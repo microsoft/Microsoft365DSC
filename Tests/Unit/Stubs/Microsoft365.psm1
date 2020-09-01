@@ -78840,7 +78840,16570 @@ function Update-PnPTeamsApp
 }
 #endregion
 
+function Add-PnPAlert
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]
+        $User,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.AlertDeliveryChannel]
+        $DeliveryMethod,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.AlertEventType]
+        $ChangeType,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.AlertFrequency]
+        $Frequency,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.AlertFilter]
+        $Filter,
+
+        [Parameter()]
+        [System.DateTime]
+        $Time,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.AppCatalogScope]
+        $Scope,
+
+        [Parameter()]
+        [System.Boolean]
+        $Publish,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipFeatureDeployment,
+
+        [Parameter()]
+        [System.Boolean]
+        $Overwrite,
+
+        [Parameter()]
+        [System.Int32]
+        $Timeout,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPApplicationCustomizer
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Int32]
+        $Sequence,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CustomActionScope]
+        $Scope,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $ClientSideComponentId,
+
+        [Parameter()]
+        [System.String]
+        $ClientSideComponentProperties,
+
+        [Parameter()]
+        [System.String]
+        $ClientSideHostProperties,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPClientSidePage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Pages.ClientSidePageLayoutType]
+        $LayoutType,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.ClientSidePages.ClientSidePagePromoteType]
+        $PromoteAs,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $ContentType,
+
+        [Parameter()]
+        [System.Boolean]
+        $CommentsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $Publish,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Pages.ClientSidePageHeaderLayoutType]
+        $HeaderLayoutType,
+
+        [Parameter()]
+        [System.String]
+        $PublishMessage,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPClientSidePageSection
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Page,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Pages.CanvasSectionTemplate]
+        $SectionTemplate,
+
+        [Parameter()]
+        [System.Int32]
+        $Order,
+
+        [Parameter()]
+        [System.Int32]
+        $ZoneEmphasis,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPClientSideText
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Page,
+
+        [Parameter()]
+        [System.String]
+        $Text,
+
+        [Parameter()]
+        [System.Int32]
+        $Order,
+
+        [Parameter()]
+        [System.Int32]
+        $Section,
+
+        [Parameter()]
+        [System.Int32]
+        $Column,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPClientSideWebPart
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Page,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Pages.DefaultClientSideWebParts]
+        $DefaultWebPartType,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSideComponentPipeBind]
+        $Component,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.PropertyBagPipeBind]
+        $WebPartProperties,
+
+        [Parameter()]
+        [System.Int32]
+        $Order,
+
+        [Parameter()]
+        [System.Int32]
+        $Section,
+
+        [Parameter()]
+        [System.Int32]
+        $Column,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPContentType
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $ContentTypeId,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.ContentType]
+        $ParentContentType,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPContentTypeToDocumentSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind[]]
+        $ContentType,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.DocumentSetPipeBind]
+        $DocumentSet,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPContentTypeToList
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $ContentType,
+
+        [Parameter()]
+        [System.Boolean]
+        $DefaultContentType,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPCustomAction
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $Location,
+
+        [Parameter()]
+        [System.Int32]
+        $Sequence,
+
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.String]
+        $ImageUrl,
+
+        [Parameter()]
+        [System.String]
+        $CommandUIExtension,
+
+        [Parameter()]
+        [System.String]
+        $RegistrationId,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.PermissionKind[]]
+        $Rights,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.UserCustomActionRegistrationType]
+        $RegistrationType,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CustomActionScope]
+        $Scope,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $ClientSideComponentId,
+
+        [Parameter()]
+        [System.String]
+        $ClientSideComponentProperties,
+
+        [Parameter()]
+        [System.String]
+        $ClientSideHostProperties,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPDataRowsToProvisioningTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [System.String]
+        $Query,
+
+        [Parameter()]
+        [System.String[]]
+        $Fields,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeSecurity,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $TokenizeUrls,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPDocumentSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $ContentType,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPEventReceiver
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.EventReceiverType]
+        $EventReceiverType,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.EventReceiverSynchronization]
+        $Synchronization,
+
+        [Parameter()]
+        [System.Int32]
+        $SequenceNumber,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPField
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
+        $Field,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $InternalName,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.FieldType]
+        $Type,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $Id,
+
+        [Parameter()]
+        [System.Boolean]
+        $AddToDefaultView,
+
+        [Parameter()]
+        [System.Boolean]
+        $Required,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $ClientSideComponentId,
+
+        [Parameter()]
+        [System.String]
+        $ClientSideComponentProperties,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPFieldFromXml
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [System.String]
+        $FieldXml,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPFieldToContentType
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
+        $Field,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $ContentType,
+
+        [Parameter()]
+        [System.Boolean]
+        $Required,
+
+        [Parameter()]
+        [System.Boolean]
+        $Hidden,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Values
+    )
+}
+function Add-PnPFileToProvisioningTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.String]
+        $Source,
+
+        [Parameter()]
+        [System.String]
+        $SourceUrl,
+
+        [Parameter()]
+        [System.String]
+        $Folder,
+
+        [Parameter()]
+        [System.String]
+        $Container,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.FileLevel]
+        $FileLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $FileOverwrite,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPFolder
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Folder,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPHtmlPublishingPageLayout
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $SourceFilePath,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $AssociatedContentTypeID,
+
+        [Parameter()]
+        [System.String]
+        $DestinationFolderHierarchy,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPHubSiteAssociation
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $Site,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $HubSite,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPIndexedProperty
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Key,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPJavaScriptBlock
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Script,
+
+        [Parameter()]
+        [System.Int32]
+        $Sequence,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteScoped,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CustomActionScope]
+        $Scope,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPJavaScriptLink
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $Url,
+
+        [Parameter()]
+        [System.Int32]
+        $Sequence,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteScoped,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CustomActionScope]
+        $Scope,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPListFoldersToProvisioningTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [System.Boolean]
+        $Recursive,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeSecurity,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPListItem
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Values
+    )
+}
+function Add-PnPMasterPage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $SourceFilePath,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DestinationFolderHierarchy,
+
+        [Parameter()]
+        [System.String]
+        $UIVersion,
+
+        [Parameter()]
+        [System.String]
+        $DefaultCssFile,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPMicrosoft365GroupMember
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $Users,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveExisting,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPMicrosoft365GroupOwner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $Users,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveExisting,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPMicrosoft365GroupToSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.String]
+        $Alias,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Classification,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsPublic,
+
+        [Parameter()]
+        [System.Boolean]
+        $KeepOldHomePage,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $HubSiteId,
+
+        [Parameter()]
+        [System.String[]]
+        $Owners,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPNavigationNode
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.NavigationType]
+        $Location,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Parent,
+
+        [Parameter()]
+        [System.String]
+        $Header,
+
+        [Parameter()]
+        [System.Boolean]
+        $First,
+
+        [Parameter()]
+        [System.Boolean]
+        $External,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPOrgAssetsLibrary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $LibraryUrl,
+
+        [Parameter()]
+        [System.String]
+        $ThumbnailUrl,
+
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        $CdnType,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPOrgNewsSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $OrgNewsSiteUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPProvisioningTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningTemplate]
+        $SiteTemplate,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningHierarchy]
+        $TenantTemplate,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+function Add-PnPPublishingImageRendition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Int32]
+        $Width,
+
+        [Parameter()]
+        [System.Int32]
+        $Height,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPPublishingPage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $PageName,
+
+        [Parameter()]
+        [System.String]
+        $FolderPath,
+
+        [Parameter()]
+        [System.String]
+        $PageTemplateName,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.Boolean]
+        $Publish,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPPublishingPageLayout
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $SourceFilePath,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $AssociatedContentTypeID,
+
+        [Parameter()]
+        [System.String]
+        $DestinationFolderHierarchy,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPRoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $RoleName,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.RoleDefinitionPipeBind]
+        $Clone,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.PermissionKind[]]
+        $Include,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.PermissionKind[]]
+        $Exclude,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPSiteClassification
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        $Classifications,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPSiteCollectionAdmin
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Collections.Generic.List`1[PnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]]
+        $Owners,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPSiteCollectionAppCatalog
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $Site,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPSiteDesign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind[]]
+        $SiteScriptIds,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsDefault,
+
+        [Parameter()]
+        [System.String]
+        $PreviewImageAltText,
+
+        [Parameter()]
+        [System.String]
+        $PreviewImageUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.SiteWebTemplate]
+        $WebTemplate,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Add-PnPSiteDesignTask
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $SiteDesignId,
+
+        [Parameter()]
+        [System.String]
+        $WebUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Add-PnPSiteScript
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Content,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Add-PnPStoredCredential
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Username,
+
+        [Parameter()]
+        [System.Security.SecureString]
+        $Password,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPTaxonomyField
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $InternalName,
+
+        [Parameter()]
+        [System.String]
+        $TermSetPath,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $TaxonomyItemId,
+
+        [Parameter()]
+        [System.String]
+        $TermPathDelimiter,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $Id,
+
+        [Parameter()]
+        [System.Boolean]
+        $AddToDefaultView,
+
+        [Parameter()]
+        [System.Boolean]
+        $MultiValue,
+
+        [Parameter()]
+        [System.Boolean]
+        $Required,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.AddFieldOptions]
+        $FieldOptions,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPTeamsChannel
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $Private,
+
+        [Parameter()]
+        [System.String]
+        $OwnerUPN,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPTeamsTab
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsChannelPipeBind]
+        $Channel,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Model.Teams.TeamTabType]
+        $Type,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.String]
+        $ContentUrl
+    )
+}
+function Add-PnPTeamsTeam
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPTeamsUser
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [System.String]
+        $User,
+
+        [Parameter()]
+        [System.String]
+        $Role,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPTenantCdnOrigin
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $OriginUrl,
+
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        $CdnType,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPTenantSequence
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningHierarchy]
+        $Template,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningSequence]
+        $Sequence,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Add-PnPTenantSequenceSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ProvisioningSitePipeBind]
+        $Site,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningSequence]
+        $Sequence,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Add-PnPTenantSequenceSubSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.TeamNoGroupSubSite]
+        $SubSite,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.SiteCollection]
+        $Site,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Add-PnPTenantTheme
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $Overwrite,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ThemePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ThemePalettePipeBind]
+        $Palette,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsInverted,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPUserToGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $LoginName,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $EmailAddress,
+
+        [Parameter()]
+        [System.Boolean]
+        $SendEmail,
+
+        [Parameter()]
+        [System.String]
+        $EmailBody,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPView
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $Query,
+
+        [Parameter()]
+        [System.String[]]
+        $Fields,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.ViewType]
+        $ViewType,
+
+        [Parameter()]
+        [System.UInt32]
+        $RowLimit,
+
+        [Parameter()]
+        [System.Boolean]
+        $Personal,
+
+        [Parameter()]
+        [System.Boolean]
+        $SetAsDefault,
+
+        [Parameter()]
+        [System.Boolean]
+        $Paged,
+
+        [Parameter()]
+        [System.String]
+        $Aggregations,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPWebhookSubscription
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [System.String]
+        $NotificationUrl,
+
+        [Parameter()]
+        [System.DateTime]
+        $ExpirationDate,
+
+        [Parameter()]
+        [System.String]
+        $ClientState,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPWebPartToWebPartPage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativePageUrl,
+
+        [Parameter()]
+        [System.String]
+        $Xml,
+
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.String]
+        $ZoneId,
+
+        [Parameter()]
+        [System.Int32]
+        $ZoneIndex,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPWebPartToWikiPage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativePageUrl,
+
+        [Parameter()]
+        [System.String]
+        $Xml,
+
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.Int32]
+        $Row,
+
+        [Parameter()]
+        [System.Int32]
+        $Column,
+
+        [Parameter()]
+        [System.Boolean]
+        $AddSpace,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPWikiPage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativePageUrl,
+
+        [Parameter()]
+        [System.String]
+        $Content,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.WikiPageLayout]
+        $Layout,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPWorkflowDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.SharePoint.Client.WorkflowServices.WorkflowDefinition]
+        $Definition,
+
+        [Parameter()]
+        [System.Boolean]
+        $DoNotPublish,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Add-PnPWorkflowSubscription
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $DefinitionName,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [System.Boolean]
+        $StartManually,
+
+        [Parameter()]
+        [System.Boolean]
+        $StartOnCreated,
+
+        [Parameter()]
+        [System.Boolean]
+        $StartOnChanged,
+
+        [Parameter()]
+        [System.String]
+        $HistoryListName,
+
+        [Parameter()]
+        [System.String]
+        $TaskListName,
+
+        [Parameter()]
+        [System.Collections.Generic.Dictionary`2[System.String,System.String]]
+        $AssociationValues,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Apply-PnPProvisioningTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.String]
+        $TemplateId,
+
+        [Parameter()]
+        [System.String]
+        $ResourceFolder,
+
+        [Parameter()]
+        [System.Boolean]
+        $OverwriteSystemPropertyBagValues,
+
+        [Parameter()]
+        [System.Boolean]
+        $IgnoreDuplicateDataRowErrors,
+
+        [Parameter()]
+        [System.Boolean]
+        $ProvisionContentTypesToSubWebs,
+
+        [Parameter()]
+        [System.Boolean]
+        $ProvisionFieldsToSubWebs,
+
+        [Parameter()]
+        [System.Boolean]
+        $ClearNavigation,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Parameters,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers]
+        $Handlers,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers]
+        $ExcludeHandlers,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ExtensibilityHandler[]]
+        $ExtensibilityHandlers,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningTemplate]
+        $InputInstance,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Apply-PnPTenantTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningHierarchy]
+        $Template,
+
+        [Parameter()]
+        [System.String]
+        $SequenceId,
+
+        [Parameter()]
+        [System.String]
+        $ResourceFolder,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers]
+        $Handlers,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers]
+        $ExcludeHandlers,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ExtensibilityHandler[]]
+        $ExtensibilityHandlers,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Parameters,
+
+        [Parameter()]
+        [System.Boolean]
+        $OverwriteSystemPropertyBagValues,
+
+        [Parameter()]
+        [System.Boolean]
+        $IgnoreDuplicateDataRowErrors,
+
+        [Parameter()]
+        [System.Boolean]
+        $ProvisionContentTypesToSubWebs,
+
+        [Parameter()]
+        [System.Boolean]
+        $ProvisionFieldsToSubWebs,
+
+        [Parameter()]
+        [System.Boolean]
+        $ClearNavigation,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ApplyConfigurationPipeBind]
+        $Configuration,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Approve-PnPTenantServicePrincipalPermissionRequest
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $RequestId,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Clear-PnPDefaultColumnValues
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
+        $Field,
+
+        [Parameter()]
+        [System.String]
+        $Folder,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Clear-PnPListItemAsRecord
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Clear-PnPMicrosoft365GroupOwner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Clear-PnPRecycleBinItem
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.RecycleBinItemPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $All,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecondStageOnly,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Int32]
+        $RowLimit,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Clear-PnPTenantAppCatalogUrl
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Clear-PnPTenantRecycleBinItem
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.Boolean]
+        $Wait,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Connect-PnPOnline
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $ReturnConnection,
+
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.CredentialPipeBind]
+        $Credentials,
+
+        [Parameter()]
+        [System.Boolean]
+        $CurrentCredentials,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseAdfs,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseAdfsCert,
+
+        [Parameter()]
+        [System.Security.Cryptography.X509Certificates.X509Certificate2]
+        $ClientCertificate,
+
+        [Parameter()]
+        [System.Boolean]
+        $Kerberos,
+
+        [Parameter()]
+        [System.String]
+        $LoginProviderName,
+
+        [Parameter()]
+        [System.Int32]
+        $MinimalHealthScore,
+
+        [Parameter()]
+        [System.Int32]
+        $RetryCount,
+
+        [Parameter()]
+        [System.Int32]
+        $RetryWait,
+
+        [Parameter()]
+        [System.Int32]
+        $RequestTimeout,
+
+        [Parameter()]
+        [System.String]
+        $Realm,
+
+        [Parameter()]
+        [System.String]
+        $AppId,
+
+        [Parameter()]
+        [System.String]
+        $AppSecret,
+
+        [Parameter()]
+        [System.String]
+        $ClientSecret,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseWebLogin,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.ClientAuthenticationMode]
+        $AuthenticationMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $CreateDrive,
+
+        [Parameter()]
+        [System.String]
+        $DriveName,
+
+        [Parameter()]
+        [System.Boolean]
+        $SPOManagementShell,
+
+        [Parameter()]
+        [System.Boolean]
+        $PnPManagementShell,
+
+        [Parameter()]
+        [System.Boolean]
+        $LaunchBrowser,
+
+        [Parameter()]
+        [System.Boolean]
+        $Graph,
+
+        [Parameter()]
+        [System.String]
+        $ClientId,
+
+        [Parameter()]
+        [System.String]
+        $RedirectUri,
+
+        [Parameter()]
+        [System.String]
+        $Tenant,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.String]
+        $CertificateBase64Encoded,
+
+        [Parameter()]
+        [System.Security.Cryptography.X509Certificates.X509Certificate2]
+        $Certificate,
+
+        [Parameter()]
+        [System.Security.SecureString]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $PEMCertificate,
+
+        [Parameter()]
+        [System.String]
+        $PEMPrivateKey,
+
+        [Parameter()]
+        [System.String]
+        $Thumbprint,
+
+        [Parameter()]
+        [System.Boolean]
+        $ClearTokenCache,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.AzureEnvironment]
+        $AzureEnvironment,
+
+        [Parameter()]
+        [System.String[]]
+        $Scopes,
+
+        [Parameter()]
+        [System.String]
+        $AADDomain,
+
+        [Parameter()]
+        [System.String]
+        $AccessToken,
+
+        [Parameter()]
+        [System.String]
+        $TenantAdminUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipTenantAdminCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $IgnoreSslErrors,
+
+        [Parameter()]
+        [System.Boolean]
+        $NoTelemetry,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Convert-PnPFolderToProvisioningTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Out,
+
+        [Parameter()]
+        [System.String]
+        $Folder,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Convert-PnPProvisioningTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.String]
+        $Out,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml.XMLPnPSchemaVersion]
+        $ToSchema,
+
+        [Parameter()]
+        [System.Text.Encoding]
+        $Encoding,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function ConvertTo-PnPClientSidePage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.PagePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Library,
+
+        [Parameter()]
+        [System.String]
+        $Folder,
+
+        [Parameter()]
+        [System.String]
+        $WebPartMappingFile,
+
+        [Parameter()]
+        [System.Boolean]
+        $Overwrite,
+
+        [Parameter()]
+        [System.Boolean]
+        $TakeSourcePageName,
+
+        [Parameter()]
+        [System.Boolean]
+        $ReplaceHomePageWithDefault,
+
+        [Parameter()]
+        [System.Boolean]
+        $AddPageAcceptBanner,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipItemLevelPermissionCopyToClientSidePage,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipUrlRewriting,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipDefaultUrlRewriting,
+
+        [Parameter()]
+        [System.String]
+        $UrlMappingFile,
+
+        [Parameter()]
+        [System.Boolean]
+        $ClearCache,
+
+        [Parameter()]
+        [System.Boolean]
+        $CopyPageMetadata,
+
+        [Parameter()]
+        [System.Boolean]
+        $AddTableListImageAsImageWebPart,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseCommunityScriptEditor,
+
+        [Parameter()]
+        [System.Boolean]
+        $SummaryLinksToHtml,
+
+        [Parameter()]
+        [System.String]
+        $TargetWebUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.ClientSidePages.ClientSidePageTransformatorLogType]
+        $LogType,
+
+        [Parameter()]
+        [System.String]
+        $LogFolder,
+
+        [Parameter()]
+        [System.Boolean]
+        $LogSkipFlush,
+
+        [Parameter()]
+        [System.Boolean]
+        $LogVerbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $DontPublish,
+
+        [Parameter()]
+        [System.Boolean]
+        $KeepPageCreationModificationInformation,
+
+        [Parameter()]
+        [System.Boolean]
+        $SetAuthorInPageHeader,
+
+        [Parameter()]
+        [System.Boolean]
+        $PostAsNews,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisablePageComments,
+
+        [Parameter()]
+        [System.Boolean]
+        $PublishingPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlogPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $DelveBlogPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $DelveKeepSubTitle,
+
+        [Parameter()]
+        [System.String]
+        $PageLayoutMapping,
+
+        [Parameter()]
+        [System.String]
+        $PublishingTargetPageName,
+
+        [Parameter()]
+        [System.String]
+        $TargetPageName,
+
+        [Parameter()]
+        [System.String]
+        $TargetPageFolder,
+
+        [Parameter()]
+        [System.Boolean]
+        $TargetPageFolderOverridesDefaultFolder,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveEmptySectionsAndColumns,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $TargetConnection,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipUserMapping,
+
+        [Parameter()]
+        [System.String]
+        $UserMappingFile,
+
+        [Parameter()]
+        [System.String]
+        $TermMappingFile,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipTermStoreMapping,
+
+        [Parameter()]
+        [System.String]
+        $LDAPConnectionString,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Copy-PnPFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $SourceUrl,
+
+        [Parameter()]
+        [System.String]
+        $TargetUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $OverwriteIfAlreadyExists,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipSourceFolderName,
+
+        [Parameter()]
+        [System.Boolean]
+        $IgnoreVersionHistory,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Copy-PnPItemProxy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $Recurse,
+
+        [Parameter()]
+        [System.String[]]
+        $Path,
+
+        [Parameter()]
+        [System.String[]]
+        $LiteralPath,
+
+        [Parameter()]
+        [System.String]
+        $Destination,
+
+        [Parameter()]
+        [System.Boolean]
+        $Container,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String[]]
+        $Include,
+
+        [Parameter()]
+        [System.String[]]
+        $Exclude,
+
+        [Parameter()]
+        [System.Boolean]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseTransaction
+    )
+}
+function Deny-PnPTenantServicePrincipalPermissionRequest
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $RequestId,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Disable-PnPFeature
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.FeatureScope]
+        $Scope,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Disable-PnPInPlaceRecordsManagementForSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Disable-PnPPowerShellTelemetry
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Disable-PnPResponsiveUI
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Disable-PnPSharingForNonOwnersOfSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Disable-PnPSiteClassification
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Disable-PnPTenantServicePrincipal
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Disconnect-PnPOnline
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Enable-PnPCommSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DesignPackageId,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Enable-PnPFeature
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.FeatureScope]
+        $Scope,
+
+        [Parameter()]
+        [System.Boolean]
+        $Sandboxed,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Enable-PnPInPlaceRecordsManagementForSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Enable-PnPPowerShellTelemetry
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Enable-PnPResponsiveUI
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $InfrastructureSiteUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Enable-PnPSiteClassification
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        $Classifications,
+
+        [Parameter()]
+        [System.String]
+        $DefaultClassification,
+
+        [Parameter()]
+        [System.String]
+        $UsageGuidelinesUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Enable-PnPTenantServicePrincipal
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Export-PnPClientSidePage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $PersistBrandingFiles,
+
+        [Parameter()]
+        [System.String]
+        $Out,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ExtractConfigurationPipeBind]
+        $Configuration,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Export-PnPClientSidePageMapping
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $BuiltInWebPartMapping,
+
+        [Parameter()]
+        [System.Boolean]
+        $BuiltInPageLayoutMapping,
+
+        [Parameter()]
+        [System.Boolean]
+        $CustomPageLayoutMapping,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.PagePipeBind]
+        $PublishingPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AnalyzeOOBPageLayouts,
+
+        [Parameter()]
+        [System.String]
+        $Folder,
+
+        [Parameter()]
+        [System.Boolean]
+        $Overwrite,
+
+        [Parameter()]
+        [System.Boolean]
+        $Logging,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Export-PnPListToProvisioningTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        $List,
+
+        [Parameter()]
+        [System.String]
+        $Out,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml.XMLPnPSchemaVersion]
+        $Schema,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $OutputInstance,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Export-PnPTaxonomy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $TermSetId,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeID,
+
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.String]
+        $TermStoreName,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.String]
+        $Delimiter,
+
+        [Parameter()]
+        [System.Int32]
+        $Lcid,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.Encoding]
+        $Encoding,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Export-PnPTermGroupToXml
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TermGroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Out,
+
+        [Parameter()]
+        [System.Boolean]
+        $FullTemplate,
+
+        [Parameter()]
+        [System.Text.Encoding]
+        $Encoding,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Find-PnPFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Match,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FolderPipeBind]
+        $Folder,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPAADUser
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $OrderBy,
+
+        [Parameter()]
+        [System.String[]]
+        $Select,
+
+        [Parameter()]
+        [System.Boolean]
+        $Delta,
+
+        [Parameter()]
+        [System.String]
+        $DeltaToken,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPAccessToken
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $Decoded,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPAlert
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]
+        $User,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.AppCatalogScope]
+        $Scope,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPAppAuthAccessToken
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPAppInstance
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.AppPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
+    )
+}
+function Get-PnPApplicationCustomizer
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $ClientSideComponentId,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CustomActionScope]
+        $Scope,
+
+        [Parameter()]
+        [System.Boolean]
+        $ThrowExceptionIfCustomActionNotFound,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
+    )
+}
+function Get-PnPAuditing
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPAuthenticationRealm
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPAvailableClientSideComponents
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Page,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSideComponentPipeBind]
+        $Component,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPAvailableLanguage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
+    )
+}
+function Get-PnPAzureCertificate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Security.SecureString]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPClientSideComponent
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Page,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $InstanceId,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPClientSidePage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPConnection
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPContentType
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [System.Boolean]
+        $InSiteHierarchy,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPContentTypePublishingHubUrl
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPContext
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPCustomAction
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CustomActionScope]
+        $Scope,
+
+        [Parameter()]
+        [System.Boolean]
+        $ThrowExceptionIfCustomActionNotFound,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
+    )
+}
+function Get-PnPDefaultColumnValues
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPDeletedMicrosoft365Group
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPDocumentSetTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.DocumentSetPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
+    )
+}
+function Get-PnPEventReceiver
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.EventReceiverPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
+    )
+}
+function Get-PnPException
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $All,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPFeature
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FeaturePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.FeatureScope]
+        $Scope,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
+    )
+}
+function Get-PnPField
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.Boolean]
+        $InSiteHierarchy,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
+    )
+}
+function Get-PnPFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.String]
+        $Filename,
+
+        [Parameter()]
+        [System.Boolean]
+        $AsFile,
+
+        [Parameter()]
+        [System.Boolean]
+        $AsListItem,
+
+        [Parameter()]
+        [System.Boolean]
+        $ThrowExceptionIfFileNotFound,
+
+        [Parameter()]
+        [System.Boolean]
+        $AsString,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $AsFileObject,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPFileVersion
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPFolder
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
+    )
+}
+function Get-PnPFolderItem
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $FolderSiteRelativeUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FolderPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $ItemType,
+
+        [Parameter()]
+        [System.String]
+        $ItemName,
+
+        [Parameter()]
+        [System.Boolean]
+        $Recursive,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPFooter
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPGraphAccessToken
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $Decoded,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPGraphSubscription
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AssociatedMemberGroup,
+
+        [Parameter()]
+        [System.Boolean]
+        $AssociatedVisitorGroup,
+
+        [Parameter()]
+        [System.Boolean]
+        $AssociatedOwnerGroup,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
+    )
+}
+function Get-PnPGroupMembers
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPGroupPermissions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPHealthScore
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPHideDefaultThemes
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPHomePage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPHomeSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPHubSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPHubSiteChild
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPIndexedPropertyKeys
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPInPlaceRecordsManagement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPIsSiteAliasAvailable
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPJavaScriptLink
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CustomActionScope]
+        $Scope,
+
+        [Parameter()]
+        [System.Boolean]
+        $ThrowExceptionIfJavaScriptLinkNotFound,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPKnowledgeHubSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPLabel
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [System.Boolean]
+        $ValuesOnly,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPList
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $ThrowExceptionIfListNotFound,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
+    )
+}
+function Get-PnPListInformationRightsManagement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPListItem
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [System.Int32]
+        $Id,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $UniqueId,
+
+        [Parameter()]
+        [System.String]
+        $Query,
+
+        [Parameter()]
+        [System.String]
+        $FolderServerRelativeUrl,
+
+        [Parameter()]
+        [System.String[]]
+        $Fields,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [System.Management.Automation.ScriptBlock]
+        $ScriptBlock,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPListRecordDeclaration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPManagementApiAccessToken
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ClientId,
+
+        [Parameter()]
+        [System.String]
+        $ClientSecret,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPMasterPage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPMicrosoft365Group
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExcludeSiteUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeClassification,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeHasTeam,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPMicrosoft365GroupMembers
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPMicrosoft365GroupOwners
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPNavigationNode
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.NavigationType]
+        $Location,
+
+        [Parameter()]
+        [System.Int32]
+        $Id,
+
+        [Parameter()]
+        [System.Boolean]
+        $Tree,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPOffice365CurrentServiceStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Nullable`1[PnP.PowerShell.Commands.Enums.Office365Workload]]
+        $Workload,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPOffice365HistoricalServiceStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Nullable`1[PnP.PowerShell.Commands.Enums.Office365Workload]]
+        $Workload,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPOffice365ServiceMessage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Nullable`1[PnP.PowerShell.Commands.Enums.Office365Workload]]
+        $Workload,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPOffice365Services
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPOfficeManagementApiAccessToken
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $Decoded,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPOrgAssetsLibrary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPOrgNewsSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPPowerShellTelemetryEnabled
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPProperty
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.SharePoint.Client.ClientObject]
+        $ClientObject,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPPropertyBag
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Key,
+
+        [Parameter()]
+        [System.String]
+        $Folder,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPProvisioningTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Out,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml.XMLPnPSchemaVersion]
+        $Schema,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeAllTermGroups,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeSiteCollectionTermGroup,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeSiteGroups,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeTermGroupsSecurity,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeSearchConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $PersistBrandingFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $PersistComposedLookFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $PersistPublishingFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeNativePublishingFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeHiddenLists,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeAllClientSidePages,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipVersionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $PersistMultiLanguageResources,
+
+        [Parameter()]
+        [System.String]
+        $ResourceFilePrefix,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers]
+        $Handlers,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers]
+        $ExcludeHandlers,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ExtensibilityHandler[]]
+        $ExtensibilityHandlers,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions,
+
+        [Parameter()]
+        [System.String[]]
+        $ContentTypeGroups,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $NoBaseTemplate,
+
+        [Parameter()]
+        [System.Text.Encoding]
+        $Encoding,
+
+        [Parameter()]
+        [System.String]
+        $TemplateDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $TemplateImagePreviewUrl,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $TemplateProperties,
+
+        [Parameter()]
+        [System.Boolean]
+        $OutputInstance,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExcludeContentTypesFromSyndication,
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        $ListsToExtract,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ExtractConfigurationPipeBind]
+        $Configuration,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Get-PnPPublishingImageRendition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ImageRenditionPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPRecycleBinItem
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $FirstStage,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecondStage,
+
+        [Parameter()]
+        [System.Int32]
+        $RowLimit,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
+    )
+}
+function Get-PnPRequestAccessEmails
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPRoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.RoleDefinitionPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPSearchConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.SearchConfigurationScope]
+        $Scope,
+
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Search.OutputFormat]
+        $OutputFormat,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPSearchCrawlLog
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Search.LogLevel]
+        $LogLevel,
+
+        [Parameter()]
+        [System.Int32]
+        $RowLimit,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Search.ContentSource]
+        $ContentSource,
+
+        [Parameter()]
+        [System.DateTime]
+        $StartDate,
+
+        [Parameter()]
+        [System.DateTime]
+        $EndDate,
+
+        [Parameter()]
+        [System.Boolean]
+        $RawFormat,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPSearchSettings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPSharingForNonOwnersOfSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
+    )
+}
+function Get-PnPSiteClassification
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPSiteClosure
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPSiteCollectionAdmin
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPSiteCollectionTermStore
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Get-PnPSiteDesign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Get-PnPSiteDesignRights
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Get-PnPSiteDesignRun
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $SiteDesignId,
+
+        [Parameter()]
+        [System.String]
+        $WebUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Get-PnPSiteDesignRunStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.TenantSiteDesignRun]
+        $Run,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Get-PnPSiteDesignTask
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignTaskPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $WebUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPSitePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $AllAvailable,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPSiteScript
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteScriptPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        $SiteDesign,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Get-PnPSiteScriptFromList
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Get-PnPSiteScriptFromWeb
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.String[]]
+        $Lists,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeAll,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeBranding,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeLinksToExportedItems,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeRegionalSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeSiteExternalSharingCapability,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeTheme,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Get-PnPSiteSearchQueryResults
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Query,
+
+        [Parameter()]
+        [System.Int32]
+        $StartRow,
+
+        [Parameter()]
+        [System.Int32]
+        $MaxResults,
+
+        [Parameter()]
+        [System.Boolean]
+        $All,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPStorageEntity
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Key,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.StorageEntityScope]
+        $Scope,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Get-PnPStoredCredential
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CredentialType]
+        $Type,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPSubWebs
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Recurse,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
+    )
+}
+function Get-PnPTaxonomyItem
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TermPath,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Get-PnPTaxonomySession
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPTeamsApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsAppPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPTeamsChannel
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsChannelPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPTeamsChannelMessage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsChannelPipeBind]
+        $Channel,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeDeleted,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPTeamsTab
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsChannelPipeBind]
+        $Channel,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTabPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPTeamsTeam
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPTeamsUser
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsChannelPipeBind]
+        $Channel,
+
+        [Parameter()]
+        [System.String]
+        $Role,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPTenant
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPTenantAppCatalogUrl
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Get-PnPTenantCdnEnabled
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        $CdnType,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPTenantCdnOrigin
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        $CdnType,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPTenantCdnPolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        $CdnType,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPTenantId
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TenantUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPTenantRecycleBinItem
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPTenantSequence
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningHierarchy]
+        $Template,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ProvisioningSequencePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Get-PnPTenantSequenceSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningSequence]
+        $Sequence,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ProvisioningSitePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Get-PnPTenantServicePrincipal
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPTenantServicePrincipalPermissionGrants
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPTenantServicePrincipalPermissionRequests
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPTenantSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.String]
+        $Template,
+
+        [Parameter()]
+        [System.Boolean]
+        $Detailed,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeOneDriveSites,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.String]
+        $WebTemplate,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Get-PnPTenantSyncClientRestriction
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPTenantTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $SiteUrl,
+
+        [Parameter()]
+        [System.String]
+        $Out,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $AsInstance,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ExtractConfigurationPipeBind]
+        $Configuration,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Get-PnPTenantTheme
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Boolean]
+        $AsJson,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPTerm
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
+        $TermSet,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TermGroupPipeBind]
+        $TermGroup,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
+        $TermStore,
+
+        [Parameter()]
+        [System.Boolean]
+        $Recursive,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeChildTerms,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
+    )
+}
+function Get-PnPTermGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermGroup]]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
+        $TermStore,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
+    )
+}
+function Get-PnPTermSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TermGroupPipeBind]
+        $TermGroup,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
+        $TermStore,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
+    )
+}
+function Get-PnPTheme
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $DetectCurrentComposedLook,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPTimeZoneId
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Match,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPUnifiedAuditLog
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.AuditContentType]
+        $ContentType,
+
+        [Parameter()]
+        [System.DateTime]
+        $StartTime,
+
+        [Parameter()]
+        [System.DateTime]
+        $EndTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPUPABulkImportStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $JobId,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeErrorDetails,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPUser
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $WithRightsAssigned,
+
+        [Parameter()]
+        [System.Boolean]
+        $WithRightsAssignedDetailed,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPUserOneDriveQuota
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Account,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPUserProfileProperty
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Account,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPView
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ViewPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
+    )
+}
+function Get-PnPWeb
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
+    )
+}
+function Get-PnPWebhookSubscriptions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPWebPart
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativePageUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPartPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPWebPartProperty
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativePageUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Key,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPWebPartXml
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativePageUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPartPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPWebTemplates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.UInt32]
+        $Lcid,
+
+        [Parameter()]
+        [System.Int32]
+        $CompatibilityLevel,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPWikiPageContent
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativePageUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPWorkflowDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Boolean]
+        $PublishedOnly,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPWorkflowInstance
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
+        $ListItem,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WorkflowSubscriptionPipeBind]
+        $WorkflowSubscription,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Get-PnPWorkflowSubscription
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Grant-PnPHubSiteRights
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $Principals,
+
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.SPOHubSiteUserRights]
+        $Rights,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Grant-PnPSiteDesignRights
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $Principals,
+
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.TenantSiteDesignPrincipalRights]
+        $Rights,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Grant-PnPTenantServicePrincipalPermission
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Scope,
+
+        [Parameter()]
+        [System.String]
+        $Resource,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Import-PnPAppPackage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $LoadOnly,
+
+        [Parameter()]
+        [System.Int32]
+        $Locale,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Import-PnPTaxonomy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Terms,
+
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.Int32]
+        $Lcid,
+
+        [Parameter()]
+        [System.String]
+        $TermStoreName,
+
+        [Parameter()]
+        [System.String]
+        $Delimiter,
+
+        [Parameter()]
+        [System.Boolean]
+        $SynchronizeDeletions,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Import-PnPTermGroupFromXml
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Xml,
+
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Import-PnPTermSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $GroupName,
+
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.Guid]
+        $TermSetId,
+
+        [Parameter()]
+        [System.Boolean]
+        $SynchronizeDeletions,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $IsOpen,
+
+        [Parameter()]
+        [System.String]
+        $Contact,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.String]
+        $TermStoreName,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Initialize-PnPPowerShellAuthentication
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationName,
+
+        [Parameter()]
+        [System.String]
+        $Tenant,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.String]
+        $CommonName,
+
+        [Parameter()]
+        [System.String]
+        $Country,
+
+        [Parameter()]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [System.String]
+        $Locality,
+
+        [Parameter()]
+        [System.String]
+        $Organization,
+
+        [Parameter()]
+        [System.String]
+        $OrganizationUnit,
+
+        [Parameter()]
+        [System.Int32]
+        $ValidYears,
+
+        [Parameter()]
+        [System.Security.SecureString]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $OutPath,
+
+        [Parameter()]
+        [System.Security.Cryptography.X509Certificates.StoreLocation]
+        $Store,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.AzureEnvironment]
+        $AzureEnvironment,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Scopes
+    )
+}
+function Install-PnPApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.AppCatalogScope]
+        $Scope,
+
+        [Parameter()]
+        [System.Boolean]
+        $Wait,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Install-PnPSolution
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $PackageId,
+
+        [Parameter()]
+        [System.String]
+        $SourceFilePath,
+
+        [Parameter()]
+        [System.Int32]
+        $MajorVersion,
+
+        [Parameter()]
+        [System.Int32]
+        $MinorVersion,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Invoke-PnPQuery
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $RetryCount,
+
+        [Parameter()]
+        [System.Int32]
+        $RetryWait,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Invoke-PnPSiteDesign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $WebUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Invoke-PnPSPRestMethod
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.HttpRequestMethod]
+        $Method,
+
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.Object]
+        $Content,
+
+        [Parameter()]
+        [System.String]
+        $ContentType,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Invoke-PnPWebAction
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ListName,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.Web[]]
+        $Webs,
+
+        [Parameter()]
+        [System.Action`1[Microsoft.SharePoint.Client.Web]]
+        $WebAction,
+
+        [Parameter()]
+        [System.Func`2[Microsoft.SharePoint.Client.Web,System.Boolean]]
+        $ShouldProcessWebAction,
+
+        [Parameter()]
+        [System.Action`1[Microsoft.SharePoint.Client.Web]]
+        $PostWebAction,
+
+        [Parameter()]
+        [System.Func`2[Microsoft.SharePoint.Client.Web,System.Boolean]]
+        $ShouldProcessPostWebAction,
+
+        [Parameter()]
+        [System.String[]]
+        $WebProperties,
+
+        [Parameter()]
+        [System.Action`1[Microsoft.SharePoint.Client.List]]
+        $ListAction,
+
+        [Parameter()]
+        [System.Func`2[Microsoft.SharePoint.Client.List,System.Boolean]]
+        $ShouldProcessListAction,
+
+        [Parameter()]
+        [System.Action`1[Microsoft.SharePoint.Client.List]]
+        $PostListAction,
+
+        [Parameter()]
+        [System.Func`2[Microsoft.SharePoint.Client.List,System.Boolean]]
+        $ShouldProcessPostListAction,
+
+        [Parameter()]
+        [System.String[]]
+        $ListProperties,
+
+        [Parameter()]
+        [System.Action`1[Microsoft.SharePoint.Client.ListItem]]
+        $ListItemAction,
+
+        [Parameter()]
+        [System.Func`2[Microsoft.SharePoint.Client.ListItem,System.Boolean]]
+        $ShouldProcessListItemAction,
+
+        [Parameter()]
+        [System.String[]]
+        $ListItemProperties,
+
+        [Parameter()]
+        [System.Boolean]
+        $SubWebs,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableStatisticsOutput,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipCounting,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Measure-PnPList
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $ItemLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $BrokenPermissions,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
+    )
+}
+function Measure-PnPResponseTime
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.DiagnosticEndpointPipeBind]
+        $Url,
+
+        [Parameter()]
+        [System.UInt32]
+        $Count,
+
+        [Parameter()]
+        [System.UInt32]
+        $WarmUp,
+
+        [Parameter()]
+        [System.UInt32]
+        $Timeout,
+
+        [Parameter()]
+        [System.UInt32]
+        $Histogram,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Diagnostic.MeasureResponseTimeMode]
+        $Mode,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Measure-PnPWeb
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Recursive,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeHiddenList,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Move-PnPClientSideComponent
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Page,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $InstanceId,
+
+        [Parameter()]
+        [System.Int32]
+        $Section,
+
+        [Parameter()]
+        [System.Int32]
+        $Column,
+
+        [Parameter()]
+        [System.Int32]
+        $Position,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Move-PnPFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativeUrl,
+
+        [Parameter()]
+        [System.String]
+        $SiteRelativeUrl,
+
+        [Parameter()]
+        [System.String]
+        $TargetUrl,
+
+        [Parameter()]
+        [System.String]
+        $TargetServerRelativeLibrary,
+
+        [Parameter()]
+        [System.Boolean]
+        $OverwriteIfAlreadyExists,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSchemaMismatch,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSmallerVersionLimitOnDestination,
+
+        [Parameter()]
+        [System.Boolean]
+        $IgnoreVersionHistory,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Move-PnPFolder
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Folder,
+
+        [Parameter()]
+        [System.String]
+        $TargetFolder,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Move-PnPItemProxy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Path,
+
+        [Parameter()]
+        [System.String[]]
+        $LiteralPath,
+
+        [Parameter()]
+        [System.String]
+        $Destination,
+
+        [Parameter()]
+        [System.Boolean]
+        $Container,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String[]]
+        $Include,
+
+        [Parameter()]
+        [System.String[]]
+        $Exclude,
+
+        [Parameter()]
+        [System.Boolean]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseTransaction
+    )
+}
+function Move-PnPListItemToRecycleBin
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Move-PnPRecycleBinItem
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.RecycleBinItemPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function New-PnPAzureCertificate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $CommonName,
+
+        [Parameter()]
+        [System.String]
+        $Country,
+
+        [Parameter()]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [System.String]
+        $Locality,
+
+        [Parameter()]
+        [System.String]
+        $Organization,
+
+        [Parameter()]
+        [System.String]
+        $OrganizationUnit,
+
+        [Parameter()]
+        [System.String]
+        $Out,
+
+        [Parameter()]
+        [System.String]
+        $OutPfx,
+
+        [Parameter()]
+        [System.String]
+        $OutCert,
+
+        [Parameter()]
+        [System.Int32]
+        $ValidYears,
+
+        [Parameter()]
+        [System.Security.SecureString]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function New-PnPExtensibilityHandlerObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Assembly,
+
+        [Parameter()]
+        [System.String]
+        $Type,
+
+        [Parameter()]
+        [System.String]
+        $Configuration,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function New-PnPGraphSubscription
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.GraphSubscriptionChangeType]
+        $ChangeType,
+
+        [Parameter()]
+        [System.String]
+        $NotificationUrl,
+
+        [Parameter()]
+        [System.String]
+        $Resource,
+
+        [Parameter()]
+        [System.DateTime]
+        $ExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ClientState,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.GraphSubscriptionTlsVersion]
+        $LatestSupportedTlsVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function New-PnPGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRequestToJoinLeave,
+
+        [Parameter()]
+        [System.Boolean]
+        $AutoAcceptRequestToJoinLeave,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMembersEditMembership,
+
+        [Parameter()]
+        [System.Boolean]
+        $OnlyAllowMembersViewMembership,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisallowMembersViewMembership,
+
+        [Parameter()]
+        [System.String]
+        $RequestToJoinEmail,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.AssociatedGroupType]
+        $SetAssociatedGroup,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function New-PnPList
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.ListTemplateType]
+        $Template,
+
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.Boolean]
+        $Hidden,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableVersioning,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.QuickLaunchOptions]
+        $QuickLaunchOptions,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableContentTypes,
+
+        [Parameter()]
+        [System.Boolean]
+        $OnQuickLaunch,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function New-PnPMicrosoft365Group
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $MailNickname,
+
+        [Parameter()]
+        [System.String[]]
+        $Owners,
+
+        [Parameter()]
+        [System.String[]]
+        $Members,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsPrivate,
+
+        [Parameter()]
+        [System.String]
+        $GroupLogoPath,
+
+        [Parameter()]
+        [System.Boolean]
+        $CreateTeam,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function New-PnPPersonalSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Email,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function New-PnPProvisioningTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function New-PnPProvisioningTemplateFromFolder
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Out,
+
+        [Parameter()]
+        [System.String]
+        $Folder,
+
+        [Parameter()]
+        [System.String]
+        $TargetFolder,
+
+        [Parameter()]
+        [System.String]
+        $Match,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $ContentType,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Properties,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml.XMLPnPSchemaVersion]
+        $Schema,
+
+        [Parameter()]
+        [System.Boolean]
+        $AsIncludeFile,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Text.Encoding]
+        $Encoding,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function New-PnPSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.SiteType]
+        $Type,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $HubSiteId,
+
+        [Parameter()]
+        [System.Boolean]
+        $Wait,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function New-PnPTeamsApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function New-PnPTeamsTeam
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $GroupId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $MailNickName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowAddRemoveApps,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowChannelMentions,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowCreateUpdateChannels,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowCreateUpdateRemoveConnectors,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowCreateUpdateRemoveTabs,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowCustomMemes,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowDeleteChannels,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowGiphy,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowGuestCreateUpdateChannels,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowGuestDeleteChannels,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowOwnerDeleteMessages,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowStickersAndMemes,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowTeamMentions,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowUserDeleteMessages,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowUserEditMessages,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Model.Teams.TeamGiphyContentRating]
+        $GiphyContentRating,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.Teams.TeamVisibility]
+        $Visibility,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $ShowInTeamsSearchAndSuggestions,
+
+        [Parameter()]
+        [System.String]
+        $Classification,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function New-PnPTenantSequence
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function New-PnPTenantSequenceCommunicationSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.UInt32]
+        $Language,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Classification,
+
+        [Parameter()]
+        [System.String]
+        $SiteDesignId,
+
+        [Parameter()]
+        [System.Boolean]
+        $HubSite,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowFileSharingForGuestUsers,
+
+        [Parameter()]
+        [System.String[]]
+        $TemplateIds,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function New-PnPTenantSequenceTeamNoGroupSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.UInt32]
+        $TimeZoneId,
+
+        [Parameter()]
+        [System.UInt32]
+        $Language,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $HubSite,
+
+        [Parameter()]
+        [System.String[]]
+        $TemplateIds,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function New-PnPTenantSequenceTeamNoGroupSubSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.UInt32]
+        $TimeZoneId,
+
+        [Parameter()]
+        [System.UInt32]
+        $Language,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $TemplateIds,
+
+        [Parameter()]
+        [System.Boolean]
+        $QuickLaunchDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseDifferentPermissionsFromParentSite,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function New-PnPTenantSequenceTeamSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Alias,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Classification,
+
+        [Parameter()]
+        [System.Boolean]
+        $Public,
+
+        [Parameter()]
+        [System.Boolean]
+        $HubSite,
+
+        [Parameter()]
+        [System.String[]]
+        $TemplateIds,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function New-PnPTenantSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.UInt32]
+        $Lcid,
+
+        [Parameter()]
+        [System.String]
+        $Template,
+
+        [Parameter()]
+        [System.Int32]
+        $TimeZone,
+
+        [Parameter()]
+        [System.Double]
+        $ResourceQuota,
+
+        [Parameter()]
+        [System.Double]
+        $ResourceQuotaWarningLevel,
+
+        [Parameter()]
+        [System.Int64]
+        $StorageQuota,
+
+        [Parameter()]
+        [System.Int64]
+        $StorageQuotaWarningLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveDeletedSite,
+
+        [Parameter()]
+        [System.Boolean]
+        $Wait,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function New-PnPTenantTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Author,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Generator,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function New-PnPTerm
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Guid]
+        $Id,
+
+        [Parameter()]
+        [System.Int32]
+        $Lcid,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
+        $TermSet,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TermGroupPipeBind]
+        $TermGroup,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $CustomProperties,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $LocalCustomProperties,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
+        $TermStore,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function New-PnPTermGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Guid]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
+        $TermStore,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function New-PnPTermLabel
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.Term]]
+        $Term,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Int32]
+        $Lcid,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsDefault,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function New-PnPTermSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Guid]
+        $Id,
+
+        [Parameter()]
+        [System.Int32]
+        $Lcid,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TermGroupPipeBind]
+        $TermGroup,
+
+        [Parameter()]
+        [System.String]
+        $Contact,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsOpenForTermCreation,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsNotAvailableForTagging,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.String[]]
+        $StakeHolders,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $CustomProperties,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
+        $TermStore,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function New-PnPUPABulkImportJob
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Folder,
+
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $UserProfilePropertyMapping,
+
+        [Parameter()]
+        [System.String]
+        $IdProperty,
+
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantManagement.ImportProfilePropertiesUserIdType]
+        $IdType,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function New-PnPUser
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $LoginName,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function New-PnPWeb
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Int32]
+        $Locale,
+
+        [Parameter()]
+        [System.String]
+        $Template,
+
+        [Parameter()]
+        [System.Boolean]
+        $BreakInheritance,
+
+        [Parameter()]
+        [System.Boolean]
+        $InheritNavigation,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Publish-PnPApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipFeatureDeployment,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.AppCatalogScope]
+        $Scope,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Read-PnPProvisioningTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.String]
+        $Xml,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Read-PnPTenantTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Register-PnPAppCatalogSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.Int32]
+        $TimeZoneId,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Register-PnPHubSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $Site,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPAlert
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]
+        $User,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.AlertPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.AppCatalogScope]
+        $Scope,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPApplicationCustomizer
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.UserCustomActionPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $ClientSideComponentId,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CustomActionScope]
+        $Scope,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Remove-PnPClientSideComponent
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Page,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $InstanceId,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPClientSidePage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPContentType
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPContentTypeFromDocumentSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $ContentType,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.DocumentSetPipeBind]
+        $DocumentSet,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPContentTypeFromList
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $ContentType,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPCustomAction
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.UserCustomActionPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CustomActionScope]
+        $Scope,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Remove-PnPDeletedMicrosoft365Group
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPEventReceiver
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.EventReceiverPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Remove-PnPField
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Remove-PnPFieldFromContentType
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
+        $Field,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $ContentType,
+
+        [Parameter()]
+        [System.Boolean]
+        $DoNotUpdateChildren,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativeUrl,
+
+        [Parameter()]
+        [System.String]
+        $SiteRelativeUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $Recycle,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Remove-PnPFileFromProvisioningTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.String]
+        $FilePath,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPFileVersion
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.Boolean]
+        $All,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FileVersionPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Recycle,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPFolder
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Folder,
+
+        [Parameter()]
+        [System.Boolean]
+        $Recycle,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPGraphSubscription
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GraphSubscriptionPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPHomeSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPHubSiteAssociation
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $Site,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPIndexedProperty
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Key,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPJavaScriptLink
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.UserCustomActionPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $FromSite,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CustomActionScope]
+        $Scope,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Remove-PnPKnowledgeHubSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPList
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Recycle,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Remove-PnPListItem
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Recycle,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Remove-PnPMicrosoft365Group
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPMicrosoft365GroupMember
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $Users,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPMicrosoft365GroupOwner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $Users,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPNavigationNode
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.NavigationNodePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.NavigationType]
+        $Location,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $Header,
+
+        [Parameter()]
+        [System.Boolean]
+        $All,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Remove-PnPOrgAssetsLibrary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $LibraryUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShouldRemoveFromCdn,
+
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        $CdnType,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPOrgNewsSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $OrgNewsSiteUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPPropertyBagValue
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Key,
+
+        [Parameter()]
+        [System.String]
+        $Folder,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Remove-PnPPublishingImageRendition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ImageRenditionPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPRoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.RoleDefinitionPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPSearchConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Configuration,
+
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.SearchConfigurationScope]
+        $Scope,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPSiteClassification
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        $Classifications,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPSiteCollectionAdmin
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Collections.Generic.List`1[PnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]]
+        $Owners,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPSiteCollectionAppCatalog
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $Site,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPSiteDesign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Remove-PnPSiteDesignTask
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignTaskPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Remove-PnPSiteScript
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteScriptPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Remove-PnPStorageEntity
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Key,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.StorageEntityScope]
+        $Scope,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Remove-PnPStoredCredential
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPTaxonomyItem
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TermPath,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Remove-PnPTeamsApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsAppPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPTeamsChannel
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsChannelPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPTeamsTab
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsChannelPipeBind]
+        $Channel,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTabPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPTeamsTeam
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPTeamsUser
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [System.String]
+        $User,
+
+        [Parameter()]
+        [System.String]
+        $Role,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPTenantCdnOrigin
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $OriginUrl,
+
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        $CdnType,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPTenantSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipRecycleBin,
+
+        [Parameter()]
+        [System.Boolean]
+        $Wait,
+
+        [Parameter()]
+        [System.Boolean]
+        $FromRecycleBin,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPTenantTheme
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ThemePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPTermGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $GroupName,
+
+        [Parameter()]
+        [System.String]
+        $TermStoreName,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPUser
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPUserFromGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $LoginName,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPView
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ViewPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Remove-PnPWeb
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPWebhookSubscription
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebhookSubscriptionPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPWebPart
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $ServerRelativePageUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPWikiPage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativePageUrl,
+
+        [Parameter()]
+        [System.String]
+        $SiteRelativePageUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPWorkflowDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WorkflowDefinitionPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Remove-PnPWorkflowSubscription
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WorkflowSubscriptionPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Rename-PnPFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativeUrl,
+
+        [Parameter()]
+        [System.String]
+        $SiteRelativeUrl,
+
+        [Parameter()]
+        [System.String]
+        $TargetFileName,
+
+        [Parameter()]
+        [System.Boolean]
+        $OverwriteIfAlreadyExists,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Rename-PnPFolder
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Folder,
+
+        [Parameter()]
+        [System.String]
+        $TargetFolderName,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Request-PnPAccessToken
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ClientId,
+
+        [Parameter()]
+        [System.String]
+        $Resource,
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        $Scopes,
+
+        [Parameter()]
+        [System.Boolean]
+        $Decoded,
+
+        [Parameter()]
+        [System.Boolean]
+        $SetAsCurrent,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credentials,
+
+        [Parameter()]
+        [System.String]
+        $TenantUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Request-PnPReIndexList
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Request-PnPReIndexWeb
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Reset-PnPFileVersion
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativeUrl,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.CheckinType]
+        $CheckinType,
+
+        [Parameter()]
+        [System.String]
+        $CheckInComment,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Reset-PnPLabel
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [System.Boolean]
+        $SyncToItems,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Reset-PnPMicrosoft365GroupExpiration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Reset-PnPUserOneDriveQuotaToDefault
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Account,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Resolve-PnPFolder
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $SiteRelativePath,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
+    )
+}
+function Restore-PnPDeletedMicrosoft365Group
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Restore-PnPFileVersion
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FileVersionPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Restore-PnPRecycleBinItem
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.RecycleBinItemPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $All,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Int32]
+        $RowLimit,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Restore-PnPTenantRecycleBinItem
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.Boolean]
+        $Wait,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Resume-PnPWorkflowInstance
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WorkflowInstancePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Revoke-PnPHubSiteRights
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $Principals,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Revoke-PnPSiteDesignRights
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $Principals,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Revoke-PnPTenantServicePrincipalPermission
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ObjectId,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Save-PnPClientSidePageConversionLog
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Save-PnPProvisioningTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ProvisioningTemplatePipeBind]
+        $Template,
+
+        [Parameter()]
+        [System.String]
+        $Out,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml.XMLPnPSchemaVersion]
+        $Schema,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Save-PnPTenantTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ProvisioningHierarchyPipeBind]
+        $Template,
+
+        [Parameter()]
+        [System.String]
+        $Out,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml.XMLPnPSchemaVersion]
+        $Schema,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Send-PnPMail
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Server,
+
+        [Parameter()]
+        [System.String]
+        $From,
+
+        [Parameter()]
+        [System.String]
+        $Password,
+
+        [Parameter()]
+        [System.String[]]
+        $To,
+
+        [Parameter()]
+        [System.String[]]
+        $Cc,
+
+        [Parameter()]
+        [System.String]
+        $Subject,
+
+        [Parameter()]
+        [System.String]
+        $Body,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPApplicationCustomizer
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.UserCustomActionPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $ClientSideComponentId,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CustomActionScope]
+        $Scope,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Sequence,
+
+        [Parameter()]
+        [System.String]
+        $ClientSideComponentProperties,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Set-PnPAppSideLoading
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $On,
+
+        [Parameter()]
+        [System.Boolean]
+        $Off,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPAuditing
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $EnableAll,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableAll,
+
+        [Parameter()]
+        [System.Int32]
+        $RetentionTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $TrimAuditLog,
+
+        [Parameter()]
+        [System.Boolean]
+        $EditItems,
+
+        [Parameter()]
+        [System.Boolean]
+        $CheckOutCheckInItems,
+
+        [Parameter()]
+        [System.Boolean]
+        $MoveCopyItems,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeleteRestoreItems,
+
+        [Parameter()]
+        [System.Boolean]
+        $EditContentTypesColumns,
+
+        [Parameter()]
+        [System.Boolean]
+        $SearchContent,
+
+        [Parameter()]
+        [System.Boolean]
+        $EditUsersPermissions,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPAvailablePageLayouts
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $PageLayouts,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAllPageLayouts,
+
+        [Parameter()]
+        [System.Boolean]
+        $InheritPageLayouts,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPClientSidePage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Pages.ClientSidePageLayoutType]
+        $LayoutType,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.ClientSidePages.ClientSidePagePromoteType]
+        $PromoteAs,
+
+        [Parameter()]
+        [System.Boolean]
+        $CommentsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $Publish,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Pages.ClientSidePageHeaderType]
+        $HeaderType,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $ContentType,
+
+        [Parameter()]
+        [System.String]
+        $ThumbnailUrl,
+
+        [Parameter()]
+        [System.String]
+        $PublishMessage,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPClientSideText
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Page,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $InstanceId,
+
+        [Parameter()]
+        [System.String]
+        $Text,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPClientSideWebPart
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Page,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSideWebPartPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $PropertiesJson,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPContext
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.SharePoint.Client.ClientContext]
+        $Context,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPDefaultColumnValues
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
+        $Field,
+
+        [Parameter()]
+        [System.String[]]
+        $Value,
+
+        [Parameter()]
+        [System.String]
+        $Folder,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPDefaultContentTypeToList
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $ContentType,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPDefaultPageLayout
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.Boolean]
+        $InheritFromParentSite,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPDocumentSetField
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.DocumentSetPipeBind]
+        $DocumentSet,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
+        $Field,
+
+        [Parameter()]
+        [System.Boolean]
+        $SetSharedField,
+
+        [Parameter()]
+        [System.Boolean]
+        $SetWelcomePageField,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveSharedField,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveWelcomePageField,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPField
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Values
+    )
+}
+function Set-PnPFileCheckedIn
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.CheckinType]
+        $CheckinType,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Boolean]
+        $Approve,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPFileCheckedOut
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPFolderPermission
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FolderPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $User,
+
+        [Parameter()]
+        [System.String]
+        $AddRole,
+
+        [Parameter()]
+        [System.String]
+        $RemoveRole,
+
+        [Parameter()]
+        [System.Boolean]
+        $ClearExisting,
+
+        [Parameter()]
+        [System.Boolean]
+        $InheritPermissions,
+
+        [Parameter()]
+        [System.Boolean]
+        $SystemUpdate,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPFooter
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.FooterLayoutType]
+        $Layout,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.FooterVariantThemeType]
+        $BackgroundTheme,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $LogoUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPGraphSubscription
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GraphSubscriptionPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.DateTime]
+        $ExpirationDate,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.AssociatedGroupType]
+        $SetAssociatedGroup,
+
+        [Parameter()]
+        [System.String]
+        $AddRole,
+
+        [Parameter()]
+        [System.String]
+        $RemoveRole,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRequestToJoinLeave,
+
+        [Parameter()]
+        [System.Boolean]
+        $AutoAcceptRequestToJoinLeave,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMembersEditMembership,
+
+        [Parameter()]
+        [System.Boolean]
+        $OnlyAllowMembersViewMembership,
+
+        [Parameter()]
+        [System.String]
+        $RequestToJoinEmail,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPGroupPermissions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [System.String[]]
+        $AddRole,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveRole,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPHideDefaultThemes
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $HideDefaultThemes,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPHomePage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $RootFolderRelativeUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPHomeSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPHubSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $LogoUrl,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $SiteDesignId,
+
+        [Parameter()]
+        [System.Boolean]
+        $HideNameInNavigation,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequiresJoinApproval,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPIndexedProperties
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        $Keys,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPInPlaceRecordsManagement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $On,
+
+        [Parameter()]
+        [System.Boolean]
+        $Off,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPKnowledgeHubSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $KnowledgeHubSiteUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPLabel
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [System.String]
+        $Label,
+
+        [Parameter()]
+        [System.Boolean]
+        $SyncToItems,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockDeletion,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockEdit,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPList
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableContentTypes,
+
+        [Parameter()]
+        [System.Boolean]
+        $BreakRoleInheritance,
+
+        [Parameter()]
+        [System.Boolean]
+        $ResetRoleInheritance,
+
+        [Parameter()]
+        [System.Boolean]
+        $CopyRoleAssignments,
+
+        [Parameter()]
+        [System.Boolean]
+        $ClearSubscopes,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $Hidden,
+
+        [Parameter()]
+        [System.Boolean]
+        $ForceCheckout,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.ListExperience]
+        $ListExperience,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableAttachments,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableFolderCreation,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableVersioning,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMinorVersions,
+
+        [Parameter()]
+        [System.UInt32]
+        $MajorVersions,
+
+        [Parameter()]
+        [System.UInt32]
+        $MinorVersions,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableModeration,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPListInformationRightsManagement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $Enable,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $EnableExpiration,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $EnableRejection,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowPrint,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowScript,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowWriteCopy,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $DisableDocumentBrowserView,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $DocumentAccessExpireDays,
+
+        [Parameter()]
+        [System.Nullable`1[System.DateTime]]
+        $DocumentLibraryProtectionExpireDate,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $EnableDocumentAccessExpire,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $EnableDocumentBrowserPublishingView,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $EnableGroupProtection,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $EnableLicenseCacheExpire,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $LicenseCacheExpireDays,
+
+        [Parameter()]
+        [System.String]
+        $GroupName,
+
+        [Parameter()]
+        [System.String]
+        $PolicyDescription,
+
+        [Parameter()]
+        [System.String]
+        $PolicyTitle,
+
+        [Parameter()]
+        [System.String]
+        $TemplateId,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPListItem
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Values
+    )
+}
+function Set-PnPListItemAsRecord
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.DateTime]
+        $DeclarationDate,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPListItemPermission
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $User,
+
+        [Parameter()]
+        [System.String]
+        $AddRole,
+
+        [Parameter()]
+        [System.String]
+        $RemoveRole,
+
+        [Parameter()]
+        [System.Boolean]
+        $ClearExisting,
+
+        [Parameter()]
+        [System.Boolean]
+        $InheritPermissions,
+
+        [Parameter()]
+        [System.Boolean]
+        $SystemUpdate,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPListPermission
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $User,
+
+        [Parameter()]
+        [System.String]
+        $AddRole,
+
+        [Parameter()]
+        [System.String]
+        $RemoveRole,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPListRecordDeclaration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [System.Nullable`1[OfficeDevPnP.Core.EcmListManualRecordDeclaration]]
+        $ManualRecordDeclaration,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AutoRecordDeclaration,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPMasterPage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MasterPageServerRelativeUrl,
+
+        [Parameter()]
+        [System.String]
+        $CustomMasterPageServerRelativeUrl,
+
+        [Parameter()]
+        [System.String]
+        $MasterPageSiteRelativeUrl,
+
+        [Parameter()]
+        [System.String]
+        $CustomMasterPageSiteRelativeUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPMicrosoft365Group
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $Owners,
+
+        [Parameter()]
+        [System.String[]]
+        $Members,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsPrivate,
+
+        [Parameter()]
+        [System.String]
+        $GroupLogoPath,
+
+        [Parameter()]
+        [System.Boolean]
+        $CreateTeam,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $HideFromAddressLists,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $HideFromOutlookClients,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPMinimalDownloadStrategy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $On,
+
+        [Parameter()]
+        [System.Boolean]
+        $Off,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPPropertyBagValue
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Key,
+
+        [Parameter()]
+        [System.String]
+        $Value,
+
+        [Parameter()]
+        [System.Boolean]
+        $Indexed,
+
+        [Parameter()]
+        [System.String]
+        $Folder,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPProvisioningTemplateMetadata
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.String]
+        $TemplateDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $TemplateImagePreviewUrl,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $TemplateProperties,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPRequestAccessEmails
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Emails,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPSearchConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Configuration,
+
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.SearchConfigurationScope]
+        $Scope,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPSearchSettings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Nullable`1[Microsoft.SharePoint.Client.SearchBoxInNavBarType]]
+        $SearchBoxInNavBar,
+
+        [Parameter()]
+        [System.String]
+        $SearchPageUrl,
+
+        [Parameter()]
+        [System.String]
+        $SearchBoxPlaceholderText,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.SharePoint.Client.SearchScopeType]]
+        $SearchScope,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.SearchSettingsScope]
+        $Scope,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Classification,
+
+        [Parameter()]
+        [System.Nullable`1[System.Management.Automation.SwitchParameter]]
+        $DisableFlows,
+
+        [Parameter()]
+        [System.String]
+        $LogoFilePath,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]]
+        $Sharing,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int64]]
+        $StorageMaximumLevel,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int64]]
+        $StorageWarningLevel,
+
+        [Parameter()]
+        [System.Nullable`1[System.Double]]
+        $UserCodeMaximumLevel,
+
+        [Parameter()]
+        [System.Nullable`1[System.Double]]
+        $UserCodeWarningLevel,
+
+        [Parameter()]
+        [System.Nullable`1[OfficeDevPnP.Core.SiteLockState]]
+        $LockState,
+
+        [Parameter()]
+        [System.Nullable`1[System.Management.Automation.SwitchParameter]]
+        $AllowSelfServiceUpgrade,
+
+        [Parameter()]
+        [System.Nullable`1[System.Management.Automation.SwitchParameter]]
+        $NoScriptSite,
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        $Owners,
+
+        [Parameter()]
+        [System.Nullable`1[System.Management.Automation.SwitchParameter]]
+        $CommentsOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType]]
+        $DefaultLinkPermission,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingLinkType]]
+        $DefaultSharingLinkType,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantAdministration.AppViewsPolicy]]
+        $DisableAppViews,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantAdministration.CompanyWideSharingLinksPolicy]]
+        $DisableCompanyWideSharingLinks,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableSharingForNonOwners,
+
+        [Parameter()]
+        [System.Nullable`1[System.UInt32]]
+        $LocaleId,
+
+        [Parameter()]
+        [System.String]
+        $NewUrl,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantAdministration.RestrictedToRegion]]
+        $RestrictedToGeo,
+
+        [Parameter()]
+        [System.Nullable`1[System.Management.Automation.SwitchParameter]]
+        $SocialBarOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $Wait,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPSiteClosure
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.InformationManagement.ClosureState]
+        $State,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPSiteDesign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind[]]
+        $SiteScriptIds,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsDefault,
+
+        [Parameter()]
+        [System.String]
+        $PreviewImageAltText,
+
+        [Parameter()]
+        [System.String]
+        $PreviewImageUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.SiteWebTemplate]
+        $WebTemplate,
+
+        [Parameter()]
+        [System.Int32]
+        $Version,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Set-PnPSitePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPSiteScript
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteScriptPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Content,
+
+        [Parameter()]
+        [System.Int32]
+        $Version,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Set-PnPStorageEntity
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Key,
+
+        [Parameter()]
+        [System.String]
+        $Value,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.StorageEntityScope]
+        $Scope,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Set-PnPTaxonomyFieldValue
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.SharePoint.Client.ListItem]
+        $ListItem,
+
+        [Parameter()]
+        [System.String]
+        $InternalFieldName,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $TermId,
+
+        [Parameter()]
+        [System.String]
+        $Label,
+
+        [Parameter()]
+        [System.String]
+        $TermPath,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Terms,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPTeamifyPromptHidden
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPTeamsChannel
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsChannelPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPTeamsTab
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsChannelPipeBind]
+        $Channel,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTabPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPTeamsTeam
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.Teams.TeamVisibility]
+        $Visibility,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowAddRemoveApps,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowChannelMentions,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowCreateUpdateChannels,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowCreateUpdateRemoveConnectors,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowCreateUpdateRemoveTabs,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowCustomMemes,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowDeleteChannels,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowGiphy,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowGuestCreateUpdateChannels,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowGuestDeleteChannels,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowOwnerDeleteMessages,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowStickersAndMemes,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowTeamMentions,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowUserDeleteMessages,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowUserEditMessages,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Model.Teams.TeamGiphyContentRating]
+        $GiphyContentRating,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $ShowInTeamsSearchAndSuggestions,
+
+        [Parameter()]
+        [System.String]
+        $Classification,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPTeamsTeamArchivedState
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Archived,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $SetSiteReadOnlyForMembers,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPTeamsTeamPicture
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPTenant
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SpecialCharactersState]]
+        $SpecialCharactersStateInFileFolderNames,
+
+        [Parameter()]
+        [System.Int32]
+        $MinCompatibilityLevel,
+
+        [Parameter()]
+        [System.Int32]
+        $MaxCompatibilityLevel,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $ExternalServicesEnabled,
+
+        [Parameter()]
+        [System.String]
+        $NoAccessRedirectUrl,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]]
+        $SharingCapability,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $DisplayStartASiteOption,
+
+        [Parameter()]
+        [System.String]
+        $StartASiteFormUrl,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $ShowEveryoneClaim,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $ShowAllUsersClaim,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $ShowEveryoneExceptExternalUsersClaim,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $SearchResolveExactEmailOrUPN,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $OfficeClientADALDisabled,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $LegacyAuthProtocolsEnabled,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $RequireAcceptingAccountMatchInvitedAccount,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $ProvisionSharedWithEveryoneFolder,
+
+        [Parameter()]
+        [System.String]
+        $SignInAccelerationDomain,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $EnableGuestSignInAcceleration,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $UsePersistentCookiesForExplorerView,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $BccExternalSharingInvitations,
+
+        [Parameter()]
+        [System.String]
+        $BccExternalSharingInvitationsList,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $UserVoiceForFeedbackEnabled,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $PublicCdnEnabled,
+
+        [Parameter()]
+        [System.String]
+        $PublicCdnAllowedFileTypes,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $RequireAnonymousLinksExpireInDays,
+
+        [Parameter()]
+        [System.String]
+        $SharingAllowedDomainList,
+
+        [Parameter()]
+        [System.String]
+        $SharingBlockedDomainList,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingDomainRestrictionModes]]
+        $SharingDomainRestrictionMode,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int64]]
+        $OneDriveStorageQuota,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $OneDriveForGuestsEnabled,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $IPAddressEnforcement,
+
+        [Parameter()]
+        [System.String]
+        $IPAddressAllowList,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $IPAddressWACTokenLifetime,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $UseFindPeopleInPeoplePicker,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingLinkType]]
+        $DefaultSharingLinkType,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.SharePoint.Client.SharingState]]
+        $ODBMembersCanShare,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.SharePoint.Client.SharingState]]
+        $ODBAccessRequests,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $PreventExternalUsersFromResharing,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $ShowPeoplePickerSuggestionsForGuestUsers,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.SharePoint.Client.AnonymousLinkType]]
+        $FileAnonymousLinkType,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.SharePoint.Client.AnonymousLinkType]]
+        $FolderAnonymousLinkType,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $NotifyOwnersWhenItemsReshared,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $NotifyOwnersWhenInvitationsAccepted,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $NotificationsInOneDriveForBusinessEnabled,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $NotificationsInSharePointEnabled,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $OwnerAnonymousNotification,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $CommentsOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $SocialBarOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $OrphanedPersonalSitesRetentionPeriod,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $DisallowInfectedFileDownload,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType]]
+        $DefaultLinkPermission,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SPOConditionalAccessPolicyType]]
+        $ConditionalAccessPolicy,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowDownloadingNonWebViewableFiles,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowEditing,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $ApplyAppEnforcedRestrictionsToAdHocRecipients,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $FilePickerExternalImageSearchEnabled,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $EmailAttestationRequired,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $EmailAttestationReAuthDays,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $HideDefaultThemes,
+
+        [Parameter()]
+        [System.Guid[]]
+        $DisabledWebPartIds,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $EnableAIPIntegration,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPTenantAppCatalogUrl
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Set-PnPTenantCdnEnabled
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $NoDefaultOrigins,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enable,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CdnType]
+        $CdnType,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPTenantCdnPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        $CdnType,
+
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnPolicyType]
+        $PolicyType,
+
+        [Parameter()]
+        [System.String]
+        $PolicyValue,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPTenantSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.UInt32]
+        $LocaleId,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSelfServiceUpgrade,
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        $Owners,
+
+        [Parameter()]
+        [System.Boolean]
+        $DenyAddAndCustomizePages,
+
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]
+        $SharingCapability,
+
+        [Parameter()]
+        [System.Int64]
+        $StorageMaximumLevel,
+
+        [Parameter()]
+        [System.Int64]
+        $StorageWarningLevel,
+
+        [Parameter()]
+        [System.Double]
+        $UserCodeMaximumLevel,
+
+        [Parameter()]
+        [System.Double]
+        $UserCodeWarningLevel,
+
+        [Parameter()]
+        [System.Nullable`1[OfficeDevPnP.Core.SiteLockState]]
+        $LockState,
+
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType]
+        $DefaultLinkPermission,
+
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantManagement.SharingLinkType]
+        $DefaultSharingLinkType,
+
+        [Parameter()]
+        [System.String]
+        $SharingAllowedDomainList,
+
+        [Parameter()]
+        [System.String]
+        $SharingBlockedDomainList,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockDownloadOfNonViewableFiles,
+
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantManagement.SharingDomainRestrictionModes]
+        $SharingDomainRestrictionMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $CommentsOnSitePagesDisabled,
+
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.AppViewsPolicy]
+        $DisableAppViews,
+
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.CompanyWideSharingLinksPolicy]
+        $DisableCompanyWideSharingLinks,
+
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.FlowsPolicy]
+        $DisableFlows,
+
+        [Parameter()]
+        [System.Boolean]
+        $Wait,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPTenantSyncClientRestriction
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $BlockMacSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableReportProblemDialog,
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.Guid]]
+        $DomainGuids,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enable,
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        $ExcludedFileExtensions,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.GrooveBlockOption]
+        $GrooveBlockOption,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPTermGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermGroup]]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
+        $TermStore,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPTermSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TermGroupPipeBind]
+        $TermGroup,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
+        $TermStore,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.String]
+        $Contact,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $CustomProperties,
+
+        [Parameter()]
+        [System.String]
+        $StakeholderToAdd,
+
+        [Parameter()]
+        [System.String]
+        $StakeholderToDelete,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsAvailableForTagging,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsOpenForTermCreation,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseForSiteNavigation,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseForFacetedNavigation,
+
+        [Parameter()]
+        [System.String]
+        $SetTargetPageForTerms,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveTargetPageforTerms,
+
+        [Parameter()]
+        [System.String]
+        $SetCatalogItemPageForCategories,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveCatalogItemPageForCategories,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPTheme
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ColorPaletteUrl,
+
+        [Parameter()]
+        [System.String]
+        $FontSchemeUrl,
+
+        [Parameter()]
+        [System.String]
+        $BackgroundImageUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShareGenerated,
+
+        [Parameter()]
+        [System.Boolean]
+        $ResetSubwebsToInherit,
+
+        [Parameter()]
+        [System.Boolean]
+        $UpdateRootWebOnly,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPTraceLog
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $On,
+
+        [Parameter()]
+        [System.String]
+        $LogFile,
+
+        [Parameter()]
+        [System.Boolean]
+        $WriteToConsole,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Diagnostics.LogLevel]
+        $Level,
+
+        [Parameter()]
+        [System.String]
+        $Delimiter,
+
+        [Parameter()]
+        [System.Int32]
+        $IndentSize,
+
+        [Parameter()]
+        [System.Boolean]
+        $AutoFlush,
+
+        [Parameter()]
+        [System.Boolean]
+        $Off,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPUserOneDriveQuota
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Account,
+
+        [Parameter()]
+        [System.Int64]
+        $Quota,
+
+        [Parameter()]
+        [System.Int64]
+        $QuotaWarning,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPUserProfileProperty
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Values
+    )
+}
+function Set-PnPView
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Values
+    )
+}
+function Set-PnPWeb
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $SiteLogoUrl,
+
+        [Parameter()]
+        [System.String]
+        $AlternateCssUrl,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $MasterUrl,
+
+        [Parameter()]
+        [System.String]
+        $CustomMasterUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $QuickLaunchEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MembersCanShare,
+
+        [Parameter()]
+        [System.Boolean]
+        $NoCrawl,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.HeaderLayoutType]
+        $HeaderLayout,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.SPVariantThemeType]
+        $HeaderEmphasis,
+
+        [Parameter()]
+        [System.Boolean]
+        $NavAudienceTargetingEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MegaMenuEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisablePowerAutomate,
+
+        [Parameter()]
+        [System.Boolean]
+        $CommentsOnSitePagesDisabled,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPWebhookSubscription
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebhookSubscriptionPipeBind]
+        $Subscription,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [System.String]
+        $NotificationUrl,
+
+        [Parameter()]
+        [System.DateTime]
+        $ExpirationDate,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPWebPartProperty
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativePageUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Key,
+
+        [Parameter()]
+        [System.Management.Automation.PSObject]
+        $Value,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPWebPermission
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $User,
+
+        [Parameter()]
+        [System.String[]]
+        $AddRole,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveRole,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPWebTheme
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ThemePipeBind]
+        $Theme,
+
+        [Parameter()]
+        [System.String]
+        $WebUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Set-PnPWikiPageContent
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Content,
+
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.String]
+        $ServerRelativePageUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Start-PnPWorkflowInstance
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WorkflowSubscriptionPipeBind]
+        $Subscription,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
+        $ListItem,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Stop-PnPWorkflowInstance
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WorkflowInstancePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Submit-PnPSearchQuery
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Query,
+
+        [Parameter()]
+        [System.Int32]
+        $StartRow,
+
+        [Parameter()]
+        [System.Int32]
+        $MaxResults,
+
+        [Parameter()]
+        [System.Boolean]
+        $All,
+
+        [Parameter()]
+        [System.Boolean]
+        $TrimDuplicates,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Properties,
+
+        [Parameter()]
+        [System.String]
+        $Refiners,
+
+        [Parameter()]
+        [System.Int32]
+        $Culture,
+
+        [Parameter()]
+        [System.String]
+        $QueryTemplate,
+
+        [Parameter()]
+        [System.String[]]
+        $SelectProperties,
+
+        [Parameter()]
+        [System.String[]]
+        $RefinementFilters,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $SortList,
+
+        [Parameter()]
+        [System.String]
+        $RankingModelId,
+
+        [Parameter()]
+        [System.String]
+        $ClientType,
+
+        [Parameter()]
+        [System.String]
+        $CollapseSpecification,
+
+        [Parameter()]
+        [System.String]
+        $HiddenConstraints,
+
+        [Parameter()]
+        [System.Int32]
+        $TimeZoneId,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnablePhonetic,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableStemming,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableQueryRules,
+
+        [Parameter()]
+        [System.Guid]
+        $SourceId,
+
+        [Parameter()]
+        [System.Boolean]
+        $ProcessBestBets,
+
+        [Parameter()]
+        [System.Boolean]
+        $ProcessPersonalFavorites,
+
+        [Parameter()]
+        [System.Boolean]
+        $RelevantResults,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Submit-PnPTeamsChannelMessage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsChannelPipeBind]
+        $Channel,
+
+        [Parameter()]
+        [System.String]
+        $Message,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Model.Teams.TeamChannelMessageContentType]
+        $ContentType,
+
+        [Parameter()]
+        [System.Boolean]
+        $Important,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Sync-PnPAppToTeams
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Test-PnPListItemIsRecord
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Test-PnPOffice365GroupAliasIsUsed
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Alias,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Test-PnPTenantTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningHierarchy]
+        $Template,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Uninstall-PnPApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.AppCatalogScope]
+        $Scope,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Uninstall-PnPAppInstance
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.AppPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $WhatIf
+    )
+}
+function Uninstall-PnPSolution
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $PackageId,
+
+        [Parameter()]
+        [System.String]
+        $PackageName,
+
+        [Parameter()]
+        [System.Int32]
+        $MajorVersion,
+
+        [Parameter()]
+        [System.Int32]
+        $MinorVersion,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Unpublish-PnPApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.AppCatalogScope]
+        $Scope,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Unregister-PnPHubSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $Site,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Update-PnPApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.AppCatalogScope]
+        $Scope,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Update-PnPSiteClassification
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Graph.Model.SiteClassificationsSettings]
+        $Settings,
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        $Classifications,
+
+        [Parameter()]
+        [System.String]
+        $DefaultClassification,
+
+        [Parameter()]
+        [System.String]
+        $UsageGuidelinesUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+function Update-PnPTeamsApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsAppPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.Boolean]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $Verbose,
+
+        [Parameter()]
+        [System.Boolean]
+        $Debug
+    )
+}
+#endregion
 
 #region PowerPlatforms
 function Add-AdminPowerAppsSyncUser

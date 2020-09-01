@@ -129,19 +129,24 @@ function Get-M365StubFiles
                     "OutVariable", `
                     "OutBuffer", `
                     "PipelineVariable")
+                $foundParamNames = @()
                 foreach ($param in $parameters.Values)
                 {
-                    if ($param.ParameterType.Name -notin $invalidTypes -and `
-                        $param.Name -notin $invalidParameters)
+                    if ($foundParamNames -notcontains $param.Name)
                     {
-                        $StubContent += "        [Parameter()]`r`n"
-                        $ParamType = $param.ParameterType.ToString()
-                        if ($ParamType -eq "System.Management.Automation.SwitchParameter")
+                        $foundParamNames += $param.Name
+                        if ($param.ParameterType.Name -notin $invalidTypes -and `
+                            $param.Name -notin $invalidParameters)
                         {
-                            $ParamType = "System.Boolean"
+                            $StubContent += "        [Parameter()]`r`n"
+                            $ParamType = $param.ParameterType.ToString()
+                            if ($ParamType -eq "System.Management.Automation.SwitchParameter")
+                            {
+                                $ParamType = "System.Boolean"
+                            }
+                            $StubContent += "        [$ParamType]`r`n"
+                            $StubContent += "        `$$($param.Name),`r`n`r`n"
                         }
-                        $StubContent += "        [$ParamType]`r`n"
-                        $StubContent += "        `$$($param.Name),`r`n`r`n"
                     }
                 }
                 if ($parameters.Values.Count -gt 0)
