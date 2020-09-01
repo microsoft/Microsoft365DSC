@@ -378,7 +378,7 @@ function Set-TargetResource
     if ($Options.ContainsKey("BlockMacSync") -and $Options.ContainsKey("DomainGuids"))
     {
         Write-Verbose -Message "Updating BlockMacSync {$($Options.BlockMacSync)}"
-        Set-PnPTenantSyncClientRestriction -BlockMacSync $Options.BlockMacSync -DomainGuids $Options.DomainGuids -Enable:$true | Out-Null
+        Set-PnPTenantSyncClientRestriction -BlockMacSync:$Options.BlockMacSync -DomainGuids $Options.DomainGuids -Enable:$true | Out-Null
     }
     elseif ($Options.ContainsKey("DomainGuids") -and ($Options.ContainsKey("BlockMacSync") -eq $false))
     {
