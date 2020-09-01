@@ -53,6 +53,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credential"
             }
+
+            Mock -CommandName Add-PnPSiteScript -MockWith {
+                return @{
+                    Id = (New-Guid).ToString()
+                }
+            }
         }
 
         # Test contexts
@@ -99,6 +105,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description         = "This is the description for the Site Script: 'Test Title'"
                     GlobalAdminAccount  = $GlobalAdminAccount
                     Ensure              = "Present"
+                }
+
+                Mock -CommandName Get-PnPSiteScript -MockWith {
+                    return @{
+                        Title = "Title One"
+                    }
                 }
 
                 Mock -CommandName Get-PnPTenantTheme -MockWith {
@@ -158,6 +170,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     GlobalAdminAccount = $GlobalAdminAccount
+                }
+
+                Mock -CommandName Get-PnPSiteScript -MockWith {
+                    return @{
+                        Id = "11111"
+                        Title = "Test"
+                    }
                 }
 
                 Mock -CommandName Get-PnPTenantTheme -MockWith {

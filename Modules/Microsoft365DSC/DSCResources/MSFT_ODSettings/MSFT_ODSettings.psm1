@@ -338,7 +338,7 @@ function Set-TargetResource
     }
     if ($CurrentParameters.ContainsKey("DomainGuids"))
     {
-        $Options.Add("DomainGuids", $CurrentParameters.DomainGuids)
+        $Options.Add("DomainGuids", [System.Guid[]]$CurrentParameters.DomainGuids)
         $CurrentParameters.Remove("DomainGuids")| Out-Null
     }
     if ($CurrentParameters.ContainsKey("DisableReportProblemDialog"))

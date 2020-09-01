@@ -62320,11 +62320,11 @@ function Add-PnPAlert
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -62341,15 +62341,15 @@ function Add-PnPApp
         $Scope,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Publish,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SkipFeatureDeployment,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Overwrite,
 
         [Parameter()]
@@ -62361,11 +62361,11 @@ function Add-PnPApp
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -62410,11 +62410,11 @@ function Add-PnPApplicationCustomizer
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -62439,11 +62439,11 @@ function Add-PnPClientSidePage
         $ContentType,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $CommentsEnabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Publish,
 
         [Parameter()]
@@ -62463,11 +62463,11 @@ function Add-PnPClientSidePage
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -62500,11 +62500,11 @@ function Add-PnPClientSidePageSection
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -62541,11 +62541,11 @@ function Add-PnPClientSideText
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -62590,11 +62590,11 @@ function Add-PnPClientSideWebPart
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -62631,11 +62631,11 @@ function Add-PnPContentType
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -62660,11 +62660,11 @@ function Add-PnPContentTypeToDocumentSet
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -62681,7 +62681,7 @@ function Add-PnPContentTypeToList
         $ContentType,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $DefaultContentType,
 
         [Parameter()]
@@ -62693,11 +62693,11 @@ function Add-PnPContentTypeToList
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -62778,11 +62778,11 @@ function Add-PnPCustomAction
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -62807,7 +62807,7 @@ function Add-PnPDataRowsToProvisioningTemplate
         $Fields,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeSecurity,
 
         [Parameter()]
@@ -62815,7 +62815,7 @@ function Add-PnPDataRowsToProvisioningTemplate
         $TemplateProviderExtensions,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $TokenizeUrls,
 
         [Parameter()]
@@ -62827,11 +62827,11 @@ function Add-PnPDataRowsToProvisioningTemplate
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -62860,11 +62860,11 @@ function Add-PnPDocumentSet
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -62897,7 +62897,7 @@ function Add-PnPEventReceiver
         $SequenceNumber,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -62909,11 +62909,11 @@ function Add-PnPEventReceiver
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -62946,11 +62946,11 @@ function Add-PnPField
         $Id,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AddToDefaultView,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Required,
 
         [Parameter()]
@@ -62974,11 +62974,11 @@ function Add-PnPField
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63003,11 +63003,11 @@ function Add-PnPFieldFromXml
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63024,11 +63024,11 @@ function Add-PnPFieldToContentType
         $ContentType,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Required,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Hidden,
 
         [Parameter()]
@@ -63040,11 +63040,11 @@ function Add-PnPFieldToContentType
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63086,7 +63086,7 @@ function Add-PnPFileToProvisioningTemplate
         $FileLevel,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $FileOverwrite,
 
         [Parameter()]
@@ -63102,11 +63102,11 @@ function Add-PnPFileToProvisioningTemplate
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63131,11 +63131,11 @@ function Add-PnPFolder
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63172,11 +63172,11 @@ function Add-PnPHtmlPublishingPageLayout
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63197,11 +63197,11 @@ function Add-PnPHubSiteAssociation
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63226,11 +63226,11 @@ function Add-PnPIndexedProperty
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63251,7 +63251,7 @@ function Add-PnPJavaScriptBlock
         $Sequence,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SiteScoped,
 
         [Parameter()]
@@ -63267,11 +63267,11 @@ function Add-PnPJavaScriptBlock
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63292,7 +63292,7 @@ function Add-PnPJavaScriptLink
         $Sequence,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SiteScoped,
 
         [Parameter()]
@@ -63308,11 +63308,11 @@ function Add-PnPJavaScriptLink
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63329,11 +63329,11 @@ function Add-PnPListFoldersToProvisioningTemplate
         $List,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Recursive,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeSecurity,
 
         [Parameter()]
@@ -63349,11 +63349,11 @@ function Add-PnPListFoldersToProvisioningTemplate
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63403,11 +63403,11 @@ function Add-PnPMasterPage
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63424,19 +63424,19 @@ function Add-PnPMicrosoft365GroupMember
         $Users,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $RemoveExisting,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63453,19 +63453,19 @@ function Add-PnPMicrosoft365GroupOwner
         $Users,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $RemoveExisting,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63494,11 +63494,11 @@ function Add-PnPMicrosoft365GroupToSite
         $Classification,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IsPublic,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $KeepOldHomePage,
 
         [Parameter()]
@@ -63514,11 +63514,11 @@ function Add-PnPMicrosoft365GroupToSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63547,11 +63547,11 @@ function Add-PnPNavigationNode
         $Header,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $First,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $External,
 
         [Parameter()]
@@ -63563,11 +63563,11 @@ function Add-PnPNavigationNode
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63592,11 +63592,11 @@ function Add-PnPOrgAssetsLibrary
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63613,11 +63613,11 @@ function Add-PnPOrgNewsSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63634,19 +63634,19 @@ function Add-PnPProvisioningTemplate
         $TenantTemplate,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm
     )
 }
@@ -63675,11 +63675,11 @@ function Add-PnPPublishingImageRendition
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63704,7 +63704,7 @@ function Add-PnPPublishingPage
         $Title,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Publish,
 
         [Parameter()]
@@ -63716,11 +63716,11 @@ function Add-PnPPublishingPage
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63757,11 +63757,11 @@ function Add-PnPPublishingPageLayout
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63794,11 +63794,11 @@ function Add-PnPRoleDefinition
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63811,15 +63811,15 @@ function Add-PnPSiteClassification
         $Classifications,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63836,11 +63836,11 @@ function Add-PnPSiteCollectionAdmin
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63857,11 +63857,11 @@ function Add-PnPSiteCollectionAppCatalog
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -63882,7 +63882,7 @@ function Add-PnPSiteDesign
         $Description,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IsDefault,
 
         [Parameter()]
@@ -63902,19 +63902,19 @@ function Add-PnPSiteDesign
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -63939,19 +63939,19 @@ function Add-PnPSiteDesignTask
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -63976,19 +63976,19 @@ function Add-PnPSiteScript
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -64009,11 +64009,11 @@ function Add-PnPStoredCredential
         $Password,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -64054,15 +64054,15 @@ function Add-PnPTaxonomyField
         $Id,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AddToDefaultView,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $MultiValue,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Required,
 
         [Parameter()]
@@ -64078,11 +64078,11 @@ function Add-PnPTaxonomyField
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -64103,7 +64103,7 @@ function Add-PnPTeamsChannel
         $Description,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Private,
 
         [Parameter()]
@@ -64111,15 +64111,15 @@ function Add-PnPTeamsChannel
         $OwnerUPN,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -64144,15 +64144,15 @@ function Add-PnPTeamsTab
         $Type,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
@@ -64169,11 +64169,11 @@ function Add-PnPTeamsTeam
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -64194,15 +64194,15 @@ function Add-PnPTeamsUser
         $Role,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -64223,11 +64223,11 @@ function Add-PnPTenantCdnOrigin
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -64244,19 +64244,19 @@ function Add-PnPTenantSequence
         $Sequence,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -64273,19 +64273,19 @@ function Add-PnPTenantSequenceSite
         $Sequence,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -64302,19 +64302,19 @@ function Add-PnPTenantSequenceSubSite
         $Site,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -64323,7 +64323,7 @@ function Add-PnPTenantTheme
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Overwrite,
 
         [Parameter()]
@@ -64343,11 +64343,11 @@ function Add-PnPTenantTheme
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -64368,7 +64368,7 @@ function Add-PnPUserToGroup
         $EmailAddress,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SendEmail,
 
         [Parameter()]
@@ -64384,11 +64384,11 @@ function Add-PnPUserToGroup
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -64421,15 +64421,15 @@ function Add-PnPView
         $RowLimit,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Personal,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SetAsDefault,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Paged,
 
         [Parameter()]
@@ -64445,11 +64445,11 @@ function Add-PnPView
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -64482,11 +64482,11 @@ function Add-PnPWebhookSubscription
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -64523,11 +64523,11 @@ function Add-PnPWebPartToWebPartPage
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -64556,7 +64556,7 @@ function Add-PnPWebPartToWikiPage
         $Column,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AddSpace,
 
         [Parameter()]
@@ -64568,11 +64568,11 @@ function Add-PnPWebPartToWikiPage
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -64601,11 +64601,11 @@ function Add-PnPWikiPage
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -64618,7 +64618,7 @@ function Add-PnPWorkflowDefinition
         $Definition,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $DoNotPublish,
 
         [Parameter()]
@@ -64630,11 +64630,11 @@ function Add-PnPWorkflowDefinition
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -64655,15 +64655,15 @@ function Add-PnPWorkflowSubscription
         $List,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $StartManually,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $StartOnCreated,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $StartOnChanged,
 
         [Parameter()]
@@ -64687,11 +64687,11 @@ function Add-PnPWorkflowSubscription
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -64712,23 +64712,23 @@ function Apply-PnPProvisioningTemplate
         $ResourceFolder,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $OverwriteSystemPropertyBagValues,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IgnoreDuplicateDataRowErrors,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ProvisionContentTypesToSubWebs,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ProvisionFieldsToSubWebs,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ClearNavigation,
 
         [Parameter()]
@@ -64764,11 +64764,11 @@ function Apply-PnPProvisioningTemplate
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -64813,23 +64813,23 @@ function Apply-PnPTenantTemplate
         $Parameters,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $OverwriteSystemPropertyBagValues,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IgnoreDuplicateDataRowErrors,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ProvisionContentTypesToSubWebs,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ProvisionFieldsToSubWebs,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ClearNavigation,
 
         [Parameter()]
@@ -64841,19 +64841,19 @@ function Apply-PnPTenantTemplate
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -64866,7 +64866,7 @@ function Approve-PnPTenantServicePrincipalPermissionRequest
         $RequestId,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -64874,11 +64874,11 @@ function Approve-PnPTenantServicePrincipalPermissionRequest
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -64907,11 +64907,11 @@ function Clear-PnPDefaultColumnValues
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -64936,11 +64936,11 @@ function Clear-PnPListItemAsRecord
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -64953,15 +64953,15 @@ function Clear-PnPMicrosoft365GroupOwner
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -64974,15 +64974,15 @@ function Clear-PnPRecycleBinItem
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $All,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SecondStageOnly,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -64994,11 +64994,11 @@ function Clear-PnPRecycleBinItem
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -65011,19 +65011,19 @@ function Clear-PnPTenantAppCatalogUrl
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -65036,11 +65036,11 @@ function Clear-PnPTenantRecycleBinItem
         $Url,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Wait,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -65048,11 +65048,11 @@ function Clear-PnPTenantRecycleBinItem
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -65061,7 +65061,7 @@ function Connect-PnPOnline
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ReturnConnection,
 
         [Parameter()]
@@ -65073,15 +65073,15 @@ function Connect-PnPOnline
         $Credentials,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $CurrentCredentials,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $UseAdfs,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $UseAdfsCert,
 
         [Parameter()]
@@ -65089,7 +65089,7 @@ function Connect-PnPOnline
         $ClientCertificate,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Kerberos,
 
         [Parameter()]
@@ -65129,7 +65129,7 @@ function Connect-PnPOnline
         $ClientSecret,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $UseWebLogin,
 
         [Parameter()]
@@ -65137,7 +65137,7 @@ function Connect-PnPOnline
         $AuthenticationMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $CreateDrive,
 
         [Parameter()]
@@ -65145,19 +65145,19 @@ function Connect-PnPOnline
         $DriveName,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SPOManagementShell,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $PnPManagementShell,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $LaunchBrowser,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Graph,
 
         [Parameter()]
@@ -65201,7 +65201,7 @@ function Connect-PnPOnline
         $Thumbprint,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ClearTokenCache,
 
         [Parameter()]
@@ -65225,23 +65225,23 @@ function Connect-PnPOnline
         $TenantAdminUrl,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SkipTenantAdminCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IgnoreSslErrors,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $NoTelemetry,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -65258,15 +65258,15 @@ function Convert-PnPFolderToProvisioningTemplate
         $Folder,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -65291,15 +65291,15 @@ function Convert-PnPProvisioningTemplate
         $Encoding,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -65324,31 +65324,31 @@ function ConvertTo-PnPClientSidePage
         $WebPartMappingFile,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Overwrite,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $TakeSourcePageName,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ReplaceHomePageWithDefault,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AddPageAcceptBanner,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SkipItemLevelPermissionCopyToClientSidePage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SkipUrlRewriting,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SkipDefaultUrlRewriting,
 
         [Parameter()]
@@ -65356,23 +65356,23 @@ function ConvertTo-PnPClientSidePage
         $UrlMappingFile,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ClearCache,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $CopyPageMetadata,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AddTableListImageAsImageWebPart,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $UseCommunityScriptEditor,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SummaryLinksToHtml,
 
         [Parameter()]
@@ -65388,47 +65388,47 @@ function ConvertTo-PnPClientSidePage
         $LogFolder,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $LogSkipFlush,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $LogVerbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $DontPublish,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $KeepPageCreationModificationInformation,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SetAuthorInPageHeader,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $PostAsNews,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $DisablePageComments,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $PublishingPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $BlogPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $DelveBlogPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $DelveKeepSubTitle,
 
         [Parameter()]
@@ -65448,11 +65448,11 @@ function ConvertTo-PnPClientSidePage
         $TargetPageFolder,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $TargetPageFolderOverridesDefaultFolder,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $RemoveEmptySectionsAndColumns,
 
         [Parameter()]
@@ -65460,7 +65460,7 @@ function ConvertTo-PnPClientSidePage
         $TargetConnection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SkipUserMapping,
 
         [Parameter()]
@@ -65472,7 +65472,7 @@ function ConvertTo-PnPClientSidePage
         $TermMappingFile,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SkipTermStoreMapping,
 
         [Parameter()]
@@ -65488,11 +65488,11 @@ function ConvertTo-PnPClientSidePage
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -65509,19 +65509,19 @@ function Copy-PnPFile
         $TargetUrl,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $OverwriteIfAlreadyExists,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SkipSourceFolderName,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IgnoreVersionHistory,
 
         [Parameter()]
@@ -65533,19 +65533,19 @@ function Copy-PnPFile
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -65554,7 +65554,7 @@ function Copy-PnPItemProxy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Recurse,
 
         [Parameter()]
@@ -65570,11 +65570,11 @@ function Copy-PnPItemProxy
         $Destination,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Container,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -65590,7 +65590,7 @@ function Copy-PnPItemProxy
         $Exclude,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $PassThru,
 
         [Parameter()]
@@ -65598,23 +65598,23 @@ function Copy-PnPItemProxy
         $Credential,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $UseTransaction
     )
 }
@@ -65627,7 +65627,7 @@ function Deny-PnPTenantServicePrincipalPermissionRequest
         $RequestId,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -65635,11 +65635,11 @@ function Deny-PnPTenantServicePrincipalPermissionRequest
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -65652,7 +65652,7 @@ function Disable-PnPFeature
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -65668,11 +65668,11 @@ function Disable-PnPFeature
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -65685,11 +65685,11 @@ function Disable-PnPInPlaceRecordsManagementForSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -65698,15 +65698,15 @@ function Disable-PnPPowerShellTelemetry
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -65723,11 +65723,11 @@ function Disable-PnPResponsiveUI
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -65744,11 +65744,11 @@ function Disable-PnPSharingForNonOwnersOfSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -65757,15 +65757,15 @@ function Disable-PnPSiteClassification
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -65774,7 +65774,7 @@ function Disable-PnPTenantServicePrincipal
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -65782,11 +65782,11 @@ function Disable-PnPTenantServicePrincipal
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -65799,11 +65799,11 @@ function Disconnect-PnPOnline
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -65820,11 +65820,11 @@ function Enable-PnPCommSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -65837,7 +65837,7 @@ function Enable-PnPFeature
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -65845,7 +65845,7 @@ function Enable-PnPFeature
         $Scope,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Sandboxed,
 
         [Parameter()]
@@ -65857,11 +65857,11 @@ function Enable-PnPFeature
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -65874,11 +65874,11 @@ function Enable-PnPInPlaceRecordsManagementForSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -65887,15 +65887,15 @@ function Enable-PnPPowerShellTelemetry
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -65916,11 +65916,11 @@ function Enable-PnPResponsiveUI
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -65941,15 +65941,15 @@ function Enable-PnPSiteClassification
         $UsageGuidelinesUrl,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -65958,7 +65958,7 @@ function Enable-PnPTenantServicePrincipal
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -65966,11 +65966,11 @@ function Enable-PnPTenantServicePrincipal
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -65983,7 +65983,7 @@ function Export-PnPClientSidePage
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $PersistBrandingFiles,
 
         [Parameter()]
@@ -65991,7 +65991,7 @@ function Export-PnPClientSidePage
         $Out,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -66007,19 +66007,19 @@ function Export-PnPClientSidePage
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -66028,15 +66028,15 @@ function Export-PnPClientSidePageMapping
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $BuiltInWebPartMapping,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $BuiltInPageLayoutMapping,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $CustomPageLayoutMapping,
 
         [Parameter()]
@@ -66044,7 +66044,7 @@ function Export-PnPClientSidePageMapping
         $PublishingPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AnalyzeOOBPageLayouts,
 
         [Parameter()]
@@ -66052,11 +66052,11 @@ function Export-PnPClientSidePageMapping
         $Folder,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Overwrite,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Logging,
 
         [Parameter()]
@@ -66068,11 +66068,11 @@ function Export-PnPClientSidePageMapping
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -66093,11 +66093,11 @@ function Export-PnPListToProvisioningTemplate
         $Schema,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $OutputInstance,
 
         [Parameter()]
@@ -66109,19 +66109,19 @@ function Export-PnPListToProvisioningTemplate
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -66134,7 +66134,7 @@ function Export-PnPTaxonomy
         $TermSetId,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeID,
 
         [Parameter()]
@@ -66146,7 +66146,7 @@ function Export-PnPTaxonomy
         $TermStoreName,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -66166,19 +66166,19 @@ function Export-PnPTaxonomy
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -66195,7 +66195,7 @@ function Export-PnPTermGroupToXml
         $Out,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $FullTemplate,
 
         [Parameter()]
@@ -66203,7 +66203,7 @@ function Export-PnPTermGroupToXml
         $Encoding,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -66211,19 +66211,19 @@ function Export-PnPTermGroupToXml
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -66252,11 +66252,11 @@ function Find-PnPFile
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -66281,7 +66281,7 @@ function Get-PnPAADUser
         $Select,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Delta,
 
         [Parameter()]
@@ -66289,15 +66289,15 @@ function Get-PnPAADUser
         $DeltaToken,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -66306,19 +66306,19 @@ function Get-PnPAccessToken
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Decoded,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -66347,11 +66347,11 @@ function Get-PnPAlert
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -66372,11 +66372,11 @@ function Get-PnPApp
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -66389,11 +66389,11 @@ function Get-PnPAppAuthAccessToken
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -66414,11 +66414,11 @@ function Get-PnPAppInstance
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
@@ -66443,7 +66443,7 @@ function Get-PnPApplicationCustomizer
         $Scope,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ThrowExceptionIfCustomActionNotFound,
 
         [Parameter()]
@@ -66455,19 +66455,19 @@ function Get-PnPApplicationCustomizer
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
@@ -66484,11 +66484,11 @@ function Get-PnPAuditing
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -66505,11 +66505,11 @@ function Get-PnPAuthenticationRealm
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -66534,11 +66534,11 @@ function Get-PnPAvailableClientSideComponents
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -66555,11 +66555,11 @@ function Get-PnPAvailableLanguage
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
@@ -66580,11 +66580,11 @@ function Get-PnPAzureCertificate
         $CertificatePassword,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -66609,11 +66609,11 @@ function Get-PnPClientSideComponent
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -66634,11 +66634,11 @@ function Get-PnPClientSidePage
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -66647,11 +66647,11 @@ function Get-PnPConnection
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -66668,7 +66668,7 @@ function Get-PnPContentType
         $List,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $InSiteHierarchy,
 
         [Parameter()]
@@ -66680,11 +66680,11 @@ function Get-PnPContentType
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -66697,11 +66697,11 @@ function Get-PnPContentTypePublishingHubUrl
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -66710,11 +66710,11 @@ function Get-PnPContext
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -66731,7 +66731,7 @@ function Get-PnPCustomAction
         $Scope,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ThrowExceptionIfCustomActionNotFound,
 
         [Parameter()]
@@ -66743,11 +66743,11 @@ function Get-PnPCustomAction
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
@@ -66772,11 +66772,11 @@ function Get-PnPDefaultColumnValues
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -66789,15 +66789,15 @@ function Get-PnPDeletedMicrosoft365Group
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -66818,11 +66818,11 @@ function Get-PnPDocumentSetTemplate
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
@@ -66851,11 +66851,11 @@ function Get-PnPEventReceiver
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
@@ -66868,15 +66868,15 @@ function Get-PnPException
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $All,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -66901,11 +66901,11 @@ function Get-PnPFeature
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
@@ -66930,7 +66930,7 @@ function Get-PnPField
         $Group,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $InSiteHierarchy,
 
         [Parameter()]
@@ -66942,11 +66942,11 @@ function Get-PnPField
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
@@ -66971,27 +66971,27 @@ function Get-PnPFile
         $Filename,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AsFile,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AsListItem,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ThrowExceptionIfFileNotFound,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AsString,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AsFileObject,
 
         [Parameter()]
@@ -67003,11 +67003,11 @@ function Get-PnPFile
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67028,11 +67028,11 @@ function Get-PnPFileVersion
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67057,11 +67057,11 @@ function Get-PnPFolder
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
@@ -67090,7 +67090,7 @@ function Get-PnPFolderItem
         $ItemName,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Recursive,
 
         [Parameter()]
@@ -67102,11 +67102,11 @@ function Get-PnPFolderItem
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67123,11 +67123,11 @@ function Get-PnPFooter
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67136,19 +67136,19 @@ function Get-PnPGraphAccessToken
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Decoded,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67161,15 +67161,15 @@ function Get-PnPGraphSubscription
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67182,15 +67182,15 @@ function Get-PnPGroup
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AssociatedMemberGroup,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AssociatedVisitorGroup,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AssociatedOwnerGroup,
 
         [Parameter()]
@@ -67202,11 +67202,11 @@ function Get-PnPGroup
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
@@ -67231,11 +67231,11 @@ function Get-PnPGroupMembers
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67256,11 +67256,11 @@ function Get-PnPGroupPermissions
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67273,11 +67273,11 @@ function Get-PnPHealthScore
         $Url,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67290,11 +67290,11 @@ function Get-PnPHideDefaultThemes
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67311,11 +67311,11 @@ function Get-PnPHomePage
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67328,11 +67328,11 @@ function Get-PnPHomeSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67349,11 +67349,11 @@ function Get-PnPHubSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67370,11 +67370,11 @@ function Get-PnPHubSiteChild
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67395,11 +67395,11 @@ function Get-PnPIndexedPropertyKeys
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67416,11 +67416,11 @@ function Get-PnPInPlaceRecordsManagement
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67437,11 +67437,11 @@ function Get-PnPIsSiteAliasAvailable
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67458,7 +67458,7 @@ function Get-PnPJavaScriptLink
         $Scope,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ThrowExceptionIfJavaScriptLinkNotFound,
 
         [Parameter()]
@@ -67470,11 +67470,11 @@ function Get-PnPJavaScriptLink
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67487,11 +67487,11 @@ function Get-PnPKnowledgeHubSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67504,7 +67504,7 @@ function Get-PnPLabel
         $List,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ValuesOnly,
 
         [Parameter()]
@@ -67516,11 +67516,11 @@ function Get-PnPLabel
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67533,7 +67533,7 @@ function Get-PnPList
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ThrowExceptionIfListNotFound,
 
         [Parameter()]
@@ -67545,11 +67545,11 @@ function Get-PnPList
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
@@ -67574,11 +67574,11 @@ function Get-PnPListInformationRightsManagement
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67627,11 +67627,11 @@ function Get-PnPListItem
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67652,11 +67652,11 @@ function Get-PnPListRecordDeclaration
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67677,11 +67677,11 @@ function Get-PnPManagementApiAccessToken
         $ClientSecret,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67698,11 +67698,11 @@ function Get-PnPMasterPage
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67715,27 +67715,27 @@ function Get-PnPMicrosoft365Group
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ExcludeSiteUrl,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeClassification,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeHasTeam,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67748,15 +67748,15 @@ function Get-PnPMicrosoft365GroupMembers
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67769,15 +67769,15 @@ function Get-PnPMicrosoft365GroupOwners
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67794,7 +67794,7 @@ function Get-PnPNavigationNode
         $Id,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Tree,
 
         [Parameter()]
@@ -67806,11 +67806,11 @@ function Get-PnPNavigationNode
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67823,15 +67823,15 @@ function Get-PnPOffice365CurrentServiceStatus
         $Workload,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67844,15 +67844,15 @@ function Get-PnPOffice365HistoricalServiceStatus
         $Workload,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67865,15 +67865,15 @@ function Get-PnPOffice365ServiceMessage
         $Workload,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67882,15 +67882,15 @@ function Get-PnPOffice365Services
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67899,19 +67899,19 @@ function Get-PnPOfficeManagementApiAccessToken
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Decoded,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67924,11 +67924,11 @@ function Get-PnPOrgAssetsLibrary
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67941,11 +67941,11 @@ function Get-PnPOrgNewsSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67958,11 +67958,11 @@ function Get-PnPPowerShellTelemetryEnabled
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -67983,11 +67983,11 @@ function Get-PnPProperty
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -68012,11 +68012,11 @@ function Get-PnPPropertyBag
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -68033,55 +68033,55 @@ function Get-PnPProvisioningTemplate
         $Schema,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeAllTermGroups,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeSiteCollectionTermGroup,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeSiteGroups,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeTermGroupsSecurity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeSearchConfiguration,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $PersistBrandingFiles,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $PersistComposedLookFiles,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $PersistPublishingFiles,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeNativePublishingFiles,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeHiddenLists,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeAllClientSidePages,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SkipVersionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $PersistMultiLanguageResources,
 
         [Parameter()]
@@ -68109,11 +68109,11 @@ function Get-PnPProvisioningTemplate
         $ContentTypeGroups,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $NoBaseTemplate,
 
         [Parameter()]
@@ -68133,11 +68133,11 @@ function Get-PnPProvisioningTemplate
         $TemplateProperties,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $OutputInstance,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ExcludeContentTypesFromSyndication,
 
         [Parameter()]
@@ -68157,19 +68157,19 @@ function Get-PnPProvisioningTemplate
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -68190,11 +68190,11 @@ function Get-PnPPublishingImageRendition
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -68207,11 +68207,11 @@ function Get-PnPRecycleBinItem
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $FirstStage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SecondStage,
 
         [Parameter()]
@@ -68223,11 +68223,11 @@ function Get-PnPRecycleBinItem
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
@@ -68248,11 +68248,11 @@ function Get-PnPRequestAccessEmails
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -68269,11 +68269,11 @@ function Get-PnPRoleDefinition
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -68302,11 +68302,11 @@ function Get-PnPSearchConfiguration
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -68339,7 +68339,7 @@ function Get-PnPSearchCrawlLog
         $EndDate,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $RawFormat,
 
         [Parameter()]
@@ -68351,11 +68351,11 @@ function Get-PnPSearchCrawlLog
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -68372,11 +68372,11 @@ function Get-PnPSearchSettings
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -68393,11 +68393,11 @@ function Get-PnPSharingForNonOwnersOfSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -68410,11 +68410,11 @@ function Get-PnPSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
@@ -68427,15 +68427,15 @@ function Get-PnPSiteClassification
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -68452,11 +68452,11 @@ function Get-PnPSiteClosure
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -68473,11 +68473,11 @@ function Get-PnPSiteCollectionAdmin
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -68490,19 +68490,19 @@ function Get-PnPSiteCollectionTermStore
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -68519,19 +68519,19 @@ function Get-PnPSiteDesign
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -68548,19 +68548,19 @@ function Get-PnPSiteDesignRights
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -68585,19 +68585,19 @@ function Get-PnPSiteDesignRun
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -68614,19 +68614,19 @@ function Get-PnPSiteDesignRunStatus
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -68651,11 +68651,11 @@ function Get-PnPSiteDesignTask
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -68664,7 +68664,7 @@ function Get-PnPSitePolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AllAvailable,
 
         [Parameter()]
@@ -68680,11 +68680,11 @@ function Get-PnPSitePolicy
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -68705,19 +68705,19 @@ function Get-PnPSiteScript
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -68734,19 +68734,19 @@ function Get-PnPSiteScriptFromList
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -68763,27 +68763,27 @@ function Get-PnPSiteScriptFromWeb
         $Lists,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeAll,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeBranding,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeLinksToExportedItems,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeRegionalSettings,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeSiteExternalSharingCapability,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeTheme,
 
         [Parameter()]
@@ -68791,19 +68791,19 @@ function Get-PnPSiteScriptFromWeb
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -68824,7 +68824,7 @@ function Get-PnPSiteSearchQueryResults
         $MaxResults,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $All,
 
         [Parameter()]
@@ -68836,11 +68836,11 @@ function Get-PnPSiteSearchQueryResults
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -68861,19 +68861,19 @@ function Get-PnPStorageEntity
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -68890,11 +68890,11 @@ function Get-PnPStoredCredential
         $Type,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -68907,7 +68907,7 @@ function Get-PnPSubWebs
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Recurse,
 
         [Parameter()]
@@ -68919,11 +68919,11 @@ function Get-PnPSubWebs
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
@@ -68944,19 +68944,19 @@ function Get-PnPTaxonomyItem
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -68973,11 +68973,11 @@ function Get-PnPTaxonomySession
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -68990,15 +68990,15 @@ function Get-PnPTeamsApp
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69015,15 +69015,15 @@ function Get-PnPTeamsChannel
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69040,19 +69040,19 @@ function Get-PnPTeamsChannelMessage
         $Channel,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeDeleted,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69073,15 +69073,15 @@ function Get-PnPTeamsTab
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69094,15 +69094,15 @@ function Get-PnPTeamsTeam
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69123,15 +69123,15 @@ function Get-PnPTeamsUser
         $Role,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69144,11 +69144,11 @@ function Get-PnPTenant
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69161,19 +69161,19 @@ function Get-PnPTenantAppCatalogUrl
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -69190,11 +69190,11 @@ function Get-PnPTenantCdnEnabled
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69211,11 +69211,11 @@ function Get-PnPTenantCdnOrigin
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69232,11 +69232,11 @@ function Get-PnPTenantCdnPolicies
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69249,11 +69249,11 @@ function Get-PnPTenantId
         $TenantUrl,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69266,11 +69266,11 @@ function Get-PnPTenantRecycleBinItem
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69287,19 +69287,19 @@ function Get-PnPTenantSequence
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -69316,19 +69316,19 @@ function Get-PnPTenantSequenceSite
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -69341,11 +69341,11 @@ function Get-PnPTenantServicePrincipal
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69358,11 +69358,11 @@ function Get-PnPTenantServicePrincipalPermissionGrants
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69375,11 +69375,11 @@ function Get-PnPTenantServicePrincipalPermissionRequests
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69396,15 +69396,15 @@ function Get-PnPTenantSite
         $Template,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Detailed,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeOneDriveSites,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -69420,19 +69420,19 @@ function Get-PnPTenantSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -69445,11 +69445,11 @@ function Get-PnPTenantSyncClientRestriction
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69466,11 +69466,11 @@ function Get-PnPTenantTemplate
         $Out,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AsInstance,
 
         [Parameter()]
@@ -69482,19 +69482,19 @@ function Get-PnPTenantTemplate
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -69507,7 +69507,7 @@ function Get-PnPTenantTheme
         $Name,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AsJson,
 
         [Parameter()]
@@ -69515,11 +69515,11 @@ function Get-PnPTenantTheme
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69544,11 +69544,11 @@ function Get-PnPTerm
         $TermStore,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Recursive,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeChildTerms,
 
         [Parameter()]
@@ -69556,11 +69556,11 @@ function Get-PnPTerm
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
@@ -69585,11 +69585,11 @@ function Get-PnPTermGroup
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
@@ -69618,11 +69618,11 @@ function Get-PnPTermSet
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
@@ -69635,7 +69635,7 @@ function Get-PnPTheme
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $DetectCurrentComposedLook,
 
         [Parameter()]
@@ -69647,11 +69647,11 @@ function Get-PnPTheme
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69664,11 +69664,11 @@ function Get-PnPTimeZoneId
         $Match,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69689,15 +69689,15 @@ function Get-PnPUnifiedAuditLog
         $EndTime,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69710,7 +69710,7 @@ function Get-PnPUPABulkImportStatus
         $JobId,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeErrorDetails,
 
         [Parameter()]
@@ -69718,11 +69718,11 @@ function Get-PnPUPABulkImportStatus
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69735,11 +69735,11 @@ function Get-PnPUser
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WithRightsAssigned,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WithRightsAssignedDetailed,
 
         [Parameter()]
@@ -69751,11 +69751,11 @@ function Get-PnPUser
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69772,11 +69772,11 @@ function Get-PnPUserOneDriveQuota
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69793,11 +69793,11 @@ function Get-PnPUserProfileProperty
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69822,11 +69822,11 @@ function Get-PnPView
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
@@ -69847,11 +69847,11 @@ function Get-PnPWeb
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
@@ -69876,11 +69876,11 @@ function Get-PnPWebhookSubscriptions
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69905,11 +69905,11 @@ function Get-PnPWebPart
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69938,11 +69938,11 @@ function Get-PnPWebPartProperty
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69967,11 +69967,11 @@ function Get-PnPWebPartXml
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -69992,11 +69992,11 @@ function Get-PnPWebTemplates
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -70017,11 +70017,11 @@ function Get-PnPWikiPageContent
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -70034,7 +70034,7 @@ function Get-PnPWorkflowDefinition
         $Name,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $PublishedOnly,
 
         [Parameter()]
@@ -70046,11 +70046,11 @@ function Get-PnPWorkflowDefinition
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -70079,11 +70079,11 @@ function Get-PnPWorkflowInstance
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -70108,11 +70108,11 @@ function Get-PnPWorkflowSubscription
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -70137,11 +70137,11 @@ function Grant-PnPHubSiteRights
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -70166,19 +70166,19 @@ function Grant-PnPSiteDesignRights
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -70199,11 +70199,11 @@ function Grant-PnPTenantServicePrincipalPermission
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -70216,11 +70216,11 @@ function Import-PnPAppPackage
         $Path,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $LoadOnly,
 
         [Parameter()]
@@ -70236,11 +70236,11 @@ function Import-PnPAppPackage
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -70269,7 +70269,7 @@ function Import-PnPTaxonomy
         $Delimiter,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SynchronizeDeletions,
 
         [Parameter()]
@@ -70277,19 +70277,19 @@ function Import-PnPTaxonomy
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -70310,19 +70310,19 @@ function Import-PnPTermGroupFromXml
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -70343,7 +70343,7 @@ function Import-PnPTermSet
         $TermSetId,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SynchronizeDeletions,
 
         [Parameter()]
@@ -70367,11 +70367,11 @@ function Import-PnPTermSet
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -70436,11 +70436,11 @@ function Initialize-PnPPowerShellAuthentication
         $AzureEnvironment,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
@@ -70461,7 +70461,7 @@ function Install-PnPApp
         $Scope,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Wait,
 
         [Parameter()]
@@ -70469,11 +70469,11 @@ function Install-PnPApp
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -70502,11 +70502,11 @@ function Install-PnPSolution
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -70527,11 +70527,11 @@ function Invoke-PnPQuery
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -70556,19 +70556,19 @@ function Invoke-PnPSiteDesign
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -70597,11 +70597,11 @@ function Invoke-PnPSPRestMethod
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -70670,15 +70670,15 @@ function Invoke-PnPWebAction
         $ListItemProperties,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SubWebs,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $DisableStatisticsOutput,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SkipCounting,
 
         [Parameter()]
@@ -70690,19 +70690,19 @@ function Invoke-PnPWebAction
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -70715,11 +70715,11 @@ function Measure-PnPList
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ItemLevel,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $BrokenPermissions,
 
         [Parameter()]
@@ -70731,11 +70731,11 @@ function Measure-PnPList
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
@@ -70776,11 +70776,11 @@ function Measure-PnPResponseTime
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -70793,11 +70793,11 @@ function Measure-PnPWeb
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Recursive,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IncludeHiddenList,
 
         [Parameter()]
@@ -70805,11 +70805,11 @@ function Measure-PnPWeb
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -70846,11 +70846,11 @@ function Move-PnPClientSideComponent
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -70875,23 +70875,23 @@ function Move-PnPFile
         $TargetServerRelativeLibrary,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $OverwriteIfAlreadyExists,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AllowSchemaMismatch,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AllowSmallerVersionLimitOnDestination,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IgnoreVersionHistory,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -70903,19 +70903,19 @@ function Move-PnPFile
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -70940,11 +70940,11 @@ function Move-PnPFolder
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -70965,11 +70965,11 @@ function Move-PnPItemProxy
         $Destination,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Container,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -70985,7 +70985,7 @@ function Move-PnPItemProxy
         $Exclude,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $PassThru,
 
         [Parameter()]
@@ -70993,23 +70993,23 @@ function Move-PnPItemProxy
         $Credential,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $UseTransaction
     )
 }
@@ -71026,7 +71026,7 @@ function Move-PnPListItemToRecycleBin
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -71038,19 +71038,19 @@ function Move-PnPListItemToRecycleBin
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -71063,7 +71063,7 @@ function Move-PnPRecycleBinItem
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -71071,11 +71071,11 @@ function Move-PnPRecycleBinItem
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -71128,11 +71128,11 @@ function New-PnPAzureCertificate
         $CertificatePassword,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -71153,15 +71153,15 @@ function New-PnPExtensibilityHandlerObject
         $Configuration,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Disabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -71194,15 +71194,15 @@ function New-PnPGraphSubscription
         $LatestSupportedTlsVersion,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -71223,23 +71223,23 @@ function New-PnPGroup
         $Owner,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AllowRequestToJoinLeave,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AutoAcceptRequestToJoinLeave,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AllowMembersEditMembership,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $OnlyAllowMembersViewMembership,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $DisallowMembersViewMembership,
 
         [Parameter()]
@@ -71259,11 +71259,11 @@ function New-PnPGroup
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -71284,11 +71284,11 @@ function New-PnPList
         $Url,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Hidden,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $EnableVersioning,
 
         [Parameter()]
@@ -71296,11 +71296,11 @@ function New-PnPList
         $QuickLaunchOptions,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $EnableContentTypes,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $OnQuickLaunch,
 
         [Parameter()]
@@ -71312,11 +71312,11 @@ function New-PnPList
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -71345,7 +71345,7 @@ function New-PnPMicrosoft365Group
         $Members,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IsPrivate,
 
         [Parameter()]
@@ -71353,23 +71353,23 @@ function New-PnPMicrosoft365Group
         $GroupLogoPath,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $CreateTeam,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -71386,11 +71386,11 @@ function New-PnPPersonalSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -71399,19 +71399,19 @@ function New-PnPProvisioningTemplate
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -71448,11 +71448,11 @@ function New-PnPProvisioningTemplateFromFolder
         $Schema,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AsIncludeFile,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -71468,11 +71468,11 @@ function New-PnPProvisioningTemplateFromFolder
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -71489,7 +71489,7 @@ function New-PnPSite
         $HubSiteId,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Wait,
 
         [Parameter()]
@@ -71497,11 +71497,11 @@ function New-PnPSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -71514,15 +71514,15 @@ function New-PnPTeamsApp
         $Path,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -71627,15 +71627,15 @@ function New-PnPTeamsTeam
         $Classification,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -71648,19 +71648,19 @@ function New-PnPTenantSequence
         $Id,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -71697,11 +71697,11 @@ function New-PnPTenantSequenceCommunicationSite
         $SiteDesignId,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $HubSite,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AllowFileSharingForGuestUsers,
 
         [Parameter()]
@@ -71709,19 +71709,19 @@ function New-PnPTenantSequenceCommunicationSite
         $TemplateIds,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -71754,7 +71754,7 @@ function New-PnPTenantSequenceTeamNoGroupSite
         $Description,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $HubSite,
 
         [Parameter()]
@@ -71762,19 +71762,19 @@ function New-PnPTenantSequenceTeamNoGroupSite
         $TemplateIds,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -71807,27 +71807,27 @@ function New-PnPTenantSequenceTeamNoGroupSubSite
         $TemplateIds,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $QuickLaunchDisabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $UseDifferentPermissionsFromParentSite,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -71856,11 +71856,11 @@ function New-PnPTenantSequenceTeamSite
         $Classification,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Public,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $HubSite,
 
         [Parameter()]
@@ -71868,19 +71868,19 @@ function New-PnPTenantSequenceTeamSite
         $TemplateIds,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -71933,15 +71933,15 @@ function New-PnPTenantSite
         $StorageQuotaWarningLevel,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $RemoveDeletedSite,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Wait,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -71949,11 +71949,11 @@ function New-PnPTenantSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -71978,19 +71978,19 @@ function New-PnPTenantTemplate
         $Generator,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -72039,11 +72039,11 @@ function New-PnPTerm
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72072,11 +72072,11 @@ function New-PnPTermGroup
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72097,7 +72097,7 @@ function New-PnPTermLabel
         $Lcid,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IsDefault,
 
         [Parameter()]
@@ -72105,11 +72105,11 @@ function New-PnPTermLabel
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72142,11 +72142,11 @@ function New-PnPTermSet
         $Description,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IsOpenForTermCreation,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IsNotAvailableForTagging,
 
         [Parameter()]
@@ -72170,11 +72170,11 @@ function New-PnPTermSet
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72207,11 +72207,11 @@ function New-PnPUPABulkImportJob
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72232,11 +72232,11 @@ function New-PnPUser
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72265,11 +72265,11 @@ function New-PnPWeb
         $Template,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $BreakInheritance,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $InheritNavigation,
 
         [Parameter()]
@@ -72281,11 +72281,11 @@ function New-PnPWeb
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72298,7 +72298,7 @@ function Publish-PnPApp
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SkipFeatureDeployment,
 
         [Parameter()]
@@ -72310,11 +72310,11 @@ function Publish-PnPApp
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72335,11 +72335,11 @@ function Read-PnPProvisioningTemplate
         $TemplateProviderExtensions,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72356,11 +72356,11 @@ function Read-PnPTenantTemplate
         $TemplateProviderExtensions,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72381,7 +72381,7 @@ function Register-PnPAppCatalogSite
         $TimeZoneId,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -72389,11 +72389,11 @@ function Register-PnPAppCatalogSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72410,11 +72410,11 @@ function Register-PnPHubSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72431,7 +72431,7 @@ function Remove-PnPAlert
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -72443,11 +72443,11 @@ function Remove-PnPAlert
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72468,11 +72468,11 @@ function Remove-PnPApp
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72493,7 +72493,7 @@ function Remove-PnPApplicationCustomizer
         $Scope,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -72505,19 +72505,19 @@ function Remove-PnPApplicationCustomizer
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -72534,7 +72534,7 @@ function Remove-PnPClientSideComponent
         $InstanceId,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -72546,11 +72546,11 @@ function Remove-PnPClientSideComponent
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72563,7 +72563,7 @@ function Remove-PnPClientSidePage
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -72575,11 +72575,11 @@ function Remove-PnPClientSidePage
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72592,7 +72592,7 @@ function Remove-PnPContentType
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -72604,11 +72604,11 @@ function Remove-PnPContentType
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72633,11 +72633,11 @@ function Remove-PnPContentTypeFromDocumentSet
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72662,11 +72662,11 @@ function Remove-PnPContentTypeFromList
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72683,7 +72683,7 @@ function Remove-PnPCustomAction
         $Scope,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -72695,19 +72695,19 @@ function Remove-PnPCustomAction
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -72720,15 +72720,15 @@ function Remove-PnPDeletedMicrosoft365Group
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72745,7 +72745,7 @@ function Remove-PnPEventReceiver
         $List,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -72757,19 +72757,19 @@ function Remove-PnPEventReceiver
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -72786,7 +72786,7 @@ function Remove-PnPField
         $List,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -72798,19 +72798,19 @@ function Remove-PnPField
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -72827,7 +72827,7 @@ function Remove-PnPFieldFromContentType
         $ContentType,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $DoNotUpdateChildren,
 
         [Parameter()]
@@ -72839,11 +72839,11 @@ function Remove-PnPFieldFromContentType
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72860,11 +72860,11 @@ function Remove-PnPFile
         $SiteRelativeUrl,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Recycle,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -72876,19 +72876,19 @@ function Remove-PnPFile
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -72909,11 +72909,11 @@ function Remove-PnPFileFromProvisioningTemplate
         $TemplateProviderExtensions,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72926,7 +72926,7 @@ function Remove-PnPFileVersion
         $Url,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $All,
 
         [Parameter()]
@@ -72934,11 +72934,11 @@ function Remove-PnPFileVersion
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Recycle,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -72950,11 +72950,11 @@ function Remove-PnPFileVersion
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -72971,11 +72971,11 @@ function Remove-PnPFolder
         $Folder,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Recycle,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -72987,11 +72987,11 @@ function Remove-PnPFolder
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73004,15 +73004,15 @@ function Remove-PnPGraphSubscription
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73025,7 +73025,7 @@ function Remove-PnPGroup
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -73037,11 +73037,11 @@ function Remove-PnPGroup
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73050,7 +73050,7 @@ function Remove-PnPHomeSite
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -73058,11 +73058,11 @@ function Remove-PnPHomeSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73079,11 +73079,11 @@ function Remove-PnPHubSiteAssociation
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73108,11 +73108,11 @@ function Remove-PnPIndexedProperty
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73125,11 +73125,11 @@ function Remove-PnPJavaScriptLink
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $FromSite,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -73145,19 +73145,19 @@ function Remove-PnPJavaScriptLink
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -73170,11 +73170,11 @@ function Remove-PnPKnowledgeHubSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73187,11 +73187,11 @@ function Remove-PnPList
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Recycle,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -73203,19 +73203,19 @@ function Remove-PnPList
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -73232,11 +73232,11 @@ function Remove-PnPListItem
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Recycle,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -73248,19 +73248,19 @@ function Remove-PnPListItem
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -73273,15 +73273,15 @@ function Remove-PnPMicrosoft365Group
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73298,15 +73298,15 @@ function Remove-PnPMicrosoft365GroupMember
         $Users,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73323,15 +73323,15 @@ function Remove-PnPMicrosoft365GroupOwner
         $Users,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73356,11 +73356,11 @@ function Remove-PnPNavigationNode
         $Header,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $All,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -73372,19 +73372,19 @@ function Remove-PnPNavigationNode
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -73409,11 +73409,11 @@ function Remove-PnPOrgAssetsLibrary
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73430,11 +73430,11 @@ function Remove-PnPOrgNewsSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73451,7 +73451,7 @@ function Remove-PnPPropertyBagValue
         $Folder,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -73463,19 +73463,19 @@ function Remove-PnPPropertyBagValue
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -73488,7 +73488,7 @@ function Remove-PnPPublishingImageRendition
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -73500,11 +73500,11 @@ function Remove-PnPPublishingImageRendition
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73517,7 +73517,7 @@ function Remove-PnPRoleDefinition
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -73525,11 +73525,11 @@ function Remove-PnPRoleDefinition
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73558,11 +73558,11 @@ function Remove-PnPSearchConfiguration
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73575,19 +73575,19 @@ function Remove-PnPSiteClassification
         $Classifications,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73604,11 +73604,11 @@ function Remove-PnPSiteCollectionAdmin
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73625,11 +73625,11 @@ function Remove-PnPSiteCollectionAppCatalog
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73642,7 +73642,7 @@ function Remove-PnPSiteDesign
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -73650,19 +73650,19 @@ function Remove-PnPSiteDesign
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -73675,7 +73675,7 @@ function Remove-PnPSiteDesignTask
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -73683,19 +73683,19 @@ function Remove-PnPSiteDesignTask
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -73708,7 +73708,7 @@ function Remove-PnPSiteScript
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -73716,19 +73716,19 @@ function Remove-PnPSiteScript
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -73749,19 +73749,19 @@ function Remove-PnPStorageEntity
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -73774,15 +73774,15 @@ function Remove-PnPStoredCredential
         $Name,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73795,7 +73795,7 @@ function Remove-PnPTaxonomyItem
         $TermPath,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -73803,19 +73803,19 @@ function Remove-PnPTaxonomyItem
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -73828,19 +73828,19 @@ function Remove-PnPTeamsApp
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73857,19 +73857,19 @@ function Remove-PnPTeamsChannel
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73890,19 +73890,19 @@ function Remove-PnPTeamsTab
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73915,19 +73915,19 @@ function Remove-PnPTeamsTeam
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73948,19 +73948,19 @@ function Remove-PnPTeamsUser
         $Role,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73981,11 +73981,11 @@ function Remove-PnPTenantCdnOrigin
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -73998,19 +73998,19 @@ function Remove-PnPTenantSite
         $Url,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SkipRecycleBin,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Wait,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $FromRecycleBin,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -74018,11 +74018,11 @@ function Remove-PnPTenantSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74039,11 +74039,11 @@ function Remove-PnPTenantTheme
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74060,7 +74060,7 @@ function Remove-PnPTermGroup
         $TermStoreName,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -74068,11 +74068,11 @@ function Remove-PnPTermGroup
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74085,11 +74085,11 @@ function Remove-PnPUser
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
@@ -74101,11 +74101,11 @@ function Remove-PnPUser
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74130,11 +74130,11 @@ function Remove-PnPUserFromGroup
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74151,7 +74151,7 @@ function Remove-PnPView
         $List,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -74163,19 +74163,19 @@ function Remove-PnPView
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -74192,7 +74192,7 @@ function Remove-PnPWeb
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -74204,11 +74204,11 @@ function Remove-PnPWeb
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74225,7 +74225,7 @@ function Remove-PnPWebhookSubscription
         $List,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -74237,11 +74237,11 @@ function Remove-PnPWebhookSubscription
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74270,11 +74270,11 @@ function Remove-PnPWebPart
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74299,11 +74299,11 @@ function Remove-PnPWikiPage
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74324,11 +74324,11 @@ function Remove-PnPWorkflowDefinition
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74349,11 +74349,11 @@ function Remove-PnPWorkflowSubscription
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74374,11 +74374,11 @@ function Rename-PnPFile
         $TargetFileName,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $OverwriteIfAlreadyExists,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -74390,19 +74390,19 @@ function Rename-PnPFile
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -74427,11 +74427,11 @@ function Rename-PnPFolder
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74452,11 +74452,11 @@ function Request-PnPAccessToken
         $Scopes,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Decoded,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SetAsCurrent,
 
         [Parameter()]
@@ -74468,11 +74468,11 @@ function Request-PnPAccessToken
         $TenantUrl,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74493,11 +74493,11 @@ function Request-PnPReIndexList
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74514,11 +74514,11 @@ function Request-PnPReIndexWeb
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74547,11 +74547,11 @@ function Reset-PnPFileVersion
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74576,11 +74576,11 @@ function Reset-PnPLabel
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74593,15 +74593,15 @@ function Reset-PnPMicrosoft365GroupExpiration
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74618,11 +74618,11 @@ function Reset-PnPUserOneDriveQuotaToDefault
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74643,11 +74643,11 @@ function Resolve-PnPFolder
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
@@ -74664,15 +74664,15 @@ function Restore-PnPDeletedMicrosoft365Group
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74689,7 +74689,7 @@ function Restore-PnPFileVersion
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -74701,11 +74701,11 @@ function Restore-PnPFileVersion
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74718,11 +74718,11 @@ function Restore-PnPRecycleBinItem
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $All,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -74734,11 +74734,11 @@ function Restore-PnPRecycleBinItem
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74751,11 +74751,11 @@ function Restore-PnPTenantRecycleBinItem
         $Url,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Wait,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -74763,11 +74763,11 @@ function Restore-PnPTenantRecycleBinItem
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74788,11 +74788,11 @@ function Resume-PnPWorkflowInstance
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74813,11 +74813,11 @@ function Revoke-PnPHubSiteRights
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74838,19 +74838,19 @@ function Revoke-PnPSiteDesignRights
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -74863,7 +74863,7 @@ function Revoke-PnPTenantServicePrincipalPermission
         $ObjectId,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -74871,11 +74871,11 @@ function Revoke-PnPTenantServicePrincipalPermission
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74892,11 +74892,11 @@ function Save-PnPClientSidePageConversionLog
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74917,7 +74917,7 @@ function Save-PnPProvisioningTemplate
         $Schema,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -74925,11 +74925,11 @@ function Save-PnPProvisioningTemplate
         $TemplateProviderExtensions,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -74950,15 +74950,15 @@ function Save-PnPTenantTemplate
         $Schema,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75003,11 +75003,11 @@ function Send-PnPMail
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75052,19 +75052,19 @@ function Set-PnPApplicationCustomizer
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -75073,11 +75073,11 @@ function Set-PnPAppSideLoading
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $On,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Off,
 
         [Parameter()]
@@ -75085,11 +75085,11 @@ function Set-PnPAppSideLoading
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75098,11 +75098,11 @@ function Set-PnPAuditing
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $EnableAll,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $DisableAll,
 
         [Parameter()]
@@ -75110,35 +75110,35 @@ function Set-PnPAuditing
         $RetentionTime,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $TrimAuditLog,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $EditItems,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $CheckOutCheckInItems,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $MoveCopyItems,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $DeleteRestoreItems,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $EditContentTypesColumns,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SearchContent,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $EditUsersPermissions,
 
         [Parameter()]
@@ -75146,11 +75146,11 @@ function Set-PnPAuditing
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75163,11 +75163,11 @@ function Set-PnPAvailablePageLayouts
         $PageLayouts,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AllowAllPageLayouts,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $InheritPageLayouts,
 
         [Parameter()]
@@ -75179,11 +75179,11 @@ function Set-PnPAvailablePageLayouts
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75212,11 +75212,11 @@ function Set-PnPClientSidePage
         $PromoteAs,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $CommentsEnabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Publish,
 
         [Parameter()]
@@ -75244,11 +75244,11 @@ function Set-PnPClientSidePage
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75277,11 +75277,11 @@ function Set-PnPClientSideText
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75314,11 +75314,11 @@ function Set-PnPClientSideWebPart
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75331,11 +75331,11 @@ function Set-PnPContext
         $Context,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75368,11 +75368,11 @@ function Set-PnPDefaultColumnValues
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75397,11 +75397,11 @@ function Set-PnPDefaultContentTypeToList
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75414,7 +75414,7 @@ function Set-PnPDefaultPageLayout
         $Title,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $InheritFromParentSite,
 
         [Parameter()]
@@ -75426,11 +75426,11 @@ function Set-PnPDefaultPageLayout
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75447,19 +75447,19 @@ function Set-PnPDocumentSetField
         $Field,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SetSharedField,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SetWelcomePageField,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $RemoveSharedField,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $RemoveWelcomePageField,
 
         [Parameter()]
@@ -75471,11 +75471,11 @@ function Set-PnPDocumentSetField
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75505,7 +75505,7 @@ function Set-PnPFileCheckedIn
         $Comment,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Approve,
 
         [Parameter()]
@@ -75517,11 +75517,11 @@ function Set-PnPFileCheckedIn
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75542,11 +75542,11 @@ function Set-PnPFileCheckedOut
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75579,15 +75579,15 @@ function Set-PnPFolderPermission
         $RemoveRole,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ClearExisting,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $InheritPermissions,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SystemUpdate,
 
         [Parameter()]
@@ -75599,11 +75599,11 @@ function Set-PnPFolderPermission
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75612,7 +75612,7 @@ function Set-PnPFooter
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Enabled,
 
         [Parameter()]
@@ -75640,11 +75640,11 @@ function Set-PnPFooter
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75661,15 +75661,15 @@ function Set-PnPGraphSubscription
         $ExpirationDate,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75734,11 +75734,11 @@ function Set-PnPGroup
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75771,11 +75771,11 @@ function Set-PnPGroupPermissions
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75792,11 +75792,11 @@ function Set-PnPHideDefaultThemes
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75817,11 +75817,11 @@ function Set-PnPHomePage
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75838,11 +75838,11 @@ function Set-PnPHomeSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75871,11 +75871,11 @@ function Set-PnPHubSite
         $SiteDesignId,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $HideNameInNavigation,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $RequiresJoinApproval,
 
         [Parameter()]
@@ -75883,11 +75883,11 @@ function Set-PnPHubSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75908,11 +75908,11 @@ function Set-PnPIndexedProperties
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75925,11 +75925,11 @@ function Set-PnPInPlaceRecordsManagement
         $Enabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $On,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Off,
 
         [Parameter()]
@@ -75941,11 +75941,11 @@ function Set-PnPInPlaceRecordsManagement
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -75962,11 +75962,11 @@ function Set-PnPKnowledgeHubSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -76003,11 +76003,11 @@ function Set-PnPLabel
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -76024,19 +76024,19 @@ function Set-PnPList
         $EnableContentTypes,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $BreakRoleInheritance,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ResetRoleInheritance,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $CopyRoleAssignments,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ClearSubscopes,
 
         [Parameter()]
@@ -76096,11 +76096,11 @@ function Set-PnPList
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -76193,11 +76193,11 @@ function Set-PnPListInformationRightsManagement
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -76235,11 +76235,11 @@ function Set-PnPListItemAsRecord
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -76272,15 +76272,15 @@ function Set-PnPListItemPermission
         $RemoveRole,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ClearExisting,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $InheritPermissions,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $SystemUpdate,
 
         [Parameter()]
@@ -76292,11 +76292,11 @@ function Set-PnPListItemPermission
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -76333,11 +76333,11 @@ function Set-PnPListPermission
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -76366,11 +76366,11 @@ function Set-PnPListRecordDeclaration
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -76403,11 +76403,11 @@ function Set-PnPMasterPage
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -76436,7 +76436,7 @@ function Set-PnPMicrosoft365Group
         $Members,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IsPrivate,
 
         [Parameter()]
@@ -76444,7 +76444,7 @@ function Set-PnPMicrosoft365Group
         $GroupLogoPath,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $CreateTeam,
 
         [Parameter()]
@@ -76456,15 +76456,15 @@ function Set-PnPMicrosoft365Group
         $HideFromOutlookClients,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -76473,15 +76473,15 @@ function Set-PnPMinimalDownloadStrategy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $On,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Off,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -76493,11 +76493,11 @@ function Set-PnPMinimalDownloadStrategy
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -76514,7 +76514,7 @@ function Set-PnPPropertyBagValue
         $Value,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Indexed,
 
         [Parameter()]
@@ -76530,11 +76530,11 @@ function Set-PnPPropertyBagValue
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -76571,11 +76571,11 @@ function Set-PnPProvisioningTemplateMetadata
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -76588,7 +76588,7 @@ function Set-PnPRequestAccessEmails
         $Emails,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Disabled,
 
         [Parameter()]
@@ -76600,11 +76600,11 @@ function Set-PnPRequestAccessEmails
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -76633,11 +76633,11 @@ function Set-PnPSearchConfiguration
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -76666,7 +76666,7 @@ function Set-PnPSearchSettings
         $Scope,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -76678,11 +76678,11 @@ function Set-PnPSearchSettings
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -76763,7 +76763,7 @@ function Set-PnPSite
         $DisableCompanyWideSharingLinks,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $DisableSharingForNonOwners,
 
         [Parameter()]
@@ -76783,7 +76783,7 @@ function Set-PnPSite
         $SocialBarOnSitePagesDisabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Wait,
 
         [Parameter()]
@@ -76791,11 +76791,11 @@ function Set-PnPSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -76816,11 +76816,11 @@ function Set-PnPSiteClosure
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -76845,7 +76845,7 @@ function Set-PnPSiteDesign
         $Description,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $IsDefault,
 
         [Parameter()]
@@ -76869,19 +76869,19 @@ function Set-PnPSiteDesign
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -76902,11 +76902,11 @@ function Set-PnPSitePolicy
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -76939,19 +76939,19 @@ function Set-PnPSiteScript
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -76984,19 +76984,19 @@ function Set-PnPStorageEntity
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -77033,11 +77033,11 @@ function Set-PnPTaxonomyFieldValue
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -77050,11 +77050,11 @@ function Set-PnPTeamifyPromptHidden
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -77079,15 +77079,15 @@ function Set-PnPTeamsChannel
         $Description,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -77112,15 +77112,15 @@ function Set-PnPTeamsTab
         $DisplayName,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -77217,15 +77217,15 @@ function Set-PnPTeamsTeam
         $Classification,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -77246,15 +77246,15 @@ function Set-PnPTeamsTeamArchivedState
         $SetSiteReadOnlyForMembers,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -77271,15 +77271,15 @@ function Set-PnPTeamsTeamPicture
         $Path,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -77536,11 +77536,11 @@ function Set-PnPTenant
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -77557,19 +77557,19 @@ function Set-PnPTenantAppCatalogUrl
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -77578,7 +77578,7 @@ function Set-PnPTenantCdnEnabled
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $NoDefaultOrigins,
 
         [Parameter()]
@@ -77594,11 +77594,11 @@ function Set-PnPTenantCdnEnabled
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -77623,11 +77623,11 @@ function Set-PnPTenantCdnPolicy
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -77648,7 +77648,7 @@ function Set-PnPTenantSite
         $LocaleId,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $AllowSelfServiceUpgrade,
 
         [Parameter()]
@@ -77656,7 +77656,7 @@ function Set-PnPTenantSite
         $Owners,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $DenyAddAndCustomizePages,
 
         [Parameter()]
@@ -77700,7 +77700,7 @@ function Set-PnPTenantSite
         $SharingBlockedDomainList,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $BlockDownloadOfNonViewableFiles,
 
         [Parameter()]
@@ -77708,7 +77708,7 @@ function Set-PnPTenantSite
         $SharingDomainRestrictionMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $CommentsOnSitePagesDisabled,
 
         [Parameter()]
@@ -77724,7 +77724,7 @@ function Set-PnPTenantSite
         $DisableFlows,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Wait,
 
         [Parameter()]
@@ -77732,11 +77732,11 @@ function Set-PnPTenantSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -77745,11 +77745,11 @@ function Set-PnPTenantSyncClientRestriction
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $BlockMacSync,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $DisableReportProblemDialog,
 
         [Parameter()]
@@ -77757,7 +77757,7 @@ function Set-PnPTenantSyncClientRestriction
         $DomainGuids,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Enable,
 
         [Parameter()]
@@ -77773,11 +77773,11 @@ function Set-PnPTenantSyncClientRestriction
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -77806,11 +77806,11 @@ function Set-PnPTermGroup
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -77879,7 +77879,7 @@ function Set-PnPTermSet
         $SetTargetPageForTerms,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $RemoveTargetPageforTerms,
 
         [Parameter()]
@@ -77887,7 +77887,7 @@ function Set-PnPTermSet
         $SetCatalogItemPageForCategories,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $RemoveCatalogItemPageForCategories,
 
         [Parameter()]
@@ -77895,11 +77895,11 @@ function Set-PnPTermSet
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -77920,15 +77920,15 @@ function Set-PnPTheme
         $BackgroundImageUrl,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ShareGenerated,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ResetSubwebsToInherit,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $UpdateRootWebOnly,
 
         [Parameter()]
@@ -77940,11 +77940,11 @@ function Set-PnPTheme
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -77953,7 +77953,7 @@ function Set-PnPTraceLog
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $On,
 
         [Parameter()]
@@ -77961,7 +77961,7 @@ function Set-PnPTraceLog
         $LogFile,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WriteToConsole,
 
         [Parameter()]
@@ -77981,15 +77981,15 @@ function Set-PnPTraceLog
         $AutoFlush,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Off,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -78014,11 +78014,11 @@ function Set-PnPUserOneDriveQuota
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -78069,15 +78069,15 @@ function Set-PnPWeb
         $CustomMasterUrl,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $QuickLaunchEnabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $MembersCanShare,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $NoCrawl,
 
         [Parameter()]
@@ -78089,19 +78089,19 @@ function Set-PnPWeb
         $HeaderEmphasis,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $NavAudienceTargetingEnabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $MegaMenuEnabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $DisablePowerAutomate,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $CommentsOnSitePagesDisabled,
 
         [Parameter()]
@@ -78113,11 +78113,11 @@ function Set-PnPWeb
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -78150,11 +78150,11 @@ function Set-PnPWebhookSubscription
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -78187,11 +78187,11 @@ function Set-PnPWebPartProperty
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -78232,11 +78232,11 @@ function Set-PnPWebPermission
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -78261,11 +78261,11 @@ function Set-PnPWebTheme
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -78294,11 +78294,11 @@ function Set-PnPWikiPageContent
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -78323,11 +78323,11 @@ function Start-PnPWorkflowInstance
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -78340,7 +78340,7 @@ function Stop-PnPWorkflowInstance
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -78352,11 +78352,11 @@ function Stop-PnPWorkflowInstance
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -78377,7 +78377,7 @@ function Submit-PnPSearchQuery
         $MaxResults,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $All,
 
         [Parameter()]
@@ -78457,7 +78457,7 @@ function Submit-PnPSearchQuery
         $ProcessPersonalFavorites,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $RelevantResults,
 
         [Parameter()]
@@ -78469,11 +78469,11 @@ function Submit-PnPSearchQuery
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -78498,19 +78498,19 @@ function Submit-PnPTeamsChannelMessage
         $ContentType,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Important,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -78527,11 +78527,11 @@ function Sync-PnPAppToTeams
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -78556,11 +78556,11 @@ function Test-PnPListItemIsRecord
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -78577,11 +78577,11 @@ function Test-PnPOffice365GroupAliasIsUsed
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -78598,19 +78598,19 @@ function Test-PnPTenantTemplate
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -78631,11 +78631,11 @@ function Uninstall-PnPApp
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -78648,7 +78648,7 @@ function Uninstall-PnPAppInstance
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
@@ -78660,19 +78660,19 @@ function Uninstall-PnPAppInstance
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $WhatIf
     )
 }
@@ -78701,11 +78701,11 @@ function Uninstall-PnPSolution
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -78726,11 +78726,11 @@ function Unpublish-PnPApp
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -78747,11 +78747,11 @@ function Unregister-PnPHubSite
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -78772,11 +78772,11 @@ function Update-PnPApp
         $Connection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -78801,15 +78801,15 @@ function Update-PnPSiteClassification
         $UsageGuidelinesUrl,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }
@@ -78826,15 +78826,15 @@ function Update-PnPTeamsApp
         $Path,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $ByPassPermissionCheck,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Verbose,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
         $Debug
     )
 }

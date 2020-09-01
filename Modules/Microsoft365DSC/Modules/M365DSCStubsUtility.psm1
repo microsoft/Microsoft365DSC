@@ -140,10 +140,6 @@ function Get-M365StubFiles
                         {
                             $StubContent += "        [Parameter()]`r`n"
                             $ParamType = $param.ParameterType.ToString()
-                            if ($ParamType -eq "System.Management.Automation.SwitchParameter")
-                            {
-                                $ParamType = "System.Boolean"
-                            }
                             $StubContent += "        [$ParamType]`r`n"
                             $StubContent += "        `$$($param.Name),`r`n`r`n"
                         }
