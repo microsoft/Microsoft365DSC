@@ -2,6 +2,12 @@
 
 ## UNRELEASED
 
+* O365User
+  * Fixed an issue where we were trying to assign an empty
+    license to a user if an empty array was passed for
+    LicenseAssignment.
+* SCComplianceSearchAction
+  * Added 'Preview' as a supported value for Action;
 * ReverseDSC
   * Fixed an issue where a newline was missing in the
     credentials section when a certificate password was
