@@ -6,7 +6,7 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Export', 'Purge', 'Retention')]
+        [ValidateSet('Export', 'Preview', 'Purge', 'Retention')]
         $Action,
 
         [Parameter(Mandatory = $true)]
@@ -148,7 +148,7 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Export', 'Purge', 'Retention')]
+        [ValidateSet('Export', 'Preview', 'Purge', 'Retention')]
         $Action,
 
         [Parameter(Mandatory = $true)]
@@ -301,7 +301,7 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Export', 'Purge', 'Retention')]
+        [ValidateSet('Export', 'Preview', 'Purge', 'Retention')]
         $Action,
 
         [Parameter(Mandatory = $true)]
