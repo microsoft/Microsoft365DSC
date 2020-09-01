@@ -509,123 +509,132 @@ function Show-M365DSCGUI
         $panelMenu.Controls.Add($btnClear);
 
         #region ServicePrincipal Info
+        $chckApplication = New-Object System.Windows.Forms.CheckBox
+        $chckApplication.Top = 0
+        $chckApplication.Height = 20
+        $chckApplication.Width = 180
+        $chckApplication.Left = 455
+        $chckApplication.Text = "Application"
+        $chckApplication.Font = [System.Drawing.Font]::new($chckApplication.Font.Name, 10, [System.Drawing.FontStyle]::Bold)
+        $chckApplication.Add_Click( {
+            if ($chckApplication.Checked)
+            {
+                $txtApplicationId.Enabled = $true
+                $txtTenantId.Enabled = $true
+            }
+            else
+            {
+                $txtApplicationId.Enabled = $false
+                $txtTenantId.Enabled = $false
+            }
+        })
+
+        $panelMenu.Controls.Add($chckApplication)
         $lblApplicationId = New-Object System.Windows.Forms.Label
         $lblApplicationId.Text = "Application Id:"
-        $lblApplicationId.Top = 10
-        $lblApplicationId.Left = 350
+        $lblApplicationId.Top = 25
+        $lblApplicationId.Left = 455
         $lblApplicationId.Width = 80
         $lblApplicationId.TextAlign = [System.Drawing.ContentAlignment]::TopRight
-        $lblApplicationId.Font = [System.Drawing.Font]::new($lblApplicationId.Font.Name, 8, [System.Drawing.FontStyle]::Bold)
+        $lblApplicationId.Font = [System.Drawing.Font]::new($lblApplicationId.Font.Name, 8)
         $panelMenu.Controls.Add($lblApplicationId)
 
         $txtApplicationId = New-Object System.Windows.Forms.Textbox
-        $txtApplicationId.Top = 5
-        $txtApplicationId.Left = 440
-        $txtApplicationId.Width = 150
+        $txtApplicationId.Top = 20
+        $txtApplicationId.Enabled = $false
+        $txtApplicationId.Left = 545
+        $txtApplicationId.Width = 225
         $txtApplicationId.Font = [System.Drawing.Font]::new($txtApplicationId.Font.Name, 10)
         $panelMenu.Controls.Add($txtApplicationId)
 
         $lblTenantId = New-Object System.Windows.Forms.Label
         $lblTenantId.Text = "Tenant Id:"
-        $lblTenantId.Top = 35
-        $lblTenantId.Left = 350
+        $lblTenantId.Top = 50
+        $lblTenantId.Left = 455
         $lblTenantId.Width = 80
         $lblTenantId.TextAlign = [System.Drawing.ContentAlignment]::TopRight
-        $lblTenantId.Font = [System.Drawing.Font]::new($lblTenantId.Font.Name, 8, [System.Drawing.FontStyle]::Bold)
+        $lblTenantId.Font = [System.Drawing.Font]::new($lblTenantId.Font.Name, 8)
         $panelMenu.Controls.Add($lblTenantId)
 
         $txtTenantId = New-Object System.Windows.Forms.Textbox
-        $txtTenantId.Top = 35
-        $txtTenantId.Left = 440
-        $txtTenantId.Width = 150
+        $txtTenantId.Top = 50
+        $txtTenantId.Enabled = $false
+        $txtTenantId.Left = 545
+        $txtTenantId.Width = 225
         $txtTenantId.Font = [System.Drawing.Font]::new($txtTenantId.Font.Name, 10)
         $panelMenu.Controls.Add($txtTenantId)
 
+        $chckCertificate = New-Object System.Windows.Forms.CheckBox
+        $chckCertificate.Top = 0
+        $chckCertificate.Height = 20
+        $chckCertificate.Width = 180
+        $chckCertificate.Left = 780
+        $chckCertificate.Text = "Certificate"
+        $chckCertificate.Font = [System.Drawing.Font]::new($chckCertificate.Font.Name, 10, [System.Drawing.FontStyle]::Bold)
+        $chckCertificate.Add_Click( {
+            if ($chckCertificate.Checked)
+            {
+                $txtCertPassword.Enabled = $true
+                $txtCertThumb.Enabled = $true
+                $txtCertFile.Enabled = $true
+            }
+            else
+            {
+                $txtCertPassword.Enabled = $false
+                $txtCertThumb.Enabled = $false
+                $txtCertFile.Enabled = $false
+            }
+        })
+        $panelMenu.Controls.Add($chckCertificate)
+
         $lblCertThumb = New-Object System.Windows.Forms.Label
-        $lblCertThumb.Text = "Certificate Thumbprint:"
-        $lblCertThumb.Top = 10
-        $lblCertThumb.Left = 625
+        $lblCertThumb.Text = "Thumbprint:"
+        $lblCertThumb.Top = 25
+        $lblCertThumb.Left = 725
         $lblCertThumb.Width = 120
         $lblCertThumb.TextAlign = [System.Drawing.ContentAlignment]::TopRight
-        $lblCertThumb.Font = [System.Drawing.Font]::new($lblCertThumb.Font.Name, 8, [System.Drawing.FontStyle]::Bold)
+        $lblCertThumb.Font = [System.Drawing.Font]::new($lblCertThumb.Font.Name, 8)
         $panelMenu.Controls.Add($lblCertThumb)
 
         $txtCertThumb = New-Object System.Windows.Forms.Textbox
-        $txtCertThumb.Top = 5
-        $txtCertThumb.Left = 750
-        $txtCertThumb.Width = 150
+        $txtCertThumb.Top = 20
+        $txtCertThumb.Left = 850
+        $txtCertThumb.Width = 225
+        $txtCertThumb.Enabled = $false
         $txtCertThumb.Font = [System.Drawing.Font]::new($txtCertThumb.Font.Name, 10)
         $panelMenu.Controls.Add($txtCertThumb)
 
         $lblCertPath = New-Object System.Windows.Forms.Label
-        $lblCertPath.Text = "Certificate Path:"
-        $lblCertPath.Top = 35
-        $lblCertPath.Left = 625
+        $lblCertPath.Text = "File Path:"
+        $lblCertPath.Top = 55
+        $lblCertPath.Left = 725
         $lblCertPath.Width = 120
         $lblCertPath.TextAlign = [System.Drawing.ContentAlignment]::TopRight
-        $lblCertPath.Font = [System.Drawing.Font]::new($lblCertPath.Font.Name, 8, [System.Drawing.FontStyle]::Bold)
+        $lblCertPath.Font = [System.Drawing.Font]::new($lblCertPath.Font.Name, 8)
         $panelMenu.Controls.Add($lblCertPath)
 
         $txtCertFile = New-Object System.Windows.Forms.Textbox
-        $txtCertFile.Top = 35
-        $txtCertFile.Left = 750
-        $txtCertFile.Width = 150
+        $txtCertFile.Top = 50
+        $txtCertFile.Left = 850
+        $txtCertFile.Width = 225
+        $txtCertFile.Enabled = $false
         $txtCertFile.Font = [System.Drawing.Font]::new($txtCertFile.Font.Name, 10)
         $panelMenu.Controls.Add($txtCertFile)
-        #endregion
-
-        $lblFarmAccount = New-Object System.Windows.Forms.Label
-        $lblFarmAccount.Text = "Tenant Admin:"
-        $lblFarmAccount.Top = 10
-        $lblFarmAccount.Left = 940
-        $lblFarmAccount.AutoSize = $true
-        $lblFarmAccount.TextAlign = [System.Drawing.ContentAlignment]::TopRight
-        $lblFarmAccount.Font = [System.Drawing.Font]::new($lblFarmAccount.Font.Name, 8, [System.Drawing.FontStyle]::Bold)
-        $panelMenu.Controls.Add($lblFarmAccount)
-
-        $txtTenantAdmin = New-Object System.Windows.Forms.Textbox
-        $txtTenantAdmin.Top = 5
-        $txtTenantAdmin.Left = 1060
-        $txtTenantAdmin.Width = 345
-        $txtTenantAdmin.Font = [System.Drawing.Font]::new($txtTenantAdmin.Font.Name, 10)
-        $panelMenu.Controls.Add($txtTenantAdmin)
-
-        $lblPassword = New-Object System.Windows.Forms.Label
-        $lblPassword.Text = "Password:"
-        $lblPassword.Top = 47
-        $lblPassword.Left = 940
-        $lblPassword.AutoSize = $true
-        $lblPassword.TextAlign = [System.Drawing.ContentAlignment]::TopRight
-        $lblPassword.Font = [System.Drawing.Font]::new($lblPassword.Font.Name, 8, [System.Drawing.FontStyle]::Bold)
-        $panelMenu.Controls.Add($lblPassword)
-
-        $txtPassword = New-Object System.Windows.Forms.Textbox
-        $txtPassword.Top = 40
-        $txtPassword.Left = 1060
-        $txtPassword.Width = 345
-        $txtPassword.PasswordChar = "*"
-        $txtPassword.Font = [System.Drawing.Font]::new($txtPassword.Font.Name, 10)
-        $txtPassword.Add_KeyDown( {
-                if ($_.KeyCode -eq [System.Windows.Forms.Keys]::Enter)
-                {
-                    $btnExtract.PerformClick()
-                }
-            })
-        $panelMenu.Controls.Add($txtPassword)
 
         $lblCertPassword = New-Object System.Windows.Forms.Label
-        $lblCertPassword.Text = "Certificate Password:"
-        $lblCertPassword.Top = 80
-        $lblCertPassword.Left = 940
-        $lblCertPassword.AutoSize = $true
+        $lblCertPassword.Text = "Password:"
+        $lblCertPassword.Top = 85
+        $lblCertPassword.Left = 725
+        $lblCertPassword.Width = 120
         $lblCertPassword.TextAlign = [System.Drawing.ContentAlignment]::TopRight
-        $lblCertPassword.Font = [System.Drawing.Font]::new($lblCertPassword.Font.Name, 8, [System.Drawing.FontStyle]::Bold)
+        $lblCertPassword.Font = [System.Drawing.Font]::new($lblCertPassword.Font.Name, 8)
         $panelMenu.Controls.Add($lblCertPassword)
 
         $txtCertPassword = New-Object System.Windows.Forms.Textbox
-        $txtCertPassword.Top = 75
-        $txtCertPassword.Left = 1060
-        $txtCertPassword.Width = 345
+        $txtCertPassword.Top = 80
+        $txtCertPassword.Left = 850
+        $txtCertPassword.Width = 225
+        $txtCertPassword.Enabled = $false
         $txtCertPassword.PasswordChar = "*"
         $txtCertPassword.Font = [System.Drawing.Font]::new($txtCertPassword.Font.Name, 10)
         $txtCertPassword.Add_KeyDown( {
@@ -635,6 +644,68 @@ function Show-M365DSCGUI
                 }
             })
         $panelMenu.Controls.Add($txtCertPassword)
+        #endregion
+
+        $chckCredential = New-Object System.Windows.Forms.CheckBox
+        $chckCredential.Top = 0
+        $chckCredential.Checked = $true
+        $chckCredential.Height = 20
+        $chckCredential.Width = 180
+        $chckCredential.Left = 1100
+        $chckCredential.Text = "Credentials"
+        $chckCredential.Font = [System.Drawing.Font]::new($chckCredential.Font.Name, 10, [System.Drawing.FontStyle]::Bold)
+        $chckCredential.Add_Click( {
+            if ($chckCredential.Checked)
+            {
+                $txtTenantAdmin.Enabled = $true
+                $txtPassword.Enabled = $true
+            }
+            else
+            {
+                $txtTenantAdmin.Enabled = $false
+                $txtPassword.Enabled = $false
+            }
+        })
+        $panelMenu.Controls.Add($chckCredential)
+
+        $lblFarmAccount = New-Object System.Windows.Forms.Label
+        $lblFarmAccount.Text = "Username:"
+        $lblFarmAccount.Top = 25
+        $lblFarmAccount.Left = 1100
+        $lblFarmAccount.AutoSize = $true
+        $lblFarmAccount.TextAlign = [System.Drawing.ContentAlignment]::TopRight
+        $lblFarmAccount.Font = [System.Drawing.Font]::new($lblFarmAccount.Font.Name, 8)
+        $panelMenu.Controls.Add($lblFarmAccount)
+
+        $txtTenantAdmin = New-Object System.Windows.Forms.Textbox
+        $txtTenantAdmin.Top = 20
+        $txtTenantAdmin.Left = 1160
+        $txtTenantAdmin.Width = 225
+        $txtTenantAdmin.Font = [System.Drawing.Font]::new($txtTenantAdmin.Font.Name, 10)
+        $panelMenu.Controls.Add($txtTenantAdmin)
+
+        $lblPassword = New-Object System.Windows.Forms.Label
+        $lblPassword.Text = "Password:"
+        $lblPassword.Top = 55
+        $lblPassword.Left = 1100
+        $lblPassword.AutoSize = $true
+        $lblPassword.TextAlign = [System.Drawing.ContentAlignment]::TopRight
+        $lblPassword.Font = [System.Drawing.Font]::new($lblPassword.Font.Name, 8)
+        $panelMenu.Controls.Add($lblPassword)
+
+        $txtPassword = New-Object System.Windows.Forms.Textbox
+        $txtPassword.Top = 50
+        $txtPassword.Left = 1160
+        $txtPassword.Width = 225
+        $txtPassword.PasswordChar = "*"
+        $txtPassword.Font = [System.Drawing.Font]::new($txtPassword.Font.Name, 10)
+        $txtPassword.Add_KeyDown( {
+                if ($_.KeyCode -eq [System.Windows.Forms.Keys]::Enter)
+                {
+                    $btnExtract.PerformClick()
+                }
+            })
+        $panelMenu.Controls.Add($txtPassword)
 
         $btnExtract = New-Object System.Windows.Forms.Button
         $btnExtract.Width = 178
