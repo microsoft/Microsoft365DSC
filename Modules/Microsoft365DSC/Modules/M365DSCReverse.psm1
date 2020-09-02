@@ -463,6 +463,11 @@ function Start-M365DSCConfigurationExtract
         $OutputDSCPath = $Path
     }
 
+    if ([System.String]::IsNullOrEmpty($OutputDSCPath))
+    {
+        $OutputDSCPath = '.'
+    }
+
     while ((Test-Path -Path $OutputDSCPath -PathType Container -ErrorAction SilentlyContinue) -eq $false)
     {
         try
