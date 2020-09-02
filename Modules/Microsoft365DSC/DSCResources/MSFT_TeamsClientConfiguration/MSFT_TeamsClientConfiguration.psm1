@@ -50,6 +50,10 @@ function Get-TargetResource
         $AllowSkypeBusinessInterop,
 
         [Parameter()]
+        [System.Boolean]
+        $AllowEgnyte,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('NotRequired', 'RequiredOutsideScheduleMeeting', 'AlwaysRequired')]
         $ContentPin = 'RequiredOutsideScheduledMeeting',
@@ -90,6 +94,7 @@ function Get-TargetResource
             Identity                         = $config.Identity
             AllowBox                         = $config.AllowBox
             AllowDropBox                     = $config.AllowDropBox
+            AllowEgnyte                      = $config.AllowEgnyte
             AllowEmailIntoChannel            = $config.AllowEmailIntoChannel
             AllowGoogleDrive                 = $config.AllowGoogleDrive
             AllowGuestUser                   = $config.AllowGuestUser
@@ -164,6 +169,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowSkypeBusinessInterop,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowEgnyte,
 
         [Parameter()]
         [System.String]
@@ -258,6 +267,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowSkypeBusinessInterop,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowEgnyte,
 
         [Parameter()]
         [System.String]
