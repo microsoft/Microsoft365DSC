@@ -13,6 +13,10 @@
   * Fixed an issue where SPOHubSite was left selected in the
     Export GUI even when unselecting the entire SPO Workload
     (Issue #735);
+  * Fixed an issue where if no Destination Path was provided
+    after an export, it would fail. It now defaults to the
+    current location;
+    (Issue #698)
 
 ## 1.20.902.1
 
