@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+## UNRELEASED
+
+* TeamsChannel
+  * Fixed an error in the Export when trying to connect using
+    only an Azure AD Application without any credentials;
+
 ## 1.20.902.1
 
 * O365User
