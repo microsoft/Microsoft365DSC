@@ -218,18 +218,33 @@ function Set-TargetResource
         $diff = Compare-Object -ReferenceObject $current -DifferenceObject $desired
         if ($diff)
         {
+            # Add Aliases
             Write-Verbose -Message "Updating the list of Aliases for the Shared Mailbox '$($DisplayName)'"
             $emails = ""
-            foreach ($alias in $Aliases)
+            $aliasesToAdd = $diff | Where-Object -FilterScript {$_.SideIndicator -eq '=>'}
+            $emailsToAdd = ''
+            foreach ($alias in $aliasesToAdd)
             {
-                $emails += $alias + ","
+                $emailsToAdd += $alias + ","
             }
-            $emails += $PrimarySMTPAddress
-            $proxyAddresses = $emails -Split ','
-            $CurrentParameters.Aliases = $proxyAddresses
+            $emailsToAdd += $PrimarySMTPAddress
+            $proxyAddresses = $emailsToAdd -Split ','
 
-            Write-Verbose -Message "Adding the following email aliases: $($emails)"
-            Set-Mailbox -Identity $DisplayName -EmailAddresses @{add = $Aliases }
+            Write-Verbose -Message "Adding the following email aliases: $emailsToAdd"
+            Set-Mailbox -Identity $DisplayName -EmailAddresses @{add = $proxyAddresses }
+
+            # Remove Aliases
+            $aliasesToRemove = $diff | Where-Object -FilterScript {$_.SideIndicator -eq '<='}
+            $emailsToRemoved = ''
+            foreach ($alias in $aliasesToRemove)
+            {
+                $emailsToRemoved += $alias + ","
+            }
+            $emailsToRemoved += $PrimarySMTPAddress
+            $proxyAddresses = $emailsToRemoved -Split ','
+
+            Write-Verbose -Message "Removing the following email aliases: $emailsToRemoved"
+            Set-Mailbox -Identity $DisplayName -EmailAddresses @{remove = $proxyAddresses }
         }
     }
 }
