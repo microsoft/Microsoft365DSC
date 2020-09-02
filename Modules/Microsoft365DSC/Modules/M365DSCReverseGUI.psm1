@@ -637,17 +637,17 @@ function Show-M365DSCGUI
 
         $lblTenantId = New-Object System.Windows.Forms.Label
         $lblTenantId.Text = "Tenant Id:"
-        $lblTenantId.Top = 50
-        $lblTenantId.Left = 1100
+        $lblTenantId.Top = 55
+        $lblTenantId.Left = 1090
         $lblTenantId.Width = 80
         $lblTenantId.TextAlign = [System.Drawing.ContentAlignment]::TopRight
         $lblTenantId.Font = [System.Drawing.Font]::new($lblTenantId.Font.Name, 8)
         $panelMenu.Controls.Add($lblTenantId)
 
         $txtTenantId = New-Object System.Windows.Forms.Textbox
-        $txtTenantId.Top = 55
+        $txtTenantId.Top = 50
         $txtTenantId.Enabled = $false
-        $txtTenantId.Left = 1175
+        $txtTenantId.Left = 1185
         $txtTenantId.Width = 225
         $txtTenantId.Font = [System.Drawing.Font]::new($txtTenantId.Font.Name, 10)
         $panelMenu.Controls.Add($txtTenantId)
@@ -721,7 +721,7 @@ function Show-M365DSCGUI
         $btnExtract = New-Object System.Windows.Forms.Button
         $btnExtract.Width = 178
         $btnExtract.Height = 70
-        $btnExtract.Top = 0
+        $btnExtract.Top = 5
         $btnExtract.Left = $form.Width - 200
         $btnExtract.BackColor = [System.Drawing.Color]::ForestGreen
         $btnExtract.ForeColor = [System.Drawing.Color]::White
