@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-## UNRELEASED
+## 1.20.902.1
 
 * O365User
   * Fixed an issue where we were trying to assign an empty
