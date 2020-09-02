@@ -1,5 +1,19 @@
 # Change log for Microsoft365DSC
 
+## UNRELEASED
+
+* TeamsChannel
+  * Fixed an error in the Export when trying to connect using
+    only an Azure AD Application without any credentials
+    (Issue #754);
+* TeamsClientConfiguration
+  * Added support for the AllowEgnyte property
+  (Issue #744);
+* MISC
+  * Fixed an issue where SPOHubSite was left selected in the
+    Export GUI even when unselecting the entire SPO Workload
+    (Issue #735);
+
 ## 1.20.902.1
 
 * O365User

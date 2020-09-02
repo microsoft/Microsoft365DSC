@@ -15,11 +15,7 @@ function SectionChanged
     {
         if ($pnlControl.GetType().ToString() -eq "System.Windows.Forms.Checkbox")
         {
-            # TODO remove exception after the SPO Management Shell bug is fixed;
-            if ($pnlControl.Name -ne 'chckSPOSite' -and $pnlControl.Name -ne 'chckSPOHubSite')
-            {
-                $pnlControl.Checked = $Control.Checked
-            }
+            $pnlControl.Checked = $Control.Checked
         }
     }
 }
