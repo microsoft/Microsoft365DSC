@@ -7,7 +7,8 @@
     only an Azure AD Application without any credentials
     (Issue #754);
 * TeamsClientConfiguration
-  * Added support for the AllowEgnyte property (Issue #744);
+  * Added support for the AllowEgnyte property
+  (Issue #744);
 * MISC
   * Fixed an issue where SPOHubSite was left selected in the
     Export GUI even when unselecting the entire SPO Workload
