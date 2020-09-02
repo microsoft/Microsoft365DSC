@@ -222,29 +222,34 @@ function Set-TargetResource
             Write-Verbose -Message "Updating the list of Aliases for the Shared Mailbox '$($DisplayName)'"
             $emails = ""
             $aliasesToAdd = $diff | Where-Object -FilterScript {$_.SideIndicator -eq '=>'}
-            $emailsToAdd = ''
-            foreach ($alias in $aliasesToAdd)
+            if ($null -ne $aliasesToAdd)
             {
-                $emailsToAdd += $alias + ","
+                $emailsToAdd = ''
+                foreach ($alias in $aliasesToAdd)
+                {
+                    $emailsToAdd += $alias.InputObject + ","
+                }
+                $emailsToAdd += $PrimarySMTPAddress
+                $proxyAddresses = $emailsToAdd -Split ','
+
+                Write-Verbose -Message "Adding the following email aliases: $emailsToAdd"
+                Set-Mailbox -Identity $DisplayName -EmailAddresses @{add = $proxyAddresses }
             }
-            $emailsToAdd += $PrimarySMTPAddress
-            $proxyAddresses = $emailsToAdd -Split ','
-
-            Write-Verbose -Message "Adding the following email aliases: $emailsToAdd"
-            Set-Mailbox -Identity $DisplayName -EmailAddresses @{add = $proxyAddresses }
-
             # Remove Aliases
             $aliasesToRemove = $diff | Where-Object -FilterScript {$_.SideIndicator -eq '<='}
-            $emailsToRemoved = ''
-            foreach ($alias in $aliasesToRemove)
+            if ($null -ne $aliasesToRemove)
             {
-                $emailsToRemoved += $alias + ","
-            }
-            $emailsToRemoved += $PrimarySMTPAddress
-            $proxyAddresses = $emailsToRemoved -Split ','
+                $emailsToRemoved = ''
+                foreach ($alias in $aliasesToRemove)
+                {
+                    $emailsToRemoved += $alias.InputObject + ","
+                }
+                $emailsToRemoved += $PrimarySMTPAddress
+                $proxyAddresses = $emailsToRemoved -Split ','
 
-            Write-Verbose -Message "Removing the following email aliases: $emailsToRemoved"
-            Set-Mailbox -Identity $DisplayName -EmailAddresses @{remove = $proxyAddresses }
+                Write-Verbose -Message "Removing the following email aliases: $emailsToRemoved"
+                Set-Mailbox -Identity $DisplayName -EmailAddresses @{remove = $proxyAddresses }
+            }
         }
     }
 }

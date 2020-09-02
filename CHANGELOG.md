@@ -6,6 +6,9 @@
   * Added some error handling around the
     Get-ApplicationAccessPolicy cmdlet
     (Issue #702);
+*EXOSharedMailbox
+  * Fixed an issue where Aliases were not properly removed
+    (Issue #749);
 * TeamsChannel
   * Fixed an error in the Export when trying to connect using
     only an Azure AD Application without any credentials
