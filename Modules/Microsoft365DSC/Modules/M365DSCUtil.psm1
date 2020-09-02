@@ -1504,6 +1504,7 @@ function Remove-NullEntriesFromHashtable
     return $Hash
 }
 
+# To be deprecated in future release
 function Assert-M365DSCTemplate
 {
     [CmdletBinding()]
@@ -1592,6 +1593,94 @@ function Assert-M365DSCTemplate
     }
 }
 
+function Assert-M365DSCBlueprint
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $BluePrintUrl,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $OutputReportPath,
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $Credentials
+    )
+    $InformationPreference = 'SilentlyContinue'
+    $WarningPreference = 'SilentlyContinue'
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Event", "AssertBlueprint")
+    $data.Add("BluePrint", $BluePrintUrl)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $TempBluePrintName = (New-Guid).ToString() + ".M365"
+    $LocalBluePrintPath = Join-Path -Path $env:Temp -ChildPath $TempBluePrintName
+    try
+    {
+        # Download the BluePrint locally in a temp location
+        Invoke-WebRequest -Uri $BluePrintUrl -OutFile $LocalBluePrintPath
+    }
+    catch
+    {
+        # If the download failed, we assume the provided Url was a local path
+        # and we try copying the item instead.
+        try
+        {
+            Copy-Item -Path $BluePrintUrl -Destination $LocalBluePrintPath
+        }
+        catch
+        {
+            throw $_
+        }
+    }
+
+    if ((Test-Path -Path $LocalBluePrintPath))
+    {
+        # Parse the content of the BluePrint into an array of PowerShell Objects
+        $parsedBluePrint = ConvertTo-DSCObject -Path $LocalBluePrintPath
+
+        # Generate an Array of Resource Types contained in the BluePrint
+        $ResourcesInBluePrint = @()
+        foreach ($resource in $parsedBluePrint)
+        {
+            if ($ResourcesInBluePrint -notcontains $resource.ResourceName)
+            {
+                $ResourcesInBluePrint += $resource.ResourceName
+            }
+        }
+        Write-Host "Selected BluePrint contains ($($ResourcesInBluePrint.Length)) components to assess."
+
+        # Call the Export-M365DSCConfiguration cmdlet to extract only the resource
+        # types contained within the BluePrint;
+        Write-Host "Initiating the Export of those ($($ResourcesInBluePrint.Length)) components from the tenant..."
+        $TempExportName = (New-Guid).ToString() + ".ps1"
+        Export-M365DSCConfiguration -Quiet `
+            -ComponentsToExtract $ResourcesInBluePrint `
+            -Path $env:temp `
+            -FileName $TempExportName `
+            -GlobalAdminAccount $Credentials
+
+        # Call the New-M365DSCDeltaReport configuration to generate the Delta Report between
+        # the BluePrint and the extracted resources;
+        $ExportPath = Join-Path -Path $env:Temp -ChildPath $TempExportName
+        New-M365DSCDeltaReport -Source $ExportPath `
+            -Destination $LocalBluePrintPath `
+            -OutputPath $OutputReportPath `
+            -DriftOnly:$true `
+            -IsBlueprintAssessment:$true
+    }
+    else
+    {
+        Write-Error "M365DSC Template Path {$LocalBluePrintPath} does not exist."
+    }
+}
+
 function Test-M365DSCDependenciesForNewVersions
 {
     [CmdletBinding()]
@@ -1617,6 +1706,29 @@ function Test-M365DSCDependenciesForNewVersions
         catch
         {
             Write-Information -MessageData "New version of {$($dependency.ModuleName)} is available"
+        }
+        $i++
+    }
+}
+
+function Update-M365DSCDependencies
+{
+    [CmdletBinding()]
+    $InformationPreference = 'Continue'
+    $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
+    $manifest = Import-PowerShellDataFile "$currentPath/Microsoft365DSC.psd1"
+    $dependencies = $manifest.RequiredModules
+    $i = 1
+    foreach ($dependency in $dependencies)
+    {
+        Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
+        try
+        {
+            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force
+        }
+        catch
+        {
+            Write-Information -MessageData "Could not update {$($dependency.ModuleName)}"
         }
         $i++
     }
@@ -2024,7 +2136,7 @@ function Test-M365DSCNewVersionAvailable
 
             if ([Version]($GalleryVersion.Version) -gt [Version]($currentVersion.Version))
             {
-                $message = "A NEWER VERSION of MICROSOFT365DSC {v$($GalleryVersion.Version)} IS AVAILABLE IN THE POWERSHELL GALLERY. TO UPDATE, RUN:`r`nInstall-Module Microsoft365DSC -Force"
+                $message = "A NEWER VERSION OF MICROSOFT365DSC {v$($GalleryVersion.Version)} IS AVAILABLE IN THE POWERSHELL GALLERY. TO UPDATE, RUN:`r`nInstall-Module Microsoft365DSC -Force -AllowClobber"
                 Write-Host $message `
                     -ForegroundColor 'White' `
                     -BackgroundColor 'DarkGray'
@@ -2037,4 +2149,55 @@ function Test-M365DSCNewVersionAvailable
     {
         Write-Verbose -Message $_
     }
+}
+
+function Get-M365DSCComponentsForAuthenticationType
+{
+    [CmdletBinding()]
+    [OutputType([System.String[]])]
+    param(
+        [Parameter()]
+        [System.String[]]
+        [ValidateSet('Application', 'Certificate', 'Credentials')]
+        $AuthenticationMethod
+    )
+
+    $modules = Get-ChildItem -Path ($PSScriptRoot + "\..\DSCResources\") -Recurse -Filter '*.psm1'
+    $Components = @()
+    foreach ($resource in $modules)
+    {
+        Import-Module $resource.FullName -Force
+        $parameters = (Get-command 'Set-TargetResource').Parameters.Keys
+
+        # Case - Resource only supports AppID & GlobalAdmin
+        if ($AuthenticationMethod.Contains("Application") -and `
+            $AuthenticationMethod.Contains("Credentials") -and `
+           ($parameters.Contains("ApplicationId") -and `
+            $parameters.Contains("GlobalAdminAccount") -and `
+            -not $parameters.Contains('CertificateThumbprint') -and `
+            -not $parameters.Contains('CertificatePath') -and `
+            -not $parameters.Contains('CertificatePassword') -and `
+            -not $parameters.Contains('TenantId')))
+        {
+            $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+        }
+
+        #Case - Resource certificate info and TenantId
+        elseif ($AuthenticationMethod.Contains("Certificate") -and `
+            ($parameters.Contains('CertificateThumbprint') -or `
+            $parameters.Contains('CertificatePath') -or `
+            $parameters.Contains('CertificatePassword')) -and `
+            $parameters.Contains('TenantId'))
+        {
+            $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+        }
+
+        # Case - Resource contains GlobalAdminAccount
+        elseif ($AuthenticationMethod.Contains("Credentials") -and `
+            $parameters.Contains('GlobalAdminAccount'))
+        {
+            $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+        }
+    }
+    return $Components
 }

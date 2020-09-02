@@ -1,5 +1,35 @@
 # Change log for Microsoft365DSC
 
+## 1.20.902.1
+
+* O365User
+  * Fixed an issue where we were trying to assign an empty
+    license to a user if an empty array was passed for
+    LicenseAssignment.
+* SCComplianceSearchAction
+  * Added 'Preview' as a supported value for Action;
+* ReverseDSC
+  * Fixed an issue where a newline was missing in the
+    credentials section when a certificate password was
+    specified;
+* MISC
+  * Added a new Assert-M365DSCBlueprint function to generate
+    discrepency report between export of tenant and a BluePrint;
+* Metadata
+  * Updated DSCParser Module to version 1.2.0.0;
+  * Updated Microsoft.Graph.Authentication Module to version
+    0.9.1;
+  * Updated Microsoft.Graph.Groups.Planner Module to version
+    0.9.1;
+  * Updated Microsoft.Graph.Identity.ConditionalAccess Module
+    to version 0.9.1;
+  * Updated Microsoft.Graph.Planner Module to version
+    0.9.1;
+  * Updated Microsoft.PowerApps.Administration.PowerShell Module
+    to version 0.9.1;
+  * Updated SharePointPnPPowerShellOnline Module to version
+    3.24.2008.1;
+
 ## 1.20.805.1
 
 * EXOAvailabilityConfig
@@ -66,6 +96,9 @@
   * Updated Microsoft.PowerApps.Administration.PowerShell version to
     2.0.72;
   * Updated SharePointPnPPowerShellOnline version to 3.23.2007.1;
+
+* SPOSiteScript;
+  * Initial Release;
 
 ## 1.20.716.1
 

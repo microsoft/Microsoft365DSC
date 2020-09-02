@@ -62275,3092 +62275,4155 @@ param(
 #region MicrosoftTeams
 #endregion
 #region PnP
-function Connect-PnPHubSite
+function Add-PnPAlert
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The site to connect to the hubsite')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
-    ${Site},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(Mandatory=$true, HelpMessage='The hubsite to connect the site to')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
-    ${HubSite})
+        [Parameter()]
+        [System.String]
+        $Title,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]
+        $User,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.AlertDeliveryChannel]
+        $DeliveryMethod,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.AlertEventType]
+        $ChangeType,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.AlertFrequency]
+        $Frequency,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.AlertFilter]
+        $Filter,
+
+        [Parameter()]
+        [System.DateTime]
+        $Time,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
-function Disconnect-PnPHubSite
-{
-    [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The site to disconnect from its hubsite')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
-    ${Site})
-
-}
-function Ensure-PnPFolder
+function Add-PnPApp
 {
     [CmdletBinding()]
     param(
         [Parameter()]
         [System.String]
-        ${SiteRelativePath},
+        $Path,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-        ${Web},
+        [OfficeDevPnP.Core.Enums.AppCatalogScope]
+        $Scope,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [System.Management.Automation.SwitchParameter]
+        $Publish,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipFeatureDeployment,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Overwrite,
+
+        [Parameter()]
+        [System.Int32]
+        $Timeout,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
     )
-}
-function Execute-PnPQuery
-{
-    [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='Number of times to retry in case of throttling. Defaults to 10.')]
-    [int]
-    ${RetryCount},
-
-    [Parameter(HelpMessage='Delay in seconds. Defaults to 1.')]
-    [int]
-    ${RetryWait})
-
-}
-function Invoke-PnPSearchQuery
-{
-    [CmdletBinding(DefaultParameterSetName='Limit')]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Search query in Keyword Query Language (KQL).')]
-    [string]
-    ${Query},
-
-    [Parameter(ParameterSetName='Limit', HelpMessage='Search result item to start returning the results from. Useful for paging. Leave at 0 to return all results.')]
-    [int]
-    ${StartRow},
-
-    [Parameter(ParameterSetName='Limit', HelpMessage='Maximum amount of search results to return. Default and max per page is 500 search results.')]
-    [ValidateRange(0, 500)]
-    [int]
-    ${MaxResults},
-
-    [Parameter(ParameterSetName='All', HelpMessage='Automatically page results until the end to get more than 500. Use with caution!')]
-    [switch]
-    ${All},
-
-    [Parameter(HelpMessage='Specifies whether near duplicate items should be removed from the search results.')]
-    [bool]
-    ${TrimDuplicates},
-
-    [Parameter(HelpMessage='Extra query properties. Can for example be used for Office Graph queries.')]
-    [hashtable]
-    ${Properties},
-
-    [Parameter(HelpMessage='The list of refiners to be returned in a search result.')]
-    [string]
-    ${Refiners},
-
-    [Parameter(HelpMessage='The locale for the query.')]
-    [int]
-    ${Culture},
-
-    [Parameter(HelpMessage='Specifies the query template that is used at run time to transform the query based on user input.')]
-    [string]
-    ${QueryTemplate},
-
-    [Parameter(HelpMessage='The list of properties to return in the search results.')]
-    [string[]]
-    ${SelectProperties},
-
-    [Parameter(HelpMessage='The set of refinement filters used.')]
-    [string[]]
-    ${RefinementFilters},
-
-    [Parameter(HelpMessage='The list of properties by which the search results are ordered.')]
-    [hashtable]
-    ${SortList},
-
-    [Parameter(HelpMessage='The identifier (ID) of the ranking model to use for the query.')]
-    [string]
-    ${RankingModelId},
-
-    [Parameter(HelpMessage='Specifies the name of the client which issued the query.')]
-    [string]
-    ${ClientType},
-
-    [Parameter(HelpMessage='Limit the number of items per the collapse specification. See https://docs.microsoft.com/en-us/sharepoint/dev/general-development/customizing-search-results-in-sharepoint#collapse-similar-search-results-using-the-collapsespecification-property for more information.')]
-    [string]
-    ${CollapseSpecification},
-
-    [Parameter(HelpMessage='The keyword query’’s hidden constraints.')]
-    [string]
-    ${HiddenConstraints},
-
-    [Parameter(HelpMessage='The identifier for the search query time zone.')]
-    [int]
-    ${TimeZoneId},
-
-    [Parameter(HelpMessage='Specifies whether the phonetic forms of the query terms are used to find matches.')]
-    [bool]
-    ${EnablePhonetic},
-
-    [Parameter(HelpMessage='Specifies whether stemming is enabled.')]
-    [bool]
-    ${EnableStemming},
-
-    [Parameter(HelpMessage='Specifies whether Query Rules are enabled for this query.')]
-    [bool]
-    ${EnableQueryRules},
-
-    [Parameter(HelpMessage='Specifies the identifier (ID or name) of the result source to be used to run the query.')]
-    [guid]
-    ${SourceId},
-
-    [Parameter(HelpMessage='Determines whether Best Bets are enabled.')]
-    [bool]
-    ${ProcessBestBets},
-
-    [Parameter(HelpMessage='Determines whether personal favorites data is processed or not.')]
-    [bool]
-    ${ProcessPersonalFavorites},
-
-    [Parameter(HelpMessage='Specifies whether only relevant results are returned')]
-    [switch]
-    ${RelevantResults},
-
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
-
-}
-function Load-PnPProvisioningTemplate
-{
-    [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='By Path', Mandatory=$true, Position=0, HelpMessage='Filename to read from, optionally including full path.')]
-    [string]
-    ${Path},
-
-    [Parameter(ParameterSetName='By XML', Mandatory=$true, Position=1, HelpMessage='Variable to read from, containing the valid XML of a provisioning template.')]
-    [string]
-    ${Xml},
-
-    [Parameter(HelpMessage='Allows you to specify ITemplateProviderExtension to execute while loading the template.')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
-    ${TemplateProviderExtensions})
-
-}
-function Add-PnPAlert
-{
-    [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID, Title or Url of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
-
-    [Parameter(HelpMessage='Alert title')]
-    [string]
-    ${Title},
-
-    [Parameter(HelpMessage='User to create the alert for (User ID, login name or actual User object). Skip this parameter to create an alert for the current user. Note: Only site owners can create alerts for other users.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]
-    ${User},
-
-    [Parameter(HelpMessage='Alert delivery method')]
-    [Microsoft.SharePoint.Client.AlertDeliveryChannel]
-    ${DeliveryMethod},
-
-    [Parameter(HelpMessage='Alert change type')]
-    [Microsoft.SharePoint.Client.AlertEventType]
-    ${ChangeType},
-
-    [Parameter(HelpMessage='Alert frequency')]
-    [Microsoft.SharePoint.Client.AlertFrequency]
-    ${Frequency},
-
-    [Parameter(HelpMessage='Alert filter')]
-    [SharePointPnP.PowerShell.Commands.Enums.AlertFilter]
-    ${Filter},
-
-    [Parameter(HelpMessage='Alert time (if frequency is not immediate)')]
-    [datetime]
-    ${Time},
-
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
-
-}
-function Add-PnPApp
-{
-    [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='Add only', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Specifies the Id or an actual app metadata instance')]
-    [Parameter(ParameterSetName='Add and Publish', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Specifies the Id or an actual app metadata instance')]
-    [string]
-    ${Path},
-
-    [Parameter(HelpMessage='Defines which app catalog to use. Defaults to Tenant')]
-    [OfficeDevPnP.Core.Enums.AppCatalogScope]
-    ${Scope},
-
-    [Parameter(ParameterSetName='Add and Publish', Mandatory=$true, HelpMessage='This will deploy/trust an app into the app catalog')]
-    [switch]
-    ${Publish},
-
-    [Parameter(ParameterSetName='Add and Publish')]
-    [switch]
-    ${SkipFeatureDeployment},
-
-    [Parameter(HelpMessage='Overwrites the existing app package if it already exists')]
-    [switch]
-    ${Overwrite},
-
-    [Parameter(HelpMessage='Specifies the timeout in seconds. Defaults to 200.')]
-    [int]
-    ${Timeout})
-
 }
 function Add-PnPApplicationCustomizer
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='The title of the application customizer')]
-    [string]
-    ${Title},
+    param(
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(HelpMessage='The description of the application customizer')]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [Parameter(HelpMessage='Sequence of this application customizer being injected. Use when you have a specific sequence with which to have multiple application customizers being added to the page.')]
-    [int]
-    ${Sequence},
+        [Parameter()]
+        [System.Int32]
+        $Sequence,
 
-    [Parameter(HelpMessage='The scope of the CustomAction to add to. Either Web or Site; defaults to Web. ''All'' is not valid for this command.')]
-    [SharePointPnP.PowerShell.Commands.Enums.CustomActionScope]
-    ${Scope},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CustomActionScope]
+        $Scope,
 
-    [Parameter(Mandatory=$true, HelpMessage='The Client Side Component Id of the SharePoint Framework client side extension application customizer found in the manifest')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${ClientSideComponentId},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $ClientSideComponentId,
 
-    [Parameter(HelpMessage='The Client Side Component Properties of the application customizer. Specify values as a json string : "{Property1 : ''Value1'', Property2: ''Value2''}"')]
-    [string]
-    ${ClientSideComponentProperties},
+        [Parameter()]
+        [System.String]
+        $ClientSideComponentProperties,
 
-    [Parameter(HelpMessage='The Client Side Host Properties of the application customizer. Specify values as a json string : "{''preAllocatedApplicationCustomizerTopHeight'': ''50'', ''preAllocatedApplicationCustomizerBottomHeight'': ''50''}"')]
-    [string]
-    ${ClientSideHostProperties},
+        [Parameter()]
+        [System.String]
+        $ClientSideHostProperties,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPClientSidePage
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='Specifies the name of the page.')]
-    [string]
-    ${Name},
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(HelpMessage='Specifies the layout type of the page.')]
-    [OfficeDevPnP.Core.Pages.ClientSidePageLayoutType]
-    ${LayoutType},
+        [Parameter()]
+        [OfficeDevPnP.Core.Pages.ClientSidePageLayoutType]
+        $LayoutType,
 
-    [Parameter(HelpMessage='Allows to promote the page for a specific purpose (HomePage | NewsPage)')]
-    [SharePointPnP.PowerShell.Commands.ClientSidePages.ClientSidePagePromoteType]
-    ${PromoteAs},
+        [Parameter()]
+        [PnP.PowerShell.Commands.ClientSidePages.ClientSidePagePromoteType]
+        $PromoteAs,
 
-    [Parameter(HelpMessage='Specify either the name, ID or an actual content type.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
-    ${ContentType},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $ContentType,
 
-    [Parameter(HelpMessage='Enables or Disables the comments on the page')]
-    [switch]
-    ${CommentsEnabled},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $CommentsEnabled,
 
-    [Parameter(HelpMessage='Publishes the page once it is saved. Applicable to libraries set to create major and minor versions.')]
-    [switch]
-    ${Publish},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Publish,
 
-    [Parameter(HelpMessage='Type of layout used for the header')]
-    [OfficeDevPnP.Core.Pages.ClientSidePageHeaderLayoutType]
-    ${HeaderLayoutType},
+        [Parameter()]
+        [OfficeDevPnP.Core.Pages.ClientSidePageHeaderLayoutType]
+        $HeaderLayoutType,
 
-    [Parameter(HelpMessage='Sets the message for publishing the page.')]
-    [Obsolete('This parameter will be ignored')]
-    [string]
-    ${PublishMessage},
+        [Parameter()]
+        [System.String]
+        $PublishMessage,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPClientSidePageSection
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The name of the page')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
-    ${Page},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Page,
 
-    [Parameter(Mandatory=$true, HelpMessage='Specifies the columns template to use for the section.')]
-    [OfficeDevPnP.Core.Pages.CanvasSectionTemplate]
-    ${SectionTemplate},
+        [Parameter()]
+        [OfficeDevPnP.Core.Pages.CanvasSectionTemplate]
+        $SectionTemplate,
 
-    [Parameter(HelpMessage='Sets the order of the section. (Default = 1)')]
-    [int]
-    ${Order},
+        [Parameter()]
+        [System.Int32]
+        $Order,
 
-    [Parameter(HelpMessage='Sets the background of the section (default = 0)')]
-    [int]
-    ${ZoneEmphasis},
+        [Parameter()]
+        [System.Int32]
+        $ZoneEmphasis,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPClientSideText
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='Default', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The name of the page.')]
-    [Parameter(ParameterSetName='Positioned', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The name of the page.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
-    ${Page},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Page,
 
-    [Parameter(ParameterSetName='Default', Mandatory=$true, HelpMessage='Specifies the text to display in the text area.')]
-    [Parameter(ParameterSetName='Positioned', Mandatory=$true, HelpMessage='Specifies the text to display in the text area.')]
-    [string]
-    ${Text},
+        [Parameter()]
+        [System.String]
+        $Text,
 
-    [Parameter(ParameterSetName='Default', HelpMessage='Sets the order of the text control. (Default = 1)')]
-    [Parameter(ParameterSetName='Positioned', HelpMessage='Sets the order of the text control. (Default = 1)')]
-    [int]
-    ${Order},
+        [Parameter()]
+        [System.Int32]
+        $Order,
 
-    [Parameter(ParameterSetName='Positioned', Mandatory=$true, HelpMessage='Sets the section where to insert the text control.')]
-    [int]
-    ${Section},
+        [Parameter()]
+        [System.Int32]
+        $Section,
 
-    [Parameter(ParameterSetName='Positioned', Mandatory=$true, HelpMessage='Sets the column where to insert the text control.')]
-    [int]
-    ${Column},
+        [Parameter()]
+        [System.Int32]
+        $Column,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPClientSideWebPart
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='Default with built-in web part', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The name of the page.')]
-    [Parameter(ParameterSetName='Default with 3rd party web part', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The name of the page.')]
-    [Parameter(ParameterSetName='Positioned with built-in web part', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The name of the page.')]
-    [Parameter(ParameterSetName='Positioned with 3rd party web part', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The name of the page.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
-    ${Page},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Page,
 
-    [Parameter(ParameterSetName='Default with built-in web part', Mandatory=$true, HelpMessage='Defines a default web part type to insert.')]
-    [Parameter(ParameterSetName='Positioned with built-in web part', Mandatory=$true, HelpMessage='Defines a default web part type to insert.')]
-    [OfficeDevPnP.Core.Pages.DefaultClientSideWebParts]
-    ${DefaultWebPartType},
+        [Parameter()]
+        [OfficeDevPnP.Core.Pages.DefaultClientSideWebParts]
+        $DefaultWebPartType,
 
-    [Parameter(ParameterSetName='Default with 3rd party web part', Mandatory=$true, HelpMessage='Specifies the component instance or Id to add.')]
-    [Parameter(ParameterSetName='Positioned with 3rd party web part', Mandatory=$true, HelpMessage='Specifies the component instance or Id to add.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ClientSideComponentPipeBind]
-    ${Component},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSideComponentPipeBind]
+        $Component,
 
-    [Parameter(ParameterSetName='Default with built-in web part', HelpMessage='The properties of the web part')]
-    [Parameter(ParameterSetName='Default with 3rd party web part', HelpMessage='The properties of the web part')]
-    [Parameter(ParameterSetName='Positioned with built-in web part', HelpMessage='The properties of the web part')]
-    [Parameter(ParameterSetName='Positioned with 3rd party web part', HelpMessage='The properties of the web part')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.PropertyBagPipeBind]
-    ${WebPartProperties},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.PropertyBagPipeBind]
+        $WebPartProperties,
 
-    [Parameter(ParameterSetName='Default with built-in web part', HelpMessage='Sets the order of the web part control. (Default = 1)')]
-    [Parameter(ParameterSetName='Default with 3rd party web part', HelpMessage='Sets the order of the web part control. (Default = 1)')]
-    [Parameter(ParameterSetName='Positioned with built-in web part', HelpMessage='Sets the order of the web part control. (Default = 1)')]
-    [Parameter(ParameterSetName='Positioned with 3rd party web part', HelpMessage='Sets the order of the web part control. (Default = 1)')]
-    [int]
-    ${Order},
+        [Parameter()]
+        [System.Int32]
+        $Order,
 
-    [Parameter(ParameterSetName='Positioned with built-in web part', Mandatory=$true, HelpMessage='Sets the section where to insert the web part control.')]
-    [Parameter(ParameterSetName='Positioned with 3rd party web part', Mandatory=$true, HelpMessage='Sets the section where to insert the web part control.')]
-    [int]
-    ${Section},
+        [Parameter()]
+        [System.Int32]
+        $Section,
 
-    [Parameter(ParameterSetName='Positioned with built-in web part', Mandatory=$true, HelpMessage='Sets the column where to insert the web part control.')]
-    [Parameter(ParameterSetName='Positioned with 3rd party web part', Mandatory=$true, HelpMessage='Sets the column where to insert the web part control.')]
-    [int]
-    ${Column},
+        [Parameter()]
+        [System.Int32]
+        $Column,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPContentType
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Specify the name of the new content type')]
-    [string]
-    ${Name},
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(HelpMessage='If specified, in the format of 0x0100233af432334r434343f32f3, will create a content type with the specific ID')]
-    [string]
-    ${ContentTypeId},
+        [Parameter()]
+        [System.String]
+        $ContentTypeId,
 
-    [Parameter(HelpMessage='Specifies the description of the new content type')]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [Parameter(HelpMessage='Specifies the group of the new content type')]
-    [string]
-    ${Group},
+        [Parameter()]
+        [System.String]
+        $Group,
 
-    [Parameter(HelpMessage='Specifies the parent of the new content type')]
-    [Microsoft.SharePoint.Client.ContentType]
-    ${ParentContentType},
+        [Parameter()]
+        [Microsoft.SharePoint.Client.ContentType]
+        $ParentContentType,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPContentTypeToDocumentSet
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The content type object, name or id to add. Either specify name, an id, or a content type object.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind[]]
-    ${ContentType},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind[]]
+        $ContentType,
 
-    [Parameter(Mandatory=$true, HelpMessage='The document set object or id to add the content type to. Either specify a name, a document set template object, an id, or a content type object')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.DocumentSetPipeBind]
-    ${DocumentSet},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.DocumentSetPipeBind]
+        $DocumentSet,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPContentTypeToList
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Specifies the list to which the content type needs to be added')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(Mandatory=$true, HelpMessage='Specifies the content type that needs to be added to the list')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
-    ${ContentType},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $ContentType,
 
-    [Parameter(HelpMessage='Specify if the content type needs to be the default content type or not')]
-    [switch]
-    ${DefaultContentType},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DefaultContentType,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPCustomAction
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='Default', Mandatory=$true, HelpMessage='The name of the custom action')]
-    [Parameter(ParameterSetName='Client Side Component Id', Mandatory=$true, HelpMessage='The name of the custom action')]
-    [string]
-    ${Name},
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(ParameterSetName='Default', Mandatory=$true, HelpMessage='The title of the custom action')]
-    [Parameter(ParameterSetName='Client Side Component Id', Mandatory=$true, HelpMessage='The title of the custom action')]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(ParameterSetName='Default', Mandatory=$true, HelpMessage='The description of the custom action')]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [Parameter(ParameterSetName='Default', Mandatory=$true, HelpMessage='The group where this custom action needs to be added like ''SiteActions''')]
-    [string]
-    ${Group},
+        [Parameter()]
+        [System.String]
+        $Group,
 
-    [Parameter(ParameterSetName='Default', Mandatory=$true, HelpMessage='The actual location where this custom action need to be added like ''CommandUI.Ribbon''')]
-    [Parameter(ParameterSetName='Client Side Component Id', Mandatory=$true, HelpMessage='The actual location where this custom action need to be added like ''CommandUI.Ribbon''')]
-    [string]
-    ${Location},
+        [Parameter()]
+        [System.String]
+        $Location,
 
-    [Parameter(ParameterSetName='Default', HelpMessage='Sequence of this CustomAction being injected. Use when you have a specific sequence with which to have multiple CustomActions being added to the page.')]
-    [Parameter(ParameterSetName='Client Side Component Id', HelpMessage='Optional activation sequence order for the extensions. Used if multiple extensions are activated on a same scope.')]
-    [int]
-    ${Sequence},
+        [Parameter()]
+        [System.Int32]
+        $Sequence,
 
-    [Parameter(ParameterSetName='Default', HelpMessage='The URL, URI or ECMAScript (JScript, JavaScript) function associated with the action')]
-    [string]
-    ${Url},
+        [Parameter()]
+        [System.String]
+        $Url,
 
-    [Parameter(ParameterSetName='Default', HelpMessage='The URL of the image associated with the custom action')]
-    [string]
-    ${ImageUrl},
+        [Parameter()]
+        [System.String]
+        $ImageUrl,
 
-    [Parameter(ParameterSetName='Default', HelpMessage='XML fragment that determines user interface properties of the custom action')]
-    [string]
-    ${CommandUIExtension},
+        [Parameter()]
+        [System.String]
+        $CommandUIExtension,
 
-    [Parameter(ParameterSetName='Default', HelpMessage='The identifier of the object associated with the custom action.')]
-    [Parameter(ParameterSetName='Client Side Component Id', HelpMessage='The identifier of the object associated with the custom action.')]
-    [string]
-    ${RegistrationId},
+        [Parameter()]
+        [System.String]
+        $RegistrationId,
 
-    [Parameter(ParameterSetName='Default', HelpMessage='A string array that contain the permissions needed for the custom action')]
-    [Microsoft.SharePoint.Client.PermissionKind[]]
-    ${Rights},
+        [Parameter()]
+        [Microsoft.SharePoint.Client.PermissionKind[]]
+        $Rights,
 
-    [Parameter(ParameterSetName='Default', HelpMessage='Specifies the type of object associated with the custom action')]
-    [Parameter(ParameterSetName='Client Side Component Id', HelpMessage='Specifies the type of object associated with the custom action')]
-    [Microsoft.SharePoint.Client.UserCustomActionRegistrationType]
-    ${RegistrationType},
+        [Parameter()]
+        [Microsoft.SharePoint.Client.UserCustomActionRegistrationType]
+        $RegistrationType,
 
-    [Parameter(ParameterSetName='Default', HelpMessage='The scope of the CustomAction to add to. Either Web or Site; defaults to Web. ''All'' is not valid for this command.')]
-    [Parameter(ParameterSetName='Client Side Component Id', HelpMessage='The scope of the CustomAction to add to. Either Web or Site; defaults to Web. ''All'' is not valid for this command.')]
-    [SharePointPnP.PowerShell.Commands.Enums.CustomActionScope]
-    ${Scope},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CustomActionScope]
+        $Scope,
 
-    [Parameter(ParameterSetName='Client Side Component Id', Mandatory=$true, HelpMessage='The Client Side Component Id of the custom action')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${ClientSideComponentId},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $ClientSideComponentId,
 
-    [Parameter(ParameterSetName='Client Side Component Id', HelpMessage='The Client Side Component Properties of the custom action. Specify values as a json string : "{Property1 : ''Value1'', Property2: ''Value2''}"')]
-    [string]
-    ${ClientSideComponentProperties},
+        [Parameter()]
+        [System.String]
+        $ClientSideComponentProperties,
 
-    [Parameter(ParameterSetName='Client Side Component Id', HelpMessage='The Client Side Host Properties of the custom action. Specify values as a json string : "{''preAllocatedApplicationCustomizerTopHeight'': ''50'', ''preAllocatedApplicationCustomizerBottomHeight'': ''50''}"')]
-    [string]
-    ${ClientSideHostProperties},
+        [Parameter()]
+        [System.String]
+        $ClientSideHostProperties,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPDataRowsToProvisioningTemplate
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='Filename of the .PNP Open XML site template to read from, optionally including full path.')]
-    [string]
-    ${Path},
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
 
-    [Parameter(Mandatory=$true, HelpMessage='The list to query')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(HelpMessage='The CAML query to execute against the list. Defaults to all items.')]
-    [string]
-    ${Query},
+        [Parameter()]
+        [System.String]
+        $Query,
 
-    [Parameter(HelpMessage='The fields to retrieve. If not specified all fields will be loaded in the returned list object.')]
-    [string[]]
-    ${Fields},
+        [Parameter()]
+        [System.String[]]
+        $Fields,
 
-    [Parameter(Position=5, HelpMessage='A switch to include ObjectSecurity information.')]
-    [switch]
-    ${IncludeSecurity},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeSecurity,
 
-    [Parameter(Position=4, HelpMessage='Allows you to specify ITemplateProviderExtension to execute while loading the template.')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
-    ${TemplateProviderExtensions},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions,
 
-    [Parameter(HelpMessage='If set, this switch will try to tokenize the values with web and site related tokens')]
-    [switch]
-    ${TokenizeUrls},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $TokenizeUrls,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPDocumentSet
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The name of the list, its ID or an actual list object from where the document set needs to be added')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(Mandatory=$true, HelpMessage='The name of the document set')]
-    [string]
-    ${Name},
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(Mandatory=$true, HelpMessage='The name of the content type, its ID or an actual content object referencing to the document set')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
-    ${ContentType},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $ContentType,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPEventReceiver
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='The list object or name where the remote event receiver needs to be added. If omitted, the remote event receiver will be added to the web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(Mandatory=$true, HelpMessage='The name of the remote event receiver')]
-    [string]
-    ${Name},
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(Mandatory=$true, HelpMessage='The URL of the remote event receiver web service')]
-    [string]
-    ${Url},
+        [Parameter()]
+        [System.String]
+        $Url,
 
-    [Parameter(Mandatory=$true, HelpMessage='The type of the event receiver like ItemAdded, ItemAdding. See https://msdn.microsoft.com/en-us/library/microsoft.sharepoint.client.eventreceivertype.aspx for the full list of available types.')]
-    [Alias('Type')]
-    [Microsoft.SharePoint.Client.EventReceiverType]
-    ${EventReceiverType},
+        [Parameter()]
+        [Microsoft.SharePoint.Client.EventReceiverType]
+        $EventReceiverType,
 
-    [Parameter(Mandatory=$true, HelpMessage='The synchronization type: Asynchronous or Synchronous')]
-    [Alias('Sync')]
-    [Microsoft.SharePoint.Client.EventReceiverSynchronization]
-    ${Synchronization},
+        [Parameter()]
+        [Microsoft.SharePoint.Client.EventReceiverSynchronization]
+        $Synchronization,
 
-    [Parameter(HelpMessage='The sequence number where this remote event receiver should be placed')]
-    [int]
-    ${SequenceNumber},
+        [Parameter()]
+        [System.Int32]
+        $SequenceNumber,
 
-    [Parameter(HelpMessage='Overwrites the output file if it exists.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPField
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-        ${List},
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
-        ${Field},
-
-        [Parameter()]
-        [System.String]
-        ${DisplayName},
+        [PnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
+        $Field,
 
         [Parameter()]
         [System.String]
-        ${InternalName},
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $InternalName,
 
         [Parameter()]
         [Microsoft.SharePoint.Client.FieldType]
-        ${Type},
+        $Type,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-        ${Id},
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AddToDefaultView,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Required,
 
         [Parameter()]
         [System.String]
-        ${Group},
+        $Group,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-        ${ClientSideComponentId},
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $ClientSideComponentId,
 
         [Parameter()]
         [System.String]
-        ${ClientSideComponentProperties},
+        $ClientSideComponentProperties,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-        ${Web},
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
     )
 }
 function Add-PnPFieldFromXml
 {
     [CmdletBinding()]
-param(
-    [Parameter(ValueFromPipeline=$true, HelpMessage='The name of the list, its ID or an actual list object where this field needs to be added')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='CAML snippet containing the field definition. See http://msdn.microsoft.com/en-us/library/office/ms437580(v=office.15).aspx')]
-    [string]
-    ${FieldXml},
+        [Parameter()]
+        [System.String]
+        $FieldXml,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPFieldToContentType
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Specifies the field that needs to be added to the content type')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
-    ${Field},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
+        $Field,
 
-    [Parameter(Mandatory=$true, HelpMessage='Specifies which content type a field needs to be added to')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
-    ${ContentType},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $ContentType,
 
-    [Parameter(HelpMessage='Specifies whether the field is required or not')]
-    [switch]
-    ${Required},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Required,
 
-    [Parameter(HelpMessage='Specifies whether the field should be hidden or not')]
-    [switch]
-    ${Hidden},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Hidden,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPFile
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='Upload file', Mandatory=$true, HelpMessage='The local file path.')]
-    [string]
-    ${Path},
-
-    [Parameter(Mandatory=$true, HelpMessage='The destination folder in the site')]
-    [string]
-    ${Folder},
-
-    [Parameter(ParameterSetName='Upload file from stream', Mandatory=$true, HelpMessage='Name for file')]
-    [string]
-    ${FileName},
-
-    [Parameter(ParameterSetName='Upload file', HelpMessage='Filename to give the file on SharePoint')]
-    [string]
-    ${NewFileName},
-
-    [Parameter(ParameterSetName='Upload file from stream', Mandatory=$true, HelpMessage='Stream with the file contents')]
-    [System.IO.Stream]
-    ${Stream},
-
-    [Parameter(HelpMessage='If versioning is enabled, this will check out the file first if it exists, upload the file, then check it in again.')]
-    [switch]
-    ${Checkout},
-
-    [Parameter(HelpMessage='The comment added to the checkin.')]
-    [string]
-    ${CheckInComment},
-
-    [Parameter(HelpMessage='Will auto approve the uploaded file.')]
-    [switch]
-    ${Approve},
-
-    [Parameter(HelpMessage='The comment added to the approval.')]
-    [string]
-    ${ApproveComment},
-
-    [Parameter(HelpMessage='Will auto publish the file.')]
-    [switch]
-    ${Publish},
-
-    [Parameter(HelpMessage='The comment added to the publish action.')]
-    [string]
-    ${PublishComment},
-
-    [switch]
-    ${UseWebDav},
-
-    [Parameter(HelpMessage='Use the internal names of the fields when specifying field names.Single line of text: -Values @{"Title" = "Title New"}Multiple lines of text: -Values @{"MultiText" = "New text\n\nMore text"}Rich text: -Values @{"MultiText" = "<strong>New</strong> text"}Choice: -Values @{"Choice" = "Value 1"}Number: -Values @{"Number" = "10"}Currency: -Values @{"Number" = "10"}Currency: -Values @{"Currency" = "10"}Date and Time: -Values @{"DateAndTime" = "03/10/2015 14:16"}Lookup (id of lookup value): -Values @{"Lookup" = "2"}Multi value lookup (id of lookup values as array 1): -Values @{"MultiLookupField" = "1","2"}Multi value lookup (id of lookup values as array 2): -Values @{"MultiLookupField" = 1,2}Multi value lookup (id of lookup values as string): -Values @{"MultiLookupField" = "1,2"}Yes/No: -Values @{"YesNo" = $false}Person/Group (id of user/group in Site User Info List or email of the user, separate multiple values with a comma): -Values @{"Person" = "user1@domain.com","21"}Managed Metadata (single value with path to term): -Values @{"MetadataField" = "CORPORATE|DEPARTMENTS|FINANCE"}Managed Metadata (single value with id of term): -Values @{"MetadataField" = "fe40a95b-2144-4fa2-b82a-0b3d0299d818"} with Id of termManaged Metadata (multiple values with paths to terms): -Values @{"MetadataField" = "CORPORATE|DEPARTMENTS|FINANCE","CORPORATE|DEPARTMENTS|HR"}Managed Metadata (multiple values with ids of terms): -Values @{"MetadataField" = "fe40a95b-2144-4fa2-b82a-0b3d0299d818","52d88107-c2a8-4bf0-adfa-04bc2305b593"}Hyperlink or Picture: -Values @{"Hyperlink" = "https://github.com/OfficeDev/, OfficePnp"}')]
-    [hashtable]
-    ${Values},
-
-    [Parameter(HelpMessage='Use to assign a ContentType to the file.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
-    ${ContentType},
-
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
-
+    param(
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Values
+    )
 }
 function Add-PnPFileToProvisioningTemplate
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='Filename of the .PNP Open XML site template to read from, optionally including full path.')]
-    [string]
-    ${Path},
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
 
-    [Parameter(ParameterSetName='Local File', Mandatory=$true, Position=1, HelpMessage='The file to add to the in-memory template, optionally including full path.')]
-    [string]
-    ${Source},
+        [Parameter()]
+        [System.String]
+        $Source,
 
-    [Parameter(ParameterSetName='Remove File', Mandatory=$true, Position=1, HelpMessage='The file to add to the in-memory template, specifying its url in the current connected Web.')]
-    [string]
-    ${SourceUrl},
+        [Parameter()]
+        [System.String]
+        $SourceUrl,
 
-    [Parameter(ParameterSetName='Local File', Mandatory=$true, Position=2, HelpMessage='The target Folder for the file to add to the in-memory template.')]
-    [string]
-    ${Folder},
+        [Parameter()]
+        [System.String]
+        $Folder,
 
-    [Parameter(Position=3, HelpMessage='The target Container for the file to add to the in-memory template, optional argument.')]
-    [string]
-    ${Container},
+        [Parameter()]
+        [System.String]
+        $Container,
 
-    [Parameter(Position=4, HelpMessage='The level of the files to add. Defaults to Published')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.FileLevel]
-    ${FileLevel},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.FileLevel]
+        $FileLevel,
 
-    [Parameter(Position=5, HelpMessage='Set to overwrite in site, Defaults to true')]
-    [switch]
-    ${FileOverwrite},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $FileOverwrite,
 
-    [Parameter(Position=4, HelpMessage='Allows you to specify ITemplateProviderExtension to execute while loading the template.')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
-    ${TemplateProviderExtensions},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPFolder
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The folder name')]
-    [string]
-    ${Name},
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(Mandatory=$true, HelpMessage='The parent folder in the site')]
-    [string]
-    ${Folder},
+        [Parameter()]
+        [System.String]
+        $Folder,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPHtmlPublishingPageLayout
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Path to the file which will be uploaded')]
-    [string]
-    ${SourceFilePath},
+    param(
+        [Parameter()]
+        [System.String]
+        $SourceFilePath,
 
-    [Parameter(Mandatory=$true, HelpMessage='Title for the page layout')]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(Mandatory=$true, HelpMessage='Description for the page layout')]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [Parameter(Mandatory=$true, HelpMessage='Associated content type ID')]
-    [string]
-    ${AssociatedContentTypeID},
+        [Parameter()]
+        [System.String]
+        $AssociatedContentTypeID,
 
-    [Parameter(HelpMessage='Folder hierarchy where the HTML page layouts will be deployed')]
-    [string]
-    ${DestinationFolderHierarchy},
+        [Parameter()]
+        [System.String]
+        $DestinationFolderHierarchy,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPHubSiteAssociation
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The site to connect to the hubsite')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
-    ${Site},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $Site,
 
-    [Parameter(Mandatory=$true, HelpMessage='The hubsite to connect the site to')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
-    ${HubSite})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $HubSite,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPIndexedProperty
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='Key of the property bag value to be indexed')]
-    [string]
-    ${Key},
+    param(
+        [Parameter()]
+        [System.String]
+        $Key,
 
-    [Parameter(ValueFromPipeline=$true, HelpMessage='The list object or name where to set the indexed property')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPJavaScriptBlock
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The name of the script block. Can be used to identify the script with other cmdlets or coded solutions')]
-    [Alias('Key')]
-    [string]
-    ${Name},
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(Mandatory=$true, HelpMessage='The javascript block to add to the specified scope')]
-    [string]
-    ${Script},
+        [Parameter()]
+        [System.String]
+        $Script,
 
-    [Parameter(HelpMessage='A sequence number that defines the order on the page')]
-    [int]
-    ${Sequence},
+        [Parameter()]
+        [System.Int32]
+        $Sequence,
 
-    [Alias('AddToSite')]
-    [Obsolete('Use Scope instead')]
-    [switch]
-    ${SiteScoped},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SiteScoped,
 
-    [Parameter(HelpMessage='The scope of the script to add to. Either Web or Site, defaults to Web. ''All'' is not valid for this command.')]
-    [SharePointPnP.PowerShell.Commands.Enums.CustomActionScope]
-    ${Scope},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CustomActionScope]
+        $Scope,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPJavaScriptLink
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Name under which to register the JavaScriptLink')]
-    [Alias('Key')]
-    [string]
-    ${Name},
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(Mandatory=$true, HelpMessage='URL to the JavaScript file to inject')]
-    [string[]]
-    ${Url},
+        [Parameter()]
+        [System.String[]]
+        $Url,
 
-    [Parameter(HelpMessage='Sequence of this JavaScript being injected. Use when you have a specific sequence with which to have JavaScript files being added to the page. I.e. jQuery library first and then jQueryUI.')]
-    [int]
-    ${Sequence},
+        [Parameter()]
+        [System.Int32]
+        $Sequence,
 
-    [Alias('AddToSite')]
-    [Obsolete('Use Scope')]
-    [switch]
-    ${SiteScoped},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SiteScoped,
 
-    [Parameter(HelpMessage='Defines if this JavaScript file will be injected to every page within the current site collection or web. All is not allowed in for this command. Default is web.')]
-    [SharePointPnP.PowerShell.Commands.Enums.CustomActionScope]
-    ${Scope},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CustomActionScope]
+        $Scope,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPListFoldersToProvisioningTemplate
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='Filename of the .PNP Open XML site template to read from, optionally including full path.')]
-    [string]
-    ${Path},
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
 
-    [Parameter(Mandatory=$true, Position=2, HelpMessage='The list to query')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(Position=4, HelpMessage='A switch parameter to include all folders in the list, or just top level folders.')]
-    [switch]
-    ${Recursive},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Recursive,
 
-    [Parameter(Position=5, HelpMessage='A switch to include ObjectSecurity information.')]
-    [switch]
-    ${IncludeSecurity},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeSecurity,
 
-    [Parameter(Position=6, HelpMessage='Allows you to specify ITemplateProviderExtension to execute while loading the template.')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
-    ${TemplateProviderExtensions},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPListItem
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID, Title or Url of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
-
-    [Parameter(HelpMessage='Specify either the name, ID or an actual content type.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
-    ${ContentType},
-
-    [Parameter(HelpMessage='Use the internal names of the fields when specifying field names.Single line of text: -Values @{"Title" = "Title New"}Multiple lines of text: -Values @{"MultiText" = "New text\n\nMore text"}Rich text: -Values @{"MultiText" = "<strong>New</strong> text"}Choice: -Values @{"Choice" = "Value 1"}Number: -Values @{"Number" = "10"}Currency: -Values @{"Number" = "10"}Currency: -Values @{"Currency" = "10"}Date and Time: -Values @{"DateAndTime" = "03/13/2015 14:16"}Lookup (id of lookup value): -Values @{"Lookup" = "2"}Multi value lookup (id of lookup values as array 1): -Values @{"MultiLookupField" = "1","2"}Multi value lookup (id of lookup values as array 2): -Values @{"MultiLookupField" = 1,2}Multi value lookup (id of lookup values as string): -Values @{"MultiLookupField" = "1,2"}Yes/No: -Values @{"YesNo" = $false}Person/Group (id of user/group in Site User Info List or email of the user, separate multiple values with a comma): -Values @{"Person" = "user1@domain.com","21"}Managed Metadata (single value with path to term): -Values @{"MetadataField" = "CORPORATE|DEPARTMENTS|FINANCE"}Managed Metadata (single value with id of term): -Values @{"MetadataField" = "fe40a95b-2144-4fa2-b82a-0b3d0299d818"} with Id of termManaged Metadata (multiple values with paths to terms): -Values @{"MetadataField" = "CORPORATE|DEPARTMENTS|FINANCE","CORPORATE|DEPARTMENTS|HR"}Managed Metadata (multiple values with ids of terms): -Values @{"MetadataField" = "fe40a95b-2144-4fa2-b82a-0b3d0299d818","52d88107-c2a8-4bf0-adfa-04bc2305b593"}Hyperlink or Picture: -Values @{"Hyperlink" = "https://github.com/OfficeDev/, OfficePnp"}')]
-    [hashtable]
-    ${Values},
-
-    [Parameter(HelpMessage='The list relative URL of a folder. E.g. "MyFolder" for a folder located in the root of the list, or "MyFolder/SubFolder" for a folder located in the MyFolder folder which is located in the root of the list.')]
-    [string]
-    ${Folder},
-
-    [Parameter(HelpMessage='The name of the retention label.')]
-    [string]
-    ${Label},
-
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
-
+    param(
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Values
+    )
 }
 function Add-PnPMasterPage
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Path to the file which will be uploaded')]
-    [string]
-    ${SourceFilePath},
+    param(
+        [Parameter()]
+        [System.String]
+        $SourceFilePath,
 
-    [Parameter(Mandatory=$true, HelpMessage='Title for the Masterpage')]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(Mandatory=$true, HelpMessage='Description for the Masterpage')]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [Parameter(HelpMessage='Folder hierarchy where the MasterPage will be deployed')]
-    [string]
-    ${DestinationFolderHierarchy},
+        [Parameter()]
+        [System.String]
+        $DestinationFolderHierarchy,
 
-    [Parameter(HelpMessage='UIVersion of the Masterpage. Default = 15')]
-    [string]
-    ${UIVersion},
+        [Parameter()]
+        [System.String]
+        $UIVersion,
 
-    [Parameter(HelpMessage='Default CSS file for the MasterPage, this Url is SiteRelative')]
-    [string]
-    ${DefaultCssFile},
+        [Parameter()]
+        [System.String]
+        $DefaultCssFile,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Add-PnPMicrosoft365GroupMember
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $Users,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RemoveExisting,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Add-PnPMicrosoft365GroupOwner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $Users,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RemoveExisting,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Add-PnPMicrosoft365GroupToSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.String]
+        $Alias,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Classification,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsPublic,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $KeepOldHomePage,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $HubSiteId,
+
+        [Parameter()]
+        [System.String[]]
+        $Owners,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPNavigationNode
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The location of the node to add. Either TopNavigationBar, QuickLaunch, SearchNav')]
-    [OfficeDevPnP.Core.Enums.NavigationType]
-    ${Location},
+    param(
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.NavigationType]
+        $Location,
 
-    [Parameter(Mandatory=$true, HelpMessage='The title of the node to add')]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(HelpMessage='The url to navigate to when clicking the new menu item. This can either be absolute or relative to the Web. Fragments are not supported.')]
-    [string]
-    ${Url},
+        [Parameter()]
+        [System.String]
+        $Url,
 
-    [Parameter(HelpMessage='The key of the parent. Leave empty to add to the top level')]
-    [System.Nullable[int]]
-    ${Parent},
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Parent,
 
-    [Parameter(HelpMessage='Optional value of a header entry to add the menu item to.')]
-    [Obsolete('Use Parent instead')]
-    [string]
-    ${Header},
+        [Parameter()]
+        [System.String]
+        $Header,
 
-    [Parameter(HelpMessage='Add the new menu item to beginning of the collection.')]
-    [switch]
-    ${First},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $First,
 
-    [Parameter(HelpMessage='Indicates the destination URL is outside of the site collection.')]
-    [switch]
-    ${External},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $External,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
-}
-function Add-PnPOffice365GroupToSite
-{
-    [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Url of the site to be connected to an Office 365 Group.')]
-    [string]
-    ${Url},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
-    [Parameter(Mandatory=$true, HelpMessage='Specifies the alias of the group. Cannot contain spaces.')]
-    [string]
-    ${Alias},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
 
-    [Parameter(HelpMessage='The optional description of the group.')]
-    [string]
-    ${Description},
-
-    [Parameter(Mandatory=$true, HelpMessage='The display name of the group.')]
-    [string]
-    ${DisplayName},
-
-    [Parameter(HelpMessage='Specifies the classification of the group.')]
-    [string]
-    ${Classification},
-
-    [Parameter(HelpMessage='Specifies if the group is public. Defaults to false.')]
-    [switch]
-    ${IsPublic},
-
-    [Parameter(HelpMessage='Specifies if the current site home page is kept. Defaults to false.')]
-    [switch]
-    ${KeepOldHomePage},
-
-    [Parameter(HelpMessage='If specified the site will be associated to the hubsite as identified by this id')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${HubSiteId},
-
-    [Parameter(HelpMessage='The array UPN values of the group''s owners.')]
-    [string[]]
-    ${Owners})
-
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPOrgAssetsLibrary
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The full url of the document library to be marked as one of organization''s assets sources')]
-    [string]
-    ${LibraryUrl},
+    param(
+        [Parameter()]
+        [System.String]
+        $LibraryUrl,
 
-    [Parameter(HelpMessage='The full url to an image that should be used as a thumbnail for showing this source. The image must reside in the same site as the document library you specify.')]
-    [string]
-    ${ThumbnailUrl},
+        [Parameter()]
+        [System.String]
+        $ThumbnailUrl,
 
-    [Parameter(HelpMessage='Indicates what type of Office 365 CDN source the document library will be added to')]
-    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
-    ${CdnType})
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        $CdnType,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPOrgNewsSite
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The url of the site to be marked as one of organization''s news sites')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
-    ${OrgNewsSiteUrl})
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $OrgNewsSiteUrl,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPProvisioningTemplate
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The template to add to the tenant template')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningTemplate]
-    ${SiteTemplate},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningTemplate]
+        $SiteTemplate,
 
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The tenant template to add the template to')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningHierarchy]
-    ${TenantTemplate})
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningHierarchy]
+        $TenantTemplate,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
 }
 function Add-PnPPublishingImageRendition
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The display name of the Image Rendition.')]
-    [string]
-    ${Name},
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(Mandatory=$true, HelpMessage='The width of the Image Rendition.')]
-    [int]
-    ${Width},
+        [Parameter()]
+        [System.Int32]
+        $Width,
 
-    [Parameter(Mandatory=$true, HelpMessage='The height of the Image Rendition.')]
-    [int]
-    ${Height},
+        [Parameter()]
+        [System.Int32]
+        $Height,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPPublishingPage
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The name of the page to be added as an aspx file')]
-    [Alias('Name')]
-    [string]
-    ${PageName},
+    param(
+        [Parameter()]
+        [System.String]
+        $PageName,
 
-    [Parameter(HelpMessage='The site relative folder path of the page to be added')]
-    [Alias('Folder')]
-    [string]
-    ${FolderPath},
+        [Parameter()]
+        [System.String]
+        $FolderPath,
 
-    [Parameter(Mandatory=$true, HelpMessage='The name of the page layout you want to use. Specify without the .aspx extension. So ''ArticleLeft'' or ''BlankWebPartPage''')]
-    [string]
-    ${PageTemplateName},
+        [Parameter()]
+        [System.String]
+        $PageTemplateName,
 
-    [Parameter(ParameterSetName='WithTitle', HelpMessage='The title of the page')]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(HelpMessage='Publishes the page. Also Approves it if moderation is enabled on the Pages library.')]
-    [switch]
-    ${Publish},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Publish,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPPublishingPageLayout
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Path to the file which will be uploaded')]
-    [string]
-    ${SourceFilePath},
+    param(
+        [Parameter()]
+        [System.String]
+        $SourceFilePath,
 
-    [Parameter(Mandatory=$true, HelpMessage='Title for the page layout')]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(Mandatory=$true, HelpMessage='Description for the page layout')]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [Parameter(Mandatory=$true, HelpMessage='Associated content type ID')]
-    [string]
-    ${AssociatedContentTypeID},
+        [Parameter()]
+        [System.String]
+        $AssociatedContentTypeID,
 
-    [Parameter(HelpMessage='Folder hierarchy where the html page layouts will be deployed')]
-    [string]
-    ${DestinationFolderHierarchy},
+        [Parameter()]
+        [System.String]
+        $DestinationFolderHierarchy,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPRoleDefinition
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='Name of new permission level.')]
-    [string]
-    ${RoleName},
+    param(
+        [Parameter()]
+        [System.String]
+        $RoleName,
 
-    [Parameter(HelpMessage='An existing permission level or the name of an permission level to clone as base template.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.RoleDefinitionPipeBind]
-    ${Clone},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.RoleDefinitionPipeBind]
+        $Clone,
 
-    [Parameter(HelpMessage='Specifies permission flags(s) to enable. Please visit https://docs.microsoft.com/previous-versions/office/sharepoint-csom/ee536458(v%3Doffice.15) for the PermissionKind enum')]
-    [Microsoft.SharePoint.Client.PermissionKind[]]
-    ${Include},
+        [Parameter()]
+        [Microsoft.SharePoint.Client.PermissionKind[]]
+        $Include,
 
-    [Parameter(HelpMessage='Specifies permission flags(s) to disable. Please visit https://docs.microsoft.com/previous-versions/office/sharepoint-csom/ee536458(v%3Doffice.15) for the PermissionKind enum')]
-    [Microsoft.SharePoint.Client.PermissionKind[]]
-    ${Exclude},
+        [Parameter()]
+        [Microsoft.SharePoint.Client.PermissionKind[]]
+        $Exclude,
 
-    [Parameter(HelpMessage='Optional description for the new permission level.')]
-    [string]
-    ${Description})
+        [Parameter()]
+        [System.String]
+        $Description,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPSiteClassification
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true)]
-    [System.Collections.Generic.List[string]]
-    ${Classifications})
+    param(
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        $Classifications,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPSiteCollectionAdmin
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='Specifies owner(s) to add as site collection administrators. They will be added as additional site collection administrators to the site in the current context. Existing administrators will stay. Can be both users and groups.')]
-    [System.Collections.Generic.List[SharePointPnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]]
-    ${Owners})
+    param(
+        [Parameter()]
+        [System.Collections.Generic.List`1[PnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]]
+        $Owners,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPSiteCollectionAppCatalog
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Url of the site to add the app catalog to.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
-    ${Site})
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $Site,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPSiteDesign
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The title of the site design')]
-    [string]
-    ${Title},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(Mandatory=$true, HelpMessage='An array of guids of site scripts')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind[]]
-    ${SiteScriptIds},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind[]]
+        $SiteScriptIds,
 
-    [Parameter(HelpMessage='The description of the site design')]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [Parameter(HelpMessage='Specifies if the site design is a default site design')]
-    [switch]
-    ${IsDefault},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsDefault,
 
-    [Parameter(HelpMessage='Sets the text for the preview image')]
-    [string]
-    ${PreviewImageAltText},
+        [Parameter()]
+        [System.String]
+        $PreviewImageAltText,
 
-    [Parameter(HelpMessage='Sets the url to the preview image')]
-    [string]
-    ${PreviewImageUrl},
+        [Parameter()]
+        [System.String]
+        $PreviewImageUrl,
 
-    [Parameter(Mandatory=$true, HelpMessage='Specifies the type of site to which this design applies')]
-    [SharePointPnP.PowerShell.Commands.Enums.SiteWebTemplate]
-    ${WebTemplate})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.SiteWebTemplate]
+        $WebTemplate,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Add-PnPSiteDesignTask
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The ID of the site design to apply.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${SiteDesignId},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $SiteDesignId,
 
-    [Parameter(HelpMessage='The URL of the site collection where the site design will be applied. If not specified the design will be applied to the site you connected to with Connect-PnPOnline.')]
-    [string]
-    ${WebUrl},
+        [Parameter()]
+        [System.String]
+        $WebUrl,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Add-PnPSiteScript
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The title of the site script')]
-    [string]
-    ${Title},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(HelpMessage='The description of the site script')]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [Parameter(Mandatory=$true, HelpMessage='A JSON string containing the site script')]
-    [string]
-    ${Content})
+        [Parameter()]
+        [System.String]
+        $Content,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Add-PnPStoredCredential
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The credential to set')]
-    [string]
-    ${Name},
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(Mandatory=$true)]
-    [string]
-    ${Username},
+        [Parameter()]
+        [System.String]
+        $Username,
 
-    [Parameter(HelpMessage='If not specified you will be prompted to enter your password.
-If you want to specify this value use ConvertTo-SecureString -String ''YourPassword'' -AsPlainText -Force')]
-    [securestring]
-    ${Password})
+        [Parameter()]
+        [System.Security.SecureString]
+        $Password,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPTaxonomyField
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='The list object or name where this field needs to be added')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(Mandatory=$true, HelpMessage='The display name of the field')]
-    [string]
-    ${DisplayName},
+        [Parameter()]
+        [System.String]
+        $DisplayName,
 
-    [Parameter(Mandatory=$true, HelpMessage='The internal name of the field')]
-    [string]
-    ${InternalName},
+        [Parameter()]
+        [System.String]
+        $InternalName,
 
-    [Parameter(ParameterSetName='Path', Mandatory=$true, HelpMessage='The path to the term that this needs to be bound')]
-    [string]
-    ${TermSetPath},
+        [Parameter()]
+        [System.String]
+        $TermSetPath,
 
-    [Parameter(ParameterSetName='Id', HelpMessage='The ID of the Taxonomy item')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${TaxonomyItemId},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $TaxonomyItemId,
 
-    [Parameter(ParameterSetName='Path', HelpMessage='The path delimiter to be used, by default this is ''|''')]
-    [string]
-    ${TermPathDelimiter},
+        [Parameter()]
+        [System.String]
+        $TermPathDelimiter,
 
-    [Parameter(HelpMessage='The group name to where this field belongs to')]
-    [string]
-    ${Group},
+        [Parameter()]
+        [System.String]
+        $Group,
 
-    [Parameter(HelpMessage='The ID for the field, must be unique')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${Id},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $Id,
 
-    [Parameter(HelpMessage='Switch Parameter if this field must be added to the default view')]
-    [switch]
-    ${AddToDefaultView},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AddToDefaultView,
 
-    [Parameter(HelpMessage='Switch Parameter if this Taxonomy field can hold multiple values')]
-    [switch]
-    ${MultiValue},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $MultiValue,
 
-    [Parameter(HelpMessage='Switch Parameter if the field is a required field')]
-    [switch]
-    ${Required},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Required,
 
-    [Parameter(HelpMessage='Specifies the control settings while adding a field. See https://msdn.microsoft.com/en-us/library/microsoft.sharepoint.client.addfieldoptions.aspx for details')]
-    [Microsoft.SharePoint.Client.AddFieldOptions]
-    ${FieldOptions},
+        [Parameter()]
+        [Microsoft.SharePoint.Client.AddFieldOptions]
+        $FieldOptions,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Add-PnPTeamsChannel
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Private,
+
+        [Parameter()]
+        [System.String]
+        $OwnerUPN,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Add-PnPTeamsTab
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsChannelPipeBind]
+        $Channel,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Model.Teams.TeamTabType]
+        $Type,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.String]
+        $ContentUrl
+    )
 }
 function Add-PnPTeamsTeam
 {
     [CmdletBinding()]
-param()
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Add-PnPTeamsUser
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [System.String]
+        $User,
+
+        [Parameter()]
+        [System.String]
+        $Role,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPTenantCdnOrigin
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Specifies a path to the doc library to be configured. It can be provided in two ways: relative path, or a mask.
+    param(
+        [Parameter()]
+        [System.String]
+        $OriginUrl,
 
-Relative-Relative path depends on the OriginScope. If the originScope is Tenant, a path must be a relative path under the tenant root. If the originScope is Site, a path must be a relative path under the given Site. The path must point to the valid Document Library or a folder with a document library.')]
-    [string]
-    ${OriginUrl},
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        $CdnType,
 
-    [Parameter(Mandatory=$true, HelpMessage='Specifies the CDN type. The valid values are: public or private.')]
-    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
-    ${CdnType})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPTenantSequence
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The template to add the sequence to')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningHierarchy]
-    ${Template},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningHierarchy]
+        $Template,
 
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='Optional Id of the sequence')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningSequence]
-    ${Sequence})
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningSequence]
+        $Sequence,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Add-PnPTenantSequenceSite
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ProvisioningSitePipeBind]
-    ${Site},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ProvisioningSitePipeBind]
+        $Site,
 
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The sequence to add the site to')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningSequence]
-    ${Sequence})
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningSequence]
+        $Sequence,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Add-PnPTenantSequenceSubSite
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The subsite to add')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.TeamNoGroupSubSite]
-    ${SubSite},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.TeamNoGroupSubSite]
+        $SubSite,
 
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The site to add the subsite to')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.SiteCollection]
-    ${Site})
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.SiteCollection]
+        $Site,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Add-PnPTenantTheme
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='If a theme is already present, specifying this will overwrite the existing theme')]
-    [switch]
-    ${Overwrite},
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Overwrite,
 
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The name of the theme to add or update')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ThemePipeBind]
-    ${Identity},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ThemePipeBind]
+        $Identity,
 
-    [Parameter(Mandatory=$true, HelpMessage='The palette to add. See examples for more information.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ThemePalettePipeBind]
-    ${Palette},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ThemePalettePipeBind]
+        $Palette,
 
-    [Parameter(Mandatory=$true, HelpMessage='If the theme is inverted or not')]
-    [bool]
-    ${IsInverted})
+        [Parameter()]
+        [System.Boolean]
+        $IsInverted,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPUserToGroup
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='Internal', Mandatory=$true, HelpMessage='The login name of the user')]
-    [string]
-    ${LoginName},
+    param(
+        [Parameter()]
+        [System.String]
+        $LoginName,
 
-    [Parameter(ParameterSetName='Internal', Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The group id, group name or group object to add the user to.')]
-    [Parameter(ParameterSetName='External', Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The group id, group name or group object to add the user to.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
-    ${Identity},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Identity,
 
-    [Parameter(ParameterSetName='External', Mandatory=$true, HelpMessage='The email address of the user')]
-    [string]
-    ${EmailAddress},
+        [Parameter()]
+        [System.String]
+        $EmailAddress,
 
-    [Parameter(ParameterSetName='External')]
-    [switch]
-    ${SendEmail},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SendEmail,
 
-    [Parameter(ParameterSetName='External')]
-    [string]
-    ${EmailBody},
+        [Parameter()]
+        [System.String]
+        $EmailBody,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPView
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID or Url of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(Mandatory=$true, HelpMessage='The title of the view.')]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(HelpMessage='A valid CAML Query.')]
-    [string]
-    ${Query},
+        [Parameter()]
+        [System.String]
+        $Query,
 
-    [Parameter(Mandatory=$true, HelpMessage='A list of fields to add.')]
-    [string[]]
-    ${Fields},
+        [Parameter()]
+        [System.String[]]
+        $Fields,
 
-    [Parameter(HelpMessage='The type of view to add.')]
-    [Microsoft.SharePoint.Client.ViewType]
-    ${ViewType},
+        [Parameter()]
+        [Microsoft.SharePoint.Client.ViewType]
+        $ViewType,
 
-    [Parameter(HelpMessage='The row limit for the view. Defaults to 30.')]
-    [uint32]
-    ${RowLimit},
+        [Parameter()]
+        [System.UInt32]
+        $RowLimit,
 
-    [Parameter(HelpMessage='If specified, a personal view will be created.')]
-    [switch]
-    ${Personal},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Personal,
 
-    [Parameter(HelpMessage='If specified, the view will be set as the default view for the list.')]
-    [switch]
-    ${SetAsDefault},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SetAsDefault,
 
-    [Parameter(HelpMessage='If specified, the view will have paging.')]
-    [switch]
-    ${Paged},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Paged,
 
-    [Parameter(HelpMessage='A valid XML fragment containing one or more Aggregations')]
-    [string]
-    ${Aggregations},
+        [Parameter()]
+        [System.String]
+        $Aggregations,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPWebhookSubscription
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='The list object or name where the Webhook subscription will be added to')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(Mandatory=$true, HelpMessage='The URL of the Webhook endpoint that will be notified of the change')]
-    [string]
-    ${NotificationUrl},
+        [Parameter()]
+        [System.String]
+        $NotificationUrl,
 
-    [Parameter(HelpMessage='The date at which the Webhook subscription will expire. (Default: 6 months from today)')]
-    [datetime]
-    ${ExpirationDate},
+        [Parameter()]
+        [System.DateTime]
+        $ExpirationDate,
 
-    [Parameter(HelpMessage='A client state information that will be passed through notifications')]
-    [string]
-    ${ClientState},
+        [Parameter()]
+        [System.String]
+        $ClientState,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPWebPartToWebPartPage
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Server Relative Url of the page to add the web part to.')]
-    [Alias('PageUrl')]
-    [string]
-    ${ServerRelativePageUrl},
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativePageUrl,
 
-    [Parameter(ParameterSetName='XML', Mandatory=$true, HelpMessage='A string containing the XML for the web part.')]
-    [string]
-    ${Xml},
+        [Parameter()]
+        [System.String]
+        $Xml,
 
-    [Parameter(ParameterSetName='FILE', Mandatory=$true, HelpMessage='A path to a web part file on a the file system.')]
-    [string]
-    ${Path},
+        [Parameter()]
+        [System.String]
+        $Path,
 
-    [Parameter(Mandatory=$true, HelpMessage='The Zone Id where the web part must be placed')]
-    [string]
-    ${ZoneId},
+        [Parameter()]
+        [System.String]
+        $ZoneId,
 
-    [Parameter(Mandatory=$true, HelpMessage='The Zone Index where the web part must be placed')]
-    [int]
-    ${ZoneIndex},
+        [Parameter()]
+        [System.Int32]
+        $ZoneIndex,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPWebPartToWikiPage
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Full server relative url of the web part page, e.g. /sites/demo/sitepages/home.aspx')]
-    [Alias('PageUrl')]
-    [string]
-    ${ServerRelativePageUrl},
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativePageUrl,
 
-    [Parameter(ParameterSetName='XML', Mandatory=$true, HelpMessage='A string containing the XML for the web part.')]
-    [string]
-    ${Xml},
+        [Parameter()]
+        [System.String]
+        $Xml,
 
-    [Parameter(ParameterSetName='FILE', Mandatory=$true, HelpMessage='A path to a web part file on a the file system.')]
-    [string]
-    ${Path},
+        [Parameter()]
+        [System.String]
+        $Path,
 
-    [Parameter(Mandatory=$true, HelpMessage='Row number where the web part must be placed')]
-    [int]
-    ${Row},
+        [Parameter()]
+        [System.Int32]
+        $Row,
 
-    [Parameter(Mandatory=$true, HelpMessage='Column number where the web part must be placed')]
-    [int]
-    ${Column},
+        [Parameter()]
+        [System.Int32]
+        $Column,
 
-    [Parameter(HelpMessage='Must there be a extra space between the web part')]
-    [switch]
-    ${AddSpace},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AddSpace,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPWikiPage
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The server relative page URL')]
-    [Alias('PageUrl')]
-    [string]
-    ${ServerRelativePageUrl},
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativePageUrl,
 
-    [Parameter(ParameterSetName='WithContent', Mandatory=$true)]
-    [string]
-    ${Content},
+        [Parameter()]
+        [System.String]
+        $Content,
 
-    [Parameter(ParameterSetName='WithLayout', Mandatory=$true)]
-    [OfficeDevPnP.Core.WikiPageLayout]
-    ${Layout},
+        [Parameter()]
+        [OfficeDevPnP.Core.WikiPageLayout]
+        $Layout,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPWorkflowDefinition
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The workflow definition to add.')]
-    [Microsoft.SharePoint.Client.WorkflowServices.WorkflowDefinition]
-    ${Definition},
+    param(
+        [Parameter()]
+        [Microsoft.SharePoint.Client.WorkflowServices.WorkflowDefinition]
+        $Definition,
 
-    [Parameter(HelpMessage='Overrides the default behavior, which is to publish workflow definitions.')]
-    [switch]
-    ${DoNotPublish},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DoNotPublish,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Add-PnPWorkflowSubscription
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The name of the subscription')]
-    [string]
-    ${Name},
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(Mandatory=$true, HelpMessage='The name of the workflow definition')]
-    [string]
-    ${DefinitionName},
+        [Parameter()]
+        [System.String]
+        $DefinitionName,
 
-    [Parameter(Mandatory=$true, HelpMessage='The list to add the workflow to')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(HelpMessage='Switch if the workflow should be started manually, default value is ''true''')]
-    [switch]
-    ${StartManually},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $StartManually,
 
-    [Parameter(HelpMessage='Should the workflow run when an new item is created')]
-    [switch]
-    ${StartOnCreated},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $StartOnCreated,
 
-    [Parameter(HelpMessage='Should the workflow run when an item is changed')]
-    [switch]
-    ${StartOnChanged},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $StartOnChanged,
 
-    [Parameter(Mandatory=$true, HelpMessage='The name of the History list')]
-    [string]
-    ${HistoryListName},
+        [Parameter()]
+        [System.String]
+        $HistoryListName,
 
-    [Parameter(Mandatory=$true, HelpMessage='The name of the task list')]
-    [string]
-    ${TaskListName},
+        [Parameter()]
+        [System.String]
+        $TaskListName,
 
-    [System.Collections.Generic.Dictionary[string,string]]
-    ${AssociationValues},
+        [Parameter()]
+        [System.Collections.Generic.Dictionary`2[System.String,System.String]]
+        $AssociationValues,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Apply-PnPProvisioningTemplate
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='Path', Mandatory=$true, Position=0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, HelpMessage='Path to the xml or pnp file containing the provisioning template.')]
-    [string]
-    ${Path},
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
 
-    [Parameter(HelpMessage='ID of the template to use from the xml file containing the provisioning template. If not specified and multiple ProvisioningTemplate elements exist, the last one will be used.')]
-    [string]
-    ${TemplateId},
+        [Parameter()]
+        [System.String]
+        $TemplateId,
 
-    [Parameter(HelpMessage='Root folder where resources/files that are being referenced in the template are located. If not specified the same folder as where the provisioning template is located will be used.')]
-    [string]
-    ${ResourceFolder},
+        [Parameter()]
+        [System.String]
+        $ResourceFolder,
 
-    [Parameter(HelpMessage='Specify this parameter if you want to overwrite and/or create properties that are known to be system entries (starting with vti_, dlc_, etc.)')]
-    [switch]
-    ${OverwriteSystemPropertyBagValues},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OverwriteSystemPropertyBagValues,
 
-    [Parameter(HelpMessage='Ignore duplicate data row errors when the data row in the template already exists.')]
-    [switch]
-    ${IgnoreDuplicateDataRowErrors},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IgnoreDuplicateDataRowErrors,
 
-    [Parameter(HelpMessage='If set content types will be provisioned if the target web is a subweb.')]
-    [switch]
-    ${ProvisionContentTypesToSubWebs},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProvisionContentTypesToSubWebs,
 
-    [Parameter(HelpMessage='If set fields will be provisioned if the target web is a subweb.')]
-    [switch]
-    ${ProvisionFieldsToSubWebs},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProvisionFieldsToSubWebs,
 
-    [Parameter(HelpMessage='Override the RemoveExistingNodes attribute in the Navigation elements of the template. If you specify this value the navigation nodes will always be removed before adding the nodes in the template')]
-    [switch]
-    ${ClearNavigation},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ClearNavigation,
 
-    [Parameter(HelpMessage='Allows you to specify parameters that can be referred to in the template by means of the {parameter:<Key>} token. See examples on how to use this parameter.')]
-    [hashtable]
-    ${Parameters},
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Parameters,
 
-    [Parameter(HelpMessage='Allows you to only process a specific part of the template. Notice that this might fail, as some of the handlers require other artifacts in place if they are not part of what your applying. Visit https://docs.microsoft.com/dotnet/api/officedevpnp.core.framework.provisioning.model.handlers for possible values.')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers]
-    ${Handlers},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers]
+        $Handlers,
 
-    [Parameter(HelpMessage='Allows you to run all handlers, excluding the ones specified.')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers]
-    ${ExcludeHandlers},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers]
+        $ExcludeHandlers,
 
-    [Parameter(HelpMessage='Allows you to specify ExtensbilityHandlers to execute while applying a template')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.ExtensibilityHandler[]]
-    ${ExtensibilityHandlers},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ExtensibilityHandler[]]
+        $ExtensibilityHandlers,
 
-    [Parameter(HelpMessage='Allows you to specify ITemplateProviderExtension to execute while applying a template.')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
-    ${TemplateProviderExtensions},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions,
 
-    [Parameter(ParameterSetName='Instance', HelpMessage='Allows you to provide an in-memory instance of the ProvisioningTemplate type of the PnP Core Component. When using this parameter, the -Path parameter refers to the path of any supporting file for the template.')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningTemplate]
-    ${InputInstance},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningTemplate]
+        $InputInstance,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Apply-PnPTenantTemplate
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(ParameterSetName='By Path', Mandatory=$true, Position=0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, HelpMessage='Path to the xml or pnp file containing the tenant template.')]
-    [string]
-    ${Path},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
 
-    [Parameter(ParameterSetName='By Object', Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningHierarchy]
-    ${Template},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningHierarchy]
+        $Template,
 
-    [string]
-    ${SequenceId},
+        [Parameter()]
+        [System.String]
+        $SequenceId,
 
-    [Parameter(HelpMessage='Root folder where resources/files that are being referenced in the template are located. If not specified the same folder as where the tenant template is located will be used.')]
-    [string]
-    ${ResourceFolder},
+        [Parameter()]
+        [System.String]
+        $ResourceFolder,
 
-    [Parameter(HelpMessage='Allows you to only process a specific part of the template. Notice that this might fail, as some of the handlers require other artifacts in place if they are not part of what your applying.')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers]
-    ${Handlers},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers]
+        $Handlers,
 
-    [Parameter(HelpMessage='Allows you to run all handlers, excluding the ones specified.')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers]
-    ${ExcludeHandlers},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers]
+        $ExcludeHandlers,
 
-    [Parameter(HelpMessage='Allows you to specify ExtensbilityHandlers to execute while applying a template')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.ExtensibilityHandler[]]
-    ${ExtensibilityHandlers},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ExtensibilityHandler[]]
+        $ExtensibilityHandlers,
 
-    [Parameter(HelpMessage='Allows you to specify ITemplateProviderExtension to execute while applying a template.')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
-    ${TemplateProviderExtensions},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions,
 
-    [Parameter(HelpMessage='Allows you to specify parameters that can be referred to in the tenant template by means of the {parameter:<Key>} token. See examples on how to use this parameter.')]
-    [hashtable]
-    ${Parameters},
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Parameters,
 
-    [Parameter(HelpMessage='Specify this parameter if you want to overwrite and/or create properties that are known to be system entries (starting with vti_, dlc_, etc.)')]
-    [switch]
-    ${OverwriteSystemPropertyBagValues},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OverwriteSystemPropertyBagValues,
 
-    [Parameter(HelpMessage='Ignore duplicate data row errors when the data row in the template already exists.')]
-    [switch]
-    ${IgnoreDuplicateDataRowErrors},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IgnoreDuplicateDataRowErrors,
 
-    [Parameter(HelpMessage='If set content types will be provisioned if the target web is a subweb.')]
-    [switch]
-    ${ProvisionContentTypesToSubWebs},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProvisionContentTypesToSubWebs,
 
-    [Parameter(HelpMessage='If set fields will be provisioned if the target web is a subweb.')]
-    [switch]
-    ${ProvisionFieldsToSubWebs},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProvisionFieldsToSubWebs,
 
-    [Parameter(HelpMessage='Override the RemoveExistingNodes attribute in the Navigation elements of the template. If you specify this value the navigation nodes will always be removed before adding the nodes in the template')]
-    [switch]
-    ${ClearNavigation},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ClearNavigation,
 
-    [Parameter(HelpMessage='Specify a JSON configuration file to configure the extraction progress.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ApplyConfigurationPipeBind]
-    ${Configuration})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ApplyConfigurationPipeBind]
+        $Configuration,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Approve-PnPTenantServicePrincipalPermissionRequest
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true)]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${RequestId},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $RequestId,
 
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
-    [switch]
-    ${Force})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Clear-PnPDefaultColumnValues
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID, Name or Url of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(Mandatory=$true, HelpMessage='The internal name, id or a reference to a field')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
-    ${Field},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
+        $Field,
 
-    [Parameter(HelpMessage='A library relative folder path, if not specified it will set the default column values on the root folder of the library (''/'')')]
-    [string]
-    ${Folder},
+        [Parameter()]
+        [System.String]
+        $Folder,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Clear-PnPListItemAsRecord
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID, Title or Url of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The ID of the listitem, or actual ListItem object')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
-    ${Identity},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Clear-PnPMicrosoft365GroupOwner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Clear-PnPRecycleBinItem
 {
-    [CmdletBinding(DefaultParameterSetName='All')]
-param(
-    [Parameter(ParameterSetName='Identity', Mandatory=$true, ValueFromPipeline=$true, HelpMessage='Id of the recycle bin item or the recycle bin item itself to permanently delete')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.RecycleBinItemPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.RecycleBinItemPipeBind]
+        $Identity,
 
-    [Parameter(ParameterSetName='All', HelpMessage='Clears all items')]
-    [switch]
-    ${All},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
 
-    [Parameter(ParameterSetName='All', HelpMessage='If provided, only all the items in the second stage recycle bin will be cleared')]
-    [switch]
-    ${SecondStageOnly},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SecondStageOnly,
 
-    [Parameter(HelpMessage='If provided, no confirmation will be asked to permanently delete the recycle bin item')]
-    [switch]
-    ${Force})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [System.Int32]
+        $RowLimit,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Clear-PnPTenantAppCatalogUrl
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param()
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Clear-PnPTenantRecycleBinItem
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Url of the site collection to permanently delete from the tenant recycle bin')]
-    [string]
-    ${Url},
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
 
-    [Parameter(HelpMessage='If provided, the PowerShell execution will halt until the operation has completed')]
-    [switch]
-    ${Wait},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Wait,
 
-    [Parameter(HelpMessage='If provided, no confirmation will be asked to permanently delete the site collection from the tenant recycle bin')]
-    [switch]
-    ${Force})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Connect-PnPOnline
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='Main', ValueFromPipeline=$true, HelpMessage='Returns the connection for use with the -Connection parameter on cmdlets.')]
-    [Parameter(ParameterSetName='Token', ValueFromPipeline=$true, HelpMessage='Returns the connection for use with the -Connection parameter on cmdlets.')]
-    [Parameter(ParameterSetName='WebLogin', ValueFromPipeline=$true, HelpMessage='Returns the connection for use with the -Connection parameter on cmdlets.')]
-    [Parameter(ParameterSetName='Azure Active Directory', ValueFromPipeline=$true, HelpMessage='Returns the connection for use with the -Connection parameter on cmdlets.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory', ValueFromPipeline=$true, HelpMessage='Returns the connection for use with the -Connection parameter on cmdlets.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate as PEM strings', ValueFromPipeline=$true, HelpMessage='Returns the connection for use with the -Connection parameter on cmdlets.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate from certificate store by thumbprint', ValueFromPipeline=$true, HelpMessage='Returns the connection for use with the -Connection parameter on cmdlets.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using X502 certificates', ValueFromPipeline=$true, HelpMessage='Returns the connection for use with the -Connection parameter on cmdlets.')]
-    [Parameter(ParameterSetName='SPO Management Shell Credentials', ValueFromPipeline=$true, HelpMessage='Returns the connection for use with the -Connection parameter on cmdlets.')]
-    [Parameter(ParameterSetName='Access Token', ValueFromPipeline=$true, HelpMessage='Returns the connection for use with the -Connection parameter on cmdlets.')]
-    [Parameter(ParameterSetName='PnP O365 Management Shell / DeviceLogin', ValueFromPipeline=$true, HelpMessage='Returns the connection for use with the -Connection parameter on cmdlets.')]
-    [switch]
-    ${ReturnConnection},
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ReturnConnection,
 
-    [Parameter(ParameterSetName='Main', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The Url of the site collection to connect to.')]
-    [Parameter(ParameterSetName='Token', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The Url of the site collection to connect to.')]
-    [Parameter(ParameterSetName='WebLogin', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The Url of the site collection to connect to.')]
-    [Parameter(ParameterSetName='Azure Active Directory', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The Url of the site collection to connect to.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The Url of the site collection to connect to.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate as PEM strings', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The Url of the site collection to connect to.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using X502 certificates', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The Url of the site collection to connect to.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate from certificate store by thumbprint', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The Url of the site collection to connect to.')]
-    [Parameter(ParameterSetName='SPO Management Shell Credentials', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The Url of the site collection to connect to.')]
-    [Parameter(ParameterSetName='Access Token', Position=0, ValueFromPipeline=$true, HelpMessage='The Url of the site collection to connect to.')]
-    [Parameter(ParameterSetName='PnP O365 Management Shell / DeviceLogin', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The Url of the site collection to connect to.')]
-    [string]
-    ${Url},
+        [Parameter()]
+        [System.String]
+        $Url,
 
-    [Parameter(ParameterSetName='Main', HelpMessage='Credentials of the user to connect with. Either specify a PSCredential object or a string. In case of a string value a lookup will be done to the Generic Credentials section of the Windows Credentials in the Windows Credential Manager for the correct credentials.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.CredentialPipeBind]
-    ${Credentials},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.CredentialPipeBind]
+        $Credentials,
 
-    [Parameter(ParameterSetName='Main', HelpMessage='If you want to connect with the current user credentials')]
-    [switch]
-    ${CurrentCredentials},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $CurrentCredentials,
 
-    [Parameter(ParameterSetName='Main', HelpMessage='If you want to connect to your on-premises SharePoint farm using ADFS')]
-    [switch]
-    ${UseAdfs},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UseAdfs,
 
-    [Parameter(ParameterSetName='Main', HelpMessage='If you want to connect to your SharePoint farm using ADFS with Certificate Authentication')]
-    [switch]
-    ${UseAdfsCert},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UseAdfsCert,
 
-    [Parameter(ParameterSetName='Main', HelpMessage='Authenticate using Kerberos to an on-premises ADFS instance.')]
-    [switch]
-    ${Kerberos},
+        [Parameter()]
+        [System.Security.Cryptography.X509Certificates.X509Certificate2]
+        $ClientCertificate,
 
-    [Parameter(ParameterSetName='Main', HelpMessage='The name of the ADFS trusted login provider')]
-    [string]
-    ${LoginProviderName},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Kerberos,
 
-    [Parameter(ParameterSetName='Main', HelpMessage='Specifies a minimal server healthscore before any requests are executed.')]
-    [Parameter(ParameterSetName='Token', HelpMessage='Specifies a minimal server healthscore before any requests are executed.')]
-    [Parameter(ParameterSetName='WebLogin', HelpMessage='Specifies a minimal server healthscore before any requests are executed.')]
-    [Parameter(ParameterSetName='Azure Active Directory', HelpMessage='Specifies a minimal server healthscore before any requests are executed.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory', HelpMessage='Specifies a minimal server healthscore before any requests are executed.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate as PEM strings', HelpMessage='Specifies a minimal server healthscore before any requests are executed.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate from certificate store by thumbprint', HelpMessage='Specifies a minimal server healthscore before any requests are executed.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using X502 certificates', HelpMessage='Specifies a minimal server healthscore before any requests are executed.')]
-    [Parameter(ParameterSetName='SPO Management Shell Credentials', HelpMessage='Specifies a minimal server healthscore before any requests are executed.')]
-    [Parameter(ParameterSetName='Access Token', HelpMessage='Specifies a minimal server healthscore before any requests are executed.')]
-    [int]
-    ${MinimalHealthScore},
+        [Parameter()]
+        [System.String]
+        $LoginProviderName,
 
-    [Parameter(ParameterSetName='Main', HelpMessage='Defines how often a retry should be executed if the server healthscore is not sufficient. Default is 10 times.')]
-    [Parameter(ParameterSetName='Token', HelpMessage='Defines how often a retry should be executed if the server healthscore is not sufficient. Default is 10 times.')]
-    [Parameter(ParameterSetName='WebLogin', HelpMessage='Defines how often a retry should be executed if the server healthscore is not sufficient. Default is 10 times.')]
-    [Parameter(ParameterSetName='Azure Active Directory', HelpMessage='Defines how often a retry should be executed if the server healthscore is not sufficient. Default is 10 times.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory', HelpMessage='Defines how often a retry should be executed if the server healthscore is not sufficient. Default is 10 times.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate as PEM strings', HelpMessage='Defines how often a retry should be executed if the server healthscore is not sufficient. Default is 10 times.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate from certificate store by thumbprint', HelpMessage='Defines how often a retry should be executed if the server healthscore is not sufficient. Default is 10 times.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using X502 certificates', HelpMessage='Defines how often a retry should be executed if the server healthscore is not sufficient. Default is 10 times.')]
-    [Parameter(ParameterSetName='SPO Management Shell Credentials', HelpMessage='Defines how often a retry should be executed if the server healthscore is not sufficient. Default is 10 times.')]
-    [Parameter(ParameterSetName='Access Token', HelpMessage='Defines how often a retry should be executed if the server healthscore is not sufficient. Default is 10 times.')]
-    [int]
-    ${RetryCount},
+        [Parameter()]
+        [System.Int32]
+        $MinimalHealthScore,
 
-    [Parameter(ParameterSetName='Main', HelpMessage='Defines how many seconds to wait before each retry. Default is 1 second.')]
-    [Parameter(ParameterSetName='Token', HelpMessage='Defines how many seconds to wait before each retry. Default is 1 second.')]
-    [Parameter(ParameterSetName='WebLogin', HelpMessage='Defines how many seconds to wait before each retry. Default is 1 second.')]
-    [Parameter(ParameterSetName='Azure Active Directory', HelpMessage='Defines how many seconds to wait before each retry. Default is 1 second.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory', HelpMessage='Defines how many seconds to wait before each retry. Default is 1 second.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate as PEM strings', HelpMessage='Defines how many seconds to wait before each retry. Default is 1 second.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate from certificate store by thumbprint', HelpMessage='Defines how many seconds to wait before each retry. Default is 1 second.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using X502 certificates', HelpMessage='Defines how many seconds to wait before each retry. Default is 1 second.')]
-    [Parameter(ParameterSetName='SPO Management Shell Credentials', HelpMessage='Defines how many seconds to wait before each retry. Default is 1 second.')]
-    [Parameter(ParameterSetName='Access Token', HelpMessage='Defines how many seconds to wait before each retry. Default is 1 second.')]
-    [int]
-    ${RetryWait},
+        [Parameter()]
+        [System.Int32]
+        $RetryCount,
 
-    [Parameter(ParameterSetName='Main', HelpMessage='The request timeout. Default is 1800000')]
-    [Parameter(ParameterSetName='Token', HelpMessage='The request timeout. Default is 1800000')]
-    [Parameter(ParameterSetName='WebLogin', HelpMessage='The request timeout. Default is 1800000')]
-    [Parameter(ParameterSetName='Azure Active Directory', HelpMessage='The request timeout. Default is 1800000')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory', HelpMessage='The request timeout. Default is 1800000')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate as PEM strings', HelpMessage='The request timeout. Default is 1800000')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate from certificate store by thumbprint', HelpMessage='The request timeout. Default is 1800000')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using X502 certificates', HelpMessage='The request timeout. Default is 180000')]
-    [Parameter(ParameterSetName='SPO Management Shell Credentials', HelpMessage='The request timeout. Default is 1800000')]
-    [Parameter(ParameterSetName='Access Token', HelpMessage='The request timeout. Default is 1800000')]
-    [int]
-    ${RequestTimeout},
+        [Parameter()]
+        [System.Int32]
+        $RetryWait,
 
-    [Parameter(ParameterSetName='Token', HelpMessage='Authentication realm. If not specified will be resolved from the url specified.')]
-    [string]
-    ${Realm},
+        [Parameter()]
+        [System.Int32]
+        $RequestTimeout,
 
-    [Parameter(ParameterSetName='Token', Mandatory=$true, HelpMessage='The Application Client ID to use.')]
-    [Parameter(ParameterSetName='Microsoft Graph using Azure Active Directory', Mandatory=$true, HelpMessage='The client id of the app which gives you access to the Microsoft Graph API.')]
-    [string]
-    ${AppId},
+        [Parameter()]
+        [System.String]
+        $Realm,
 
-    [Parameter(ParameterSetName='Token', Mandatory=$true, HelpMessage='The Application Client Secret to use.')]
-    [Parameter(ParameterSetName='Microsoft Graph using Azure Active Directory', Mandatory=$true, HelpMessage='The app key of the app which gives you access to the Microsoft Graph API.')]
-    [string]
-    ${AppSecret},
+        [Parameter()]
+        [System.String]
+        $AppId,
 
-    [Parameter(ParameterSetName='WebLogin', Mandatory=$true, HelpMessage='If you want to connect to SharePoint with browser based login. This is required when you have multi-factor authentication (MFA) enabled.')]
-    [switch]
-    ${UseWebLogin},
+        [Parameter()]
+        [System.String]
+        $AppSecret,
 
-    [Parameter(ParameterSetName='Main', HelpMessage='Specify to use for instance use forms based authentication (FBA)')]
-    [Microsoft.SharePoint.Client.ClientAuthenticationMode]
-    ${AuthenticationMode},
+        [Parameter()]
+        [System.String]
+        $ClientSecret,
 
-    [Parameter(ParameterSetName='Main', HelpMessage='If you want to create a PSDrive connected to the URL')]
-    [Parameter(ParameterSetName='Token', HelpMessage='If you want to create a PSDrive connected to the URL')]
-    [Parameter(ParameterSetName='WebLogin', HelpMessage='If you want to create a PSDrive connected to the URL')]
-    [Parameter(ParameterSetName='Azure Active Directory', HelpMessage='If you want to create a PSDrive connected to the URL')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory', HelpMessage='If you want to create a PSDrive connected to the URL')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate as PEM strings', HelpMessage='If you want to create a PSDrive connected to the URL')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate from certificate store by thumbprint', HelpMessage='If you want to create a PSDrive connected to the URL')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using X502 certificates', HelpMessage='If you want to create a PSDrive connected to the URL')]
-    [Parameter(ParameterSetName='SPO Management Shell Credentials', HelpMessage='If you want to create a PSDrive connected to the URL')]
-    [Parameter(ParameterSetName='Access Token', HelpMessage='If you want to create a PSDrive connected to the URL')]
-    [switch]
-    ${CreateDrive},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UseWebLogin,
 
-    [Parameter(ParameterSetName='Main', HelpMessage='Name of the PSDrive to create (default: SPO)')]
-    [Parameter(ParameterSetName='Token', HelpMessage='Name of the PSDrive to create (default: SPO)')]
-    [Parameter(ParameterSetName='WebLogin', HelpMessage='Name of the PSDrive to create (default: SPO)')]
-    [Parameter(ParameterSetName='Azure Active Directory', HelpMessage='Name of the PSDrive to create (default: SPO)')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory', HelpMessage='Name of the PSDrive to create (default: SPO)')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate as PEM strings', HelpMessage='Name of the PSDrive to create (default: SPO)')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate from certificate store by thumbprint', HelpMessage='Name of the PSDrive to create (default: SPO)')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using X502 certificates', HelpMessage='Name of the PSDrive to create (default: SPO)')]
-    [Parameter(ParameterSetName='SPO Management Shell Credentials', HelpMessage='Name of the PSDrive to create (default: SPO)')]
-    [Parameter(ParameterSetName='Access Token', HelpMessage='Name of the PSDrive to create (default: SPO)')]
-    [string]
-    ${DriveName},
+        [Parameter()]
+        [Microsoft.SharePoint.Client.ClientAuthenticationMode]
+        $AuthenticationMode,
 
-    [Parameter(ParameterSetName='SPO Management Shell Credentials', Mandatory=$true, HelpMessage='Log in using the SharePoint Online Management Shell application')]
-    [switch]
-    ${SPOManagementShell},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $CreateDrive,
 
-    [Parameter(ParameterSetName='PnP O365 Management Shell / DeviceLogin', Mandatory=$true, HelpMessage='Log in using the PnP O365 Management Shell application. You will be asked to consent to:
+        [Parameter()]
+        [System.String]
+        $DriveName,
 
-* Read and write managed metadata
-* Have full control of all site collections
-* Read user profiles
-* Invite guest users to the organization
-* Read and write all groups
-* Read and write directory data
-* Read and write identity providers
-* Access the directory as you')]
-    [switch]
-    ${PnPO365ManagementShell},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SPOManagementShell,
 
-    [Parameter(ParameterSetName='PnP O365 Management Shell / DeviceLogin', HelpMessage='Launch a browser automatically and copy the code to enter to the clipboard')]
-    [Parameter(ParameterSetName='PnP Office 365 Management Shell to the Microsoft Graph', HelpMessage='Launch a browser automatically and copy the code to enter to the clipboard')]
-    [switch]
-    ${LaunchBrowser},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PnPManagementShell,
 
-    [Parameter(ParameterSetName='PnP Office 365 Management Shell to the Microsoft Graph', Mandatory=$true, HelpMessage='Log in using the PnP O365 Management Shell application towards the Graph. You will be asked to consent to:
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $LaunchBrowser,
 
-* Read and write managed metadata
-* Have full control of all site collections
-* Read user profiles
-* Invite guest users to the organization
-* Read and write all groups
-* Read and write directory data
-* Read and write identity providers
-* Access the directory as you
-')]
-    [switch]
-    ${Graph},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Graph,
 
-    [Parameter(ParameterSetName='Azure Active Directory', Mandatory=$true, HelpMessage='The Client ID of the Azure AD Application')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory', Mandatory=$true, HelpMessage='The Client ID of the Azure AD Application')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate as PEM strings', Mandatory=$true, HelpMessage='The Client ID of the Azure AD Application')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate from certificate store by thumbprint', Mandatory=$true, HelpMessage='The Client ID of the Azure AD Application')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using X502 certificates', Mandatory=$true, HelpMessage='The Client ID of the Azure AD Application')]
-    [string]
-    ${ClientId},
+        [Parameter()]
+        [System.String]
+        $ClientId,
 
-    [Parameter(ParameterSetName='Azure Active Directory', Mandatory=$true, HelpMessage='The Redirect URI of the Azure AD Application')]
-    [string]
-    ${RedirectUri},
+        [Parameter()]
+        [System.String]
+        $RedirectUri,
 
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate as PEM strings', Mandatory=$true, HelpMessage='The Azure AD Tenant name,e.g. mycompany.onmicrosoft.com')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate from certificate store by thumbprint', Mandatory=$true, HelpMessage='The Azure AD Tenant name,e.g. mycompany.onmicrosoft.com')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory', Mandatory=$true, HelpMessage='The Azure AD Tenant name,e.g. mycompany.onmicrosoft.com')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using X502 certificates', Mandatory=$true, HelpMessage='The Azure AD Tenant name,e.g. mycompany.onmicrosoft.com')]
-    [string]
-    ${Tenant},
+        [Parameter()]
+        [System.String]
+        $Tenant,
 
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory', HelpMessage='Path to the certificate containing the private key (*.pfx)')]
-    [string]
-    ${CertificatePath},
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
 
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory', HelpMessage='Base64 Encoded X509Certificate2 certificate containing the private key to authenticate the requests to SharePoint Online such as retrieved in Azure Functions from Azure KeyVault')]
-    [string]
-    ${CertificateBase64Encoded},
+        [Parameter()]
+        [System.String]
+        $CertificateBase64Encoded,
 
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory', HelpMessage='X509Certificate2 reference containing the private key to authenticate the requests to SharePoint Online')]
-    [System.Security.Cryptography.X509Certificates.X509Certificate2]
-    ${Certificate},
+        [Parameter()]
+        [System.Security.Cryptography.X509Certificates.X509Certificate2]
+        $Certificate,
 
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory', HelpMessage='Password to the certificate (*.pfx)')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate as PEM strings', HelpMessage='Password to the certificate (*.pfx)')]
-    [securestring]
-    ${CertificatePassword},
+        [Parameter()]
+        [System.Security.SecureString]
+        $CertificatePassword,
 
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate as PEM strings', Mandatory=$true, HelpMessage='PEM encoded certificate')]
-    [string]
-    ${PEMCertificate},
+        [Parameter()]
+        [System.String]
+        $PEMCertificate,
 
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate as PEM strings', Mandatory=$true, HelpMessage='PEM encoded private key for the certificate')]
-    [string]
-    ${PEMPrivateKey},
+        [Parameter()]
+        [System.String]
+        $PEMPrivateKey,
 
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate from certificate store by thumbprint', Mandatory=$true, HelpMessage='Certificate thumbprint')]
-    [string]
-    ${Thumbprint},
+        [Parameter()]
+        [System.String]
+        $Thumbprint,
 
-    [Parameter(ParameterSetName='Azure Active Directory', HelpMessage='Clears the token cache.')]
-    [Parameter(ParameterSetName='SPO Management Shell Credentials', HelpMessage='Clears the token cache.')]
-    [switch]
-    ${ClearTokenCache},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ClearTokenCache,
 
-    [Parameter(ParameterSetName='Azure Active Directory', HelpMessage='The Azure environment to use for authentication, the defaults to ''Production'' which is the main Azure environment.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory', HelpMessage='The Azure environment to use for authentication, the defaults to ''Production'' which is the main Azure environment.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate as PEM strings', HelpMessage='The Azure environment to use for authentication, the defaults to ''Production'' which is the main Azure environment.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate from certificate store by thumbprint', HelpMessage='The Azure environment to use for authentication, the defaults to ''Production'' which is the main Azure environment.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using X502 certificates', HelpMessage='The Azure environment to use for authentication, the defaults to ''Production'' which is the main Azure environment.')]
-    [Parameter(ParameterSetName='Token', HelpMessage='The Azure environment to use for authentication, the defaults to ''Production'' which is the main Azure environment.')]
-    [OfficeDevPnP.Core.AzureEnvironment]
-    ${AzureEnvironment},
+        [Parameter()]
+        [OfficeDevPnP.Core.AzureEnvironment]
+        $AzureEnvironment,
 
-    [Parameter(ParameterSetName='Main', HelpMessage='The array of permission scopes for the Microsoft Graph API.')]
-    [Parameter(ParameterSetName='Token', HelpMessage='The array of permission scopes for the Microsoft Graph API.')]
-    [Parameter(ParameterSetName='WebLogin', HelpMessage='The array of permission scopes for the Microsoft Graph API.')]
-    [Parameter(ParameterSetName='Azure Active Directory', HelpMessage='The array of permission scopes for the Microsoft Graph API.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory', HelpMessage='The array of permission scopes for the Microsoft Graph API.')]
-    [Parameter(ParameterSetName='SPO Management Shell Credentials', HelpMessage='The array of permission scopes for the Microsoft Graph API.')]
-    [Parameter(ParameterSetName='Microsoft Graph using Scopes', Mandatory=$true, HelpMessage='The array of permission scopes for the Microsoft Graph API.')]
-    [string[]]
-    ${Scopes},
+        [Parameter()]
+        [System.String[]]
+        $Scopes,
 
-    [Parameter(ParameterSetName='Microsoft Graph using Azure Active Directory', Mandatory=$true, HelpMessage='The AAD where the O365 app is registered. Eg.: contoso.com, or contoso.onmicrosoft.com.')]
-    [string]
-    ${AADDomain},
+        [Parameter()]
+        [System.String]
+        $AADDomain,
 
-    [Parameter(ParameterSetName='Access Token', Mandatory=$true, HelpMessage='Connect with an existing Access Token')]
-    [string]
-    ${AccessToken},
+        [Parameter()]
+        [System.String]
+        $AccessToken,
 
-    [Parameter(ParameterSetName='Main', HelpMessage='The url to the Tenant Admin site. If not specified, the cmdlets will assume to connect automatically to https://<tenantname>-admin.sharepoint.com where appropriate.')]
-    [Parameter(ParameterSetName='Token', HelpMessage='The url to the Tenant Admin site. If not specified, the cmdlets will assume to connect automatically to https://<tenantname>-admin.sharepoint.com where appropriate.')]
-    [Parameter(ParameterSetName='WebLogin', HelpMessage='The url to the Tenant Admin site. If not specified, the cmdlets will assume to connect automatically to https://<tenantname>-admin.sharepoint.com where appropriate.')]
-    [Parameter(ParameterSetName='Azure Active Directory', HelpMessage='The url to the Tenant Admin site. If not specified, the cmdlets will assume to connect automatically to https://<tenantname>-admin.sharepoint.com where appropriate.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory', HelpMessage='The url to the Tenant Admin site. If not specified, the cmdlets will assume to connect automatically to https://<tenantname>-admin.sharepoint.com where appropriate.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate as PEM strings', HelpMessage='The url to the Tenant Admin site. If not specified, the cmdlets will assume to connect automatically to https://<tenantname>-admin.sharepoint.com where appropriate.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate from certificate store by thumbprint', HelpMessage='The url to the Tenant Admin site. If not specified, the cmdlets will assume to connect automatically to https://<tenantname>-admin.sharepoint.com where appropriate.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using X502 certificates', HelpMessage='The url to the Tenant Admin site. If not specified, the cmdlets will assume to connect automatically to https://<tenantname>-admin.sharepoint.com where appropriate.')]
-    [Parameter(ParameterSetName='SPO Management Shell Credentials', HelpMessage='The url to the Tenant Admin site. If not specified, the cmdlets will assume to connect automatically to https://<tenantname>-admin.sharepoint.com where appropriate.')]
-    [string]
-    ${TenantAdminUrl},
+        [Parameter()]
+        [System.String]
+        $TenantAdminUrl,
 
-    [Parameter(ParameterSetName='Main', HelpMessage='Should we skip the check if this site is the Tenant admin site. Default is false')]
-    [Parameter(ParameterSetName='Token', HelpMessage='Should we skip the check if this site is the Tenant admin site. Default is false')]
-    [Parameter(ParameterSetName='WebLogin', HelpMessage='Should we skip the check if this site is the Tenant admin site. Default is false')]
-    [Parameter(ParameterSetName='Azure Active Directory', HelpMessage='Should we skip the check if this site is the Tenant admin site. Default is false')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory', HelpMessage='Should we skip the check if this site is the Tenant admin site. Default is false')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate as PEM strings', HelpMessage='Should we skip the check if this site is the Tenant admin site. Default is false')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate from certificate store by thumbprint', HelpMessage='Should we skip the check if this site is the Tenant admin site. Default is false')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using X502 certificates', HelpMessage='Should we skip the check if this site is the Tenant admin site. Default is false')]
-    [Parameter(ParameterSetName='SPO Management Shell Credentials', HelpMessage='Should we skip the check if this site is the Tenant admin site. Default is false')]
-    [Parameter(ParameterSetName='Access Token', HelpMessage='Should we skip the check if this site is the Tenant admin site. Default is false')]
-    [switch]
-    ${SkipTenantAdminCheck},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipTenantAdminCheck,
 
-    [Parameter(ParameterSetName='Main', HelpMessage='Ignores any SSL errors. To be used i.e. when connecting to a SharePoint farm using self signed certificates or using a certificate authority not trusted by this machine.')]
-    [Parameter(ParameterSetName='Token', HelpMessage='Ignores any SSL errors. To be used i.e. when connecting to a SharePoint farm using self signed certificates or using a certificate authority not trusted by this machine.')]
-    [Parameter(ParameterSetName='WebLogin', HelpMessage='Ignores any SSL errors. To be used i.e. when connecting to a SharePoint farm using self signed certificates or using a certificate authority not trusted by this machine.')]
-    [Parameter(ParameterSetName='Azure Active Directory', HelpMessage='Ignores any SSL errors. To be used i.e. when connecting to a SharePoint farm using self signed certificates or using a certificate authority not trusted by this machine.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory', HelpMessage='Ignores any SSL errors. To be used i.e. when connecting to a SharePoint farm using self signed certificates or using a certificate authority not trusted by this machine.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate as PEM strings', HelpMessage='Ignores any SSL errors. To be used i.e. when connecting to a SharePoint farm using self signed certificates or using a certificate authority not trusted by this machine.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate from certificate store by thumbprint', HelpMessage='Ignores any SSL errors. To be used i.e. when connecting to a SharePoint farm using self signed certificates or using a certificate authority not trusted by this machine.')]
-    [Parameter(ParameterSetName='App-Only with Azure Active Directory using X502 certificates', HelpMessage='Ignores any SSL errors. To be used i.e. when connecting to a SharePoint farm using self signed certificates or using a certificate authority not trusted by this machine.')]
-    [Parameter(ParameterSetName='Microsoft Graph using Azure Active Directory', HelpMessage='Ignores any SSL errors. To be used i.e. when connecting through a proxy to the Microsoft Graph API which has SSL interception enabled.')]
-    [Parameter(ParameterSetName='Microsoft Graph using Scopes', HelpMessage='Ignores any SSL errors. To be used i.e. when connecting through a proxy to the Microsoft Graph API which has SSL interception enabled.')]
-    [Parameter(ParameterSetName='PnP Office 365 Management Shell to the Microsoft Graph', HelpMessage='Ignores any SSL errors. To be used i.e. when connecting through a proxy to the Microsoft Graph API which has SSL interception enabled.')]
-    [Parameter(ParameterSetName='SPO Management Shell Credentials', HelpMessage='Ignores any SSL errors. To be used i.e. when connecting to a SharePoint farm using self signed certificates or using a certificate authority not trusted by this machine.')]
-    [switch]
-    ${IgnoreSslErrors},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IgnoreSslErrors,
 
-    [Parameter(HelpMessage='In order to help to make PnP PowerShell better, we can track anonymous telemetry. We track the version of the cmdlets you are using, which cmdlet you are executing and which version of SharePoint you are connecting to. Use Disable-PnPPowerShellTelemetry to turn this off in general or use the -NoTelemetry switch to turn it off for that session.')]
-    [switch]
-    ${NoTelemetry})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $NoTelemetry,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Convert-PnPFolderToProvisioningTemplate
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='Filename to write to, optionally including full path.')]
-    [string]
-    ${Out},
+    param(
+        [Parameter()]
+        [System.String]
+        $Out,
 
-    [Parameter(Position=1, HelpMessage='Folder to process. If not specified the current folder will be used.')]
-    [string]
-    ${Folder},
+        [Parameter()]
+        [System.String]
+        $Folder,
 
-    [Parameter(HelpMessage='Overwrites the output file if it exists.')]
-    [switch]
-    ${Force})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Convert-PnPProvisioningTemplate
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, HelpMessage='Path to the xml file containing the site template')]
-    [string]
-    ${Path},
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
 
-    [Parameter(HelpMessage='Filename to write to, optionally including full path')]
-    [string]
-    ${Out},
+        [Parameter()]
+        [System.String]
+        $Out,
 
-    [Parameter(Position=1, HelpMessage='The schema of the output to use, defaults to the latest schema')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml.XMLPnPSchemaVersion]
-    ${ToSchema},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml.XMLPnPSchemaVersion]
+        $ToSchema,
 
-    [Parameter(HelpMessage='The encoding type of the XML file, Unicode is default')]
-    [System.Text.Encoding]
-    ${Encoding},
+        [Parameter()]
+        [System.Text.Encoding]
+        $Encoding,
 
-    [Parameter(HelpMessage='Overwrites the output file if it exists')]
-    [switch]
-    ${Force})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function ConvertTo-PnPClientSidePage
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The name of the page to convert')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.PagePipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.PagePipeBind]
+        $Identity,
 
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='The name of the library containing the page. If SitePages then please omit this parameter')]
-    [string]
-    ${Library},
+        [Parameter()]
+        [System.String]
+        $Library,
 
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='The folder to load the provided page from. If not provided all folders are searched')]
-    [string]
-    ${Folder},
+        [Parameter()]
+        [System.String]
+        $Folder,
 
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, HelpMessage='Path and name of the web part mapping file driving the transformation')]
-    [string]
-    ${WebPartMappingFile},
+        [Parameter()]
+        [System.String]
+        $WebPartMappingFile,
 
-    [Parameter(HelpMessage='Overwrites page if already existing')]
-    [switch]
-    ${Overwrite},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Overwrite,
 
-    [Parameter(HelpMessage='Created client side page takes name from previous classic page. Classic page gets renamed to previous_<Page>.aspx')]
-    [switch]
-    ${TakeSourcePageName},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $TakeSourcePageName,
 
-    [Parameter(HelpMessage='Replaces a home page with a default stock modern home page')]
-    [switch]
-    ${ReplaceHomePageWithDefault},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ReplaceHomePageWithDefault,
 
-    [Parameter(HelpMessage='Adds the page accept banner web part. The actual web part is specified in webpartmapping.xml file')]
-    [switch]
-    ${AddPageAcceptBanner},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AddPageAcceptBanner,
 
-    [Parameter(HelpMessage='By default the item level permissions on a page are copied to the created client side page. Use this switch to prevent the copy')]
-    [switch]
-    ${SkipItemLevelPermissionCopyToClientSidePage},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipItemLevelPermissionCopyToClientSidePage,
 
-    [Parameter(HelpMessage='If transforming cross site then by default urls in html and summarylinks are rewritten for the target site. Set this flag to prevent that')]
-    [switch]
-    ${SkipUrlRewriting},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipUrlRewriting,
 
-    [Parameter(HelpMessage='Set this flag to prevent the default URL rewriting while you still want to do URL rewriting using a custom URL mapping file')]
-    [switch]
-    ${SkipDefaultUrlRewriting},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipDefaultUrlRewriting,
 
-    [Parameter(HelpMessage='File holding custom URL mapping definitions')]
-    [string]
-    ${UrlMappingFile},
+        [Parameter()]
+        [System.String]
+        $UrlMappingFile,
 
-    [Parameter(HelpMessage='Clears the cache. Can be needed if you''ve installed a new web part to the site and want to use that in a custom webpartmapping file. Restarting your PS session has the same effect')]
-    [switch]
-    ${ClearCache},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ClearCache,
 
-    [Parameter(HelpMessage='Copies the page metadata to the created modern page')]
-    [switch]
-    ${CopyPageMetadata},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $CopyPageMetadata,
 
-    [Parameter(HelpMessage='When an image lives inside a table/list then it''s also created as separate image web part underneath that table/list by default. Use this switch set to $false to change that')]
-    [switch]
-    ${AddTableListImageAsImageWebPart},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AddTableListImageAsImageWebPart,
 
-    [Parameter(HelpMessage='Uses the community script editor (https://github.com/SharePoint/sp-dev-fx-webparts/tree/master/samples/react-script-editor) as replacement for the classic script editor web part')]
-    [switch]
-    ${UseCommunityScriptEditor},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UseCommunityScriptEditor,
 
-    [Parameter(HelpMessage='By default summarylinks web parts are replaced by QuickLinks, but you can transform to plain html by setting this switch')]
-    [switch]
-    ${SummaryLinksToHtml},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SummaryLinksToHtml,
 
-    [Parameter(HelpMessage='Url of the target web that will receive the modern page. Defaults to null which means in-place transformation')]
-    [string]
-    ${TargetWebUrl},
+        [Parameter()]
+        [System.String]
+        $TargetWebUrl,
 
-    [Parameter(HelpMessage='Allows to generate a transformation log (File | SharePoint)')]
-    [SharePointPnP.PowerShell.Commands.ClientSidePages.ClientSidePageTransformatorLogType]
-    ${LogType},
+        [Parameter()]
+        [PnP.PowerShell.Commands.ClientSidePages.ClientSidePageTransformatorLogType]
+        $LogType,
 
-    [Parameter(HelpMessage='Folder in where the log file will be created (if LogType==File)')]
-    [string]
-    ${LogFolder},
+        [Parameter()]
+        [System.String]
+        $LogFolder,
 
-    [Parameter(HelpMessage='By default each cmdlet invocation will result in a log file, use the -SkipLogFlush to delay the log flushing. The first call without -SkipLogFlush will then write all log entries to a single log')]
-    [switch]
-    ${LogSkipFlush},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $LogSkipFlush,
 
-    [Parameter(HelpMessage='Configure logging to include verbose log entries')]
-    [switch]
-    ${LogVerbose},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $LogVerbose,
 
-    [Parameter(HelpMessage='Don''t publish the created modern page')]
-    [switch]
-    ${DontPublish},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DontPublish,
 
-    [Parameter(HelpMessage='Keep the author, editor, created and modified information from the source page (when source page lives in SPO)')]
-    [switch]
-    ${KeepPageCreationModificationInformation},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $KeepPageCreationModificationInformation,
 
-    [Parameter(HelpMessage='Set''s the author of the source page as author in the modern page header (when source page lives in SPO)')]
-    [switch]
-    ${SetAuthorInPageHeader},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SetAuthorInPageHeader,
 
-    [Parameter(HelpMessage='Post the created, and published, modern page as news')]
-    [switch]
-    ${PostAsNews},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PostAsNews,
 
-    [Parameter(HelpMessage='Disable comments for the created modern page')]
-    [switch]
-    ${DisablePageComments},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DisablePageComments,
 
-    [Parameter(HelpMessage='I''m transforming a publishing page')]
-    [switch]
-    ${PublishingPage},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PublishingPage,
 
-    [Parameter(HelpMessage='I''m transforming a blog page')]
-    [switch]
-    ${BlogPage},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $BlogPage,
 
-    [Parameter(HelpMessage='I''m transforming a Delve blog page')]
-    [switch]
-    ${DelveBlogPage},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DelveBlogPage,
 
-    [Parameter(HelpMessage='Transform the possible sub title as topic header on the modern page')]
-    [switch]
-    ${DelveKeepSubTitle},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DelveKeepSubTitle,
 
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, HelpMessage='Path and name of the page layout mapping file driving the publishing page transformation')]
-    [string]
-    ${PageLayoutMapping},
+        [Parameter()]
+        [System.String]
+        $PageLayoutMapping,
 
-    [Parameter(HelpMessage='Name for the target page (only applies to publishing page transformation)')]
-    [string]
-    ${PublishingTargetPageName},
+        [Parameter()]
+        [System.String]
+        $PublishingTargetPageName,
 
-    [Parameter(HelpMessage='Name for the target page (only applies when doing cross site page transformation)')]
-    [string]
-    ${TargetPageName},
+        [Parameter()]
+        [System.String]
+        $TargetPageName,
 
-    [Parameter(HelpMessage='Folder to create the target page in (will be used in conjunction with auto-generated folders that ensure page name uniqueness)')]
-    [string]
-    ${TargetPageFolder},
+        [Parameter()]
+        [System.String]
+        $TargetPageFolder,
 
-    [Parameter(HelpMessage='When setting a target page folder then the target page folder overrides possibly default folder path (e.g. in the source page lived in a folder) instead of being appended to it')]
-    [switch]
-    ${TargetPageFolderOverridesDefaultFolder},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $TargetPageFolderOverridesDefaultFolder,
 
-    [Parameter(HelpMessage='Remove empty sections and columns after transformation of the page')]
-    [switch]
-    ${RemoveEmptySectionsAndColumns},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RemoveEmptySectionsAndColumns,
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${TargetConnection},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $TargetConnection,
 
-    [Parameter(HelpMessage='Disables user mapping during transformation')]
-    [switch]
-    ${SkipUserMapping},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipUserMapping,
 
-    [Parameter(HelpMessage='Specifies a user mapping file')]
-    [string]
-    ${UserMappingFile},
+        [Parameter()]
+        [System.String]
+        $UserMappingFile,
 
-    [Parameter(HelpMessage='Specifies a taxonomy term mapping file')]
-    [string]
-    ${TermMappingFile},
+        [Parameter()]
+        [System.String]
+        $TermMappingFile,
 
-    [Parameter(HelpMessage='Disables term mapping during transformation')]
-    [switch]
-    ${SkipTermStoreMapping},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipTermStoreMapping,
 
-    [Parameter(HelpMessage='Specifies a LDAP connection string e.g. LDAP://OU=Users,DC=Contoso,DC=local')]
-    [string]
-    ${LDAPConnectionString},
+        [Parameter()]
+        [System.String]
+        $LDAPConnectionString,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Copy-PnPFile
 {
-    [CmdletBinding(DefaultParameterSetName='SOURCEURL', SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(ParameterSetName='SERVER', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Server relative Url specifying the file or folder to copy.')]
-    [Obsolete('Use SourceUrl instead.')]
-    [string]
-    ${ServerRelativeUrl},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $SourceUrl,
 
-    [Parameter(ParameterSetName='SOURCEURL', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Site relative Url specifying the file or folder to copy.')]
-    [Alias('SiteRelativeUrl')]
-    [string]
-    ${SourceUrl},
+        [Parameter()]
+        [System.String]
+        $TargetUrl,
 
-    [Parameter(Mandatory=$true, Position=1, HelpMessage='Server relative Url where to copy the file or folder to.')]
-    [string]
-    ${TargetUrl},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OverwriteIfAlreadyExists,
 
-    [Parameter(HelpMessage='If provided, if a file already exists at the TargetUrl, it will be overwritten. If omitted, the copy operation will be canceled if the file already exists at the TargetUrl location.')]
-    [switch]
-    ${OverwriteIfAlreadyExists},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='If provided, no confirmation will be requested and the action will be performed')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipSourceFolderName,
 
-    [Parameter(HelpMessage='If the source is a folder, the source folder name will not be created, only the contents within it.')]
-    [switch]
-    ${SkipSourceFolderName},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IgnoreVersionHistory,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Copy-PnPItemProxy
 {
-    [CmdletBinding(DefaultParameterSetName='Path', SupportsShouldProcess=$true, ConfirmImpact='Medium', SupportsTransactions=$true)]
-param(
-    [switch]
-    ${Recurse},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Recurse,
 
-    [Parameter(ParameterSetName='Path', Mandatory=$true, Position=0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [string[]]
-    ${Path},
+        [Parameter()]
+        [System.String[]]
+        $Path,
 
-    [Parameter(ParameterSetName='LiteralPath', Mandatory=$true, Position=0, ValueFromPipelineByPropertyName=$true)]
-    [Alias('PSPath')]
-    [string[]]
-    ${LiteralPath},
+        [Parameter()]
+        [System.String[]]
+        $LiteralPath,
 
-    [Parameter(Position=1, ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${Destination},
+        [Parameter()]
+        [System.String]
+        $Destination,
 
-    [switch]
-    ${Container},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Container,
 
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [string]
-    ${Filter},
+        [Parameter()]
+        [System.String]
+        $Filter,
 
-    [string[]]
-    ${Include},
+        [Parameter()]
+        [System.String[]]
+        $Include,
 
-    [string[]]
-    ${Exclude},
+        [Parameter()]
+        [System.String[]]
+        $Exclude,
 
-    [switch]
-    ${PassThru},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
 
-    [Parameter(ValueFromPipelineByPropertyName=$true)]
-    [pscredential]
-    [System.Management.Automation.CredentialAttribute()]
-    ${Credential})
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UseTransaction
+    )
 }
 function Deny-PnPTenantServicePrincipalPermissionRequest
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true)]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${RequestId},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $RequestId,
 
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
-    [switch]
-    ${Force})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Disable-PnPFeature
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='The id of the feature to disable.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Specifies whether to continue if an error occurs when deactivating the feature.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='Specify the scope of the feature to deactivate, either Web or Site. Defaults to Web.')]
-    [SharePointPnP.PowerShell.Commands.Enums.FeatureScope]
-    ${Scope},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.FeatureScope]
+        $Scope,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Disable-PnPInPlaceRecordsManagementForSite
 {
     [CmdletBinding()]
-param()
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Disable-PnPPowerShellTelemetry
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
-    [switch]
-    ${Force})
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Disable-PnPResponsiveUI
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Disable-PnPSharingForNonOwnersOfSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Disable-PnPSiteClassification
 {
     [CmdletBinding()]
-param()
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Disable-PnPTenantServicePrincipal
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
-    [switch]
-    ${Force})
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Disconnect-PnPOnline
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='Connection to be used by cmdlet')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Enable-PnPCommSite
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='The id (guid) of the design package to apply: 96c933ac-3698-44c7-9f4a-5fd17d71af9e (Topic = default), 6142d2a0-63a5-4ba0-aede-d9fefca2c767 (Showcase) or f6cc5403-0d63-442e-96c0-285923709ffc (Blank)')]
-    [string]
-    ${DesignPackageId})
+    param(
+        [Parameter()]
+        [System.String]
+        $DesignPackageId,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Enable-PnPFeature
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The id of the feature to enable.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Specifies whether to overwrite an existing feature with the same feature identifier. This parameter is ignored if there are no errors.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='Specify the scope of the feature to activate, either Web or Site. Defaults to Web.')]
-    [SharePointPnP.PowerShell.Commands.Enums.FeatureScope]
-    ${Scope},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.FeatureScope]
+        $Scope,
 
-    [Parameter(HelpMessage='Specify this parameter if the feature you''re trying to activate is part of a sandboxed solution.')]
-    [switch]
-    ${Sandboxed},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Sandboxed,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Enable-PnPInPlaceRecordsManagementForSite
 {
     [CmdletBinding()]
-param()
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Enable-PnPPowerShellTelemetry
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
-    [switch]
-    ${Force})
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Enable-PnPResponsiveUI
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='A full URL pointing to an infrastructure site. If specified, it will add a custom action pointing to the responsive UI JS code in that site.')]
-    [string]
-    ${InfrastructureSiteUrl},
+    param(
+        [Parameter()]
+        [System.String]
+        $InfrastructureSiteUrl,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Enable-PnPSiteClassification
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true)]
-    [System.Collections.Generic.List[string]]
-    ${Classifications},
+    param(
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        $Classifications,
 
-    [Parameter(Mandatory=$true)]
-    [string]
-    ${DefaultClassification},
+        [Parameter()]
+        [System.String]
+        $DefaultClassification,
 
-    [string]
-    ${UsageGuidelinesUrl})
+        [Parameter()]
+        [System.String]
+        $UsageGuidelinesUrl,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Enable-PnPTenantServicePrincipal
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
-    [switch]
-    ${Force})
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Export-PnPClientSidePage
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The name of the page')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='If specified referenced files will be exported to the current folder.')]
-    [switch]
-    ${PersistBrandingFiles},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PersistBrandingFiles,
 
-    [Parameter(HelpMessage='If specified the template will be saved to the file specified with this parameter.')]
-    [string]
-    ${Out},
+        [Parameter()]
+        [System.String]
+        $Out,
 
-    [Parameter(HelpMessage='Specify to override the question to overwrite a file if it already exists.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='Specify a JSON configuration file to configure the extraction progress.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ExtractConfigurationPipeBind]
-    ${Configuration},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ExtractConfigurationPipeBind]
+        $Configuration,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Export-PnPClientSidePageMapping
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='Exports the builtin web part mapping file')]
-    [switch]
-    ${BuiltInWebPartMapping},
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $BuiltInWebPartMapping,
 
-    [Parameter(HelpMessage='Exports the builtin pagelayout mapping file (only needed for publishing page transformation)')]
-    [switch]
-    ${BuiltInPageLayoutMapping},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $BuiltInPageLayoutMapping,
 
-    [Parameter(HelpMessage='Analyzes the pagelayouts in the current publishing portal and exports them as a pagelayout mapping file')]
-    [switch]
-    ${CustomPageLayoutMapping},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $CustomPageLayoutMapping,
 
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='The name of the publishing page to export a page layout mapping file for')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.PagePipeBind]
-    ${PublishingPage},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.PagePipeBind]
+        $PublishingPage,
 
-    [Parameter(HelpMessage='Set this flag if you also want to analyze the OOB page layouts...typically these are covered via the default mapping, but if you''ve updated these page layouts you might want to analyze them again')]
-    [switch]
-    ${AnalyzeOOBPageLayouts},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AnalyzeOOBPageLayouts,
 
-    [Parameter(HelpMessage='The folder to created the mapping file(s) in')]
-    [string]
-    ${Folder},
+        [Parameter()]
+        [System.String]
+        $Folder,
 
-    [Parameter(HelpMessage='Overwrites existing mapping files')]
-    [switch]
-    ${Overwrite},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Overwrite,
 
-    [Parameter(HelpMessage='Outputs analyser logging to the console')]
-    [switch]
-    ${Logging},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Logging,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Export-PnPListToProvisioningTemplate
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Specify the lists to extract, either providing their ID or their Title.')]
-    [System.Collections.Generic.List[string]]
-    ${List},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        $List,
 
-    [Parameter(Position=0, HelpMessage='Filename to write to, optionally including full path')]
-    [string]
-    ${Out},
+        [Parameter()]
+        [System.String]
+        $Out,
 
-    [Parameter(Position=1, HelpMessage='The schema of the output to use, defaults to the latest schema')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml.XMLPnPSchemaVersion]
-    ${Schema},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml.XMLPnPSchemaVersion]
+        $Schema,
 
-    [Parameter(HelpMessage='Overwrites the output file if it exists.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='Returns the template as an in-memory object, which is an instance of the ProvisioningTemplate type of the PnP Core Component. It cannot be used together with the -Out parameter.')]
-    [switch]
-    ${OutputInstance},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OutputInstance,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Export-PnPTaxonomy
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(ParameterSetName='TermSet', HelpMessage='If specified, will export the specified termset only')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${TermSetId},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $TermSetId,
 
-    [Parameter(HelpMessage='If specified will include the ids of the taxonomy items in the output. Format: <label>;#<guid>')]
-    [switch]
-    ${IncludeID},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeID,
 
-    [Parameter(HelpMessage='File to export the data to.')]
-    [string]
-    ${Path},
+        [Parameter()]
+        [System.String]
+        $Path,
 
-    [Parameter(ParameterSetName='TermSet', HelpMessage='Term store to export; if not specified the default term store is used.')]
-    [string]
-    ${TermStoreName},
+        [Parameter()]
+        [System.String]
+        $TermStoreName,
 
-    [Parameter(HelpMessage='Overwrites the output file if it exists.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='The path delimiter to be used, by default this is ''|''')]
-    [string]
-    ${Delimiter},
+        [Parameter()]
+        [System.String]
+        $Delimiter,
 
-    [Parameter(ParameterSetName='TermSet', HelpMessage='Specify the language code for the exported terms')]
-    [int]
-    ${Lcid},
+        [Parameter()]
+        [System.Int32]
+        $Lcid,
 
-    [Parameter(HelpMessage='Defaults to Unicode')]
-    [SharePointPnP.PowerShell.Commands.Enums.Encoding]
-    ${Encoding})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.Encoding]
+        $Encoding,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Export-PnPTermGroupToXml
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(ValueFromPipeline=$true, HelpMessage='The ID or name of the termgroup')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TermGroupPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TermGroupPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='File to export the data to.')]
-    [string]
-    ${Out},
+        [Parameter()]
+        [System.String]
+        $Out,
 
-    [Parameter(HelpMessage='If specified, a full provisioning template structure will be returned')]
-    [switch]
-    ${FullTemplate},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $FullTemplate,
 
-    [Parameter(HelpMessage='Defaults to Unicode')]
-    [System.Text.Encoding]
-    ${Encoding},
+        [Parameter()]
+        [System.Text.Encoding]
+        $Encoding,
 
-    [Parameter(HelpMessage='Overwrites the output file if it exists.')]
-    [switch]
-    ${Force})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Find-PnPFile
 {
-    [CmdletBinding(DefaultParameterSetName='Web')]
-param(
-    [Parameter(ParameterSetName='Web', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Wildcard query')]
-    [Parameter(ParameterSetName='List', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Wildcard query')]
-    [Parameter(ParameterSetName='Folder', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Wildcard query')]
-    [string]
-    ${Match},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Match,
 
-    [Parameter(ParameterSetName='List', Mandatory=$true, HelpMessage='List title, url or an actual List object to query')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(ParameterSetName='Folder', Mandatory=$true, HelpMessage='Folder object or relative url of a folder to query')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.FolderPipeBind]
-    ${Folder},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FolderPipeBind]
+        $Folder,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPAADUser
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $OrderBy,
+
+        [Parameter()]
+        [System.String[]]
+        $Select,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Delta,
+
+        [Parameter()]
+        [System.String]
+        $DeltaToken,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPAccessToken
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='Returns the access token in a decoded manner')]
-    [switch]
-    ${Decoded})
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Decoded,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPAlert
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='The ID, Title or Url of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(HelpMessage='User to retrieve the alerts for (User ID, login name or actual User object). Skip this parameter to retrieve the alerts for the current user. Note: Only site owners can retrieve alerts for other users.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]
-    ${User},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]
+        $User,
 
-    [Parameter(HelpMessage='Retrieve alerts with this title. Title comparison is case sensitive.')]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPApp
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='Specifies the Id of an app which is available in the app catalog')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Defines which app catalog to use. Defaults to Tenant')]
-    [OfficeDevPnP.Core.Enums.AppCatalogScope]
-    ${Scope})
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.AppCatalogScope]
+        $Scope,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPAppAuthAccessToken
 {
     [CmdletBinding()]
-param()
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPAppInstance
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.AppPipeBind]
-        ${Identity},
+        [PnP.PowerShell.Commands.Base.PipeBinds.AppPipeBind]
+        $Identity,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-        ${Web},
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
     )
 }
 function Get-PnPApplicationCustomizer
@@ -65368,198 +66431,403 @@ function Get-PnPApplicationCustomizer
     [CmdletBinding()]
     param(
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-        ${Identity},
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $Identity,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-        ${ClientSideComponentId},
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $ClientSideComponentId,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Enums.CustomActionScope]
-        ${Scope},
+        [PnP.PowerShell.Commands.Enums.CustomActionScope]
+        $Scope,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-        ${Web},
+        [System.Management.Automation.SwitchParameter]
+        $ThrowExceptionIfCustomActionNotFound,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
     )
 }
 function Get-PnPAuditing
 {
     [CmdletBinding()]
-param()
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPAuthenticationRealm
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='Specifies the URL of the site')]
-    [string]
-    ${Url})
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPAvailableClientSideComponents
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The name of the page.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
-    ${Page},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Page,
 
-    [Parameter(HelpMessage='Specifies the component instance or Id to look for.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ClientSideComponentPipeBind]
-    ${Component},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSideComponentPipeBind]
+        $Component,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPAvailableLanguage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
+    )
 }
 function Get-PnPAzureCertificate
 {
-    [CmdletBinding(DefaultParameterSetName='SELF')]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Path to the certificate (*.pfx)')]
-    [string]
-    ${CertificatePath},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
 
-    [Parameter(HelpMessage='Password to the certificate (*.pfx)')]
-    [securestring]
-    ${CertificatePassword})
+        [Parameter()]
+        [System.Security.SecureString]
+        $CertificatePassword,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPClientSideComponent
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The name of the page')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
-    ${Page},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Page,
 
-    [Parameter(ValueFromPipeline=$true, HelpMessage='The instance id of the component')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${InstanceId},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $InstanceId,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPClientSidePage
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The name of the page')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPConnection
 {
     [CmdletBinding()]
-param()
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPContentType
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='Name or ID of the content type to retrieve')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $Identity,
 
-    [Parameter(ValueFromPipeline=$true, HelpMessage='List to query')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(HelpMessage='Search site hierarchy for content types')]
-    [switch]
-    ${InSiteHierarchy},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $InSiteHierarchy,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPContentTypePublishingHubUrl
 {
     [CmdletBinding()]
-param()
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPContext
 {
     [CmdletBinding()]
-param()
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPCustomAction
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-        ${Identity},
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $Identity,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Enums.CustomActionScope]
-        ${Scope},
+        [PnP.PowerShell.Commands.Enums.CustomActionScope]
+        $Scope,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-        ${Web},
+        [System.Management.Automation.SwitchParameter]
+        $ThrowExceptionIfCustomActionNotFound,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
     )
 }
 function Get-PnPDefaultColumnValues
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID, Name or Url of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
-function Get-PnPDeletedUnifiedGroup
+function Get-PnPDeletedMicrosoft365Group
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='The Identity of the Office 365 Group.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.UnifiedGroupPipeBind]
-    ${Identity})
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPDocumentSetTemplate
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.DocumentSetPipeBind]
-        ${Identity},
+        [PnP.PowerShell.Commands.Base.PipeBinds.DocumentSetPipeBind]
+        $Identity,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-        ${Web},
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
     )
 }
 function Get-PnPEventReceiver
@@ -65567,50 +66835,82 @@ function Get-PnPEventReceiver
     [CmdletBinding()]
     param(
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-        ${List},
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.EventReceiverPipeBind]
-        ${Identity},
+        [PnP.PowerShell.Commands.Base.PipeBinds.EventReceiverPipeBind]
+        $Identity,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-        ${Web},
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
     )
 }
 function Get-PnPException
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='Show all exceptions')]
-    [switch]
-    ${All})
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPFeature
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.FeaturePipeBind]
-        ${Identity},
+        [PnP.PowerShell.Commands.Base.PipeBinds.FeaturePipeBind]
+        $Identity,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Enums.FeatureScope]
-        ${Scope},
+        [PnP.PowerShell.Commands.Enums.FeatureScope]
+        $Scope,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-        ${Web},
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
     )
 }
 function Get-PnPField
@@ -65618,74 +66918,123 @@ function Get-PnPField
     [CmdletBinding()]
     param(
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-        ${List},
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
-        ${Identity},
+        [PnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
+        $Identity,
 
         [Parameter()]
         [System.String]
-        ${Group},
+        $Group,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-        ${Web},
+        [System.Management.Automation.SwitchParameter]
+        $InSiteHierarchy,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
     )
 }
 function Get-PnPFile
 {
-    [CmdletBinding(DefaultParameterSetName='Return as file object')]
-param(
-    [Parameter(ParameterSetName='Return as file object', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The URL (server or site relative) to the file')]
-    [Parameter(ParameterSetName='Return as list item', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The URL (server or site relative) to the file')]
-    [Parameter(ParameterSetName='Save to local path', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The URL (server or site relative) to the file')]
-    [Parameter(ParameterSetName='Return as string', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The URL (server or site relative) to the file')]
-    [Alias('ServerRelativeUrl','SiteRelativeUrl')]
-    [string]
-    ${Url},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
 
-    [Parameter(ParameterSetName='Save to local path', HelpMessage='Local path where the file should be saved')]
-    [string]
-    ${Path},
+        [Parameter()]
+        [System.String]
+        $Path,
 
-    [Parameter(ParameterSetName='Save to local path', HelpMessage='Name for the local file')]
-    [string]
-    ${Filename},
+        [Parameter()]
+        [System.String]
+        $Filename,
 
-    [Parameter(ParameterSetName='Save to local path', Mandatory=$true)]
-    [switch]
-    ${AsFile},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsFile,
 
-    [Parameter(ParameterSetName='Return as list item', HelpMessage='Returns the file as a listitem showing all its properties')]
-    [switch]
-    ${AsListItem},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsListItem,
 
-    [Parameter(ParameterSetName='Return as list item', HelpMessage='If provided in combination with -AsListItem, a System.ArgumentException will be thrown if the file specified in the -Url argument does not exist. Otherwise it will return nothing instead.')]
-    [switch]
-    ${ThrowExceptionIfFileNotFound},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ThrowExceptionIfFileNotFound,
 
-    [Parameter(ParameterSetName='Return as string', HelpMessage='Retrieve the file contents as a string')]
-    [switch]
-    ${AsString},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsString,
 
-    [Parameter(ParameterSetName='Save to local path', HelpMessage='Overwrites the file if it exists.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(ParameterSetName='Return as file object', HelpMessage='Retrieve the file contents as a file object.')]
-    [switch]
-    ${AsFileObject},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsFileObject,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPFileVersion
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPFolder
 {
@@ -65693,1109 +67042,2530 @@ function Get-PnPFolder
     param(
         [Parameter()]
         [System.String]
-        ${Url},
+        $Url,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-        ${List},
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-        ${Web},
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
     )
 }
 function Get-PnPFolderItem
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='Folder via url', Position=0, ValueFromPipeline=$true, HelpMessage='The site relative URL of the folder to retrieve')]
-    [string]
-    ${FolderSiteRelativeUrl},
+    param(
+        [Parameter()]
+        [System.String]
+        $FolderSiteRelativeUrl,
 
-    [Parameter(ParameterSetName='Folder via pipebind', Position=0, HelpMessage='A folder instance to the folder to retrieve')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.FolderPipeBind]
-    ${Identity},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FolderPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='The type of contents to retrieve, either File, Folder or All (default)')]
-    [ValidateSet('Folder','File','All')]
-    [string]
-    ${ItemType},
+        [Parameter()]
+        [System.String]
+        $ItemType,
 
-    [Parameter(HelpMessage='Optional name of the item to retrieve')]
-    [string]
-    ${ItemName},
+        [Parameter()]
+        [System.String]
+        $ItemName,
 
-    [Parameter(Position=4, HelpMessage='A switch parameter to include contents of all subfolders in the specified folder')]
-    [switch]
-    ${Recursive},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Recursive,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPFooter
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPGraphAccessToken
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Decoded,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPGraphSubscription
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPGroup
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
-        ${Identity},
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Identity,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-        ${Web}
+        [System.Management.Automation.SwitchParameter]
+        $AssociatedMemberGroup,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AssociatedVisitorGroup,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AssociatedOwnerGroup,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
     )
 }
 function Get-PnPGroupMembers
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='A group object, an ID or a name of a group')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPGroupPermissions
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='ByName', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Get the permissions of a specific group by name')]
-    [Alias('Name')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPHealthScore
 {
     [CmdletBinding()]
-param(
-    [Parameter(ValueFromPipeline=$true, HelpMessage='The url of the WebApplication to retrieve the health score from')]
-    [string]
-    ${Url})
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPHideDefaultThemes
 {
     [CmdletBinding()]
-param()
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPHomePage
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPHomeSite
 {
     [CmdletBinding()]
-param()
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPHubSite
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true)]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
-    ${Identity})
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
+        $Identity,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPHubSiteChild
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The URL of the hubsite for which to receive the sites refering to it')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
-    ${Identity})
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
+        $Identity,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPIndexedPropertyKeys
 {
     [CmdletBinding()]
-param(
-    [Parameter(ValueFromPipeline=$true, HelpMessage='The list object or name from where to get the indexed properties')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPInPlaceRecordsManagement
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPIsSiteAliasAvailable
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPJavaScriptLink
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='Name of the Javascript link. Omit this parameter to retrieve all script links')]
-    [Alias('Key')]
-    [string]
-    ${Name},
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(HelpMessage='Scope of the action, either Web, Site or All to return both, defaults to Web')]
-    [SharePointPnP.PowerShell.Commands.Enums.CustomActionScope]
-    ${Scope},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CustomActionScope]
+        $Scope,
 
-    [Parameter(HelpMessage='Switch parameter if an exception should be thrown if the requested JavaScriptLink does not exist (true) or if omitted, nothing will be returned in case the JavaScriptLink does not exist')]
-    [switch]
-    ${ThrowExceptionIfJavaScriptLinkNotFound},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ThrowExceptionIfJavaScriptLinkNotFound,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPKnowledgeHubSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPLabel
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID or Url of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ValuesOnly,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPList
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-        ${Identity},
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $Identity,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-        ${Web},
+        [System.Management.Automation.SwitchParameter]
+        $ThrowExceptionIfListNotFound,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
     )
 }
 function Get-PnPListInformationRightsManagement
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true)]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPListItem
 {
-    [CmdletBinding(DefaultParameterSetName='All Items')]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The list to query')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(ParameterSetName='By Id', HelpMessage='The ID of the item to retrieve')]
-    [int]
-    ${Id},
+        [Parameter()]
+        [System.Int32]
+        $Id,
 
-    [Parameter(ParameterSetName='By Unique Id', HelpMessage='The unique id (GUID) of the item to retrieve')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${UniqueId},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $UniqueId,
 
-    [Parameter(ParameterSetName='By Query', HelpMessage='The CAML query to execute against the list')]
-    [string]
-    ${Query},
+        [Parameter()]
+        [System.String]
+        $Query,
 
-    [Parameter(ParameterSetName='All Items', HelpMessage='The fields to retrieve. If not specified all fields will be loaded in the returned list object.')]
-    [Parameter(ParameterSetName='By Id', HelpMessage='The fields to retrieve. If not specified all fields will be loaded in the returned list object.')]
-    [Parameter(ParameterSetName='By Unique Id', HelpMessage='The fields to retrieve. If not specified all fields will be loaded in the returned list object.')]
-    [string[]]
-    ${Fields},
+        [Parameter()]
+        [System.String]
+        $FolderServerRelativeUrl,
 
-    [Parameter(ParameterSetName='All Items', HelpMessage='The number of items to retrieve per page request.')]
-    [Parameter(ParameterSetName='By Query', HelpMessage='The number of items to retrieve per page request.')]
-    [int]
-    ${PageSize},
+        [Parameter()]
+        [System.String[]]
+        $Fields,
 
-    [Parameter(ParameterSetName='All Items', HelpMessage='The script block to run after every page request.')]
-    [Parameter(ParameterSetName='By Query', HelpMessage='The script block to run after every page request.')]
-    [scriptblock]
-    ${ScriptBlock},
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [System.Management.Automation.ScriptBlock]
+        $ScriptBlock,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPListRecordDeclaration
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The list to retrieve the record declaration settings for')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPManagementApiAccessToken
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The Tenant ID to connect to the Office 365 Management API')]
-    [string]
-    ${TenantId},
+    param(
+        [Parameter()]
+        [System.String]
+        $TenantId,
 
-    [Parameter(Mandatory=$true, HelpMessage='The App\Client ID of the app which gives you access to the Office 365 Management API')]
-    [string]
-    ${ClientId},
+        [Parameter()]
+        [System.String]
+        $ClientId,
 
-    [Parameter(Mandatory=$true, HelpMessage='The Client Secret of the app which gives you access to the Office 365 Management API')]
-    [string]
-    ${ClientSecret})
+        [Parameter()]
+        [System.String]
+        $ClientSecret,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPMasterPage
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPMicrosoft365Group
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ExcludeSiteUrl,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeClassification,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeHasTeam,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPMicrosoft365GroupMembers
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPMicrosoft365GroupOwners
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPNavigationNode
 {
-    [CmdletBinding(DefaultParameterSetName='All nodes by location')]
-param(
-    [Parameter(ParameterSetName='All nodes by location', HelpMessage='The location of the nodes to retrieve. Either TopNavigationBar, QuickLaunch')]
-    [OfficeDevPnP.Core.Enums.NavigationType]
-    ${Location},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.NavigationType]
+        $Location,
 
-    [Parameter(ParameterSetName='A single node by ID', HelpMessage='The Id of the node to retrieve')]
-    [int]
-    ${Id},
+        [Parameter()]
+        [System.Int32]
+        $Id,
 
-    [Parameter(HelpMessage='Show a tree view of all navigation nodes')]
-    [switch]
-    ${Tree},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Tree,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPOffice365CurrentServiceStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Nullable`1[PnP.PowerShell.Commands.Enums.Office365Workload]]
+        $Workload,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPOffice365HistoricalServiceStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Nullable`1[PnP.PowerShell.Commands.Enums.Office365Workload]]
+        $Workload,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPOffice365ServiceMessage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Nullable`1[PnP.PowerShell.Commands.Enums.Office365Workload]]
+        $Workload,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPOffice365Services
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPOfficeManagementApiAccessToken
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Decoded,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPOrgAssetsLibrary
 {
     [CmdletBinding()]
-param()
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPOrgNewsSite
 {
     [CmdletBinding()]
-param()
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPPowerShellTelemetryEnabled
 {
     [CmdletBinding()]
-param()
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPProperty
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='Specifies the object where the properties of should be retrieved')]
-    [Microsoft.SharePoint.Client.ClientObject]
-    ${ClientObject},
+    param(
+        [Parameter()]
+        [Microsoft.SharePoint.Client.ClientObject]
+        $ClientObject,
 
-    [Parameter(Mandatory=$true, Position=1, HelpMessage='The properties to load. If one property is specified its value will be returned to the output.')]
-    [string[]]
-    ${Property})
+        [Parameter()]
+        [System.String[]]
+        $Property,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPPropertyBag
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='Key that should be looked up')]
-    [string]
-    ${Key},
+    param(
+        [Parameter()]
+        [System.String]
+        $Key,
 
-    [Parameter(HelpMessage='Site relative url of the folder. See examples for use.')]
-    [string]
-    ${Folder},
+        [Parameter()]
+        [System.String]
+        $Folder,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPProvisioningTemplate
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Position=0, HelpMessage='Filename to write to, optionally including full path')]
-    [string]
-    ${Out},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Out,
 
-    [Parameter(Position=1, HelpMessage='The schema of the output to use, defaults to the latest schema')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml.XMLPnPSchemaVersion]
-    ${Schema},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml.XMLPnPSchemaVersion]
+        $Schema,
 
-    [Parameter(HelpMessage='If specified, all term groups will be included. Overrides IncludeSiteCollectionTermGroup.')]
-    [switch]
-    ${IncludeAllTermGroups},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeAllTermGroups,
 
-    [Parameter(HelpMessage='If specified, all the site collection term groups will be included. Overridden by IncludeAllTermGroups.')]
-    [switch]
-    ${IncludeSiteCollectionTermGroup},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeSiteCollectionTermGroup,
 
-    [Parameter(HelpMessage='If specified all site groups will be included.')]
-    [switch]
-    ${IncludeSiteGroups},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeSiteGroups,
 
-    [Parameter(HelpMessage='If specified all the managers and contributors of term groups will be included.')]
-    [switch]
-    ${IncludeTermGroupsSecurity},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeTermGroupsSecurity,
 
-    [Parameter(HelpMessage='If specified the template will contain the current search configuration of the site.')]
-    [switch]
-    ${IncludeSearchConfiguration},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeSearchConfiguration,
 
-    [Parameter(HelpMessage='If specified the files used for masterpages, sitelogo, alternate CSS and the files that make up the composed look will be saved.')]
-    [switch]
-    ${PersistBrandingFiles},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PersistBrandingFiles,
 
-    [Parameter(HelpMessage='If specified the files making up the composed look (background image, font file and color file) will be saved.')]
-    [Obsolete('Use PersistBrandingFiles instead.')]
-    [switch]
-    ${PersistComposedLookFiles},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PersistComposedLookFiles,
 
-    [Parameter(HelpMessage='If specified the files used for the publishing feature will be saved.')]
-    [switch]
-    ${PersistPublishingFiles},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PersistPublishingFiles,
 
-    [Parameter(HelpMessage='If specified, out of the box / native publishing files will be saved.')]
-    [switch]
-    ${IncludeNativePublishingFiles},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeNativePublishingFiles,
 
-    [Parameter(HelpMessage='If specified hidden lists will be included in the template')]
-    [switch]
-    ${IncludeHiddenLists},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeHiddenLists,
 
-    [Parameter(HelpMessage='If specified all client side pages will be included')]
-    [switch]
-    ${IncludeAllClientSidePages},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeAllClientSidePages,
 
-    [Parameter(HelpMessage='During extraction the version of the server will be checked for certain actions. If you specify this switch, this check will be skipped.')]
-    [switch]
-    ${SkipVersionCheck},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipVersionCheck,
 
-    [Parameter(HelpMessage='If specified, resource values for applicable artifacts will be persisted to a resource file')]
-    [switch]
-    ${PersistMultiLanguageResources},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PersistMultiLanguageResources,
 
-    [Parameter(HelpMessage='If specified, resource files will be saved with the specified prefix instead of using the template name specified. If no template name is specified the files will be called PnP-Resources.<language>.resx. See examples for more info.')]
-    [string]
-    ${ResourceFilePrefix},
+        [Parameter()]
+        [System.String]
+        $ResourceFilePrefix,
 
-    [Parameter(HelpMessage='Allows you to only process a specific type of artifact in the site. Notice that this might result in a non-working template, as some of the handlers require other artifacts in place if they are not part of what your extracting. For possible values for this parameter visit https://docs.microsoft.com/dotnet/api/officedevpnp.core.framework.provisioning.model.handlers')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers]
-    ${Handlers},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers]
+        $Handlers,
 
-    [Parameter(HelpMessage='Allows you to run all handlers, excluding the ones specified.')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers]
-    ${ExcludeHandlers},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers]
+        $ExcludeHandlers,
 
-    [Parameter(HelpMessage='Allows you to specify ExtensibilityHandlers to execute while extracting a template.')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.ExtensibilityHandler[]]
-    ${ExtensibilityHandlers},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ExtensibilityHandler[]]
+        $ExtensibilityHandlers,
 
-    [Parameter(HelpMessage='Allows you to specify ITemplateProviderExtension to execute while extracting a template.')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
-    ${TemplateProviderExtensions},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions,
 
-    [Parameter(HelpMessage='Allows you to specify from which content type group(s) the content types should be included into the template.')]
-    [string[]]
-    ${ContentTypeGroups},
+        [Parameter()]
+        [System.String[]]
+        $ContentTypeGroups,
 
-    [Parameter(HelpMessage='Overwrites the output file if it exists.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='Exports the template without the use of a base template, causing all OOTB artifacts to be included. Using this switch is generally not required/recommended.')]
-    [Obsolete('Use of this method is generally not required/recommended')]
-    [switch]
-    ${NoBaseTemplate},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $NoBaseTemplate,
 
-    [Parameter(HelpMessage='The encoding type of the XML file, Unicode is default')]
-    [System.Text.Encoding]
-    ${Encoding},
+        [Parameter()]
+        [System.Text.Encoding]
+        $Encoding,
 
-    [Parameter(HelpMessage='It can be used to specify the DisplayName of the template file that will be extracted.')]
-    [string]
-    ${TemplateDisplayName},
+        [Parameter()]
+        [System.String]
+        $TemplateDisplayName,
 
-    [Parameter(HelpMessage='It can be used to specify the ImagePreviewUrl of the template file that will be extracted.')]
-    [string]
-    ${TemplateImagePreviewUrl},
+        [Parameter()]
+        [System.String]
+        $TemplateImagePreviewUrl,
 
-    [Parameter(HelpMessage='It can be used to specify custom Properties for the template file that will be extracted.')]
-    [hashtable]
-    ${TemplateProperties},
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $TemplateProperties,
 
-    [Parameter(HelpMessage='Returns the template as an in-memory object, which is an instance of the ProvisioningTemplate type of the PnP Core Component. It cannot be used together with the -Out parameter.')]
-    [switch]
-    ${OutputInstance},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OutputInstance,
 
-    [Parameter(HelpMessage='Specify whether or not content types issued from a content hub should be exported. By default, these content types are included.')]
-    [switch]
-    ${ExcludeContentTypesFromSyndication},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ExcludeContentTypesFromSyndication,
 
-    [Parameter(HelpMessage='Specify the lists to extract, either providing their ID or their Title.')]
-    [System.Collections.Generic.List[string]]
-    ${ListsToExtract},
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        $ListsToExtract,
 
-    [Parameter(HelpMessage='Specify a JSON configuration file to configure the extraction progress.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ExtractConfigurationPipeBind]
-    ${Configuration},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ExtractConfigurationPipeBind]
+        $Configuration,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Get-PnPPublishingImageRendition
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='Id or name of an existing image rendition')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ImageRenditionPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ImageRenditionPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPRecycleBinItem
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-        ${Identity},
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $FirstStage,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SecondStage,
 
         [Parameter()]
         [System.Int32]
-        ${RowLimit},
+        $RowLimit,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
     )
 }
 function Get-PnPRequestAccessEmails
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web}
-)
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPRoleDefinition
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='The name of a role definition to retrieve.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.RoleDefinitionPipeBind]
-    ${Identity}
-)
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.RoleDefinitionPipeBind]
+        $Identity,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPSearchConfiguration
 {
-    [CmdletBinding(DefaultParameterSetName='Xml')]
-param(
-    [Parameter(HelpMessage='Scope to use. Either Web, Site, or Subscription. Defaults to Web')]
-    [SharePointPnP.PowerShell.Commands.Enums.SearchConfigurationScope]
-    ${Scope},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.SearchConfigurationScope]
+        $Scope,
 
-    [Parameter(ParameterSetName='Xml', HelpMessage='Local path where the search configuration will be saved')]
-    [string]
-    ${Path},
+        [Parameter()]
+        [System.String]
+        $Path,
 
-    [Parameter(ParameterSetName='OutputFormat', HelpMessage='Output format for of the configuration. Defaults to complete XML')]
-    [SharePointPnP.PowerShell.Commands.Search.OutputFormat]
-    ${OutputFormat},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Search.OutputFormat]
+        $OutputFormat,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web}
-)
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPSearchCrawlLog
 {
-    [CmdletBinding(DefaultParameterSetName='Xml')]
-param(
-    [Parameter(HelpMessage='Filter what log entries to return (All, Success, Warning, Error). Defaults to All')]
-    [SharePointPnP.PowerShell.Commands.Search.LogLevel]
-    ${LogLevel},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Search.LogLevel]
+        $LogLevel,
 
-    [Parameter(HelpMessage='Number of entries to return. Defaults to 100.')]
-    [int]
-    ${RowLimit},
+        [Parameter()]
+        [System.Int32]
+        $RowLimit,
 
-    [Parameter(HelpMessage='Filter to limit what is being returned. Has to be a URL prefix for SharePoint content, and part of a user principal name for user profiles. Wildcard characters are not supported.')]
-    [string]
-    ${Filter},
+        [Parameter()]
+        [System.String]
+        $Filter,
 
-    [Parameter(HelpMessage='Content to retrieve (Sites, User Profiles). Defaults to Sites.')]
-    [SharePointPnP.PowerShell.Commands.Search.ContentSource]
-    ${ContentSource},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Search.ContentSource]
+        $ContentSource,
 
-    [Parameter(HelpMessage='Start date to start getting entries from. Defaults to start of time.')]
-    [datetime]
-    ${StartDate},
+        [Parameter()]
+        [System.DateTime]
+        $StartDate,
 
-    [Parameter(HelpMessage='End date to stop getting entries from. Default to current time.')]
-    [datetime]
-    ${EndDate},
+        [Parameter()]
+        [System.DateTime]
+        $EndDate,
 
-    [Parameter(HelpMessage='Show raw crawl log data')]
-    [switch]
-    ${RawFormat},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RawFormat,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web}
-)
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPSearchSettings
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web}
-)
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPSharingForNonOwnersOfSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPSite
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
     )
 }
 function Get-PnPSiteClassification
 {
     [CmdletBinding()]
-param()
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPSiteClosure
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web}
-)
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPSiteCollectionAdmin
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web}
-)
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPSiteCollectionTermStore
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param()
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Get-PnPSiteDesign
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='If specified will retrieve the specified site design')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
-    ${Identity}
-)
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        $Identity,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Get-PnPSiteDesignRights
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID of the Site Design to receive the rights for')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
-    ${Identity}
-)
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        $Identity,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Get-PnPSiteDesignRun
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(HelpMessage='The ID of the site design to apply.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${SiteDesignId},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $SiteDesignId,
 
-    [Parameter(HelpMessage='The URL of the site collection where the site design will be applied. If not specified the design will be applied to the site you connected to with Connect-PnPOnline.')]
-    [string]
-    ${WebUrl},
+        [Parameter()]
+        [System.String]
+        $WebUrl,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web}
-)
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Get-PnPSiteDesignRunStatus
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The site design run for the desired set of script action details.')]
-    [Microsoft.Online.SharePoint.TenantAdministration.TenantSiteDesignRun]
-    ${Run}
-)
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.TenantSiteDesignRun]
+        $Run,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Get-PnPSiteDesignTask
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='The ID of the site design to apply.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignTaskPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignTaskPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='The URL of the site collection where the site design will be applied. If not specified the design will be applied to the site you connected to with Connect-PnPOnline.')]
-    [string]
-    ${WebUrl},
+        [Parameter()]
+        [System.String]
+        $WebUrl,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web}
-)
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPSitePolicy
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='Retrieve all available site policies')]
-    [switch]
-    ${AllAvailable},
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AllAvailable,
 
-    [Parameter(HelpMessage='Retrieves a site policy with a specific name')]
-    [string]
-    ${Name},
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web}
-)
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPSiteScript
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='If specified will retrieve the specified site script')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TenantSiteScriptPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteScriptPipeBind]
+        $Identity,
 
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='If specified will retrieve the site scripts for this design')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
-    ${SiteDesign}
-)
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        $SiteDesign,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Get-PnPSiteScriptFromList
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='Specifies the URL of the list to generate a Site Script from')]
-    [string]
-    ${Url}
-)
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Get-PnPSiteScriptFromWeb
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='Specifies the URL of the site to generate a Site Script from')]
-    [string]
-    ${Url},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
 
-    [Parameter(HelpMessage='Allows specifying one or more site relative URLs of lists that should be included into the Site Script, i.e. "Shared Documents","List\MyList"')]
-    [string[]]
-    ${Lists},
+        [Parameter()]
+        [System.String[]]
+        $Lists,
 
-    [Parameter(ParameterSetName='All components', HelpMessage='If specified will include all supported components into the Site Script')]
-    [switch]
-    ${IncludeAll},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeAll,
 
-    [Parameter(ParameterSetName='Specific components', HelpMessage='If specified will include the branding of the site into the Site Script')]
-    [switch]
-    ${IncludeBranding},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeBranding,
 
-    [Parameter(ParameterSetName='Specific components', HelpMessage='If specified will include navigation links into the Site Script')]
-    [switch]
-    ${IncludeLinksToExportedItems},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeLinksToExportedItems,
 
-    [Parameter(ParameterSetName='Specific components', HelpMessage='If specified will include the regional settings into the Site Script')]
-    [switch]
-    ${IncludeRegionalSettings},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeRegionalSettings,
 
-    [Parameter(ParameterSetName='Specific components', HelpMessage='If specified will include the external sharing configuration into the Site Script')]
-    [switch]
-    ${IncludeSiteExternalSharingCapability},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeSiteExternalSharingCapability,
 
-    [Parameter(ParameterSetName='Specific components', HelpMessage='If specified will include the branding of the site into the Site Script')]
-    [switch]
-    ${IncludeTheme}
-)
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeTheme,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Get-PnPSiteSearchQueryResults
 {
-    [CmdletBinding(DefaultParameterSetName='Limit')]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='Search query in Keyword Query Language (KQL) to execute to refine the returned sites. If omitted, all indexed sites will be returned.')]
-    [string]
-    ${Query},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Query,
 
-    [Parameter(ParameterSetName='Limit', HelpMessage='Search result item to start returning the results from. Useful for paging. Leave at 0 to return all results.')]
-    [int]
-    ${StartRow},
+        [Parameter()]
+        [System.Int32]
+        $StartRow,
 
-    [Parameter(ParameterSetName='Limit', HelpMessage='Maximum amount of search results to return. Default and max is 500 search results.')]
-    [ValidateRange(0, 500)]
-    [int]
-    ${MaxResults},
+        [Parameter()]
+        [System.Int32]
+        $MaxResults,
 
-    [Parameter(ParameterSetName='All', HelpMessage='Automatically page results until the end to get more than 500 sites. Use with caution!')]
-    [switch]
-    ${All},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web}
-)
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPStorageEntity
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(HelpMessage='The key of the value to retrieve.')]
-    [string]
-    ${Key},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Key,
 
-    [Parameter(HelpMessage='Defines the scope of the storage entity. Defaults to Tenant.')]
-    [SharePointPnP.PowerShell.Commands.Enums.StorageEntityScope]
-    ${Scope}
-)
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.StorageEntityScope]
+        $Scope,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Get-PnPStoredCredential
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The credential to retrieve.')]
-    [string]
-    ${Name},
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(HelpMessage='The object type of the credential to return from the Credential Manager. Possible values are ''O365'', ''OnPrem'' or ''PSCredential''')]
-    [SharePointPnP.PowerShell.Commands.Enums.CredentialType]
-    ${Type})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CredentialType]
+        $Type,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPSubWebs
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-        ${Identity},
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Identity,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-        ${Web},
+        [System.Management.Automation.SwitchParameter]
+        $Recurse,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
     )
 }
 function Get-PnPTaxonomyItem
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The path, delimited by | of the taxonomy item to retrieve, alike GROUPLABEL|TERMSETLABEL|TERMLABEL')]
-    [Alias('Term')]
-    [string]
-    ${TermPath}
-)
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TermPath,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Get-PnPTaxonomySession
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web}
-)
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPTeamsApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsAppPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPTeamsChannel
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsChannelPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPTeamsChannelMessage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsChannelPipeBind]
+        $Channel,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeDeleted,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPTeamsTab
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsChannelPipeBind]
+        $Channel,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTabPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPTeamsTeam
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPTeamsUser
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsChannelPipeBind]
+        $Channel,
+
+        [Parameter()]
+        [System.String]
+        $Role,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPTenant
 {
     [CmdletBinding()]
-param()
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
-}
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
 
-function Get-PnPTenantSyncClientRestriction
-{
-    [CmdletBinding()]
-param()
-
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPTenantAppCatalogUrl
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param()
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Get-PnPTenantCdnEnabled
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The type of cdn to retrieve the origins from')]
-    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
-    ${CdnType}
-)
+    param(
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        $CdnType,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPTenantCdnOrigin
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The type of cdn to retrieve the origins from')]
-    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
-    ${CdnType})
+    param(
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        $CdnType,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPTenantCdnPolicies
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The type of cdn to retrieve the policies from')]
-    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
-    ${CdnType})
+    param(
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        $CdnType,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPTenantId
 {
     [CmdletBinding()]
-param(
-    [string]
-    ${TenantUrl})
+    param(
+        [Parameter()]
+        [System.String]
+        $TenantUrl,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPTenantRecycleBinItem
 {
-    [CmdletBinding(DefaultParameterSetName='All')]
-param()
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPTenantSequence
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The template to retrieve the sequence from')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningHierarchy]
-    ${Template},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningHierarchy]
+        $Template,
 
-    [Parameter(ValueFromPipeline=$true, HelpMessage='Optional Id of the sequence')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ProvisioningSequencePipeBind]
-    ${Identity})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ProvisioningSequencePipeBind]
+        $Identity,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Get-PnPTenantSequenceSite
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The sequence to retrieve the site from')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningSequence]
-    ${Sequence},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningSequence]
+        $Sequence,
 
-    [Parameter(ValueFromPipeline=$true, HelpMessage='Optional Id of the site')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ProvisioningSitePipeBind]
-    ${Identity})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ProvisioningSitePipeBind]
+        $Identity,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Get-PnPTenantServicePrincipal
 {
     [CmdletBinding()]
-param()
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPTenantServicePrincipalPermissionGrants
 {
     [CmdletBinding()]
-param()
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPTenantServicePrincipalPermissionRequests
 {
     [CmdletBinding()]
-param()
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPTenantSite
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='The URL of the site')]
-    [Alias('Identity')]
-    [string]
-    ${Url},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
 
-    [Parameter(HelpMessage='By default, all sites will be returned. Specify a template value alike "STS#0" here to filter on the template')]
-    [string]
-    ${Template},
+        [Parameter()]
+        [System.String]
+        $Template,
 
-    [Parameter(HelpMessage='By default, not all returned attributes are populated. This switch populates all attributes. It can take several seconds to run. Without this, some attributes will show default values that may not be correct.')]
-    [switch]
-    ${Detailed},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Detailed,
 
-    [Parameter(HelpMessage='By default, the OneDrives are not returned. This switch includes all OneDrives.')]
-    [switch]
-    ${IncludeOneDriveSites},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeOneDriveSites,
 
-    [Parameter(HelpMessage='When the switch IncludeOneDriveSites is used, this switch ignores the question shown that the command can take a long time to execute')]
-    [Obsolete()]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='Limit results to a specific web template name')]
-    [Obsolete('Use Template')]
-    [string]
-    ${WebTemplate},
+        [Parameter()]
+        [System.String]
+        $WebTemplate,
 
-    [Parameter(HelpMessage='Specifies the script block of the server-side filter to apply. See https://technet.microsoft.com/en-us/library/fp161380.aspx')]
-    [string]
-    ${Filter})
+        [Parameter()]
+        [System.String]
+        $Filter,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
+}
+function Get-PnPTenantSyncClientRestriction
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPTenantTemplate
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(ParameterSetName='Extract a template to a file')]
-    [Parameter(ParameterSetName='Extract a template as an object')]
-    [string]
-    ${SiteUrl},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $SiteUrl,
 
-    [Parameter(ParameterSetName='Extract a template to a file', Mandatory=$true, Position=0, HelpMessage='Filename to write to, optionally including full path')]
-    [string]
-    ${Out},
+        [Parameter()]
+        [System.String]
+        $Out,
 
-    [Parameter(ParameterSetName='Extract a template to a file', HelpMessage='Overwrites the output file if it exists.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(ParameterSetName='Extract a template as an object', Mandatory=$true, HelpMessage='Returns the template as an in-memory object, which is an instance of the ProvisioningHierarchy type of the PnP Core Component. It cannot be used together with the -Out parameter.')]
-    [switch]
-    ${AsInstance},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsInstance,
 
-    [Parameter(ParameterSetName='Extract a template to a file', HelpMessage='Specify a JSON configuration file to configure the extraction progress.')]
-    [Parameter(ParameterSetName='Extract a template as an object', HelpMessage='Specify a JSON configuration file to configure the extraction progress.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ExtractConfigurationPipeBind]
-    ${Configuration})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ExtractConfigurationPipeBind]
+        $Configuration,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Get-PnPTenantTheme
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='The name of the theme to retrieve')]
-    [string]
-    ${Name})
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJson,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPTerm
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
-        ${Identity},
+        [PnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
+        $Identity,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
-        ${TermSet},
+        [PnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
+        $TermSet,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TermGroupPipeBind]
-        ${TermGroup},
+        [PnP.PowerShell.Commands.Base.PipeBinds.TermGroupPipeBind]
+        $TermGroup,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
-        ${TermStore},
+        [PnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
+        $TermStore,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [System.Management.Automation.SwitchParameter]
+        $Recursive,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeChildTerms,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
     )
 }
 function Get-PnPTermGroup
@@ -66803,16 +69573,28 @@ function Get-PnPTermGroup
     [CmdletBinding()]
     param(
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermGroup]]
-        ${Identity},
+        [PnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermGroup]]
+        $Identity,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
-        ${TermStore},
+        [PnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
+        $TermStore,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
     )
 }
 function Get-PnPTermSet
@@ -66820,155 +69602,236 @@ function Get-PnPTermSet
     [CmdletBinding()]
     param(
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
-        ${Identity},
+        [PnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
+        $Identity,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TermGroupPipeBind]
-        ${TermGroup},
+        [PnP.PowerShell.Commands.Base.PipeBinds.TermGroupPipeBind]
+        $TermGroup,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
-        ${TermStore},
+        [PnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
+        $TermStore,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
     )
 }
 function Get-PnPTheme
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='Specify this switch to not use the PnP Provisioning engine based composed look information but try to detect the current composed look as is.')]
-    [switch]
-    ${DetectCurrentComposedLook},
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DetectCurrentComposedLook,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPTimeZoneId
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, HelpMessage='A string to search for like ''Stockholm''')]
-    [string]
-    ${Match})
+    param(
+        [Parameter()]
+        [System.String]
+        $Match,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPUnifiedAuditLog
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='Content type of logs to be retrieved, should be one of the following: AzureActiveDirectory, Exchange, SharePoint, General, DLP.')]
-    [Parameter(ParameterSetName='Logs by date', HelpMessage='Content type of logs to be retreived, should be one of the following: AzureActiveDirectory, Exchange, SharePoint, General, DLP.')]
-    [SharePointPnP.PowerShell.Commands.Enums.AuditContentType]
-    ${ContentType},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.AuditContentType]
+        $ContentType,
 
-    [Parameter(ParameterSetName='Logs by date', HelpMessage='Start time of logs to be retrieved. Start time and end time must both be specified (or both omitted) and must be less than or equal to 24 hours apart, with the start time prior to end time and start time no more than 7 days in the past.')]
-    [datetime]
-    ${StartTime},
+        [Parameter()]
+        [System.DateTime]
+        $StartTime,
 
-    [Parameter(ParameterSetName='Logs by date', HelpMessage='End time of logs to be retrieved. Start time and end time must both be specified (or both omitted) and must be less than or equal to 24 hours apart.')]
-    [datetime]
-    ${EndTime})
+        [Parameter()]
+        [System.DateTime]
+        $EndTime,
 
-}
-function Get-PnPUnifiedGroup
-{
-    [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='The Identity of the Office 365 Group.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.UnifiedGroupPipeBind]
-    ${Identity},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
 
-    [Parameter(HelpMessage='Exclude fetching the site URL for Office 365 Groups. This speeds up large listings.')]
-    [switch]
-    ${ExcludeSiteUrl},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
 
-    [Parameter(HelpMessage='Include Classification value of Office 365 Groups.')]
-    [switch]
-    ${IncludeClassification})
-
-}
-function Get-PnPUnifiedGroupMembers
-{
-    [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The Identity of the Office 365 Group.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.UnifiedGroupPipeBind]
-    ${Identity})
-
-}
-function Get-PnPUnifiedGroupOwners
-{
-    [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The Identity of the Office 365 Group.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.UnifiedGroupPipeBind]
-    ${Identity})
-
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPUPABulkImportStatus
 {
     [CmdletBinding()]
-param(
-    [Parameter(ValueFromPipeline=$true, HelpMessage='The instance id of the job')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${JobId},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $JobId,
 
-    [Parameter(ValueFromPipeline=$true, HelpMessage='Include error log details')]
-    [switch]
-    ${IncludeErrorDetails})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeErrorDetails,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPUser
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='User ID or login name')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]
+        $Identity,
 
-    [Parameter(Position=1, HelpMessage='If provided, only users that currently have any kinds of access rights assigned to the current site collection will be returned. Otherwise all users, even those who previously had rights assigned, but not anymore at the moment, will be returned as the information is pulled from the User Information List. Only works if you don''t provide an -Identity.')]
-    [switch]
-    ${WithRightsAssigned},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WithRightsAssigned,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WithRightsAssignedDetailed,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Get-PnPUserOneDriveQuota
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Account,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPUserProfileProperty
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='The account of the user, formatted either as a login name, or as a claims identity, e.g. i:0#.f|membership|user@domain.com')]
-    [string[]]
-    ${Account})
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Account,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPView
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-        ${List},
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ViewPipeBind]
-        ${Identity},
+        [PnP.PowerShell.Commands.Base.PipeBinds.ViewPipeBind]
+        $Identity,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-        ${Web},
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
     )
 }
 function Get-PnPWeb
@@ -66976,2530 +69839,4792 @@ function Get-PnPWeb
     [CmdletBinding()]
     param(
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-        ${Identity},
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Identity,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
     )
 }
 function Get-PnPWebhookSubscriptions
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='The list object or name to get the Webhook subscriptions from')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPWebPart
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Full server relative URL of the web part page, e.g. /sites/mysite/sitepages/home.aspx')]
-    [Alias('PageUrl')]
-    [string]
-    ${ServerRelativePageUrl},
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativePageUrl,
 
-    [Parameter(ValueFromPipeline=$true, HelpMessage='The identity of the web part, this can be the web part guid or a web part object')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPartPipeBind]
-    ${Identity},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPartPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPWebPartProperty
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Full server relative URL of the web part page, e.g. /sites/mysite/sitepages/home.aspx')]
-    [Alias('PageUrl')]
-    [string]
-    ${ServerRelativePageUrl},
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativePageUrl,
 
-    [Parameter(Mandatory=$true, HelpMessage='The id of the web part')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${Identity},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Name of a single property to be returned')]
-    [string]
-    ${Key},
+        [Parameter()]
+        [System.String]
+        $Key,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPWebPartXml
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Full server relative url of the web part page, e.g. /sites/mysite/sitepages/home.aspx')]
-    [Alias('PageUrl')]
-    [string]
-    ${ServerRelativePageUrl},
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativePageUrl,
 
-    [Parameter(Mandatory=$true, HelpMessage='Id or title of the web part. Use Get-PnPWebPart to retrieve all web part Ids')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPartPipeBind]
-    ${Identity},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPartPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPWebTemplates
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='The language ID. For instance: 1033 for English')]
-    [uint32]
-    ${Lcid},
+    param(
+        [Parameter()]
+        [System.UInt32]
+        $Lcid,
 
-    [Parameter(HelpMessage='The version of SharePoint')]
-    [int]
-    ${CompatibilityLevel})
+        [Parameter()]
+        [System.Int32]
+        $CompatibilityLevel,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPWikiPageContent
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, HelpMessage='The server relative URL for the wiki page')]
-    [Alias('PageUrl')]
-    [string]
-    ${ServerRelativePageUrl},
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativePageUrl,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPWorkflowDefinition
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, HelpMessage='The name of the workflow')]
-    [string]
-    ${Name},
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(HelpMessage='Return only the published workflows')]
-    [switch]
-    ${PublishedOnly},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PublishedOnly,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPWorkflowInstance
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='The List for which workflow instances should be retrieved')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(Mandatory=$true, Position=1, HelpMessage='The List Item for which workflow instances should be retrieved')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
-    ${ListItem},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
+        $ListItem,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WorkflowSubscriptionPipeBind]
+        $WorkflowSubscription,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Get-PnPWorkflowSubscription
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, HelpMessage='The name of the workflow')]
-    [string]
-    ${Name},
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(Position=1, HelpMessage='A list to search the association for')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Grant-PnPHubSiteRights
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The Hub Site to set the permissions on to associate another site with this Hub Site')]
-    [Alias('HubSite')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
+        $Identity,
 
-    [Parameter(Mandatory=$true, HelpMessage='One or more usernames that will be given or revoked the permission to associate a site with this Hub Site. It does not replace permissions given out before but adds to the already existing permissions.')]
-    [string[]]
-    ${Principals},
+        [Parameter()]
+        [System.String[]]
+        $Principals,
 
-    [Parameter(HelpMessage='Provide Join to give permissions to associate a site with this Hub Site or use None to revoke the permissions for the user(s) specified with the Principals argument')]
-    [Obsolete('Use Revoke-PnPHubSiteRights to revoke rights and Grant-PnPHubSiteRights without the -Rights parameter to grant rights')]
-    [Microsoft.Online.SharePoint.TenantAdministration.SPOHubSiteUserRights]
-    ${Rights})
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.SPOHubSiteUserRights]
+        $Rights,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Grant-PnPSiteDesignRights
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The site design to use.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        $Identity,
 
-    [Parameter(Mandatory=$true, HelpMessage='One or more principals to grant rights to.')]
-    [string[]]
-    ${Principals},
+        [Parameter()]
+        [System.String[]]
+        $Principals,
 
-    [Parameter(HelpMessage='The rights to set. Defaults to ''View''')]
-    [Microsoft.Online.SharePoint.TenantAdministration.TenantSiteDesignPrincipalRights]
-    ${Rights})
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.TenantSiteDesignPrincipalRights]
+        $Rights,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Grant-PnPTenantServicePrincipalPermission
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The scope to grant the permission for')]
-    [string]
-    ${Scope},
+    param(
+        [Parameter()]
+        [System.String]
+        $Scope,
 
-    [Parameter(Mandatory=$true, HelpMessage='The resource to grant the permission for')]
-    [string]
-    ${Resource})
+        [Parameter()]
+        [System.String]
+        $Resource,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Import-PnPAppPackage
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Path pointing to the .app file')]
-    [string]
-    ${Path},
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
 
-    [Parameter(HelpMessage='Will forcibly install the app by activating the addin sideloading feature, installing the addin, and deactivating the sideloading feature')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='Will only upload the addin, but not install it')]
-    [switch]
-    ${LoadOnly},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $LoadOnly,
 
-    [Parameter(HelpMessage='Will install the addin for the specified locale')]
-    [int]
-    ${Locale},
+        [Parameter()]
+        [System.Int32]
+        $Locale,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Import-PnPTaxonomy
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(ParameterSetName='Direct', ValueFromPipeline=$true, HelpMessage='An array of strings describing termgroup, termset, term, subterms using a default delimiter of ''|''.')]
-    [string[]]
-    ${Terms},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Terms,
 
-    [Parameter(ParameterSetName='File', Mandatory=$true, HelpMessage='Specifies a file containing terms per line, in the format as required by the Terms parameter.')]
-    [string]
-    ${Path},
+        [Parameter()]
+        [System.String]
+        $Path,
 
-    [int]
-    ${Lcid},
+        [Parameter()]
+        [System.Int32]
+        $Lcid,
 
-    [Parameter(HelpMessage='Term store to import to; if not specified the default term store is used.')]
-    [string]
-    ${TermStoreName},
+        [Parameter()]
+        [System.String]
+        $TermStoreName,
 
-    [Parameter(HelpMessage='The path delimiter to be used, by default this is ''|''')]
-    [string]
-    ${Delimiter},
+        [Parameter()]
+        [System.String]
+        $Delimiter,
 
-    [Parameter(HelpMessage='If specified, terms that exist in the termset, but are not in the imported data, will be removed.')]
-    [switch]
-    ${SynchronizeDeletions})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SynchronizeDeletions,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Import-PnPTermGroupFromXml
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(ParameterSetName='XML', Position=0, ValueFromPipeline=$true, HelpMessage='The XML to process')]
-    [string]
-    ${Xml},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Xml,
 
-    [Parameter(ParameterSetName='File', HelpMessage='The XML File to import the data from')]
-    [string]
-    ${Path})
+        [Parameter()]
+        [System.String]
+        $Path,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Import-PnPTermSet
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Group to import the term set to; an error is returned if the group does not exist.')]
-    [string]
-    ${GroupName},
+    param(
+        [Parameter()]
+        [System.String]
+        $GroupName,
 
-    [Parameter(Mandatory=$true, HelpMessage='Local path to the file containing the term set to import, in the standard format (as the ''sample import file'' available in the Term Store Administration).')]
-    [string]
-    ${Path},
+        [Parameter()]
+        [System.String]
+        $Path,
 
-    [Parameter(HelpMessage='GUID to use for the term set; if not specified, or the empty GUID, a random GUID is generated and used.')]
-    [guid]
-    ${TermSetId},
+        [Parameter()]
+        [System.Guid]
+        $TermSetId,
 
-    [Parameter(HelpMessage='If specified, the import will remove any terms (and children) previously in the term set but not in the import file; default is to leave them.')]
-    [switch]
-    ${SynchronizeDeletions},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SynchronizeDeletions,
 
-    [Parameter(HelpMessage='Whether the term set should be marked open; if not specified, then the existing setting is not changed.')]
-    [System.Nullable[bool]]
-    ${IsOpen},
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $IsOpen,
 
-    [Parameter(HelpMessage='Contact for the term set; if not specified, the existing setting is retained.')]
-    [string]
-    ${Contact},
+        [Parameter()]
+        [System.String]
+        $Contact,
 
-    [Parameter(HelpMessage='Owner for the term set; if not specified, the existing setting is retained.')]
-    [string]
-    ${Owner},
+        [Parameter()]
+        [System.String]
+        $Owner,
 
-    [Parameter(HelpMessage='Term store to import into; if not specified the default term store is used.')]
-    [string]
-    ${TermStoreName})
+        [Parameter()]
+        [System.String]
+        $TermStoreName,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Initialize-PnPPowerShellAuthentication
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationName,
+
+        [Parameter()]
+        [System.String]
+        $Tenant,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.String]
+        $CommonName,
+
+        [Parameter()]
+        [System.String]
+        $Country,
+
+        [Parameter()]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [System.String]
+        $Locality,
+
+        [Parameter()]
+        [System.String]
+        $Organization,
+
+        [Parameter()]
+        [System.String]
+        $OrganizationUnit,
+
+        [Parameter()]
+        [System.Int32]
+        $ValidYears,
+
+        [Parameter()]
+        [System.Security.SecureString]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $OutPath,
+
+        [Parameter()]
+        [System.Security.Cryptography.X509Certificates.StoreLocation]
+        $Store,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.AzureEnvironment]
+        $AzureEnvironment,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Scopes
+    )
 }
 function Install-PnPApp
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Specifies the Id or an actual app metadata instance')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Defines which app catalog to use. Defaults to Tenant')]
-    [OfficeDevPnP.Core.Enums.AppCatalogScope]
-    ${Scope},
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.AppCatalogScope]
+        $Scope,
 
-    [Parameter(HelpMessage='If specified the execution will pause until the app has been installed in the site.')]
-    [switch]
-    ${Wait})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Wait,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Install-PnPSolution
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='ID of the solution, from the solution manifest')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${PackageId},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $PackageId,
 
-    [Parameter(Mandatory=$true, HelpMessage='Path to the sandbox solution package (.WSP) file')]
-    [string]
-    ${SourceFilePath},
+        [Parameter()]
+        [System.String]
+        $SourceFilePath,
 
-    [Parameter(HelpMessage='Optional major version of the solution, defaults to 1')]
-    [int]
-    ${MajorVersion},
+        [Parameter()]
+        [System.Int32]
+        $MajorVersion,
 
-    [Parameter(HelpMessage='Optional minor version of the solution, defaults to 0')]
-    [int]
-    ${MinorVersion})
+        [Parameter()]
+        [System.Int32]
+        $MinorVersion,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Invoke-PnPQuery
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='Number of times to retry in case of throttling. Defaults to 10.')]
-    [int]
-    ${RetryCount},
+    param(
+        [Parameter()]
+        [System.Int32]
+        $RetryCount,
 
-    [Parameter(HelpMessage='Delay in seconds. Defaults to 1.')]
-    [int]
-    ${RetryWait})
+        [Parameter()]
+        [System.Int32]
+        $RetryWait,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Invoke-PnPSiteDesign
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The Site Design Id or an actual Site Design object to apply')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='The URL of the web to apply the site design to. If not specified it will default to the current web based upon the URL specified with Connect-PnPOnline.')]
-    [string]
-    ${WebUrl},
+        [Parameter()]
+        [System.String]
+        $WebUrl,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Invoke-PnPSPRestMethod
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, HelpMessage='The Http method to execute. Defaults to GET.')]
-    [SharePointPnP.PowerShell.Commands.Enums.HttpRequestMethod]
-    ${Method},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.HttpRequestMethod]
+        $Method,
 
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='The url to execute.')]
-    [string]
-    ${Url},
+        [Parameter()]
+        [System.String]
+        $Url,
 
-    [Parameter(HelpMessage='A string or object to send')]
-    [System.Object]
-    ${Content},
+        [Parameter()]
+        [System.Object]
+        $Content,
 
-    [Parameter(HelpMessage='The content type of the object to send. Defaults to ''application/json''')]
-    [string]
-    ${ContentType})
+        [Parameter()]
+        [System.String]
+        $ContentType,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Invoke-PnPWebAction
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(HelpMessage='Name of list if you only want to handle one specific list and its list items')]
-    [string]
-    ${ListName},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ListName,
 
-    [Parameter(HelpMessage='Webs you want to process (for example different site collections), will use Web parameter if not specified')]
-    [Microsoft.SharePoint.Client.Web[]]
-    ${Webs},
+        [Parameter()]
+        [Microsoft.SharePoint.Client.Web[]]
+        $Webs,
 
-    [Parameter(HelpMessage='Function to be executed on the web. There is one input parameter of type Web')]
-    [System.Action[Microsoft.SharePoint.Client.Web]]
-    ${WebAction},
+        [Parameter()]
+        [System.Action`1[Microsoft.SharePoint.Client.Web]]
+        $WebAction,
 
-    [Parameter(HelpMessage='Function to be executed on the web that would determine if WebAction should be invoked, There is one input parameter of type Web and the function should return a boolean value')]
-    [System.Func[Microsoft.SharePoint.Client.Web,bool]]
-    ${ShouldProcessWebAction},
+        [Parameter()]
+        [System.Func`2[Microsoft.SharePoint.Client.Web,System.Boolean]]
+        $ShouldProcessWebAction,
 
-    [Parameter(HelpMessage='Function to be executed on the web, this will trigger after lists and list items have been processed. There is one input parameter of type Web')]
-    [System.Action[Microsoft.SharePoint.Client.Web]]
-    ${PostWebAction},
+        [Parameter()]
+        [System.Action`1[Microsoft.SharePoint.Client.Web]]
+        $PostWebAction,
 
-    [Parameter(HelpMessage='Function to be executed on the web that would determine if PostWebAction should be invoked, There is one input parameter of type Web and the function should return a boolean value')]
-    [System.Func[Microsoft.SharePoint.Client.Web,bool]]
-    ${ShouldProcessPostWebAction},
+        [Parameter()]
+        [System.Func`2[Microsoft.SharePoint.Client.Web,System.Boolean]]
+        $ShouldProcessPostWebAction,
 
-    [Parameter(HelpMessage='The properties to load for web.')]
-    [string[]]
-    ${WebProperties},
+        [Parameter()]
+        [System.String[]]
+        $WebProperties,
 
-    [Parameter(HelpMessage='Function to be executed on the list. There is one input parameter of type List')]
-    [System.Action[Microsoft.SharePoint.Client.List]]
-    ${ListAction},
+        [Parameter()]
+        [System.Action`1[Microsoft.SharePoint.Client.List]]
+        $ListAction,
 
-    [Parameter(HelpMessage='Function to be executed on the web that would determine if ListAction should be invoked, There is one input parameter of type List and the function should return a boolean value')]
-    [System.Func[Microsoft.SharePoint.Client.List,bool]]
-    ${ShouldProcessListAction},
+        [Parameter()]
+        [System.Func`2[Microsoft.SharePoint.Client.List,System.Boolean]]
+        $ShouldProcessListAction,
 
-    [Parameter(HelpMessage='Function to be executed on the list, this will trigger after list items have been processed. There is one input parameter of type List')]
-    [System.Action[Microsoft.SharePoint.Client.List]]
-    ${PostListAction},
+        [Parameter()]
+        [System.Action`1[Microsoft.SharePoint.Client.List]]
+        $PostListAction,
 
-    [Parameter(HelpMessage='Function to be executed on the web that would determine if PostListAction should be invoked, There is one input parameter of type List and the function should return a boolean value')]
-    [System.Func[Microsoft.SharePoint.Client.List,bool]]
-    ${ShouldProcessPostListAction},
+        [Parameter()]
+        [System.Func`2[Microsoft.SharePoint.Client.List,System.Boolean]]
+        $ShouldProcessPostListAction,
 
-    [Parameter(HelpMessage='The properties to load for list.')]
-    [string[]]
-    ${ListProperties},
+        [Parameter()]
+        [System.String[]]
+        $ListProperties,
 
-    [Parameter(HelpMessage='Function to be executed on the list item. There is one input parameter of type ListItem')]
-    [System.Action[Microsoft.SharePoint.Client.ListItem]]
-    ${ListItemAction},
+        [Parameter()]
+        [System.Action`1[Microsoft.SharePoint.Client.ListItem]]
+        $ListItemAction,
 
-    [Parameter(HelpMessage='Function to be executed on the web that would determine if ListItemAction should be invoked, There is one input parameter of type ListItem and the function should return a boolean value')]
-    [System.Func[Microsoft.SharePoint.Client.ListItem,bool]]
-    ${ShouldProcessListItemAction},
+        [Parameter()]
+        [System.Func`2[Microsoft.SharePoint.Client.ListItem,System.Boolean]]
+        $ShouldProcessListItemAction,
 
-    [Parameter(HelpMessage='The properties to load for list items.')]
-    [string[]]
-    ${ListItemProperties},
+        [Parameter()]
+        [System.String[]]
+        $ListItemProperties,
 
-    [Parameter(HelpMessage='Specify if sub webs will be processed')]
-    [switch]
-    ${SubWebs},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SubWebs,
 
-    [Parameter(HelpMessage='Will not output statistics after the operation')]
-    [switch]
-    ${DisableStatisticsOutput},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DisableStatisticsOutput,
 
-    [Parameter(HelpMessage='Will skip the counting process; by doing this you will not get an estimated time remaining')]
-    [switch]
-    ${SkipCounting},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipCounting,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Measure-PnPList
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-        ${Identity},
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $Identity,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-        ${Web},
+        [System.Management.Automation.SwitchParameter]
+        $ItemLevel,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [System.Management.Automation.SwitchParameter]
+        $BrokenPermissions,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
     )
 }
 function Measure-PnPResponseTime
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true)]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.DiagnosticEndpointPipeBind]
-    ${Url},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.DiagnosticEndpointPipeBind]
+        $Url,
 
-    [Parameter(HelpMessage='Number of probe requests to send')]
-    [uint32]
-    ${Count},
+        [Parameter()]
+        [System.UInt32]
+        $Count,
 
-    [Parameter(HelpMessage='Number of warm up requests to send before start calculating statistics')]
-    [uint32]
-    ${WarmUp},
+        [Parameter()]
+        [System.UInt32]
+        $WarmUp,
 
-    [Parameter(HelpMessage='Idle timeout between requests to avoid request throttling')]
-    [uint32]
-    ${Timeout},
+        [Parameter()]
+        [System.UInt32]
+        $Timeout,
 
-    [Parameter(HelpMessage='Number of buckets in histogram in output statistics')]
-    [uint32]
-    ${Histogram},
+        [Parameter()]
+        [System.UInt32]
+        $Histogram,
 
-    [Parameter(HelpMessage='Response time measurement mode. RoundTrip - measures full request round trip. SPRequestDuration - measures server processing time only, based on SPRequestDuration HTTP header. Latency - difference between RoundTrip and SPRequestDuration')]
-    [SharePointPnP.PowerShell.Commands.Diagnostic.MeasureResponseTimeMode]
-    ${Mode})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Diagnostic.MeasureResponseTimeMode]
+        $Mode,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Measure-PnPWeb
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true)]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Iterate all sub webs recursively')]
-    [switch]
-    ${Recursive},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Recursive,
 
-    [Parameter(HelpMessage='Include hidden lists in statistics calculation')]
-    [switch]
-    ${IncludeHiddenList})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeHiddenList,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Move-PnPClientSideComponent
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The name of the page')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
-    ${Page},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Page,
 
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The instance id of the control. Use Get-PnPClientSideControl retrieve the instance ids.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${InstanceId},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $InstanceId,
 
-    [Parameter(ParameterSetName='Move to other section', Mandatory=$true, HelpMessage='The section to move the web part to')]
-    [Parameter(ParameterSetName='Move to other section and column', Mandatory=$true, HelpMessage='The section to move the web part to')]
-    [int]
-    ${Section},
+        [Parameter()]
+        [System.Int32]
+        $Section,
 
-    [Parameter(ParameterSetName='Move to other column', Mandatory=$true, HelpMessage='The column to move the web part to')]
-    [Parameter(ParameterSetName='Move to other section and column', Mandatory=$true, HelpMessage='The column to move the web part to')]
-    [int]
-    ${Column},
+        [Parameter()]
+        [System.Int32]
+        $Column,
 
-    [Parameter(ParameterSetName='Move to other column', HelpMessage='Change to order of the web part in the column')]
-    [Parameter(ParameterSetName='Move to other section', HelpMessage='Change to order of the web part in the column')]
-    [Parameter(ParameterSetName='Move to other section and column', HelpMessage='Change to order of the web part in the column')]
-    [Parameter(ParameterSetName='Move within a column', Mandatory=$true, HelpMessage='Change to order of the web part in the column')]
-    [int]
-    ${Position},
+        [Parameter()]
+        [System.Int32]
+        $Position,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Move-PnPFile
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(ParameterSetName='Server Relative', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Server relative Url specifying the file to move. Must include the file name.')]
-    [string]
-    ${ServerRelativeUrl},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativeUrl,
 
-    [Parameter(ParameterSetName='Site Relative', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Site relative Url specifying the file to move. Must include the file name.')]
-    [string]
-    ${SiteRelativeUrl},
+        [Parameter()]
+        [System.String]
+        $SiteRelativeUrl,
 
-    [Parameter(Mandatory=$true, Position=1, HelpMessage='Server relative Url where to move the file to. Must include the file name.')]
-    [string]
-    ${TargetUrl},
+        [Parameter()]
+        [System.String]
+        $TargetUrl,
 
-    [Parameter(HelpMessage='If provided, if a file already exists at the TargetUrl, it will be overwritten. If omitted, the move operation will be canceled if the file already exists at the TargetUrl location.')]
-    [switch]
-    ${OverwriteIfAlreadyExists},
+        [Parameter()]
+        [System.String]
+        $TargetServerRelativeLibrary,
 
-    [Parameter(HelpMessage='If provided, no confirmation will be requested and the action will be performed')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OverwriteIfAlreadyExists,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AllowSchemaMismatch,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AllowSmallerVersionLimitOnDestination,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IgnoreVersionHistory,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Move-PnPFolder
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The folder to move')]
-    [string]
-    ${Folder},
+    param(
+        [Parameter()]
+        [System.String]
+        $Folder,
 
-    [Parameter(Mandatory=$true, HelpMessage='The new parent location to which the folder should be moved to')]
-    [string]
-    ${TargetFolder},
+        [Parameter()]
+        [System.String]
+        $TargetFolder,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Move-PnPItemProxy
 {
-    [CmdletBinding(DefaultParameterSetName='Path', SupportsShouldProcess=$true, ConfirmImpact='Medium', SupportsTransactions=$true)]
-param(
-    [Parameter(ParameterSetName='Path', Mandatory=$true, Position=0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [string[]]
-    ${Path},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Path,
 
-    [Parameter(ParameterSetName='LiteralPath', Mandatory=$true, Position=0, ValueFromPipelineByPropertyName=$true)]
-    [Alias('PSPath')]
-    [string[]]
-    ${LiteralPath},
+        [Parameter()]
+        [System.String[]]
+        $LiteralPath,
 
-    [Parameter(Position=1, ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${Destination},
+        [Parameter()]
+        [System.String]
+        $Destination,
 
-    [switch]
-    ${Container},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Container,
 
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [string]
-    ${Filter},
+        [Parameter()]
+        [System.String]
+        $Filter,
 
-    [string[]]
-    ${Include},
+        [Parameter()]
+        [System.String[]]
+        $Include,
 
-    [string[]]
-    ${Exclude},
+        [Parameter()]
+        [System.String[]]
+        $Exclude,
 
-    [switch]
-    ${PassThru},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
 
-    [Parameter(ValueFromPipelineByPropertyName=$true)]
-    [pscredential]
-    [System.Management.Automation.CredentialAttribute()]
-    ${Credential})
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UseTransaction
+    )
 }
 function Move-PnPListItemToRecycleBin
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID, Title or Url of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(Mandatory=$true, HelpMessage='The ID of the listitem, or actual ListItem object')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
-    ${Identity},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Move-PnPRecycleBinItem
 {
     [CmdletBinding()]
-param(
-    [Parameter(ValueFromPipeline=$true, HelpMessage='If provided, moves the item with the specific ID to the second stage recycle bin')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.RecycleBinItemPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.RecycleBinItemPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='If provided, no confirmation will be asked to move the first stage recycle bin items to the second stage')]
-    [switch]
-    ${Force})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function New-PnPAzureCertificate
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, HelpMessage='Common Name (e.g. server FQDN or YOUR name) [pnp.contoso.com]')]
-    [string]
-    ${CommonName},
+    param(
+        [Parameter()]
+        [System.String]
+        $CommonName,
 
-    [Parameter(Position=1, HelpMessage='Country Name (2 letter code)')]
-    [string]
-    ${Country},
+        [Parameter()]
+        [System.String]
+        $Country,
 
-    [Parameter(Position=2, HelpMessage='State or Province Name (full name)')]
-    [string]
-    ${State},
+        [Parameter()]
+        [System.String]
+        $State,
 
-    [Parameter(Position=3, HelpMessage='Locality Name (eg, city)')]
-    [string]
-    ${Locality},
+        [Parameter()]
+        [System.String]
+        $Locality,
 
-    [Parameter(Position=4, HelpMessage='Organization Name (eg, company)')]
-    [string]
-    ${Organization},
+        [Parameter()]
+        [System.String]
+        $Organization,
 
-    [Parameter(Position=5, HelpMessage='Organizational Unit Name (eg, section)')]
-    [string]
-    ${OrganizationUnit},
+        [Parameter()]
+        [System.String]
+        $OrganizationUnit,
 
-    [Parameter(Position=6, HelpMessage='Filename to write to, optionally including full path (.pfx)')]
-    [Obsolete('Use OutPfx parameter')]
-    [string]
-    ${Out},
+        [Parameter()]
+        [System.String]
+        $Out,
 
-    [Parameter(Position=6, HelpMessage='Filename to write to, optionally including full path (.pfx)')]
-    [string]
-    ${OutPfx},
+        [Parameter()]
+        [System.String]
+        $OutPfx,
 
-    [Parameter(Position=6, HelpMessage='Filename to write to, optionally including full path (.cer)')]
-    [string]
-    ${OutCert},
+        [Parameter()]
+        [System.String]
+        $OutCert,
 
-    [Parameter(Position=7, HelpMessage='Number of years until expiration (default is 10, max is 30)')]
-    [int]
-    ${ValidYears},
+        [Parameter()]
+        [System.Int32]
+        $ValidYears,
 
-    [Parameter(Position=8, HelpMessage='Optional certificate password')]
-    [securestring]
-    ${CertificatePassword})
+        [Parameter()]
+        [System.Security.SecureString]
+        $CertificatePassword,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function New-PnPExtensibilityHandlerObject
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The full assembly name of the handler')]
-    [string]
-    ${Assembly},
+    param(
+        [Parameter()]
+        [System.String]
+        $Assembly,
 
-    [Parameter(Mandatory=$true, HelpMessage='The type of the handler')]
-    [string]
-    ${Type},
+        [Parameter()]
+        [System.String]
+        $Type,
 
-    [Parameter(HelpMessage='Any configuration data you want to send to the handler')]
-    [string]
-    ${Configuration},
+        [Parameter()]
+        [System.String]
+        $Configuration,
 
-    [Parameter(HelpMessage='If set, the handler will be disabled')]
-    [switch]
-    ${Disabled})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Disabled,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function New-PnPGraphSubscription
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.GraphSubscriptionChangeType]
+        $ChangeType,
+
+        [Parameter()]
+        [System.String]
+        $NotificationUrl,
+
+        [Parameter()]
+        [System.String]
+        $Resource,
+
+        [Parameter()]
+        [System.DateTime]
+        $ExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ClientState,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.GraphSubscriptionTlsVersion]
+        $LatestSupportedTlsVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function New-PnPGroup
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The Title of the group')]
-    [string]
-    ${Title},
+    param(
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(HelpMessage='The description for the group')]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [Parameter(HelpMessage='The owner for the group, which can be a user or another group')]
-    [string]
-    ${Owner},
+        [Parameter()]
+        [System.String]
+        $Owner,
 
-    [Parameter(HelpMessage='A switch parameter that specifies whether to allow users to request membership in the group and to allow users to request to leave the group')]
-    [switch]
-    ${AllowRequestToJoinLeave},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AllowRequestToJoinLeave,
 
-    [Parameter(HelpMessage='A switch parameter that specifies whether users are automatically added or removed when they make a request')]
-    [switch]
-    ${AutoAcceptRequestToJoinLeave},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AutoAcceptRequestToJoinLeave,
 
-    [Parameter(HelpMessage='A switch parameter that specifies whether group members can modify membership in the group')]
-    [switch]
-    ${AllowMembersEditMembership},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AllowMembersEditMembership,
 
-    [Parameter(HelpMessage='A switch parameter that specifies whether only group members are allowed to view the list of members in the group')]
-    [Obsolete('This is done by default. Use DisallowMembersViewMembership to disallow group members viewing membership')]
-    [switch]
-    ${OnlyAllowMembersViewMembership},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OnlyAllowMembersViewMembership,
 
-    [Parameter(HelpMessage='A switch parameter that disallows group members to view membership.')]
-    [switch]
-    ${DisallowMembersViewMembership},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DisallowMembersViewMembership,
 
-    [Parameter(HelpMessage='The e-mail address to which membership requests are sent')]
-    [string]
-    ${RequestToJoinEmail},
+        [Parameter()]
+        [System.String]
+        $RequestToJoinEmail,
 
-    [Obsolete('Use Set-PnPGroup.')]
-    [SharePointPnP.PowerShell.Commands.Enums.AssociatedGroupType]
-    ${SetAssociatedGroup},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.AssociatedGroupType]
+        $SetAssociatedGroup,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function New-PnPList
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The Title of the list')]
-    [string]
-    ${Title},
+    param(
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(Mandatory=$true, HelpMessage='The type of list to create.')]
-    [Microsoft.SharePoint.Client.ListTemplateType]
-    ${Template},
+        [Parameter()]
+        [Microsoft.SharePoint.Client.ListTemplateType]
+        $Template,
 
-    [Parameter(HelpMessage='If set, will override the url of the list.')]
-    [string]
-    ${Url},
+        [Parameter()]
+        [System.String]
+        $Url,
 
-    [Parameter(HelpMessage='Switch parameter if list should be hidden from the SharePoint UI')]
-    [switch]
-    ${Hidden},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Hidden,
 
-    [Parameter(HelpMessage='Switch parameter if versioning should be enabled')]
-    [switch]
-    ${EnableVersioning},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $EnableVersioning,
 
-    [Parameter(HelpMessage='Obsolete')]
-    [Obsolete('Not in use, use OnQuickLaunch parameter instead')]
-    [Microsoft.SharePoint.Client.QuickLaunchOptions]
-    ${QuickLaunchOptions},
+        [Parameter()]
+        [Microsoft.SharePoint.Client.QuickLaunchOptions]
+        $QuickLaunchOptions,
 
-    [Parameter(HelpMessage='Switch parameter if content types should be enabled on this list')]
-    [switch]
-    ${EnableContentTypes},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $EnableContentTypes,
 
-    [Parameter(HelpMessage='Switch parameter if this list should be visible on the QuickLaunch')]
-    [switch]
-    ${OnQuickLaunch},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OnQuickLaunch,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function New-PnPMicrosoft365Group
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $MailNickname,
+
+        [Parameter()]
+        [System.String[]]
+        $Owners,
+
+        [Parameter()]
+        [System.String[]]
+        $Members,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsPrivate,
+
+        [Parameter()]
+        [System.String]
+        $GroupLogoPath,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $CreateTeam,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function New-PnPPersonalSite
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='The UserPrincipalName (UPN) of the users')]
-    [string[]]
-    ${Email})
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Email,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function New-PnPProvisioningTemplate
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param()
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function New-PnPProvisioningTemplateFromFolder
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, HelpMessage='Filename to write to, optionally including full path.')]
-    [string]
-    ${Out},
+    param(
+        [Parameter()]
+        [System.String]
+        $Out,
 
-    [Parameter(Position=0, HelpMessage='Folder to process. If not specified the current folder will be used.')]
-    [string]
-    ${Folder},
+        [Parameter()]
+        [System.String]
+        $Folder,
 
-    [Parameter(Position=1, HelpMessage='Target folder to provision to files to. If not specified, the current folder name will be used.')]
-    [string]
-    ${TargetFolder},
+        [Parameter()]
+        [System.String]
+        $TargetFolder,
 
-    [Parameter(HelpMessage='Optional wildcard pattern to match filenames against. If empty all files will be included.')]
-    [string]
-    ${Match},
+        [Parameter()]
+        [System.String]
+        $Match,
 
-    [Parameter(HelpMessage='An optional content type to use.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
-    ${ContentType},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $ContentType,
 
-    [Parameter(HelpMessage='Additional properties to set for every file entry in the generated template.')]
-    [hashtable]
-    ${Properties},
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Properties,
 
-    [Parameter(Position=1, HelpMessage='The schema of the output to use, defaults to the latest schema')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml.XMLPnPSchemaVersion]
-    ${Schema},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml.XMLPnPSchemaVersion]
+        $Schema,
 
-    [Parameter(HelpMessage='If specified, the output will only contain the <pnp:Files> element. This allows the output to be included in another template.')]
-    [switch]
-    ${AsIncludeFile},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsIncludeFile,
 
-    [Parameter(HelpMessage='Overwrites the output file if it exists.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='The encoding type of the XML file, Unicode is default')]
-    [System.Text.Encoding]
-    ${Encoding},
+        [Parameter()]
+        [System.Text.Encoding]
+        $Encoding,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function New-PnPSite
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Enums.SiteType]
-        ${Type},
+        [PnP.PowerShell.Commands.Enums.SiteType]
+        $Type,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-        ${HubSiteId},
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $HubSiteId,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [System.Management.Automation.SwitchParameter]
+        $Wait,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function New-PnPTeamsApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function New-PnPTeamsTeam
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $GroupId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $MailNickName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowAddRemoveApps,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowChannelMentions,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowCreateUpdateChannels,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowCreateUpdateRemoveConnectors,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowCreateUpdateRemoveTabs,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowCustomMemes,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowDeleteChannels,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowGiphy,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowGuestCreateUpdateChannels,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowGuestDeleteChannels,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowOwnerDeleteMessages,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowStickersAndMemes,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowTeamMentions,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowUserDeleteMessages,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowUserEditMessages,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Model.Teams.TeamGiphyContentRating]
+        $GiphyContentRating,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.Teams.TeamVisibility]
+        $Visibility,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $ShowInTeamsSearchAndSuggestions,
+
+        [Parameter()]
+        [System.String]
+        $Classification,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
     )
 }
 function New-PnPTenantSequence
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(HelpMessage='Optional Id of the sequence')]
-    [string]
-    ${Id})
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function New-PnPTenantSequenceCommunicationSite
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true)]
-    [string]
-    ${Url},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
 
-    [Parameter(Mandatory=$true)]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [uint32]
-    ${Language},
+        [Parameter()]
+        [System.UInt32]
+        $Language,
 
-    [string]
-    ${Owner},
+        [Parameter()]
+        [System.String]
+        $Owner,
 
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [string]
-    ${Classification},
+        [Parameter()]
+        [System.String]
+        $Classification,
 
-    [string]
-    ${SiteDesignId},
+        [Parameter()]
+        [System.String]
+        $SiteDesignId,
 
-    [switch]
-    ${HubSite},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $HubSite,
 
-    [switch]
-    ${AllowFileSharingForGuestUsers},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AllowFileSharingForGuestUsers,
 
-    [string[]]
-    ${TemplateIds})
+        [Parameter()]
+        [System.String[]]
+        $TemplateIds,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function New-PnPTenantSequenceTeamNoGroupSite
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true)]
-    [string]
-    ${Url},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
 
-    [Parameter(Mandatory=$true)]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(Mandatory=$true)]
-    [uint32]
-    ${TimeZoneId},
+        [Parameter()]
+        [System.UInt32]
+        $TimeZoneId,
 
-    [uint32]
-    ${Language},
+        [Parameter()]
+        [System.UInt32]
+        $Language,
 
-    [string]
-    ${Owner},
+        [Parameter()]
+        [System.String]
+        $Owner,
 
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [switch]
-    ${HubSite},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $HubSite,
 
-    [string[]]
-    ${TemplateIds})
+        [Parameter()]
+        [System.String[]]
+        $TemplateIds,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function New-PnPTenantSequenceTeamNoGroupSubSite
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true)]
-    [string]
-    ${Url},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
 
-    [Parameter(Mandatory=$true)]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(Mandatory=$true)]
-    [uint32]
-    ${TimeZoneId},
+        [Parameter()]
+        [System.UInt32]
+        $TimeZoneId,
 
-    [uint32]
-    ${Language},
+        [Parameter()]
+        [System.UInt32]
+        $Language,
 
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [string[]]
-    ${TemplateIds},
+        [Parameter()]
+        [System.String[]]
+        $TemplateIds,
 
-    [switch]
-    ${QuickLaunchDisabled},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $QuickLaunchDisabled,
 
-    [switch]
-    ${UseDifferentPermissionsFromParentSite})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UseDifferentPermissionsFromParentSite,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function New-PnPTenantSequenceTeamSite
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true)]
-    [string]
-    ${Alias},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Alias,
 
-    [Parameter(Mandatory=$true)]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [string]
-    ${DisplayName},
+        [Parameter()]
+        [System.String]
+        $DisplayName,
 
-    [string]
-    ${Classification},
+        [Parameter()]
+        [System.String]
+        $Classification,
 
-    [switch]
-    ${Public},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Public,
 
-    [switch]
-    ${HubSite},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $HubSite,
 
-    [string[]]
-    ${TemplateIds})
+        [Parameter()]
+        [System.String[]]
+        $TemplateIds,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function New-PnPTenantSite
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Specifies the title of the new site collection')]
-    [string]
-    ${Title},
+    param(
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(Mandatory=$true, HelpMessage='Specifies the full URL of the new site collection. It must be in a valid managed path in the company''s site. For example, for company contoso, valid managed paths are https://contoso.sharepoint.com/sites and https://contoso.sharepoint.com/teams.')]
-    [string]
-    ${Url},
+        [Parameter()]
+        [System.String]
+        $Url,
 
-    [Parameter(HelpMessage='Specifies the description of the new site collection. Setting a value for this parameter will override the Wait parameter as we have to set the description after the site has been created.')]
-    [Obsolete('This parameter is currently ignored due to server side API issues when setting this value.')]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [Parameter(Mandatory=$true, HelpMessage='Specifies the user name of the site collection''s primary owner. The owner must be a user instead of a security group or an email-enabled security group.')]
-    [string]
-    ${Owner},
+        [Parameter()]
+        [System.String]
+        $Owner,
 
-    [Parameter(HelpMessage='Specifies the language of this site collection. For more information, see Locale IDs Assigned by Microsoft: https://msdn.microsoft.com/en-us/library/microsoft.sharepoint.splanguage.lcid.aspx. To get the list of supported languages use: (Get-PnPWeb -Includes RegionalSettings.InstalledLanguages).RegionalSettings.InstalledLanguages ')]
-    [uint32]
-    ${Lcid},
+        [Parameter()]
+        [System.UInt32]
+        $Lcid,
 
-    [Parameter(HelpMessage='Specifies the site collection template type. Use the Get-PnPWebTemplates cmdlet to get the list of valid templates. If no template is specified, one can be added later. The Template and LocaleId parameters must be a valid combination as returned from the Get-PnPWebTemplates cmdlet.')]
-    [string]
-    ${Template},
+        [Parameter()]
+        [System.String]
+        $Template,
 
-    [Parameter(Mandatory=$true, HelpMessage='Use Get-PnPTimeZoneId to retrieve possible timezone values')]
-    [int]
-    ${TimeZone},
+        [Parameter()]
+        [System.Int32]
+        $TimeZone,
 
-    [Parameter(HelpMessage='Specifies the quota for this site collection in Sandboxed Solutions units. This value must not exceed the company''s aggregate available Sandboxed Solutions quota. The default value is 0. For more information, see Resource Usage Limits on Sandboxed Solutions in SharePoint 2010 : http://msdn.microsoft.com/en-us/library/gg615462.aspx.')]
-    [double]
-    ${ResourceQuota},
+        [Parameter()]
+        [System.Double]
+        $ResourceQuota,
 
-    [Parameter(HelpMessage='Specifies the warning level for the resource quota. This value must not exceed the value set for the ResourceQuota parameter')]
-    [double]
-    ${ResourceQuotaWarningLevel},
+        [Parameter()]
+        [System.Double]
+        $ResourceQuotaWarningLevel,
 
-    [Parameter(HelpMessage='Specifies the storage quota for this site collection in megabytes. This value must not exceed the company''s available quota.')]
-    [long]
-    ${StorageQuota},
+        [Parameter()]
+        [System.Int64]
+        $StorageQuota,
 
-    [Parameter(HelpMessage='Specifies the warning level for the storage quota in megabytes. This value must not exceed the values set for the StorageQuota parameter')]
-    [long]
-    ${StorageQuotaWarningLevel},
+        [Parameter()]
+        [System.Int64]
+        $StorageQuotaWarningLevel,
 
-    [Parameter(HelpMessage='Specifies if any existing site with the same URL should be removed from the recycle bin')]
-    [switch]
-    ${RemoveDeletedSite},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RemoveDeletedSite,
 
-    [switch]
-    ${Wait},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Wait,
 
-    [Parameter(HelpMessage='Do not ask for confirmation.')]
-    [switch]
-    ${Force})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function New-PnPTenantTemplate
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [string]
-    ${Author},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Author,
 
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [string]
-    ${DisplayName},
+        [Parameter()]
+        [System.String]
+        $DisplayName,
 
-    [string]
-    ${Generator})
+        [Parameter()]
+        [System.String]
+        $Generator,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function New-PnPTerm
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The name of the term.')]
-    [string]
-    ${Name},
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(HelpMessage='The Id to use for the term; if not specified, or the empty GUID, a random GUID is generated and used.')]
-    [guid]
-    ${Id},
+        [Parameter()]
+        [System.Guid]
+        $Id,
 
-    [Parameter(HelpMessage='The locale id to use for the term. Defaults to the current locale id.')]
-    [int]
-    ${Lcid},
+        [Parameter()]
+        [System.Int32]
+        $Lcid,
 
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The termset to add the term to.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
-    ${TermSet},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
+        $TermSet,
 
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The termgroup to create the term in.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TermGroupPipeBind]
-    ${TermGroup},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TermGroupPipeBind]
+        $TermGroup,
 
-    [Parameter(HelpMessage='Descriptive text to help users understand the intended use of this term.')]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [Parameter(HelpMessage='Custom Properties')]
-    [hashtable]
-    ${CustomProperties},
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $CustomProperties,
 
-    [Parameter(HelpMessage='Custom Properties')]
-    [hashtable]
-    ${LocalCustomProperties},
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $LocalCustomProperties,
 
-    [Parameter(HelpMessage='Term store to check; if not specified the default term store is used.')]
-    [Alias('TermStoreName')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
-    ${TermStore})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
+        $TermStore,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function New-PnPTermGroup
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='Name of the taxonomy term group to create.')]
-    [Alias('GroupName')]
-    [string]
-    ${Name},
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(HelpMessage='GUID to use for the term group; if not specified, or the empty GUID, a random GUID is generated and used.')]
-    [Alias('GroupId')]
-    [guid]
-    ${Id},
+        [Parameter()]
+        [System.Guid]
+        $Id,
 
-    [Parameter(HelpMessage='Description to use for the term group.')]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [Parameter(HelpMessage='Term store to add the group to; if not specified the default term store is used.')]
-    [Alias('TermStoreName')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
-    ${TermStore})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
+        $TermStore,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function New-PnPTermLabel
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The term to add the localized label to')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind[Microsoft.SharePoint.Client.Taxonomy.Term]]
-    ${Term},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.Term]]
+        $Term,
 
-    [Parameter(Mandatory=$true, HelpMessage='The localized name of the term')]
-    [string]
-    ${Name},
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(Mandatory=$true, HelpMessage='The locale id to use for the localized term')]
-    [int]
-    ${Lcid},
+        [Parameter()]
+        [System.Int32]
+        $Lcid,
 
-    [Parameter(HelpMessage='Makes this new label the default label')]
-    [switch]
-    ${IsDefault})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsDefault,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function New-PnPTermSet
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The name of the termset.')]
-    [string]
-    ${Name},
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(HelpMessage='The Id to use for the term set; if not specified, or the empty GUID, a random GUID is generated and used.')]
-    [guid]
-    ${Id},
+        [Parameter()]
+        [System.Guid]
+        $Id,
 
-    [Parameter(HelpMessage='The locale id to use for the term set. Defaults to the current locale id.')]
-    [int]
-    ${Lcid},
+        [Parameter()]
+        [System.Int32]
+        $Lcid,
 
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='Name, id or actually termgroup to create the termset in.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TermGroupPipeBind]
-    ${TermGroup},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TermGroupPipeBind]
+        $TermGroup,
 
-    [Parameter(HelpMessage='An e-mail address for term suggestion and feedback. If left blank the suggestion feature will be disabled.')]
-    [string]
-    ${Contact},
+        [Parameter()]
+        [System.String]
+        $Contact,
 
-    [Parameter(HelpMessage='Descriptive text to help users understand the intended use of this term set.')]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [Parameter(HelpMessage='When a term set is closed, only metadata managers can add terms to this term set. When it is open, users can add terms from a tagging application. Not specifying this switch will make the term set closed.')]
-    [switch]
-    ${IsOpenForTermCreation},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsOpenForTermCreation,
 
-    [Parameter(HelpMessage='By default a term set is available to be used by end users and content editors of sites consuming this term set. Specify this switch to turn this off')]
-    [switch]
-    ${IsNotAvailableForTagging},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsNotAvailableForTagging,
 
-    [Parameter(HelpMessage='The primary user or group of this term set.')]
-    [string]
-    ${Owner},
+        [Parameter()]
+        [System.String]
+        $Owner,
 
-    [Parameter(HelpMessage='People and groups in the organization that should be notified before major changes are made to the term set. You can enter multiple users or groups.')]
-    [string[]]
-    ${StakeHolders},
+        [Parameter()]
+        [System.String[]]
+        $StakeHolders,
 
-    [hashtable]
-    ${CustomProperties},
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $CustomProperties,
 
-    [Parameter(HelpMessage='Term store to check; if not specified the default term store is used.')]
-    [Alias('TermStoreName')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
-    ${TermStore})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
+        $TermStore,
 
-}
-function New-PnPUnifiedGroup
-{
-    [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The Display Name of the Office 365 Group.')]
-    [string]
-    ${DisplayName},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
-    [Parameter(Mandatory=$true, HelpMessage='The Description of the Office 365 Group.')]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
 
-    [Parameter(Mandatory=$true, HelpMessage='The Mail Nickname of the Office 365 Group. Cannot contain spaces.')]
-    [string]
-    ${MailNickname},
-
-    [Parameter(HelpMessage='The array UPN values of the group''s owners.')]
-    [string[]]
-    ${Owners},
-
-    [Parameter(HelpMessage='The array UPN values of the group''s members.')]
-    [string[]]
-    ${Members},
-
-    [Parameter(HelpMessage='Makes the group private when selected.')]
-    [switch]
-    ${IsPrivate},
-
-    [Parameter(HelpMessage='The path to the logo file of to set.')]
-    [string]
-    ${GroupLogoPath},
-
-    [Parameter(HelpMessage='Creates a MS Teams team associated with created group.')]
-    [switch]
-    ${CreateTeam},
-
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
-    [switch]
-    ${Force})
-
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function New-PnPUPABulkImportJob
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='Site or server relative URL of the folder to where you want to store the import job file.')]
-    [string]
-    ${Folder},
+    param(
+        [Parameter()]
+        [System.String]
+        $Folder,
 
-    [Parameter(Mandatory=$true, Position=1, HelpMessage='The local file path.')]
-    [string]
-    ${Path},
+        [Parameter()]
+        [System.String]
+        $Path,
 
-    [Parameter(Mandatory=$true, Position=2, HelpMessage='Specify user profile property mapping between the import file and UPA property names.')]
-    [hashtable]
-    ${UserProfilePropertyMapping},
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $UserProfilePropertyMapping,
 
-    [Parameter(Mandatory=$true, Position=3, HelpMessage='The name of the identifying property in your file.')]
-    [string]
-    ${IdProperty},
+        [Parameter()]
+        [System.String]
+        $IdProperty,
 
-    [Parameter(Position=4, HelpMessage='The type of profile identifier (Email/CloudId/PrincipalName). Defaults to Email.')]
-    [Microsoft.Online.SharePoint.TenantManagement.ImportProfilePropertiesUserIdType]
-    ${IdType})
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantManagement.ImportProfilePropertiesUserIdType]
+        $IdType,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function New-PnPUser
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The users login name (user@company.com)')]
-    [Alias('LogonName')]
-    [string]
-    ${LoginName},
+    param(
+        [Parameter()]
+        [System.String]
+        $LoginName,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function New-PnPWeb
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The title of the new web')]
-    [string]
-    ${Title},
+    param(
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(Mandatory=$true, HelpMessage='The URL of the new web')]
-    [string]
-    ${Url},
+        [Parameter()]
+        [System.String]
+        $Url,
 
-    [Parameter(HelpMessage='The description of the new web')]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [Parameter(HelpMessage='The language id of the new web. default = 1033 for English')]
-    [int]
-    ${Locale},
+        [Parameter()]
+        [System.Int32]
+        $Locale,
 
-    [Parameter(Mandatory=$true, HelpMessage='The site definition template to use for the new web, e.g. STS#0. Use Get-PnPWebTemplates to fetch a list of available templates')]
-    [string]
-    ${Template},
+        [Parameter()]
+        [System.String]
+        $Template,
 
-    [Parameter(HelpMessage='By default the subweb will inherit its security from its parent, specify this switch to break this inheritance')]
-    [switch]
-    ${BreakInheritance},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $BreakInheritance,
 
-    [Parameter(HelpMessage='Specifies whether the site inherits navigation.')]
-    [switch]
-    ${InheritNavigation},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $InheritNavigation,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Publish-PnPApp
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Specifies the Id of the app')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
+        $Identity,
 
-    [switch]
-    ${SkipFeatureDeployment},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipFeatureDeployment,
 
-    [Parameter(HelpMessage='Defines which app catalog to use. Defaults to Tenant')]
-    [OfficeDevPnP.Core.Enums.AppCatalogScope]
-    ${Scope})
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.AppCatalogScope]
+        $Scope,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Read-PnPProvisioningTemplate
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='By Path', Mandatory=$true, Position=0, HelpMessage='Filename to read from, optionally including full path.')]
-    [string]
-    ${Path},
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
 
-    [Parameter(ParameterSetName='By XML', Mandatory=$true, Position=1, HelpMessage='Variable to read from, containing the valid XML of a provisioning template.')]
-    [string]
-    ${Xml},
+        [Parameter()]
+        [System.String]
+        $Xml,
 
-    [Parameter(HelpMessage='Allows you to specify ITemplateProviderExtension to execute while loading the template.')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
-    ${TemplateProviderExtensions})
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Read-PnPTenantTemplate
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='Filename to read from, optionally including full path.')]
-    [string]
-    ${Path},
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
 
-    [Parameter(HelpMessage='Allows you to specify ITemplateProviderExtension to execute while loading the template.')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
-    ${TemplateProviderExtensions})
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Register-PnPAppCatalogSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.Int32]
+        $TimeZoneId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Register-PnPHubSite
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The site to register as a hubsite')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
-    ${Site})
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $Site,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPAlert
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='User to remove the alert for (User ID, login name or actual User object). Skip this parameter to use the current user. Note: Only site owners can remove alerts for other users.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]
-    ${User},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]
+        $User,
 
-    [Parameter(Mandatory=$true, HelpMessage='The alert id, or the actual alert object to remove.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.AlertPipeBind]
-    ${Identity},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.AlertPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPApp
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Specifies the Id of the Addin Instance')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Defines which app catalog to use. Defaults to Tenant')]
-    [OfficeDevPnP.Core.Enums.AppCatalogScope]
-    ${Scope})
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.AppCatalogScope]
+        $Scope,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPApplicationCustomizer
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
-param(
-    [Parameter(ParameterSetName='Custom Action Id', Position=0, ValueFromPipeline=$true, HelpMessage='The id or name of the CustomAction representing the client side extension registration that needs to be removed or a CustomAction instance itself')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.UserCustomActionPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.UserCustomActionPipeBind]
+        $Identity,
 
-    [Parameter(ParameterSetName='Client Side Component Id', Mandatory=$true, HelpMessage='The Client Side Component Id of the SharePoint Framework client side extension application customizer found in the manifest for which existing custom action(s) should be removed')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${ClientSideComponentId},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $ClientSideComponentId,
 
-    [Parameter(HelpMessage='Define if the CustomAction representing the client side extension registration is to be found at the web or site collection scope. Specify All to allow deletion from either web or site collection (default).')]
-    [SharePointPnP.PowerShell.Commands.Enums.CustomActionScope]
-    ${Scope},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CustomActionScope]
+        $Scope,
 
-    [Parameter(HelpMessage='Use the -Force flag to bypass the confirmation question')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Remove-PnPClientSideComponent
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The name of the page')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
-    ${Page},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Page,
 
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The instance id of the component')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${InstanceId},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $InstanceId,
 
-    [Parameter(HelpMessage='If specified you will not receive the confirmation question')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPClientSidePage
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The name of the page')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPContentType
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The name or ID of the content type to remove')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPContentTypeFromDocumentSet
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The content type to remove. Either specify name, an id, or a content type object.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
-    ${ContentType},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $ContentType,
 
-    [Parameter(Mandatory=$true, HelpMessage='The document set to remove the content type from. Either specify a name, a document set template object, an id, or a content type object')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.DocumentSetPipeBind]
-    ${DocumentSet},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.DocumentSetPipeBind]
+        $DocumentSet,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPContentTypeFromList
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The name of the list, its ID or an actual list object from where the content type needs to be removed from')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(Mandatory=$true, HelpMessage='The name of a content type, its ID or an actual content type object that needs to be removed from the specified list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
-    ${ContentType},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $ContentType,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPCustomAction
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='The id or name of the CustomAction that needs to be removed or a CustomAction instance itself')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.UserCustomActionPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.UserCustomActionPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Define if the CustomAction is to be found at the web or site collection scope. Specify All to allow deletion from either web or site collection.')]
-    [SharePointPnP.PowerShell.Commands.Enums.CustomActionScope]
-    ${Scope},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CustomActionScope]
+        $Scope,
 
-    [Parameter(HelpMessage='Use the -Force flag to bypass the confirmation question')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
-function Remove-PnPDeletedUnifiedGroup
+function Remove-PnPDeletedMicrosoft365Group
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The Identity of the deleted Office 365 Group')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.UnifiedGroupPipeBind]
-    ${Identity})
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPEventReceiver
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The Guid of the event receiver on the list')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.EventReceiverPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.EventReceiverPipeBind]
+        $Identity,
 
-    [Parameter(ParameterSetName='List', HelpMessage='The list object from where to remove the event receiver object')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Remove-PnPField
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The field object or name to remove')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
+        $Identity,
 
-    [Parameter(Position=1, ValueFromPipeline=$true, HelpMessage='The list object or name where to remove the field from')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Remove-PnPFieldFromContentType
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The field to remove')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
-    ${Field},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
+        $Field,
 
-    [Parameter(Mandatory=$true, HelpMessage='The content type where the field is to be removed from')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
-    ${ContentType},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $ContentType,
 
-    [Parameter(HelpMessage='If specified, inherited content types will not be updated')]
-    [switch]
-    ${DoNotUpdateChildren},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DoNotUpdateChildren,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPFile
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(ParameterSetName='Server Relative', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Server relative URL to the file')]
-    [string]
-    ${ServerRelativeUrl},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativeUrl,
 
-    [Parameter(ParameterSetName='Site Relative', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Site relative URL to the file')]
-    [string]
-    ${SiteRelativeUrl},
+        [Parameter()]
+        [System.String]
+        $SiteRelativeUrl,
 
-    [switch]
-    ${Recycle},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Recycle,
 
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Remove-PnPFileFromProvisioningTemplate
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='Filename to read the template from, optionally including full path.')]
-    [string]
-    ${Path},
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
 
-    [Parameter(Mandatory=$true, Position=1, HelpMessage='The relative File Path of the file to remove from the in-memory template')]
-    [string]
-    ${FilePath},
+        [Parameter()]
+        [System.String]
+        $FilePath,
 
-    [Parameter(Position=2, HelpMessage='Allows you to specify ITemplateProviderExtension to execute while saving the template.')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
-    ${TemplateProviderExtensions})
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Remove-PnPFileVersion
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FileVersionPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Recycle,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPFolder
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The folder name')]
-    [string]
-    ${Name},
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(Mandatory=$true, HelpMessage='The parent folder in the site')]
-    [string]
-    ${Folder},
+        [Parameter()]
+        [System.String]
+        $Folder,
 
-    [switch]
-    ${Recycle},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Recycle,
 
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Remove-PnPGraphSubscription
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GraphSubscriptionPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPGroup
 {
-    [CmdletBinding(DefaultParameterSetName='All')]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='A group object, an ID or a name of a group to remove')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPHomeSite
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
-    [switch]
-    ${Force})
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPHubSiteAssociation
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The site to disconnect from its hubsite')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
-    ${Site})
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $Site,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPIndexedProperty
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='Key of the property bag value to be removed from indexing')]
-    [string]
-    ${Key},
+    param(
+        [Parameter()]
+        [System.String]
+        $Key,
 
-    [Parameter(ValueFromPipeline=$true, HelpMessage='The list object or name from where to remove the indexed properties')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPJavaScriptLink
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='Name or id of the JavaScriptLink to remove. Omit if you want to remove all JavaScript Links.')]
-    [Alias('Key','Name')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.UserCustomActionPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.UserCustomActionPipeBind]
+        $Identity,
 
-    [Obsolete('Use Scope parameter')]
-    [switch]
-    ${FromSite},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $FromSite,
 
-    [Parameter(HelpMessage='Use the -Force flag to bypass the confirmation question')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='Define if the JavaScriptLink is to be found at the web or site collection scope. Specify All to allow deletion from either web or site collection.')]
-    [SharePointPnP.PowerShell.Commands.Enums.CustomActionScope]
-    ${Scope},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CustomActionScope]
+        $Scope,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
+}
+function Remove-PnPKnowledgeHubSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPList
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID or Title of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Defines if the list should be moved to recycle bin or directly deleted.')]
-    [switch]
-    ${Recycle},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Recycle,
 
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Remove-PnPListItem
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID, Title or Url of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(Mandatory=$true, HelpMessage='The ID of the listitem, or actual ListItem object')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
-    ${Identity},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
+        $Identity,
 
-    [switch]
-    ${Recycle},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Recycle,
 
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
+}
+function Remove-PnPMicrosoft365Group
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Remove-PnPMicrosoft365GroupMember
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $Users,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Remove-PnPMicrosoft365GroupOwner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $Users,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPNavigationNode
 {
-    [CmdletBinding(DefaultParameterSetName='Remove a node by ID', SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(ParameterSetName='Remove a node by ID', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The Id or node object to delete')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.NavigationNodePipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.NavigationNodePipeBind]
+        $Identity,
 
-    [Parameter(ParameterSetName='Remove node by Title', Mandatory=$true, Position=0, HelpMessage='The location from where to remove the node (QuickLaunch, TopNavigationBar')]
-    [Obsolete('Use -Identity with an Id instead.')]
-    [OfficeDevPnP.Core.Enums.NavigationType]
-    ${Location},
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.NavigationType]
+        $Location,
 
-    [Parameter(ParameterSetName='Remove node by Title', Mandatory=$true, HelpMessage='The title of the node that needs to be removed')]
-    [Obsolete('Use -Identity with an Id instead.')]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(ParameterSetName='Remove node by Title', HelpMessage='The header where the node is located')]
-    [Obsolete('Use -Identity with an Id instead.')]
-    [string]
-    ${Header},
+        [Parameter()]
+        [System.String]
+        $Header,
 
-    [Parameter(ParameterSetName='All Nodes', Mandatory=$true, HelpMessage='Specifying the All parameter will remove all the nodes from specified Location.')]
-    [switch]
-    ${All},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
 
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Remove-PnPOrgAssetsLibrary
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The server relative url of the document library flagged as organizational asset which you want to remove, i.e. "sites/branding/logos"')]
-    [string]
-    ${LibraryUrl},
+    param(
+        [Parameter()]
+        [System.String]
+        $LibraryUrl,
 
-    [Parameter(HelpMessage='Boolean indicating if the document library that will no longer be flagged as an organizational asset also needs to be removed as an Office 365 CDN source')]
-    [bool]
-    ${ShouldRemoveFromCdn},
+        [Parameter()]
+        [System.Boolean]
+        $ShouldRemoveFromCdn,
 
-    [Parameter(HelpMessage='Indicates what type of Office 365 CDN source the document library that will no longer be flagged as an organizational asset was of')]
-    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
-    ${CdnType})
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        $CdnType,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPOrgNewsSite
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The site to be removed from list of organization''s news sites')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
-    ${OrgNewsSiteUrl})
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $OrgNewsSiteUrl,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPPropertyBagValue
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Key of the property bag value to be removed')]
-    [string]
-    ${Key},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Key,
 
-    [Parameter(HelpMessage='Site relative url of the folder. See examples for use.')]
-    [string]
-    ${Folder},
+        [Parameter()]
+        [System.String]
+        $Folder,
 
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Remove-PnPPublishingImageRendition
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The display name or id of the Image Rendition.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ImageRenditionPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ImageRenditionPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='If provided, no confirmation will be asked to remove the Image Rendition.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPRoleDefinition
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The identity of the role definition, either a RoleDefinition object or a the name of roledefinition')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.RoleDefinitionPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.RoleDefinitionPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Do not ask for confirmation to delete the role definition')]
-    [switch]
-    ${Force})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPSearchConfiguration
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='Config', Mandatory=$true, HelpMessage='Search configuration string')]
-    [string]
-    ${Configuration},
+    param(
+        [Parameter()]
+        [System.String]
+        $Configuration,
 
-    [Parameter(ParameterSetName='Path', Mandatory=$true, HelpMessage='Path to a search configuration')]
-    [string]
-    ${Path},
+        [Parameter()]
+        [System.String]
+        $Path,
 
-    [SharePointPnP.PowerShell.Commands.Enums.SearchConfigurationScope]
-    ${Scope},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.SearchConfigurationScope]
+        $Scope,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPSiteClassification
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true)]
-    [System.Collections.Generic.List[string]]
-    ${Classifications},
+    param(
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        $Classifications,
 
-    [Parameter(HelpMessage='Specifying the Confirm parameter will allow the confirmation question to be skipped')]
-    [switch]
-    ${Confirm})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPSiteCollectionAdmin
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='Specifies owner(s) to remove as site collection administrators. Can be both users and groups.')]
-    [System.Collections.Generic.List[SharePointPnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]]
-    ${Owners})
+    param(
+        [Parameter()]
+        [System.Collections.Generic.List`1[PnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]]
+        $Owners,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPSiteCollectionAppCatalog
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Url of the site to remove the app catalog from.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
-    ${Site})
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $Site,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPSiteDesign
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID of the site design to remove')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='If specified you will not be asked to confirm removing the specified Site Design')]
-    [switch]
-    ${Force})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Remove-PnPSiteDesignTask
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID of the site design to remove')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignTaskPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignTaskPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='If specified you will not be asked to confirm removing the specified Site Design')]
-    [switch]
-    ${Force})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Remove-PnPSiteScript
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID of the Site Script to remove')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TenantSiteScriptPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteScriptPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='If specified you will not be asked to confirm removing the specified Site Script')]
-    [switch]
-    ${Force})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Remove-PnPStorageEntity
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The key of the value to remove.')]
-    [string]
-    ${Key},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Key,
 
-    [Parameter(HelpMessage='Defines the scope of the storage entity. Defaults to Tenant.')]
-    [SharePointPnP.PowerShell.Commands.Enums.StorageEntityScope]
-    ${Scope})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.StorageEntityScope]
+        $Scope,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Remove-PnPStoredCredential
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The credential to remove')]
-    [string]
-    ${Name},
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(HelpMessage='If specified you will not be asked for confirmation')]
-    [switch]
-    ${Force})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPTaxonomyItem
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The path, delimited by | of the taxonomy item to remove, alike GROUPLABEL|TERMSETLABEL|TERMLABEL')]
-    [Alias('Term')]
-    [string]
-    ${TermPath},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TermPath,
 
-    [switch]
-    ${Force})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
+}
+function Remove-PnPTeamsApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsAppPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Remove-PnPTeamsChannel
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsChannelPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Remove-PnPTeamsTab
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsChannelPipeBind]
+        $Channel,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTabPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Remove-PnPTeamsTeam
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Remove-PnPTeamsUser
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [System.String]
+        $User,
+
+        [Parameter()]
+        [System.String]
+        $Role,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPTenantCdnOrigin
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The origin to remove.')]
-    [string]
-    ${OriginUrl},
+    param(
+        [Parameter()]
+        [System.String]
+        $OriginUrl,
 
-    [Parameter(Mandatory=$true, HelpMessage='The cdn type to remove the origin from.')]
-    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
-    ${CdnType})
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        $CdnType,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPTenantSite
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Specifies the full URL of the site collection that needs to be deleted')]
-    [string]
-    ${Url},
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
 
-    [Parameter(HelpMessage='Do not add to the tenant scoped recycle bin when selected.')]
-    [Alias('SkipTrash')]
-    [switch]
-    ${SkipRecycleBin},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipRecycleBin,
 
-    [Parameter(HelpMessage='OBSOLETE: If true, will wait for the site to be deleted before processing continues')]
-    [Obsolete('The cmdlet will always wait for the site to be deleted first')]
-    [switch]
-    ${Wait},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Wait,
 
-    [Parameter(HelpMessage='If specified, will search for the site in the Recycle Bin and remove it from there.')]
-    [Obsolete('Use Clear-PnPTenantRecycleBinItem instead.')]
-    [switch]
-    ${FromRecycleBin},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $FromRecycleBin,
 
-    [Parameter(HelpMessage='Do not ask for confirmation.')]
-    [switch]
-    ${Force})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPTenantTheme
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The name of the theme to retrieve')]
-    [Alias('Name')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ThemePipeBind]
-    ${Identity})
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ThemePipeBind]
+        $Identity,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPTermGroup
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Name of the taxonomy term group to delete.')]
-    [string]
-    ${GroupName},
+    param(
+        [Parameter()]
+        [System.String]
+        $GroupName,
 
-    [Parameter(HelpMessage='Term store to use; if not specified the default term store is used.')]
-    [string]
-    ${TermStoreName},
+        [Parameter()]
+        [System.String]
+        $TermStoreName,
 
-    [switch]
-    ${Force})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-}
-function Remove-PnPUnifiedGroup
-{
-    [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The Identity of the Office 365 Group')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.UnifiedGroupPipeBind]
-    ${Identity})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPUser
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='User ID or login name')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='Specifying the Confirm parameter will allow the confirmation question to be skipped')]
-    [switch]
-    ${Confirm},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPUserFromGroup
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='A valid login name of a user (user@company.com)')]
-    [Alias('LogonName')]
-    [string]
-    ${LoginName},
+    param(
+        [Parameter()]
+        [System.String]
+        $LoginName,
 
-    [Parameter(Mandatory=$true, HelpMessage='A group object, an ID or a name of a group')]
-    [Alias('GroupName')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
-    ${Identity},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPView
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID or Title of the view.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ViewPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ViewPipeBind]
+        $Identity,
 
-    [Parameter(Mandatory=$true, Position=1, ValueFromPipeline=$true, HelpMessage='The ID or Url of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Remove-PnPWeb
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='ByUrl', Mandatory=$true, HelpMessage='The site relative url of the web, e.g. ''Subweb1''')]
-    [string]
-    ${Url},
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
 
-    [Parameter(ParameterSetName='ByIdentity', Mandatory=$true, ValueFromPipeline=$true, HelpMessage='Identity/Id/Web object to delete')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Identity},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Do not ask for confirmation to delete the subweb')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPWebhookSubscription
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The identity of the Webhook subscription to remove')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebhookSubscriptionPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebhookSubscriptionPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='The list object or name which the Webhook subscription will be removed from')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPWebPart
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='ID', Mandatory=$true, HelpMessage='The Guid of the web part')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $Identity,
 
-    [Parameter(ParameterSetName='NAME', Mandatory=$true, HelpMessage='The name of the web part')]
-    [Alias('Name')]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(Mandatory=$true, HelpMessage='Server relative url of the web part page, e.g. /sites/demo/sitepages/home.aspx')]
-    [Alias('PageUrl')]
-    [string]
-    ${ServerRelativePageUrl},
+        [Parameter()]
+        [System.String]
+        $ServerRelativePageUrl,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPWikiPage
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='SERVER', Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-    [Alias('PageUrl')]
-    [string]
-    ${ServerRelativePageUrl},
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativePageUrl,
 
-    [Parameter(ParameterSetName='SITE', Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-    [string]
-    ${SiteRelativePageUrl},
+        [Parameter()]
+        [System.String]
+        $SiteRelativePageUrl,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPWorkflowDefinition
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='The definition to remove')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WorkflowDefinitionPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WorkflowDefinitionPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Remove-PnPWorkflowSubscription
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='The subscription to remove')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WorkflowSubscriptionPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WorkflowSubscriptionPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Rename-PnPFile
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(ParameterSetName='SERVER', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Server relative Url specifying the file to rename. Must include the file name.')]
-    [string]
-    ${ServerRelativeUrl},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativeUrl,
 
-    [Parameter(ParameterSetName='SITE', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Site relative Url specifying the file to rename. Must include the file name.')]
-    [string]
-    ${SiteRelativeUrl},
+        [Parameter()]
+        [System.String]
+        $SiteRelativeUrl,
 
-    [Parameter(Mandatory=$true, Position=1, HelpMessage='File name to rename the file to. Should only be the file name and not include the path to its location. Use Move-PnPFile to move the file to another location.')]
-    [string]
-    ${TargetFileName},
+        [Parameter()]
+        [System.String]
+        $TargetFileName,
 
-    [Parameter(HelpMessage='If provided, if a file already exist with the provided TargetFileName, it will be overwritten. If omitted, the rename operation will be canceled if a file already exists with the TargetFileName file name.')]
-    [switch]
-    ${OverwriteIfAlreadyExists},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OverwriteIfAlreadyExists,
 
-    [Parameter(HelpMessage='If provided, no confirmation will be requested and the action will be performed')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Rename-PnPFolder
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The folder to rename')]
-    [string]
-    ${Folder},
+    param(
+        [Parameter()]
+        [System.String]
+        $Folder,
 
-    [Parameter(Mandatory=$true, HelpMessage='The new folder name')]
-    [string]
-    ${TargetFolderName},
+        [Parameter()]
+        [System.String]
+        $TargetFolderName,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Request-PnPAccessToken
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='The Azure Application Client Id to use to retrieve the token. Defaults to the PnP Office 365 Management Shell')]
-    [string]
-    ${ClientId},
+    param(
+        [Parameter()]
+        [System.String]
+        $ClientId,
 
-    [Parameter(HelpMessage='The scopes to retrieve the token for. Defaults to AllSites.FullControl')]
-    [string]
-    ${Resource},
+        [Parameter()]
+        [System.String]
+        $Resource,
 
-    [Parameter(HelpMessage='The scopes to retrieve the token for. Defaults to AllSites.FullControl')]
-    [System.Collections.Generic.List[string]]
-    ${Scopes},
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        $Scopes,
 
-    [Parameter(HelpMessage='Returns the token in a decoded / human readible manner')]
-    [switch]
-    ${Decoded},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Decoded,
 
-    [Parameter(HelpMessage='Set this token as the current token to use when performing Azure AD based authentication requests with PnP PowerShell')]
-    [switch]
-    ${SetAsCurrent},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SetAsCurrent,
 
-    [Parameter(HelpMessage='Optional credentials to use when retrieving the access token. If not present you need to connect first with Connect-PnPOnline.')]
-    [pscredential]
-    ${Credentials},
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credentials,
 
-    [Parameter(HelpMessage='Optional tenant URL to use when retrieving the access token. The Url should be in the shape of https://yourtenant.sharepoint.com. See examples for more info.')]
-    [string]
-    ${TenantUrl})
+        [Parameter()]
+        [System.String]
+        $TenantUrl,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Request-PnPReIndexList
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID, Title or Url of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Request-PnPReIndexWeb
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Reset-PnPFileVersion
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The server relative URL of the file.')]
-    [string]
-    ${ServerRelativeUrl},
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativeUrl,
 
-    [Parameter(HelpMessage='The check in type to use. Defaults to Major.')]
-    [Microsoft.SharePoint.Client.CheckinType]
-    ${CheckinType},
+        [Parameter()]
+        [Microsoft.SharePoint.Client.CheckinType]
+        $CheckinType,
 
-    [Parameter(HelpMessage='The comment added to the checkin. Defaults to ''Restored to previous version''.')]
-    [string]
-    ${CheckInComment},
+        [Parameter()]
+        [System.String]
+        $CheckInComment,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Reset-PnPLabel
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID or Url of the list')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(HelpMessage='Reset label on existing items in the library')]
-    [bool]
-    ${SyncToItems},
+        [Parameter()]
+        [System.Boolean]
+        $SyncToItems,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Reset-PnPMicrosoft365GroupExpiration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Reset-PnPUserOneDriveQuotaToDefault
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Account,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Resolve-PnPFolder
 {
@@ -69507,2773 +74632,4215 @@ function Resolve-PnPFolder
     param(
         [Parameter()]
         [System.String]
-        ${SiteRelativePath},
+        $SiteRelativePath,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-        ${Web},
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.String[]]
+        $Includes
     )
 }
-function Restore-PnPDeletedUnifiedGroup
+function Restore-PnPDeletedMicrosoft365Group
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The Identity of the deleted Office 365 Group')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.UnifiedGroupPipeBind]
-    ${Identity})
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Restore-PnPFileVersion
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FileVersionPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Restore-PnPRecycleBinItem
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='Identity', Mandatory=$true, ValueFromPipeline=$true, HelpMessage='Id of the recycle bin item or the recycle bin item object itself to restore')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.RecycleBinItemPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.RecycleBinItemPipeBind]
+        $Identity,
 
-    [Parameter(ParameterSetName='All', Mandatory=$true, ValueFromPipeline=$true, HelpMessage='If provided all items will be stored ')]
-    [switch]
-    ${All},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
 
-    [Parameter(HelpMessage='If provided, no confirmation will be asked to restore the recycle bin item')]
-    [switch]
-    ${Force})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [System.Int32]
+        $RowLimit,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Restore-PnPTenantRecycleBinItem
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Url of the site collection to restore from the tenant recycle bin')]
-    [string]
-    ${Url},
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
 
-    [Parameter(HelpMessage='If provided, the PowerShell execution will halt until the site restore process has completed')]
-    [switch]
-    ${Wait},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Wait,
 
-    [Parameter(HelpMessage='If provided, no confirmation will be asked to restore the site collection from the tenant recycle bin')]
-    [switch]
-    ${Force})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Resume-PnPWorkflowInstance
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='The instance to resume')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WorkflowInstancePipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WorkflowInstancePipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Revoke-PnPHubSiteRights
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The Hub Site to revoke the permissions on to associate another site with this Hub Site')]
-    [Alias('HubSite')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
+        $Identity,
 
-    [Parameter(Mandatory=$true, HelpMessage='One or more usernames that will be revoked the permission to associate a site with this Hub Site.')]
-    [string[]]
-    ${Principals})
+        [Parameter()]
+        [System.String[]]
+        $Principals,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Revoke-PnPSiteDesignRights
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The site design to use.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        $Identity,
 
-    [Parameter(Mandatory=$true, HelpMessage='One or more principals to revoke.')]
-    [string[]]
-    ${Principals})
+        [Parameter()]
+        [System.String[]]
+        $Principals,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Revoke-PnPTenantServicePrincipalPermission
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true)]
-    [string]
-    ${ObjectId},
+    param(
+        [Parameter()]
+        [System.String]
+        $ObjectId,
 
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
-    [switch]
-    ${Force})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Save-PnPClientSidePageConversionLog
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Save-PnPProvisioningTemplate
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Allows you to provide an in-memory instance of the ProvisioningTemplate type of the PnP Core Component. When using this parameter, the -Out parameter refers to the path for saving the template and storing any supporting file for the template.')]
-    [Alias('InputInstance')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningTemplate]
-    ${Template},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ProvisioningTemplatePipeBind]
+        $Template,
 
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='Filename to write to, optionally including full path.')]
-    [string]
-    ${Out},
+        [Parameter()]
+        [System.String]
+        $Out,
 
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml.XMLPnPSchemaVersion]
+        $Schema,
 
-    [Parameter(HelpMessage='Allows you to specify the ITemplateProviderExtension to execute while saving a template.')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
-    ${TemplateProviderExtensions})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Save-PnPTenantTemplate
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Allows you to provide an in-memory instance of a Tenant Template. When using this parameter, the -Out parameter refers to the path for saving the template and storing any supporting file for the template.')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningHierarchy]
-    ${Template},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ProvisioningHierarchyPipeBind]
+        $Template,
 
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='Filename to write to, optionally including full path.')]
-    [string]
-    ${Out},
+        [Parameter()]
+        [System.String]
+        $Out,
 
-    [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
-    [switch]
-    ${Force})
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml.XMLPnPSchemaVersion]
+        $Schema,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Send-PnPMail
 {
     [CmdletBinding()]
-param(
-    [string]
-    ${Server},
+    param(
+        [Parameter()]
+        [System.String]
+        $Server,
 
-    [Parameter(HelpMessage='If using from address, you also have to provide a password')]
-    [string]
-    ${From},
+        [Parameter()]
+        [System.String]
+        $From,
 
-    [Parameter(HelpMessage='If using a password, you also have to provide the associated from address')]
-    [string]
-    ${Password},
+        [Parameter()]
+        [System.String]
+        $Password,
 
-    [Parameter(Mandatory=$true, HelpMessage='List of recipients')]
-    [string[]]
-    ${To},
+        [Parameter()]
+        [System.String[]]
+        $To,
 
-    [Parameter(HelpMessage='List of recipients on CC')]
-    [string[]]
-    ${Cc},
+        [Parameter()]
+        [System.String[]]
+        $Cc,
 
-    [Parameter(Mandatory=$true, HelpMessage='Subject of the email')]
-    [string]
-    ${Subject},
+        [Parameter()]
+        [System.String]
+        $Subject,
 
-    [Parameter(Mandatory=$true, HelpMessage='Body of the email')]
-    [string]
-    ${Body},
+        [Parameter()]
+        [System.String]
+        $Body,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPApplicationCustomizer
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
-param(
-    [Parameter(ParameterSetName='Custom Action Id', Position=0, ValueFromPipeline=$true, HelpMessage='The id or name of the CustomAction representing the client side extension registration that needs to be updated or a CustomAction instance itself')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.UserCustomActionPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.UserCustomActionPipeBind]
+        $Identity,
 
-    [Parameter(ParameterSetName='Client Side Component Id', HelpMessage='The Client Side Component Id of the SharePoint Framework client side extension application customizer found in the manifest for which existing custom action(s) should be updated')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${ClientSideComponentId},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $ClientSideComponentId,
 
-    [Parameter(HelpMessage='Define if the CustomAction representing the client side extension registration is to be found at the web or site collection scope. Specify All to update the component on both web and site collection level.')]
-    [SharePointPnP.PowerShell.Commands.Enums.CustomActionScope]
-    ${Scope},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CustomActionScope]
+        $Scope,
 
-    [Parameter(HelpMessage='The title of the application customizer. Omit to not update this property.')]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(HelpMessage='The description of the application customizer. Omit to not update this property.')]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [Parameter(HelpMessage='Sequence of this application customizer being injected. Use when you have a specific sequence with which to have multiple application customizers being added to the page. Omit to not update this property.')]
-    [System.Nullable[int]]
-    ${Sequence},
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Sequence,
 
-    [Parameter(HelpMessage='The Client Side Component Properties of the application customizer to update. Specify values as a json string : "{Property1 : ''Value1'', Property2: ''Value2''}". Omit to not update this property.')]
-    [string]
-    ${ClientSideComponentProperties},
+        [Parameter()]
+        [System.String]
+        $ClientSideComponentProperties,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Set-PnPAppSideLoading
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='On', Mandatory=$true)]
-    [switch]
-    ${On},
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $On,
 
-    [Parameter(ParameterSetName='Off', Mandatory=$true)]
-    [switch]
-    ${Off})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Off,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPAuditing
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='Enable all', Mandatory=$true, HelpMessage='Enable all audit flags')]
-    [switch]
-    ${EnableAll},
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $EnableAll,
 
-    [Parameter(ParameterSetName='Disable All', Mandatory=$true, HelpMessage='Disable all audit flags')]
-    [switch]
-    ${DisableAll},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DisableAll,
 
-    [Parameter(ParameterSetName='Specific flags', HelpMessage='Set the retention time')]
-    [Parameter(ParameterSetName='Enable all', HelpMessage='Set the retention time')]
-    [int]
-    ${RetentionTime},
+        [Parameter()]
+        [System.Int32]
+        $RetentionTime,
 
-    [Parameter(ParameterSetName='Specific flags', HelpMessage='Trim the audit log')]
-    [Parameter(ParameterSetName='Enable all', HelpMessage='Trim the audit log')]
-    [switch]
-    ${TrimAuditLog},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $TrimAuditLog,
 
-    [Parameter(ParameterSetName='Specific flags', HelpMessage='Audit editing items')]
-    [switch]
-    ${EditItems},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $EditItems,
 
-    [Parameter(ParameterSetName='Specific flags', HelpMessage='Audit checking out or checking in items')]
-    [switch]
-    ${CheckOutCheckInItems},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $CheckOutCheckInItems,
 
-    [Parameter(ParameterSetName='Specific flags', HelpMessage='Audit moving or copying items to another location in the site.')]
-    [switch]
-    ${MoveCopyItems},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $MoveCopyItems,
 
-    [Parameter(ParameterSetName='Specific flags', HelpMessage='Audit deleting or restoring items')]
-    [switch]
-    ${DeleteRestoreItems},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DeleteRestoreItems,
 
-    [Parameter(ParameterSetName='Specific flags', HelpMessage='Audit editing content types and columns')]
-    [switch]
-    ${EditContentTypesColumns},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $EditContentTypesColumns,
 
-    [Parameter(ParameterSetName='Specific flags', HelpMessage='Audit searching site content')]
-    [switch]
-    ${SearchContent},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SearchContent,
 
-    [Parameter(ParameterSetName='Specific flags', HelpMessage='Audit editing users and permissions')]
-    [switch]
-    ${EditUsersPermissions})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $EditUsersPermissions,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPAvailablePageLayouts
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='SPECIFIC', Mandatory=$true, HelpMessage='An array of page layout files to set as available page layouts for the site.')]
-    [string[]]
-    ${PageLayouts},
+    param(
+        [Parameter()]
+        [System.String[]]
+        $PageLayouts,
 
-    [Parameter(ParameterSetName='ALL', Mandatory=$true, HelpMessage='An array of page layout files to set as available page layouts for the site.')]
-    [switch]
-    ${AllowAllPageLayouts},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AllowAllPageLayouts,
 
-    [Parameter(ParameterSetName='INHERIT', Mandatory=$true, HelpMessage='Set the available page layouts to inherit from the parent site.')]
-    [switch]
-    ${InheritPageLayouts},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $InheritPageLayouts,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPClientSidePage
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
-        ${Identity},
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Identity,
 
         [Parameter()]
         [System.String]
-        ${Name},
+        $Name,
 
         [Parameter()]
         [System.String]
-        ${Title},
+        $Title,
 
         [Parameter()]
         [OfficeDevPnP.Core.Pages.ClientSidePageLayoutType]
-        ${LayoutType},
+        $LayoutType,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.ClientSidePages.ClientSidePagePromoteType]
-        ${PromoteAs},
+        [PnP.PowerShell.Commands.ClientSidePages.ClientSidePagePromoteType]
+        $PromoteAs,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $CommentsEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Publish,
 
         [Parameter()]
         [OfficeDevPnP.Core.Pages.ClientSidePageHeaderType]
-        ${HeaderType},
+        $HeaderType,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
-        ${ContentType},
-
-        [Parameter()]
-        [System.String]
-        ${ThumbnailUrl},
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $ContentType,
 
         [Parameter()]
         [System.String]
-        ${PublishMessage},
+        $ThumbnailUrl,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-        ${Web},
+        [System.String]
+        $PublishMessage,
 
         [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
     )
 }
 function Set-PnPClientSideText
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The name of the page')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
-    ${Page},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Page,
 
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The instance id of the text component')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${InstanceId},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $InstanceId,
 
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='Text to set')]
-    [string]
-    ${Text},
+        [Parameter()]
+        [System.String]
+        $Text,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPClientSideWebPart
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The name of the page')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
-    ${Page},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        $Page,
 
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The identity of the web part. This can be the web part instance id or the title of a web part')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ClientSideWebPartPipeBind]
-    ${Identity},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ClientSideWebPartPipeBind]
+        $Identity,
 
-    [Parameter(ValueFromPipeline=$true, HelpMessage='Sets the internal title of the web part. Notice that this will NOT set a visible title.')]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(ValueFromPipeline=$true, HelpMessage='Sets the properties as a JSON string.')]
-    [string]
-    ${PropertiesJson},
+        [Parameter()]
+        [System.String]
+        $PropertiesJson,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPContext
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=1, ValueFromPipeline=$true, HelpMessage='The ClientContext to set')]
-    [Microsoft.SharePoint.Client.ClientContext]
-    ${Context})
+    param(
+        [Parameter()]
+        [Microsoft.SharePoint.Client.ClientContext]
+        $Context,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPDefaultColumnValues
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID, Name or Url of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(Mandatory=$true, HelpMessage='The internal name, id or a reference to a field')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
-    ${Field},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
+        $Field,
 
-    [Parameter(Mandatory=$true, HelpMessage='A list of values. In case of a text field the values will be concatenated, separated by a semi-colon. In case of a taxonomy field multiple values will added. In case of people field multiple values will be added.')]
-    [string[]]
-    ${Value},
+        [Parameter()]
+        [System.String[]]
+        $Value,
 
-    [Parameter(HelpMessage='A library relative folder path, if not specified it will set the default column values on the root folder of the library (''/'')')]
-    [string]
-    ${Folder},
+        [Parameter()]
+        [System.String]
+        $Folder,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPDefaultContentTypeToList
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The name of a list, an ID or the actual list object to update')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(Mandatory=$true, HelpMessage='The content type object that needs to be set as the default content type on the list. Content Type needs to be present on the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
-    ${ContentType},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        $ContentType,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPDefaultPageLayout
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='TITLE', Mandatory=$true, HelpMessage='Title of the page layout')]
-    [string]
-    ${Title},
+    param(
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(ParameterSetName='INHERIT', Mandatory=$true, HelpMessage='Set the default page layout to be inherited from the parent site.')]
-    [switch]
-    ${InheritFromParentSite},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $InheritFromParentSite,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPDocumentSetField
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The document set in which to set the field. Either specify a name, a document set template object, an id, or a content type object')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.DocumentSetPipeBind]
-    ${DocumentSet},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.DocumentSetPipeBind]
+        $DocumentSet,
 
-    [Parameter(Mandatory=$true, HelpMessage='The field to set. The field needs to be available in one of the available content types. Either specify a name, an id or a field object')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
-    ${Field},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
+        $Field,
 
-    [Parameter(HelpMessage='Set the field as a Shared Field')]
-    [switch]
-    ${SetSharedField},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SetSharedField,
 
-    [Parameter(HelpMessage='Set the field as a Welcome Page field')]
-    [switch]
-    ${SetWelcomePageField},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SetWelcomePageField,
 
-    [Parameter(HelpMessage='Removes the field as a Shared Field')]
-    [switch]
-    ${RemoveSharedField},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RemoveSharedField,
 
-    [Parameter(HelpMessage='Removes the field as a Welcome Page Field')]
-    [switch]
-    ${RemoveWelcomePageField},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RemoveWelcomePageField,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPField
 {
     [CmdletBinding()]
-param(
-    [Parameter(ValueFromPipeline=$true, HelpMessage='The list object, name or id where to update the field. If omitted the field will be updated on the web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
-
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The field object, internal field name (case sensitive) or field id to update')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
-    ${Identity},
-
-    [Parameter(Mandatory=$true, HelpMessage='Hashtable of properties to update on the field. Use the syntax @{property1="value";property2="value"}.')]
-    [hashtable]
-    ${Values},
-
-    [Parameter(HelpMessage='If provided, the field will be updated on existing lists that use it as well. If not provided or set to $false, existing lists using the field will remain unchanged but new lists will get the updated field.')]
-    [switch]
-    ${UpdateExistingLists},
-
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
-
+    param(
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Values
+    )
 }
 function Set-PnPFileCheckedIn
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The server relative url of the file to check in')]
-    [string]
-    ${Url},
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
 
-    [Parameter(HelpMessage='The check in type to use. Defaults to Major')]
-    [Microsoft.SharePoint.Client.CheckinType]
-    ${CheckinType},
+        [Parameter()]
+        [Microsoft.SharePoint.Client.CheckinType]
+        $CheckinType,
 
-    [Parameter(HelpMessage='The check in comment')]
-    [string]
-    ${Comment},
+        [Parameter()]
+        [System.String]
+        $Comment,
 
-    [Parameter(HelpMessage='Approve file')]
-    [switch]
-    ${Approve},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Approve,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPFileCheckedOut
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The server relative url of the file to check out')]
-    [string]
-    ${Url},
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPFolderPermission
 {
-    [CmdletBinding(DefaultParameterSetName='User')]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='The ID, Title or Url of the list the folder is part of')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The ID of the folder, the server relative URL to the folder or actual Folder object')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.FolderPipeBind]
-    ${Identity},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.FolderPipeBind]
+        $Identity,
 
-    [Parameter(ParameterSetName='Group', Mandatory=$true)]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
-    ${Group},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Group,
 
-    [Parameter(ParameterSetName='User', Mandatory=$true)]
-    [string]
-    ${User},
+        [Parameter()]
+        [System.String]
+        $User,
 
-    [Parameter(ParameterSetName='User', HelpMessage='The role that must be assigned to the group or user')]
-    [Parameter(ParameterSetName='Group', HelpMessage='The role that must be assigned to the group or user')]
-    [string]
-    ${AddRole},
+        [Parameter()]
+        [System.String]
+        $AddRole,
 
-    [Parameter(ParameterSetName='User', HelpMessage='The role that must be removed from the group or user')]
-    [Parameter(ParameterSetName='Group', HelpMessage='The role that must be removed from the group or user')]
-    [string]
-    ${RemoveRole},
+        [Parameter()]
+        [System.String]
+        $RemoveRole,
 
-    [Parameter(ParameterSetName='User', HelpMessage='Clear all existing permissions')]
-    [Parameter(ParameterSetName='Group', HelpMessage='Clear all existing permissions')]
-    [switch]
-    ${ClearExisting},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ClearExisting,
 
-    [Parameter(ParameterSetName='Inherit', HelpMessage='Inherit permissions from the parent, removing unique permissions')]
-    [switch]
-    ${InheritPermissions},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $InheritPermissions,
 
-    [Parameter(HelpMessage='Update the folder permissions without creating a new version or triggering MS Flow.')]
-    [switch]
-    ${SystemUpdate},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SystemUpdate,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Set-PnPFooter
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Enabled,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.FooterLayoutType]
+        $Layout,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.FooterVariantThemeType]
+        $BackgroundTheme,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $LogoUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Set-PnPGraphSubscription
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GraphSubscriptionPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.DateTime]
+        $ExpirationDate,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPGroup
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='A group object, an ID or a name of a group')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='One of the associated group types (Visitors, Members, Owners')]
-    [SharePointPnP.PowerShell.Commands.Enums.AssociatedGroupType]
-    ${SetAssociatedGroup},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.AssociatedGroupType]
+        $SetAssociatedGroup,
 
-    [Parameter(HelpMessage='Name of the permission set to add to this SharePoint group')]
-    [string]
-    ${AddRole},
+        [Parameter()]
+        [System.String]
+        $AddRole,
 
-    [Parameter(HelpMessage='Name of the permission set to remove from this SharePoint group')]
-    [string]
-    ${RemoveRole},
+        [Parameter()]
+        [System.String]
+        $RemoveRole,
 
-    [Parameter(HelpMessage='The title for the group')]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(HelpMessage='The owner for the group, which can be a user or another group')]
-    [string]
-    ${Owner},
+        [Parameter()]
+        [System.String]
+        $Owner,
 
-    [Parameter(HelpMessage='The description for the group')]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [Parameter(HelpMessage='A switch parameter that specifies whether to allow users to request membership in the group and to allow users to request to leave the group')]
-    [bool]
-    ${AllowRequestToJoinLeave},
+        [Parameter()]
+        [System.Boolean]
+        $AllowRequestToJoinLeave,
 
-    [Parameter(HelpMessage='A switch parameter that specifies whether users are automatically added or removed when they make a request')]
-    [bool]
-    ${AutoAcceptRequestToJoinLeave},
+        [Parameter()]
+        [System.Boolean]
+        $AutoAcceptRequestToJoinLeave,
 
-    [Parameter(HelpMessage='A switch parameter that specifies whether group members can modify membership in the group')]
-    [bool]
-    ${AllowMembersEditMembership},
+        [Parameter()]
+        [System.Boolean]
+        $AllowMembersEditMembership,
 
-    [Parameter(HelpMessage='A switch parameter that specifies whether only group members are allowed to view the list of members in the group')]
-    [bool]
-    ${OnlyAllowMembersViewMembership},
+        [Parameter()]
+        [System.Boolean]
+        $OnlyAllowMembersViewMembership,
 
-    [Parameter(HelpMessage='The e-mail address to which membership requests are sent')]
-    [string]
-    ${RequestToJoinEmail},
+        [Parameter()]
+        [System.String]
+        $RequestToJoinEmail,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPGroupPermissions
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='ByName', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Get the permissions of a specific group by name')]
-    [Alias('Name')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='The list to apply the command to.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(HelpMessage='Name of the permission set to add to this SharePoint group')]
-    [string[]]
-    ${AddRole},
+        [Parameter()]
+        [System.String[]]
+        $AddRole,
 
-    [Parameter(HelpMessage='Name of the permission set to remove from this SharePoint group')]
-    [string[]]
-    ${RemoveRole},
+        [Parameter()]
+        [System.String[]]
+        $RemoveRole,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPHideDefaultThemes
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Defines if the default themes should be visible or hidden')]
-    [bool]
-    ${HideDefaultThemes})
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $HideDefaultThemes,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPHomePage
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The root folder relative url of the homepage, e.g. ''sitepages/home.aspx''')]
-    [Alias('Path')]
-    [string]
-    ${RootFolderRelativeUrl},
+    param(
+        [Parameter()]
+        [System.String]
+        $RootFolderRelativeUrl,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPHomeSite
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The url of the site to set as the home site')]
-    [string]
-    ${Url})
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPHubSite
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The Id or Url of a hub site to configure')]
-    [Alias('HubSite')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='The title to set on the hub which will be shown in the hub navigation bar')]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(HelpMessage='Full url to the image to use for the hub site logo. Can either be a logo hosted on SharePoint or outside of SharePoint and must be an absolute URL to the image.')]
-    [string]
-    ${LogoUrl},
+        [Parameter()]
+        [System.String]
+        $LogoUrl,
 
-    [Parameter(HelpMessage='The description of the hub site')]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [Parameter(HelpMessage='GUID of the SharePoint Site Design which should be applied when a site joins the hub site')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${SiteDesignId},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $SiteDesignId,
 
-    [switch]
-    ${HideNameInNavigation},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $HideNameInNavigation,
 
-    [switch]
-    ${RequiresJoinApproval})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RequiresJoinApproval,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPIndexedProperties
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true)]
-    [System.Collections.Generic.List[string]]
-    ${Keys},
+    param(
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        $Keys,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPInPlaceRecordsManagement
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='Enable or Disable', Mandatory=$true)]
-    [bool]
-    ${Enabled},
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
 
-    [Parameter(ParameterSetName='On', Mandatory=$true, Position=0, HelpMessage='Turn records management on')]
-    [Obsolete('Use -Enabled $true')]
-    [switch]
-    ${On},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $On,
 
-    [Parameter(ParameterSetName='Off', Mandatory=$true, Position=0, HelpMessage='Turn records management off')]
-    [Obsolete('Use -Enabled $false')]
-    [switch]
-    ${Off},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Off,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Set-PnPKnowledgeHubSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $KnowledgeHubSiteUrl,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPLabel
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID or Url of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(Mandatory=$true, HelpMessage='The name of the label.')]
-    [string]
-    ${Label},
+        [Parameter()]
+        [System.String]
+        $Label,
 
-    [Parameter(HelpMessage='Apply label to existing items in the library.')]
-    [bool]
-    ${SyncToItems},
+        [Parameter()]
+        [System.Boolean]
+        $SyncToItems,
 
-    [Parameter(HelpMessage='Block deletion of items in the library.')]
-    [bool]
-    ${BlockDeletion},
+        [Parameter()]
+        [System.Boolean]
+        $BlockDeletion,
 
-    [Parameter(HelpMessage='Block editing of items in the library.')]
-    [bool]
-    ${BlockEdit},
+        [Parameter()]
+        [System.Boolean]
+        $BlockEdit,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPList
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The ID, Title or Url of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Set to $true to enable content types, set to $false to disable content types')]
-    [bool]
-    ${EnableContentTypes},
+        [Parameter()]
+        [System.Boolean]
+        $EnableContentTypes,
 
-    [Parameter(HelpMessage='If used the security inheritance is broken for this list')]
-    [switch]
-    ${BreakRoleInheritance},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $BreakRoleInheritance,
 
-    [Parameter(HelpMessage='If used the security inheritance is reset for this list (inherited from parent)')]
-    [switch]
-    ${ResetRoleInheritance},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ResetRoleInheritance,
 
-    [Parameter(HelpMessage='If used the roles are copied from the parent web')]
-    [switch]
-    ${CopyRoleAssignments},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $CopyRoleAssignments,
 
-    [Parameter(HelpMessage='If used the unique permissions are cleared from child objects and they can inherit role assignments from this object')]
-    [switch]
-    ${ClearSubscopes},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ClearSubscopes,
 
-    [Parameter(HelpMessage='The title of the list')]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(HelpMessage='The description of the list')]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [Parameter(HelpMessage='Hide the list from the SharePoint UI. Set to $true to hide, $false to show.')]
-    [bool]
-    ${Hidden},
+        [Parameter()]
+        [System.Boolean]
+        $Hidden,
 
-    [Parameter(HelpMessage='Enable or disable force checkout. Set to $true to enable, $false to disable.')]
-    [bool]
-    ${ForceCheckout},
+        [Parameter()]
+        [System.Boolean]
+        $ForceCheckout,
 
-    [Parameter(HelpMessage='Set the list experience: Auto, NewExperience or ClassicExperience')]
-    [Microsoft.SharePoint.Client.ListExperience]
-    ${ListExperience},
+        [Parameter()]
+        [Microsoft.SharePoint.Client.ListExperience]
+        $ListExperience,
 
-    [Parameter(HelpMessage='Enable or disable attachments. Set to $true to enable, $false to disable.')]
-    [bool]
-    ${EnableAttachments},
+        [Parameter()]
+        [System.Boolean]
+        $EnableAttachments,
 
-    [Parameter(HelpMessage='Enable or disable folder creation. Set to $true to enable, $false to disable.')]
-    [bool]
-    ${EnableFolderCreation},
+        [Parameter()]
+        [System.Boolean]
+        $EnableFolderCreation,
 
-    [Parameter(HelpMessage='Enable or disable versioning. Set to $true to enable, $false to disable.')]
-    [bool]
-    ${EnableVersioning},
+        [Parameter()]
+        [System.Boolean]
+        $EnableVersioning,
 
-    [Parameter(HelpMessage='Enable or disable minor versions versioning. Set to $true to enable, $false to disable.')]
-    [bool]
-    ${EnableMinorVersions},
+        [Parameter()]
+        [System.Boolean]
+        $EnableMinorVersions,
 
-    [Parameter(HelpMessage='Maximum major versions to keep')]
-    [uint32]
-    ${MajorVersions},
+        [Parameter()]
+        [System.UInt32]
+        $MajorVersions,
 
-    [Parameter(HelpMessage='Maximum minor versions to keep')]
-    [uint32]
-    ${MinorVersions},
+        [Parameter()]
+        [System.UInt32]
+        $MinorVersions,
 
-    [Parameter(HelpMessage='Enable or disable whether content approval is enabled for the list. Set to $true to enable, $false to disable.')]
-    [bool]
-    ${EnableModeration},
+        [Parameter()]
+        [System.Boolean]
+        $EnableModeration,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPListInformationRightsManagement
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The list to set Information Rights Management (IRM) settings for.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(HelpMessage='Specifies whether Information Rights Management (IRM) is enabled for the list.')]
-    [System.Nullable[bool]]
-    ${Enable},
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $Enable,
 
-    [Parameter(HelpMessage='Specifies whether Information Rights Management (IRM) expiration is enabled for the list.')]
-    [System.Nullable[bool]]
-    ${EnableExpiration},
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $EnableExpiration,
 
-    [Parameter(HelpMessage='Specifies whether Information Rights Management (IRM) rejection is enabled for the list.')]
-    [System.Nullable[bool]]
-    ${EnableRejection},
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $EnableRejection,
 
-    [Parameter(HelpMessage='Sets a value indicating whether the viewer can print the downloaded document.')]
-    [System.Nullable[bool]]
-    ${AllowPrint},
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowPrint,
 
-    [Parameter(HelpMessage='Sets a value indicating whether the viewer can run a script on the downloaded document.')]
-    [System.Nullable[bool]]
-    ${AllowScript},
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowScript,
 
-    [Parameter(HelpMessage='Sets a value indicating whether the viewer can write on a copy of the downloaded document.')]
-    [System.Nullable[bool]]
-    ${AllowWriteCopy},
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowWriteCopy,
 
-    [Parameter(HelpMessage='Sets a value indicating whether to block Office Web Application Companion applications (WACs) from showing this document.')]
-    [System.Nullable[bool]]
-    ${DisableDocumentBrowserView},
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $DisableDocumentBrowserView,
 
-    [Parameter(HelpMessage='Sets the number of days after which the downloaded document will expire.')]
-    [System.Nullable[int]]
-    ${DocumentAccessExpireDays},
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $DocumentAccessExpireDays,
 
-    [Parameter(HelpMessage='Sets the date after which the Information Rights Management (IRM) protection of this document library will stop.')]
-    [System.Nullable[datetime]]
-    ${DocumentLibraryProtectionExpireDate},
+        [Parameter()]
+        [System.Nullable`1[System.DateTime]]
+        $DocumentLibraryProtectionExpireDate,
 
-    [Parameter(HelpMessage='Sets a value indicating whether the downloaded document will expire.')]
-    [System.Nullable[bool]]
-    ${EnableDocumentAccessExpire},
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $EnableDocumentAccessExpire,
 
-    [Parameter(HelpMessage='Sets a value indicating whether to enable Office Web Application Companion applications (WACs) to publishing view.')]
-    [System.Nullable[bool]]
-    ${EnableDocumentBrowserPublishingView},
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $EnableDocumentBrowserPublishingView,
 
-    [Parameter(HelpMessage='Sets a value indicating whether the permission of the downloaded document is applicable to a group.')]
-    [System.Nullable[bool]]
-    ${EnableGroupProtection},
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $EnableGroupProtection,
 
-    [Parameter(HelpMessage='Sets whether a user must verify their credentials after some interval.')]
-    [System.Nullable[bool]]
-    ${EnableLicenseCacheExpire},
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $EnableLicenseCacheExpire,
 
-    [Parameter(HelpMessage='Sets the number of days that the application that opens the document caches the IRM license. When these elapse, the application will connect to the IRM server to validate the license.')]
-    [System.Nullable[int]]
-    ${LicenseCacheExpireDays},
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $LicenseCacheExpireDays,
 
-    [Parameter(HelpMessage='Sets the group name (email address) that the permission is also applicable to.')]
-    [string]
-    ${GroupName},
+        [Parameter()]
+        [System.String]
+        $GroupName,
 
-    [Parameter(HelpMessage='Sets the permission policy description.')]
-    [string]
-    ${PolicyDescription},
+        [Parameter()]
+        [System.String]
+        $PolicyDescription,
 
-    [Parameter(HelpMessage='Sets the permission policy title.')]
-    [string]
-    ${PolicyTitle},
+        [Parameter()]
+        [System.String]
+        $PolicyTitle,
 
-    [string]
-    ${TemplateId},
+        [Parameter()]
+        [System.String]
+        $TemplateId,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPListItem
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID, Title or Url of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
-
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The ID of the listitem, or actual ListItem object')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
-    ${Identity},
-
-    [Parameter(HelpMessage='Specify either the name, ID or an actual content type')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
-    ${ContentType},
-
-    [Parameter(HelpMessage='Use the internal names of the fields when specifying field names.Single line of text: -Values @{"TextField" = "Title New"}Multiple lines of text: -Values @{"MultiTextField" = "New text\n\nMore text"}Rich text: -Values @{"MultiTextField" = "<strong>New</strong> text"}Choice: -Values @{"ChoiceField" = "Value 1"}Number: -Values @{"NumberField" = "10"}Currency: -Values @{"NumberField" = "10"}Currency: -Values @{"CurrencyField" = "10"}Date and Time: -Values @{"DateAndTimeField" = "03/13/2015 14:16"}Lookup (id of lookup value): -Values @{"LookupField" = "2"}Multi value lookup (id of lookup values as array 1): -Values @{"MultiLookupField" = "1","2"}Multi value lookup (id of lookup values as array 2): -Values @{"MultiLookupField" = 1,2}Multi value lookup (id of lookup values as string): -Values @{"MultiLookupField" = "1,2"}Yes/No: -Values @{"YesNoField" = $false}Person/Group (id of user/group in Site User Info List or email of the user, separate multiple values with a comma): -Values @{"PersonField" = "user1@domain.com","21"}Managed Metadata (single value with path to term): -Values @{"MetadataField" = "CORPORATE|DEPARTMENTS|FINANCE"}Managed Metadata (single value with id of term): -Values @{"MetadataField" = "fe40a95b-2144-4fa2-b82a-0b3d0299d818"} with Id of termManaged Metadata (multiple values with paths to terms): -Values @{"MetadataField" = ("CORPORATE|DEPARTMENTS|FINANCE","CORPORATE|DEPARTMENTS|HR")}Managed Metadata (multiple values with ids of terms): -Values @{"MetadataField" = ("fe40a95b-2144-4fa2-b82a-0b3d0299d818","52d88107-c2a8-4bf0-adfa-04bc2305b593")}Hyperlink or Picture: -Values @{"HyperlinkField" = "https://github.com/OfficeDev/, OfficePnp"}')]
-    [hashtable]
-    ${Values},
-
-    [Parameter(HelpMessage='Update the item without creating a new version.')]
-    [switch]
-    ${SystemUpdate},
-
-    [Parameter(HelpMessage='The name of the retention label.')]
-    [string]
-    ${Label},
-
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
-
+    param(
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Values
+    )
 }
 function Set-PnPListItemAsRecord
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID, Title or Url of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The ID of the listitem, or actual ListItem object')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
-    ${Identity},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='The declaration date')]
-    [datetime]
-    ${DeclarationDate},
+        [Parameter()]
+        [System.DateTime]
+        $DeclarationDate,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPListItemPermission
 {
-    [CmdletBinding(DefaultParameterSetName='User')]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID, Title or Url of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The ID of the listitem, or actual ListItem object')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
-    ${Identity},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
+        $Identity,
 
-    [Parameter(ParameterSetName='Group', Mandatory=$true)]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
-    ${Group},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Group,
 
-    [Parameter(ParameterSetName='User', Mandatory=$true)]
-    [string]
-    ${User},
+        [Parameter()]
+        [System.String]
+        $User,
 
-    [Parameter(ParameterSetName='User', HelpMessage='The role that must be assigned to the group or user')]
-    [Parameter(ParameterSetName='Group', HelpMessage='The role that must be assigned to the group or user')]
-    [string]
-    ${AddRole},
+        [Parameter()]
+        [System.String]
+        $AddRole,
 
-    [Parameter(ParameterSetName='User', HelpMessage='The role that must be removed from the group or user')]
-    [Parameter(ParameterSetName='Group', HelpMessage='The role that must be removed from the group or user')]
-    [string]
-    ${RemoveRole},
+        [Parameter()]
+        [System.String]
+        $RemoveRole,
 
-    [Parameter(ParameterSetName='User', HelpMessage='Clear all existing permissions')]
-    [Parameter(ParameterSetName='Group', HelpMessage='Clear all existing permissions')]
-    [switch]
-    ${ClearExisting},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ClearExisting,
 
-    [Parameter(ParameterSetName='Inherit', HelpMessage='Inherit permissions from the list, removing unique permissions')]
-    [switch]
-    ${InheritPermissions},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $InheritPermissions,
 
-    [Parameter(HelpMessage='Update the item permissions without creating a new version or triggering MS Flow.')]
-    [switch]
-    ${SystemUpdate},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SystemUpdate,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPListPermission
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The ID or Title of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $Identity,
 
-    [Parameter(ParameterSetName='Group', Mandatory=$true)]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
-    ${Group},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Group,
 
-    [Parameter(ParameterSetName='User', Mandatory=$true)]
-    [string]
-    ${User},
+        [Parameter()]
+        [System.String]
+        $User,
 
-    [Parameter(HelpMessage='The role that must be assigned to the group or user')]
-    [string]
-    ${AddRole},
+        [Parameter()]
+        [System.String]
+        $AddRole,
 
-    [Parameter(HelpMessage='The role that must be removed from the group or user')]
-    [string]
-    ${RemoveRole},
+        [Parameter()]
+        [System.String]
+        $RemoveRole,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPListRecordDeclaration
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The List to set the manual record declaration settings for')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(HelpMessage='Defines the manual record declaration setting for the lists')]
-    [System.Nullable[OfficeDevPnP.Core.EcmListManualRecordDeclaration]]
-    ${ManualRecordDeclaration},
+        [Parameter()]
+        [System.Nullable`1[OfficeDevPnP.Core.EcmListManualRecordDeclaration]]
+        $ManualRecordDeclaration,
 
-    [Parameter(HelpMessage='Defines if you want to set auto record declaration on the list')]
-    [System.Nullable[bool]]
-    ${AutoRecordDeclaration},
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AutoRecordDeclaration,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPMasterPage
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='Server Relative', HelpMessage='Specifies the Master page URL based on the server relative URL')]
-    [Alias('MasterPageUrl')]
-    [string]
-    ${MasterPageServerRelativeUrl},
+    param(
+        [Parameter()]
+        [System.String]
+        $MasterPageServerRelativeUrl,
 
-    [Parameter(ParameterSetName='Server Relative', HelpMessage='Specifies the custom Master page URL based on the server relative URL')]
-    [Alias('CustomMasterPageUrl')]
-    [string]
-    ${CustomMasterPageServerRelativeUrl},
+        [Parameter()]
+        [System.String]
+        $CustomMasterPageServerRelativeUrl,
 
-    [Parameter(ParameterSetName='Site Relative', HelpMessage='Specifies the Master page URL based on the site relative URL')]
-    [string]
-    ${MasterPageSiteRelativeUrl},
+        [Parameter()]
+        [System.String]
+        $MasterPageSiteRelativeUrl,
 
-    [Parameter(ParameterSetName='Site Relative', HelpMessage='Specifies the custom Master page URL based on the site relative URL')]
-    [string]
-    ${CustomMasterPageSiteRelativeUrl},
+        [Parameter()]
+        [System.String]
+        $CustomMasterPageSiteRelativeUrl,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Set-PnPMicrosoft365Group
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $Owners,
+
+        [Parameter()]
+        [System.String[]]
+        $Members,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsPrivate,
+
+        [Parameter()]
+        [System.String]
+        $GroupLogoPath,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $CreateTeam,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $HideFromAddressLists,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $HideFromOutlookClients,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPMinimalDownloadStrategy
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='On', Mandatory=$true, HelpMessage='Turn minimal download strategy on')]
-    [switch]
-    ${On},
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $On,
 
-    [Parameter(ParameterSetName='Off', Mandatory=$true, HelpMessage='Turn minimal download strategy off')]
-    [switch]
-    ${Off},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Off,
 
-    [Parameter(HelpMessage='Specifies whether to overwrite (when activating) or continue (when deactivating) an existing feature with the same feature identifier. This parameter is ignored if there are no errors.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPPropertyBagValue
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='Web', Mandatory=$true)]
-    [Parameter(ParameterSetName='Folder', Mandatory=$true)]
-    [string]
-    ${Key},
+    param(
+        [Parameter()]
+        [System.String]
+        $Key,
 
-    [Parameter(ParameterSetName='Web', Mandatory=$true)]
-    [Parameter(ParameterSetName='Folder', Mandatory=$true)]
-    [Parameter(Mandatory=$true)]
-    [string]
-    ${Value},
+        [Parameter()]
+        [System.String]
+        $Value,
 
-    [Parameter(ParameterSetName='Web', Mandatory=$true)]
-    [switch]
-    ${Indexed},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Indexed,
 
-    [Parameter(ParameterSetName='Folder', HelpMessage='Site relative url of the folder. See examples for use.')]
-    [string]
-    ${Folder},
+        [Parameter()]
+        [System.String]
+        $Folder,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPProvisioningTemplateMetadata
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, HelpMessage='Path to the xml or pnp file containing the site template.')]
-    [string]
-    ${Path},
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
 
-    [Parameter(HelpMessage='It can be used to specify the DisplayName of the template file that will be updated.')]
-    [string]
-    ${TemplateDisplayName},
+        [Parameter()]
+        [System.String]
+        $TemplateDisplayName,
 
-    [Parameter(HelpMessage='It can be used to specify the ImagePreviewUrl of the template file that will be updated.')]
-    [string]
-    ${TemplateImagePreviewUrl},
+        [Parameter()]
+        [System.String]
+        $TemplateImagePreviewUrl,
 
-    [Parameter(HelpMessage='It can be used to specify custom Properties for the template file that will be updated.')]
-    [hashtable]
-    ${TemplateProperties},
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $TemplateProperties,
 
-    [Parameter(HelpMessage='Allows you to specify ITemplateProviderExtension to execute while extracting a template.')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
-    ${TemplateProviderExtensions},
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPRequestAccessEmails
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='Email address to send the access requests to')]
-    [string[]]
-    ${Emails},
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Emails,
 
-    [Parameter(HelpMessage='Enables or disables access to be requested')]
-    [switch]
-    ${Disabled},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Disabled,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPSearchConfiguration
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='Config', Mandatory=$true, HelpMessage='Search configuration string')]
-    [string]
-    ${Configuration},
+    param(
+        [Parameter()]
+        [System.String]
+        $Configuration,
 
-    [Parameter(ParameterSetName='Path', Mandatory=$true, HelpMessage='Path to a search configuration')]
-    [string]
-    ${Path},
+        [Parameter()]
+        [System.String]
+        $Path,
 
-    [SharePointPnP.PowerShell.Commands.Enums.SearchConfigurationScope]
-    ${Scope},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.SearchConfigurationScope]
+        $Scope,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPSearchSettings
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='Set the scope of which the suite bar search box shows. Possible values: Inherit, AllPages, ModernOnly, Hidden')]
-    [System.Nullable[Microsoft.SharePoint.Client.SearchBoxInNavBarType]]
-    ${SearchBoxInNavBar},
+    param(
+        [Parameter()]
+        [System.Nullable`1[Microsoft.SharePoint.Client.SearchBoxInNavBarType]]
+        $SearchBoxInNavBar,
 
-    [Parameter(HelpMessage='Set the URL where the search box should redirect to.')]
-    [string]
-    ${SearchPageUrl},
+        [Parameter()]
+        [System.String]
+        $SearchPageUrl,
 
-    [Parameter(HelpMessage='Set the search scope of the suite bar search box. Possible values: DefaultScope, Tenant, Hub, Site')]
-    [System.Nullable[Microsoft.SharePoint.Client.SearchScopeType]]
-    ${SearchScope},
+        [Parameter()]
+        [System.String]
+        $SearchBoxPlaceholderText,
 
-    [Parameter(HelpMessage='Scope to apply the setting to. Possible values: Web (default), Site\r\n\r\nFor a root site, the scope does not matter.')]
-    [SharePointPnP.PowerShell.Commands.Enums.SearchSettingsScope]
-    ${Scope},
+        [Parameter()]
+        [System.Nullable`1[Microsoft.SharePoint.Client.SearchScopeType]]
+        $SearchScope,
 
-    [Parameter(HelpMessage='Do not ask for confirmation.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.SearchSettingsScope]
+        $Scope,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPSite
 {
     [CmdletBinding()]
-param(
-    [Alias('Url')]
-    [string]
-    ${Identity},
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='The classification to set')]
-    [string]
-    ${Classification},
+        [Parameter()]
+        [System.String]
+        $Classification,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Disables Microsoft Flow for this site')]
-    [System.Nullable[switch]]
-    ${DisableFlows},
+        [Parameter()]
+        [System.Nullable`1[System.Management.Automation.SwitchParameter]]
+        $DisableFlows,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Sets the logo of the site if it concerns a modern team site. Provide a full path to a local image file on your disk which you want to use as the site logo. The logo will be uploaded automatically to SharePoint. If you want to set the logo for a classic site, use Set-PnPWeb -SiteLogoUrl.')]
-    [string]
-    ${LogoFilePath},
+        [Parameter()]
+        [System.String]
+        $LogoFilePath,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies what the sharing capabilities are for the site. Possible values: Disabled, ExternalUserSharingOnly, ExternalUserAndGuestSharing, ExistingExternalUserSharingOnly')]
-    [System.Nullable[Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]]
-    ${Sharing},
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]]
+        $Sharing,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the storage quota for this site collection in megabytes. This value must not exceed the company''s available quota.')]
-    [System.Nullable[long]]
-    ${StorageMaximumLevel},
+        [Parameter()]
+        [System.Nullable`1[System.Int64]]
+        $StorageMaximumLevel,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the warning level for the storage quota in megabytes. This value must not exceed the values set for the StorageMaximumLevel parameter')]
-    [System.Nullable[long]]
-    ${StorageWarningLevel},
+        [Parameter()]
+        [System.Nullable`1[System.Int64]]
+        $StorageWarningLevel,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the quota for this site collection in Sandboxed Solutions units. This value must not exceed the company''s aggregate available Sandboxed Solutions quota. The default value is 0. For more information, see Resource Usage Limits on Sandboxed Solutions in SharePoint 2010 : http://msdn.microsoft.com/en-us/library/gg615462.aspx.')]
-    [Obsolete('Sandboxed solution code has been deprecated')]
-    [System.Nullable[double]]
-    ${UserCodeMaximumLevel},
+        [Parameter()]
+        [System.Nullable`1[System.Double]]
+        $UserCodeMaximumLevel,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the warning level for the resource quota. This value must not exceed the value set for the UserCodeMaximumLevel parameter')]
-    [Obsolete('Sandboxed solution code has been deprecated')]
-    [System.Nullable[double]]
-    ${UserCodeWarningLevel},
+        [Parameter()]
+        [System.Nullable`1[System.Double]]
+        $UserCodeWarningLevel,
 
-    [Parameter(ParameterSetName='Set Lock State', HelpMessage='Sets the lockstate of a site')]
-    [System.Nullable[OfficeDevPnP.Core.SiteLockState]]
-    ${LockState},
+        [Parameter()]
+        [System.Nullable`1[OfficeDevPnP.Core.SiteLockState]]
+        $LockState,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies if the site administrator can upgrade the site collection')]
-    [System.Nullable[switch]]
-    ${AllowSelfServiceUpgrade},
+        [Parameter()]
+        [System.Nullable`1[System.Management.Automation.SwitchParameter]]
+        $AllowSelfServiceUpgrade,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies if a site allows custom script or not. See https://support.office.com/en-us/article/Turn-scripting-capabilities-on-or-off-1f2c515f-5d7e-448a-9fd7-835da935584f for more information.')]
-    [Alias('DenyAndAddCustomizePages')]
-    [System.Nullable[switch]]
-    ${NoScriptSite},
+        [Parameter()]
+        [System.Nullable`1[System.Management.Automation.SwitchParameter]]
+        $NoScriptSite,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies owner(s) to add as site collection administrators. They will be added as additional site collection administrators. Existing administrators will stay. Can be both users and groups.')]
-    [System.Collections.Generic.List[string]]
-    ${Owners},
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        $Owners,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies if comments on site pages are enabled or disabled')]
-    [System.Nullable[switch]]
-    ${CommentsOnSitePagesDisabled},
+        [Parameter()]
+        [System.Nullable`1[System.Management.Automation.SwitchParameter]]
+        $CommentsOnSitePagesDisabled,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the default link permission for the site collection. None - Respect the organization default link permission. View - Sets the default link permission for the site to "view" permissions. Edit - Sets the default link permission for the site to "edit" permissions')]
-    [System.Nullable[Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType]]
-    ${DefaultLinkPermission},
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType]]
+        $DefaultLinkPermission,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the default link type for the site collection. None - Respect the organization default sharing link type. AnonymousAccess - Sets the default sharing link for this site to an Anonymous Access or Anyone link. Internal - Sets the default sharing link for this site to the "organization" link or company shareable link. Direct - Sets the default sharing link for this site to the "Specific people" link')]
-    [System.Nullable[Microsoft.Online.SharePoint.TenantManagement.SharingLinkType]]
-    ${DefaultSharingLinkType},
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingLinkType]]
+        $DefaultSharingLinkType,
 
-    [Parameter(ParameterSetName='Set Properties')]
-    [System.Nullable[Microsoft.Online.SharePoint.TenantAdministration.AppViewsPolicy]]
-    ${DisableAppViews},
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantAdministration.AppViewsPolicy]]
+        $DisableAppViews,
 
-    [Parameter(ParameterSetName='Set Properties')]
-    [System.Nullable[Microsoft.Online.SharePoint.TenantAdministration.CompanyWideSharingLinksPolicy]]
-    ${DisableCompanyWideSharingLinks},
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantAdministration.CompanyWideSharingLinksPolicy]]
+        $DisableCompanyWideSharingLinks,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies to prevent non-owners from inviting new users to the site')]
-    [switch]
-    ${DisableSharingForNonOwners},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DisableSharingForNonOwners,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the language of this site collection.')]
-    [System.Nullable[uint32]]
-    ${LocaleId},
+        [Parameter()]
+        [System.Nullable`1[System.UInt32]]
+        $LocaleId,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the new URL for this site collection.')]
-    [Obsolete('NewUrl is deprecated')]
-    [string]
-    ${NewUrl},
+        [Parameter()]
+        [System.String]
+        $NewUrl,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the Geo/Region restrictions of this site.')]
-    [System.Nullable[Microsoft.Online.SharePoint.TenantAdministration.RestrictedToRegion]]
-    ${RestrictedToGeo},
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantAdministration.RestrictedToRegion]]
+        $RestrictedToGeo,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Disables or enables the Social Bar for Site Collection.')]
-    [System.Nullable[switch]]
-    ${SocialBarOnSitePagesDisabled},
+        [Parameter()]
+        [System.Nullable`1[System.Management.Automation.SwitchParameter]]
+        $SocialBarOnSitePagesDisabled,
 
-    [Parameter(ParameterSetName='Set Lock State', HelpMessage='Wait for the operation to complete')]
-    [switch]
-    ${Wait})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Wait,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPSiteClosure
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The state of the site')]
-    [SharePointPnP.PowerShell.Commands.InformationManagement.ClosureState]
-    ${State},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.InformationManagement.ClosureState]
+        $State,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPSiteDesign
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The guid or an object representing the site design')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='The title of the site design')]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(HelpMessage='An array of guids of site scripts')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind[]]
-    ${SiteScriptIds},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind[]]
+        $SiteScriptIds,
 
-    [Parameter(HelpMessage='The description of the site design')]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [Parameter(HelpMessage='Specifies if the site design is a default site design')]
-    [switch]
-    ${IsDefault},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsDefault,
 
-    [Parameter(HelpMessage='Sets the text for the preview image')]
-    [string]
-    ${PreviewImageAltText},
+        [Parameter()]
+        [System.String]
+        $PreviewImageAltText,
 
-    [Parameter(HelpMessage='Sets the url to the preview image')]
-    [string]
-    ${PreviewImageUrl},
+        [Parameter()]
+        [System.String]
+        $PreviewImageUrl,
 
-    [Parameter(HelpMessage='Specifies the type of site to which this design applies')]
-    [SharePointPnP.PowerShell.Commands.Enums.SiteWebTemplate]
-    ${WebTemplate},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.SiteWebTemplate]
+        $WebTemplate,
 
-    [Parameter(HelpMessage='Specifies the version of the design')]
-    [int]
-    ${Version})
+        [Parameter()]
+        [System.Int32]
+        $Version,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Set-PnPSitePolicy
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The name of the site policy to apply')]
-    [string]
-    ${Name},
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPSiteScript
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The guid or an object representing the site script')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TenantSiteScriptPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteScriptPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='The title of the site script')]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(HelpMessage='The description of the site script')]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [Parameter(HelpMessage='A JSON string containing the site script')]
-    [string]
-    ${Content},
+        [Parameter()]
+        [System.String]
+        $Content,
 
-    [Parameter(HelpMessage='Specifies the version of the site script')]
-    [int]
-    ${Version})
+        [Parameter()]
+        [System.Int32]
+        $Version,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Set-PnPStorageEntity
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The key of the value to set.')]
-    [string]
-    ${Key},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Key,
 
-    [Parameter(Mandatory=$true, HelpMessage='The value to set.')]
-    [string]
-    ${Value},
+        [Parameter()]
+        [System.String]
+        $Value,
 
-    [Parameter(HelpMessage='The comment to set.')]
-    [AllowNull()]
-    [string]
-    ${Comment},
+        [Parameter()]
+        [System.String]
+        $Comment,
 
-    [Parameter(HelpMessage='The description to set.')]
-    [AllowNull()]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [Parameter(HelpMessage='Defines the scope of the storage entity. Defaults to Tenant.')]
-    [SharePointPnP.PowerShell.Commands.Enums.StorageEntityScope]
-    ${Scope})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.StorageEntityScope]
+        $Scope,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Set-PnPTaxonomyFieldValue
 {
-    [CmdletBinding(DefaultParameterSetName='ITEM')]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The list item to set the field value to')]
-    [Microsoft.SharePoint.Client.ListItem]
-    ${ListItem},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.SharePoint.Client.ListItem]
+        $ListItem,
 
-    [Parameter(Mandatory=$true, HelpMessage='The internal name of the field')]
-    [string]
-    ${InternalFieldName},
+        [Parameter()]
+        [System.String]
+        $InternalFieldName,
 
-    [Parameter(ParameterSetName='ITEM', Mandatory=$true, HelpMessage='The Id of the Term')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${TermId},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $TermId,
 
-    [Parameter(ParameterSetName='ITEM', HelpMessage='The Label value of the term')]
-    [string]
-    ${Label},
+        [Parameter()]
+        [System.String]
+        $Label,
 
-    [Parameter(ParameterSetName='PATH', Mandatory=$true, HelpMessage='A path in the form of GROUPLABEL|TERMSETLABEL|TERMLABEL')]
-    [string]
-    ${TermPath},
+        [Parameter()]
+        [System.String]
+        $TermPath,
 
-    [Parameter(ParameterSetName='ITEMS', HelpMessage='Allows you to specify terms with key value pairs that can be referred to in the template by means of the {id:label} token. See examples on how to use this parameter.')]
-    [hashtable]
-    ${Terms})
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Terms,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Set-PnPTeamifyPromptHidden
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Set-PnPTeamsChannel
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsChannelPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Set-PnPTeamsTab
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsChannelPipeBind]
+        $Channel,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTabPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Set-PnPTeamsTeam
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.Teams.TeamVisibility]
+        $Visibility,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowAddRemoveApps,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowChannelMentions,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowCreateUpdateChannels,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowCreateUpdateRemoveConnectors,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowCreateUpdateRemoveTabs,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowCustomMemes,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowDeleteChannels,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowGiphy,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowGuestCreateUpdateChannels,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowGuestDeleteChannels,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowOwnerDeleteMessages,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowStickersAndMemes,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowTeamMentions,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowUserDeleteMessages,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowUserEditMessages,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Model.Teams.TeamGiphyContentRating]
+        $GiphyContentRating,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $ShowInTeamsSearchAndSuggestions,
+
+        [Parameter()]
+        [System.String]
+        $Classification,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Set-PnPTeamsTeamArchivedState
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Archived,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $SetSiteReadOnlyForMembers,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Set-PnPTeamsTeamPicture
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPTenant
 {
-    [CmdletBinding(DefaultParameterSetName='__AllParameterSets')]
-param(
-    [Parameter(HelpMessage='Permits the use of special characters in file and folder names in SharePoint Online and OneDrive for Business document libraries.
-
-Note:
-The only two characters that can be managed at this time are the # and % characters.
-
-The following are the valid values:
-
-NoPreference- Support for feature will be enabled by Microsoft on your Office 365 tenant.
-
-Allowed- Lets the # and % characters in file and folder names in SharePoint Online and OneDrive for Business document libraries.
-
-Disallowed- Disallows the # and % characters in file and folder names in SharePoint Online and OneDrive for Business document libraries.')]
-    [System.Nullable[Microsoft.Online.SharePoint.TenantManagement.SpecialCharactersState]]
-    ${SpecialCharactersStateInFileFolderNames},
-
-    [Parameter(HelpMessage='Specifies the lower bound on the compatibility level for new sites.')]
-    [int]
-    ${MinCompatibilityLevel},
-
-    [Parameter(HelpMessage='Specifies the upper bound on the compatibility level for new sites.')]
-    [int]
-    ${MaxCompatibilityLevel},
-
-    [Parameter(HelpMessage='Enables external services for a tenant.
-External services are defined as services that are not in the Office 365 datacenters.
-
-The valid values are:
-True (default) - External services are enabled for the tenant.
-False - External services that are outside of the Office 365 datacenters cannot interact with SharePoint.')]
-    [System.Nullable[bool]]
-    ${ExternalServicesEnabled},
-
-    [Parameter(HelpMessage='Specifies the URL of the redirected site for those site collections which have the locked state "NoAccess"
-
-The valid values are:
-""(default) - Blank by default, this will also remove or clear any value that has been set.
-Full URL - Example: https://contoso.sharepoint.com/Pages/Locked.aspx')]
-    [string]
-    ${NoAccessRedirectUrl},
-
-    [Parameter(HelpMessage='Determines what level of sharing is available for the site.
-
-The valid values are:
-ExternalUserAndGuestSharing (default) - External user sharing (share by email) and guest link sharing are both enabled. Disabled - External user sharing (share by email) and guest link sharing are both disabled.
-ExternalUserSharingOnly - External user sharing (share by email) is enabled, but guest link sharing is disabled.
-
-For more information about sharing, see Manage external sharing for your SharePoint online environment (http://office.microsoft.com/en-us/office365-sharepoint-online-enterprise-help/manage-external-sharing-for-your-sharepoint-online-environment-HA102849864.aspx).')]
-    [System.Nullable[Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]]
-    ${SharingCapability},
-
-    [Parameter(HelpMessage='Determines whether tenant users see the Start a Site menu option.
-
-The valid values are:
-True (default) - Tenant users will see the Start a Site menu option.
-False - Start a Site is hidden from the menu.')]
-    [System.Nullable[bool]]
-    ${DisplayStartASiteOption},
-
-    [Parameter(HelpMessage='Specifies URL of the form to load in the Start a Site dialog.
-
-The valid values are:
-"" (default) - Blank by default, this will also remove or clear any value that has been set.
-Full URL - Example: "https://contoso.sharepoint.com/path/to/form"')]
-    [string]
-    ${StartASiteFormUrl},
-
-    [Parameter(HelpMessage='Enables the administrator to hide the Everyone claim in the People Picker.
-When users share an item with Everyone, it is accessible to all authenticated users in the tenant''s Azure Active Directory, including any active external users who have previously accepted invitations.
-
-Note, that some SharePoint system resources such as templates and pages are required to be shared to Everyone and this type of sharing does not expose any user data or metadata.
-
-The valid values are:
-True (default) - The Everyone claim group is displayed in People Picker.
-False - The Everyone claim group is hidden from the People Picker.')]
-    [System.Nullable[bool]]
-    ${ShowEveryoneClaim},
-
-    [Parameter(HelpMessage='Enables the administrator to hide the All Users claim groups in People Picker.
-
-When users share an item with "All Users (x)", it is accessible to all organization members in the tenant''s Azure Active Directory who have authenticated with via this method. When users share an item with "All Users (x)" it is accessible to all organization members in the tenant that used NTLM to authentication with SharePoint.
-
-Note, the All Users(authenticated) group is equivalent to the Everyone claim, and shows as Everyone.To change this, see - ShowEveryoneClaim.
-
-The valid values are:
-True(default) - The All Users claim groups are displayed in People Picker.
-False - The All Users claim groups are hidden in People Picker.')]
-    [System.Nullable[bool]]
-    ${ShowAllUsersClaim},
-
-    [Parameter(HelpMessage='Enables the administrator to hide the "Everyone except external users" claim in the People Picker.
-When users share an item with "Everyone except external users", it is accessible to all organization members in the tenant''s Azure Active Directory, but not to any users who have previously accepted invitations.
-
-The valid values are:
-True(default) - The Everyone except external users is displayed in People Picker.
-False - The Everyone except external users claim is not visible in People Picker.')]
-    [System.Nullable[bool]]
-    ${ShowEveryoneExceptExternalUsersClaim},
-
-    [Parameter(HelpMessage='Removes the search capability from People Picker. Note, recently resolved names will still appear in the list until browser cache is cleared or expired.
-
-SharePoint Administrators will still be able to use starts with or partial name matching when enabled.
-
-The valid values are:
-False (default) - Starts with / partial name search functionality is available.
-True - Disables starts with / partial name search functionality for all SharePoint users, except SharePoint Admins.')]
-    [System.Nullable[bool]]
-    ${SearchResolveExactEmailOrUPN},
-
-    [Parameter(HelpMessage='When set to true this will disable the ability to use Modern Authentication that leverages ADAL across the tenant.
-
-The valid values are:
-False (default) - Modern Authentication is enabled/allowed.
-True - Modern Authentication via ADAL is disabled.')]
-    [System.Nullable[bool]]
-    ${OfficeClientADALDisabled},
-
-    [Parameter(HelpMessage='By default this value is set to $true.
-
-Setting this parameter prevents Office clients using non-modern authentication protocols from accessing SharePoint Online resources.
-
-A value of $true - Enables Office clients using non-modern authentication protocols(such as, Forms-Based Authentication (FBA) or Identity Client Runtime Library (IDCRL)) to access SharePoint resources.
-
-A value of $false - Prevents Office clients using non-modern authentication protocols from accessing SharePoint Online resources.
-
-Note:
-This may also prevent third-party apps from accessing SharePoint Online resources.Also, this will also block apps using the SharePointOnlineCredentials class to access SharePoint Online resources.For additional information about SharePointOnlineCredentials, see SharePointOnlineCredentials class.')]
-    [System.Nullable[bool]]
-    ${LegacyAuthProtocolsEnabled},
-
-    [Parameter(HelpMessage='Ensures that an external user can only accept an external sharing invitation with an account matching the invited email address.
-
-Administrators who desire increased control over external collaborators should consider enabling this feature.
-
-Note, this only applies to new external users accepting new sharing invitations. Also, the resource owner must share with an organizational or Microsoft account or the external user will be unable to access the resource.
-
-The valid values are:
-False (default) - When a document is shared with an external user, bob@contoso.com, it can be accepted by any user with access to the invitation link in the original e-mail.
-True - User must accept this invitation with bob@contoso.com.')]
-    [System.Nullable[bool]]
-    ${RequireAcceptingAccountMatchInvitedAccount},
-
-    [Parameter(HelpMessage='Creates a Shared with Everyone folder in every user''s new OneDrive for Business document library.
-
-The valid values are:
-True (default) - The Shared with Everyone folder is created.
-False - No folder is created when the site and OneDrive for Business document library is created.
-
-The default behavior of the Shared with Everyone folder changed in August 2015.
-For additional information about the change, see Provision the Shared with Everyone folder in OneDrive for Business (https://support.office.com/en-us/article/Provision-the-Shared-with-Everyone-folder-in-OneDrive-for-Business-6bb02c91-fd0b-42ba-9457-3921cb6dc5b2?ui=en-US&rs=en-US&ad=US)')]
-    [System.Nullable[bool]]
-    ${ProvisionSharedWithEveryoneFolder},
-
-    [Parameter(HelpMessage='Specifies the home realm discovery value to be sent to Azure Active Directory (AAD) during the user sign-in process.
-
-When the organization uses a third-party identity provider, this prevents the user from seeing the Azure Active Directory Home Realm Discovery web page and ensures the user only sees their company''s Identity Provider''s portal.
-This value can also be used with Azure Active Directory Premium to customize the Azure Active Directory login page.
-
-Acceleration will not occur on site collections that are shared externally.
-
-This value should be configured with the login domain that is used by your company (that is, example@contoso.com).
-
-If your company has multiple third-party identity providers, configuring the sign-in acceleration value will break sign-in for your organization.
-
-The valid values are:
-"" (default) - Blank by default, this will also remove or clear any value that has been set.
-Login Domain - For example: "contoso.com"')]
-    [string]
-    ${SignInAccelerationDomain},
-
-    [Parameter(HelpMessage='Accelerates guest-enabled site collections as well as member-only site collections when the SignInAccelerationDomain parameter is set.
-
-Note:
-If enabled, your identity provider must be capable of authenticating guest users. If it is not, guest users will be unable to log in and access content that was shared with them.')]
-    [System.Nullable[bool]]
-    ${EnableGuestSignInAcceleration},
-
-    [Parameter(HelpMessage='Lets SharePoint issue a special cookie that will allow this feature to work even when "Keep Me Signed In" is not selected.
-
-"Open with Explorer" requires persisted cookies to operate correctly.
-When the user does not select "Keep Me Signed in" at the time of sign -in, "Open with Explorer" will fail.
-
-This special cookie expires after 30 minutes and cannot be cleared by closing the browser or signing out of SharePoint Online.To clear this cookie, the user must log out of their Windows session.
-
-The valid values are:
-False(default) - No special cookie is generated and the normal Office 365 sign -in length / timing applies.
-True - Generates a special cookie that will allow "Open with Explorer" to function if the "Keep Me Signed In" box is not checked at sign -in.')]
-    [System.Nullable[bool]]
-    ${UsePersistentCookiesForExplorerView},
-
-    [Parameter(HelpMessage='When the feature is enabled, all external sharing invitations that are sent will blind copy the e-mail messages listed in the BccExternalSharingInvitationsList.
-
-The valid values are:
-False (default) - BCC for external sharing is disabled.
-True - All external sharing invitations that are sent will blind copy the e-mail messages listed in the BccExternalSharingInvitationsList.')]
-    [System.Nullable[bool]]
-    ${BccExternalSharingInvitations},
-
-    [Parameter(HelpMessage='Specifies a list of e-mail addresses to be BCC''d when the BCC for External Sharing feature is enabled.
-Multiple addresses can be specified by creating a comma separated list with no spaces.
-
-The valid values are:
-"" (default) - Blank by default, this will also clear any value that has been set.
-Single or Multiple e-mail addresses - joe@contoso.com or joe@contoso.com,bob@contoso.com')]
-    [string]
-    ${BccExternalSharingInvitationsList},
-
-    [System.Nullable[bool]]
-    ${UserVoiceForFeedbackEnabled},
-
-    [System.Nullable[bool]]
-    ${PublicCdnEnabled},
-
-    [string]
-    ${PublicCdnAllowedFileTypes},
-
-    [Parameter(HelpMessage='Specifies all anonymous links that have been created (or will be created) will expire after the set number of days .
-
-To remove the expiration requirement, set the value to zero (0).')]
-    [System.Nullable[int]]
-    ${RequireAnonymousLinksExpireInDays},
-
-    [Parameter(HelpMessage='Specifies a list of email domains that is allowed for sharing with the external collaborators. Use the space character as the delimiter for entering multiple values. For example, "contoso.com fabrikam.com".
-
-For additional information about how to restrict a domain sharing, see Restricted Domains Sharing in Office 365 SharePoint Online and OneDrive for Business')]
-    [string]
-    ${SharingAllowedDomainList},
-
-    [Parameter(HelpMessage='Specifies a list of email domains that is blocked or prohibited for sharing with the external collaborators. Use space character as the delimiter for entering multiple values. For example, "contoso.com fabrikam.com".
-
-For additional information about how to restrict a domain sharing, see Restricted Domains Sharing in Office 365 SharePoint Online and OneDrive for Business')]
-    [string]
-    ${SharingBlockedDomainList},
-
-    [Parameter(HelpMessage='Specifies the external sharing mode for domains.
-
-The following values are: None AllowList BlockList
-
-For additional information about how to restrict a domain sharing, see Restricted Domains Sharing in Office 365 SharePoint Online and OneDrive for Business.')]
-    [System.Nullable[Microsoft.Online.SharePoint.TenantManagement.SharingDomainRestrictionModes]]
-    ${SharingDomainRestrictionMode},
-
-    [Parameter(HelpMessage='Sets a default OneDrive for Business storage quota for the tenant. It will be used for new OneDrive for Business sites created.
-
-A typical use will be to reduce the amount of storage associated with OneDrive for Business to a level below what the License entitles the users. For example, it could be used to set the quota to 10 gigabytes (GB) by default.
-
-If value is set to 0, the parameter will have no effect.
-
-If the value is set larger than the Maximum allowed OneDrive for Business quota, it will have no effect.')]
-    [System.Nullable[long]]
-    ${OneDriveStorageQuota},
-
-    [Parameter(HelpMessage='Lets OneDrive for Business creation for administrator managed guest users. Administrator managed Guest users use credentials in the resource tenant to access the resources.
-
-The valid values are the following:
-
-$true-Administrator managed Guest users can be given OneDrives, provided needed licenses are assigned.
-
-$false- Administrator managed Guest users can''t be given OneDrives as functionality is turned off.')]
-    [System.Nullable[bool]]
-    ${OneDriveForGuestsEnabled},
-
-    [Parameter(HelpMessage='Allows access from network locations that are defined by an administrator.
-
-The values are $true and $false. The default value is $false which means the setting is disabled.
-
-Before the IPAddressEnforcement parameter is set, make sure you add a valid IPv4 or IPv6 address to the IPAddressAllowList parameter.')]
-    [System.Nullable[bool]]
-    ${IPAddressEnforcement},
-
-    [Parameter(HelpMessage='Configures multiple IP addresses or IP address ranges (IPv4 or IPv6).
-
-Use commas to separate multiple IP addresses or IP address ranges. Verify there are no overlapping IP addresses and ensure IP ranges use Classless Inter-Domain Routing (CIDR) notation. For example, 172.16.0.0, 192.168.1.0/27.
-
-Note:
-The IPAddressAllowList parameter only lets administrators set IP addresses or ranges that are recognized as trusted. To only grant access from these IP addresses or ranges, set the IPAddressEnforcement parameter to $true.')]
-    [string]
-    ${IPAddressAllowList},
-
-    [System.Nullable[int]]
-    ${IPAddressWACTokenLifetime},
-
-    [Parameter(HelpMessage='Note:
-When set to $true, users aren''t able to share with security groups or SharePoint groups.')]
-    [System.Nullable[bool]]
-    ${UseFindPeopleInPeoplePicker},
-
-    [Parameter(HelpMessage='Lets administrators choose what type of link appears is selected in the “Get a link” sharing dialog box in OneDrive for Business and SharePoint Online.
-
-For additional information about how to change the default link type, see Change the default link type when users get links for sharing.
-
-Note:
-Setting this value to “none” will default “get a link” to the most permissive link available (that is, if anonymous links are enabled, the default link will be anonymous access; if they are disabled then the default link will be internal.
-
-The values are: None Direct Internal AnonymousAccess')]
-    [System.Nullable[Microsoft.Online.SharePoint.TenantManagement.SharingLinkType]]
-    ${DefaultSharingLinkType},
-
-    [Parameter(HelpMessage='Lets administrators set policy on re-sharing behavior in OneDrive for Business.
-
-Values:
-
-On- Users with edit permissions can re-share.
-
-Off- Only OneDrive for Business owner can share. The value of ODBAccessRequests defines whether a request to share gets sent to the owner.
-
-Unspecified- Let each OneDrive for Business owner enable or disable re-sharing behavior on their OneDrive.')]
-    [System.Nullable[Microsoft.SharePoint.Client.SharingState]]
-    ${ODBMembersCanShare},
-
-    [Parameter(HelpMessage='Lets administrators set policy on access requests and requests to share in OneDrive for Business.
-
-Values:
-
-On- Users without permission to share can trigger sharing requests to the OneDrive for Business owner when they attempt to share. Also, users without permission to a file or folder can trigger access requests to the OneDrive for Business owner when they attempt to access an item they do not have permissions to.
-
-Off- Prevent access requests and requests to share on OneDrive for Business.
-
-Unspecified- Let each OneDrive for Business owner enable or disable access requests and requests to share on their OneDrive.')]
-    [System.Nullable[Microsoft.SharePoint.Client.SharingState]]
-    ${ODBAccessRequests},
-
-    [System.Nullable[bool]]
-    ${PreventExternalUsersFromResharing},
-
-    [System.Nullable[bool]]
-    ${ShowPeoplePickerSuggestionsForGuestUsers},
-
-    [System.Nullable[Microsoft.SharePoint.Client.AnonymousLinkType]]
-    ${FileAnonymousLinkType},
-
-    [System.Nullable[Microsoft.SharePoint.Client.AnonymousLinkType]]
-    ${FolderAnonymousLinkType},
-
-    [Parameter(HelpMessage='When this parameter is set to $true and another user re-shares a document from a user’’s OneDrive for Business, the OneDrive for Business owner is notified by e-mail.
-
-For additional information about how to configure notifications for external sharing, see Configure notifications for external sharing for OneDrive for Business.
-
-The values are $true and $false.')]
-    [System.Nullable[bool]]
-    ${NotifyOwnersWhenItemsReshared},
-
-    [Parameter(HelpMessage='When this parameter is set to $true and when an external user accepts an invitation to a resource in a user’’s OneDrive for Business, the OneDrive for Business owner is notified by e-mail.
-
-For additional information about how to configure notifications for external sharing, see Configure notifications for external sharing for OneDrive for Business.
-
-The values are $true and $false.')]
-    [System.Nullable[bool]]
-    ${NotifyOwnersWhenInvitationsAccepted},
-
-    [System.Nullable[bool]]
-    ${NotificationsInOneDriveForBusinessEnabled},
-
-    [System.Nullable[bool]]
-    ${NotificationsInSharePointEnabled},
-
-    [System.Nullable[bool]]
-    ${OwnerAnonymousNotification},
-
-    [System.Nullable[bool]]
-    ${CommentsOnSitePagesDisabled},
-
-    [System.Nullable[bool]]
-    ${SocialBarOnSitePagesDisabled},
-
-    [Parameter(HelpMessage='Specifies the number of days after a user''s Active Directory account is deleted that their OneDrive for Business content will be deleted.
-
-The value range is in days, between 30 and 3650. The default value is 30.')]
-    [System.Nullable[int]]
-    ${OrphanedPersonalSitesRetentionPeriod},
-
-    [Parameter(HelpMessage='Prevents the Download button from being displayed on the Virus Found warning page.
-
-Accepts a value of true (enabled) to hide the Download button or false (disabled) to display the Download button. By default this feature is set to false.
-
-')]
-    [System.Nullable[bool]]
-    ${DisallowInfectedFileDownload},
-
-    [System.Nullable[Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType]]
-    ${DefaultLinkPermission},
-
-    [System.Nullable[Microsoft.Online.SharePoint.TenantManagement.SPOConditionalAccessPolicyType]]
-    ${ConditionalAccessPolicy},
-
-    [System.Nullable[bool]]
-    ${AllowDownloadingNonWebViewableFiles},
-
-    [System.Nullable[bool]]
-    ${AllowEditing},
-
-    [System.Nullable[bool]]
-    ${ApplyAppEnforcedRestrictionsToAdHocRecipients},
-
-    [System.Nullable[bool]]
-    ${FilePickerExternalImageSearchEnabled},
-
-    [System.Nullable[bool]]
-    ${EmailAttestationRequired},
-
-    [System.Nullable[int]]
-    ${EmailAttestationReAuthDays},
-
-    [Parameter(HelpMessage='Defines if the default themes are visible or hidden')]
-    [System.Nullable[bool]]
-    ${HideDefaultThemes},
-
-    [Parameter(HelpMessage='Guids of out of the box modern web part id''s to hide')]
-    [guid[]]
-    ${DisabledWebPartIds})
-
-}
-function Set-PnPTenantSyncClientRestriction
-{
     [CmdletBinding()]
-    Param(
-        [System.Boolean]
-        $BlockMacSync,
-        [System.Boolean]
-        $DisableReportProblemDialog,
-        [System.string[]]
-        $DomainGuids,
-        [System.Boolean]
-        $Enable,
-        [System.String[]]
-        $ExcludedFileExtensions,
+    param(
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SpecialCharactersState]]
+        $SpecialCharactersStateInFileFolderNames,
+
+        [Parameter()]
+        [System.Int32]
+        $MinCompatibilityLevel,
+
+        [Parameter()]
+        [System.Int32]
+        $MaxCompatibilityLevel,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $ExternalServicesEnabled,
+
+        [Parameter()]
         [System.String]
-        $GrooveBlockOption
+        $NoAccessRedirectUrl,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]]
+        $SharingCapability,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $DisplayStartASiteOption,
+
+        [Parameter()]
+        [System.String]
+        $StartASiteFormUrl,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $ShowEveryoneClaim,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $ShowAllUsersClaim,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $ShowEveryoneExceptExternalUsersClaim,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $SearchResolveExactEmailOrUPN,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $OfficeClientADALDisabled,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $LegacyAuthProtocolsEnabled,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $RequireAcceptingAccountMatchInvitedAccount,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $ProvisionSharedWithEveryoneFolder,
+
+        [Parameter()]
+        [System.String]
+        $SignInAccelerationDomain,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $EnableGuestSignInAcceleration,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $UsePersistentCookiesForExplorerView,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $BccExternalSharingInvitations,
+
+        [Parameter()]
+        [System.String]
+        $BccExternalSharingInvitationsList,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $UserVoiceForFeedbackEnabled,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $PublicCdnEnabled,
+
+        [Parameter()]
+        [System.String]
+        $PublicCdnAllowedFileTypes,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $RequireAnonymousLinksExpireInDays,
+
+        [Parameter()]
+        [System.String]
+        $SharingAllowedDomainList,
+
+        [Parameter()]
+        [System.String]
+        $SharingBlockedDomainList,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingDomainRestrictionModes]]
+        $SharingDomainRestrictionMode,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int64]]
+        $OneDriveStorageQuota,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $OneDriveForGuestsEnabled,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $IPAddressEnforcement,
+
+        [Parameter()]
+        [System.String]
+        $IPAddressAllowList,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $IPAddressWACTokenLifetime,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $UseFindPeopleInPeoplePicker,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingLinkType]]
+        $DefaultSharingLinkType,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.SharePoint.Client.SharingState]]
+        $ODBMembersCanShare,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.SharePoint.Client.SharingState]]
+        $ODBAccessRequests,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $PreventExternalUsersFromResharing,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $ShowPeoplePickerSuggestionsForGuestUsers,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.SharePoint.Client.AnonymousLinkType]]
+        $FileAnonymousLinkType,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.SharePoint.Client.AnonymousLinkType]]
+        $FolderAnonymousLinkType,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $NotifyOwnersWhenItemsReshared,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $NotifyOwnersWhenInvitationsAccepted,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $NotificationsInOneDriveForBusinessEnabled,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $NotificationsInSharePointEnabled,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $OwnerAnonymousNotification,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $CommentsOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $SocialBarOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $OrphanedPersonalSitesRetentionPeriod,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $DisallowInfectedFileDownload,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType]]
+        $DefaultLinkPermission,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SPOConditionalAccessPolicyType]]
+        $ConditionalAccessPolicy,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowDownloadingNonWebViewableFiles,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $AllowEditing,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $ApplyAppEnforcedRestrictionsToAdHocRecipients,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $FilePickerExternalImageSearchEnabled,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $EmailAttestationRequired,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $EmailAttestationReAuthDays,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $HideDefaultThemes,
+
+        [Parameter()]
+        [System.Guid[]]
+        $DisabledWebPartIds,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $EnableAIPIntegration,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
     )
 }
 function Set-PnPTenantAppCatalogUrl
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The url of the site to set as the tenant scoped app catalog')]
-    [string]
-    ${Url})
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Set-PnPTenantCdnEnabled
 {
     [CmdletBinding()]
-param(
-    [switch]
-    ${NoDefaultOrigins},
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $NoDefaultOrigins,
 
-    [Parameter(Mandatory=$true, HelpMessage='Specify to enable or disable')]
-    [bool]
-    ${Enable},
+        [Parameter()]
+        [System.Boolean]
+        $Enable,
 
-    [Parameter(Mandatory=$true, HelpMessage='The type of cdn to enable or disable')]
-    [SharePointPnP.PowerShell.Commands.Enums.CdnType]
-    ${CdnType})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.CdnType]
+        $CdnType,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPTenantCdnPolicy
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The type of cdn to retrieve the policies from')]
-    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
-    ${CdnType},
+    param(
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        $CdnType,
 
-    [Parameter(Mandatory=$true, HelpMessage='The type of the policy to set')]
-    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnPolicyType]
-    ${PolicyType},
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnPolicyType]
+        $PolicyType,
 
-    [Parameter(Mandatory=$true, HelpMessage='The value of the policy to set')]
-    [string]
-    ${PolicyValue})
+        [Parameter()]
+        [System.String]
+        $PolicyValue,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPTenantSite
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Specifies the URL of the site')]
-    [string]
-    ${Url},
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the title of the site')]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies what the sharing capabilities are for the site. Possible values: Disabled, ExternalUserSharingOnly, ExternalUserAndGuestSharing, ExistingExternalUserSharingOnly')]
-    [Alias('Sharing')]
-    [Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]
-    ${SharingCapability},
+        [Parameter()]
+        [System.UInt32]
+        $LocaleId,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Determines whether the Add And Customize Pages right is denied on the site collection. For more information about permission levels, see User permissions and permission levels in SharePoint.')]
-    [Alias('NoScriptSite')]
-    [switch]
-    ${DenyAddAndCustomizePages},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AllowSelfServiceUpgrade,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the language of this site collection. For more information, see Locale IDs Assigned by Microsoft (https://go.microsoft.com/fwlink/p/?LinkId=242911).')]
-    [uint32]
-    ${LocaleId},
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        $Owners,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the storage quota for this site collection in megabytes. This value must not exceed the company''s available quota.')]
-    [long]
-    ${StorageMaximumLevel},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DenyAddAndCustomizePages,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the warning level for the storage quota in megabytes. This value must not exceed the values set for the StorageMaximumLevel parameter')]
-    [long]
-    ${StorageWarningLevel},
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]
+        $SharingCapability,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the quota for this site collection in Sandboxed Solutions units. This value must not exceed the company''s aggregate available Sandboxed Solutions quota. The default value is 0. For more information, see Resource Usage Limits on Sandboxed Solutions in SharePoint 2010 : http://msdn.microsoft.com/en-us/library/gg615462.aspx.')]
-    [Obsolete('Sandboxed solutions are obsolete')]
-    [double]
-    ${UserCodeMaximumLevel},
+        [Parameter()]
+        [System.Int64]
+        $StorageMaximumLevel,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the warning level for the resource quota. This value must not exceed the value set for the UserCodeMaximumLevel parameter')]
-    [Obsolete('Sandboxed solutions are obsolete')]
-    [double]
-    ${UserCodeWarningLevel},
+        [Parameter()]
+        [System.Int64]
+        $StorageWarningLevel,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies if the site administrator can upgrade the site collection')]
-    [switch]
-    ${AllowSelfServiceUpgrade},
+        [Parameter()]
+        [System.Double]
+        $UserCodeMaximumLevel,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies owner(s) to add as site collection administrators. They will be added as additional site collection administrators. Existing administrators will stay. Can be both users and groups.')]
-    [System.Collections.Generic.List[string]]
-    ${Owners},
+        [Parameter()]
+        [System.Double]
+        $UserCodeWarningLevel,
 
-    [Parameter(ParameterSetName='Set Lock State', HelpMessage='Sets the lockstate of a site')]
-    [System.Nullable[OfficeDevPnP.Core.SiteLockState]]
-    ${LockState},
+        [Parameter()]
+        [System.Nullable`1[OfficeDevPnP.Core.SiteLockState]]
+        $LockState,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the default link permission for the site collection. None - Respect the organization default link permission. View - Sets the default link permission for the site to "view" permissions. Edit - Sets the default link permission for the site to "edit" permissions')]
-    [Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType]
-    ${DefaultLinkPermission},
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType]
+        $DefaultLinkPermission,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the default link type for the site collection. None - Respect the organization default sharing link type. AnonymousAccess - Sets the default sharing link for this site to an Anonymous Access or Anyone link. Internal - Sets the default sharing link for this site to the "organization" link or company shareable link. Direct - Sets the default sharing link for this site to the "Specific people" link')]
-    [Microsoft.Online.SharePoint.TenantManagement.SharingLinkType]
-    ${DefaultSharingLinkType},
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantManagement.SharingLinkType]
+        $DefaultSharingLinkType,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies a list of email domains that is allowed for sharing with the external collaborators. Use the space character as the delimiter for entering multiple values. For example, "contoso.com fabrikam.com".')]
-    [string]
-    ${SharingAllowedDomainList},
+        [Parameter()]
+        [System.String]
+        $SharingAllowedDomainList,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies a list of email domains that is blocked for sharing with the external collaborators. Use the space character as the delimiter for entering multiple values. For example, "contoso.com fabrikam.com".')]
-    [string]
-    ${SharingBlockedDomainList},
+        [Parameter()]
+        [System.String]
+        $SharingBlockedDomainList,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies if non web viewable files can be downloaded.')]
-    [switch]
-    ${BlockDownloadOfNonViewableFiles},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $BlockDownloadOfNonViewableFiles,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the external sharing mode for domains.')]
-    [Microsoft.Online.SharePoint.TenantManagement.SharingDomainRestrictionModes]
-    ${SharingDomainRestrictionMode},
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantManagement.SharingDomainRestrictionModes]
+        $SharingDomainRestrictionMode,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies if comments on site pages are enabled')]
-    [switch]
-    ${CommentsOnSitePagesDisabled},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $CommentsOnSitePagesDisabled,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='-')]
-    [Microsoft.Online.SharePoint.TenantAdministration.AppViewsPolicy]
-    ${DisableAppViews},
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.AppViewsPolicy]
+        $DisableAppViews,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='-')]
-    [Microsoft.Online.SharePoint.TenantAdministration.CompanyWideSharingLinksPolicy]
-    ${DisableCompanyWideSharingLinks},
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.CompanyWideSharingLinksPolicy]
+        $DisableCompanyWideSharingLinks,
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='-')]
-    [Microsoft.Online.SharePoint.TenantAdministration.FlowsPolicy]
-    ${DisableFlows},
+        [Parameter()]
+        [Microsoft.Online.SharePoint.TenantAdministration.FlowsPolicy]
+        $DisableFlows,
 
-    [Parameter(HelpMessage='Wait for the operation to complete')]
-    [switch]
-    ${Wait})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Wait,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Set-PnPTenantSyncClientRestriction
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $BlockMacSync,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DisableReportProblemDialog,
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.Guid]]
+        $DomainGuids,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Enable,
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        $ExcludedFileExtensions,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.GrooveBlockOption]
+        $GrooveBlockOption,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Set-PnPTermGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermGroup]]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
+        $TermStore,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Set-PnPTermSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
+        $Identity,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TermGroupPipeBind]
+        $TermGroup,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
+        $TermStore,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.String]
+        $Contact,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $CustomProperties,
+
+        [Parameter()]
+        [System.String]
+        $StakeholderToAdd,
+
+        [Parameter()]
+        [System.String]
+        $StakeholderToDelete,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsAvailableForTagging,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsOpenForTermCreation,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseForSiteNavigation,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseForFacetedNavigation,
+
+        [Parameter()]
+        [System.String]
+        $SetTargetPageForTerms,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RemoveTargetPageforTerms,
+
+        [Parameter()]
+        [System.String]
+        $SetCatalogItemPageForCategories,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RemoveCatalogItemPageForCategories,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPTheme
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='Specifies the Color Palette Url based on the site or server relative url')]
-    [string]
-    ${ColorPaletteUrl},
+    param(
+        [Parameter()]
+        [System.String]
+        $ColorPaletteUrl,
 
-    [Parameter(HelpMessage='Specifies the Font Scheme Url based on the site or server relative url')]
-    [string]
-    ${FontSchemeUrl},
+        [Parameter()]
+        [System.String]
+        $FontSchemeUrl,
 
-    [Parameter(HelpMessage='Specifies the Background Image Url based on the site or server relative url')]
-    [string]
-    ${BackgroundImageUrl},
+        [Parameter()]
+        [System.String]
+        $BackgroundImageUrl,
 
-    [Parameter(HelpMessage='true if the generated theme files should be placed in the root web, false to store them in this web. Default is false')]
-    [Obsolete('This parameter is obsolete and its usage has no effect. Generated theme files will be placed in the root web by default.')]
-    [switch]
-    ${ShareGenerated},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ShareGenerated,
 
-    [Parameter(HelpMessage='Resets subwebs to inherit the theme from the rootweb')]
-    [switch]
-    ${ResetSubwebsToInherit},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ResetSubwebsToInherit,
 
-    [Parameter(HelpMessage='Updates only the rootweb, even if subwebs are set to inherit the theme.')]
-    [switch]
-    ${UpdateRootWebOnly},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UpdateRootWebOnly,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPTraceLog
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='On', Mandatory=$true, HelpMessage='Turn on tracing to log file')]
-    [switch]
-    ${On},
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $On,
 
-    [Parameter(ParameterSetName='On', HelpMessage='The path and filename of the file to write the trace log to.')]
-    [string]
-    ${LogFile},
+        [Parameter()]
+        [System.String]
+        $LogFile,
 
-    [Parameter(ParameterSetName='On', HelpMessage='Turn on console trace output.')]
-    [switch]
-    ${WriteToConsole},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WriteToConsole,
 
-    [Parameter(ParameterSetName='On', HelpMessage='The level of events to capture. Possible values are ''Debug'', ''Error'', ''Warning'', ''Information''. Defaults to ''Information''.')]
-    [OfficeDevPnP.Core.Diagnostics.LogLevel]
-    ${Level},
+        [Parameter()]
+        [OfficeDevPnP.Core.Diagnostics.LogLevel]
+        $Level,
 
-    [Parameter(ParameterSetName='On', HelpMessage='If specified the trace log entries will be delimited with this value.')]
-    [string]
-    ${Delimiter},
+        [Parameter()]
+        [System.String]
+        $Delimiter,
 
-    [Parameter(ParameterSetName='On', HelpMessage='Indents in the tracelog will be with this amount of characters. Defaults to 4.')]
-    [int]
-    ${IndentSize},
+        [Parameter()]
+        [System.Int32]
+        $IndentSize,
 
-    [Parameter(ParameterSetName='On', HelpMessage='Auto flush the trace log. Defaults to true.')]
-    [bool]
-    ${AutoFlush},
+        [Parameter()]
+        [System.Boolean]
+        $AutoFlush,
 
-    [Parameter(ParameterSetName='Off', Mandatory=$true, HelpMessage='Turn off tracing to log file.')]
-    [switch]
-    ${Off})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Off,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
-function Set-PnPUnifiedGroup
+function Set-PnPUserOneDriveQuota
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The Identity of the Office 365 Group.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.UnifiedGroupPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [System.String]
+        $Account,
 
-    [Parameter(HelpMessage='The DisplayName of the group to set.')]
-    [string]
-    ${DisplayName},
+        [Parameter()]
+        [System.Int64]
+        $Quota,
 
-    [Parameter(HelpMessage='The Description of the group to set.')]
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.Int64]
+        $QuotaWarning,
 
-    [Parameter(HelpMessage='The array UPN values of owners to set to the group. Note: Will replace owners.')]
-    [string[]]
-    ${Owners},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
-    [Parameter(HelpMessage='The array UPN values of members to set to the group. Note: Will replace members.')]
-    [string[]]
-    ${Members},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
 
-    [Parameter(HelpMessage='Makes the group private when selected.')]
-    [switch]
-    ${IsPrivate},
-
-    [Parameter(HelpMessage='The path to the logo file of to set.')]
-    [string]
-    ${GroupLogoPath},
-
-    [Parameter(HelpMessage='Creates a MS Teams team associated with created group.')]
-    [switch]
-    ${CreateTeam})
-
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPUserProfileProperty
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The account of the user, formatted either as a login name, or as a claims identity, e.g. i:0#.f|membership|user@domain.com')]
-    [string]
-    ${Account},
-
-    [Parameter(Mandatory=$true, HelpMessage='The property to set, for instance SPS-Skills or SPS-Location')]
-    [string]
-    ${PropertyName},
-
-    [Parameter(ParameterSetName='Single', Mandatory=$true, HelpMessage='The value to set in the case of a single value property')]
-    [AllowEmptyString()]
-    [AllowNull()]
-    [string]
-    ${Value},
-
-    [Parameter(ParameterSetName='Multi', Mandatory=$true, HelpMessage='The values set in the case of a multi value property, e.g. "Value 1","Value 2"')]
-    [AllowEmptyString()]
-    [AllowNull()]
-    [string[]]
-    ${Values})
-
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Values
+    )
 }
 function Set-PnPView
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, HelpMessage='The Id, Title or Url of the list')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
-
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The Id, Title or instance of the view')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ViewPipeBind]
-    ${Identity},
-
-    [Parameter(HelpMessage='Hashtable of properties to update on the view. Use the syntax @{property1="value";property2="value"}.')]
-    [hashtable]
-    ${Values},
-
-    [Parameter(HelpMessage='An array of fields to use in the view. Notice that specifying this value will remove the existing fields')]
-    [string[]]
-    ${Fields},
-
-    [Parameter(HelpMessage='A valid XML fragment containing one or more Aggregations')]
-    [string]
-    ${Aggregations},
-
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
-
+    param(
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Values
+    )
 }
 function Set-PnPWeb
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='Sets the logo of the web to the current url. If you want to set the logo to a modern team site, use Set-PnPSite -LogoFilePath.')]
-    [string]
-    ${SiteLogoUrl},
+    param(
+        [Parameter()]
+        [System.String]
+        $SiteLogoUrl,
 
-    [string]
-    ${AlternateCssUrl},
+        [Parameter()]
+        [System.String]
+        $AlternateCssUrl,
 
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        $Title,
 
-    [string]
-    ${Description},
+        [Parameter()]
+        [System.String]
+        $Description,
 
-    [string]
-    ${MasterUrl},
+        [Parameter()]
+        [System.String]
+        $MasterUrl,
 
-    [string]
-    ${CustomMasterUrl},
+        [Parameter()]
+        [System.String]
+        $CustomMasterUrl,
 
-    [Microsoft.SharePoint.Client.HeaderLayoutType]
-    ${HeaderLayout},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $QuickLaunchEnabled,
 
-    [Microsoft.SharePoint.Client.SPVariantThemeType]
-    ${HeaderEmphasis},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $MembersCanShare,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $NoCrawl,
 
+        [Parameter()]
+        [Microsoft.SharePoint.Client.HeaderLayoutType]
+        $HeaderLayout,
+
+        [Parameter()]
+        [Microsoft.SharePoint.Client.SPVariantThemeType]
+        $HeaderEmphasis,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $NavAudienceTargetingEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $MegaMenuEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DisablePowerAutomate,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $CommentsOnSitePagesDisabled,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPWebhookSubscription
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The identity of the Webhook subscription to update')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebhookSubscriptionPipeBind]
-    ${Subscription},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebhookSubscriptionPipeBind]
+        $Subscription,
 
-    [Parameter(HelpMessage='The list object or name from which the Webhook subscription will be modified')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(HelpMessage='The URL of the Webhook endpoint that will be notified of the change')]
-    [string]
-    ${NotificationUrl},
+        [Parameter()]
+        [System.String]
+        $NotificationUrl,
 
-    [Parameter(HelpMessage='The date at which the Webhook subscription will expire. (Default: 6 months from today)')]
-    [datetime]
-    ${ExpirationDate},
+        [Parameter()]
+        [System.DateTime]
+        $ExpirationDate,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPWebPartProperty
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Full server relative url of the web part page, e.g. /sites/demo/sitepages/home.aspx')]
-    [Alias('PageUrl')]
-    [string]
-    ${ServerRelativePageUrl},
+    param(
+        [Parameter()]
+        [System.String]
+        $ServerRelativePageUrl,
 
-    [Parameter(Mandatory=$true, HelpMessage='The Guid of the web part')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${Identity},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $Identity,
 
-    [Parameter(Mandatory=$true, HelpMessage='Name of a single property to be set')]
-    [string]
-    ${Key},
+        [Parameter()]
+        [System.String]
+        $Key,
 
-    [Parameter(Mandatory=$true, HelpMessage='Value of the property to be set')]
-    [psobject]
-    ${Value},
+        [Parameter()]
+        [System.Management.Automation.PSObject]
+        $Value,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPWebPermission
 {
-    [CmdletBinding(DefaultParameterSetName='User')]
-param(
-    [Parameter(ParameterSetName='GroupByWebIdentity', Mandatory=$true, ValueFromPipeline=$true, HelpMessage='Identity/Id/Web object')]
-    [Parameter(ParameterSetName='UserByWebIdentity', Mandatory=$true, ValueFromPipeline=$true, HelpMessage='Identity/Id/Web object')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Identity,
 
-    [Parameter(ParameterSetName='GroupByWebUrl', Mandatory=$true, HelpMessage='The site relative url of the web, e.g. ''Subweb1''')]
-    [Parameter(ParameterSetName='UserByWebUrl', Mandatory=$true, HelpMessage='The site relative url of the web, e.g. ''Subweb1''')]
-    [string]
-    ${Url},
+        [Parameter()]
+        [System.String]
+        $Url,
 
-    [Parameter(ParameterSetName='Group', Mandatory=$true)]
-    [Parameter(ParameterSetName='GroupByWebIdentity', Mandatory=$true)]
-    [Parameter(ParameterSetName='GroupByWebUrl', Mandatory=$true)]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
-    ${Group},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Group,
 
-    [Parameter(ParameterSetName='User', Mandatory=$true)]
-    [Parameter(ParameterSetName='UserByWebIdentity', Mandatory=$true)]
-    [Parameter(ParameterSetName='UserByWebUrl', Mandatory=$true)]
-    [string]
-    ${User},
+        [Parameter()]
+        [System.String]
+        $User,
 
-    [Parameter(HelpMessage='The role that must be assigned to the group or user')]
-    [string[]]
-    ${AddRole},
+        [Parameter()]
+        [System.String[]]
+        $AddRole,
 
-    [Parameter(HelpMessage='The role that must be removed from the group or user')]
-    [string[]]
-    ${RemoveRole},
+        [Parameter()]
+        [System.String[]]
+        $RemoveRole,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPWebTheme
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='Specifies the Color Palette Url based on the site or server relative url')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ThemePipeBind]
-    ${Theme},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ThemePipeBind]
+        $Theme,
 
-    [Parameter(HelpMessage='The URL of the web to apply the theme to. If not specified it will default to the current web based upon the URL specified with Connect-PnPOnline.')]
-    [string]
-    ${WebUrl},
+        [Parameter()]
+        [System.String]
+        $WebUrl,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Set-PnPWikiPageContent
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='STRING', Mandatory=$true)]
-    [string]
-    ${Content},
+    param(
+        [Parameter()]
+        [System.String]
+        $Content,
 
-    [Parameter(ParameterSetName='FILE', Mandatory=$true)]
-    [string]
-    ${Path},
+        [Parameter()]
+        [System.String]
+        $Path,
 
-    [Parameter(ParameterSetName='FILE', Mandatory=$true, HelpMessage='Site Relative Page Url')]
-    [Parameter(ParameterSetName='STRING', Mandatory=$true, HelpMessage='Site Relative Page Url')]
-    [Alias('PageUrl')]
-    [string]
-    ${ServerRelativePageUrl},
+        [Parameter()]
+        [System.String]
+        $ServerRelativePageUrl,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Start-PnPWorkflowInstance
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='The workflow subscription to start')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WorkflowSubscriptionPipeBind]
-    ${Subscription},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WorkflowSubscriptionPipeBind]
+        $Subscription,
 
-    [Parameter(Mandatory=$true, Position=1, HelpMessage='The list item to start the workflow against')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
-    ${ListItem},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
+        $ListItem,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Stop-PnPWorkflowInstance
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='The instance to stop')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WorkflowInstancePipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WorkflowInstancePipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Forcefully terminate the workflow instead of cancelling. Works on errored and non-responsive workflows. Deletes all created tasks. Does not notify participants.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Submit-PnPSearchQuery
 {
-    [CmdletBinding(DefaultParameterSetName='Limit')]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Search query in Keyword Query Language (KQL).')]
-    [string]
-    ${Query},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Query,
 
-    [Parameter(ParameterSetName='Limit', HelpMessage='Search result item to start returning the results from. Useful for paging. Leave at 0 to return all results.')]
-    [int]
-    ${StartRow},
+        [Parameter()]
+        [System.Int32]
+        $StartRow,
 
-    [Parameter(ParameterSetName='Limit', HelpMessage='Maximum amount of search results to return. Default and max per page is 500 search results.')]
-    [ValidateRange(0, 500)]
-    [int]
-    ${MaxResults},
+        [Parameter()]
+        [System.Int32]
+        $MaxResults,
 
-    [Parameter(ParameterSetName='All', HelpMessage='Automatically page results until the end to get more than 500. Use with caution!')]
-    [switch]
-    ${All},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
 
-    [Parameter(HelpMessage='Specifies whether near duplicate items should be removed from the search results.')]
-    [bool]
-    ${TrimDuplicates},
+        [Parameter()]
+        [System.Boolean]
+        $TrimDuplicates,
 
-    [Parameter(HelpMessage='Extra query properties. Can for example be used for Office Graph queries.')]
-    [hashtable]
-    ${Properties},
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Properties,
 
-    [Parameter(HelpMessage='The list of refiners to be returned in a search result.')]
-    [string]
-    ${Refiners},
+        [Parameter()]
+        [System.String]
+        $Refiners,
 
-    [Parameter(HelpMessage='The locale for the query.')]
-    [int]
-    ${Culture},
+        [Parameter()]
+        [System.Int32]
+        $Culture,
 
-    [Parameter(HelpMessage='Specifies the query template that is used at run time to transform the query based on user input.')]
-    [string]
-    ${QueryTemplate},
+        [Parameter()]
+        [System.String]
+        $QueryTemplate,
 
-    [Parameter(HelpMessage='The list of properties to return in the search results.')]
-    [string[]]
-    ${SelectProperties},
+        [Parameter()]
+        [System.String[]]
+        $SelectProperties,
 
-    [Parameter(HelpMessage='The set of refinement filters used.')]
-    [string[]]
-    ${RefinementFilters},
+        [Parameter()]
+        [System.String[]]
+        $RefinementFilters,
 
-    [Parameter(HelpMessage='The list of properties by which the search results are ordered.')]
-    [hashtable]
-    ${SortList},
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $SortList,
 
-    [Parameter(HelpMessage='The identifier (ID) of the ranking model to use for the query.')]
-    [string]
-    ${RankingModelId},
+        [Parameter()]
+        [System.String]
+        $RankingModelId,
 
-    [Parameter(HelpMessage='Specifies the name of the client which issued the query.')]
-    [string]
-    ${ClientType},
+        [Parameter()]
+        [System.String]
+        $ClientType,
 
-    [Parameter(HelpMessage='Limit the number of items per the collapse specification. See https://docs.microsoft.com/en-us/sharepoint/dev/general-development/customizing-search-results-in-sharepoint#collapse-similar-search-results-using-the-collapsespecification-property for more information.')]
-    [string]
-    ${CollapseSpecification},
+        [Parameter()]
+        [System.String]
+        $CollapseSpecification,
 
-    [Parameter(HelpMessage='The keyword query’’s hidden constraints.')]
-    [string]
-    ${HiddenConstraints},
+        [Parameter()]
+        [System.String]
+        $HiddenConstraints,
 
-    [Parameter(HelpMessage='The identifier for the search query time zone.')]
-    [int]
-    ${TimeZoneId},
+        [Parameter()]
+        [System.Int32]
+        $TimeZoneId,
 
-    [Parameter(HelpMessage='Specifies whether the phonetic forms of the query terms are used to find matches.')]
-    [bool]
-    ${EnablePhonetic},
+        [Parameter()]
+        [System.Boolean]
+        $EnablePhonetic,
 
-    [Parameter(HelpMessage='Specifies whether stemming is enabled.')]
-    [bool]
-    ${EnableStemming},
+        [Parameter()]
+        [System.Boolean]
+        $EnableStemming,
 
-    [Parameter(HelpMessage='Specifies whether Query Rules are enabled for this query.')]
-    [bool]
-    ${EnableQueryRules},
+        [Parameter()]
+        [System.Boolean]
+        $EnableQueryRules,
 
-    [Parameter(HelpMessage='Specifies the identifier (ID or name) of the result source to be used to run the query.')]
-    [guid]
-    ${SourceId},
+        [Parameter()]
+        [System.Guid]
+        $SourceId,
 
-    [Parameter(HelpMessage='Determines whether Best Bets are enabled.')]
-    [bool]
-    ${ProcessBestBets},
+        [Parameter()]
+        [System.Boolean]
+        $ProcessBestBets,
 
-    [Parameter(HelpMessage='Determines whether personal favorites data is processed or not.')]
-    [bool]
-    ${ProcessPersonalFavorites},
+        [Parameter()]
+        [System.Boolean]
+        $ProcessPersonalFavorites,
 
-    [Parameter(HelpMessage='Specifies whether only relevant results are returned')]
-    [switch]
-    ${RelevantResults},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RelevantResults,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Submit-PnPTeamsChannelMessage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsTeamPipeBind]
+        $Team,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsChannelPipeBind]
+        $Channel,
+
+        [Parameter()]
+        [System.String]
+        $Message,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Model.Teams.TeamChannelMessageContentType]
+        $ContentType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Important,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Sync-PnPAppToTeams
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Specifies the Id of the Addin Instance')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
-    ${Identity})
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
+        $Identity,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Test-PnPListItemIsRecord
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID, Title or Url of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        $List,
 
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The ID of the listitem, or actual ListItem object')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
-    ${Identity},
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.ListItemPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Test-PnPOffice365GroupAliasIsUsed
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Specifies the alias of the group. Cannot contain spaces.')]
-    [string]
-    ${Alias})
+    param(
+        [Parameter()]
+        [System.String]
+        $Alias,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Test-PnPTenantTemplate
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The in-memory template to test')]
-    [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningHierarchy]
-    ${Template})
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningHierarchy]
+        $Template,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Uninstall-PnPApp
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Specifies the Id of the Addin Instance')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Defines which app catalog to use. Defaults to Tenant')]
-    [OfficeDevPnP.Core.Enums.AppCatalogScope]
-    ${Scope})
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.AppCatalogScope]
+        $Scope,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Uninstall-PnPAppInstance
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='Appinstance or Id of the addin to remove.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.AppPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.AppPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Do not ask for confirmation.')]
-    [switch]
-    ${Force},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web})
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
 }
 function Uninstall-PnPSolution
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='ID of the solution, from the solution manifest')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${PackageId},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $PackageId,
 
-    [Parameter(Mandatory=$true, HelpMessage='Filename of the WSP file to uninstall')]
-    [string]
-    ${PackageName},
+        [Parameter()]
+        [System.String]
+        $PackageName,
 
-    [Parameter(HelpMessage='Optional major version of the solution, defaults to 1')]
-    [int]
-    ${MajorVersion},
+        [Parameter()]
+        [System.Int32]
+        $MajorVersion,
 
-    [Parameter(HelpMessage='Optional minor version of the solution, defaults to 0')]
-    [int]
-    ${MinorVersion})
+        [Parameter()]
+        [System.Int32]
+        $MinorVersion,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Unpublish-PnPApp
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Specifies the Id of the Addin Instance')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Defines which app catalog to use. Defaults to Tenant')]
-    [OfficeDevPnP.Core.Enums.AppCatalogScope]
-    ${Scope})
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.AppCatalogScope]
+        $Scope,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Unregister-PnPHubSite
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='The site to unregister as a hubsite')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
-    ${Site})
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $Site,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Update-PnPApp
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Specifies the Id or an actual app metadata instance')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
+        $Identity,
 
-    [Parameter(HelpMessage='Defines which app catalog to use. Defaults to Tenant')]
-    [OfficeDevPnP.Core.Enums.AppCatalogScope]
-    ${Scope})
+        [Parameter()]
+        [OfficeDevPnP.Core.Enums.AppCatalogScope]
+        $Scope,
 
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 function Update-PnPSiteClassification
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='Settings', Mandatory=$true, HelpMessage='A settings object retrieved by Get-PnPSiteClassification')]
-    [OfficeDevPnP.Core.Framework.Graph.Model.SiteClassificationsSettings]
-    ${Settings},
+    param(
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Graph.Model.SiteClassificationsSettings]
+        $Settings,
 
-    [Parameter(ParameterSetName='Specific', HelpMessage='A list of classifications, separated by commas. E.g. "HBI","LBI","Top Secret"')]
-    [System.Collections.Generic.List[string]]
-    ${Classifications},
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        $Classifications,
 
-    [Parameter(ParameterSetName='Specific', HelpMessage='The default classification to be used. The value needs to be present in the list of possible classifications')]
-    [string]
-    ${DefaultClassification},
+        [Parameter()]
+        [System.String]
+        $DefaultClassification,
 
-    [Parameter(ParameterSetName='Specific', HelpMessage='The UsageGuidelinesUrl. Set to "" to clear.')]
-    [string]
-    ${UsageGuidelinesUrl})
+        [Parameter()]
+        [System.String]
+        $UsageGuidelinesUrl,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
+}
+function Update-PnPTeamsApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.TeamsAppPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Verbose,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Debug
+    )
 }
 #endregion
+
+
 #region PowerPlatforms
 function Add-AdminPowerAppsSyncUser
 {

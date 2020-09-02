@@ -110,6 +110,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PreviewImageAltText = "Office"
                     }
                 }
+                Mock -CommandName Get-PnPSiteScript -MockWith {
+                    return @{
+                        Title = "DSC Site Design"
+                        Id    = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                    }
+                }
 
                 Mock -CommandName Set-PnPSiteDesign -MockWith {
                     return $null

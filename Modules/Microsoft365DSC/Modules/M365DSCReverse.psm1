@@ -409,7 +409,7 @@ function Start-M365DSCConfigurationExtract
             {
                 if (!$AzureAutomation)
                 {
-                    $credsContent += "        " + (Resolve-Credentials $credential) + " = Get-Credential -Message `"Global Admin credentials`""
+                    $credsContent += "        " + (Resolve-Credentials $credential) + " = Get-Credential -Message `"Global Admin credentials`"`r`n"
                 }
                 else
                 {

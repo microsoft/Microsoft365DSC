@@ -446,10 +446,14 @@ function Set-TargetResource
 
         try
         {
-            Write-Verbose -Message "Assigning $($licenses.Count) licences to new user"
-            Set-AzureADUserLicense -ObjectId $UserPrincipalName `
-                -AssignedLicenses $licenses `
-                -ErrorAction SilentlyContinue
+            if ($null -ne $licenses -and `
+            ($licenses.AddLicenses.Length -gt 0 -or $licenses.RemoveLicenses.Length -gt 0))
+            {
+                Write-Verbose -Message "Assigning $($licenses.Count) licences to new user"
+                Set-AzureADUserLicense -ObjectId $UserPrincipalName `
+                    -AssignedLicenses $licenses `
+                    -ErrorAction SilentlyContinue
+            }
         }
         catch
         {
