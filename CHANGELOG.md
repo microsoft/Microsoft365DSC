@@ -2,6 +2,10 @@
 
 ## UNRELEASED
 
+* EXOApplicationAccessPolicy
+  * Added some error handling around the
+    Get-ApplicationAccessPolicy cmdlet
+    (Issue #702);
 * TeamsChannel
   * Fixed an error in the Export when trying to connect using
     only an Azure AD Application without any credentials
@@ -12,16 +16,16 @@
 * TeamsUser
   * Fixed an issue where for large tenants the Export could
     failed due to a percentage of completion greater than
-    100% for the Write-Progress.
-    (Issue #722)
+    100% for the Write-Progress
+    (Issue #722);
 * MISC
   * Fixed an issue where SPOHubSite was left selected in the
     Export GUI even when unselecting the entire SPO Workload
     (Issue #735);
   * Fixed an issue where if no Destination Path was provided
     after an export, it would fail. It now defaults to the
-    current location;
-    (Issue #698)
+    current location
+    (Issue #698);
 
 ## 1.20.902.1
 
