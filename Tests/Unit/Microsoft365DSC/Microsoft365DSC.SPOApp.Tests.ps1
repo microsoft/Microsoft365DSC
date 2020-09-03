@@ -149,6 +149,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Deployed = $true
                     }
                 }
+
+                Mock -CommandName Get-PnPFile -MockWith {
+                    return @{
+                    }
+                }
             }
 
             It "Should Reverse Engineer resource from the Export method" {

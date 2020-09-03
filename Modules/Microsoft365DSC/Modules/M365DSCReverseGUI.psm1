@@ -15,11 +15,7 @@ function SectionChanged
     {
         if ($pnlControl.GetType().ToString() -eq "System.Windows.Forms.Checkbox")
         {
-            # TODO remove exception after the SPO Management Shell bug is fixed;
-            if ($pnlControl.Name -ne 'chckSPOSite' -and $pnlControl.Name -ne 'chckSPOHubSite')
-            {
-                $pnlControl.Checked = $Control.Checked
-            }
+            $pnlControl.Checked = $Control.Checked
         }
     }
 }
@@ -513,26 +509,27 @@ function Show-M365DSCGUI
         $chckApplication.Top = 0
         $chckApplication.Height = 20
         $chckApplication.Width = 180
-        $chckApplication.Left = 455
+        $chckApplication.Left = 420
         $chckApplication.Text = "Application"
         $chckApplication.Font = [System.Drawing.Font]::new($chckApplication.Font.Name, 10, [System.Drawing.FontStyle]::Bold)
         $chckApplication.Add_Click( {
             if ($chckApplication.Checked)
             {
                 $txtApplicationId.Enabled = $true
-                $txtTenantId.Enabled = $true
             }
             else
             {
                 $txtApplicationId.Enabled = $false
-                $txtTenantId.Enabled = $false
             }
+            Set-M365DSCGUIResourcesAvailability -Credentials $chckCredential.Checked `
+                -Certificate $chckCertificate.Checked `
+                -Application $chckApplication.Checked
         })
 
         $panelMenu.Controls.Add($chckApplication)
         $lblApplicationId = New-Object System.Windows.Forms.Label
         $lblApplicationId.Text = "Application Id:"
-        $lblApplicationId.Top = 25
+        $lblApplicationId.Top = 20
         $lblApplicationId.Left = 455
         $lblApplicationId.Width = 80
         $lblApplicationId.TextAlign = [System.Drawing.ContentAlignment]::TopRight
@@ -547,23 +544,6 @@ function Show-M365DSCGUI
         $txtApplicationId.Font = [System.Drawing.Font]::new($txtApplicationId.Font.Name, 10)
         $panelMenu.Controls.Add($txtApplicationId)
 
-        $lblTenantId = New-Object System.Windows.Forms.Label
-        $lblTenantId.Text = "Tenant Id:"
-        $lblTenantId.Top = 50
-        $lblTenantId.Left = 455
-        $lblTenantId.Width = 80
-        $lblTenantId.TextAlign = [System.Drawing.ContentAlignment]::TopRight
-        $lblTenantId.Font = [System.Drawing.Font]::new($lblTenantId.Font.Name, 8)
-        $panelMenu.Controls.Add($lblTenantId)
-
-        $txtTenantId = New-Object System.Windows.Forms.Textbox
-        $txtTenantId.Top = 50
-        $txtTenantId.Enabled = $false
-        $txtTenantId.Left = 545
-        $txtTenantId.Width = 225
-        $txtTenantId.Font = [System.Drawing.Font]::new($txtTenantId.Font.Name, 10)
-        $panelMenu.Controls.Add($txtTenantId)
-
         $chckCertificate = New-Object System.Windows.Forms.CheckBox
         $chckCertificate.Top = 0
         $chckCertificate.Height = 20
@@ -577,13 +557,18 @@ function Show-M365DSCGUI
                 $txtCertPassword.Enabled = $true
                 $txtCertThumb.Enabled = $true
                 $txtCertFile.Enabled = $true
+                $txtTenantId.Enabled = $true
             }
             else
             {
                 $txtCertPassword.Enabled = $false
                 $txtCertThumb.Enabled = $false
                 $txtCertFile.Enabled = $false
+                $txtTenantId.Enabled = $false
             }
+            Set-M365DSCGUIResourcesAvailability -Credentials $chckCredential.Checked `
+                -Certificate $chckCertificate.Checked `
+                -Application $chckApplication.Checked
         })
         $panelMenu.Controls.Add($chckCertificate)
 
@@ -605,9 +590,10 @@ function Show-M365DSCGUI
         $panelMenu.Controls.Add($txtCertThumb)
 
         $lblCertPath = New-Object System.Windows.Forms.Label
+        $lblCertPath.AutoSize = $true
         $lblCertPath.Text = "File Path:"
         $lblCertPath.Top = 55
-        $lblCertPath.Left = 725
+        $lblCertPath.Left = 795
         $lblCertPath.Width = 120
         $lblCertPath.TextAlign = [System.Drawing.ContentAlignment]::TopRight
         $lblCertPath.Font = [System.Drawing.Font]::new($lblCertPath.Font.Name, 8)
@@ -623,16 +609,16 @@ function Show-M365DSCGUI
 
         $lblCertPassword = New-Object System.Windows.Forms.Label
         $lblCertPassword.Text = "Password:"
-        $lblCertPassword.Top = 85
-        $lblCertPassword.Left = 725
+        $lblCertPassword.Top = 25
+        $lblCertPassword.Left = 1050
         $lblCertPassword.Width = 120
         $lblCertPassword.TextAlign = [System.Drawing.ContentAlignment]::TopRight
         $lblCertPassword.Font = [System.Drawing.Font]::new($lblCertPassword.Font.Name, 8)
         $panelMenu.Controls.Add($lblCertPassword)
 
         $txtCertPassword = New-Object System.Windows.Forms.Textbox
-        $txtCertPassword.Top = 80
-        $txtCertPassword.Left = 850
+        $txtCertPassword.Top = 20
+        $txtCertPassword.Left = 1185
         $txtCertPassword.Width = 225
         $txtCertPassword.Enabled = $false
         $txtCertPassword.PasswordChar = "*"
@@ -644,14 +630,32 @@ function Show-M365DSCGUI
                 }
             })
         $panelMenu.Controls.Add($txtCertPassword)
+
+        $lblTenantId = New-Object System.Windows.Forms.Label
+        $lblTenantId.Text = "Tenant Id:"
+        $lblTenantId.Top = 55
+        $lblTenantId.Left = 1090
+        $lblTenantId.Width = 80
+        $lblTenantId.TextAlign = [System.Drawing.ContentAlignment]::TopRight
+        $lblTenantId.Font = [System.Drawing.Font]::new($lblTenantId.Font.Name, 8)
+        $panelMenu.Controls.Add($lblTenantId)
+
+        $txtTenantId = New-Object System.Windows.Forms.Textbox
+        $txtTenantId.Top = 50
+        $txtTenantId.Enabled = $false
+        $txtTenantId.Left = 1185
+        $txtTenantId.Width = 225
+        $txtTenantId.Font = [System.Drawing.Font]::new($txtTenantId.Font.Name, 10)
+        $panelMenu.Controls.Add($txtTenantId)
         #endregion
 
         $chckCredential = New-Object System.Windows.Forms.CheckBox
-        $chckCredential.Top = 0
+        $chckCredential.Top = 40
+        $chckCredential.Autosize = $true
         $chckCredential.Checked = $true
         $chckCredential.Height = 20
         $chckCredential.Width = 180
-        $chckCredential.Left = 1100
+        $chckCredential.Left = 420
         $chckCredential.Text = "Credentials"
         $chckCredential.Font = [System.Drawing.Font]::new($chckCredential.Font.Name, 10, [System.Drawing.FontStyle]::Bold)
         $chckCredential.Add_Click( {
@@ -665,37 +669,40 @@ function Show-M365DSCGUI
                 $txtTenantAdmin.Enabled = $false
                 $txtPassword.Enabled = $false
             }
+            Set-M365DSCGUIResourcesAvailability -Credentials $chckCredential.Checked `
+                -Certificate $chckCertificate.Checked `
+                -Application $chckApplication.Checked
         })
         $panelMenu.Controls.Add($chckCredential)
 
-        $lblFarmAccount = New-Object System.Windows.Forms.Label
-        $lblFarmAccount.Text = "Username:"
-        $lblFarmAccount.Top = 25
-        $lblFarmAccount.Left = 1100
-        $lblFarmAccount.AutoSize = $true
-        $lblFarmAccount.TextAlign = [System.Drawing.ContentAlignment]::TopRight
-        $lblFarmAccount.Font = [System.Drawing.Font]::new($lblFarmAccount.Font.Name, 8)
-        $panelMenu.Controls.Add($lblFarmAccount)
+        $lblTenantAdmin = New-Object System.Windows.Forms.Label
+        $lblTenantAdmin.Text = "Username:"
+        $lblTenantAdmin.Top = 60
+        $lblTenantAdmin.Left = 460
+        $lblTenantAdmin.Width = 80
+        $lblTenantAdmin.TextAlign = [System.Drawing.ContentAlignment]::TopRight
+        $lblTenantAdmin.Font = [System.Drawing.Font]::new($lblTenantAdmin.Font.Name, 8)
+        $panelMenu.Controls.Add($lblTenantAdmin)
 
         $txtTenantAdmin = New-Object System.Windows.Forms.Textbox
-        $txtTenantAdmin.Top = 20
-        $txtTenantAdmin.Left = 1160
+        $txtTenantAdmin.Top = 50
+        $txtTenantAdmin.Left = 545
         $txtTenantAdmin.Width = 225
         $txtTenantAdmin.Font = [System.Drawing.Font]::new($txtTenantAdmin.Font.Name, 10)
         $panelMenu.Controls.Add($txtTenantAdmin)
 
         $lblPassword = New-Object System.Windows.Forms.Label
         $lblPassword.Text = "Password:"
-        $lblPassword.Top = 55
-        $lblPassword.Left = 1100
-        $lblPassword.AutoSize = $true
+        $lblPassword.Top = 85
+        $lblPassword.Left = 460
+        $lblPassword.Width = 80
         $lblPassword.TextAlign = [System.Drawing.ContentAlignment]::TopRight
         $lblPassword.Font = [System.Drawing.Font]::new($lblPassword.Font.Name, 8)
         $panelMenu.Controls.Add($lblPassword)
 
         $txtPassword = New-Object System.Windows.Forms.Textbox
-        $txtPassword.Top = 50
-        $txtPassword.Left = 1160
+        $txtPassword.Top = 80
+        $txtPassword.Left = 545
         $txtPassword.Width = 225
         $txtPassword.PasswordChar = "*"
         $txtPassword.Font = [System.Drawing.Font]::new($txtPassword.Font.Name, 10)
@@ -710,7 +717,7 @@ function Show-M365DSCGUI
         $btnExtract = New-Object System.Windows.Forms.Button
         $btnExtract.Width = 178
         $btnExtract.Height = 70
-        $btnExtract.Top = 0
+        $btnExtract.Top = 5
         $btnExtract.Left = $form.Width - 200
         $btnExtract.BackColor = [System.Drawing.Color]::ForestGreen
         $btnExtract.ForeColor = [System.Drawing.Color]::White
@@ -722,7 +729,7 @@ function Show-M365DSCGUI
                 {
                     foreach ($checkbox in ($panel.Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Checkbox" }))
                     {
-                        if ($checkbox.Checked)
+                        if ($checkbox.Checked -and $checkbox.Enabled)
                         {
                             $SelectedComponents += $checkbox.Name.Replace("chck", "")
                         }
@@ -774,6 +781,10 @@ function Show-M365DSCGUI
         $form.ActiveControl = $txtTenantAdmin
         $form.Text = "Microsoft365DSC - Extract Configuration"
         $form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
+        $Global:M365DSCExportGui = $form
+        Set-M365DSCGUIResourcesAvailability -Credentials $chckCredential.Checked `
+                -Certificate $chckCertificate.Checked `
+                -Application $chckApplication.Checked
         $return = $form.ShowDialog()
     }
     catch
@@ -840,4 +851,89 @@ function SelectComponentsForMode
 
         }
     }
+}
+
+function Set-M365DSCGUIResourcesAvailability
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Boolean]
+        $Credentials,
+
+        [Parameter(Mandatory = $true)]
+        [System.Boolean]
+        $Certificate,
+
+        [Parameter(Mandatory = $true)]
+        [System.Boolean]
+        $Application
+    )
+
+    $AuthMethods = @()
+    $controlCredentials = @()
+    if ($Credentials)
+    {
+        $AuthMethods += "Credentials"
+    }
+    if ($Certificate)
+    {
+        $AuthMethods += "Certificate"
+    }
+    if ($Application)
+    {
+        $AuthMethods += "Application"
+    }
+
+    $allSelectedControls = Get-M365DSCComponentsForAuthenticationType -AuthenticationMethod $AuthMethods
+
+    $allControls = Get-M365DSCExportGuiAllControls -Control $Global:M365DSCExportGUI
+
+    foreach ($control in $allControls)
+    {
+        $chck = ([System.Windows.Forms.CheckBox]$control)
+        $controlName = $chck.Name
+        if ($allSelectedControls -contains $controlName.Replace("chck", ""))
+        {
+            $control.Enabled = $true
+        }
+        else
+        {
+            $control.Enabled = $false
+        }
+    }
+}
+
+function Get-M365DSCExportGUIAllControls
+{
+    [CmdletBinding()]
+    [OutputType([System.Windows.Forms.Control[]])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Windows.Forms.Control]
+        $Control
+    )
+
+    $result = @()
+    foreach ($control in $Control.Controls)
+    {
+        if ($control.GetType().ToString() -eq 'System.Windows.Forms.CheckBox')
+        {
+            $controlName = ([System.Windows.Forms.CheckBox]$control).Name
+            if ($controlName -like 'chckAAD*' -or `
+            $controlName -like 'chckEXO*' -or `
+            $controlName -like 'chckO365*' -or `
+            $controlName -like 'chckOD*' -or `
+            $controlName -like 'chckPP*' -or `
+            $controlName -like 'chckPlanner*' -or `
+            $controlName -like 'chckSC*' -or `
+            $controlName -like 'chckSPO*' -or `
+            $controlName -like 'chckTeams*')
+            {
+                $result += $control
+            }
+        }
+        Get-M365DSCExportGUIAllControls -Control $control
+    }
+    return $result
 }

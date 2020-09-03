@@ -32,6 +32,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
+            Mock -CommandName Grant-PnPHubSiteRights -MockWith {
+
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credential"
             }

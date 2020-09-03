@@ -275,7 +275,7 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
-    $AvailabilityConfig = Get-AvailabilityConfig
+    $AvailabilityConfig = Get-AvailabilityConfig -ErrorAction SilentlyContinue
 
     if ($null -eq $AvailabilityConfig)
     {

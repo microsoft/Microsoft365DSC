@@ -6,7 +6,7 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Export', 'Purge', 'Retention')]
+        [ValidateSet('Export', 'Preview', 'Purge', 'Retention')]
         $Action,
 
         [Parameter(Mandatory = $true)]
@@ -52,7 +52,6 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $VerbosePreference = "Continue"
     Write-Verbose -Message "Getting configuration of SCComplianceSearchAction for $SearchName - $Action"
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -148,7 +147,7 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Export', 'Purge', 'Retention')]
+        [ValidateSet('Export', 'Preview', 'Purge', 'Retention')]
         $Action,
 
         [Parameter(Mandatory = $true)]
@@ -301,7 +300,7 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Export', 'Purge', 'Retention')]
+        [ValidateSet('Export', 'Preview', 'Purge', 'Retention')]
         $Action,
 
         [Parameter(Mandatory = $true)]
@@ -347,7 +346,6 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $VerbosePreference = "Continue"
     Write-Verbose -Message "Testing configuration of SCComplianceSearchAction"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -481,7 +479,7 @@ function Get-ResultProperty
     )
 
     $start = $ResultString.IndexOf($PropertyName) + $PropertyName.Length + 2
-    if ($start -lt 0 -or $start -gt $Result.Length)
+    if ($start -lt 0 -or $start -gt $ResultString.Length)
     {
         return $null
     }

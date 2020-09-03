@@ -207,7 +207,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
+                Test-TargetResource @testParams | Should -Be $true
             }
 
             It 'Should return Present from the Get method' {

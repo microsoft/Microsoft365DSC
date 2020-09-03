@@ -133,7 +133,8 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Teams Guest Messaging settings"
-
+    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+        -InboundParameters $PSBoundParameters
     # Check that at least one optional parameter is specified
     $inputValues = $PSBoundParameters
     $inputValues.Remove("GlobalAdminAccount") | Out-Null
@@ -161,8 +162,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
-        -InboundParameters $PSBoundParameters
+
 
     $SetParams = $PSBoundParameters
     $SetParams.Remove("GlobalAdminAccount") | Out-Null

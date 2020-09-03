@@ -2,11 +2,63 @@
 
 ## UNRELEASED
 
+* EXOApplicationAccessPolicy
+  * Added some error handling around the
+    Get-ApplicationAccessPolicy cmdlet
+    (Issue #702);
+*EXOSharedMailbox
+  * Fixed an issue where Aliases were not properly removed
+    (Issue #749);
+* TeamsChannel
+  * Fixed an error in the Export when trying to connect using
+    only an Azure AD Application without any credentials
+    (Issue #754);
+* TeamsClientConfiguration
+  * Added support for the AllowEgnyte property
+  (Issue #744);
+* TeamsUser
+  * Fixed an issue where for large tenants the Export could
+    failed due to a percentage of completion greater than
+    100% for the Write-Progress
+    (Issue #722);
+* MISC
+  * Fixed an issue where SPOHubSite was left selected in the
+    Export GUI even when unselecting the entire SPO Workload
+    (Issue #735);
+  * Fixed an issue where if no Destination Path was provided
+    after an export, it would fail. It now defaults to the
+    current location
+    (Issue #698);
+
+## 1.20.902.1
+
+* O365User
+  * Fixed an issue where we were trying to assign an empty
+    license to a user if an empty array was passed for
+    LicenseAssignment.
+* SCComplianceSearchAction
+  * Added 'Preview' as a supported value for Action;
+* ReverseDSC
+  * Fixed an issue where a newline was missing in the
+    credentials section when a certificate password was
+    specified;
 * MISC
   * Added a new Assert-M365DSCBlueprint function to generate
     discrepency report between export of tenant and a BluePrint;
 * Metadata
   * Updated DSCParser Module to version 1.2.0.0;
+  * Updated Microsoft.Graph.Authentication Module to version
+    0.9.1;
+  * Updated Microsoft.Graph.Groups.Planner Module to version
+    0.9.1;
+  * Updated Microsoft.Graph.Identity.ConditionalAccess Module
+    to version 0.9.1;
+  * Updated Microsoft.Graph.Planner Module to version
+    0.9.1;
+  * Updated Microsoft.PowerApps.Administration.PowerShell Module
+    to version 0.9.1;
+  * Updated SharePointPnPPowerShellOnline Module to version
+    3.24.2008.1;
 
 ## 1.20.805.1
 

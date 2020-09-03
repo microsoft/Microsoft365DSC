@@ -1711,6 +1711,29 @@ function Test-M365DSCDependenciesForNewVersions
     }
 }
 
+function Update-M365DSCDependencies
+{
+    [CmdletBinding()]
+    $InformationPreference = 'Continue'
+    $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
+    $manifest = Import-PowerShellDataFile "$currentPath/Microsoft365DSC.psd1"
+    $dependencies = $manifest.RequiredModules
+    $i = 1
+    foreach ($dependency in $dependencies)
+    {
+        Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
+        try
+        {
+            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force
+        }
+        catch
+        {
+            Write-Information -MessageData "Could not update {$($dependency.ModuleName)}"
+        }
+        $i++
+    }
+}
+
 function Set-M365DSCAgentCertificateConfiguration
 {
     [CmdletBinding()]
@@ -2133,39 +2156,47 @@ function Get-M365DSCComponentsForAuthenticationType
     [CmdletBinding()]
     [OutputType([System.String[]])]
     param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
+        [Parameter()]
+        [System.String[]]
         [ValidateSet('Application', 'Certificate', 'Credentials')]
         $AuthenticationMethod
     )
 
-    $modules = Get-ChildItem ".\..\DSCResources" -Recurse -Filter '*.psm1'
+    $modules = Get-ChildItem -Path ($PSScriptRoot + "\..\DSCResources\") -Recurse -Filter '*.psm1'
     $Components = @()
     foreach ($resource in $modules)
     {
         Import-Module $resource.FullName -Force
         $parameters = (Get-command 'Set-TargetResource').Parameters.Keys
 
-        switch ($AuthenticationMethod)
+        # Case - Resource only supports AppID & GlobalAdmin
+        if ($AuthenticationMethod.Contains("Application") -and `
+            $AuthenticationMethod.Contains("Credentials") -and `
+           ($parameters.Contains("ApplicationId") -and `
+            $parameters.Contains("GlobalAdminAccount") -and `
+            -not $parameters.Contains('CertificateThumbprint') -and `
+            -not $parameters.Contains('CertificatePath') -and `
+            -not $parameters.Contains('CertificatePassword') -and `
+            -not $parameters.Contains('TenantId')))
         {
-            'Application' {
-                if ($parameters.Contains("ApplicationId") -and -not $parameters.Contains('CertificateThumbprint'))
-                {
-                    $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
-                }
-            }
-            'Certificate' {
-                if ($parameters.Contains('CertificateThumbprint'))
-                {
-                    $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
-                }
-            }
-            'Credentials' {
-                if (-not $parameters.Contains("ApplicationId") -and -not $parameters.Contains('CertificateThumbprint'))
-                {
-                    $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
-                }
-            }
+            $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+        }
+
+        #Case - Resource certificate info and TenantId
+        elseif ($AuthenticationMethod.Contains("Certificate") -and `
+            ($parameters.Contains('CertificateThumbprint') -or `
+            $parameters.Contains('CertificatePath') -or `
+            $parameters.Contains('CertificatePassword')) -and `
+            $parameters.Contains('TenantId'))
+        {
+            $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+        }
+
+        # Case - Resource contains GlobalAdminAccount
+        elseif ($AuthenticationMethod.Contains("Credentials") -and `
+            $parameters.Contains('GlobalAdminAccount'))
+        {
+            $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
         }
     }
     return $Components

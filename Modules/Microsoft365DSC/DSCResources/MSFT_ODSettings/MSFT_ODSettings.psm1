@@ -338,7 +338,7 @@ function Set-TargetResource
     }
     if ($CurrentParameters.ContainsKey("DomainGuids"))
     {
-        $Options.Add("DomainGuids", $CurrentParameters.DomainGuids)
+        $Options.Add("DomainGuids", [System.Guid[]]$CurrentParameters.DomainGuids)
         $CurrentParameters.Remove("DomainGuids")| Out-Null
     }
     if ($CurrentParameters.ContainsKey("DisableReportProblemDialog"))
@@ -378,7 +378,7 @@ function Set-TargetResource
     if ($Options.ContainsKey("BlockMacSync") -and $Options.ContainsKey("DomainGuids"))
     {
         Write-Verbose -Message "Updating BlockMacSync {$($Options.BlockMacSync)}"
-        Set-PnPTenantSyncClientRestriction -BlockMacSync $Options.BlockMacSync -DomainGuids $Options.DomainGuids -Enable:$true | Out-Null
+        Set-PnPTenantSyncClientRestriction -BlockMacSync:$Options.BlockMacSync -DomainGuids $Options.DomainGuids -Enable:$true | Out-Null
     }
     elseif ($Options.ContainsKey("DomainGuids") -and ($Options.ContainsKey("BlockMacSync") -eq $false))
     {
