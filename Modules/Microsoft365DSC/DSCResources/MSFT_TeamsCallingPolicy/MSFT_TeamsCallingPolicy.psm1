@@ -38,6 +38,10 @@ function Get-TargetResource
         $PreventTollBypass,
 
         [Parameter()]
+        [System.Boolean]
+        $AllowWebPSTNCalling,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('Enabled', 'Disabled')]
         $BusyOnBusyEnabledType = 'Enabled',
@@ -87,6 +91,7 @@ function Get-TargetResource
         AllowCallForwardingToUser  = $policy.AllowCallForwardingToUser
         AllowCallForwardingToPhone = $policy.AllowCallForwardingToPhone
         PreventTollBypass          = $policy.PreventTollBypass
+        AllowWebPSTNCalling        = $policy.AllowWebPSTNCalling
         BusyOnBusyEnabledType      = $policy.BusyOnBusyEnabledType
         Ensure                     = 'Present'
         GlobalAdminAccount         = $GlobalAdminAccount
@@ -130,6 +135,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $PreventTollBypass,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWebPSTNCalling,
 
         [Parameter()]
         [System.String]
@@ -223,6 +232,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $PreventTollBypass,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWebPSTNCalling,
 
         [Parameter()]
         [System.String]
