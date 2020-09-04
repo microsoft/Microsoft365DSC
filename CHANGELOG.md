@@ -22,6 +22,10 @@
     100% for the Write-Progress
     (Issue #722);
 * MISC
+  * Fixed an issue where the OD checkbox was always disabled
+    in the GUI;
+  * Changed the logic of the Unselect All button in the GUI
+    so that it doesn't unselect the authentication checkboxes;
   * Fixed an issue where SPOHubSite was left selected in the
     Export GUI even when unselecting the entire SPO Workload
     (Issue #735);
@@ -29,6 +33,8 @@
     after an export, it would fail. It now defaults to the
     current location
     (Issue #698);
+* DEPENDENCIES
+  * MSCloudLoginAssistant Updated to 1.0.33;
 
 ## 1.20.902.1
 

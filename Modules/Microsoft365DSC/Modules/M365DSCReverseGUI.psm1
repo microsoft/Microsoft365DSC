@@ -261,8 +261,7 @@ function Show-M365DSCGUI
         $chckAllOD = New-Object System.Windows.Forms.CheckBox
         $chckAllOD.Left = $fourthColumnLeft + 280
         $chckAllOD.Top = $topBannerHeight + 40
-        $chckAllOD.Enabled = $false #TODO - Reactivate after SPO Mgmt Shell bug fix
-        $chckAllOD.Checked = $false #TODO - Reactivate after SPO Mgmt Shell bug fix
+        $chckAllOD.Checked = $true
         $chckAllOD.AutoSize = $true
         $chckAllOD.Add_CheckedChanged( { SectionChanged -Control $chckAllOD -Panel $pnlOD })
         $pnlMain.Controls.Add($chckAllOD)
@@ -510,6 +509,7 @@ function Show-M365DSCGUI
         $chckApplication.Height = 20
         $chckApplication.Width = 180
         $chckApplication.Left = 420
+        $chckApplication.Name = "chckApplication"
         $chckApplication.Text = "Application"
         $chckApplication.Font = [System.Drawing.Font]::new($chckApplication.Font.Name, 10, [System.Drawing.FontStyle]::Bold)
         $chckApplication.Add_Click( {
@@ -547,6 +547,7 @@ function Show-M365DSCGUI
         $chckCertificate = New-Object System.Windows.Forms.CheckBox
         $chckCertificate.Top = 0
         $chckCertificate.Height = 20
+        $chckCertificate.Name = "chckCertificate"
         $chckCertificate.Width = 180
         $chckCertificate.Left = 780
         $chckCertificate.Text = "Certificate"
@@ -656,6 +657,7 @@ function Show-M365DSCGUI
         $chckCredential.Height = 20
         $chckCredential.Width = 180
         $chckCredential.Left = 420
+        $chckCredential.Name = "chckCredential"
         $chckCredential.Text = "Credentials"
         $chckCredential.Font = [System.Drawing.Font]::new($chckCredential.Font.Name, 10, [System.Drawing.FontStyle]::Bold)
         $chckCredential.Add_Click( {
@@ -815,7 +817,10 @@ function SelectComponentsForMode
         {
             foreach ($control in ([System.Windows.Forms.Panel]$parent).Controls)
             {
-                if ($control.GetType().Name -eq 'Checkbox')
+                if ($control.GetType().Name -eq 'Checkbox' -and `
+                -not($control.Name -eq 'chckCredential' -or `
+                     $control.Name -eq 'chckApplication' -or `
+                     $control.Name -eq 'chckCertificate'))
                 {
                     try
                     {
