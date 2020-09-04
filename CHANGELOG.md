@@ -33,6 +33,8 @@
     after an export, it would fail. It now defaults to the
     current location
     (Issue #698);
+* DEPENDENCIES
+  * MSCloudLoginAssistant Updated to 1.0.33;
 
 ## 1.20.902.1
 
