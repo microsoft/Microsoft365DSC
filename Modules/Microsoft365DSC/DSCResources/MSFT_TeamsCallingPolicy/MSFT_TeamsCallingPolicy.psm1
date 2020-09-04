@@ -9,6 +9,10 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
         [System.Boolean]
         $AllowPrivateCalling,
 
@@ -90,6 +94,7 @@ function Get-TargetResource
         AllowDelegation            = $policy.AllowDelegation
         AllowCallForwardingToUser  = $policy.AllowCallForwardingToUser
         AllowCallForwardingToPhone = $policy.AllowCallForwardingToPhone
+        Description                = $policy.Description
         PreventTollBypass          = $policy.PreventTollBypass
         AllowWebPSTNCalling        = $policy.AllowWebPSTNCalling
         BusyOnBusyEnabledType      = $policy.BusyOnBusyEnabledType
@@ -106,6 +111,10 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Description,
 
         [Parameter()]
         [System.Boolean]
@@ -203,6 +212,10 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Description,
 
         [Parameter()]
         [System.Boolean]

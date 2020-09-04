@@ -10,7 +10,8 @@
   * Fixed an issue where Aliases were not properly removed
     (Issue #749);
 * TeamsCallingPolicy
-  * Added support for the AllowWebPSTNCalling property;
+  * Added support for the AllowWebPSTNCalling and Description
+    properties;
 * TeamsChannel
   * Fixed an error in the Export when trying to connect using
     only an Azure AD Application without any credentials
