@@ -9,6 +9,10 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
         [System.Boolean]
         $AllowPrivateCalling,
 
@@ -36,6 +40,10 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $PreventTollBypass,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWebPSTNCalling,
 
         [Parameter()]
         [System.String]
@@ -86,7 +94,9 @@ function Get-TargetResource
         AllowDelegation            = $policy.AllowDelegation
         AllowCallForwardingToUser  = $policy.AllowCallForwardingToUser
         AllowCallForwardingToPhone = $policy.AllowCallForwardingToPhone
+        Description                = $policy.Description
         PreventTollBypass          = $policy.PreventTollBypass
+        AllowWebPSTNCalling        = $policy.AllowWebPSTNCalling
         BusyOnBusyEnabledType      = $policy.BusyOnBusyEnabledType
         Ensure                     = 'Present'
         GlobalAdminAccount         = $GlobalAdminAccount
@@ -101,6 +111,10 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Description,
 
         [Parameter()]
         [System.Boolean]
@@ -130,6 +144,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $PreventTollBypass,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWebPSTNCalling,
 
         [Parameter()]
         [System.String]
@@ -196,6 +214,10 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
         [System.Boolean]
         $AllowPrivateCalling,
 
@@ -223,6 +245,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $PreventTollBypass,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWebPSTNCalling,
 
         [Parameter()]
         [System.String]
