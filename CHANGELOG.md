@@ -39,7 +39,9 @@
   * Fixed issue SCSensitivityLabel on EncryptionRightsDefinitions parameters
     format (Issue #758)
 * DEPENDENCIES
-  * MSCloudLoginAssistant Updated to 1.0.33;
+  * MSCloudLoginAssistant Updated to 1.0.34;
+  * Microsoft.PowerApps.Administration.PowerShell Updated to 2.0.77;
+  * SharePointPnPPowerShellOnline Updated to 3.25.2009.1;
 
 ## 1.20.902.1
 
