@@ -36,6 +36,8 @@
     after an export, it would fail. It now defaults to the
     current location
     (Issue #698);
+  * Fixed issue SCSensitivityLabel on EncryptionRightsDefinitions parameters
+    format (Issue #758)
 * DEPENDENCIES
   * MSCloudLoginAssistant Updated to 1.0.33;
 

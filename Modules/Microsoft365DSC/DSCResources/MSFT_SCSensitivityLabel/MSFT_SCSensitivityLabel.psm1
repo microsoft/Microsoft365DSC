@@ -256,6 +256,10 @@ function Get-TargetResource
         {
             $advancedSettingsValue = Convert-StringToAdvancedSettings -AdvancedSettings $label.Settings
         }
+        if($null -ne $label.EncryptionRightsDefinitions)
+        {
+            $EncryptionRightsDefinitionsValue = Convert-EncryptionRightDefinition -RightsDefinition $label.EncryptionRightsDefinitions
+        }
         Write-Verbose "Found existing Sensitivity Label $($Name)"
         $result = @{
             Name                                           = $label.Name
@@ -296,7 +300,7 @@ function Get-TargetResource
             EncryptionOfflineAccessDays                    = $label.EncryptionOfflineAccessDays
             EncryptionPromptUser                           = $label.EncryptionPromptUser
             EncryptionProtectionType                       = $label.EncryptionProtectionType
-            EncryptionRightsDefinitions                    = $label.EncryptionRightsDefinitions
+            EncryptionRightsDefinitions                    = $EncryptionRightsDefinitionsValue
             EncryptionRightsUrl                            = $label.EncryptionRightsUrl
             EncryptionTemplateId                           = $label.EncryptionTemplateId
             SiteAndGroupProtectionAllowAccessToGuestUsers  = $label.SiteAndGroupProtectionAllowAccessToGuestUsers
@@ -1033,6 +1037,28 @@ function Convert-CIMToAdvancedSettings
     return $entry
 }
 
+function Convert-EncryptionRightDefinition
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    Param(
+        [parameter(Mandatory = $true)]
+        [System.String]
+        $RightsDefinition
+    )
+
+    $EncryptionRights = $RightsDefinition | ConvertFrom-Json
+    foreach ($right in $EncryptionRights)
+    {
+        $StringContent += "$($right.Identity):$($right.Rights);"
+    }
+    if ($StringContent.EndsWith(";"))
+    {
+        $StringContent = $StringContent.Substring(0,($StringContent.Length-1))
+    }
+    return $StringContent
+
+}
 
 function Convert-CIMToLocaleSettings
 {
