@@ -367,7 +367,10 @@ function Export-TargetResource
             $content += "        TeamsChannel " + (New-GUID).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            if ($ConnectionMode -eq 'Credential')
+            {
+                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            }
             $content += "        }`r`n"
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckMark

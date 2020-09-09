@@ -1,5 +1,48 @@
 # Change log for Microsoft365DSC
 
+## 1.20.909.1
+
+* EXOApplicationAccessPolicy
+  * Added some error handling around the
+    Get-ApplicationAccessPolicy cmdlet
+    (Issue #702);
+*EXOSharedMailbox
+  * Fixed an issue where Aliases were not properly removed
+    (Issue #749);
+* TeamsCallingPolicy
+  * Added support for the AllowWebPSTNCalling and Description
+    properties;
+* TeamsChannel
+  * Fixed an error in the Export when trying to connect using
+    only an Azure AD Application without any credentials
+    (Issue #754);
+* TeamsClientConfiguration
+  * Added support for the AllowEgnyte property
+  (Issue #744);
+* TeamsUser
+  * Fixed an issue where for large tenants the Export could
+    failed due to a percentage of completion greater than
+    100% for the Write-Progress
+    (Issue #722);
+* MISC
+  * Fixed an issue where the OD checkbox was always disabled
+    in the GUI;
+  * Changed the logic of the Unselect All button in the GUI
+    so that it doesn't unselect the authentication checkboxes;
+  * Fixed an issue where SPOHubSite was left selected in the
+    Export GUI even when unselecting the entire SPO Workload
+    (Issue #735);
+  * Fixed an issue where if no Destination Path was provided
+    after an export, it would fail. It now defaults to the
+    current location
+    (Issue #698);
+  * Fixed issue SCSensitivityLabel on EncryptionRightsDefinitions parameters
+    format (Issue #758)
+* DEPENDENCIES
+  * MSCloudLoginAssistant Updated to 1.0.34;
+  * Microsoft.PowerApps.Administration.PowerShell Updated to 2.0.77;
+  * SharePointPnPPowerShellOnline Updated to 3.25.2009.1;
+
 ## 1.20.902.1
 
 * O365User

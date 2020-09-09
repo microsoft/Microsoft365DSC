@@ -218,18 +218,38 @@ function Set-TargetResource
         $diff = Compare-Object -ReferenceObject $current -DifferenceObject $desired
         if ($diff)
         {
+            # Add Aliases
             Write-Verbose -Message "Updating the list of Aliases for the Shared Mailbox '$($DisplayName)'"
             $emails = ""
-            foreach ($alias in $Aliases)
+            $aliasesToAdd = $diff | Where-Object -FilterScript {$_.SideIndicator -eq '=>'}
+            if ($null -ne $aliasesToAdd)
             {
-                $emails += $alias + ","
-            }
-            $emails += $PrimarySMTPAddress
-            $proxyAddresses = $emails -Split ','
-            $CurrentParameters.Aliases = $proxyAddresses
+                $emailsToAdd = ''
+                foreach ($alias in $aliasesToAdd)
+                {
+                    $emailsToAdd += $alias.InputObject + ","
+                }
+                $emailsToAdd += $PrimarySMTPAddress
+                $proxyAddresses = $emailsToAdd -Split ','
 
-            Write-Verbose -Message "Adding the following email aliases: $($emails)"
-            Set-Mailbox -Identity $DisplayName -EmailAddresses @{add = $Aliases }
+                Write-Verbose -Message "Adding the following email aliases: $emailsToAdd"
+                Set-Mailbox -Identity $DisplayName -EmailAddresses @{add = $proxyAddresses }
+            }
+            # Remove Aliases
+            $aliasesToRemove = $diff | Where-Object -FilterScript {$_.SideIndicator -eq '<='}
+            if ($null -ne $aliasesToRemove)
+            {
+                $emailsToRemoved = ''
+                foreach ($alias in $aliasesToRemove)
+                {
+                    $emailsToRemoved += $alias.InputObject + ","
+                }
+                $emailsToRemoved += $PrimarySMTPAddress
+                $proxyAddresses = $emailsToRemoved -Split ','
+
+                Write-Verbose -Message "Removing the following email aliases: $emailsToRemoved"
+                Set-Mailbox -Identity $DisplayName -EmailAddresses @{remove = $proxyAddresses }
+            }
         }
     }
 }
