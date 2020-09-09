@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-## UNRELEASED
+## 1.20.909.1
 
 * EXOApplicationAccessPolicy
   * Added some error handling around the
