@@ -821,10 +821,6 @@ function Export-M365DSCConfiguration
         $TenantId,
 
         [Parameter()]
-        [System.string]
-        $ApplicationSecret,
-
-        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
@@ -877,7 +873,6 @@ function Export-M365DSCConfiguration
                 -ConfigurationName $ConfigurationName `
                 -ApplicationId $ApplicationId `
                 -TenantId $TenantId `
-                -ApplicationSecret $ApplicationSecret `
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
@@ -893,7 +888,6 @@ function Export-M365DSCConfiguration
                 -ConfigurationName $ConfigurationName `
                 -ApplicationId $ApplicationId `
                 -TenantId $TenantId `
-                -ApplicationSecret $ApplicationSecret `
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
@@ -909,7 +903,6 @@ function Export-M365DSCConfiguration
                 -ConfigurationName $ConfigurationName `
                 -ApplicationId $ApplicationId `
                 -TenantId $TenantId `
-                -ApplicationSecret $ApplicationSecret `
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
@@ -2201,4 +2194,21 @@ function Get-M365DSCComponentsForAuthenticationType
         }
     }
     return $Components
+}
+
+function Get-M365DSCAllResources
+{
+    [CmdletBinding()]
+    [OutputType([System.String[]])]
+    [CmdletBinding()]
+    param ()
+
+    $allResources = Get-ChildItem -Path ($PSScriptRoot + "\..\DSCResources\") -Recurse -Filter '*.psm1'
+    $result = @()
+    foreach ($resource in $allResources)
+    {
+        $result += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+    }
+
+    return $result
 }
