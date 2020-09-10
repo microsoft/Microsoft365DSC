@@ -307,7 +307,18 @@ function Export-TargetResource
     }
     else
     {
-        $MaxProcesses = $instances.Length
+        try
+        {
+            $MaxProcesses = $instances.Length
+        }
+        catch
+        {
+            if ($MaxProcesses -eq 0 -or $null -eq $MaxProcesses)
+            {
+                $MaxProcesses = 1
+            }
+        }
+
         $batchSize = 1
     }
 
@@ -451,7 +462,15 @@ function Export-TargetResource
         $i++
     }
 
-    Write-Host "    `r`nBroke extraction process down into {$MaxProcesses} jobs of {$($instances[0].Length)} item(s) each" -NoNewLine
+    try
+    {
+        Write-Host "    `r`nBroke extraction process down into {$MaxProcesses} jobs of {$($instances[0].Length)} item(s) each" -NoNewLine
+    }
+    catch
+    {
+        Write-Verbose $_
+    }
+
     $totalJobs = $MaxProcesses
     $jobsCompleted = 0
     $status = "Running..."
