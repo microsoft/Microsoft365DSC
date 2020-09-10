@@ -19,15 +19,10 @@ class MSFT_EXORemoteDomain : OMI_BaseResource
     [Write, Description("The NonMimeCharacterSet parameter specifies a character set for plain text messages without defined character sets that are sent from your organization to recipients in the remote domain.")] String NonMimeCharacterSet;
     [Write, Description("The PreferredInternetCodePageForShiftJis parameter specifies the specific code page to use for Shift JIS character encoding in messages that are sent to recipients in the remote domain."), ValueMap{"50220","50221","50222","Undefined"}, Values{"50220","50221","50222","Undefined"}] String PreferredInternetCodePageForShiftJis;
     [Write, Description("The RequiredCharsetCoverage parameter specifies a percentage threshold for characters in a message that must match to apply your organization's preferred character set before switching to automatic character set detection.")] sint32 RequiredCharsetCoverage;
-    [Write, Description("The TargetDeliveryDomain parameter specifies whether the remote domain is used in cross-forest deployments to generate target email addresses for new mail users that represent users in the other organization (for example, all mailboxes hosted on Exchange Online are represented as mail users in your on-premises organization).")] Boolean TargetDeliveryDomain;
+    [Write, Description("The TargetDeliveryDomain parameter specifies whether the remote domain is used in cross-forest deployments to generate target email addresses for new mail users that represent users in the other organization (for example, all mailboxes hosted on Exchange Online are represented as mail users in your on-premises organization).")] String TargetDeliveryDomain;
     [Write, Description("The TNEFEnabled parameter specifies whether Transport Neutral Encapsulation Format (TNEF) message encoding is used on messages sent to the remote domain.")] Boolean TNEFEnabled;
     [Write, Description("The TrustedMailInboundEnabled parameter specifies whether messages from senders in the remote domain are treated as trusted messages.")] Boolean TrustedMailInboundEnabled;
     [Write, Description("The TrustedMailOutboundEnabled parameter specifies whether messages sent to recipients in the remote domain are treated as trusted messages.")] Boolean TrustedMailOutboundEnabled;
     [Write, Description("The UseSimpleDisplayName parameter specifies whether the sender's simple display name is used for the From email address in messages sent to recipients in the remote domain.")] Boolean UseSimpleDisplayName;
-    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
-    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
-    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
-    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
-    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
-    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
+    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
 };

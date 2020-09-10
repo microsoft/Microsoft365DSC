@@ -93,16 +93,14 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of Teams Messaging Policy"
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
-        -InboundParameters $PSBoundParameters
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform SkypeForBusiness
 
     try
     {
@@ -248,16 +246,14 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of Teams Messaging Policy"
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
-        -InboundParameters $PSBoundParameters
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform SkypeForBusiness
 
     $curPolicy = Get-TargetResource @PSBoundParameters
 
@@ -403,24 +399,23 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference = 'Continue'
+
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
-        -InboundParameters $PSBoundParameters
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform SkypeForBusiness
 
     $i = 1
     [array]$policies = Get-CsTeamsMessagingPolicy
     $content = ''
-    Write-Host "`r`n" -NoNewLine
     foreach ($policy in $policies)
     {
-        Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewLine
+        Write-Information "    [$i/$($policies.Count)] $($policy.Identity)"
         if ($policy.Identity.ToString().contains(":"))
         {
             $currentIdentity = $policy.Identity.split(":")[1]
@@ -443,7 +438,6 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $i++
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

@@ -6,10 +6,5 @@ class MSFT_EXOSharingPolicy : OMI_BaseResource
     [Write, Description("The Enabled parameter specifies whether to enable the sharing policy. Valid values for this parameter are $true or $false.")] Boolean Enabled;
     [Write, Description("The Domains parameter specifies domains to which this policy applies and the sharing policy action.")] String Domains[];
     [Write, Description("Specify if the Sharing Policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
-    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
-    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
-    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
-    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
-    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
+    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
 };

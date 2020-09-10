@@ -39,16 +39,14 @@ function Get-TargetResource
     Write-Verbose -Message "Getting the Teams Emergency Calling Policy {$Identity}"
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    Add-M365DSCTelemetryEvent -Data $data
+    Add-M365DSCTelemetryEvent  -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
-        -InboundParameters $PSBoundParameters
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform SkypeForBusiness
 
     $policy = Get-CsTeamsEmergencyCallingPolicy -Identity $Identity -ErrorAction 'SilentlyContinue'
 
@@ -137,16 +135,14 @@ function Set-TargetResource
     }
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
-        -InboundParameters $PSBoundParameters
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform SkypeForBusiness
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -241,31 +237,24 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference = 'Continue'
+
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
-        -InboundParameters $PSBoundParameters
-
-    $organization = ""
-    if ($GlobalAdminAccount.UserName.Contains("@"))
-    {
-        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
-    }
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform SkypeForBusiness
 
     $i = 1
     [array]$policies = Get-CsTeamsEmergencyCallingPolicy
     $content = ''
-    Write-Host "`r`n" -NoNewLine
     foreach ($policy in $policies)
     {
-        Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewLine
+        Write-Information "    [$i/$($policies.Count)] $($policy.Identity)"
         $params = @{
             Identity           = $policy.Identity
             GlobalAdminAccount = $GlobalAdminAccount
@@ -275,15 +264,9 @@ function Export-TargetResource
         $content += "        TeamsEmergencyCallingPolicy " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
-        {
-            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
-        }
-        $content += $partialContent
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $i++
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

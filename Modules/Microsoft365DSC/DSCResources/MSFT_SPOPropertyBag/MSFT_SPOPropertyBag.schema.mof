@@ -5,10 +5,5 @@ class MSFT_SPOPropertyBag : OMI_BaseResource
     [Key, Description("Key that should be configured.")] String Key;
     [Key, Description("Value of the assigned key.")] String Value;
     [Write, Description("Specify if this policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Write, Description("Credentials of the Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
-    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
-    [Write, Description("Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com")] String TenantId;
-    [Write, Description("Username can be made up to anything but password will be used for certificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
-    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
-    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Required, Description("Credentials of the Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
 };

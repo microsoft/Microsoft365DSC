@@ -8,10 +8,5 @@ class MSFT_EXOHostedOutboundSpamFilterPolicy : OMI_BaseResource
     [Write, Description("The NotifyOutboundSpam parameter enables or disables sending notification messages to administrators when an outgoing message is determined to be spam. Valid input for this parameter is $true or $false. The default value is $false. You specify the administrators to notify by using the NotifyOutboundSpamRecipients parameter.")] Boolean NotifyOutboundSpam;
     [Write, Description("The NotifyOutboundSpamRecipients parameter specifies the administrators to notify when an outgoing message is determined to be spam. Valid input for this parameter is an email address. Separate multiple email addresses with commas.")] String NotifyOutboundSpamRecipients[];
     [Write, Description("Specify if this rule should exist or not.  This value must be 'Present' as the Default policy cannot be deleted."), ValueMap{"Present"}, Values{"Present"}] String Ensure;
-    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
-    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
-    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
-    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
-    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
-    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
+    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
 };

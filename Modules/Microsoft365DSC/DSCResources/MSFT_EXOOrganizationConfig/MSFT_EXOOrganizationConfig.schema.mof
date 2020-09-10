@@ -65,11 +65,6 @@ class MSFT_EXOOrganizationConfig : OMI_BaseResource
     [Write, Description("The VisibleMeetingUpdateProperties parameter specifies whether meeting message updates will be auto-processed on behalf of attendees. Auto-processed updates are applied to the attendee's calendar item, and then the meeting message is moved to the deleted items. The attendee never sees the update in their inbox, but their calendar is updated.")] String VisibleMeetingUpdateProperties;
     [Write, Description("The WebPushNotificationsDisabled parameter specifies whether to enable or disable Web Push Notifications in Outlook on the Web. This feature provides web push notifications which appear on a user's desktop while the user is not using Outlook on the Web. This brings awareness of incoming messages while they are working elsewhere on their computer.")] Boolean WebPushNotificationsDisabled;
     [Write, Description("The WebSuggestedRepliesDisabled parameter specifies whether to enable or disable Suggested Replies in Outlook on the web. This feature provides suggested replies to emails so users can easily and quickly respond to messages.")] Boolean WebSuggestedRepliesDisabled;
-    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
-    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
-    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
-    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
-    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
-    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
+    [Required, Description("Credentials of the Exchange Global Admin."), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
 };
 

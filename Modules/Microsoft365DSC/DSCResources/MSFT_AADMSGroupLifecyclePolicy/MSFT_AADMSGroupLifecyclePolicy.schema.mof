@@ -6,8 +6,5 @@ class MSFT_AADMSGroupLifecyclePolicy : OMI_BaseResource
     [Required, Description("This parameter allows the admin to select which office 365 groups the policy will apply to. 'None' will create the policy in a disabled state. 'All' will apply the policy to every Office 365 group in the tenant. 'Selected' will allow the admin to choose specific Office 365 groups that the policy will apply to."), ValueMap{"All","None", "Selected"}, Values{"All","None", "Selected"}] String ManagedGroupTypes;
     [Required, Description("Notification emails for groups that have no owners will be sent to these email addresses.")] String AlternateNotificationEmails[];
     [Write, Description("Specify if the Azure AD Groups Lifecycle Policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Write, Description("Credentials of the Azure Active Directory Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
-    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
-    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
-    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Required, Description("Credentials of the Azure Active Directory Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
 };

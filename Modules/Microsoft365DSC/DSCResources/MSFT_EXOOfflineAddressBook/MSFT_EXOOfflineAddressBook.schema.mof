@@ -7,10 +7,5 @@ class MSFT_EXOOfflineAddressBook : OMI_BaseResource
     [Write, Description("The DiffRetentionPeriod parameter specifies the number of days that the OAB difference files are stored on the server.")] String DiffRetentionPeriod;
     [Write, Description("The IsDefault parameter specifies whether the OAB is used by all mailboxes and mailbox databases that don't have an OAB specified.")] Boolean IsDefault;
     [Write, Description("Specify if the Offline Address Book should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
-    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
-    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
-    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
-    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
-    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
+    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
 };

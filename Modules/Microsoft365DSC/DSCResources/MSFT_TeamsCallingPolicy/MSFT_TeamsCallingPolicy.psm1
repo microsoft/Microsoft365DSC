@@ -9,10 +9,6 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
         [System.Boolean]
         $AllowPrivateCalling,
 
@@ -42,10 +38,6 @@ function Get-TargetResource
         $PreventTollBypass,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowWebPSTNCalling,
-
-        [Parameter()]
         [System.String]
         [ValidateSet('Enabled', 'Disabled')]
         $BusyOnBusyEnabledType = 'Enabled',
@@ -63,16 +55,14 @@ function Get-TargetResource
     Write-Verbose -Message "Getting the Teams Calling Policy $($Identity)"
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    Add-M365DSCTelemetryEvent -Data $data
+    Add-M365DSCTelemetryEvent  -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
-        -InboundParameters $PSBoundParameters
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform SkypeForBusiness
 
     $policy = Get-CsTeamsCallingPolicy -Identity $Identity -ErrorAction 'SilentlyContinue'
 
@@ -94,9 +84,7 @@ function Get-TargetResource
         AllowDelegation            = $policy.AllowDelegation
         AllowCallForwardingToUser  = $policy.AllowCallForwardingToUser
         AllowCallForwardingToPhone = $policy.AllowCallForwardingToPhone
-        Description                = $policy.Description
         PreventTollBypass          = $policy.PreventTollBypass
-        AllowWebPSTNCalling        = $policy.AllowWebPSTNCalling
         BusyOnBusyEnabledType      = $policy.BusyOnBusyEnabledType
         Ensure                     = 'Present'
         GlobalAdminAccount         = $GlobalAdminAccount
@@ -111,10 +99,6 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
-
-        [Parameter()]
-        [System.String]
-        $Description,
 
         [Parameter()]
         [System.Boolean]
@@ -146,10 +130,6 @@ function Set-TargetResource
         $PreventTollBypass,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowWebPSTNCalling,
-
-        [Parameter()]
         [System.String]
         [ValidateSet('Enabled', 'Disabled')]
         $BusyOnBusyEnabledType = 'Enabled',
@@ -167,16 +147,14 @@ function Set-TargetResource
     Write-Verbose -Message "Setting Teams Calling Policy"
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
-        -InboundParameters $PSBoundParameters
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform SkypeForBusiness
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -214,10 +192,6 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
         [System.Boolean]
         $AllowPrivateCalling,
 
@@ -245,10 +219,6 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $PreventTollBypass,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowWebPSTNCalling,
 
         [Parameter()]
         [System.String]
@@ -295,25 +265,24 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference = 'Continue'
+
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
-        -InboundParameters $PSBoundParameters
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform SkypeForBusiness
 
     $i = 1
     [array]$policies = Get-CsTeamsCallingPolicy
     $content = ''
-    Write-Host "`r`n" -NoNewLine
     foreach ($policy in $policies)
     {
-        Write-Host "    |---[$i/$($policies.Length)] $($policy.Identity)" -NoNewLine
+        Write-Information "    [$i/$($policies.Count)] $($policy.Identity)"
         $params = @{
             Identity           = $policy.Identity
             Ensure             = 'Present'
@@ -326,7 +295,6 @@ function Export-TargetResource
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $content

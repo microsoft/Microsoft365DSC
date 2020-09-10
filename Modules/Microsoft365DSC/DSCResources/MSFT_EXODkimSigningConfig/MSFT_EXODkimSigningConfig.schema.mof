@@ -8,10 +8,5 @@ class MSFT_EXODkimSigningConfig : OMI_BaseResource
     [Write, Description("The KeySize parameter specifies the size in bits of the public key that's used in the DKIM signing policy. The only available value is 1024."),ValueMap{"1024"}, Values{"1024"}] Uint16 KeySize;
     [Write, Description("The Enabled parameter specifies whether the DKIM Signing Configuration is enabled or disabled. Default is $true.")] Boolean Enabled;
     [Write, Description("Specifies if this Client Access Rule should exist."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
-    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
-    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
-    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
-    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
-    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
+    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
 };

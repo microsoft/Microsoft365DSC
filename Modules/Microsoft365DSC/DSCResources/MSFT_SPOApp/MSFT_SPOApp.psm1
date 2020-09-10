@@ -25,61 +25,31 @@ function Get-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Getting configuration for app $Identity"
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
     $nullReturn = @{
-        Identity              = ""
-        Path                  = $null
-        Publish               = $Publish
-        Overwrite             = $Overwrite
-        Ensure                = "Absent"
-        ApplicationId         = $ApplicationId
-        TenantId              = $TenantId
-        CertificatePassword   = $CertificatePassword
-        CertificatePath       = $CertificatePath
-        CertificateThumbprint = $CertificateThumbprint
-        GlobalAdminAccount    = $GlobalAdminAccount
+        Identity  = ""
+        Path      = $null
+        Publish   = $Publish
+        Overwrite = $Overwrite
+        Ensure    = "Absent"
     }
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters
-
+        Test-MSCloudLogin -Platform PnP `
+            -CloudCredential $GlobalAdminAccount
         $app = Get-PnPApp -Identity $Identity -ErrorAction SilentlyContinue
         if ($null -eq $app)
         {
@@ -88,17 +58,11 @@ function Get-TargetResource
         }
 
         return @{
-            Identity              = $app.Title
-            Path                  = $Path
-            Publish               = $app.Deployed
-            Overwrite             = $Overwrite
-            Ensure                = "Present"
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
-            CertificateThumbprint = $CertificateThumbprint
-            GlobalAdminAccount    = $GlobalAdminAccount
+            Identity  = $app.Title
+            Path      = $Path
+            Publish   = $app.Deployed
+            Overwrite = $Overwrite
+            Ensure    = "Present"
         }
     }
     catch
@@ -134,44 +98,21 @@ function Set-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Setting configuration for app $Identity"
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-        -InboundParameters $PSBoundParameters
+    Test-MSCloudLogin -Platform PnP `
+        -CloudCredential $GlobalAdminAccount
 
     $currentApp = Get-TargetResource @PSBoundParameters
 
@@ -182,7 +123,7 @@ function Set-TargetResource
     elseif ($Ensure -eq "Present")
     {
         Write-Verbose -Message "Adding app instance $Identity"
-        Add-PnPApp -Path $Path -Overwrite:$true
+        Add-PnPApp -Path $Path -Overwrite
     }
     elseif ($Ensure -eq "Absent" -and $currentApp.Ensure -eq "Present")
     {
@@ -218,29 +159,9 @@ function Test-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Testing configuration for app $Identity"
@@ -267,70 +188,40 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        $GlobalAdminAccount
     )
+    $InformationPreference = 'Continue'
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform PnP
 
     $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters `
-                -Url $tenantAppCatalogUrl
+    Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
+        -CloudCredential $GlobalAdminAccount `
+        -Platform PnP
 
     if (-not [string]::IsNullOrEmpty($tenantAppCatalogUrl))
     {
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $filesToDownload = Get-AllSPOPackages -GlobalAdminAccount $GlobalAdminAccount
-        }
-        else
-        {
-            $filesToDownload = Get-AllSPOPackages -ApplicationId $ApplicationId -CertificateThumbprint $CertificateThumbprint `
-                -CertificatePassword $CertificatePassword -TenantId $TenantId -CertificatePath $CertificatePath
-        }
+        $filesToDownload = Get-AllSPOPackages -GlobalAdminAccount $GlobalAdminAccount
         $tenantAppCatalogPath = $tenantAppCatalogUrl.Replace("https://", "")
         $tenantAppCatalogPath = $tenantAppCatalogPath.Replace($tenantAppCatalogPath.Split('/')[0], "")
 
-        $dscContent = ''
+        $partialContent = ""
+        $content = ''
         $i = 1
-        Write-Host "`r`n" -NoNewline
         foreach ($file in $filesToDownload)
         {
-            Write-Host "    |---[$i/$($filesToDownload.Length)] $($file.Name)" -NoNewline
+            Write-Information "    - [$i/$($filesToDownload.Length)] $($file.Name)"
 
             $identity = $file.Name.ToLower().Replace(".app", "").Replace(".sppkg", "")
             $app = Get-PnpApp -Identity $identity -ErrorAction SilentlyContinue
@@ -342,34 +233,26 @@ function Export-TargetResource
             }
             if ($null -ne $app)
             {
-                $Params = @{
-                    Identity              = $identity
-                    Path                  = ("`$PSScriptRoot\" + $file.Name)
-                    ApplicationId         = $ApplicationId
-                    TenantId              = $TenantId
-                    CertificatePassword   = $CertificatePassword
-                    CertificatePath       = $CertificatePath
-                    CertificateThumbprint = $CertificateThumbprint
-                    GlobalAdminAccount    = $GlobalAdminAccount
+                $params = @{
+                    GlobalAdminAccount = $GlobalAdminAccount
+                    Identity           = $identity
+                    Path               = ("`$PSScriptRoot\" + $file.Name)
                 }
-
-                $Results = Get-TargetResource @Params
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                        -Results $Results
-                $dscContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                        -ConnectionMode $ConnectionMode `
-                        -ModulePath $PSScriptRoot `
-                        -Results $Results `
-                        -GlobalAdminAccount $GlobalAdminAccount
+                $result = Get-TargetResource @params
+                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                $content += "        SPOApp " + (New-GUID).ToString() + "`r`n"
+                $content += "        {`r`n"
+                $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+                $convertedContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                $content += $convertedContent
+                $content += "        }`r`n"
             }
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckmark
         }
 
-        $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters `
-                -Url $tenantAppCatalogUrl
-
+        Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
+            -CloudCredential $GlobalAdminAccount `
+            -Platform PnP
         foreach ($file in $filesToDownload)
         {
             $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name
@@ -381,7 +264,7 @@ function Export-TargetResource
     {
         Write-Information "    * App Catalog is not configured on tenant. Cannot extract information about SharePoint apps."
     }
-    return $dscContent
+    return $content
 }
 
 Export-ModuleMember -Function *-TargetResource

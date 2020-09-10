@@ -8,10 +8,5 @@ class MSFT_SPOStorageEntity : OMI_BaseResource
     [Write, Description("Comment for the storage entity.")] string Comment;
     [Write, Description("Used to add or remove storage entity."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
     [Required, Description("The url of site collection or tenant.")] string SiteUrl;
-    [Write, Description("Credentials of the Office365 Tenant Admin."), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
-    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
-    [Write, Description("Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com")] String TenantId;
-    [Write, Description("Username can be made up to anything but password will be used for certificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
-    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
-    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Required, Description("Credentials of the Office365 Tenant Admin."), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
 };

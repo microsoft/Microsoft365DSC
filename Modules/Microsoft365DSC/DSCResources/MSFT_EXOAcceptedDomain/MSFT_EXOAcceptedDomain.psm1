@@ -29,53 +29,21 @@ function Get-TargetResource
         [System.Boolean]
         $OutboundOnly = $false,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
-
-        [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
-
+        $GlobalAdminAccount
     )
+
     Write-Verbose -Message "Getting configuration of Accepted Domain for $Identity"
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform ExchangeOnline
 
     Write-Verbose -Message 'Getting all Accepted Domain'
     $AllAcceptedDomains = Get-AcceptedDomain
@@ -88,8 +56,8 @@ function Get-TargetResource
         Write-Verbose -Message "AcceptedDomain configuration for $($Identity) does not exist."
 
         # Check to see if $Identity matches a verified domain in the O365 Tenant
-        $ConnectionMode = New-M365DSCConnection -Platform 'AzureAd' `
-           -InboundParameters $PSBoundParameters
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+            -Platform AzureAD
 
         $VerifiedDomains = Get-AzureADDomain | Where-Object -FilterScript { $_.IsVerified }
         $MatchingVerifiedDomain = $VerifiedDomains | Where-Object -FilterScript { $_.Name -eq $Identity }
@@ -114,17 +82,12 @@ function Get-TargetResource
         else
         {
             $result = @{
-                DomainType            = $DomainType
-                Ensure                = 'Absent'
-                GlobalAdminAccount    = $GlobalAdminAccount
-                Identity              = $Identity
-                MatchSubDomains       = $MatchSubDomains
-                OutboundOnly          = $OutboundOnly
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePath       = $CertificatePath
-                CertificatePassword   = $CertificatePassword
+                DomainType         = $DomainType
+                Ensure             = 'Absent'
+                GlobalAdminAccount = $GlobalAdminAccount
+                Identity           = $Identity
+                MatchSubDomains    = $MatchSubDomains
+                OutboundOnly       = $OutboundOnly
             }
             # if AcceptedDomain does not exist for a verfied domain, return 'Absent' with submitted parameters to Test-TargetResource.
             return $result
@@ -133,17 +96,12 @@ function Get-TargetResource
     else
     {
         $result = @{
-            DomainType            = $AcceptedDomain.DomainType
-            Ensure                = 'Present'
-            Identity              = $AcceptedDomain.Identity
-            MatchSubDomains       = $AcceptedDomain.MatchSubDomains
-            OutboundOnly          = $AcceptedDomain.OutboundOnly
-            GlobalAdminAccount    = $GlobalAdminAccount
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            CertificatePath       = $CertificatePath
-            CertificatePassword   = $CertificatePassword
+            DomainType         = $AcceptedDomain.DomainType
+            Ensure             = 'Present'
+            GlobalAdminAccount = $GlobalAdminAccount
+            Identity           = $AcceptedDomain.Identity
+            MatchSubDomains    = $AcceptedDomain.MatchSubDomains
+            OutboundOnly       = $AcceptedDomain.OutboundOnly
         }
 
         Write-Verbose -Message "Found AcceptedDomain configuration for $($Identity)"
@@ -181,45 +139,22 @@ function Set-TargetResource
         [System.Boolean]
         $OutboundOnly = $false,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
-
-        [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Setting configuration of Accepted Domain for $Identity"
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform ExchangeOnline
 
     $AcceptedDomainParams = @{
         DomainType      = $DomainType
@@ -263,29 +198,9 @@ function Test-TargetResource
         [System.Boolean]
         $OutboundOnly = $false,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
-
-        [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Testing configuration of Accepted Domain for $Identity"
@@ -314,77 +229,40 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
-
-        [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $GlobalAdminAccount
     )
+    $InformationPreference = 'Continue'
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform ExchangeOnline
 
     [array]$AllAcceptedDomains = Get-AcceptedDomain
 
     $dscContent = ""
     $i = 1
-    if ($AllAcceptedDomains.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-    }
-    else
-    {
-        Write-Host "`r`n" -NoNewLine
-    }
     foreach ($domain in $AllAcceptedDomains)
     {
-        Write-Host "    |---[$i/$($AllAcceptedDomains.Count)] $($domain.Identity)" -NoNewLine
+        Write-Information "    [$i/$($AllAcceptedDomains.Count)] $($domain.Identity)"
 
         $Params = @{
-            Identity              = $domain.Identity
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
-            GlobalAdminAccount    = $GlobalAdminAccount
+            Identity           = $domain.Identity
+            GlobalAdminAccount = $GlobalAdminAccount
         }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        $result = Get-TargetResource @Params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content = "        EXOAcceptedDomain " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+        $dscContent += $content
         $i++
     }
     return $dscContent

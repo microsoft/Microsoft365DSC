@@ -23,10 +23,5 @@ class MSFT_EXOGlobalAddressList : OMI_BaseResource
     [Write, Description("The IncludedRecipients parameter specifies a precanned filter that's based on the recipient type."), ValueMap{"","AllRecipients","MailboxUsers","MailContacts","MailGroups","MailUsers","Resources"}, Values{"","AllRecipients","MailboxUsers","MailContacts","MailGroups","MailUsers","Resources"}] String IncludedRecipients[];
     [Write, Description("The RecipientFilter parameter specifies an OPath filter that's based on the value of any available recipient property.")] String RecipientFilter;
     [Write, Description("Specify if the Global Address List should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
-    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
-    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
-    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
-    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
-    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
+    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
 };

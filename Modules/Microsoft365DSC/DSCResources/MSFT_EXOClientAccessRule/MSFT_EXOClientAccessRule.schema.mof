@@ -16,10 +16,5 @@ class MSFT_EXOClientAccessRule : OMI_BaseResource
     [Write, Description("The UserRecipientFilter parameter specifies a condition for the client access rule that uses OPath filter syntax to identify the user.")] String UserRecipientFilter;
     [Write, Description("The UsernameMatchesAnyOfPatterns parameter specifies a condition for the client access rule that is based on the user's account name.")] String UsernameMatchesAnyOfPatterns[];
     [Write, Description("Specifies if this Client Access Rule should exist."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
-    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
-    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
-    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
-    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
-    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
+    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
 };

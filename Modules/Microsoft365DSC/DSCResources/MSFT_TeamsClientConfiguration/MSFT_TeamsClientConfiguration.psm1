@@ -50,10 +50,6 @@ function Get-TargetResource
         $AllowSkypeBusinessInterop,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowEgnyte,
-
-        [Parameter()]
         [System.String]
         [ValidateSet('NotRequired', 'RequiredOutsideScheduleMeeting', 'AlwaysRequired')]
         $ContentPin = 'RequiredOutsideScheduledMeeting',
@@ -75,16 +71,14 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of Teams Client"
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
-        -InboundParameters $PSBoundParameters
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform SkypeForBusiness
 
     try
     {
@@ -94,7 +88,6 @@ function Get-TargetResource
             Identity                         = $config.Identity
             AllowBox                         = $config.AllowBox
             AllowDropBox                     = $config.AllowDropBox
-            AllowEgnyte                      = $config.AllowEgnyte
             AllowEmailIntoChannel            = $config.AllowEmailIntoChannel
             AllowGoogleDrive                 = $config.AllowGoogleDrive
             AllowGuestUser                   = $config.AllowGuestUser
@@ -171,10 +164,6 @@ function Set-TargetResource
         $AllowSkypeBusinessInterop,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowEgnyte,
-
-        [Parameter()]
         [System.String]
         [ValidateSet('NotRequired', 'RequiredOutsideScheduleMeeting', 'AlwaysRequired')]
         $ContentPin = 'RequiredOutsideScheduledMeeting',
@@ -196,16 +185,14 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of Teams Client"
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
-        -InboundParameters $PSBoundParameters
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform SkypeForBusiness
 
     $SetParams = $PSBoundParameters
     $SetParams.Remove("GlobalAdminAccount")
@@ -269,10 +256,6 @@ function Test-TargetResource
         $AllowSkypeBusinessInterop,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowEgnyte,
-
-        [Parameter()]
         [System.String]
         [ValidateSet('NotRequired', 'RequiredOutsideScheduleMeeting', 'AlwaysRequired')]
         $ContentPin = 'RequiredOutsideScheduledMeeting',
@@ -325,14 +308,15 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference ='Continue'
+
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
+
 
     $params = @{
         Identity           = "Global"
@@ -345,7 +329,6 @@ function Export-TargetResource
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
     $content += "        }`r`n"
-    Write-Host $Global:M365DSCEmojiGreenCheckMark
     return $content
 }
 

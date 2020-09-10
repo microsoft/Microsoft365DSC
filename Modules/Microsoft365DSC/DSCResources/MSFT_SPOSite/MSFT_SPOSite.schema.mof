@@ -28,10 +28,5 @@ class MSFT_SPOSite : OMI_BaseResource
     [Write, Description("Disables or enables the Social Bar for Site Collection.")] boolean SocialBarOnSitePagesDisabled;
     [Write, Description("False - Respect the organization-level policy for anonymous or anyone link expiration. True - Override the organization-level policy for anonymous or anyone link expiration (can be more or less restrictive)")] boolean OverrideTenantAnonymousLinkExpirationPolicy;
     [Write, Description("Present ensures the site collection exists, absent ensures it is removed"), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
-    [Write, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
-    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
-    [Write, Description("Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com")] String TenantId;
-    [Write, Description("Username can be made up to anything but password will be used for certificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
-    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
-    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
 };

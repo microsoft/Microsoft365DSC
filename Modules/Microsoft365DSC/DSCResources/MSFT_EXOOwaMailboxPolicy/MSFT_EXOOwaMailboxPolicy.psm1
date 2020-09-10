@@ -162,7 +162,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $NpsSurveysEnabled,
+        $NpsMailboxPolicy,
 
         [Parameter()]
         [System.Boolean]
@@ -319,53 +319,21 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
-
-        [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Getting OWA Mailbox Policy configuration for $Name"
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform ExchangeOnline
 
     $AllOwaMailboxPolicies = Get-OwaMailboxPolicy
 
@@ -414,7 +382,7 @@ function Get-TargetResource
             LocalEventsEnabled                                   = $LocalEventsEnabled
             LogonAndErrorLanguage                                = $LogonAndErrorLanguage
             NotesEnabled                                         = $NotesEnabled
-            NpsSurveysEnabled                                    = $NpsSurveysEnabled
+            NpsMailboxPolicy                                     = $NpsMailboxPolicy
             OrganizationEnabled                                  = $OrganizationEnabled
             OnSendAddinsEnabled                                  = $OnSendAddinsEnabled
             OutboundCharset                                      = $OutboundCharset
@@ -499,7 +467,7 @@ function Get-TargetResource
             LocalEventsEnabled                                   = $OwaMailboxPolicy.LocalEventsEnabled
             LogonAndErrorLanguage                                = $OwaMailboxPolicy.LogonAndErrorLanguage
             NotesEnabled                                         = $OwaMailboxPolicy.NotesEnabled
-            NpsSurveysEnabled                                    = $OwaMailboxPolicy.NpsSurveysEnabled
+            NpsMailboxPolicy                                     = $OwaMailboxPolicy.NpsMailboxPolicy
             OrganizationEnabled                                  = $OwaMailboxPolicy.OrganizationEnabled
             OnSendAddinsEnabled                                  = $OwaMailboxPolicy.OnSendAddinsEnabled
             OutboundCharset                                      = $OwaMailboxPolicy.OutboundCharset
@@ -709,7 +677,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $NpsSurveysEnabled,
+        $NpsMailboxPolicy,
 
         [Parameter()]
         [System.Boolean]
@@ -866,29 +834,9 @@ function Set-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
-
-        [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Setting OWA Mailbox Policy configuration for $Name"
@@ -896,17 +844,14 @@ function Set-TargetResource
     $currentOwaMailboxPolicyConfig = Get-TargetResource @PSBoundParameters
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform ExchangeOnline
 
     $NewOwaMailboxPolicyParams = @{
         Name      = $Name
@@ -953,7 +898,7 @@ function Set-TargetResource
         LocalEventsEnabled                                   = $LocalEventsEnabled
         LogonAndErrorLanguage                                = $LogonAndErrorLanguage
         NotesEnabled                                         = $NotesEnabled
-        NpsSurveysEnabled                                    = $NpsSurveysEnabled
+        NpsMailboxPolicy                                     = $NpsMailboxPolicy
         OrganizationEnabled                                  = $OrganizationEnabled
         OnSendAddinsEnabled                                  = $OnSendAddinsEnabled
         OutboundCharset                                      = $OutboundCharset
@@ -993,8 +938,6 @@ function Set-TargetResource
         WebPartsFrameOptionsType                             = $WebPartsFrameOptionsType
         Confirm                                              = $false
     }
-    # Removes empty properties from Splat to prevent function throwing errors if parameter is null or empty
-    Remove-EmptyValue -Splat $SetOwaMailboxPolicyParams
 
     # CASE: OWA Mailbox Policy doesn't exist but should;
     if ($Ensure -eq "Present" -and $currentOwaMailboxPolicyConfig.Ensure -eq "Absent")
@@ -1186,7 +1129,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $NpsSurveysEnabled,
+        $NpsMailboxPolicy,
 
         [Parameter()]
         [System.Boolean]
@@ -1343,29 +1286,9 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
-
-        [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Testing OWA Mailbox Policy configuration for $Name"
@@ -1394,78 +1317,40 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
-
-        [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $GlobalAdminAccount
     )
+    $InformationPreference = 'Continue'
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform ExchangeOnline
 
     [array]$AllOwaMailboxPolicies = Get-OwaMailboxPolicy
 
     $dscContent = ""
-
-    if ($AllOwaMailboxPolicies.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-    }
-    else
-    {
-        Write-Host "`r`n" -NoNewLine
-    }
     $i = 1
     foreach ($OwaMailboxPolicy in $AllOwaMailboxPolicies)
     {
-        Write-Host "    |---[$i/$($AllOwaMailboxPolicies.Length)] $($OwaMailboxPolicy.Name)" -NoNewLine
+        Write-Information "    [$i/$($AllOwaMailboxPolicies.Count)] $($OwaMailboxPolicy.Name)"
 
         $Params = @{
-            Name                  = $OwaMailboxPolicy.Name
-            GlobalAdminAccount    = $GlobalAdminAccount
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
+            Name               = $OwaMailboxPolicy.Name
+            GlobalAdminAccount = $GlobalAdminAccount
         }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        $result = Get-TargetResource @Params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content = "        EXOOwaMailboxPolicy " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+        $dscContent += $content
         $i++
     }
     return $dscContent

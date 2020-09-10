@@ -24,46 +24,38 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet('Standard', 'Private')]
+        $MembershipType = 'Standard',
+
+        [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Getting configuration of Teams channel $DisplayName"
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' -InboundParameters $PSBoundParameters
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform MicrosoftTeams
 
     $nullReturn = @{
         TeamName           = $TeamName
         DisplayName        = $DisplayName
         Description        = $Description
         NewDisplayName     = $NewDisplayName
+        MembershipType     = $MembershipType
         Ensure             = "Absent"
         GlobalAdminAccount = $GlobalAdminAccount
     }
@@ -96,15 +88,13 @@ function Get-TargetResource
         }
 
         return @{
-            DisplayName           = $channel.DisplayName
-            TeamName              = $team.DisplayName
-            Description           = $channel.Description
-            NewDisplayName        = $NewDisplayName
-            Ensure                = "Present"
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            GlobalAdminAccount    = $GlobalAdminAccount
+            DisplayName        = $channel.DisplayName
+            TeamName           = $team.DisplayName
+            MembershipType     = $channel.MembershipType
+            Description        = $channel.Description
+            NewDisplayName     = $NewDisplayName
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdminAccount
         }
     }
     catch
@@ -138,38 +128,31 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet('Standard', 'Private')]
+        $MembershipType = 'Standard',
+
+        [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Setting configuration of Teams channel $DisplayName"
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
+
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform MicrosoftTeams
 
     $channel = Get-TargetResource @PSBoundParameters
 
@@ -186,9 +169,6 @@ function Set-TargetResource
     $CurrentParameters.Remove("TeamName")
     $CurrentParameters.Add("GroupId", $team.GroupId)
     $CurrentParameters.Remove("GlobalAdminAccount")
-    $CurrentParameters.Remove("ApplicationId")
-    $CurrentParameters.Remove("TenantId")
-    $CurrentParameters.Remove("CertificateThumbprint")
     $CurrentParameters.Remove("Ensure")
 
     if ($Ensure -eq "Present")
@@ -249,25 +229,18 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet('Standard', 'Private')]
+        $MembershipType = 'Standard',
+
+        [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Testing configuration of Teams channel $DisplayName"
@@ -294,88 +267,139 @@ function Export-TargetResource
     param
     (
         [Parameter()]
-        [System.String]
-        $ApplicationId,
+        [System.Uint32]
+        $Start,
 
         [Parameter()]
-        [System.String]
-        $TenantId,
+        [System.Uint32]
+        $End,
 
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
-
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference = 'Continue'
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' -InboundParameters $PSBoundParameters
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform MicrosoftTeams
 
     $teams = Get-Team
     $j = 1
     $content = ''
-    Write-Host "`r`n" -NoNewLine
-    foreach ($team in $Teams)
+
+    $TeamsModulePath = Join-Path -Path $PSScriptRoot -ChildPath '..\MSFT_TeamsTeam\MSFT_TeamsTeam.psm1' #Custom
+    $ChannelModulePath = Join-Path $PSScriptRoot -ChildPath 'MSFT_TeamsChannel.psm1' #Custom
+    $UserModulePath = Join-Path $PSScriptRoot -ChildPath '..\MSFT_TeamsUser\MSFT_TeamsUser.psm1' #Custom
+
+    $organization = $GlobalAdminAccount.UserName.Split('@')[1]
+    for ($j = $start; $j -le $Teams.Length -and $j -le $end; $j++)
     {
+        $team = $Teams[$j-1]
         $channels = Get-TeamChannel -GroupId $team.GroupId
         $i = 1
-        Write-Host "    |---[$j/$($Teams.Length)] Team {$($team.DisplayName)}"
+        $Total = $end
+        if ($end -gt $Teams.Length)
+        {
+            $total = $Teams.Length
+        }
+        Write-Information "    > [$j/$($total)] Team {$($team.DisplayName)}"
+        #region TeamsTeam - Section copied over from TeamsTeam
+        $params = @{
+            DisplayName        = $team.DisplayName
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+        Import-Module $TeamsModulePath -Force #Custom
+        $result = Get-TargetResource @params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        if ("" -eq $result.Owner)
+        {
+            $result.Remove("Owner")
+        }
+        if ([System.String]::IsNullOrEmpty($result.NewDisplayName))
+        {
+            $result.Remove("NewDisplayName")
+        }
+        $content += "        TeamsTeam " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath ($TeamsModulePath.Replace("\MSFT_TeamsTeam.psm1", "")) #Custom
+        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $partialContent += "        }`r`n"
+        if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
+        {
+            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+        }
+        $content += $partialContent
+        #endregion
         foreach ($channel in $channels)
         {
-            Write-Host "        |---[$i/$($channels.Length)] $($channel.DisplayName)" -NoNewLine
-
-            if ($ConnectionMode -eq 'Credential')
+            $channelType = '-'
+            if ($channel.MembershipType -eq 'Private')
             {
-                $params = @{
-                    TeamName           = $team.DisplayName
-                    DisplayName        = $channel.DisplayName
-                    GlobalAdminAccount = $GlobalAdminAccount
-                }
+                $channelType = '!'
             }
-            else
-            {
-                $params = @{
-                    TeamName              = $team.DisplayName
-                    DisplayName           = $channel.DisplayName
-                    ApplicationId         = $ApplicationId
-                    TenantId              = $TenantId
-                    CertificateThumbprint = $CertificateThumbprint
-                }
+            Write-Information "        $channelType [$i/$($channels.Length)] $($channel.DisplayName)"
+            $params = @{
+                TeamName           = $team.DisplayName
+                DisplayName        = $channel.DisplayName
+                GlobalAdminAccount = $GlobalAdminAccount
             }
+            Import-Module $ChannelModulePath -Force #Custom
             $result = Get-TargetResource @params
-            if ($ConnectionMode -eq 'Credential')
+            if ([System.String]::IsNullOrEmpty($result.NewDisplayName))
             {
-                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                $result.Remove("ApplicationId")
-                $result.Remove("TenantId")
-                $result.Remove("CertificateThumbprint")
+                $result.Remove("NewDisplayName")
             }
-            else
-            {
-                $result.Remove("GlobalAdminAccount")
-            }
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
             $content += "        TeamsChannel " + (New-GUID).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            if ($ConnectionMode -eq 'Credential')
-            {
-                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            }
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
             $content += "        }`r`n"
+
+            if ($channel.MembershipType -eq 'Private')
+            {
+                Import-Module $UserModulePath -Force
+		try
+		{
+                    $users = Get-TeamChannelUser -GroupId $team.GroupId -DisplayName $channel.DisplayName
+                    $k = 1
+                    foreach ($user in $users)
+                    {
+                        Write-Information "            + [$k/$($users.Length)] $($user.User)"
+                        $getParams = @{
+                            GroupId            = $team.GroupId
+                            DisplayName        = $channel.DisplayName
+                            User               = $user.User
+                            GlobalAdminAccount = $params.GlobalAdminAccount
+                        }
+                        $result = Get-TargetResource @getParams
+                        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                        $content += "        TeamsUser " + (New-GUID).ToString() + "`r`n"
+                        $content += "        {`r`n"
+                        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath ($UserModulePath.Replace("\MSFT_TeamsUser.psm1", ""))
+                        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                        $partialContent += "        }`r`n"
+                        if ($partialContent.ToLower().Contains($organization.ToLower()))
+                        {
+                            $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
+                        }
+                        $content += $partialContent
+                        $k++
+                    }
+		}
+		catch
+		{
+			Write-Error "Could not retrieve users for private channel {$($channel.DisplayName)} with GroupID {$($team.GroupId)}"
+		}
+            }
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        $j++
     }
     return $content
 }

@@ -16,45 +16,28 @@ function Get-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Getting SPO Profile Properties for user {$UserName}"
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform PnP
 
     $nullReturn = @{
-        UserName              = $UserName
-        Properties            = $Properties
-        GlobalAdminAccount    = $GlobalAdminAccount
-        Ensure                = 'Absent'
-        ApplicationId         = $ApplicationId
-        TenantId              = $TenantId
-        CertificateThumbprint = $CertificateThumbprint
+        UserName           = $UserName
+        Properties         = $Properties
+        GlobalAdminAccount = $GlobalAdminAccount
+        Ensure             = 'Absent'
     }
 
     try
@@ -76,13 +59,10 @@ function Get-TargetResource
         }
 
         $result = @{
-            UserName              = $UserName
-            Properties            = $propertiesValue
-            GlobalAdminAccount    = $GlobalAdminAccount
-            Ensure                = "Present"
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
+            UserName           = $UserName
+            Properties         = $propertiesValue
+            GlobalAdminAccount = $GlobalAdminAccount
+            Ensure             = "Present"
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -111,36 +91,22 @@ function Set-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Setting Profile Properties for user {$UserName}"
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform PnP
 
     $currentProperties = Get-TargetResource @PSBoundParameters
 
@@ -178,21 +144,9 @@ function Test-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Testing configuration for SPO Sharing settings"
@@ -220,34 +174,21 @@ function Export-TargetResource
         [ValidateRange(1, 100)]
         $MaxProcesses = 16,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        $GlobalAdminAccount
     )
+
+    $InformationPreference = 'Continue'
+
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
-        -InboundParameters $PSBoundParameters
+    Test-MSCloudLogin -Platform AzureAD -CloudCredential $GlobalAdminAccount
     $result = ""
 
     # Get all instances;
@@ -280,24 +221,10 @@ function Export-TargetResource
                 [System.String]
                 $ScriptRoot,
 
-                [Parameter()]
+                [Parameter(Mandatory = $true)]
                 [System.Management.Automation.PSCredential]
-                $GlobalAdminAccount,
-
-                [Parameter()]
-                [System.String]
-                $ApplicationId,
-
-                [Parameter()]
-                [System.String]
-                $TenantId,
-
-                [Parameter()]
-                [System.String]
-                $CertificateThumbprint
+                $GlobalAdminAccount
             )
-
-
             $WarningPreference = 'SilentlyContinue'
 
             # Implicitly load the M365DSCUtil.psm1 module in order to be able to call
@@ -309,54 +236,54 @@ function Export-TargetResource
             $returnValue = Invoke-M365DSCCommand -Arguments $PSBoundParameters -InvokationPath $ScriptRoot -ScriptBlock {
                 $WarningPreference = 'SilentlyContinue'
                 $params = $args[0]
-                $dscContent = ""
+                $content = ""
                 foreach ($instance in $params.Instances)
                 {
                     foreach ($user in $instance)
                     {
-                        $Params = @{
-                            UserName              = $user.UserPrincipalName
-                            ApplicationId         = $ApplicationId
-                            TenantId              = $TenantId
-                            CertificateThumbprint = $CertificateThumbprint
-                            GlobalAdminAccount    = $GlobalAdminAccount
+                        $getValues = @{
+                            UserName           = $user.UserPrincipalName
+                            GlobalAdminAccount = $GlobalAdminAccount
                         }
                         $CurrentModulePath = $params.ScriptRoot + "\MSFT_SPOUserProfileProperty.psm1"
                         Import-Module $CurrentModulePath -Force | Out-Null
 
-                        $Results = Get-TargetResource @Params
+                        $result = Get-TargetResource @getValues
 
                         if ($result.Ensure -eq "Present")
                         {
                             Import-Module ($params.ScriptRoot + "\..\..\Modules\M365DSCUtil.psm1") -Force | Out-Null
                             Import-Module ($params.ScriptRoot + "\..\..\Modules\M365DSCTelemetryEngine.psm1") -Force | Out-Null
 
-                            $Results.Properties = ConvertTo-SPOUserProfilePropertyInstanceString -Properties $result.Properties
-                            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                                -Results $Results
-                            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                                -ConnectionMode $ConnectionMode `
-                                -ModulePath $PSScriptRoot `
-                                -Results $Results `
-                                -GlobalAdminAccount $GlobalAdminAccount
+                            $result.Properties = ConvertTo-SPOUserProfilePropertyInstanceString -Properties $result.Properties
+                            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                            $content += "        SPOUserProfileProperty " + (New-GUID).ToString() + "`r`n"
+                            $content += "        {`r`n"
+
+                            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
+                            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Properties" -IsCIMArray $true
+                            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                            $content += $currentDSCBlock
+                            $content += "        }`r`n"
                         }
                     }
                 }
 
-                return $dscContent
+                return $content
             }
             return $returnValue
-        } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount, $ApplicationId, $TenantId, $CertificateThumbprint) | Out-Null
+        } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount) | Out-Null
         $i++
     }
 
-    Write-Host "    Broke extraction process down into {$MaxProcesses} jobs of {$batchSize} item(s) each"
+    Write-Information "    Broke extraction process down into {$MaxProcesses} jobs of {$batchSize} item(s) each"
     $totalJobs = $MaxProcesses
     $jobsCompleted = 0
     $status = "Running..."
     $elapsedTime = 0
     do
     {
+        $InformationPreference = 'SilentlyContinue'
         $jobs = Get-Job | Where-Object -FilterScript { $_.Name -like '*SPOUserProfileProperty*' }
         $count = $jobs.Length
         foreach ($job in $jobs)
@@ -385,10 +312,14 @@ function Export-TargetResource
     Write-Progress -Activity "SPOUserProfileProperty Extraction" -PercentComplete 100 -Status "Completed" -Completed
     $organization = ""
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-    $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
-    if ($organization.IndexOf(".") -gt 0)
+    if ($GlobalAdminAccount.UserName.Contains("@"))
     {
-        $principal = $organization.Split(".")[0]
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+
+        if ($organization.IndexOf(".") -gt 0)
+        {
+            $principal = $organization.Split(".")[0]
+        }
     }
     if ($result.ToLower().Contains($organization.ToLower()) -or `
             $result.ToLower().Contains($principal.ToLower()))
@@ -396,7 +327,6 @@ function Export-TargetResource
         $result = $result -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
         $result = $result -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
     }
-    Write-Host $Global:M365DSCEmojiGreenCheckMark
     return $result
 }
 

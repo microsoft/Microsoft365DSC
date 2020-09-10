@@ -23,7 +23,7 @@ function New-M365DSCLogEntry
     try
     {
         $VerbosePreference = 'Continue'
-        Write-Host "$($Global:M365DSCEmojiRedX) Logging a new Error"
+        Write-Verbose -Message "Logging a new Error"
 
         #region Telemetry
         $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -80,37 +80,32 @@ function Add-M365DSCEvent
         $EventID = 1
     )
 
-    $LogName = 'M365DSC'
-
-    if ([System.Diagnostics.EventLog]::SourceExists($Source))
-    {
-        $sourceLogName = [System.Diagnostics.EventLog]::LogNameFromSourceName($Source, ".")
-        if ($LogName -ne $sourceLogName)
-        {
-            Write-Verbose -Message "[ERROR] Specified source {$Source} already exists on log {$sourceLogName}"
-            return
-        }
-    }
-    else
-    {
-        if ([System.Diagnostics.EventLog]::Exists($LogName) -eq $false)
-        {
-            #Create event log
-            $null = New-EventLog -LogName $LogName -Source $Source
-        }
-        else
-        {
-            [System.Diagnostics.EventLog]::CreateEventSource($Source, $LogName)
-        }
-    }
-
     try
     {
-        Write-EventLog -LogName $LogName -Source $Source `
-            -EventID $EventID -Message $Message -EntryType $EntryType
+        [System.Diagnostics.EventLog]::CreateEventSource($Source, "Microsoft365DSC")
     }
     catch
     {
-        Write-Verbose -Message $_
+        try
+        {
+            $CurrentLog = New-EventLog -LogName 'Microsoft365DSC' -Source $Source -ErrorAction Stop
+            [System.Diagnostics.EventLog]::CreateEventSource($Source, "Microsoft365DSC")
+        }
+        catch
+        {
+            Write-Verbose $_
+        }
+    }
+
+
+    try
+    {
+        Write-EventLog -LogName 'Microsoft365DSC' -Source $Source `
+            -EventID $EventID -Message $Message -EntryType $EntryType `
+            -ErrorAction SilentlyContinue
+    }
+    catch
+    {
+        Write-Verbose $_
     }
 }

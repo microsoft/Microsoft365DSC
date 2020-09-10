@@ -4,9 +4,7 @@ class MSFT_PPPowerAppsEnvironment : OMI_BaseResource
     [Key, Description("Display name for the PowerApps environment")] String DisplayName;
     [Required, Description("Location of the PowerApps environment."), ValueMap{"canada","unitedstates","europe","asia","australia","india","japan","unitedkingdom","unitedstatesfirstrelease","southamerica","france","usgov"}, Values{"canada","unitedstates","europe","asia","australia","india","japan","unitedkingdom","unitedstatesfirstrelease","southamerica","france","usgov"}] string Location;
     [Required, Description("Environment type."), ValueMap{"Production","Standard","Trial","Sandbox"}, Values{"Production","Standard","Trial","Sandbox"}] String EnvironmentSKU;
+
     [Write, Description("Only accepted value is 'Present'."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Write, Description("Credentials of the Azure Active Directory Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
-    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
-    [Write, Description("Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com")] String TenantId;
-    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Required, Description("Credentials of the Azure Active Directory Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
 };

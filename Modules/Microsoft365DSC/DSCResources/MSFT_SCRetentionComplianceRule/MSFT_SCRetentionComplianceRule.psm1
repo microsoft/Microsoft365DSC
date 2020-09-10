@@ -55,25 +55,14 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of RetentionComplianceRule for $Name"
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
-            -InboundParameters $PSBoundParameters
-    }
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform SecurityComplianceCenter
 
     $RuleObject = Get-RetentionComplianceRule -Identity $Name -ErrorAction SilentlyContinue
 
@@ -164,16 +153,14 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of RetentionComplianceRule for $Name"
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
-        -InboundParameters $PSBoundParameters
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform SecurityComplianceCenter
 
     $CurrentRule = Get-TargetResource @PSBoundParameters
 
@@ -285,59 +272,81 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference = 'Continue'
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform SecurityComplianceCenter `
+        -ErrorAction SilentlyContinue
 
-    [array]$policies = Get-RetentionCompliancePolicy
+    $organization = ""
+    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
+    if ($GlobalAdminAccount.UserName.Contains("@"))
+    {
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+
+        if ($organization.IndexOf(".") -gt 0)
+        {
+            $principal = $organization.Split(".")[0]
+        }
+    }
+    $policies = Get-RetentionCompliancePolicy
 
     $j = 1
-    $dscContent = ''
-    Write-Host "`r`n" -NoNewLine
+    $content = ''
+    $policiesLength = $policies.Length
+    if ($null -eq $policiesLength)
+    {
+        $policiesLength = 1
+    }
     foreach ($policy in $policies)
     {
-        [array]$rules = Get-RetentionComplianceRule -Policy $policy.Name
-        Write-Host "    Policy [$j/$($policies.Length)] $($policy.Name)"
+        $rules = Get-RetentionComplianceRule -Policy $policy.Name
+        Write-Information "    - Policy [$j/$($policiesLength)] $($policy.Name)"
         $i = 1
-
+        $rulesLength = $rules.Length
+        if ($null -eq $rulesLength)
+        {
+            $rulesLength = 1
+        }
         foreach ($rule in $rules)
         {
-            Write-Host "        |---[$i/$($rules.Length)] $($rule.Name)" -NoNewLine
-
-            $Params = @{
-                GlobalAdminAccount    = $GlobalAdminAccount
-                Name                  = $rule.Name
-                Policy                = $rule.Policy
+            Write-Information "        - [$i/$($rulesLength)] $($rule.Name)"
+            $params = @{
+                GlobalAdminAccount = $GlobalAdminAccount
+                Name               = $rule.Name
+                Policy             = $rule.Policy
             }
-            $Results = Get-TargetResource @Params
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
 
-            if ([System.String]::IsNullOrEmpty($Results.ExpirationDateOption))
+            if ([System.String]::IsNullOrEmpty($result.ExpirationDateOption))
             {
-                $Results.Remove("ExpirationDateOption") | Out-Null
+                $result.Remove("ExpirationDateOption")
             }
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+
+            $content += "        SCRetentionComplianceRule " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
+            if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+                    $partialContent.ToLower().Contains($principal.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+            }
+            $content += $partialContent
+            $content += "        }`r`n"
             $i++
         }
         $j++
     }
-    return $dscContent
+    return $content
 }
 
 Export-ModuleMember -Function *-TargetResource
