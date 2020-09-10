@@ -14,6 +14,7 @@ function Get-M365StubFiles
     if ($null -eq $GlobalAdminAccount)
     {
         $GlobalAdminAccount = Get-Credential
+        $PSBoundParameters.Add("GlobalAdminAccount", $GlobalAdminAccount)
     }
 
     if (Test-Path $DestinationFilePath)
@@ -31,7 +32,7 @@ function Get-M365StubFiles
     }
 
     $Modules = @(
-        <#@{
+        @{
             Platform     = 'AzureAD'
             ModuleName   = 'AzureADPreview'
             RandomCmdlet = 'Get-AzureADDirectorySetting'
@@ -44,12 +45,12 @@ function Get-M365StubFiles
         @{
             Platform   = 'MicrosoftTeams'
             ModuleName = 'Microsoft.TeamsCmdlets.PowerShell.Custom'
-        },#>
+        },
         @{
             Platform   = 'PnP'
             ModuleName = 'SharePointPnPPowerShellOnline'
-        }#,
-        <#@{
+        },
+        @{
             Platform   = 'PowerPlatforms'
             ModuleName = 'Microsoft.PowerApps.Administration.PowerShell'
         },
@@ -62,7 +63,7 @@ function Get-M365StubFiles
             Platform     = 'SkypeForBusiness'
             ModuleName   = $null
             RandomCmdlet = 'Clear-CsOnlineTelephoneNumberReservation'
-        }#>
+        }
     )
     $Content = ''
     foreach ($Module in $Modules)
@@ -82,7 +83,11 @@ function Get-M365StubFiles
                 -InboundParameters $PSBoundParameters
         }
 
-        $cmdlets = Get-Command -CmdType 'Cmdlet' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
+        $cmdlets = Get-Command -CommandType 'Cmdlet' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
+        if ($null -eq $cmdlets)
+        {
+            $cmdlets = Get-Command -CommandType 'Function' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
+        }
         $StubContent = ''
         $i = 1
         foreach ($cmdlet in $cmdlets)
