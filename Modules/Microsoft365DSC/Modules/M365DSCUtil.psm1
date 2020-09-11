@@ -821,10 +821,6 @@ function Export-M365DSCConfiguration
         $TenantId,
 
         [Parameter()]
-        [System.string]
-        $ApplicationSecret,
-
-        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
@@ -877,7 +873,6 @@ function Export-M365DSCConfiguration
                 -ConfigurationName $ConfigurationName `
                 -ApplicationId $ApplicationId `
                 -TenantId $TenantId `
-                -ApplicationSecret $ApplicationSecret `
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
@@ -893,7 +888,6 @@ function Export-M365DSCConfiguration
                 -ConfigurationName $ConfigurationName `
                 -ApplicationId $ApplicationId `
                 -TenantId $TenantId `
-                -ApplicationSecret $ApplicationSecret `
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
@@ -909,7 +903,6 @@ function Export-M365DSCConfiguration
                 -ConfigurationName $ConfigurationName `
                 -ApplicationId $ApplicationId `
                 -TenantId $TenantId `
-                -ApplicationSecret $ApplicationSecret `
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
@@ -1412,7 +1405,7 @@ function Install-M365DSCDevBranch
 
     #region Install M365DSC
     $defaultPath = 'C:\Program Files\WindowsPowerShell\Modules\Microsoft365DSC\'
-    $currentVersionPath = $defaultPath + $($manifest.ModuleVersion)
+    $currentVersionPath = $defaultPath + ([Version]$($manifest.ModuleVersion)).ToString()
     if (Test-Path $currentVersionPath)
     {
         Remove-Item $currentVersionPath -Recurse -Confirm:$false
@@ -2111,6 +2104,7 @@ function Get-M365DSCExportContentForResource
 
     if ($partialContent.ToLower().IndexOf($OrganizationName.ToLower()) -gt 0)
     {
+        $partialContent = $partialContent -ireplace [regex]::Escape($OrganizationName+":"), "`$($OrganizationName):"
         $partialContent = $partialContent -ireplace [regex]::Escape($OrganizationName), "`$OrganizationName"
         $partialContent = $partialContent -ireplace [regex]::Escape("@" + $OrganizationName), "@`$OrganizationName"
     }
@@ -2200,4 +2194,21 @@ function Get-M365DSCComponentsForAuthenticationType
         }
     }
     return $Components
+}
+
+function Get-M365DSCAllResources
+{
+    [CmdletBinding()]
+    [OutputType([System.String[]])]
+    [CmdletBinding()]
+    param ()
+
+    $allResources = Get-ChildItem -Path ($PSScriptRoot + "\..\DSCResources\") -Recurse -Filter '*.psm1'
+    $result = @()
+    foreach ($resource in $allResources)
+    {
+        $result += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+    }
+
+    return $result
 }

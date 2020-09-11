@@ -36,7 +36,7 @@ function Start-M365DSCConfigurationExtract
         $MaxProcesses = 16,
 
         [Parameter()]
-        [ValidateSet('AAD', 'SPO', 'EXO', 'SC', 'OD', 'O365', 'TEAMS', 'PP')]
+        [ValidateSet('AAD', 'SPO', 'EXO', 'SC', 'OD', 'O365', 'TEAMS', 'PP', 'PLANNER')]
         [System.String[]]
         $Workloads,
 
@@ -56,10 +56,6 @@ function Start-M365DSCConfigurationExtract
         [Parameter()]
         [System.String]
         $TenantId,
-
-        [Parameter()]
-        [System.string]
-        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
@@ -86,35 +82,6 @@ function Start-M365DSCConfigurationExtract
     {
         $ComponentsToExtractSpecified = $true
     }
-    $organization = ""
-    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-    $ConnectionMode = $null
-    if (-not [String]::IsNullOrEmpty($ApplicationId) -and `
-            -not [String]::IsNullOrEmpty($TenantId) -and `
-            -not [String]::IsNullOrEmpty($CertificateThumbprint))
-    {
-        $ConnectionMode = 'ServicePrincipal'
-        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
-            -TenantId $TenantId `
-            -CertificateThumbprint $CertificateThumbprint
-    }
-    elseif (-not [String]::IsNullOrEmpty($CertificatePath))
-    {
-        $ConnectionMode = 'ServicePrincipal'
-        $organization = $TenantId
-    }
-    elseif (-not [String]::IsNullOrEmpty($GlobalAdminAccount))
-    {
-        $ConnectionMode = 'Credential'
-        if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
-        {
-            $organization = $GlobalAdminAccount.UserName.Split("@")[1]
-        }
-    }
-    if ($organization.IndexOf(".") -gt 0)
-    {
-        $principal = $organization.Split(".")[0]
-    }
 
     $ComponentsToSkip = @()
     if ($Mode -eq 'Default')
@@ -126,6 +93,103 @@ function Start-M365DSCConfigurationExtract
         $ComponentsToSkip = $Global:DefaultComponents + $Global:FullComponents
     }
 
+    # Check to validate that based on the received authentication parameters
+    # we are allowed to export the selected components.
+    $AuthMethods = @()
+    $controlCredentials = @()
+    if ($null -ne $GlobalAdminAccount)
+    {
+        $AuthMethods += "Credentials"
+    }
+    if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint) -or `
+        -not [System.String]::IsNullOrEmpty($CertificatePassword) -or `
+        -not [System.String]::IsNullOrEmpty($CertificatePath) -or `
+        -not [System.String]::IsNullOrEmpty($TenantId))
+    {
+        $AuthMethods += "Certificate"
+    }
+    if (-not [System.String]::IsNullOrEmpty($ApplicationId))
+    {
+        $AuthMethods += "Application"
+    }
+    $allSupportedResources = Get-M365DSCComponentsForAuthenticationType -AuthenticationMethod $AuthMethods
+
+    # If some resources are not supported based on the Authentication parameters
+    # received, write a warning.
+    $allResourcesInModule = Get-M365DSCAllResources
+    $selectedItems = Compare-Object -ReferenceObject $allResourcesInModule `
+        -DifferenceObject $ComponentsToSkip | Where-Object -FilterScript {$_.SideIndicator -eq '<='}
+    $selectedResources = @()
+    foreach ($item in $selectedItems)
+    {
+        $selectedResources += $item.InputObject
+    }
+    $compareResourcesResult = Compare-Object -ReferenceObject $allSupportedResources `
+        -DifferenceObject $selectedResources | Where-Object -FilterScript {$_.SideIndicator -eq '=>'}
+    if ($null -ne $compareResourcesResult)
+    {
+        # The client is trying to extract act least one resource which is not supported
+        # using only the provided authentication parameters;
+        $resourcesNotSupported = @()
+        foreach ($resource in $compareResourcesResult)
+        {
+            $resourcesNotSupported += $resource.InputObject
+
+            # Skip resources that are not supported;
+            $ComponentsToSkip += $resource.InputObject
+        }
+
+        Write-Host "[WARNING]" -NoNewLine -ForegroundColor Yellow
+        Write-Host " Based on the provided Authentication parameters, the following resources cannot be extracted: " -ForegroundColor Gray
+        Write-Host "$resourcesNotSupported" -ForegroundColor Gray
+    }
+
+    if (-not $PSBoundParameters.ContainsKey('Quiet'))
+    {
+        $unattendedCommand = "Export-M365DSCConfiguration -Quiet -ComponentsToExport @("
+        foreach ($resource in $ComponentsToExtract)
+        {
+            if ($resource -ne 'Credential' -and $resource -ne 'Application' -and `
+            $resource -ne 'Certificate')
+            {
+                $unattendedCommand += "'$resource',"
+            }
+        }
+        $unattendedCommand = $unattendedCommand.Substring(0, $unattendedCommand.Length -1)
+        $unattendedCommand += ")"
+        Write-Host "[INFO]" -NoNewLine -ForegroundColor Cyan
+        Write-Host " You can perform an equivalent unattended Export operation by running the following command:" -ForegroundColor Gray
+        Write-Host $unattendedCommand -ForegroundColor Blue
+    }
+
+    # Get Tenant Info
+    $organization = ""
+    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
+
+    if ($AuthMethods -Contains 'Application')
+    {
+        $ConnectionMode = 'ServicePrincipal'
+        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
+            -TenantId $TenantId `
+            -CertificateThumbprint $CertificateThumbprint
+    }
+    elseif ($AuthMethods -Contains 'Certificate')
+    {
+        $ConnectionMode = 'ServicePrincipal'
+        $organization = $TenantId
+    }
+    elseif ($AuthMethods -Contains 'Credentials')
+    {
+        $ConnectionMode = 'Credential'
+        if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
+        {
+            $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+        }
+    }
+    if ($organization.IndexOf(".") -gt 0)
+    {
+        $principal = $organization.Split(".")[0]
+    }
     $AzureAutomation = $false
     $version = (Get-Module 'Microsoft365DSC').Version
     $DSCContent = "# Generated with Microsoft365DSC version $version`r`n"

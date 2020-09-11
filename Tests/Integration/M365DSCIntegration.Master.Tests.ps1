@@ -8,10 +8,6 @@ param
     [System.String]
     $GlobalAdminPassword,
 
-    [Parameter(Mandatory = $true)]
-    [System.String]
-    $Domain,
-
     [Parameter()]
     [System.String]
     [ValidateSet('Public', 'GCC', 'GCCH', 'Germany', 'China')]
@@ -26,10 +22,6 @@ Configuration Master
         [System.Management.Automation.PSCredential]
         $GlobalAdmin,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Domain,
-
         [Parameter()]
         [System.String]
         [ValidateSet('Public', 'GCC', 'GCCH', 'Germany', 'China')]
@@ -37,7 +29,7 @@ Configuration Master
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
-
+    $Domain = $GlobalAdmin.Username.Split('@')[1]
     Node Localhost
     {
         AADApplication DSCApp1
@@ -967,5 +959,5 @@ $ConfigurationData = @{
 # Compile and deploy configuration
 $password = ConvertTo-SecureString $GlobalAdminPassword -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential ($GlobalAdminUser, $password)
-Master -ConfigurationData $ConfigurationData -GlobalAdmin $credential -Domain $Domain -Environment $Environment
+Master -ConfigurationData $ConfigurationData -GlobalAdmin $credential -Environment $Environment
 Start-DscConfiguration Master -Wait -Force -Verbose
