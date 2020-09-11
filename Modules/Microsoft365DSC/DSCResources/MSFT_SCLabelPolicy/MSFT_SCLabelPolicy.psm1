@@ -138,10 +138,10 @@ function Get-TargetResource
             GlobalAdminAccount           = $GlobalAdminAccount
             Ensure                       = 'Present'
             Labels                       = $policy.Labels
-            ExchangeLocation             = $policy.ExchangeLocation
-            ExchangeLocationException    = $policy.ExchangeLocationException
-            ModernGroupLocation          = $policy.ModernGroupLocation
-            ModernGroupLocationException = $policy.ModernGroupLocationException
+            ExchangeLocation             = Convert-ArrayList -CurrentProperty $policy.ExchangeLocation
+            ExchangeLocationException    = Convert-ArrayList -CurrentProperty $policy.ExchangeLocationException
+            ModernGroupLocation          = Convert-ArrayList -CurrentProperty $policy.ModernGroupLocation
+            ModernGroupLocationException = Convert-ArrayList -CurrentProperty $policy.ModernGroupLocationException
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -260,7 +260,7 @@ function Set-TargetResource
             $advanced = Convert-CIMToAdvancedSettings $AdvancedSettings
             $CreationParams["AdvancedSettings"] = $advanced
         }
-
+        #Remove parameters not used in Set-LabelPolicy
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
         $CreationParams.Remove("AddLabels")
@@ -419,8 +419,20 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of Sensitivity label for $Name"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove("AddLabels") | Out-Null
+    $ValuesToCheck.Remove("AddExchangeLocation") | Out-Null
+    $ValuesToCheck.Remove("AddExchangeLocationException") | Out-Null
+    $ValuesToCheck.Remove("AddModernGroupLocation") | Out-Null
+    $ValuesToCheck.Remove("AddModernGroupLocationException") | Out-Null
+    $ValuesToCheck.Remove("RemoveLabels") | Out-Null
+    $ValuesToCheck.Remove("RemoveExchangeLocation") | Out-Null
+    $ValuesToCheck.Remove("RemoveExchangeLocationException") | Out-Null
+    $ValuesToCheck.Remove("RemoveModernGroupLocation") | Out-Null
+    $ValuesToCheck.Remove("RemoveModernGroupLocationException") | Out-Null
 
     if ($null -ne $AdvancedSettings)
     {
@@ -431,58 +443,67 @@ function Test-TargetResource
         }
     }
 
-    if ($null -ne $CurrentValues.ModernGroupLocation)
+    if ($null -ne $RemoveModernGroupLocation -or $null -ne $AddModernGroupLocation -or $null -ne $ModernGroupLocation)
     {
         $configData = New-PolicyData -configData $ModernGroupLocation -currentData $CurrentValues.ModernGroupLocation `
             -removedData $RemoveModernGroupLocation -additionalData $AddModernGroupLocation
-        $different = Test-Location -DesiredProperty $configData -CurrentPropert $CurrentValues.ModernGroupLocation
-        if ($false -eq $different)
+        if ($null -ne $configData)
         {
-            return $false
+            $ValuesToCheck["ModernGroupLocation"] = $configData
         }
     }
 
-    if ($null -ne $CurrentValues.ModernGroupLocationException)
+    if ($null -ne $RemoveModernGroupLocationException -or $null -ne $AddModernGroupLocationException `
+        -or $null -ne $ModernGroupLocationException)
     {
         $configData = New-PolicyData -configData $ModernGroupLocationException -currentData $CurrentValues.ModernGroupLocationException `
             -removedData $RemoveModernGroupLocationException -additionalData $AddModernGroupLocationException
-        $different = Test-Location -DesiredProperty $configData -CurrentPropert $CurrentValues.ModernGroupLocationException
-        if ($false -eq $different)
+
+        if ($null -ne $configData)
         {
-            return $false
+            $ValuesToCheck["ModernGroupLocationException"] = $configData
         }
     }
 
-    if ($null -ne $CurrentValues.ExchangeLocation)
+    if ($null -ne $RemoveExchangeLocation -or $null -ne $AddExchangeLocation -or $null -ne $ExchangeLocation)
     {
         $configData = New-PolicyData -configData $ExchangeLocation -currentData $CurrentValues.ExchangeLocation `
             -removedData $RemoveExchangeLocation -additionalData $AddExchangeLocation
-        $different = Test-Location -DesiredProperty $configData -CurrentPropert $CurrentValues.ExchangeLocation
-        if ($false -eq $different)
+        if ($null -ne $configData)
         {
-            return $false
+            $ValuesToCheck["ExchangeLocation"] = $configData
         }
     }
 
-    if ($null -ne $CurrentValues.ExchangeLocationException )
+    if ($null -ne $RemoveExchangeLocationException -or $null -ne $AddExchangeLocationException -or $null -ne $ExchangeLocationException)
     {
         $configData = New-PolicyData -configData $ExchangeLocationException -currentData $CurrentValues.ExchangeLocationException `
             -removedData $RemoveExchangeLocationException -additionalData $AddExchangeLocationException
-        $different = Test-Location -DesiredProperty $configData -CurrentPropert $CurrentValues.ExchangeLocationException
-        if ($false -eq $different)
+
+        if ($null -ne $configData)
         {
-            return $false
+            $ValuesToCheck["ExchangeLocationException"] = $configData
         }
     }
 
+    if ($null -ne $RemoveLabels -or $null -ne $AddLabels -or $null -ne $Labels)
+    {
+        $configData = New-PolicyData -configData $Labels -currentData $CurrentValues.Labels `
+            -removedData $RemoveLabels -additionalData $AddLabels
+
+        if ($null -ne $configData)
+        {
+            $ValuesToCheck["Labels"] = $configData
+        }
+    }
+
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Name", `
-            "Comment", `
-            "Labels", `
-            "Ensure")
+        -DesiredValues $ValuesToCheck `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
     return $TestResult
@@ -765,39 +786,21 @@ function ConvertTo-LocaleSettingsString
     return $StringContent
 }
 
-function Test-Location
+function Convert-ArrayList
 {
     [CmdletBinding()]
-    [OutputType([System.Boolean])]
+    [OutputType([System.Collections.ArrayList])]
     param(
         [Parameter ()]
-        $DesiredProperty,
-
-        [Parameter (Mandatory = $true)]
         $CurrentProperty
     )
-    [System.Collections.ArrayList]$currentLocations = @()
-    foreach ($location in $CurrentProperty)
+    [System.Collections.ArrayList]$currentItems = @()
+    foreach ($currentProp in $CurrentProperty)
     {
-        $currentLocations.Add($location.Name)
+        $currentItems.Add($currentProp.Name) | Out-Null
     }
 
-    if ($null -ne $DesiredProperty)
-    {
-        $diff = Compare-Object -ReferenceObject $currentLocations -DifferenceObject $DesiredProperty
-    }
-    else
-    {
-        return $false
-    }
-    if ($null -eq $diff)
-    {
-        return $true
-    }
-    else
-    {
-        return $false
-    }
+    return $currentItems
 
 }
 
@@ -821,22 +824,31 @@ function New-PolicyData
     [System.Collections.ArrayList]$desiredData = @()
     foreach ($currItem in $currentData)
     {
-        $desiredData.add($currItem.Name)
+        if (!$desiredData.Contains($currItem))
+        {
+            $desiredData.add($currItem) |Out-Null
+        }
     }
 
     foreach ($currItem in $configData)
     {
-        $desiredData.add($currItem)
+        if (!$desiredData.Contains("$curritem"))
+        {
+            $desiredData.add($currItem) |Out-Null
+        }
     }
 
     foreach ($currItem in $removedData)
     {
-        $desiredData.remove($currItem)
+        $desiredData.remove($currItem) |Out-Null
     }
 
     foreach ($currItem in $additionalData)
     {
-        $desiredData.add($currItem)
+        if (!$desiredData.Contains("$curritem"))
+        {
+            $desiredData.add($currItem) |Out-Null
+        }
     }
 
     return $desiredData
