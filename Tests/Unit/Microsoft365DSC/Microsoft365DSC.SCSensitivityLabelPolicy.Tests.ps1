@@ -32,6 +32,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
+            Mock -CommandName Convert-ArrayList -MockWith {
+
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credential"
             }
@@ -99,10 +103,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name               = "TestLabelPolicy"
                     Comment            = "This is a test label policy"
                     Labels             = @("Personal", "General");
-                    AdvancedSettings   = (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
-                            Key   = "LabelStatus"
-                            Value = "Enabled"
-                        } -clientOnly)
                     GlobalAdminAccount = $GlobalAdminAccount
                     Ensure             = "Present"
                 }
@@ -112,8 +112,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Name               = "TestLabelPolicy"
                         Comment            = "This is a test label policy"
                         Labels             = @("Personal", "General");
-                        Settings       = '{"Key": "LabelStatus",
-                                            "Value": "Enabled"}'
                         GlobalAdminAccount = $GlobalAdminAccount
                         Ensure             = "Present"
                     }
