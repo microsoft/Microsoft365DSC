@@ -17,15 +17,12 @@ official YouTube channel
 
 ### master
 
-[![Build status](https://ci.appveyor.com/api/projects/status/5a7f2ao7d1mnoqrb/branch/master?svg=true)](https://ci.appveyor.com/project/NikCharlebois/Microsoft365DSC/branch/master)
 [![codecov](https://codecov.io/gh/Microsoft/Microsoft365DSC/branch/master/graph/badge.svg)](https://codecov.io/gh/Microsoft/Microsoft365DSC)
 
 This is the branch containing the latest release -
 no contributions should be made directly to this branch.
 
 ### dev
-
-[![Build status](https://ci.appveyor.com/api/projects/status/5a7f2ao7d1mnoqrb?svg=true)](https://ci.appveyor.com/project/NikCharlebois/Microsoft365DSC)
 
 [![codecov](https://codecov.io/gh/microsoft/Microsoft365DSC/branch/Dev/graph/badge.svg)](https://codecov.io/gh/microsoft/Microsoft365DSC)
 
@@ -47,8 +44,6 @@ no contributions should be made directly to this branch.
 
 ![AzureUSGovernment - Integration](https://github.com/microsoft/Microsoft365DSC/workflows/AzureUSGovernment%20-%20Integration/badge.svg)
 
-![Generate Wiki Content](https://github.com/microsoft/Microsoft365DSC/workflows/Generate%20Wiki%20Content/badge.svg)
-
 ![Unit Tests](https://github.com/microsoft/Microsoft365DSC/workflows/Unit%20Tests/badge.svg)
 
 This is the development branch
@@ -63,7 +58,7 @@ bits of the module from a machine that has internet connectivity,
 simply run the following PowerShell line:
 
 ```powershell
-Install-Module -Name Microsoft365DSC -Force
+Install-Module -Name Microsoft365DSC -Force -AllowClobber
 ```
 
 ## Telemetry Disclaimer

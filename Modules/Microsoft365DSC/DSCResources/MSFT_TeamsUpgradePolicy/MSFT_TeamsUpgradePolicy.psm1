@@ -22,14 +22,16 @@ function Get-TargetResource
     )
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
     Write-Verbose -Message "Checking the Teams Upgrade Policies"
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform SkypeForBusiness
+    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+        -InboundParameters $PSBoundParameters
 
     $policy = Get-CsTeamsUpgradePolicy -Identity $Identity -ErrorAction SilentlyContinue
     [array]$users = Get-CSOnlineUser | Where-Object -Filter {$_.TeamsUpgradePolicy -eq $Identity}
@@ -76,15 +78,17 @@ function Set-TargetResource
     )
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
     Write-Verbose -Message "Updating Teams Upgrade Policy {$Identity}"
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform SkypeForBusiness
+    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+        -InboundParameters $PSBoundParameters
 
     foreach ($user in $Users)
     {
@@ -115,13 +119,6 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    #region Telemetry
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
     Write-Verbose -Message "Testing configuration of Team Upgrade Policy {$Identity}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -153,14 +150,15 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $InformationPreference = 'Continue'
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform SkypeForBusiness
+    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+        -InboundParameters $PSBoundParameters
 
     $organization = ""
     if ($GlobalAdminAccount.UserName.Contains("@"))
@@ -171,9 +169,10 @@ function Export-TargetResource
     [array]$policies = Get-CsTeamsUpgradePolicy
     $i = 1
     $content = ''
+    Write-Host "`r`n" -NoNewLine
     foreach ($policy in $policies)
     {
-        Write-Information "    [$i/$($policies.Count)] $($policy.Identity.Replace('Tag:', ''))"
+        Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity.Replace('Tag:', ''))" -NoNewLine
         $params = @{
             Identity           = $policy.Identity.Replace("Tag:", "")
             GlobalAdminAccount = $GlobalAdminAccount
@@ -191,6 +190,7 @@ function Export-TargetResource
         $content += $partialContent
         $content += "        }`r`n"
         $i++
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

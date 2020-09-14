@@ -19,7 +19,8 @@ jobs:
        $dependencies = $manifest.RequiredModules
        foreach ($dependency in $dependencies)
        {
-           Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -SkipPublisherCheck -AllowClobber -Scope AllUsers
+           Write-Verbose -Message "Installing Module {$($dependency.ModuleName)} Version {$($dependency.RequiredVersion)}"
+           Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -SkipPublisherCheck -AllowClobber -Scope AllUsers -Verbose
            try
            {
                Import-Module $dependency.ModuleName -Force
@@ -36,11 +37,11 @@ jobs:
         $source = "./Modules/Microsoft365DSC/"
         $destination = "C:\Program Files\WindowsPowerShell\Modules"
         Copy-Item -Path $source -Recurse -Destination $destination -Container
-    - name: Run ReverseDSC   
-      shell : powershell  
+    - name: Run ReverseDSC
+      shell : powershell
       env:
-        PUBLIC_USERNAME: ${{ secrets.PUBLIC_USERNAME }} 
-        PUBLIC_PASSWORD: ${{ secrets.PUBLIC_PASSWORD }} 
+        PUBLIC_USERNAME: ${{ secrets.PUBLIC_USERNAME }}
+        PUBLIC_PASSWORD: ${{ secrets.PUBLIC_PASSWORD }}
       run: |
        Set-ExecutionPolicy Unrestricted -Force
        Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File

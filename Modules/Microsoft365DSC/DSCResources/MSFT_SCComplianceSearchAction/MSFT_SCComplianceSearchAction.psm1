@@ -6,7 +6,7 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Export', 'Purge', 'Retention')]
+        [ValidateSet('Export', 'Preview', 'Purge', 'Retention')]
         $Action,
 
         [Parameter(Mandatory = $true)]
@@ -54,14 +54,25 @@ function Get-TargetResource
     )
     Write-Verbose -Message "Getting configuration of SCComplianceSearchAction for $SearchName - $Action"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters
+    }
 
     $currentAction = Get-CurrentAction -SearchName $SearchName -Action $Action
 
@@ -136,7 +147,7 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Export', 'Purge', 'Retention')]
+        [ValidateSet('Export', 'Preview', 'Purge', 'Retention')]
         $Action,
 
         [Parameter(Mandatory = $true)]
@@ -185,14 +196,16 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of SCComplianceSearchAction for $SearchName - $Action"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
+    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        -InboundParameters $PSBoundParameters
 
     $CurrentAction = Get-TargetResource @PSBoundParameters
 
@@ -287,7 +300,7 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Export', 'Purge', 'Retention')]
+        [ValidateSet('Export', 'Preview', 'Purge', 'Retention')]
         $Action,
 
         [Parameter(Mandatory = $true)]
@@ -333,7 +346,6 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-
     Write-Verbose -Message "Testing configuration of SCComplianceSearchAction"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -362,29 +374,30 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-
-    $InformationPreference = "Continue"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Test-MSCloudLogin -Platform SecurityComplianceCenter `
-        -CloudCredential $GlobalAdminAccount
+    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
     [array]$actions = Get-ComplianceSearchAction
 
     if ($actions.Count -gt 0)
     {
-        Write-Information -MessageData "    Tenant Wide Actions:"
+        Write-Host "`r`n    Tenant Wide Actions:"
     }
     $i = 1
-    $content = ""
+    $dscContent = ""
     foreach ($action in $actions)
     {
-        Write-Information "        [$i/$($actions.Length)] $($action.Name)"
-        $params = @{
+        Write-Host "        |---[$i/$($actions.Length)] $($action.Name)" -NoNewLine
+        $Params = @{
             Action             = $action.Action
             SearchName         = $action.SearchName
             GlobalAdminAccount = $GlobalAdminAccount
@@ -394,16 +407,17 @@ function Export-TargetResource
 
         if ('RetentionReports' -eq $Scenario)
         {
-            $params.Action = "Retention"
+            $Params.Action = "Retention"
         }
-
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content += "        SCComplianceSearchAction " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
+        $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
 
@@ -412,39 +426,41 @@ function Export-TargetResource
     $j = 1
     foreach ($case in $cases)
     {
-        Write-Information "    Case [$j/$($cases.Count)] $($Case.Name)"
+        Write-Host "    Case [$j/$($cases.Count)] $($Case.Name)"
 
         $actions = Get-ComplianceSearchAction -Case $Case.Name
 
         $i = 1
         foreach ($action in $actions)
         {
-            Write-Information "        [$i/$($actions.Length)] $($action.Name)"
-            $params = @{
-                Action             = $action.Action
-                SearchName         = $action.SearchName
-                GlobalAdminAccount = $GlobalAdminAccount
+            Write-Host "        |---[$i/$($actions.Length)] $($action.Name)" -NoNewLine
+
+            $Params = @{
+                Action                = $action.Action
+                SearchName            = $action.SearchName
+                GlobalAdminAccount    = $GlobalAdminAccount
             }
 
             $Scenario = Get-ResultProperty -ResultString $action.Results -PropertyName "Scenario"
 
             if ('RetentionReports' -eq $Scenario)
             {
-                $params.Action = "Retention"
+                $Params.Action = "Retention"
             }
-
-            $result = Get-TargetResource @params
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $content += "        SCComplianceSearchAction " + (New-GUID).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            $content += "        }`r`n"
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
         $j++
     }
-    return $content
+    return $dscContent
 }
 
 function Get-ResultProperty
@@ -463,6 +479,10 @@ function Get-ResultProperty
     )
 
     $start = $ResultString.IndexOf($PropertyName) + $PropertyName.Length + 2
+    if ($start -lt 0 -or $start -gt $ResultString.Length)
+    {
+        return $null
+    }
     $end = $ResultString.IndexOf(';', $start)
 
     $result = $null

@@ -25,7 +25,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
             $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-            Mock -CommandName Test-MSCloudLogin -MockWith {
+            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
+                return @{}
+            }
+
+            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
+
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
+            }
+
+            Mock -CommandName Set-PnPTenantSyncClientRestriction -MockWith {
             }
         }
 
@@ -69,7 +81,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ODBAccessRequests                         = "On"
                     BlockMacSync                              = $true
                     DisableReportProblemDialog                = $true
-                    DomainGuids                               = "12345-12345-12345-12345-12345"
+                    DomainGuids                               = @(New-Guid)
                     ExcludedFileExtensions                    = @(".asmx")
                     GrooveBlockOption                         = "HardOptIn"
                     GlobalAdminAccount                        = $GlobalAdminAccount
@@ -91,6 +103,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         TenantRestrictionEnabled   = $true
                         ExcludedFileExtensions     = @(".asmx")
                     }
+                }
+                Mock -CommandName Set-PnPTenant -MockWith {
+                    return @{OneDriveStorageQuota = $null }
                 }
             }
 

@@ -25,14 +25,16 @@ function Get-TargetResource
     Write-Verbose -Message "Checking the Teams Upgrade Configuration"
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SkypeForBusiness
+    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+        -InboundParameters $PSBoundParameters
 
     $settings = Get-CsTeamsUpgradeConfiguration
     return @{
@@ -70,14 +72,16 @@ function Set-TargetResource
     Write-Verbose -Message "Setting Teams Upgrade Configuration"
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SkypeForBusiness
+    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+        -InboundParameters $PSBoundParameters
 
     $SetParameters = $PSBoundParameters
     $SetParameters.Remove("IsSingleInstance") | Out-Null
@@ -142,9 +146,11 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -159,6 +165,7 @@ function Export-TargetResource
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
     $content += "        }`r`n"
+    Write-Host $Global:M365DSCEmojiGreenCheckMark
     return $content
 }
 

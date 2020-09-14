@@ -45,6 +45,158 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present',
 
+        [Parameter()]
+        [ValidateSet('Left', 'Center', 'Right')]
+        [System.String]
+        $ApplyContentMarkingFooterAlignment,
+
+        [Parameter()]
+        [System.Boolean]
+        $ApplyContentMarkingFooterEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingFooterFontColor,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingFooterFontName,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingFooterFontSize,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingFooterMargin,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingFooterText,
+
+        [Parameter()]
+        [ValidateSet('Left', 'Center', 'Right')]
+        [System.String]
+        $ApplyContentMarkingHeaderAlignment,
+
+        [Parameter()]
+        [System.Boolean]
+        $ApplyContentMarkingHeaderEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderFontColor,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderFontName,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingHeaderFontSize,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingHeaderMargin,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderText,
+
+        [Parameter()]
+        [System.Boolean]
+        $ApplyWaterMarkingEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingFontColor,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingFontName,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyWaterMarkingFontSize,
+
+        [Parameter()]
+        [ValidateSet('Horizontal', 'Diagonal')]
+        [System.String]
+        $ApplyWaterMarkingLayout,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingText,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionAipTemplateScopes,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionContentExpiredOnDateInDaysOrNever,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionDoNotForward,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionEnabled,
+
+        [Parameter()]
+        [System.Int32]
+        $EncryptionOfflineAccessDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionPromptUser,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionProtectionType,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionRightsDefinitions,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionRightsUrl,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowAccessToGuestUsers,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowEmailFromGuestUsers,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowFullAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowLimitedAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionBlockAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionEnabled,
+
+        [Parameter()]
+        [ValidateSet('Public', 'Private')]
+        [System.String]
+        $SiteAndGroupProtectionPrivacy,
+
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
@@ -52,19 +204,29 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Sensitivity Label for $Name"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Calling Test-SecurityAndComplianceConnection function:"
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters
+    }
 
     try
     {
-        $label = Get-Label -Identity $Name -ErrorAction SilentlyContinue
+        $label = Get-Label -Identity $Name -ErrorAction SilentlyContinue -IncludeDetailedLabelActions $true
     }
     catch
     {
@@ -94,19 +256,60 @@ function Get-TargetResource
         {
             $advancedSettingsValue = Convert-StringToAdvancedSettings -AdvancedSettings $label.Settings
         }
+        if($null -ne $label.EncryptionRightsDefinitions)
+        {
+            $EncryptionRightsDefinitionsValue = Convert-EncryptionRightDefinition -RightsDefinition $label.EncryptionRightsDefinitions
+        }
         Write-Verbose "Found existing Sensitivity Label $($Name)"
         $result = @{
-            Name               = $label.Name
-            Comment            = $label.Comment
-            ParentId           = $parentLabelID
-            AdvancedSettings   = $advancedSettingsValue
-            DisplayName        = $label.DisplayName
-            LocaleSettings     = $localeSettingsValue
-            Priority           = $label.Priority
-            Tooltip            = $label.Tooltip
-            Disabled           = $label.Disabled
-            GlobalAdminAccount = $GlobalAdminAccount
-            Ensure             = 'Present'
+            Name                                           = $label.Name
+            Comment                                        = $label.Comment
+            ParentId                                       = $parentLabelID
+            AdvancedSettings                               = $advancedSettingsValue
+            DisplayName                                    = $label.DisplayName
+            LocaleSettings                                 = $localeSettingsValue
+            Priority                                       = $label.Priority
+            Tooltip                                        = $label.Tooltip
+            Disabled                                       = $label.Disabled
+            GlobalAdminAccount                             = $GlobalAdminAccount
+            Ensure                                         = 'Present'
+            ApplyContentMarkingFooterAlignment             = $label.ApplyContentMarkingFooterAlignment
+            ApplyContentMarkingFooterEnabled               = $label.ApplyContentMarkingFooterEnabled
+            ApplyContentMarkingFooterFontColor             = $label.ApplyContentMarkingFooterFontColor
+            ApplyContentMarkingFooterFontName              = $label.ApplyContentMarkingFooterFontName
+            ApplyContentMarkingFooterFontSize              = $label.ApplyContentMarkingFooterFontSize
+            ApplyContentMarkingFooterMargin                = $label.ApplyContentMarkingFooterMargin
+            ApplyContentMarkingFooterText                  = $label.ApplyContentMarkingFooterText
+            ApplyContentMarkingHeaderAlignment             = $label.ApplyContentMarkingHeaderAlignment
+            ApplyContentMarkingHeaderEnabled               = $label.ApplyContentMarkingHeaderEnabled
+            ApplyContentMarkingHeaderFontColor             = $label.ApplyContentMarkingHeaderFontColor
+            ApplyContentMarkingHeaderFontName              = $label.ApplyContentMarkingHeaderFontName
+            ApplyContentMarkingHeaderFontSize              = $label.ApplyContentMarkingHeaderFontSize
+            ApplyContentMarkingHeaderMargin                = $label.ApplyContentMarkingHeaderMargin
+            ApplyContentMarkingHeaderText                  = $label.ApplyContentMarkingHeaderText
+            ApplyWaterMarkingEnabled                       = $label.ApplyWaterMarkingEnabled
+            ApplyWaterMarkingFontColor                     = $label.ApplyWaterMarkingFontColor
+            ApplyWaterMarkingFontName                      = $label.ApplyWaterMarkingFontName
+            ApplyWaterMarkingFontSize                      = $label.ApplyWaterMarkingFontSize
+            ApplyWaterMarkingLayout                        = $label.ApplyWaterMarkingLayout
+            ApplyWaterMarkingText                          = $label.ApplyWaterMarkingText
+            EncryptionAipTemplateScopes                    = $label.EncryptionAipTemplateScopes
+            EncryptionContentExpiredOnDateInDaysOrNever    = $label.EncryptionContentExpiredOnDateInDaysOrNever
+            EncryptionDoNotForward                         = $label.EncryptionDoNotForward
+            EncryptionEnabled                              = $label.EncryptionEnabled
+            EncryptionOfflineAccessDays                    = $label.EncryptionOfflineAccessDays
+            EncryptionPromptUser                           = $label.EncryptionPromptUser
+            EncryptionProtectionType                       = $label.EncryptionProtectionType
+            EncryptionRightsDefinitions                    = $EncryptionRightsDefinitionsValue
+            EncryptionRightsUrl                            = $label.EncryptionRightsUrl
+            EncryptionTemplateId                           = $label.EncryptionTemplateId
+            SiteAndGroupProtectionAllowAccessToGuestUsers  = $label.SiteAndGroupProtectionAllowAccessToGuestUsers
+            SiteAndGroupProtectionAllowEmailFromGuestUsers = $label.SiteAndGroupProtectionAllowEmailFromGuestUsers
+            SiteAndGroupProtectionAllowFullAccess          = $label.SiteAndGroupProtectionAllowFullAccess
+            SiteAndGroupProtectionAllowLimitedAccess       = $label.SiteAndGroupProtectionAllowLimitedAccess
+            SiteAndGroupProtectionBlockAccess              = $label.SiteAndGroupProtectionBlockAccess
+            SiteAndGroupProtectionEnabled                  = $label.SiteAndGroupProtectionEnabled
+            SiteAndGroupProtectionPrivacy                  = $label.SiteAndGroupProtectionPrivacy
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -160,6 +363,159 @@ function Set-TargetResource
         [System.String]
         $Ensure = 'Present',
 
+        [Parameter()]
+        [ValidateSet('Left', 'Center', 'Right')]
+        [System.String]
+        $ApplyContentMarkingFooterAlignment,
+
+        [Parameter()]
+        [System.Boolean]
+        $ApplyContentMarkingFooterEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingFooterFontColor,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingFooterFontName,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingFooterFontSize,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingFooterMargin,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingFooterText,
+
+        [Parameter()]
+        [ValidateSet('Left', 'Center', 'Right')]
+        [System.String]
+        $ApplyContentMarkingHeaderAlignment,
+
+        [Parameter()]
+        [System.Boolean]
+        $ApplyContentMarkingHeaderEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderFontColor,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderFontName,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingHeaderFontSize,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingHeaderMargin,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderText,
+
+        [Parameter()]
+        [System.Boolean]
+        $ApplyWaterMarkingEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingFontColor,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingFontName,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyWaterMarkingFontSize,
+
+        [Parameter()]
+        [ValidateSet('Horizontal', 'Diagonal')]
+        [System.String]
+        $ApplyWaterMarkingLayout,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingText,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionAipTemplateScopes,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionContentExpiredOnDateInDaysOrNever,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionDoNotForward,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionEnabled,
+
+        [Parameter()]
+        [System.Int32]
+        $EncryptionOfflineAccessDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionPromptUser,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionProtectionType,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionRightsDefinitions,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionRightsUrl,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowAccessToGuestUsers,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowEmailFromGuestUsers,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowFullAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowLimitedAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionBlockAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionEnabled,
+
+        [Parameter()]
+        [ValidateSet('Public', 'Private')]
+        [System.String]
+        $SiteAndGroupProtectionPrivacy,
+
+
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
@@ -167,33 +523,27 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Sensitivity label for $Name"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
+    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        -InboundParameters $PSBoundParameters
 
     $label = Get-TargetResource @PSBoundParameters
 
+    if ($PSBoundParameters.ContainsKey("Disabled"))
+    {
+        Write-Verbose -Message "The Disabled parameter is no longer available and will be depricated."
+    }
+
+
     if (('Present' -eq $Ensure) -and ('Absent' -eq $label.Ensure))
     {
-        if ($null -ne $label.Priority)
-        {
-            throw "SCSensitivityLabel can't set Priortity property on " + `
-                "new label {$Name} to $label.Priority." + `
-                "You will need to set priority property once label is created."
-        }
-
-        if ($null -ne $label.Disabled)
-        {
-            throw "SCSensitivityLabel can't set disabled property on " + `
-                "new label {$Name} to $label.Disabled." + `
-                "You will need to set disabled property once label is created."
-        }
-
         $CreationParams = $PSBoundParameters
 
         if ($PSBoundParameters.ContainsKey("AdvancedSettings"))
@@ -218,6 +568,12 @@ function Set-TargetResource
         try
         {
             New-Label @CreationParams
+            ## Can't set priority until label created
+            if ($PSBoundParameters.ContainsKey("Priority"))
+            {
+                Start-Sleep 5
+                Set-label -Identity $Name -priority $Priority
+            }
         }
         catch
         {
@@ -244,6 +600,7 @@ function Set-TargetResource
         $SetParams.Remove("GlobalAdminAccount")
         $SetParams.Remove("Ensure")
         $SetParams.Remove("Name")
+        $SetParams.Remove("Disabled")
 
         try
         {
@@ -317,6 +674,159 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present',
 
+        [Parameter()]
+        [ValidateSet('Left', 'Center', 'Right')]
+        [System.String]
+        $ApplyContentMarkingFooterAlignment,
+
+        [Parameter()]
+        [System.Boolean]
+        $ApplyContentMarkingFooterEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingFooterFontColor,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingFooterFontName,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingFooterFontSize,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingFooterMargin,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingFooterText,
+
+        [Parameter()]
+        [ValidateSet('Left', 'Center', 'Right')]
+        [System.String]
+        $ApplyContentMarkingHeaderAlignment,
+
+        [Parameter()]
+        [System.Boolean]
+        $ApplyContentMarkingHeaderEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderFontColor,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderFontName,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingHeaderFontSize,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingHeaderMargin,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderText,
+
+        [Parameter()]
+        [System.Boolean]
+        $ApplyWaterMarkingEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingFontColor,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingFontName,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyWaterMarkingFontSize,
+
+        [Parameter()]
+        [ValidateSet('Horizontal', 'Diagonal')]
+        [System.String]
+        $ApplyWaterMarkingLayout,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingText,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionAipTemplateScopes,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionContentExpiredOnDateInDaysOrNever,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionDoNotForward,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionEnabled,
+
+        [Parameter()]
+        [System.Int32]
+        $EncryptionOfflineAccessDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionPromptUser,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionProtectionType,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionRightsDefinitions,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionRightsUrl,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowAccessToGuestUsers,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowEmailFromGuestUsers,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowFullAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowLimitedAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionBlockAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionEnabled,
+
+        [Parameter()]
+        [ValidateSet('Public', 'Private')]
+        [System.String]
+        $SiteAndGroupProtectionPrivacy,
+
+
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
@@ -332,6 +842,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('AdvancedSettings') | Out-Null
     $ValuesToCheck.Remove('LocaleSettings') | Out-Null
+    $ValuesToCheck.Remove('Disabled') | Out-Null
 
     if ($null -ne $AdvancedSettings)
     {
@@ -370,56 +881,63 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -Platform 'SecurityComplianceCenter' `
-        -CloudCredential $GlobalAdminAccount
+    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
     try
     {
         [array]$labels = Get-Label
 
-        $content = ""
+        $dscContent = ""
         $i = 1
+        Write-Host "`r`n" -NoNewLine
         foreach ($label in $labels)
         {
-            Write-Information "    [$i/$($labels.Count)] $($label.Name)"
-            $params = @{
+            Write-Host "    |---[$i/$($labels.Count)] $($label.Name)" -NoNewLine
+
+            $Params = @{
                 Name               = $label.Name
                 GlobalAdminAccount = $GlobalAdminAccount
             }
-            $result = Get-TargetResource @params
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $Results = Get-TargetResource @Params
 
-            if ($null -ne $result.AdvancedSettings)
+            if ($null -ne $Results.AdvancedSettings)
             {
-                $result.AdvancedSettings = ConvertTo-AdvancedSettingsString -AdvancedSettings $result.AdvancedSettings
+                $Results.AdvancedSettings = ConvertTo-AdvancedSettingsString -AdvancedSettings $Results.AdvancedSettings
             }
 
-            if ($null -ne $result.LocaleSettings)
+            if ($null -ne $Results.LocaleSettings)
             {
-                $result.LocaleSettings = ConvertTo-LocaleSettingsString -LocaleSettings $result.LocaleSettings
+                $Results.LocaleSettings = ConvertTo-LocaleSettingsString -LocaleSettings $Results.LocaleSettings
             }
-            $content += "        SCSensitivityLabel " + (New-GUID).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            if ($null -ne $result.AdvancedSettings)
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            if ($null -ne $Results.AdvancedSettings)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AdvancedSettings"
             }
-            if ($null -ne $result.LocaleSettings)
+            if ($null -ne $Results.LocaleSettings)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "LocaleSettings"
             }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            $content += $currentDSCBlock
-            $content += "        }`r`n"
+
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $dscContent += $currentDSCBlock
             $i++
         }
     }
@@ -427,7 +945,7 @@ function Export-TargetResource
     {
         Write-Warning "Get-Label is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
     }
-    return $content
+    return $dscContent
 }
 
 function Convert-JSONToLocaleSettings
@@ -519,6 +1037,28 @@ function Convert-CIMToAdvancedSettings
     return $entry
 }
 
+function Convert-EncryptionRightDefinition
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    Param(
+        [parameter(Mandatory = $true)]
+        [System.String]
+        $RightsDefinition
+    )
+
+    $EncryptionRights = $RightsDefinition | ConvertFrom-Json
+    foreach ($right in $EncryptionRights)
+    {
+        $StringContent += "$($right.Identity):$($right.Rights);"
+    }
+    if ($StringContent.EndsWith(";"))
+    {
+        $StringContent = $StringContent.Substring(0,($StringContent.Length-1))
+    }
+    return $StringContent
+
+}
 
 function Convert-CIMToLocaleSettings
 {

@@ -25,8 +25,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.com", $secpasswd)
             $global:tenantName = $GlobalAdminAccount.UserName.Split('@')[1].Split('.')[0]
 
-            Mock -CommandName Test-MSCloudLogin -MockWith {
+            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
+                return @{}
+            }
 
+            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
+
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
 
             Mock -CommandName Get-PSSession -MockWith {
@@ -59,6 +67,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure             = "Present"
                 }
 
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return "Credential"
+                }
+
                 Mock -CommandName Get-PnPTenantCdnEnabled -MockWith {
                     return @{ Value = "true" }
                 }
@@ -87,6 +99,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     CdnType            = "Public"
                     GlobalAdminAccount = $GlobalAdminAccount;
                     Ensure             = "Absent"
+                }
+
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return "Credential"
                 }
 
                 Mock -CommandName Get-PnPTenantCdnEnabled -MockWith {
@@ -128,6 +144,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure             = "Present"
                 }
 
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return "Credential"
+                }
+
                 Mock -CommandName Get-M365TenantName -MockWith {
                     return 'contoso'
                 }
@@ -167,6 +187,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure             = "Present"
                 }
 
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return "Credential"
+                }
+
                 Mock -CommandName Get-PNPOrgAssetsLibrary -MockWith {
                     return @{
                         OrgAssetsLibraries = @{
@@ -204,6 +228,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     GlobalAdminAccount = $GlobalAdminAccount
+                }
+
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return "Credential"
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {

@@ -85,24 +85,6 @@ function Remove-PSSession
     )
 }
 
-function Get-AzureADMSGroup
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.String]
-        $Id
-    )
-}
-
 function New-AzureADMSGroup
 {
     [CmdletBinding()]
@@ -220,7 +202,15 @@ function New-M365DSCConnection
 
         [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]
-        $InboundParameters
+        $InboundParameters,
+
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipModuleReload
     )
 }
 
@@ -1013,9 +1003,29 @@ function Get-AllSPOPackages
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable[]])]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 }
 

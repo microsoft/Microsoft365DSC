@@ -25,8 +25,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString "Pass@word1)" -AsPlainText -Force
             $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-            Mock -CommandName Test-MSCloudLogin -MockWith {
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
+            }
 
+            Mock -CommandName Get-M365DSCOrganization -MockWith {
+                return "contoso.com"
+            }
+
+            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
+                return @{}
+            }
+
+            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
+
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
 
             Mock -CommandName Get-SPOAdministrationUrl -MockWith {
@@ -46,6 +62,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure             = "Present"
                     GlobalAdminAccount = $GlobalAdminAccount
                     SiteUrl            = "https://contoso-admin.sharepoint.com"
+                }
+
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return "Credential"
                 }
 
                 Mock -CommandName Get-PnPStorageEntity -MockWith {
@@ -73,6 +93,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure             = "Present"
                     SiteUrl            = "https://contoso-admin.sharepoint.com"
                     GlobalAdminAccount = $GlobalAdminAccount
+                }
+
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return "Credential"
                 }
 
                 Mock -CommandName Get-PnPStorageEntity -MockWith {
@@ -106,6 +130,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure             = "Present"
                     SiteUrl            = "https://contoso-admin.sharepoint.com"
                     GlobalAdminAccount = $GlobalAdminAccount
+                }
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return "Credential"
                 }
 
                 Mock -CommandName Get-PnPStorageEntity -MockWith {
@@ -155,6 +182,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount
                 }
 
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return "Credential"
+                }
+
                 Mock -CommandName Get-PnPStorageEntity -MockWith {
                     return @{
                         Key         = "DSCKey"
@@ -187,6 +218,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     GlobalAdminAccount = $GlobalAdminAccount
+                }
+
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return "Credential"
                 }
 
                 Mock -CommandName Get-PnPStorageEntity -MockWith {

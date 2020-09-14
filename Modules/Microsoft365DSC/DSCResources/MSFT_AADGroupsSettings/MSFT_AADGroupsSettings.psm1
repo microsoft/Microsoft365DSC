@@ -61,9 +61,12 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of AzureAD Groups Naming Policy"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -88,12 +91,12 @@ function Get-TargetResource
         }
         $result = @{
             IsSingleInstance               = 'Yes'
-            EnableGroupCreation            = [Boolean]$Policy["EnableGroupCreation"]
-            AllowGuestsToBeGroupOwner      = [Boolean]$Policy["AllowGuestsToBeGroupOwner"]
-            AllowGuestsToAccessGroups      = [Boolean]$Policy["AllowGuestsToAccessGroups"]
+            EnableGroupCreation            = [Boolean]::Parse($Policy["EnableGroupCreation"])
+            AllowGuestsToBeGroupOwner      = [Boolean]::Parse($Policy["AllowGuestsToBeGroupOwner"])
+            AllowGuestsToAccessGroups      = [Boolean]::Parse($Policy["AllowGuestsToAccessGroups"])
             GuestUsageGuidelinesUrl        = $Policy["GuestUsageGuidelinesUrl"]
             GroupCreationAllowedGroupName  = $AllowedGroupName
-            AllowToAddGuests               = [Boolean]$Policy["AllowToAddGuests"]
+            AllowToAddGuests               = [Boolean]::Parse($Policy["AllowToAddGuests"])
             UsageGuidelinesUrl             = $Policy["UsageGuidelinesUrl"]
             Ensure                         = "Present"
             GlobalAdminAccount             = $GlobalAdminAccount
@@ -169,9 +172,12 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Azure AD Groups Settings"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -315,57 +321,34 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
-    if ($ConnectionMode -eq 'ServicePrincipal')
-    {
-        $params = @{
+    $Params = @{
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             IsSingleInstance      = 'Yes'
-        }
+            GlobalAdminAccount    = $GlobalAdminAccount
     }
-    else
-    {
-        $params = @{
-            GlobalAdminAccount = $GlobalAdminAccount
-            IsSingleInstance   = 'Yes'
-        }
-    }
-    $content = ''
-    $result = Get-TargetResource @params
-    if ($ConnectionMode -eq 'Credential')
-    {
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $result.Remove("ApplicationId") | Out-Null
-        $result.Remove("TenantId") | Out-Null
-        $result.Remove("CertificateThumbprint") | Out-Null
-    }
-    else
-    {
-        $result.Remove("GlobalAdminAccount") | Out-Null
-    }
-    $content += "        AADGroupsSettings " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    if ($ConnectionMode -eq 'Credential')
-    {
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    }
-    else
-    {
-        $content += $currentDSCBlock
-    }
-    $content += "        }`r`n"
-
-    return $content
+    $dscContent = ''
+    $Results = Get-TargetResource @Params
+    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+        -Results $Results
+    $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+        -ConnectionMode $ConnectionMode `
+        -ModulePath $PSScriptRoot `
+        -Results $Results `
+        -GlobalAdminAccount $GlobalAdminAccount
+    Write-Host $Global:M365DSCEmojiGreenCheckMark
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource
