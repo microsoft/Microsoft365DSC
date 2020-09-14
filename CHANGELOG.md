@@ -1,5 +1,17 @@
 # Change log for Microsoft365DSC
 
+## UNRELEASED
+
+* EXOAvailabilityAddressSpace
+  * Fixed an issue where if the user didn't have proper permissions
+    the entire Export process would stop;
+* EXOAvailabilityConfig
+  * Fixed an issue where if the user didn't have proper permissions
+    the entire Export process would stop;
+* EXOEmailAddressPolicy
+  * Fixed an issue where if the user didn't have proper permissions
+    the entire Export process would stop;
+
 ## 1.20.909.1
 
 * EXOApplicationAccessPolicy
