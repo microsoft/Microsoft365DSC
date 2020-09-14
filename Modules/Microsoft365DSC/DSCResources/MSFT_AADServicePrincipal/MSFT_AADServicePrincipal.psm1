@@ -88,30 +88,32 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Azure AD ServicePrincipal"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
                         -InboundParameters $PSBoundParameters
 
-    if ($PSBoundParameters.ContainsKey("ObjectId"))
+    try 
     {
-        Write-Verbose "Azure AD ServicePrincipal Object ID has been specified."
-        try 
+        if ($null -ne $ObjectID)
         {
             $AADServicePrincipal = Get-AzureADServicePrincipal -ObjectID $ObjectId
         }
-        catch 
-        {
-            Write-Error -Message "Azure AD ServicePrincipal with ObjectID: $($ObjectID) could not be retrieved"
-        }
     }
-    else
+    catch 
     {
-        Write-Verbose "Azure AD ServicePrincipal Object ID was not specified."
+        Write-Error -Message "Azure AD ServicePrincipal with ObjectID: $($ObjectID) could not be retrieved"
+    }
+
+    if($null -eq $AADServicePrincipal)
+    {
         $AADServicePrincipal = Get-AzureADServicePrincipal -Filter "AppID eq '$($AppId)'"
     }
     if($null -eq $AADServicePrincipal)
@@ -238,9 +240,12 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Azure AD ServicePrincipal"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -398,69 +403,48 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $content = ''
+    $dscContent = ''
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
     $i = 1
-
+    Write-Host "`r`n" -NoNewLine
     $AADServicePrincipals = Get-AzureADServicePrincipal -All:$true
     foreach($AADServicePrincipal in $AADServicePrincipals)
     {
-        Write-Information -MessageData "    [$i/$($AADServicePrincipals.Count)] $($AADServicePrincipal.DisplayName)"
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $params = @{
+        Write-Host "    |---[$i/$($AADServicePrincipals.Count)] $($AADServicePrincipal.DisplayName)" -NoNewLine
+        $Params = @{
                 GlobalAdminAccount            = $GlobalAdminAccount
-                ObjectID                      = $AADServicePrincipal.ObjectID
-            }
-        }
-        else
-        {
-            $params = @{
                 ApplicationId                 = $ApplicationId
                 TenantId                      = $TenantId
                 CertificateThumbprint         = $CertificateThumbprint
-                ObjectID                      = $AADServicePrincipal.ObjectID
-            }
+                AppID                         = $AADServicePrincipal.AppId
         }
-        $result = Get-TargetResource @params
+        $Results = Get-TargetResource @Params
 
-        if ($result.Ensure -eq 'Present')
+        if ($Results.Ensure -eq 'Present')
         {
-            if ($ConnectionMode -eq 'Credential')
-            {
-                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                $result.Remove("ApplicationId") | Out-Null
-                $result.Remove("TenantId") | Out-Null
-                $result.Remove("CertificateThumbprint") | Out-Null
-            }
-            else
-            {
-                $result.Remove("GlobalAdminAccount") | Out-Null
-            }
-            $content += "        AADApplication " + (New-GUID).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            if ($ConnectionMode -eq 'Credential')
-            {
-                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            }
-            else
-            {
-                $content += $currentDSCBlock
-            }
-            $content += "        }`r`n"
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
     }
-    return $content
+    return $ $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource
