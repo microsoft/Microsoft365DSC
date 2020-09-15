@@ -9,7 +9,7 @@ This resource configures the Azure AD Tenant Details
 To authenticate via Azure Active Directory, this resource required the following Application permissions:
 
 * **Automate**
-  * None
+  * Organization.Read.All, Directory.Read.All, Organization.ReadWrite.All, Directory.ReadWrite.All
 * **Export**
   * None
 

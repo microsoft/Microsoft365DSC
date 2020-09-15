@@ -53,7 +53,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = @{
-        $GlobalAdminAccount             = $GlobalAdminAccount
+        GlobalAdminAccount = $GlobalAdminAccount
     }
 
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
@@ -64,18 +64,32 @@ function Get-TargetResource
         $AADTenantDetails = Get-AzureADTenantDetail
     }
     catch {
-        Write-Verbose -Message "Could not retriueve AzureAD Tenant Details"
-        return $nullReturn
+        Write-Verbose -Message "Could not receive AzureAD Tenant Details"
     }
 
-    $result = @{
-        MarketingNotificationEmails             = $AADTenantDetails.MarketingNotificationEmails
-        SecurityComplianceNotificationMails     = $AADTenantDetails.SecurityComplianceNotificationMails
-        SecurityComplianceNotificationPhones    = $AADTenantDetails.SecurityComplianceNotificationPhones
-        TechnicalNotificationMails              = $AADTenantDetails.TechnicalNotificationMails
+    if ($null -ne $AADTenantDetails)
+    {
+        Write-Verbose -Message "Could not receive AzureAD Tenant Details"
+        $nullReturn = @{
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+        <#
+        if Tenant Details could not receive , return submitted parameters for ReverseDSC.
+        This also prevents Set-TargetResource from running when current state could not be determined
+        #>
+        return $nullReturn
     }
-    Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DSCHashTabletoString -Hashtable $result)"
-    return $result
+    else
+    {
+        $result = @{
+            MarketingNotificationEmails             = $AADTenantDetails.MarketingNotificationEmails
+            SecurityComplianceNotificationMails     = $AADTenantDetails.SecurityComplianceNotificationMails
+            SecurityComplianceNotificationPhones    = $AADTenantDetails.SecurityComplianceNotificationPhones
+            TechnicalNotificationMails              = $AADTenantDetails.TechnicalNotificationMails
+        }
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DSCHashTabletoString -Hashtable $result)"
+        return $result
+    }
 }
 
 function Set-TargetResource
@@ -222,22 +236,6 @@ function Export-TargetResource {
     [OutputType([System.String])]
     param
     (
-        [Parameter()]
-        [System.String]
-        $MarketingNotificationEmails,
-
-        [Parameter()]
-        [System.String]
-        $SecurityComplianceNotificationMails,
-
-        [Parameter()]
-        [System.String]
-        $SecurityComplianceNotificationPhones,
-
-        [Parameter()]
-        [System.String]
-        $TechnicalNotificationMails,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $isSingleInstance,

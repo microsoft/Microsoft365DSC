@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin@<domain>.onmicrosoft.com", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -60,7 +60,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SecurityComplianceNotificationPhones   = "+1123456789"
                     SecurityComplianceNotificationMails    = "exapmle@contoso.com"
                     MarketingNotificationEmails            = "exapmle@contoso.com"
-                    GlobalAdminAccount                     = $GlobalAdmin
+                    GlobalAdminAccount                     = $GlobalAdminAccount
                     IsSingleInstance                       = 'Yes'
                 }
 
@@ -85,12 +85,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SecurityComplianceNotificationPhones   = "+1123456789"
                     SecurityComplianceNotificationMails    = "exapmle@contoso.com"
                     MarketingNotificationEmails            = "exapmle@contoso.com"
-                    GlobalAdminAccount                     = $GlobalAdmin
+                    GlobalAdminAccount                     = $GlobalAdminAccount
                     IsSingleInstance                       = 'Yes'
-                }
-
-                Mock -CommandName New-M365DSCConnection -MockWith {
-                    return "Credential"
                 }
 
                 Mock -CommandName Get-AzureADTenantDetail -MockWith {
@@ -118,12 +114,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SecurityComplianceNotificationPhones   = "+1123456789"
                     SecurityComplianceNotificationMails    = "exapmle@contoso.com"
                     MarketingNotificationEmails            = "exapmle@contoso.com"
-                    GlobalAdminAccount                     = $GlobalAdmin
+                    GlobalAdminAccount                     = $GlobalAdminAccount
                     IsSingleInstance                       = 'Yes'
-                }
-
-                Mock -CommandName New-M365DSCConnection -MockWith {
-                    return "Credential"
                 }
 
                 Mock -CommandName Get-AzureADTenantDetail -MockWith {
@@ -152,12 +144,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SecurityComplianceNotificationPhones   = "+1123456789"
                     SecurityComplianceNotificationMails    = "exapmle@contoso.com"
                     MarketingNotificationEmails            = "exapmle@contoso.com"
-                    GlobalAdminAccount                     = $GlobalAdmin
+                    GlobalAdminAccount                     = $GlobalAdminAccount
                     IsSingleInstance                       = 'Yes'
-                }
-
-                Mock -CommandName New-M365DSCConnection -MockWith {
-                    return "Credential"
                 }
 
                 Mock -CommandName Get-AzureADTenantDetail -MockWith {
@@ -188,10 +176,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     GlobalAdminAccount = $GlobalAdminAccount
-                }
-
-                Mock -CommandName New-M365DSCConnection -MockWith {
-                    return "Credential"
                 }
 
                 Mock -CommandName Get-AzureADTenantDetail -MockWith {
