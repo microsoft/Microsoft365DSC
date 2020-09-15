@@ -115,11 +115,17 @@ function New-M365DSCStubFiles
             }
             $invalidTypes = @("ActionPreference")
             $invalidParameters = @("ErrorVariable", `
+                "ErrorAction", `
                 "InformationVariable", `
+                "InformationAction", `
                 "WarningVariable", `
+                "WarningAction", `
                 "OutVariable", `
                 "OutBuffer", `
-                "PipelineVariable")
+                "PipelineVariable", `
+                "Verbose", `
+                "WhatIf", `
+                "Debug")
             $foundParamNames = @()
             foreach ($param in $parameters.Values)
             {
