@@ -102,7 +102,7 @@ function Get-TargetResource
 
     try 
     {
-        if ($null -ne $ObjectID)
+        if (-not [System.String]::IsNullOrEmpty($ObjectID))
         {
             $AADServicePrincipal = Get-AzureADServicePrincipal -ObjectID $ObjectId
         }
@@ -444,7 +444,7 @@ function Export-TargetResource
             $i++
         }
     }
-    return $ $dscContent
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource
