@@ -13,7 +13,7 @@
     the entire Export process would stop;
 * DEPENDENCIES
   * MicrosoftTeams Updated to 1.1.6;
-  * MSCloudLoginAssistant Updated to 1.0.36;
+  * MSCloudLoginAssistant Updated to 1.0.37;
 * MISC
   * Fixed issue with warning about unsupported resources in the
     Export mode based on authentication selected.

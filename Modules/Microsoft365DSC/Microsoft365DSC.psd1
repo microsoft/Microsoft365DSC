@@ -89,7 +89,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.36"
+            RequiredVersion = "1.0.37"
         },
         @{
             ModuleName      = "ReverseDSC"
@@ -136,6 +136,7 @@
                           'Export-M365DSCConfiguration',
                           'New-M365DSCDeltaReport',
                           'New-M365DSCReportFromConfiguration',
+                          'New-M365DSCStubFiles',
                           'Set-M365DSCAgentCertificateConfiguration',
                           'Test-M365DSCAgent',
                           'Test-M365DSCDependenciesForNewVersions')
