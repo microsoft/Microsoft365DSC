@@ -1,8 +1,13 @@
-function Get-TargetResource {
+function Get-TargetResource
+{
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $IsSingleInstance,
+
         [Parameter()]
         [System.String]
         $MarketingNotificationEmails,
@@ -19,13 +24,21 @@ function Get-TargetResource {
         [System.String]
         $TechnicalNotificationMails,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $isSingleInstance,
-
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration of AzureAD Tenant Details"
@@ -56,7 +69,6 @@ function Get-TargetResource {
     }
 
     $result = @{
-        TenantName                              = $AADTenantDetails.DisplayName
         MarketingNotificationEmails             = $AADTenantDetails.MarketingNotificationEmails
         SecurityComplianceNotificationMails     = $AADTenantDetails.SecurityComplianceNotificationMails
         SecurityComplianceNotificationPhones    = $AADTenantDetails.SecurityComplianceNotificationPhones
@@ -66,10 +78,15 @@ function Get-TargetResource {
     return $result
 }
 
-function Set-TargetResource {
+function Set-TargetResource
+{
     [CmdletBinding()]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $IsSingleInstance,
+
         [Parameter()]
         [System.String]
         $MarketingNotificationEmails,
@@ -86,16 +103,24 @@ function Set-TargetResource {
         [System.String]
         $TechnicalNotificationMails,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $isSingleInstance,
-
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Setting configuration of Azure AD Tenant Details"
+    Write-Verbose -Message "Setting configuration of AzureAD Tenant Details"
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -120,7 +145,8 @@ function Set-TargetResource {
     }
 }
 
-function Test-TargetResource  {
+function Test-TargetResource
+{
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
@@ -143,11 +169,23 @@ function Test-TargetResource  {
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $isSingleInstance,
+        $IsSingleInstance,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -206,7 +244,19 @@ function Export-TargetResource {
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -224,7 +274,6 @@ function Export-TargetResource {
     $AADTenantDetails = Get-AzureADTenantDetail
 
     $Params = @{
-        TenantName                              = $AADTenantDetails.DisplayName
         MarketingNotificationEmails             = $AADTenantDetails.MarketingNotificationEmails
         SecurityComplianceNotificationMails     = $AADTenantDetails.SecurityComplianceNotificationMails
         SecurityComplianceNotificationPhones    = $AADTenantDetails.SecurityComplianceNotificationPhones
