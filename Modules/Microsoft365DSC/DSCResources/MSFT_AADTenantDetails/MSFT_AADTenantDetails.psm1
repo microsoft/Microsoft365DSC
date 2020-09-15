@@ -19,7 +19,7 @@ function Get-TargetResource {
         [System.String]
         $TechnicalNotificationMails,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $isSingleInstance,
 
@@ -89,7 +89,7 @@ function Set-TargetResource {
         [System.String]
         $TechnicalNotificationMails,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $isSingleInstance,
 
@@ -142,7 +142,7 @@ function Test-TargetResource  {
         [System.String]
         $TechnicalNotificationMails,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $isSingleInstance,
 
@@ -200,7 +200,7 @@ function Export-TargetResource {
         [System.String]
         $TechnicalNotificationMails,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $isSingleInstance,
 
