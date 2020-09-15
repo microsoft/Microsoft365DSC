@@ -64,7 +64,7 @@ function Get-TargetResource {
         SecurityComplianceNotificationPhones    = $AADTenantDetails.SecurityComplianceNotificationPhones
         TechnicalNotificationMails              = $AADTenantDetails.TechnicalNotificationMails
     }
-    Write-Verbose -Message "Get-TargetResouce Result: `n $(Convert-M365DSCHashTabletoString -Hashtable $result)"
+    Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DSCHashTabletoString -Hashtable $result)"
     return $result
 }
 
@@ -162,7 +162,7 @@ function Test-TargetResource  {
 
     Write-Verbose -Message "Testing configuration of AzureAD Tenant Details"
 
-    $CurrentValues = Get-TargetResouce @PSBoundParameters
+    $CurrentValues = Get-TargetResource @PSBoundParameters
 
     Write-Verbose -Message "Target-Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
     $ValuesToCheck = $PSBoundParameters
