@@ -3,17 +3,25 @@ function Get-TargetResource {
     [OutputType([System.Collections.Hashtable])]
     param
     (
+        [Parameter()]
         [System.String]
         $MarketingNotificationEmails,
 
+        [Parameter()]
         [System.String]
         $SecurityComplianceNotificationMails,
 
+        [Parameter()]
         [System.String]
         $SecurityComplianceNotificationPhones,
 
+        [Parameter()]
         [System.String]
         $TechnicalNotificationMails,
+
+        [Parameter()]
+        [System.String]
+        $isSingleInstance,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -65,17 +73,25 @@ function Set-TargetResource {
     [CmdletBinding()]
     param
     (
+        [Parameter()]
         [System.String]
         $MarketingNotificationEmails,
 
+        [Parameter()]
         [System.String]
         $SecurityComplianceNotificationMails,
 
+        [Parameter()]
         [System.String]
         $SecurityComplianceNotificationPhones,
 
+        [Parameter()]
         [System.String]
         $TechnicalNotificationMails,
+
+        [Parameter()]
+        [System.String]
+        $isSingleInstance,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -110,17 +126,25 @@ function Test-TargetResource  {
     [OutputType([System.Boolean])]
     param
     (
+        [Parameter()]
         [System.String]
         $MarketingNotificationEmails,
 
+        [Parameter()]
         [System.String]
         $SecurityComplianceNotificationMails,
 
+        [Parameter()]
         [System.String]
         $SecurityComplianceNotificationPhones,
 
+        [Parameter()]
         [System.String]
         $TechnicalNotificationMails,
+
+        [Parameter()]
+        [System.String]
+        $isSingleInstance,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -160,17 +184,25 @@ function Export-TargetResource {
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
         [System.String]
         $MarketingNotificationEmails,
 
+        [Parameter()]
         [System.String]
         $SecurityComplianceNotificationMails,
 
+        [Parameter()]
         [System.String]
         $SecurityComplianceNotificationPhones,
 
+        [Parameter()]
         [System.String]
         $TechnicalNotificationMails,
+
+        [Parameter()]
+        [System.String]
+        $isSingleInstance,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
