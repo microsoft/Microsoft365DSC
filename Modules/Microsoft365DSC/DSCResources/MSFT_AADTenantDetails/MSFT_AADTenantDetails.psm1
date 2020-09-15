@@ -3,19 +3,15 @@ function Get-TargetResource {
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $true)]
         [System.String]
         $MarketingNotificationEmails,
 
-        [Parameter(Mandatory = $true)]
         [System.String]
         $SecurityComplianceNotificationMails,
 
-        [Parameter(Mandatory = $true)]
         [System.String]
         $SecurityComplianceNotificationPhones,
 
-        [Parameter(Mandatory = $true)]
         [System.String]
         $TechnicalNotificationMails,
 
@@ -69,19 +65,15 @@ function Set-TargetResource {
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = $true)]
         [System.String]
         $MarketingNotificationEmails,
 
-        [Parameter(Mandatory = $true)]
         [System.String]
         $SecurityComplianceNotificationMails,
 
-        [Parameter(Mandatory = $true)]
         [System.String]
         $SecurityComplianceNotificationPhones,
 
-        [Parameter(Mandatory = $true)]
         [System.String]
         $TechnicalNotificationMails,
 
@@ -118,19 +110,15 @@ function Test-TargetResource  {
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter(Mandatory = $true)]
         [System.String]
         $MarketingNotificationEmails,
 
-        [Parameter(Mandatory = $true)]
         [System.String]
         $SecurityComplianceNotificationMails,
 
-        [Parameter(Mandatory = $true)]
         [System.String]
         $SecurityComplianceNotificationPhones,
 
-        [Parameter(Mandatory = $true)]
         [System.String]
         $TechnicalNotificationMails,
 
@@ -172,19 +160,15 @@ function Export-TargetResource {
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
         [System.String]
         $MarketingNotificationEmails,
 
-        [Parameter(Mandatory = $true)]
         [System.String]
         $SecurityComplianceNotificationMails,
 
-        [Parameter(Mandatory = $true)]
         [System.String]
         $SecurityComplianceNotificationPhones,
 
-        [Parameter(Mandatory = $true)]
         [System.String]
         $TechnicalNotificationMails,
 
