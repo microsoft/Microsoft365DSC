@@ -1405,7 +1405,7 @@ function Install-M365DSCDevBranch
 
     #region Install M365DSC
     $defaultPath = 'C:\Program Files\WindowsPowerShell\Modules\Microsoft365DSC\'
-    $currentVersionPath = $defaultPath + $($manifest.ModuleVersion)
+    $currentVersionPath = $defaultPath + ([Version]$($manifest.ModuleVersion)).ToString()
     if (Test-Path $currentVersionPath)
     {
         Remove-Item $currentVersionPath -Recurse -Confirm:$false
