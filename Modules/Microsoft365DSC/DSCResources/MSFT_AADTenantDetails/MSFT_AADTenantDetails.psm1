@@ -39,9 +39,7 @@ function Get-TargetResource {
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-
     $nullReturn = @{
-
         $GlobalAdminAccount             = $GlobalAdminAccount
     }
 
@@ -67,7 +65,6 @@ function Get-TargetResource {
     Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DSCHashTabletoString -Hashtable $result)"
     return $result
 }
-
 
 function Set-TargetResource {
     [CmdletBinding()]
@@ -112,9 +109,11 @@ function Set-TargetResource {
 
 
     $currentParameters = $PSBoundParameters
+    $currentParameters
     $currentParameters.Remove("GlobalAdminAccount") | Out-Null
+    $currentParameters.Remove("isSingleInstance") | Out-Null
     try {
-        Set-AzureADTenantDetail @CurrentParameters
+        Set-AzureADTenantDetail @currentParameters
     }
     catch {
         Write-Verbose -Message "Cannot Set AzureAD Tenant Details"
@@ -167,6 +166,7 @@ function Test-TargetResource  {
     Write-Verbose -Message "Target-Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
 
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
