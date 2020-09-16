@@ -256,20 +256,25 @@ function Set-TargetResource
     $currentParameters.Remove("CertificateThumbprint") | Out-Null
     $currentParameters.Remove("GlobalAdminAccount") | Out-Null
     $currentParameters.Remove("Ensure") | Out-Null
+    $currentParameters.Remove("OjectID") | Out-Null
+
 
     # ServicePrincipal should exist but it doesn't
     if ($Ensure -eq "Present" -and $currentAADServicePrincipal.Ensure -eq "Absent")
     {
+        Write-Verbose -Message "Creating new Service Principal"
         New-AzureADServicePrincipal @currentParameters
     }
     # ServicePrincipal should exist and will be configured to desired state
     if ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Present')
     {
+        Write-Verbose -Message "Updating existing Service Principal"
         Set-AzureADServicePrincipal -ObjectID $currentAADServicePrincipal.ObjectID @currentParameters
     }
     # ServicePrincipal exists but should not
     elseif ($Ensure -eq 'Absent' -and $currentAADServicePrincipal.Ensure -eq 'Present')
     {
+        Write-Verbose -Message "Removing Service Principal"
         Remove-AzureADServicePrincipal -ObjectID $currentAADServicePrincipal.ObjectID
     }
 }
@@ -370,6 +375,9 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
 
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
