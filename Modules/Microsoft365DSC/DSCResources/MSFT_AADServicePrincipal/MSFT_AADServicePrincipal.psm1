@@ -256,7 +256,7 @@ function Set-TargetResource
     $currentParameters.Remove("CertificateThumbprint") | Out-Null
     $currentParameters.Remove("GlobalAdminAccount") | Out-Null
     $currentParameters.Remove("Ensure") | Out-Null
-    $currentParameters.Remove("OjectID") | Out-Null
+    $currentParameters.Remove("ObjectID") | Out-Null
 
 
     # ServicePrincipal should exist but it doesn't
