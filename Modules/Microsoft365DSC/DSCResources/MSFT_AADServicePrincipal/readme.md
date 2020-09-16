@@ -22,7 +22,7 @@ To authenticate via Azure Active Directory, this resource required the following
   Alternatively you can also assign the Application the "Directory writers" role.
 
 * **Export**
-  *  * microsoft.directory/servicePrincipals/appRoleAssignedTo/read
+  * microsoft.directory/servicePrincipals/appRoleAssignedTo/read
   * microsoft.directory/servicePrincipals/appRoleAssignments/read
   * microsoft.directory/servicePrincipals/standard/read
   * microsoft.directory/servicePrincipals/memberOf/read
