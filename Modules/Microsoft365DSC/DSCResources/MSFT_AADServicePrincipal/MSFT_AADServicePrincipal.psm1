@@ -100,14 +100,14 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
                         -InboundParameters $PSBoundParameters
 
-    try 
+    try
     {
         if (-not [System.String]::IsNullOrEmpty($ObjectID))
         {
             $AADServicePrincipal = Get-AzureADServicePrincipal -ObjectID $ObjectId
         }
     }
-    catch 
+    catch
     {
         Write-Error -Message "Azure AD ServicePrincipal with ObjectID: $($ObjectID) could not be retrieved"
     }
@@ -129,7 +129,7 @@ function Get-TargetResource
             ObjectID                      = $AADServicePrincipal.ObjectId
             DisplayName                   = $AADServicePrincipal.DisplayName
             AlternativeNames              = $AADServicePrincipal.AlternativeNames
-            AccountEnabled                = $AADServicePrincipal.AccountEnabled
+            AccountEnabled                = [boolean]$AADServicePrincipal.AccountEnabled
             AppRoleAssignmentRequired     = $AADServicePrincipal.AppRoleAssignmentRequired
             ErrorUrl                      = $AADServicePrincipal.ErrorUrl
             Homepage                      = $AADServicePrincipal.Homepage
