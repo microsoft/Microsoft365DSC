@@ -16,7 +16,6 @@ Configuration Example
     {
         AADServicePrincipal AADServicePrincipal1
         {
-            
             AppId                         = "<AppID GUID>"
             DisplayName                   = "AADAppName"
             AlternativeNames              = "AlternativeName1","AlternativeName2"
