@@ -266,7 +266,7 @@ function Export-TargetResource {
         SecurityComplianceNotificationPhones    = $AADTenantDetails.SecurityComplianceNotificationPhones
         TechnicalNotificationMails              = $AADTenantDetails.TechnicalNotificationMails
         GlobalAdminAccount                      = $GlobalAdminAccount
-        IsSingleIInstance                       = 'Yes'
+        IsSingleInstance                       = 'Yes'
     }
     $Results = Get-TargetResource @Params
     $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode -Results $Results
