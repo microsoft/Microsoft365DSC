@@ -22,6 +22,8 @@
     number (e.g. 1.20.0902.1), it would create the folder as
     a version with the '0' where the Gallery trims it.
     (Issue #685)
+* AADServicePrincipal
+  * Initial Release (Issue #492)
 
 ## 1.20.909.1
 

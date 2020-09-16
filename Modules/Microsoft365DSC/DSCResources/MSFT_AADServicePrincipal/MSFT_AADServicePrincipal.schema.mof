@@ -1,0 +1,21 @@
+[ClassVersion("1.0.0.0"), FriendlyName("AADServicePrincipal")]
+class MSFT_AADServicePrincipal : OMI_BaseResource
+{
+    [Key, Description("The unique identifier for the associated application.")] String AppId;
+    [Write, Description("The ObjectID of the ServicePrincipal")] String ObjectID;
+    [Write, Description("Displayname of the ServicePrincipal.")] String DisplayName;
+    [Write, Description("The atlernative names for this service principal")] String AlternativeNames[];
+    [Write, Description("True if the service principal account is enabled; otherwise, false.")] Boolean AccountEnabled;
+    [Write, Description("Indicates whether an application role assignment is required.")] Boolean AppRoleAssignmentRequired;
+    [Write, Description("Specifies the error URL of the ServicePrincipal.")] String ErrorUrl;
+    [Write, Description("Specifies the homepage of the ServicePrincipal.")] String Homepage;
+    [Write, Description("Specifies the LogoutURL of the ServicePrincipal.")] String LogoutUrl;
+    [Write, Description("Specifies the PublisherName of the ServicePrincipal.")] String PublisherName;
+    [Write, Description("The URLs that user tokens are sent to for sign in with the associated application, or the redirect URIs that OAuth 2.0 authorization codes and access tokens are sent to for the associated application.")] String ReplyUrls[];
+    [Write, Description("The URL for the SAML metadata of the ServicePrincipal.")] String SamlMetadataUrl;
+    [Write, Description("Specifies an array of service principal names. Based on the identifierURIs collection, plus the application's appId property, these URIs are used to reference an application's service principal.")] String ServicePrincipalNames[];
+    [Write, Description("The type of the service principal.")] String ServicePrincipalType;
+    [Write, Description("Tags linked to this service principal.Note that if you intend for this service principal to show up in the All Applications list in the admin portal, you need to set this value to {WindowsAzureActiveDirectoryIntegratedApp}")] String Tags[];
+    [Write, Description("Specify if the Azure AD App should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Credentials of the Azure AD Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+};
