@@ -5,7 +5,7 @@ $Global:SessionSecurityCompliance = $null
 
 #region Extraction Modes
 $Global:DefaultComponents = @("SPOApp", "SPOSiteDesign")
-$Global:FullComponents = @("AADMSGroup", "EXOMailboxSettings", "EXOManagementRole", "O365Group", "O365User", `
+$Global:FullComponents = @("AADMSGroup", "AADServicePrincipal", "EXOMailboxSettings", "EXOManagementRole", "O365Group", "O365User", `
         "PlannerPlan", "PlannerBucket", "PlannerTask", "PPPowerAppsEnvironment", `
         "SPOSiteAuditSettings", "SPOSiteGroup", "SPOSite", "SPOUserProfileProperty", "SPOPropertyBag", "TeamsTeam", "TeamsChannel", `
         "TeamsUser")
@@ -821,10 +821,6 @@ function Export-M365DSCConfiguration
         $TenantId,
 
         [Parameter()]
-        [System.string]
-        $ApplicationSecret,
-
-        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
@@ -877,7 +873,6 @@ function Export-M365DSCConfiguration
                 -ConfigurationName $ConfigurationName `
                 -ApplicationId $ApplicationId `
                 -TenantId $TenantId `
-                -ApplicationSecret $ApplicationSecret `
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
@@ -893,7 +888,6 @@ function Export-M365DSCConfiguration
                 -ConfigurationName $ConfigurationName `
                 -ApplicationId $ApplicationId `
                 -TenantId $TenantId `
-                -ApplicationSecret $ApplicationSecret `
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
@@ -909,7 +903,6 @@ function Export-M365DSCConfiguration
                 -ConfigurationName $ConfigurationName `
                 -ApplicationId $ApplicationId `
                 -TenantId $TenantId `
-                -ApplicationSecret $ApplicationSecret `
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
@@ -1412,7 +1405,7 @@ function Install-M365DSCDevBranch
 
     #region Install M365DSC
     $defaultPath = 'C:\Program Files\WindowsPowerShell\Modules\Microsoft365DSC\'
-    $currentVersionPath = $defaultPath + $($manifest.ModuleVersion)
+    $currentVersionPath = $defaultPath + ([Version]$($manifest.ModuleVersion)).ToString()
     if (Test-Path $currentVersionPath)
     {
         Remove-Item $currentVersionPath -Recurse -Confirm:$false
@@ -2201,4 +2194,21 @@ function Get-M365DSCComponentsForAuthenticationType
         }
     }
     return $Components
+}
+
+function Get-M365DSCAllResources
+{
+    [CmdletBinding()]
+    [OutputType([System.String[]])]
+    [CmdletBinding()]
+    param ()
+
+    $allResources = Get-ChildItem -Path ($PSScriptRoot + "\..\DSCResources\") -Recurse -Filter '*.psm1'
+    $result = @()
+    foreach ($resource in $allResources)
+    {
+        $result += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+    }
+
+    return $result
 }

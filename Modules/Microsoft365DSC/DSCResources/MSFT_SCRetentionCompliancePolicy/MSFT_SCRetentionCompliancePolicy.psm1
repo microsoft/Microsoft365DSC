@@ -555,6 +555,8 @@ function Set-TargetResource
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentPolicy.Ensure))
     {
         Write-Verbose -Message "Creating new Retention Compliance Policy $Name"
+        $CreationParams.Add("Name", $Identity)
+        $CreationParams.Remove("Identity") | Out-Null
         New-RetentionCompliancePolicy @CreationParams
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
