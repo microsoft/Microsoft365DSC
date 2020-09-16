@@ -91,6 +91,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name SecurityComplianceNotificationMails -Value "exapmle@contoso.com"
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name SecurityComplianceNotificationPhones -Value "+1123456789"
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name TechnicalNotificationMails -Value "exapmle@contoso.com"
+                    return $AADTenantDetails
                 }
             }
 
@@ -115,6 +116,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name SecurityComplianceNotificationMails -Value "exapmle@contoso.com"
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name SecurityComplianceNotificationPhones -Value "+1123456789"
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name TechnicalNotificationMails -Value "exapmle@contoso.com"
+                    return $AADTenantDetails
                 }
             }
 
@@ -145,6 +147,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name SecurityComplianceNotificationMails -Value "exapmle@contoso.com"
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name SecurityComplianceNotificationPhones -Value "+1123456789"
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name TechnicalNotificationMails -Value "exapmle@contoso.com"
+                    return $AADTenantDetails
                 }
             }
 
@@ -172,7 +175,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-AzureADTenantDetail -MockWith {
                     $AADTenantDetails = New-Object PSCustomObject
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name IsSingleInstance -Value 'Yes'
-
                     return $AADTenantDetails
                 }
             }

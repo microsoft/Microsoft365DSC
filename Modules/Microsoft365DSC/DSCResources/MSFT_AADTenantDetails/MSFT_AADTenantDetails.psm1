@@ -61,22 +61,18 @@ function Get-TargetResource
     $CurrentParameters = $PSBoundParameters
 
 
-        $AADTenantDetails = Get-AzureADTenantDetail -ErrorAction 'SilentlyContinue'
+    $AADTenantDetails = Get-AzureADTenantDetail -ErrorAction 'SilentlyContinue' -ErrorVariable AADTenantDetailsError
 
-    if ($null -ne $AADTenantDetails)
+    if ($null -eq $AADTenantDetails)
     {
-        Write-Error -Message "Could not receive AzureAD Tenant Details"
-        $nullReturn = @{
-            GlobalAdminAccount = $GlobalAdminAccount
-        }
-        <#
-        if Tenant Details could not receive , return submitted parameters for ReverseDSC.
-        This also prevents Set-TargetResource from running when current state could not be determined
-        #>
-        return $nullReturn
+        Write-Error -Message "Could not receive AzureAD Tenant Details - Error: $($AADTenantDetailsError)"
+        $currentValues = $PSBoundParameters
+        return $currentValues
     }
+
     else
     {
+        Write-Verbose -Message "Found existing AzureAD Tenant Details"
         $result = @{
             MarketingNotificationEmails             = $AADTenantDetails.MarketingNotificationEmails
             SecurityComplianceNotificationMails     = $AADTenantDetails.SecurityComplianceNotificationMails
@@ -233,10 +229,6 @@ function Export-TargetResource {
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $isSingleInstance,
-
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount,
