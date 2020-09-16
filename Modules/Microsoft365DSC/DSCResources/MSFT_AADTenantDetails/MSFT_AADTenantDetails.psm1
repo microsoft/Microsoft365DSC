@@ -60,16 +60,12 @@ function Get-TargetResource
 
     $CurrentParameters = $PSBoundParameters
 
-    try {
-        $AADTenantDetails = Get-AzureADTenantDetail
-    }
-    catch {
-        Write-Verbose -Message "Could not receive AzureAD Tenant Details"
-    }
+
+        $AADTenantDetails = Get-AzureADTenantDetail -ErrorAction 'SilentlyContinue'
 
     if ($null -ne $AADTenantDetails)
     {
-        Write-Verbose -Message "Could not receive AzureAD Tenant Details"
+        Write-Error -Message "Could not receive AzureAD Tenant Details"
         $nullReturn = @{
             GlobalAdminAccount = $GlobalAdminAccount
         }
