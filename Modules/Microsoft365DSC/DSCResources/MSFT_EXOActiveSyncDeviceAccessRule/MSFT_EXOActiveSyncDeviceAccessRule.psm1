@@ -200,8 +200,6 @@ function Set-TargetResource
     $SetActiveSyncDeviceAccessRuleParams = @{
         Identity       = $Identity
         AccessLevel    = $AccessLevel
-        Characteristic = $Characteristic
-        QueryString    = $QueryString
         Confirm        = $false
     }
 

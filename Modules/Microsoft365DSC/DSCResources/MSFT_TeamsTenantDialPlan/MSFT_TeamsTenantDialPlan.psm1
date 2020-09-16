@@ -77,7 +77,7 @@ function Get-TargetResource
                 $rules = Get-M365DSCNormalizationRules -Rules $config.NormalizationRules
             }
             $result = @{
-                Identity              = $Identity.Replace("Tag", "")
+                Identity              = $Identity.Replace("Tag:", "")
                 Description           = $config.Description
                 NormalizationRules    = $rules
                 ExternalAccessPrefix  = $config.ExternalAccessPrefix

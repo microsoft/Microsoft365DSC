@@ -213,6 +213,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Role Assignment Policy '$($Name)' already exists, but needs updating."
         Write-Verbose -Message "Setting Role Assignment Policy $($Name) with values: $(Convert-M365DscHashtableToString -Hashtable $SetRoleAssignmentPolicyParams)"
+        $SetRoleAssignmentPolicyParams.Remove("Roles") | Out-Null
         Set-RoleAssignmentPolicy @SetRoleAssignmentPolicyParams
     }
     # CASE: Role Assignment Policy exists and it should, but Roles attribute has different values than the desired ones

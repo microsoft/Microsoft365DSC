@@ -731,7 +731,10 @@ function Show-M365DSCGUI
                 {
                     foreach ($checkbox in ($panel.Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Checkbox" }))
                     {
-                        if ($checkbox.Checked -and $checkbox.Enabled)
+                        if ($checkbox.Checked -and $checkbox.Enabled -and `
+                            $checkbox.Name -ne 'chckCredential' -and `
+                            $checkbox.Name -ne 'chckApplication' -and `
+                            $checkbox.Name -ne 'chckCertificate')
                         {
                             $SelectedComponents += $checkbox.Name.Replace("chck", "")
                         }
