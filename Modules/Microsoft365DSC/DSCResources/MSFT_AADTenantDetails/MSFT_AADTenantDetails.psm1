@@ -161,6 +161,10 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $IsSingleInstance,
+
         [Parameter()]
         [System.String]
         $MarketingNotificationEmails,
@@ -176,10 +180,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $TechnicalNotificationMails,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $IsSingleInstance,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -212,6 +212,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     Write-Verbose -Message "Target-Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
