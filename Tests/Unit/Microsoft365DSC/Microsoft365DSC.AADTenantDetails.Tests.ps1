@@ -77,6 +77,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Values exists but it should not" -Fixture {
             BeforeAll {
                 $testParams = @{
+                    TechnicalNotificationMails             = "exapmle@contoso.com"
+                    SecurityComplianceNotificationPhones   = "+1123456789"
+                    SecurityComplianceNotificationMails    = "exapmle@contoso.com"
+                    MarketingNotificationEmails            = "exapmle@contoso.com"
                     GlobalAdminAccount                     = $GlobalAdminAccount
                     IsSingleInstance                       = 'Yes'
                 }

@@ -61,15 +61,12 @@ function Get-TargetResource
     $CurrentParameters = $PSBoundParameters
 
 
-    $AADTenantDetails = Get-AzureADTenantDetail -ErrorAction 'SilentlyContinue' -ErrorVariable AADTenantDetailsError
+    $AADTenantDetails = Get-AzureADTenantDetail -ErrorAction 'SilentlyContinue'
 
     if ($null -eq $AADTenantDetails)
     {
-        Write-Error -Message "Could not receive AzureAD Tenant Details - Error: $($AADTenantDetailsError)"
-        $currentValues = $PSBoundParameters
-        return $currentValues
+        throw "Could not retrieve AzureAD Tenant Details"
     }
-
     else
     {
         Write-Verbose -Message "Found existing AzureAD Tenant Details"
