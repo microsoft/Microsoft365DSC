@@ -320,7 +320,6 @@ function Set-TargetResource
         try
         {
             Remove-LabelPolicy -Identity $Name -Confirm:$false
-            Remove-LabelPolicy -Identity $Name -Confirm:$false -forcedeletion:$true
         }
         catch
         {
@@ -451,6 +450,12 @@ function Test-TargetResource
         {
             $ValuesToCheck["ModernGroupLocation"] = $configData
         }
+        if ($null -eq $configData -and $null -ne $CurrentValues.ModernGroupLocation `
+         -and $null -ne $RemoveModernGroupLocation)
+        {
+           #last entry removed so trigger drift
+            return $false
+        }
     }
 
     if ($null -ne $RemoveModernGroupLocationException -or $null -ne $AddModernGroupLocationException `
@@ -463,6 +468,12 @@ function Test-TargetResource
         {
             $ValuesToCheck["ModernGroupLocationException"] = $configData
         }
+        if ($null -eq $configData -and $null -ne $CurrentValues.ModernGroupLocationException `
+        -and $null -ne $RemoveModernGroupLocationException)
+       {
+          #last entry removed so trigger drift
+           return $false
+       }
     }
 
     if ($null -ne $RemoveExchangeLocation -or $null -ne $AddExchangeLocation -or $null -ne $ExchangeLocation)
@@ -473,6 +484,12 @@ function Test-TargetResource
         {
             $ValuesToCheck["ExchangeLocation"] = $configData
         }
+        if ($null -eq $configData -and $null -ne $CurrentValues.ExchangeLocation `
+        -and $null -ne $RemoveExchangeLocation)
+       {
+          #last entry removed so trigger drift
+           return $false
+       }
     }
 
     if ($null -ne $RemoveExchangeLocationException -or $null -ne $AddExchangeLocationException -or $null -ne $ExchangeLocationException)
@@ -484,6 +501,13 @@ function Test-TargetResource
         {
             $ValuesToCheck["ExchangeLocationException"] = $configData
         }
+
+        if ($null -eq $configData -and $null -ne $CurrentValues.ExchangeLocationException `
+        -and $null -ne $RemoveExchangeLocationException)
+       {
+          #last entry removed so trigger drift
+           return $false
+       }
     }
 
     if ($null -ne $RemoveLabels -or $null -ne $AddLabels -or $null -ne $Labels)
@@ -495,6 +519,13 @@ function Test-TargetResource
         {
             $ValuesToCheck["Labels"] = $configData
         }
+
+        if ($null -eq $configData -and $null -ne $CurrentValues.Labels `
+        -and $null -ne $RemoveLabels)
+       {
+          #last entry removed so trigger drift
+           return $false
+       }
     }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
