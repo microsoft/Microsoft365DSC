@@ -89,11 +89,11 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.38"
+            RequiredVersion = "1.0.39"
         },
         @{
             ModuleName      = "ReverseDSC"
-            RequiredVersion = "2.0.0.6"
+            RequiredVersion = "2.0.0.7"
         },
         @{
             ModuleName      = "SharePointPnPPowerShellOnline"
