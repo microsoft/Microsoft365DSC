@@ -364,7 +364,11 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
-
+    if ($null -eq (Get-Command Get-EmailAddressPolicy -ErrorAction SilentlyContinue))
+    {
+        Write-Host "`r`n    $($Global:M365DSCEmojiRedX) The specified account doesn't have permissions to access Email Address Policy"
+        return ""
+    }
     [array]$AllEmailAddressPolicies = Get-EmailAddressPolicy
 
     $dscContent = ""

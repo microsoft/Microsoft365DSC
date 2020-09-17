@@ -362,6 +362,11 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
+    if ($null -eq (Get-Command Get-AvailabilityAddressSpace -ErrorAction SilentlyContinue))
+    {
+        Write-Host "`r`n    $($Global:M365DSCEmojiRedX) The specified account doesn't have permissions to access Availibility Address Space"
+        return ""
+    }
     try
     {
             [array]$AvailabilityAddressSpaces = Get-AvailabilityAddressSpace -ErrorAction stop
