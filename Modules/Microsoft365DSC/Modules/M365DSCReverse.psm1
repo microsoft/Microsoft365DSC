@@ -116,13 +116,20 @@ function Start-M365DSCConfigurationExtract
 
     # If some resources are not supported based on the Authentication parameters
     # received, write a warning.
-    $allResourcesInModule = Get-M365DSCAllResources
-    $selectedItems = Compare-Object -ReferenceObject $allResourcesInModule `
-        -DifferenceObject $ComponentsToSkip | Where-Object -FilterScript {$_.SideIndicator -eq '<='}
-    $selectedResources = @()
-    foreach ($item in $selectedItems)
+    if ($ComponentsToExtract.Length -eq 0)
     {
-        $selectedResources += $item.InputObject
+        $allResourcesInModule = Get-M365DSCAllResources
+        $selectedItems = Compare-Object -ReferenceObject $allResourcesInModule `
+            -DifferenceObject $ComponentsToSkip | Where-Object -FilterScript {$_.SideIndicator -eq '<='}
+        $selectedResources = @()
+        foreach ($item in $selectedItems)
+        {
+            $selectedResources += $item.InputObject
+        }
+    }
+    else
+    {
+        $selectedResources = $ComponentsToExtract
     }
     $compareResourcesResult = Compare-Object -ReferenceObject $allSupportedResources `
         -DifferenceObject $selectedResources | Where-Object -FilterScript {$_.SideIndicator -eq '=>'}
@@ -146,7 +153,7 @@ function Start-M365DSCConfigurationExtract
 
     if (-not $PSBoundParameters.ContainsKey('Quiet'))
     {
-        $unattendedCommand = "Export-M365DSCConfiguration -Quiet -ComponentsToExport @("
+        $unattendedCommand = "Export-M365DSCConfiguration -Quiet -ComponentsToExtract @("
         foreach ($resource in $ComponentsToExtract)
         {
             if ($resource -ne 'Credential' -and $resource -ne 'Application' -and `

@@ -275,6 +275,11 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
+    if ($null -eq (Get-Command Get-AvailabilityConfig -ErrorAction SilentlyContinue))
+    {
+        Write-Host "`r`n    $($Global:M365DSCEmojiRedX) The specified account doesn't have permissions to access Availibility Config"
+        return ""
+    }
     $AvailabilityConfig = Get-AvailabilityConfig -ErrorAction SilentlyContinue
 
     if ($null -eq $AvailabilityConfig)

@@ -269,6 +269,8 @@ function Set-TargetResource
             Remove-HostedContentFilterRule -Identity $Identity -Confirm:$false
         }
         Write-Verbose -Message "Creating new HostedContentFilterRule {$Identity}"
+        $CreationParams.Add("Name", $Identity)
+        $CreationParams.Remove("Identity") | Out-Null
         New-HostedContentFilterRule @CreationParams
     }
     elseif ($Ensure -eq 'Present' -and $CurrentValues -eq 'Present')
