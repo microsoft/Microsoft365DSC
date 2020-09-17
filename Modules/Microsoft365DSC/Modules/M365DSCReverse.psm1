@@ -153,7 +153,7 @@ function Start-M365DSCConfigurationExtract
 
     if (-not $PSBoundParameters.ContainsKey('Quiet'))
     {
-        $unattendedCommand = "Export-M365DSCConfiguration -Quiet -ComponentsToExport @("
+        $unattendedCommand = "Export-M365DSCConfiguration -Quiet -ComponentsToExtract @("
         foreach ($resource in $ComponentsToExtract)
         {
             if ($resource -ne 'Credential' -and $resource -ne 'Application' -and `
