@@ -130,6 +130,7 @@ function Get-TargetResource
         {
             $advancedSettingsValue = Convert-StringToAdvancedSettings -AdvancedSettings $policy.Settings
         }
+
         Write-Verbose "Found existing Sensitivity Label policy $($Name)"
         $result = @{
             Name                         = $policy.Name
@@ -261,18 +262,18 @@ function Set-TargetResource
             $CreationParams["AdvancedSettings"] = $advanced
         }
         #Remove parameters not used in Set-LabelPolicy
-        $CreationParams.Remove("GlobalAdminAccount")
-        $CreationParams.Remove("Ensure")
-        $CreationParams.Remove("AddLabels")
-        $CreationParams.Remove("AddExchangeLocation")
-        $CreationParams.Remove("AddExchangeLocationException")
-        $CreationParams.Remove("AddModernGroupLocation")
-        $CreationParams.Remove("AddModernGroupLocationException")
-        $CreationParams.Remove("RemoveLabels")
-        $CreationParams.Remove("RemoveExchangeLocation")
-        $CreationParams.Remove("RemoveExchangeLocationException")
-        $CreationParams.Remove("RemoveModernGroupLocation")
-        $CreationParams.Remove("RemoveModernGroupLocationException")
+        $CreationParams.Remove("GlobalAdminAccount") | Out-Null
+        $CreationParams.Remove("Ensure") | Out-Null
+        $CreationParams.Remove("AddLabels") | Out-Null
+        $CreationParams.Remove("AddExchangeLocation") | Out-Null
+        $CreationParams.Remove("AddExchangeLocationException") | Out-Null
+        $CreationParams.Remove("AddModernGroupLocation") | Out-Null
+        $CreationParams.Remove("AddModernGroupLocationException") | Out-Null
+        $CreationParams.Remove("RemoveLabels") | Out-Null
+        $CreationParams.Remove("RemoveExchangeLocation") | Out-Null
+        $CreationParams.Remove("RemoveExchangeLocationException") | Out-Null
+        $CreationParams.Remove("RemoveModernGroupLocation") | Out-Null
+        $CreationParams.Remove("RemoveModernGroupLocationException") | Out-Null
         Write-Verbose "Creating new Sensitivity label policy $Name."
 
         try
@@ -294,14 +295,14 @@ function Set-TargetResource
             $SetParams["AdvancedSettings"] = $advanced
         }
         #Remove unused parameters for Set-Label cmdlet
-        $SetParams.Remove("GlobalAdminAccount")
-        $SetParams.Remove("Ensure")
-        $SetParams.Remove("Name")
-        $SetParams.Remove("ExchangeLocationException")
-        $SetParams.Remove("Labels")
-        $SetParams.Remove("ExchangeLocation")
-        $SetParams.Remove("ModernGroupLocation")
-        $SetParams.Remove("ModernGroupLocationException")
+        $SetParams.Remove("GlobalAdminAccount") | Out-Null
+        $SetParams.Remove("Ensure") | Out-Null
+        $SetParams.Remove("Name") | Out-Null
+        $SetParams.Remove("ExchangeLocationException") | Out-Null
+        $SetParams.Remove("Labels") | Out-Null
+        $SetParams.Remove("ExchangeLocation") | Out-Null
+        $SetParams.Remove("ModernGroupLocation") | Out-Null
+        $SetParams.Remove("ModernGroupLocationException") | Out-Null
 
         try
         {
@@ -451,15 +452,15 @@ function Test-TargetResource
             $ValuesToCheck["ModernGroupLocation"] = $configData
         }
         if ($null -eq $configData -and $null -ne $CurrentValues.ModernGroupLocation `
-         -and $null -ne $RemoveModernGroupLocation)
+                -and $null -ne $RemoveModernGroupLocation)
         {
-           #last entry removed so trigger drift
+            #last entry removed so trigger drift
             return $false
         }
     }
 
     if ($null -ne $RemoveModernGroupLocationException -or $null -ne $AddModernGroupLocationException `
-        -or $null -ne $ModernGroupLocationException)
+            -or $null -ne $ModernGroupLocationException)
     {
         $configData = New-PolicyData -configData $ModernGroupLocationException -currentData $CurrentValues.ModernGroupLocationException `
             -removedData $RemoveModernGroupLocationException -additionalData $AddModernGroupLocationException
@@ -469,11 +470,11 @@ function Test-TargetResource
             $ValuesToCheck["ModernGroupLocationException"] = $configData
         }
         if ($null -eq $configData -and $null -ne $CurrentValues.ModernGroupLocationException `
-        -and $null -ne $RemoveModernGroupLocationException)
-       {
-          #last entry removed so trigger drift
-           return $false
-       }
+                -and $null -ne $RemoveModernGroupLocationException)
+        {
+            #last entry removed so trigger drift
+            return $false
+        }
     }
 
     if ($null -ne $RemoveExchangeLocation -or $null -ne $AddExchangeLocation -or $null -ne $ExchangeLocation)
@@ -485,11 +486,11 @@ function Test-TargetResource
             $ValuesToCheck["ExchangeLocation"] = $configData
         }
         if ($null -eq $configData -and $null -ne $CurrentValues.ExchangeLocation `
-        -and $null -ne $RemoveExchangeLocation)
-       {
-          #last entry removed so trigger drift
-           return $false
-       }
+                -and $null -ne $RemoveExchangeLocation)
+        {
+            #last entry removed so trigger drift
+            return $false
+        }
     }
 
     if ($null -ne $RemoveExchangeLocationException -or $null -ne $AddExchangeLocationException -or $null -ne $ExchangeLocationException)
@@ -503,11 +504,11 @@ function Test-TargetResource
         }
 
         if ($null -eq $configData -and $null -ne $CurrentValues.ExchangeLocationException `
-        -and $null -ne $RemoveExchangeLocationException)
-       {
-          #last entry removed so trigger drift
-           return $false
-       }
+                -and $null -ne $RemoveExchangeLocationException)
+        {
+            #last entry removed so trigger drift
+            return $false
+        }
     }
 
     if ($null -ne $RemoveLabels -or $null -ne $AddLabels -or $null -ne $Labels)
@@ -521,11 +522,11 @@ function Test-TargetResource
         }
 
         if ($null -eq $configData -and $null -ne $CurrentValues.Labels `
-        -and $null -ne $RemoveLabels)
-       {
-          #last entry removed so trigger drift
-           return $false
-       }
+                -and $null -ne $RemoveLabels)
+        {
+            #last entry removed so trigger drift
+            return $false
+        }
     }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
@@ -609,40 +610,6 @@ function Export-TargetResource
     return $dscContent
 }
 
-function Convert-JSONToLocaleSettings
-{
-    [CmdletBinding()]
-    [OutputType([Microsoft.Management.Infrastructure.CimInstance[]])]
-    Param(
-        [parameter(Mandatory = $true)]
-        $JSONLocalSettings
-    )
-    $localeSettings = $JSONLocalSettings | Convertfrom-Json
-
-    $entries = @()
-    $settings = @()
-    foreach ($localeSetting in $localeSettings)
-    {
-        $result = @{
-            localeKey = $localeSetting.LocaleKey
-        }
-        foreach ($setting in $localeSetting.Settings)
-        {
-            $entry = @{
-                Key   = $setting.Key
-                Value = $setting.Value
-            }
-            $settings += $entry
-        }
-        $result.Add("Settings", $settings)
-        $settings = @()
-        $entries += $result
-        $result = @{ }
-
-    }
-    return $entries
-}
-
 function Convert-StringToAdvancedSettings
 {
     [CmdletBinding()]
@@ -693,40 +660,6 @@ function Convert-CIMToAdvancedSettings
             $settingsValues += ","
         }
         $entry[$obj.Key] = $settingsValues.Substring(0, ($settingsValues.Length - 1))
-    }
-
-    return $entry
-}
-
-
-function Convert-CIMToLocaleSettings
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.ArrayList])]
-    Param(
-        [parameter(Mandatory = $true)]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $localeSettings
-    )
-    $entry = [System.Collections.ArrayList]@()
-    foreach ($localset in $localeSettings)
-    {
-        $localeEntries = [ordered]@{
-            localeKey = $localset.LocaleKey
-        }
-        $settings = @()
-        foreach ($setting in $localset.Settings)
-        {
-            $settingEntry = @{
-                Key   = $setting.Key
-                Value = $setting.Value
-            }
-            $settings += $settingEntry
-        }
-        $localeEntries.Add("Settings", $settings)
-        [void]$entry.Add(($localeEntries | ConvertTo-Json))
-        $localeEntries = @{ }
-        $settings = @( )
     }
 
     return $entry
@@ -785,38 +718,6 @@ function ConvertTo-AdvancedSettingsString
     return $StringContent
 }
 
-function ConvertTo-LocaleSettingsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        $LocaleSettings
-    )
-
-    $StringContent = "@(`r`n"
-    foreach ($LocaleSetting in $LocaleSettings)
-    {
-        $StringContent += "                MSFT_SCLabelLocaleSettings`r`n"
-        $StringContent += "                {`r`n"
-        $StringContent += "                    LocaleKey = '$($LocaleSetting.LocaleKey.Replace("'", "''"))'`r`n"
-        $StringContent += "                    Settings  = @(`r`n"
-        foreach ($Setting in $LocaleSetting.Settings)
-        {
-            $StringContent += "                        MSFT_SCLabelSetting`r`n"
-            $StringContent += "                        {`r`n"
-            $StringContent += "                            Key   = '$($Setting.Key.Replace("'", "''"))'`r`n"
-            $StringContent += "                            Value = '$($Setting.Value.Replace("'", "''"))'`r`n"
-            $StringContent += "                        }`r`n"
-        }
-        $StringContent += "                    )`r`n"
-        $StringContent += "                }`r`n"
-    }
-    $StringContent += "            )"
-    return $StringContent
-}
-
 function Convert-ArrayList
 {
     [CmdletBinding()]
@@ -857,7 +758,7 @@ function New-PolicyData
     {
         if (!$desiredData.Contains($currItem))
         {
-            $desiredData.add($currItem) |Out-Null
+            $desiredData.add($currItem) | Out-Null
         }
     }
 
@@ -865,20 +766,20 @@ function New-PolicyData
     {
         if (!$desiredData.Contains("$curritem"))
         {
-            $desiredData.add($currItem) |Out-Null
+            $desiredData.add($currItem) | Out-Null
         }
     }
 
     foreach ($currItem in $removedData)
     {
-        $desiredData.remove($currItem) |Out-Null
+        $desiredData.remove($currItem) | Out-Null
     }
 
     foreach ($currItem in $additionalData)
     {
         if (!$desiredData.Contains("$curritem"))
         {
-            $desiredData.add($currItem) |Out-Null
+            $desiredData.add($currItem) | Out-Null
         }
     }
 

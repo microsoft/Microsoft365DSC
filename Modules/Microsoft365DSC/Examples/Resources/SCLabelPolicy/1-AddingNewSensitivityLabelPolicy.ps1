@@ -19,6 +19,7 @@ Configuration Example
             Name           = "DemoLabelPolicy"
             Comment        = "Demo Label policy comment"
             Labels = @("Personal", "General");
+            ExchangeLocation = @("All")
             AdvancedSettings = @(
                 MSFT_SCLabelSetting
                 {

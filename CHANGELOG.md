@@ -1,5 +1,15 @@
 # Change log for Microsoft365DSC
 
+## Unreleased
+
+* SCLabelPolicy
+  * Initial release
+
+* Misc
+  * Removed EncryptionTemplateID from SCSensitivityLabel (Issue #758)
+  * Added AzureAD app support SPOSiteDesign
+
+
 ## 1.20.925.1
 
 * DEPENDENCIES
