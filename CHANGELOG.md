@@ -3,7 +3,7 @@
 ## 1.20.925.1
 
 * DEPENDENCIES
-  * MSCloudLoginAssistant Updated to 1.0.39;
+  * MSCloudLoginAssistant Updated to 1.0.40;
   * ReverseDSC Updated to 2.0.0.7;
 
 ## 1.20.916.1
