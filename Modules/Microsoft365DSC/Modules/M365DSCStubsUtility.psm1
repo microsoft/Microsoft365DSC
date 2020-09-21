@@ -43,6 +43,10 @@ function New-M365DSCStubFiles
             RandomCmdlet = 'Add-AvailabilityAddressSpace'
         },
         @{
+            Platform     = 'Intune'
+            ModuleName   = "Microsoft.Graph.Intune"
+        },
+        @{
             Platform   = 'MicrosoftTeams'
             ModuleName = 'MicrosoftTeams'
         },

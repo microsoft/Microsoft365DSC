@@ -1,7 +1,9 @@
 # Change log for Microsoft365DSC
 
-## 1.20.925.1
+## 1.20.923.1
 
+* IntuneDeviceCategory
+  * Initial Release;
 * DEPENDENCIES
   * MSCloudLoginAssistant Updated to 1.0.40;
   * ReverseDSC Updated to 2.0.0.7;
