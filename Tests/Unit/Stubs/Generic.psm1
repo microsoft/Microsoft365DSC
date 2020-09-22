@@ -194,7 +194,7 @@ function New-M365DSCConnection
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Azure", "AzureAD", "SharePointOnline", "ExchangeOnline", `
+        [ValidateSet("Azure", "AzureAD", "SharePointOnline", "ExchangeOnline", 'Intune', `
                 "SecurityComplianceCenter", "MSOnline", "PnP", "PowerPlatforms", `
                 "MicrosoftTeams", "SkypeForBusiness")]
         [System.String]
