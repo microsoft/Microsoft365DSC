@@ -5655,6 +5655,32 @@ function Disable-App
         $AsJob
     )
 }
+function Disable-ATPProtectionPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Disable-ElevatedAccessControl
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Disable-EOPProtectionPolicyRule
 {
     [CmdletBinding()]
@@ -5849,6 +5875,40 @@ function Disable-OutlookProtectionRule
         $AsJob
     )
 }
+function Disable-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Disable-SafeLinksRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Disable-SweepRule
 {
     [CmdletBinding()]
@@ -5999,6 +6059,40 @@ function Enable-App
         [Parameter()]
         [System.Object]
         $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Enable-ATPProtectionPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Enable-ElevatedAccessControl
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $SystemAccounts,
+
+        [Parameter()]
+        [System.Object]
+        $AdminGroup,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -6195,6 +6289,40 @@ function Enable-OrganizationCustomization
     )
 }
 function Enable-OutlookProtectionRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Enable-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Enable-SafeLinksRule
 {
     [CmdletBinding()]
     param(
@@ -6562,6 +6690,27 @@ function Get-AcceptedDomain
         $AsJob
     )
 }
+function Get-AccessToCustomerDataRequest
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $RequestId,
+
+        [Parameter()]
+        [System.Object]
+        $ApprovalStatus,
+
+        [Parameter()]
+        [System.Object]
+        $CreatedAfter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Get-ActiveSyncDevice
 {
     [CmdletBinding()]
@@ -6813,10 +6962,75 @@ function Get-AdvancedThreatProtectionDocumentReport
         $AsJob
     )
 }
+function Get-AdvancedThreatProtectionTrafficReport
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Action,
+
+        [Parameter()]
+        [System.Object]
+        $Direction,
+
+        [Parameter()]
+        [System.Object]
+        $Page,
+
+        [Parameter()]
+        [System.Object]
+        $ProbeTag,
+
+        [Parameter()]
+        [System.Object]
+        $Domain,
+
+        [Parameter()]
+        [System.Object]
+        $EndDate,
+
+        [Parameter()]
+        [System.Object]
+        $PageSize,
+
+        [Parameter()]
+        [System.Object]
+        $AggregateBy,
+
+        [Parameter()]
+        [System.Object]
+        $DisplayBy,
+
+        [Parameter()]
+        [System.Object]
+        $EventType,
+
+        [Parameter()]
+        [System.Object]
+        $MalwareName,
+
+        [Parameter()]
+        [System.Object]
+        $StartDate,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Get-AntiPhishPolicy
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Impersonation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Advanced,
+
         [Parameter()]
         [System.Object]
         $Identity,
@@ -6904,6 +7118,36 @@ function Get-ATPEvaluation
         [Parameter()]
         [System.Object]
         $Event,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-AtpPolicyForO365
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-ATPProtectionPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $State,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -7302,8 +7546,16 @@ function Get-CalendarViewDiagnostics
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $BindToResults,
+
+        [Parameter()]
         [System.Object]
         $CalendarId,
+
+        [Parameter()]
+        [System.Object]
+        $TimeZonePreference,
 
         [Parameter()]
         [System.Object]
@@ -12005,6 +12257,19 @@ function Get-OMEConfiguration
         $AsJob
     )
 }
+function Get-OMEMessageStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $MessageId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Get-OnlineMeetingConfiguration
 {
     [CmdletBinding()]
@@ -12976,6 +13241,136 @@ function Get-RoleGroupMember
         [Parameter()]
         [System.Object]
         $ResultSize,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $State,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-SafeLinksAggregateReport
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Action,
+
+        [Parameter()]
+        [System.Object]
+        $EndDate,
+
+        [Parameter()]
+        [System.Object]
+        $AppNameList,
+
+        [Parameter()]
+        [System.Object]
+        $StartDate,
+
+        [Parameter()]
+        [System.Object]
+        $SummarizeBy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-SafeLinksDetailReport
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Action,
+
+        [Parameter()]
+        [System.Object]
+        $Page,
+
+        [Parameter()]
+        [System.Object]
+        $EndDate,
+
+        [Parameter()]
+        [System.Object]
+        $PageSize,
+
+        [Parameter()]
+        [System.Object]
+        $AppNameList,
+
+        [Parameter()]
+        [System.Object]
+        $Domain,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientAddress,
+
+        [Parameter()]
+        [System.Object]
+        $StartDate,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-SafeLinksRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $State,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -14290,6 +14685,47 @@ function Get-UnifiedGroupLinks
         $AsJob
     )
 }
+function Get-UrlTrace
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Workloads,
+
+        [Parameter()]
+        [System.Object]
+        $Page,
+
+        [Parameter()]
+        [System.Object]
+        $ClickId,
+
+        [Parameter()]
+        [System.Object]
+        $EndDate,
+
+        [Parameter()]
+        [System.Object]
+        $PageSize,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientAddress,
+
+        [Parameter()]
+        [System.Object]
+        $StartDate,
+
+        [Parameter()]
+        [System.Object]
+        $UrlOrDomain,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Get-User
 {
     [CmdletBinding()]
@@ -14937,27 +15373,11 @@ function New-AntiPhishPolicy
     param(
         [Parameter()]
         [System.Object]
-        $EnableUnauthenticatedSender,
+        $EnableMailboxIntelligenceProtection,
 
         [Parameter()]
         [System.Object]
-        $EnableSpoofIntelligence,
-
-        [Parameter()]
-        [System.Object]
-        $EnableAntiSpoofEnforcement,
-
-        [Parameter()]
-        [System.Object]
-        $Name,
-
-        [Parameter()]
-        [System.Object]
-        $AdminDisplayName,
-
-        [Parameter()]
-        [System.Object]
-        $RecommendedPolicyType,
+        $PhishThresholdLevel,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -14965,7 +15385,67 @@ function New-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
+        $EnableTargetedDomainsProtection,
+
+        [Parameter()]
+        [System.Object]
+        $Enabled,
+
+        [Parameter()]
+        [System.Object]
         $EnableViaTag,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxIntelligenceProtectionAction,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedDomainsToProtect,
+
+        [Parameter()]
+        [System.Object]
+        $EnableOrganizationDomainsProtection,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSpoofIntelligence,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSimilarUsersSafetyTips,
+
+        [Parameter()]
+        [System.Object]
+        $ExcludedDomains,
+
+        [Parameter()]
+        [System.Object]
+        $EnableAntiSpoofEnforcement,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedDomainActionRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $EnableMailboxIntelligence,
+
+        [Parameter()]
+        [System.Object]
+        $SimilarUsersSafetyTipsCustomText,
+
+        [Parameter()]
+        [System.Object]
+        $ImpersonationProtectionState,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedDomainProtectionAction,
+
+        [Parameter()]
+        [System.Object]
+        $AdminDisplayName,
 
         [Parameter()]
         [System.Object]
@@ -14973,7 +15453,55 @@ function New-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
-        $Enabled,
+        $TargetedUsersToProtect,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedUserProtectionAction,
+
+        [Parameter()]
+        [System.Object]
+        $RecommendedPolicyType,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxIntelligenceProtectionActionRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $UnusualCharactersSafetyTipsCustomText,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSimilarDomainsSafetyTips,
+
+        [Parameter()]
+        [System.Object]
+        $EnableTargetedUserProtection,
+
+        [Parameter()]
+        [System.Object]
+        $EnableUnauthenticatedSender,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyTag,
+
+        [Parameter()]
+        [System.Object]
+        $EnableUnusualCharactersSafetyTips,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedUserActionRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $ExcludedSenders,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -15145,6 +15673,67 @@ function New-ApplicationAccessPolicy
         [Parameter()]
         [System.Object]
         $AccessRight,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-ATPProtectionPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $Comments,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $SafeAttachmentPolicy,
+
+        [Parameter()]
+        [System.Object]
+        $SafeLinksPolicy,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $Enabled,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -15420,6 +16009,39 @@ function New-DataClassification
         [Parameter()]
         [System.Object]
         $Fingerprints,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-DataEncryptionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $AzureKeyIDs,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Enabled,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -15724,6 +16346,35 @@ function New-DynamicDistributionGroup
         [Parameter()]
         [System.Object]
         $ConditionalCustomAttribute11,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-ElevatedAccessApprovalPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $RoleGroup,
+
+        [Parameter()]
+        [System.Object]
+        $Task,
+
+        [Parameter()]
+        [System.Object]
+        $ApprovalType,
+
+        [Parameter()]
+        [System.Object]
+        $ApproverGroup,
+
+        [Parameter()]
+        [System.Object]
+        $Role,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -17735,6 +18386,10 @@ function New-MigrationBatch
 
         [Parameter()]
         [System.Object]
+        $SkipMerging,
+
+        [Parameter()]
+        [System.Object]
         $ExcludeFolders,
 
         [Parameter()]
@@ -17842,8 +18497,8 @@ function New-MigrationBatch
         $DisableOnCopy,
 
         [Parameter()]
-        [System.Object]
-        $SkipMerging,
+        [System.Management.Automation.SwitchParameter]
+        $RemoveOnCopy,
 
         [Parameter()]
         [System.Object]
@@ -17888,7 +18543,7 @@ function New-MigrationEndpoint
 
         [Parameter()]
         [System.Object]
-        $Name,
+        $Security,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -17915,6 +18570,10 @@ function New-MigrationEndpoint
         $ExchangeServer,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipVerification,
+
+        [Parameter()]
         [System.Object]
         $Authentication,
 
@@ -17931,6 +18590,10 @@ function New-MigrationEndpoint
         $Credentials,
 
         [Parameter()]
+        [System.Object]
+        $AppSecretKeyVaultUrl,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Compliance,
 
@@ -17943,8 +18606,12 @@ function New-MigrationEndpoint
         $EmailAddress,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PublicFolderToUnifiedGroup,
+        [System.Object]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.Object]
+        $RemoteTenant,
 
         [Parameter()]
         [System.Object]
@@ -17975,12 +18642,12 @@ function New-MigrationEndpoint
         $Autodiscover,
 
         [Parameter()]
-        [System.Object]
-        $NspiServer,
+        [System.Management.Automation.SwitchParameter]
+        $PublicFolderToUnifiedGroup,
 
         [Parameter()]
         [System.Object]
-        $RpcProxyServer,
+        $NspiServer,
 
         [Parameter()]
         [System.Object]
@@ -17988,11 +18655,11 @@ function New-MigrationEndpoint
 
         [Parameter()]
         [System.Object]
-        $Security,
+        $RpcProxyServer,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $SkipVerification,
+        [System.Object]
+        $Name,
 
         [Parameter()]
         [System.Object]
@@ -18273,6 +18940,10 @@ function New-MoveRequest
         $ForceOffline,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Suspend,
+
+        [Parameter()]
         [System.Object]
         $RequestExpiryInterval,
 
@@ -18282,11 +18953,15 @@ function New-MoveRequest
 
         [Parameter()]
         [System.Object]
+        $SuspendComment,
+
+        [Parameter()]
+        [System.Object]
         $LargeItemLimit,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Suspend,
+        [System.Object]
+        $RemoteTargetDatabase,
 
         [Parameter()]
         [System.Object]
@@ -18302,7 +18977,7 @@ function New-MoveRequest
 
         [Parameter()]
         [System.Object]
-        $SuspendComment,
+        $RemoteTenant,
 
         [Parameter()]
         [System.Object]
@@ -18318,7 +18993,7 @@ function New-MoveRequest
 
         [Parameter()]
         [System.Object]
-        $RemoteTargetDatabase,
+        $TargetDeliveryDomain,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -18346,10 +19021,6 @@ function New-MoveRequest
 
         [Parameter()]
         [System.Object]
-        $TargetDeliveryDomain,
-
-        [Parameter()]
-        [System.Object]
         $RemoteCredential,
 
         [Parameter()]
@@ -18359,6 +19030,67 @@ function New-MoveRequest
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Outbound,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-OMEConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $IntroductionText,
+
+        [Parameter()]
+        [System.Object]
+        $ExternalMailExpiryInDays,
+
+        [Parameter()]
+        [System.Object]
+        $ReadButtonText,
+
+        [Parameter()]
+        [System.Object]
+        $PortalText,
+
+        [Parameter()]
+        [System.Object]
+        $Image,
+
+        [Parameter()]
+        [System.Object]
+        $OTPEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $BackgroundColor,
+
+        [Parameter()]
+        [System.Object]
+        $DisclaimerText,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $PrivacyStatementUrl,
+
+        [Parameter()]
+        [System.Object]
+        $SocialIdSignIn,
+
+        [Parameter()]
+        [System.Object]
+        $EmailText,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -18440,6 +19172,10 @@ function New-OrganizationRelationship
 
         [Parameter()]
         [System.Object]
+        $OAuthApplicationId,
+
+        [Parameter()]
+        [System.Object]
         $OrganizationContact,
 
         [Parameter()]
@@ -18477,6 +19213,10 @@ function New-OrganizationRelationship
         [Parameter()]
         [System.Object]
         $MailboxMoveEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxMoveCapability,
 
         [Parameter()]
         [System.Object]
@@ -19201,6 +19941,238 @@ function New-RoleGroup
         [Parameter()]
         [System.Object]
         $Roles,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Redirect,
+
+        [Parameter()]
+        [System.Object]
+        $RecommendedPolicyType,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Object]
+        $Enable,
+
+        [Parameter()]
+        [System.Object]
+        $RedirectAddress,
+
+        [Parameter()]
+        [System.Object]
+        $Action,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $ActionOnError,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $Comments,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $SafeAttachmentPolicy,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $Enabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $ExcludedUrls,
+
+        [Parameter()]
+        [System.Object]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $WhiteListedUrls,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $DoNotTrackUserClicks,
+
+        [Parameter()]
+        [System.Object]
+        $DoNotRewriteUrls,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSafeLinksForTeams,
+
+        [Parameter()]
+        [System.Object]
+        $ScanUrls,
+
+        [Parameter()]
+        [System.Object]
+        $TrackClicks,
+
+        [Parameter()]
+        [System.Object]
+        $AllowClickThrough,
+
+        [Parameter()]
+        [System.Object]
+        $RecommendedPolicyType,
+
+        [Parameter()]
+        [System.Object]
+        $DoNotAllowClickThrough,
+
+        [Parameter()]
+        [System.Object]
+        $DeliverMessageAfterScan,
+
+        [Parameter()]
+        [System.Object]
+        $IsEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $EnableForInternalSenders,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-SafeLinksRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $Comments,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $SafeLinksPolicy,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $Enabled,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -20967,6 +21939,23 @@ function Remove-ATPEvaluation
         $AsJob
     )
 }
+function Remove-ATPProtectionPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Remove-AuditConfigurationPolicy
 {
     [CmdletBinding()]
@@ -21280,6 +22269,19 @@ function Remove-DynamicDistributionGroup
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Remove-ElevatedAccessApprovalPolicy
+{
+    [CmdletBinding()]
+    param(
         [Parameter()]
         [System.Object]
         $Identity,
@@ -21999,6 +23001,23 @@ function Remove-MoveRequest
         $AsJob
     )
 }
+function Remove-OMEConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Remove-OnPremisesOrganization
 {
     [CmdletBinding()]
@@ -22389,6 +23408,82 @@ function Remove-RoleGroupMember
         [Parameter()]
         [System.Object]
         $Member,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Remove-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Remove-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Remove-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Remove-SafeLinksRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -23120,6 +24215,27 @@ function Set-AcceptedDomain
         $AsJob
     )
 }
+function Set-AccessToCustomerDataRequest
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $RequestId,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $ApprovalDecision,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Set-ActiveSyncDeviceAccessRule
 {
     [CmdletBinding()]
@@ -23449,20 +24565,12 @@ function Set-AntiPhishPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
-        $EnableUnauthenticatedSender,
+        [System.Management.Automation.SwitchParameter]
+        $MakeDefault,
 
         [Parameter()]
         [System.Object]
-        $EnableSpoofIntelligence,
-
-        [Parameter()]
-        [System.Object]
-        $EnableAntiSpoofEnforcement,
-
-        [Parameter()]
-        [System.Object]
-        $AdminDisplayName,
+        $PhishThresholdLevel,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -23470,7 +24578,7 @@ function Set-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
-        $EnableViaTag,
+        $EnableTargetedDomainsProtection,
 
         [Parameter()]
         [System.Object]
@@ -23478,15 +24586,107 @@ function Set-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
-        $AuthenticationFailAction,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $MakeDefault,
+        $Enabled,
 
         [Parameter()]
         [System.Object]
-        $Enabled,
+        $EnableViaTag,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxIntelligenceProtectionAction,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedDomainsToProtect,
+
+        [Parameter()]
+        [System.Object]
+        $EnableOrganizationDomainsProtection,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSpoofIntelligence,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSimilarUsersSafetyTips,
+
+        [Parameter()]
+        [System.Object]
+        $ExcludedDomains,
+
+        [Parameter()]
+        [System.Object]
+        $EnableAntiSpoofEnforcement,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedDomainActionRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $EnableMailboxIntelligence,
+
+        [Parameter()]
+        [System.Object]
+        $ImpersonationProtectionState,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedDomainProtectionAction,
+
+        [Parameter()]
+        [System.Object]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Object]
+        $AuthenticationFailAction,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedUsersToProtect,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedUserProtectionAction,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxIntelligenceProtectionActionRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSimilarDomainsSafetyTips,
+
+        [Parameter()]
+        [System.Object]
+        $EnableTargetedUserProtection,
+
+        [Parameter()]
+        [System.Object]
+        $EnableUnauthenticatedSender,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyTag,
+
+        [Parameter()]
+        [System.Object]
+        $EnableUnusualCharactersSafetyTips,
+
+        [Parameter()]
+        [System.Object]
+        $EnableMailboxIntelligenceProtection,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedUserActionRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $ExcludedSenders,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -23606,6 +24806,104 @@ function Set-ApplicationAccessPolicy
         [Parameter()]
         [System.Object]
         $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-AtpPolicyForO365
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $TrackClicks,
+
+        [Parameter()]
+        [System.Object]
+        $EnableATPForSPOTeamsODB,
+
+        [Parameter()]
+        [System.Object]
+        $BlockUrls,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSafeLinksForO365Clients,
+
+        [Parameter()]
+        [System.Object]
+        $AllowClickThrough,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSafeDocs,
+
+        [Parameter()]
+        [System.Object]
+        $AllowSafeDocsOpen,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-ATPProtectionPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $Comments,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentToMemberOf,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -24457,12 +25755,36 @@ function Set-DataEncryptionPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.Object]
+        $PermanentDataPurgeContact,
+
+        [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $PermanentDataPurgeRequested,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Refresh,
 
         [Parameter()]
         [System.Object]
@@ -24475,14 +25797,6 @@ function Set-DataEncryptionPolicy
         [Parameter()]
         [System.Object]
         $Enabled,
-
-        [Parameter()]
-        [System.Object]
-        $PermanentDataPurgeContact,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -25107,6 +26421,27 @@ function Set-DynamicDistributionGroup
         [Parameter()]
         [System.Object]
         $HiddenFromAddressListsEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-ElevatedAccessApprovalPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ApprovalType,
+
+        [Parameter()]
+        [System.Object]
+        $ApproverGroup,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -26593,8 +27928,8 @@ function Set-Mailbox
         $AcceptMessagesOnlyFromSendersOrMembers,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $GroupMailbox,
+        [System.Object]
+        $NonCompliantDevices,
 
         [Parameter()]
         [System.Object]
@@ -26794,6 +28129,10 @@ function Set-Mailbox
 
         [Parameter()]
         [System.Object]
+        $LitigationHoldDate,
+
+        [Parameter()]
+        [System.Object]
         $DefaultPublicFolderMailbox,
 
         [Parameter()]
@@ -26846,10 +28185,6 @@ function Set-Mailbox
 
         [Parameter()]
         [System.Object]
-        $NonCompliantDevices,
-
-        [Parameter()]
-        [System.Object]
         $ResourceCapacity,
 
         [Parameter()]
@@ -26894,11 +28229,15 @@ function Set-Mailbox
 
         [Parameter()]
         [System.Object]
-        $ExtensionCustomAttribute4,
+        $DataEncryptionPolicy,
 
         [Parameter()]
         [System.Object]
-        $LitigationHoldDate,
+        $ExtensionCustomAttribute4,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $GroupMailbox,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -28398,7 +29737,7 @@ function Set-MailUser
 
         [Parameter()]
         [System.Object]
-        $RemoveOrphanedHolds,
+        $AcceptMessagesOnlyFromSendersOrMembers,
 
         [Parameter()]
         [System.Object]
@@ -28449,6 +29788,10 @@ function Set-MailUser
         $MailTip,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $EnableLitigationHoldForMigration,
+
+        [Parameter()]
         [System.Object]
         $ModeratedBy,
 
@@ -28474,10 +29817,6 @@ function Set-MailUser
 
         [Parameter()]
         [System.Object]
-        $AcceptMessagesOnlyFromSendersOrMembers,
-
-        [Parameter()]
-        [System.Object]
         $MessageBodyFormat,
 
         [Parameter()]
@@ -28491,6 +29830,10 @@ function Set-MailUser
         [Parameter()]
         [System.Object]
         $WindowsEmailAddress,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveOrphanedHolds,
 
         [Parameter()]
         [System.Object]
@@ -28529,6 +29872,10 @@ function Set-MailUser
         $UMDtmfMap,
 
         [Parameter()]
+        [System.Object]
+        $ArchiveGuid,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $RemoveMailboxProvisioningConstraint,
 
@@ -28563,6 +29910,10 @@ function Set-MailUser
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $RecalculateInactiveMailUser,
+
+        [Parameter()]
+        [System.Object]
+        $DataEncryptionPolicy,
 
         [Parameter()]
         [System.Object]
@@ -28626,10 +29977,6 @@ function Set-MailUser
 
         [Parameter()]
         [System.Object]
-        $ExtensionCustomAttribute3,
-
-        [Parameter()]
-        [System.Object]
         $CreateDTMFMap,
 
         [Parameter()]
@@ -28661,8 +30008,8 @@ function Set-MailUser
         $Name,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $EnableLitigationHoldForMigration,
+        [System.Object]
+        $ExtensionCustomAttribute3,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -29135,7 +30482,15 @@ function Set-MigrationEndpoint
 
         [Parameter()]
         [System.Object]
+        $AppSecretKeyVaultUrl,
+
+        [Parameter()]
+        [System.Object]
         $Port,
+
+        [Parameter()]
+        [System.Object]
+        $ApplicationId,
 
         [Parameter()]
         [System.Object]
@@ -29588,6 +30943,14 @@ function Set-OMEConfiguration
     param(
         [Parameter()]
         [System.Object]
+        $IntroductionText,
+
+        [Parameter()]
+        [System.Object]
+        $ExternalMailExpiryInDays,
+
+        [Parameter()]
+        [System.Object]
         $ReadButtonText,
 
         [Parameter()]
@@ -29628,11 +30991,24 @@ function Set-OMEConfiguration
 
         [Parameter()]
         [System.Object]
-        $IntroductionText,
+        $EmailText,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-OMEMessageRevocation
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Revoke,
 
         [Parameter()]
         [System.Object]
-        $EmailText,
+        $MessageId,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -30051,6 +31427,10 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Object]
+        $CustomerLockboxEnabled,
+
+        [Parameter()]
+        [System.Object]
         $OutlookMobileHelpShiftEnabled,
 
         [Parameter()]
@@ -30088,11 +31468,11 @@ function Set-OrganizationRelationship
 
         [Parameter()]
         [System.Object]
-        $MailTipsAccessLevel,
+        $TargetAutodiscoverEpr,
 
         [Parameter()]
         [System.Object]
-        $TargetAutodiscoverEpr,
+        $MailTipsAccessLevel,
 
         [Parameter()]
         [System.Object]
@@ -30113,6 +31493,10 @@ function Set-OrganizationRelationship
         [Parameter()]
         [System.Object]
         $DeliveryReportEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $OAuthApplicationId,
 
         [Parameter()]
         [System.Object]
@@ -30153,6 +31537,10 @@ function Set-OrganizationRelationship
         [Parameter()]
         [System.Object]
         $MailboxMoveEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxMoveCapability,
 
         [Parameter()]
         [System.Object]
@@ -31663,6 +33051,230 @@ function Set-RoleGroup
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Redirect,
+
+        [Parameter()]
+        [System.Object]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Object]
+        $Enable,
+
+        [Parameter()]
+        [System.Object]
+        $RedirectAddress,
+
+        [Parameter()]
+        [System.Object]
+        $Action,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ActionOnError,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $Comments,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $SafeAttachmentPolicy,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ExcludedUrls,
+
+        [Parameter()]
+        [System.Object]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $WhiteListedUrls,
+
+        [Parameter()]
+        [System.Object]
+        $DoNotTrackUserClicks,
+
+        [Parameter()]
+        [System.Object]
+        $DoNotRewriteUrls,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSafeLinksForTeams,
+
+        [Parameter()]
+        [System.Object]
+        $ScanUrls,
+
+        [Parameter()]
+        [System.Object]
+        $TrackClicks,
+
+        [Parameter()]
+        [System.Object]
+        $AllowClickThrough,
+
+        [Parameter()]
+        [System.Object]
+        $DoNotAllowClickThrough,
+
+        [Parameter()]
+        [System.Object]
+        $DeliverMessageAfterScan,
+
+        [Parameter()]
+        [System.Object]
+        $IsEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $EnableForInternalSenders,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-SafeLinksRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $Comments,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $SafeLinksPolicy,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentToMemberOf,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -35468,6 +37080,40224 @@ function Write-AdminAuditLog
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $AsJob
+    )
+}
+#endregion
+#region Intune
+function Connect-MSGraph
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceInteractive,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceNonInteractive,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ClientSecret,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AdminConsent,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Quiet,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru
+    )
+}
+function Get-DeviceAppManagement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Select,
+
+        [Parameter()]
+        [System.String[]]
+        $Expand
+    )
+}
+function Get-DeviceAppManagement_AndroidManagedAppProtections
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_AndroidManagedAppProtections_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_AndroidManagedAppProtections_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionODataType,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_AndroidManagedAppProtections_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId
+    )
+}
+function Get-DeviceAppManagement_DefaultManagedAppProtections
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_DefaultManagedAppProtections_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_DefaultManagedAppProtections_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId
+    )
+}
+function Get-DeviceAppManagement_IosManagedAppProtections
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_IosManagedAppProtections_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_IosManagedAppProtections_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionODataType,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_IosManagedAppProtections_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId
+    )
+}
+function Get-DeviceAppManagement_ManagedAppPolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_ManagedAppPolicies_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_ManagedAppPolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_ManagedAppPolicies_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType
+    )
+}
+function Get-DeviceAppManagement_ManagedAppPolicies_ExemptAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_ManagedAppPolicies_ProtectedAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_ManagedAppRegistrations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $appliedPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $appliedPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $appliedPolicyODataType
+    )
+}
+function Get-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies_ExemptAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $appliedPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies_ProtectedAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $appliedPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $intendedPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $intendedPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $intendedPolicyODataType
+    )
+}
+function Get-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies_ExemptAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $intendedPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies_ProtectedAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $intendedPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_ManagedAppRegistrations_Operations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppOperationId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_ManagedAppStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppStatusId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_ManagedEBooks
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_ManagedEBooks_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $managedEBookAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_ManagedEBooks_DeviceStates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $deviceInstallStateId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_ManagedEBooks_InstallSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId
+    )
+}
+function Get-DeviceAppManagement_ManagedEBooks_UserStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $userInstallStateSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_ManagedEBooks_UserStateSummary_DeviceStates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $userInstallStateSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $deviceInstallStateId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_MdmWindowsInformationProtectionPolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_MdmWindowsInformationProtectionPolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_MdmWindowsInformationProtectionPolicies_ExemptAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_MdmWindowsInformationProtectionPolicies_ProtectedAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_MobileAppCategories
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppCategoryId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_MobileAppConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_MobileAppConfigurations_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_MobileAppConfigurations_DeviceStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationDeviceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_MobileAppConfigurations_DeviceStatusSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId
+    )
+}
+function Get-DeviceAppManagement_MobileAppConfigurations_UserStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationUserStatusId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_MobileAppConfigurations_UserStatusSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId
+    )
+}
+function Get-DeviceAppManagement_MobileApps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_MobileApps_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_MobileApps_Categories
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppCategoryId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_MobileApps_CategoriesReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppCategoryId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_MobileApps_ContentVersions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppODataType,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppContentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_MobileApps_ContentVersions_Files
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppODataType,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppContentId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppContentFileId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_TargetedManagedAppConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_TargetedManagedAppConfigurations_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_TargetedManagedAppConfigurations_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_TargetedManagedAppConfigurations_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId
+    )
+}
+function Get-DeviceAppManagement_VppTokens
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $vppTokenId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_WindowsInformationProtectionPolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_WindowsInformationProtectionPolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_WindowsInformationProtectionPolicies_ExemptAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceAppManagement_WindowsInformationProtectionPolicies_ProtectedAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Select,
+
+        [Parameter()]
+        [System.String[]]
+        $Expand
+    )
+}
+function Get-DeviceManagement_ApplePushNotificationCertificate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Select
+    )
+}
+function Get-DeviceManagement_ConditionalAccessSettings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Select
+    )
+}
+function Get-DeviceManagement_DetectedApps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $detectedAppId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_DetectedApps_ManagedDevices
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $detectedAppId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_DetectedApps_ManagedDevicesReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $detectedAppId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_DeviceCategories
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCategoryId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_DeviceCompliancePolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_DeviceCompliancePolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_DeviceCompliancePolicies_DeviceSettingStateSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $settingStateDeviceSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_DeviceCompliancePolicies_DeviceStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $deviceComplianceDeviceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_DeviceCompliancePolicies_DeviceStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Get-DeviceManagement_DeviceCompliancePolicies_ScheduledActionsForRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $deviceComplianceScheduledActionForRuleId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_DeviceCompliancePolicies_ScheduledActionsForRule_ScheduledActionConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $deviceComplianceScheduledActionForRuleId,
+
+        [Parameter()]
+        [System.String]
+        $deviceComplianceActionItemId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_DeviceCompliancePolicies_UserStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $deviceComplianceUserStatusId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_DeviceCompliancePolicies_UserStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Get-DeviceManagement_DeviceCompliancePolicyDeviceStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Select
+    )
+}
+function Get-DeviceManagement_DeviceCompliancePolicySettingStateSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicySettingStateSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_DeviceCompliancePolicySettingStateSummaries_DeviceComplianceSettingStates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicySettingStateSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $deviceComplianceSettingStateId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_DeviceConfigurationDeviceStateSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Select
+    )
+}
+function Get-DeviceManagement_DeviceConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_DeviceConfigurations_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_DeviceConfigurations_DeviceSettingStateSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $settingStateDeviceSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_DeviceConfigurations_DeviceStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationDeviceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_DeviceConfigurations_DeviceStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId
+    )
+}
+function Get-DeviceManagement_DeviceConfigurations_UserStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationUserStatusId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_DeviceConfigurations_UserStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId
+    )
+}
+function Get-DeviceManagement_DeviceEnrollmentConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_DeviceEnrollmentConfigurations_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $enrollmentConfigurationAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_DeviceManagementPartners
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceManagementPartnerId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_ExchangeConnectors
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceManagementExchangeConnectorId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_IosUpdateStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosUpdateDeviceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_ManagedDeviceOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Select
+    )
+}
+function Get-DeviceManagement_ManagedDeviceOverviewReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Select
+    )
+}
+function Get-DeviceManagement_ManagedDevices
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_ManagedDevices_DeviceCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Get-DeviceManagement_ManagedDevices_DeviceCompliancePolicyStates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyStateId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_ManagedDevices_DeviceConfigurationStates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationStateId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_MobileThreatDefenseConnectors
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileThreatDefenseConnectorId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_NotificationMessageTemplates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $notificationMessageTemplateId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_NotificationMessageTemplates_LocalizedNotificationMessages
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $notificationMessageTemplateId,
+
+        [Parameter()]
+        [System.String]
+        $localizedNotificationMessageId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_RemoteAssistancePartners
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $remoteAssistancePartnerId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_ResourceOperations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $resourceOperationId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_RoleAssignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceAndAppManagementRoleAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_RoleAssignments_RoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceAndAppManagementRoleAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $roleAssignmentODataType
+    )
+}
+function Get-DeviceManagement_RoleAssignments_RoleDefinitionReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceAndAppManagementRoleAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $roleAssignmentODataType
+    )
+}
+function Get-DeviceManagement_RoleDefinitions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $roleDefinitionId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_RoleDefinitions_RoleAssignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $roleDefinitionId,
+
+        [Parameter()]
+        [System.String]
+        $roleAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_RoleDefinitions_RoleAssignments_RoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $roleDefinitionId,
+
+        [Parameter()]
+        [System.String]
+        $roleAssignmentId
+    )
+}
+function Get-DeviceManagement_RoleDefinitions_RoleAssignments_RoleDefinitionReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $roleDefinitionId,
+
+        [Parameter()]
+        [System.String]
+        $roleAssignmentId
+    )
+}
+function Get-DeviceManagement_SoftwareUpdateStatusSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Select
+    )
+}
+function Get-DeviceManagement_SoftwareUpdateStatusSummaryReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Select
+    )
+}
+function Get-DeviceManagement_TelecomExpenseManagementPartners
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $telecomExpenseManagementPartnerId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_TermsAndConditions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $termsAndConditionId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_TermsAndConditions_AcceptanceStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $termsAndConditionId,
+
+        [Parameter()]
+        [System.String]
+        $termsAndConditionsAcceptanceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_TermsAndConditions_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $termsAndConditionId,
+
+        [Parameter()]
+        [System.String]
+        $termsAndConditionsAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_TroubleshootingEvents
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceManagementTroubleshootingEventId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_WindowsInformationProtectionAppLearningSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLearningSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-DeviceManagement_WindowsInformationProtectionNetworkLearningSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionNetworkLearningSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-Groups
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-Groups_CreatedOnBehalfOf
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Get-Groups_CreatedOnBehalfOfReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Get-Groups_GroupLifecyclePolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $groupLifecyclePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-Groups_MemberOf
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-Groups_MemberOfReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-Groups_Members
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-Groups_MembersReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-Groups_MembersWithLicenseErrors
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-Groups_MembersWithLicenseErrorsReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-Groups_Owners
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-Groups_OwnersReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-Groups_Photo
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Get-Groups_PhotoData
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Get-Groups_Photos
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $profilePhotoId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-Groups_PhotosData
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $profilePhotoId,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Get-Groups_Settings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $groupSettingId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-Groups_TransitiveMemberOf
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-Groups_TransitiveMemberOfReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-Groups_TransitiveMembers
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-Groups_TransitiveMembersReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-MSGraphEnvironment
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Get-MSGraphMetadata
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Get-MSGraphNextPage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $NextLink,
+
+        [Parameter()]
+        [System.String]
+        $Search
+    )
+}
+function Get-Organization
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $organizationId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-Organization_Extensions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $organizationId,
+
+        [Parameter()]
+        [System.String]
+        $extensionId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Invoke-DeviceAppManagement_AndroidManagedAppProtections_Assign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId
+    )
+}
+function Invoke-DeviceAppManagement_AndroidManagedAppProtections_TargetApps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId
+    )
+}
+function Invoke-DeviceAppManagement_DefaultManagedAppProtections_TargetApps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId
+    )
+}
+function Invoke-DeviceAppManagement_IosManagedAppProtections_Assign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId
+    )
+}
+function Invoke-DeviceAppManagement_IosManagedAppProtections_TargetApps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId
+    )
+}
+function Invoke-DeviceAppManagement_ManagedAppPolicies_TargetApps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId
+    )
+}
+function Invoke-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies_TargetApps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId
+    )
+}
+function Invoke-DeviceAppManagement_ManagedAppRegistrations_GetUserIdsWithFlaggedAppRegistration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Invoke-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies_TargetApps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId
+    )
+}
+function Invoke-DeviceAppManagement_ManagedEBooks_Assign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $managedEBookAssignments,
+
+        [Parameter()]
+        [System.String]
+        $managedEBookId
+    )
+}
+function Invoke-DeviceAppManagement_MdmWindowsInformationProtectionPolicies_Assign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId
+    )
+}
+function Invoke-DeviceAppManagement_MdmWindowsInformationProtectionPolicies_TargetApps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId
+    )
+}
+function Invoke-DeviceAppManagement_MobileAppConfigurations_Assign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId
+    )
+}
+function Invoke-DeviceAppManagement_MobileApps_Assign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $mobileAppAssignments,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppId
+    )
+}
+function Invoke-DeviceAppManagement_MobileApps_ContentVersions_Files_Commit
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $fileEncryptionInfo,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppContentFileId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppODataType,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppContentId
+    )
+}
+function Invoke-DeviceAppManagement_MobileApps_ContentVersions_Files_RenewUpload
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppContentFileId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppODataType,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppContentId
+    )
+}
+function Invoke-DeviceAppManagement_SyncMicrosoftStoreForBusinessApps
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Invoke-DeviceAppManagement_TargetedManagedAppConfigurations_Assign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId
+    )
+}
+function Invoke-DeviceAppManagement_TargetedManagedAppConfigurations_TargetApps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId
+    )
+}
+function Invoke-DeviceAppManagement_VppTokens_SyncLicenses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $vppTokenId
+    )
+}
+function Invoke-DeviceAppManagement_WindowsInformationProtectionPolicies_Assign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId
+    )
+}
+function Invoke-DeviceAppManagement_WindowsInformationProtectionPolicies_TargetApps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId
+    )
+}
+function Invoke-DeviceManagement_ApplePushNotificationCertificate_DownloadApplePushNotificationCertificateSigningRequest
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Invoke-DeviceManagement_DeviceCompliancePolicies_Assign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Invoke-DeviceManagement_DeviceCompliancePolicies_ScheduleActionsForRules
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $deviceComplianceScheduledActionForRules,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Invoke-DeviceManagement_DeviceConfigurations_Assign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId
+    )
+}
+function Invoke-DeviceManagement_DeviceEnrollmentConfigurations_Assign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $enrollmentConfigurationAssignments,
+
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentConfigurationId
+    )
+}
+function Invoke-DeviceManagement_DeviceEnrollmentConfigurations_SetPriority
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $priority,
+
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentConfigurationId
+    )
+}
+function Invoke-DeviceManagement_ExchangeConnectors_Sync
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $syncType,
+
+        [Parameter()]
+        [System.String]
+        $deviceManagementExchangeConnectorId
+    )
+}
+function Invoke-DeviceManagement_GetEffectivePermissions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $scope,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Invoke-DeviceManagement_ManagedDevices_BypassActivationLock
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-DeviceManagement_ManagedDevices_CleanWindowsDevice
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $keepUserData,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-DeviceManagement_ManagedDevices_DeleteUserFromSharedAppleDevice
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-DeviceManagement_ManagedDevices_DisableLostMode
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-DeviceManagement_ManagedDevices_LocateDevice
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-DeviceManagement_ManagedDevices_LogoutSharedAppleDeviceActiveUser
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-DeviceManagement_ManagedDevices_RebootNow
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-DeviceManagement_ManagedDevices_RecoverPasscode
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-DeviceManagement_ManagedDevices_RemoteLock
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-DeviceManagement_ManagedDevices_RequestRemoteAssistance
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-DeviceManagement_ManagedDevices_ResetPasscode
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-DeviceManagement_ManagedDevices_Retire
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-DeviceManagement_ManagedDevices_ShutDown
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-DeviceManagement_ManagedDevices_SyncDevice
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-DeviceManagement_ManagedDevices_UpdateWindowsDeviceAccount
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $updateWindowsDeviceAccountActionParameter,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-DeviceManagement_ManagedDevices_WindowsDefenderScan
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $quickScan,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-DeviceManagement_ManagedDevices_WindowsDefenderUpdateSignatures
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-DeviceManagement_ManagedDevices_Wipe
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $keepEnrollmentData,
+
+        [Parameter()]
+        [System.Boolean]
+        $keepUserData,
+
+        [Parameter()]
+        [System.String]
+        $macOsUnlockCode,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-DeviceManagement_NotificationMessageTemplates_SendTestMessage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $notificationMessageTemplateId
+    )
+}
+function Invoke-DeviceManagement_RemoteAssistancePartners_BeginOnboarding
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $remoteAssistancePartnerId
+    )
+}
+function Invoke-DeviceManagement_RemoteAssistancePartners_Disconnect
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $remoteAssistancePartnerId
+    )
+}
+function Invoke-DeviceManagement_VerifyWindowsEnrollmentAutoDiscovery
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $domainName
+    )
+}
+function Invoke-Groups_AddFavorite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Invoke-Groups_CheckMemberGroups
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $groupIds,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Invoke-Groups_Delta
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Invoke-Groups_GetByIds
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $ids,
+
+        [Parameter()]
+        [System.String[]]
+        $types
+    )
+}
+function Invoke-Groups_GetMemberGroups
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $securityEnabledOnly,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Invoke-Groups_GetMemberObjects
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $securityEnabledOnly,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Invoke-Groups_GroupLifecyclePolicies_AddGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $groupLifecyclePolicyId
+    )
+}
+function Invoke-Groups_GroupLifecyclePolicies_RemoveGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $groupLifecyclePolicyId
+    )
+}
+function Invoke-Groups_RemoveFavorite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Invoke-Groups_Renew
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Invoke-Groups_ResetUnseenCount
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Invoke-Groups_Restore
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Invoke-Groups_SubscribeByMail
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Invoke-Groups_UnsubscribeByMail
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Invoke-MSGraphRequest
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $HttpMethod,
+
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.Object]
+        $Headers,
+
+        [Parameter()]
+        [System.Object]
+        $Content
+    )
+}
+function Invoke-Organization_CheckMemberGroups
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $groupIds,
+
+        [Parameter()]
+        [System.String]
+        $organizationId
+    )
+}
+function Invoke-Organization_GetByIds
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $ids,
+
+        [Parameter()]
+        [System.String[]]
+        $types
+    )
+}
+function Invoke-Organization_GetMemberGroups
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $securityEnabledOnly,
+
+        [Parameter()]
+        [System.String]
+        $organizationId
+    )
+}
+function Invoke-Organization_GetMemberObjects
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $securityEnabledOnly,
+
+        [Parameter()]
+        [System.String]
+        $organizationId
+    )
+}
+function Invoke-Organization_Restore
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $organizationId
+    )
+}
+function Invoke-Organization_SetMobileDeviceManagementAuthority
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $organizationId
+    )
+}
+function New-AccessActionObject
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function New-ActivityHistoryItemObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.Int32]
+        $activeDurationSeconds,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastActiveDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $expirationDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $startedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userTimezone,
+
+        [Parameter()]
+        [System.Object]
+        $activity
+    )
+}
+function New-AlertHistoryStateObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $appId,
+
+        [Parameter()]
+        [System.String]
+        $assignedTo,
+
+        [Parameter()]
+        [System.String[]]
+        $comments,
+
+        [Parameter()]
+        [System.String]
+        $feedback,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $updatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $user
+    )
+}
+function New-AlertObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $activityGroupName,
+
+        [Parameter()]
+        [System.String]
+        $assignedTo,
+
+        [Parameter()]
+        [System.String]
+        $azureSubscriptionId,
+
+        [Parameter()]
+        [System.String]
+        $azureTenantId,
+
+        [Parameter()]
+        [System.String]
+        $category,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $closedDateTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $cloudAppStates,
+
+        [Parameter()]
+        [System.String[]]
+        $comments,
+
+        [Parameter()]
+        [System.Int32]
+        $confidence,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String[]]
+        $detectionIds,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $eventDateTime,
+
+        [Parameter()]
+        [System.String]
+        $feedback,
+
+        [Parameter()]
+        [System.Object[]]
+        $fileStates,
+
+        [Parameter()]
+        [System.Object[]]
+        $historyStates,
+
+        [Parameter()]
+        [System.Object[]]
+        $hostStates,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $malwareStates,
+
+        [Parameter()]
+        [System.Object[]]
+        $networkConnections,
+
+        [Parameter()]
+        [System.Object[]]
+        $processes,
+
+        [Parameter()]
+        [System.String[]]
+        $recommendedActions,
+
+        [Parameter()]
+        [System.Object[]]
+        $registryKeyStates,
+
+        [Parameter()]
+        [System.String]
+        $severity,
+
+        [Parameter()]
+        [System.String[]]
+        $sourceMaterials,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.String[]]
+        $tags,
+
+        [Parameter()]
+        [System.String]
+        $title,
+
+        [Parameter()]
+        [System.Object[]]
+        $triggers,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStates,
+
+        [Parameter()]
+        [System.Object]
+        $vendorInformation,
+
+        [Parameter()]
+        [System.Object[]]
+        $vulnerabilityStates
+    )
+}
+function New-AlertTriggerObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.String]
+        $type,
+
+        [Parameter()]
+        [System.String]
+        $value
+    )
+}
+function New-AlternativeSecurityIdObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $type,
+
+        [Parameter()]
+        [System.String]
+        $identityProvider,
+
+        [Parameter()]
+        [System.Byte[]]
+        $key
+    )
+}
+function New-AndroidMinimumOperatingSystemObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $v4_0,
+
+        [Parameter()]
+        [System.Boolean]
+        $v4_0_3,
+
+        [Parameter()]
+        [System.Boolean]
+        $v4_1,
+
+        [Parameter()]
+        [System.Boolean]
+        $v4_2,
+
+        [Parameter()]
+        [System.Boolean]
+        $v4_3,
+
+        [Parameter()]
+        [System.Boolean]
+        $v4_4,
+
+        [Parameter()]
+        [System.Boolean]
+        $v5_0,
+
+        [Parameter()]
+        [System.Boolean]
+        $v5_1
+    )
+}
+function New-AppCatalogsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $teamsApps
+    )
+}
+function New-AppConfigurationSettingItemObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $appConfigKey,
+
+        [Parameter()]
+        [System.String]
+        $appConfigKeyType,
+
+        [Parameter()]
+        [System.String]
+        $appConfigKeyValue
+    )
+}
+function New-AppIdentityObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $appId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $servicePrincipalId,
+
+        [Parameter()]
+        [System.String]
+        $servicePrincipalName
+    )
+}
+function New-ApplePushNotificationCertificateObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $appleIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $topicIdentifier,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $expirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $certificate
+    )
+}
+function New-AppliedConditionalAccessPolicyObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String[]]
+        $enforcedGrantControls,
+
+        [Parameter()]
+        [System.String[]]
+        $enforcedSessionControls,
+
+        [Parameter()]
+        [System.String]
+        $result
+    )
+}
+function New-AppListItemObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.String]
+        $publisher,
+
+        [Parameter()]
+        [System.String]
+        $appStoreUrl,
+
+        [Parameter()]
+        [System.String]
+        $appId
+    )
+}
+function New-AssignedLicenseObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Guid[]]
+        $disabledPlans,
+
+        [Parameter()]
+        [System.Guid]
+        $skuId
+    )
+}
+function New-AssignedPlanObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $assignedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $capabilityStatus,
+
+        [Parameter()]
+        [System.String]
+        $service,
+
+        [Parameter()]
+        [System.Guid]
+        $servicePlanId
+    )
+}
+function New-AttachmentObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.String]
+        $contentType,
+
+        [Parameter()]
+        [System.Int32]
+        $size,
+
+        [Parameter()]
+        [System.Boolean]
+        $isInline,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $referenceAttachment,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $itemAttachment,
+
+        [Parameter()]
+        [System.Object]
+        $item,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $fileAttachment,
+
+        [Parameter()]
+        [System.String]
+        $contentId,
+
+        [Parameter()]
+        [System.String]
+        $contentLocation,
+
+        [Parameter()]
+        [System.Byte[]]
+        $contentBytes
+    )
+}
+function New-AttendeeAvailabilityObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $attendee,
+
+        [Parameter()]
+        [System.String]
+        $availability
+    )
+}
+function New-AudioObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $album,
+
+        [Parameter()]
+        [System.String]
+        $albumArtist,
+
+        [Parameter()]
+        [System.String]
+        $artist,
+
+        [Parameter()]
+        [System.Int64]
+        $bitrate,
+
+        [Parameter()]
+        [System.String]
+        $composers,
+
+        [Parameter()]
+        [System.String]
+        $copyright,
+
+        [Parameter()]
+        [System.Int16]
+        $disc,
+
+        [Parameter()]
+        [System.Int16]
+        $discCount,
+
+        [Parameter()]
+        [System.Int64]
+        $duration,
+
+        [Parameter()]
+        [System.String]
+        $genre,
+
+        [Parameter()]
+        [System.Boolean]
+        $hasDrm,
+
+        [Parameter()]
+        [System.Boolean]
+        $isVariableBitrate,
+
+        [Parameter()]
+        [System.String]
+        $title,
+
+        [Parameter()]
+        [System.Int32]
+        $track,
+
+        [Parameter()]
+        [System.Int32]
+        $trackCount,
+
+        [Parameter()]
+        [System.Int32]
+        $year
+    )
+}
+function New-AuditActivityInitiatorObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $user,
+
+        [Parameter()]
+        [System.Object]
+        $app
+    )
+}
+function New-AuditLogRootObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $signIns,
+
+        [Parameter()]
+        [System.Object[]]
+        $directoryAudits,
+
+        [Parameter()]
+        [System.Object[]]
+        $restrictedSignIns
+    )
+}
+function New-AutomaticRepliesMailTipsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $message,
+
+        [Parameter()]
+        [System.Object]
+        $messageLanguage,
+
+        [Parameter()]
+        [System.Object]
+        $scheduledStartTime,
+
+        [Parameter()]
+        [System.Object]
+        $scheduledEndTime
+    )
+}
+function New-AutomaticRepliesSettingObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.String]
+        $externalAudience,
+
+        [Parameter()]
+        [System.Object]
+        $scheduledStartDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $scheduledEndDateTime,
+
+        [Parameter()]
+        [System.String]
+        $internalReplyMessage,
+
+        [Parameter()]
+        [System.String]
+        $externalReplyMessage
+    )
+}
+function New-AverageComparativeScoreObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Double]
+        $averageScore,
+
+        [Parameter()]
+        [System.String]
+        $basis
+    )
+}
+function New-BaseItemObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $createdBy,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $eTag,
+
+        [Parameter()]
+        [System.Object]
+        $lastModifiedBy,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.Object]
+        $parentReference,
+
+        [Parameter()]
+        [System.String]
+        $webUrl,
+
+        [Parameter()]
+        [System.Object]
+        $createdByUser,
+
+        [Parameter()]
+        [System.Object]
+        $lastModifiedByUser,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $sharedDriveItem,
+
+        [Parameter()]
+        [System.Object]
+        $owner,
+
+        [Parameter()]
+        [System.Object]
+        $driveItem,
+
+        [Parameter()]
+        [System.Object[]]
+        $items,
+
+        [Parameter()]
+        [System.Object]
+        $list,
+
+        [Parameter()]
+        [System.Object]
+        $listItem,
+
+        [Parameter()]
+        [System.Object]
+        $root,
+
+        [Parameter()]
+        [System.Object]
+        $site,
+
+        [Parameter()]
+        [System.Object]
+        $contentType,
+
+        [Parameter()]
+        [System.Object]
+        $sharepointIds,
+
+        [Parameter()]
+        [System.Object]
+        $analytics,
+
+        [Parameter()]
+        [System.Object]
+        $fields,
+
+        [Parameter()]
+        [System.Object[]]
+        $versions,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Object]
+        $system,
+
+        [Parameter()]
+        [System.Object[]]
+        $columns,
+
+        [Parameter()]
+        [System.Object[]]
+        $contentTypes,
+
+        [Parameter()]
+        [System.Object]
+        $drive,
+
+        [Parameter()]
+        [System.Object]
+        $audio,
+
+        [Parameter()]
+        [System.IO.Stream]
+        $content,
+
+        [Parameter()]
+        [System.String]
+        $cTag,
+
+        [Parameter()]
+        [System.Object]
+        $deleted,
+
+        [Parameter()]
+        [System.Object]
+        $file,
+
+        [Parameter()]
+        [System.Object]
+        $fileSystemInfo,
+
+        [Parameter()]
+        [System.Object]
+        $folder,
+
+        [Parameter()]
+        [System.Object]
+        $image,
+
+        [Parameter()]
+        [System.Object]
+        $location,
+
+        [Parameter()]
+        [System.Object]
+        $package,
+
+        [Parameter()]
+        [System.Object]
+        $photo,
+
+        [Parameter()]
+        [System.Object]
+        $publication,
+
+        [Parameter()]
+        [System.Object]
+        $remoteItem,
+
+        [Parameter()]
+        [System.Object]
+        $searchResult,
+
+        [Parameter()]
+        [System.Object]
+        $shared,
+
+        [Parameter()]
+        [System.Int64]
+        $size,
+
+        [Parameter()]
+        [System.Object]
+        $specialFolder,
+
+        [Parameter()]
+        [System.Object]
+        $video,
+
+        [Parameter()]
+        [System.String]
+        $webDavUrl,
+
+        [Parameter()]
+        [System.Object[]]
+        $children,
+
+        [Parameter()]
+        [System.Object[]]
+        $permissions,
+
+        [Parameter()]
+        [System.Object[]]
+        $subscriptions,
+
+        [Parameter()]
+        [System.Object[]]
+        $thumbnails,
+
+        [Parameter()]
+        [System.Object]
+        $workbook,
+
+        [Parameter()]
+        [System.Object]
+        $siteCollection,
+
+        [Parameter()]
+        [System.Object[]]
+        $drives,
+
+        [Parameter()]
+        [System.Object[]]
+        $lists,
+
+        [Parameter()]
+        [System.Object[]]
+        $sites,
+
+        [Parameter()]
+        [System.Object]
+        $onenote,
+
+        [Parameter()]
+        [System.String]
+        $driveType,
+
+        [Parameter()]
+        [System.Object]
+        $quota,
+
+        [Parameter()]
+        [System.Object[]]
+        $special
+    )
+}
+function New-BaseItemVersionObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $lastModifiedBy,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $publication,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $listItemVersion,
+
+        [Parameter()]
+        [System.Object]
+        $fields,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $driveItemVersion,
+
+        [Parameter()]
+        [System.IO.Stream]
+        $content,
+
+        [Parameter()]
+        [System.Int64]
+        $size
+    )
+}
+function New-BitLockerRemovableDrivePolicyObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $encryptionMethod,
+
+        [Parameter()]
+        [System.Boolean]
+        $requireEncryptionForWriteAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $blockCrossOrganizationWriteAccess
+    )
+}
+function New-BooleanColumnObject
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function New-CalculatedColumnObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $format,
+
+        [Parameter()]
+        [System.String]
+        $formula,
+
+        [Parameter()]
+        [System.String]
+        $outputType
+    )
+}
+function New-CalendarGroupObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.Guid]
+        $classId,
+
+        [Parameter()]
+        [System.String]
+        $changeKey,
+
+        [Parameter()]
+        [System.Object[]]
+        $calendars
+    )
+}
+function New-CalendarObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.String]
+        $color,
+
+        [Parameter()]
+        [System.String]
+        $changeKey,
+
+        [Parameter()]
+        [System.Boolean]
+        $canShare,
+
+        [Parameter()]
+        [System.Boolean]
+        $canViewPrivateItems,
+
+        [Parameter()]
+        [System.Boolean]
+        $canEdit,
+
+        [Parameter()]
+        [System.Object]
+        $owner,
+
+        [Parameter()]
+        [System.Object[]]
+        $events,
+
+        [Parameter()]
+        [System.Object[]]
+        $calendarView,
+
+        [Parameter()]
+        [System.Object[]]
+        $singleValueExtendedProperties,
+
+        [Parameter()]
+        [System.Object[]]
+        $multiValueExtendedProperties
+    )
+}
+function New-CertificationControlObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.String]
+        $url
+    )
+}
+function New-ChannelObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $email,
+
+        [Parameter()]
+        [System.String]
+        $webUrl,
+
+        [Parameter()]
+        [System.Object[]]
+        $tabs
+    )
+}
+function New-ChoiceColumnObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $allowTextEntry,
+
+        [Parameter()]
+        [System.String[]]
+        $choices,
+
+        [Parameter()]
+        [System.String]
+        $displayAs
+    )
+}
+function New-CloudAppSecurityStateObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $destinationServiceIp,
+
+        [Parameter()]
+        [System.String]
+        $destinationServiceName,
+
+        [Parameter()]
+        [System.String]
+        $riskScore
+    )
+}
+function New-ColumnDefinitionObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $boolean,
+
+        [Parameter()]
+        [System.Object]
+        $calculated,
+
+        [Parameter()]
+        [System.Object]
+        $choice,
+
+        [Parameter()]
+        [System.String]
+        $columnGroup,
+
+        [Parameter()]
+        [System.Object]
+        $currency,
+
+        [Parameter()]
+        [System.Object]
+        $dateTime,
+
+        [Parameter()]
+        [System.Object]
+        $defaultValue,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $enforceUniqueValues,
+
+        [Parameter()]
+        [System.Boolean]
+        $hidden,
+
+        [Parameter()]
+        [System.Boolean]
+        $indexed,
+
+        [Parameter()]
+        [System.Object]
+        $lookup,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.Object]
+        $number,
+
+        [Parameter()]
+        [System.Object]
+        $personOrGroup,
+
+        [Parameter()]
+        [System.Boolean]
+        $readOnly,
+
+        [Parameter()]
+        [System.Boolean]
+        $required,
+
+        [Parameter()]
+        [System.Object]
+        $text
+    )
+}
+function New-ColumnLinkObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $name
+    )
+}
+function New-ComplexExtensionValueObject
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function New-ComplianceInformationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $certificationControls,
+
+        [Parameter()]
+        [System.String]
+        $certificationName
+    )
+}
+function New-ConfigurationManagerClientEnabledFeaturesObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $inventory,
+
+        [Parameter()]
+        [System.Boolean]
+        $modernApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $resourceAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $compliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsUpdateForBusiness
+    )
+}
+function New-ContactFolderObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $parentFolderId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Object[]]
+        $contacts,
+
+        [Parameter()]
+        [System.Object[]]
+        $childFolders,
+
+        [Parameter()]
+        [System.Object[]]
+        $singleValueExtendedProperties,
+
+        [Parameter()]
+        [System.Object[]]
+        $multiValueExtendedProperties
+    )
+}
+function New-ContentTypeInfoObject
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function New-ContentTypeObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $group,
+
+        [Parameter()]
+        [System.Boolean]
+        $hidden,
+
+        [Parameter()]
+        [System.Object]
+        $inheritedFrom,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.Object]
+        $order,
+
+        [Parameter()]
+        [System.String]
+        $parentId,
+
+        [Parameter()]
+        [System.Boolean]
+        $readOnly,
+
+        [Parameter()]
+        [System.Boolean]
+        $sealed,
+
+        [Parameter()]
+        [System.Object[]]
+        $columnLinks
+    )
+}
+function New-ContentTypeOrderObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $default,
+
+        [Parameter()]
+        [System.Int32]
+        $position
+    )
+}
+function New-ControlScoreObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $controlCategory,
+
+        [Parameter()]
+        [System.String]
+        $controlName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.Double]
+        $score
+    )
+}
+function New-ConversationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $topic,
+
+        [Parameter()]
+        [System.Boolean]
+        $hasAttachments,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastDeliveredDateTime,
+
+        [Parameter()]
+        [System.String[]]
+        $uniqueSenders,
+
+        [Parameter()]
+        [System.String]
+        $preview,
+
+        [Parameter()]
+        [System.Object[]]
+        $threads
+    )
+}
+function New-ConversationThreadObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $toRecipients,
+
+        [Parameter()]
+        [System.String]
+        $topic,
+
+        [Parameter()]
+        [System.Boolean]
+        $hasAttachments,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastDeliveredDateTime,
+
+        [Parameter()]
+        [System.String[]]
+        $uniqueSenders,
+
+        [Parameter()]
+        [System.Object[]]
+        $ccRecipients,
+
+        [Parameter()]
+        [System.String]
+        $preview,
+
+        [Parameter()]
+        [System.Boolean]
+        $isLocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $posts
+    )
+}
+function New-CopyNotebookModelObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $isDefault,
+
+        [Parameter()]
+        [System.String]
+        $userRole,
+
+        [Parameter()]
+        [System.Boolean]
+        $isShared,
+
+        [Parameter()]
+        [System.String]
+        $sectionsUrl,
+
+        [Parameter()]
+        [System.String]
+        $sectionGroupsUrl,
+
+        [Parameter()]
+        [System.Object]
+        $links,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.String]
+        $createdBy,
+
+        [Parameter()]
+        [System.Object]
+        $createdByIdentity,
+
+        [Parameter()]
+        [System.String]
+        $lastModifiedBy,
+
+        [Parameter()]
+        [System.Object]
+        $lastModifiedByIdentity,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedTime,
+
+        [Parameter()]
+        [System.String]
+        $self,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdTime
+    )
+}
+function New-CurrencyColumnObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $locale
+    )
+}
+function New-DataPolicyOperationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $completedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.String]
+        $storageLocation,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $submittedDateTime,
+
+        [Parameter()]
+        [System.Double]
+        $progress
+    )
+}
+function New-DateTimeColumnObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayAs,
+
+        [Parameter()]
+        [System.String]
+        $format
+    )
+}
+function New-DateTimeTimeZoneObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $dateTime,
+
+        [Parameter()]
+        [System.String]
+        $timeZone
+    )
+}
+function New-DefaultColumnValueObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $formula,
+
+        [Parameter()]
+        [System.String]
+        $value
+    )
+}
+function New-DefenderDetectedMalwareActionsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $lowSeverity,
+
+        [Parameter()]
+        [System.String]
+        $moderateSeverity,
+
+        [Parameter()]
+        [System.String]
+        $highSeverity,
+
+        [Parameter()]
+        [System.String]
+        $severeSeverity
+    )
+}
+function New-DeletedObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $state
+    )
+}
+function New-DetectedAppObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.Int64]
+        $sizeInByte,
+
+        [Parameter()]
+        [System.Int32]
+        $deviceCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedDevices
+    )
+}
+function New-DeviceActionResultObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceActionResult,
+
+        [Parameter()]
+        [System.String]
+        $actionName,
+
+        [Parameter()]
+        [System.String]
+        $actionState,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $startDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdatedDateTime,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $resetPasscodeActionResult,
+
+        [Parameter()]
+        [System.String]
+        $passcode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $remoteLockActionResult,
+
+        [Parameter()]
+        [System.String]
+        $unlockPin,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $locateDeviceActionResult,
+
+        [Parameter()]
+        [System.Object]
+        $deviceLocation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deleteUserFromSharedAppleDeviceActionResult,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsDefenderScanActionResult,
+
+        [Parameter()]
+        [System.String]
+        $scanType
+    )
+}
+function New-DeviceAndAppManagementAssignmentTargetObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $allDevicesAssignmentTarget,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $groupAssignmentTarget,
+
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $exclusionGroupAssignmentTarget,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $allLicensedUsersAssignmentTarget
+    )
+}
+function New-DeviceAppManagement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $microsoftStoreForBusinessLastSuccessfulSyncDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $isEnabledForMicrosoftStoreForBusiness,
+
+        [Parameter()]
+        [System.String]
+        $microsoftStoreForBusinessLanguage,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $microsoftStoreForBusinessLastCompletedApplicationSyncTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $mobileApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $mobileAppCategories,
+
+        [Parameter()]
+        [System.Object[]]
+        $mobileAppConfigurations,
+
+        [Parameter()]
+        [System.Object[]]
+        $vppTokens,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedAppPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $iosManagedAppProtections,
+
+        [Parameter()]
+        [System.Object[]]
+        $androidManagedAppProtections,
+
+        [Parameter()]
+        [System.Object[]]
+        $defaultManagedAppProtections,
+
+        [Parameter()]
+        [System.Object[]]
+        $targetedManagedAppConfigurations,
+
+        [Parameter()]
+        [System.Object[]]
+        $mdmWindowsInformationProtectionPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $windowsInformationProtectionPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedAppRegistrations,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedAppStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedEBooks,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_AndroidManagedAppProtections
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $encryptAppData,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $allowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Boolean]
+        $organizationalCredentialsRequired,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $dataBackupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceComplianceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $saveAsBlocked,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [System.Boolean]
+        $pinRequired,
+
+        [Parameter()]
+        [System.Int32]
+        $maximumPinRetries,
+
+        [Parameter()]
+        [System.Boolean]
+        $simplePinBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $minimumPinLength,
+
+        [Parameter()]
+        [System.String]
+        $pinCharacterSet,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodBeforePinReset,
+
+        [Parameter()]
+        [System.String[]]
+        $allowedDataStorageLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $contactSyncBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $printBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $fingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_AndroidManagedAppProtections_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_AndroidManagedAppProtections_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_AndroidManagedAppProtections_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_DefaultManagedAppProtections
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $appDataEncryptionType,
+
+        [Parameter()]
+        [System.Boolean]
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $encryptAppData,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredSdkVersion,
+
+        [Parameter()]
+        [System.Object[]]
+        $customSettings,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $faceIdBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $allowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Boolean]
+        $organizationalCredentialsRequired,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $dataBackupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceComplianceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $saveAsBlocked,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [System.Boolean]
+        $pinRequired,
+
+        [Parameter()]
+        [System.Int32]
+        $maximumPinRetries,
+
+        [Parameter()]
+        [System.Boolean]
+        $simplePinBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $minimumPinLength,
+
+        [Parameter()]
+        [System.String]
+        $pinCharacterSet,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodBeforePinReset,
+
+        [Parameter()]
+        [System.String[]]
+        $allowedDataStorageLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $contactSyncBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $printBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $fingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_DefaultManagedAppProtections_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_DefaultManagedAppProtections_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_IosManagedAppProtections
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $appDataEncryptionType,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredSdkVersion,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $faceIdBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $allowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Boolean]
+        $organizationalCredentialsRequired,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $dataBackupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceComplianceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $saveAsBlocked,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [System.Boolean]
+        $pinRequired,
+
+        [Parameter()]
+        [System.Int32]
+        $maximumPinRetries,
+
+        [Parameter()]
+        [System.Boolean]
+        $simplePinBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $minimumPinLength,
+
+        [Parameter()]
+        [System.String]
+        $pinCharacterSet,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodBeforePinReset,
+
+        [Parameter()]
+        [System.String[]]
+        $allowedDataStorageLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $contactSyncBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $printBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $fingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_IosManagedAppProtections_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_IosManagedAppProtections_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_IosManagedAppProtections_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedAppPolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $enforcementLevel,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseDomain,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProtectedDomainNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $protectionUnderLockConfigRequired,
+
+        [Parameter()]
+        [System.Object]
+        $dataRecoveryCertificate,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnUnenrollDisabled,
+
+        [Parameter()]
+        [System.Guid]
+        $rightsManagementServicesTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureRightsManagementServicesAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $iconsVisible,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxiedDomains,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseIPRanges,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseIPRangesAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxyServers,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseInternalProxyServers,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $neutralDomainResources,
+
+        [Parameter()]
+        [System.Boolean]
+        $indexingEncryptedStoresOrItemsBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $smbAutoEncryptedFileExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsInformationProtectionPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnMdmHandoffDisabled,
+
+        [Parameter()]
+        [System.String]
+        $mdmEnrollmentUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsHelloForBusinessBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMinimumLength,
+
+        [Parameter()]
+        [System.String]
+        $pinUppercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinLowercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinSpecialCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $pinExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $numberOfPastPinsRemembered,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMaximumAttemptCount,
+
+        [Parameter()]
+        [System.Int32]
+        $minutesOfInactivityBeforeDeviceLock,
+
+        [Parameter()]
+        [System.Int32]
+        $daysWithoutContactBeforeUnenroll,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $mdmWindowsInformationProtectionPolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $customSettings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $targetedManagedAppConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $allowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Boolean]
+        $organizationalCredentialsRequired,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $dataBackupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceComplianceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $saveAsBlocked,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [System.Boolean]
+        $pinRequired,
+
+        [Parameter()]
+        [System.Int32]
+        $maximumPinRetries,
+
+        [Parameter()]
+        [System.Boolean]
+        $simplePinBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $minimumPinLength,
+
+        [Parameter()]
+        [System.String]
+        $pinCharacterSet,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodBeforePinReset,
+
+        [Parameter()]
+        [System.String[]]
+        $allowedDataStorageLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $contactSyncBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $printBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $fingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningAppVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $defaultManagedAppProtection,
+
+        [Parameter()]
+        [System.String]
+        $appDataEncryptionType,
+
+        [Parameter()]
+        [System.Boolean]
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $encryptAppData,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredSdkVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $faceIdBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidManagedAppProtection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosManagedAppProtection,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedAppPolicies_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedAppPolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedAppPolicies_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedAppPolicies_ExemptAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedAppPolicies_ProtectedAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedAppRegistrations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $applicationVersion,
+
+        [Parameter()]
+        [System.String]
+        $managementSdkVersion,
+
+        [Parameter()]
+        [System.String]
+        $platformVersion,
+
+        [Parameter()]
+        [System.String]
+        $deviceType,
+
+        [Parameter()]
+        [System.String]
+        $deviceTag,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String[]]
+        $flaggedReasons,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.Object]
+        $appIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $appliedPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $intendedPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $operations,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidManagedAppRegistration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosManagedAppRegistration,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $enforcementLevel,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseDomain,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProtectedDomainNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $protectionUnderLockConfigRequired,
+
+        [Parameter()]
+        [System.Object]
+        $dataRecoveryCertificate,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnUnenrollDisabled,
+
+        [Parameter()]
+        [System.Guid]
+        $rightsManagementServicesTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureRightsManagementServicesAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $iconsVisible,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxiedDomains,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseIPRanges,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseIPRangesAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxyServers,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseInternalProxyServers,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $neutralDomainResources,
+
+        [Parameter()]
+        [System.Boolean]
+        $indexingEncryptedStoresOrItemsBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $smbAutoEncryptedFileExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsInformationProtectionPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnMdmHandoffDisabled,
+
+        [Parameter()]
+        [System.String]
+        $mdmEnrollmentUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsHelloForBusinessBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMinimumLength,
+
+        [Parameter()]
+        [System.String]
+        $pinUppercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinLowercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinSpecialCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $pinExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $numberOfPastPinsRemembered,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMaximumAttemptCount,
+
+        [Parameter()]
+        [System.Int32]
+        $minutesOfInactivityBeforeDeviceLock,
+
+        [Parameter()]
+        [System.Int32]
+        $daysWithoutContactBeforeUnenroll,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $mdmWindowsInformationProtectionPolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $customSettings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $targetedManagedAppConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $allowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Boolean]
+        $organizationalCredentialsRequired,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $dataBackupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceComplianceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $saveAsBlocked,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [System.Boolean]
+        $pinRequired,
+
+        [Parameter()]
+        [System.Int32]
+        $maximumPinRetries,
+
+        [Parameter()]
+        [System.Boolean]
+        $simplePinBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $minimumPinLength,
+
+        [Parameter()]
+        [System.String]
+        $pinCharacterSet,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodBeforePinReset,
+
+        [Parameter()]
+        [System.String[]]
+        $allowedDataStorageLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $contactSyncBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $printBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $fingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningAppVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $defaultManagedAppProtection,
+
+        [Parameter()]
+        [System.String]
+        $appDataEncryptionType,
+
+        [Parameter()]
+        [System.Boolean]
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $encryptAppData,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredSdkVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $faceIdBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidManagedAppProtection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosManagedAppProtection,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $appliedPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $appliedPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $appliedPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies_ExemptAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $appliedPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies_ProtectedAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $appliedPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $enforcementLevel,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseDomain,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProtectedDomainNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $protectionUnderLockConfigRequired,
+
+        [Parameter()]
+        [System.Object]
+        $dataRecoveryCertificate,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnUnenrollDisabled,
+
+        [Parameter()]
+        [System.Guid]
+        $rightsManagementServicesTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureRightsManagementServicesAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $iconsVisible,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxiedDomains,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseIPRanges,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseIPRangesAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxyServers,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseInternalProxyServers,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $neutralDomainResources,
+
+        [Parameter()]
+        [System.Boolean]
+        $indexingEncryptedStoresOrItemsBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $smbAutoEncryptedFileExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsInformationProtectionPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnMdmHandoffDisabled,
+
+        [Parameter()]
+        [System.String]
+        $mdmEnrollmentUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsHelloForBusinessBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMinimumLength,
+
+        [Parameter()]
+        [System.String]
+        $pinUppercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinLowercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinSpecialCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $pinExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $numberOfPastPinsRemembered,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMaximumAttemptCount,
+
+        [Parameter()]
+        [System.Int32]
+        $minutesOfInactivityBeforeDeviceLock,
+
+        [Parameter()]
+        [System.Int32]
+        $daysWithoutContactBeforeUnenroll,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $mdmWindowsInformationProtectionPolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $customSettings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $targetedManagedAppConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $allowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Boolean]
+        $organizationalCredentialsRequired,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $dataBackupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceComplianceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $saveAsBlocked,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [System.Boolean]
+        $pinRequired,
+
+        [Parameter()]
+        [System.Int32]
+        $maximumPinRetries,
+
+        [Parameter()]
+        [System.Boolean]
+        $simplePinBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $minimumPinLength,
+
+        [Parameter()]
+        [System.String]
+        $pinCharacterSet,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodBeforePinReset,
+
+        [Parameter()]
+        [System.String[]]
+        $allowedDataStorageLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $contactSyncBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $printBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $fingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningAppVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $defaultManagedAppProtection,
+
+        [Parameter()]
+        [System.String]
+        $appDataEncryptionType,
+
+        [Parameter()]
+        [System.Boolean]
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $encryptAppData,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredSdkVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $faceIdBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidManagedAppProtection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosManagedAppProtection,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $intendedPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $intendedPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $intendedPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies_ExemptAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $intendedPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies_ProtectedAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $intendedPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedAppRegistrations_Operations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedAppStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedAppStatusRaw,
+
+        [Parameter()]
+        [System.Object]
+        $content,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedEBooks
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $publisher,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $publishedDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $largeCover,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $informationUrl,
+
+        [Parameter()]
+        [System.String]
+        $privacyInformationUrl,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object]
+        $installSummary,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStates,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStateSummary,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosVppEBook,
+
+        [Parameter()]
+        [System.Guid]
+        $vppTokenId,
+
+        [Parameter()]
+        [System.String]
+        $appleId,
+
+        [Parameter()]
+        [System.String]
+        $vppOrganizationName,
+
+        [Parameter()]
+        [System.String[]]
+        $genres,
+
+        [Parameter()]
+        [System.String]
+        $language,
+
+        [Parameter()]
+        [System.String]
+        $seller,
+
+        [Parameter()]
+        [System.Int32]
+        $totalLicenseCount,
+
+        [Parameter()]
+        [System.Int32]
+        $usedLicenseCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedEBooks_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedEBookAssignment,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $installIntent,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosVppEBookAssignment,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedEBooks_DeviceStates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $installState,
+
+        [Parameter()]
+        [System.String]
+        $errorCode,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.String]
+        $osDescription,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedEBooks_InstallSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.Int32]
+        $installedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notInstalledDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $installedUserCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedUserCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notInstalledUserCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedEBooks_UserStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.Int32]
+        $installedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notInstalledDeviceCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStates,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_ManagedEBooks_UserStateSummary_DeviceStates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $userInstallStateSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $installState,
+
+        [Parameter()]
+        [System.String]
+        $errorCode,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.String]
+        $osDescription,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_MdmWindowsInformationProtectionPolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $enforcementLevel,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseDomain,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProtectedDomainNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $protectionUnderLockConfigRequired,
+
+        [Parameter()]
+        [System.Object]
+        $dataRecoveryCertificate,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnUnenrollDisabled,
+
+        [Parameter()]
+        [System.Guid]
+        $rightsManagementServicesTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureRightsManagementServicesAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $iconsVisible,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxiedDomains,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseIPRanges,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseIPRangesAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxyServers,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseInternalProxyServers,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $neutralDomainResources,
+
+        [Parameter()]
+        [System.Boolean]
+        $indexingEncryptedStoresOrItemsBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $smbAutoEncryptedFileExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_MdmWindowsInformationProtectionPolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_MdmWindowsInformationProtectionPolicies_ExemptAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_MdmWindowsInformationProtectionPolicies_ProtectedAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_MobileAppCategories
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_MobileAppConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $targetedMobileApps,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStatuses,
+
+        [Parameter()]
+        [System.Object]
+        $deviceStatusSummary,
+
+        [Parameter()]
+        [System.Object]
+        $userStatusSummary,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosMobileAppConfiguration,
+
+        [Parameter()]
+        [System.Byte[]]
+        $encodedSettingXml,
+
+        [Parameter()]
+        [System.Object[]]
+        $settings,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_MobileAppConfigurations_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_MobileAppConfigurations_DeviceStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $deviceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_MobileAppConfigurations_DeviceStatusSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_MobileAppConfigurations_UserStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $devicesCount,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_MobileAppConfigurations_UserStatusSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_MobileApps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $publisher,
+
+        [Parameter()]
+        [System.Object]
+        $largeIcon,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $isFeatured,
+
+        [Parameter()]
+        [System.String]
+        $privacyInformationUrl,
+
+        [Parameter()]
+        [System.String]
+        $informationUrl,
+
+        [Parameter()]
+        [System.String]
+        $owner,
+
+        [Parameter()]
+        [System.String]
+        $developer,
+
+        [Parameter()]
+        [System.String]
+        $notes,
+
+        [Parameter()]
+        [System.String]
+        $publishingState,
+
+        [Parameter()]
+        [System.Object[]]
+        $categories,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosStoreApp,
+
+        [Parameter()]
+        [System.String]
+        $bundleId,
+
+        [Parameter()]
+        [System.String]
+        $appStoreUrl,
+
+        [Parameter()]
+        [System.Object]
+        $applicableDeviceType,
+
+        [Parameter()]
+        [System.Object]
+        $minimumSupportedOperatingSystem,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosVppApp,
+
+        [Parameter()]
+        [System.Int32]
+        $usedLicenseCount,
+
+        [Parameter()]
+        [System.Int32]
+        $totalLicenseCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $releaseDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $licensingType,
+
+        [Parameter()]
+        [System.String]
+        $vppTokenOrganizationName,
+
+        [Parameter()]
+        [System.String]
+        $vppTokenAccountType,
+
+        [Parameter()]
+        [System.String]
+        $vppTokenAppleId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidStoreApp,
+
+        [Parameter()]
+        [System.String]
+        $packageId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $webApp,
+
+        [Parameter()]
+        [System.String]
+        $appUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $useManagedBrowser,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $microsoftStoreForBusinessApp,
+
+        [Parameter()]
+        [System.String]
+        $productKey,
+
+        [Parameter()]
+        [System.String]
+        $licenseType,
+
+        [Parameter()]
+        [System.String]
+        $packageIdentityName,
+
+        [Parameter()]
+        [System.String]
+        $committedContentVersion,
+
+        [Parameter()]
+        [System.String]
+        $fileName,
+
+        [Parameter()]
+        [System.Int64]
+        $size,
+
+        [Parameter()]
+        [System.Object[]]
+        $contentVersions,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosLobApp,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $expirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $versionNumber,
+
+        [Parameter()]
+        [System.String]
+        $buildNumber,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidLobApp,
+
+        [Parameter()]
+        [System.String]
+        $versionName,
+
+        [Parameter()]
+        [System.String]
+        $versionCode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsUniversalAppX,
+
+        [Parameter()]
+        [System.String]
+        $applicableArchitectures,
+
+        [Parameter()]
+        [System.String]
+        $applicableDeviceTypes,
+
+        [Parameter()]
+        [System.String]
+        $identityName,
+
+        [Parameter()]
+        [System.String]
+        $identityPublisherHash,
+
+        [Parameter()]
+        [System.String]
+        $identityResourceIdentifier,
+
+        [Parameter()]
+        [System.Boolean]
+        $isBundle,
+
+        [Parameter()]
+        [System.String]
+        $identityVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsMobileMSI,
+
+        [Parameter()]
+        [System.String]
+        $commandLine,
+
+        [Parameter()]
+        [System.String]
+        $productCode,
+
+        [Parameter()]
+        [System.String]
+        $productVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $ignoreVersionDetection,
+
+        [Parameter()]
+        [System.String]
+        $appAvailability,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedIOSLobApp,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedAndroidLobApp,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedIOSStoreApp,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedAndroidStoreApp,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSOfficeSuiteApp,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_MobileApps_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $intent,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.Object]
+        $settings,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_MobileApps_CategoriesReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppCategoryReferenceUrl
+    )
+}
+function New-DeviceAppManagement_MobileApps_ContentVersions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppODataType,
+
+        [Parameter()]
+        [System.Object[]]
+        $files,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_MobileApps_ContentVersions_Files
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppODataType,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppContentId,
+
+        [Parameter()]
+        [System.String]
+        $azureStorageUri,
+
+        [Parameter()]
+        [System.Boolean]
+        $isCommitted,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.Int64]
+        $size,
+
+        [Parameter()]
+        [System.Int64]
+        $sizeEncrypted,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $azureStorageUriExpirationDateTime,
+
+        [Parameter()]
+        [System.Byte[]]
+        $manifest,
+
+        [Parameter()]
+        [System.String]
+        $uploadState,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_TargetedManagedAppConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $customSettings,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_TargetedManagedAppConfigurations_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_TargetedManagedAppConfigurations_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_TargetedManagedAppConfigurations_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_VppTokens
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $organizationName,
+
+        [Parameter()]
+        [System.String]
+        $vppTokenAccountType,
+
+        [Parameter()]
+        [System.String]
+        $appleId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $expirationDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $token,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.String]
+        $lastSyncStatus,
+
+        [Parameter()]
+        [System.Boolean]
+        $automaticallyUpdateApps,
+
+        [Parameter()]
+        [System.String]
+        $countryOrRegion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_WindowsInformationProtectionPolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnMdmHandoffDisabled,
+
+        [Parameter()]
+        [System.String]
+        $mdmEnrollmentUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsHelloForBusinessBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMinimumLength,
+
+        [Parameter()]
+        [System.String]
+        $pinUppercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinLowercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinSpecialCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $pinExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $numberOfPastPinsRemembered,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMaximumAttemptCount,
+
+        [Parameter()]
+        [System.Int32]
+        $minutesOfInactivityBeforeDeviceLock,
+
+        [Parameter()]
+        [System.Int32]
+        $daysWithoutContactBeforeUnenroll,
+
+        [Parameter()]
+        [System.String]
+        $enforcementLevel,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseDomain,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProtectedDomainNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $protectionUnderLockConfigRequired,
+
+        [Parameter()]
+        [System.Object]
+        $dataRecoveryCertificate,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnUnenrollDisabled,
+
+        [Parameter()]
+        [System.Guid]
+        $rightsManagementServicesTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureRightsManagementServicesAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $iconsVisible,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxiedDomains,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseIPRanges,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseIPRangesAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxyServers,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseInternalProxyServers,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $neutralDomainResources,
+
+        [Parameter()]
+        [System.Boolean]
+        $indexingEncryptedStoresOrItemsBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $smbAutoEncryptedFileExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_WindowsInformationProtectionPolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_WindowsInformationProtectionPolicies_ExemptAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagement_WindowsInformationProtectionPolicies_ProtectedAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceAppManagementObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $microsoftStoreForBusinessLastSuccessfulSyncDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $isEnabledForMicrosoftStoreForBusiness,
+
+        [Parameter()]
+        [System.String]
+        $microsoftStoreForBusinessLanguage,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $microsoftStoreForBusinessLastCompletedApplicationSyncTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $mobileApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $mobileAppCategories,
+
+        [Parameter()]
+        [System.Object[]]
+        $mobileAppConfigurations,
+
+        [Parameter()]
+        [System.Object[]]
+        $vppTokens,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedAppPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $iosManagedAppProtections,
+
+        [Parameter()]
+        [System.Object[]]
+        $androidManagedAppProtections,
+
+        [Parameter()]
+        [System.Object[]]
+        $defaultManagedAppProtections,
+
+        [Parameter()]
+        [System.Object[]]
+        $targetedManagedAppConfigurations,
+
+        [Parameter()]
+        [System.Object[]]
+        $mdmWindowsInformationProtectionPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $windowsInformationProtectionPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedAppRegistrations,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedAppStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedEBooks
+    )
+}
+function New-DeviceCategoryObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description
+    )
+}
+function New-DeviceComplianceActionItemObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $gracePeriodHours,
+
+        [Parameter()]
+        [System.String]
+        $actionType,
+
+        [Parameter()]
+        [System.String]
+        $notificationTemplateId,
+
+        [Parameter()]
+        [System.String[]]
+        $notificationMessageCCList
+    )
+}
+function New-DeviceComplianceDeviceOverviewObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion
+    )
+}
+function New-DeviceComplianceDeviceStatusObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName
+    )
+}
+function New-DeviceCompliancePolicyAssignmentObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $target
+    )
+}
+function New-DeviceCompliancePolicyDeviceStateSummaryObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $inGracePeriodCount,
+
+        [Parameter()]
+        [System.Int32]
+        $configManagerCount,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount
+    )
+}
+function New-DeviceCompliancePolicyObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $scheduledActionsForRule,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStatuses,
+
+        [Parameter()]
+        [System.Object]
+        $deviceStatusOverview,
+
+        [Parameter()]
+        [System.Object]
+        $userStatusOverview,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceSettingStateSummaries,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsPhone81CompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.String]
+        $passwordRequiredType,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequired,
+
+        [Parameter()]
+        [System.String]
+        $osMinimumVersion,
+
+        [Parameter()]
+        [System.String]
+        $osMaximumVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireEncryption,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows81CompliancePolicy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10MobileCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequireToUnlockFromIdle,
+
+        [Parameter()]
+        [System.Boolean]
+        $earlyLaunchAntiMalwareDriverEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $bitLockerEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $secureBootEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $codeIntegrityEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10CompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequiredToUnlockFromIdle,
+
+        [Parameter()]
+        [System.Boolean]
+        $requireHealthyDeviceReport,
+
+        [Parameter()]
+        [System.String]
+        $mobileOsMinimumVersion,
+
+        [Parameter()]
+        [System.String]
+        $mobileOsMaximumVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $systemIntegrityProtectionEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceThreatProtectionEnabled,
+
+        [Parameter()]
+        [System.String]
+        $deviceThreatProtectionRequiredSecurityLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallBlockAllIncoming,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallEnableStealthMode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodePreviousPasscodeBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.String]
+        $passcodeRequiredType,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityBlockJailbrokenDevices,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedEmailProfileRequired,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidWorkProfileCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityPreventInstallAppsFromUnknownSources,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityDisableUsbDebugging,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireVerifyApps,
+
+        [Parameter()]
+        [System.String]
+        $minAndroidSecurityPatchLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireSafetyNetAttestationBasicIntegrity,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireSafetyNetAttestationCertifiedDevice,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireGooglePlayServices,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireUpToDateSecurityProviders,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireCompanyPortalAppIntegrity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidCompliancePolicy
+    )
+}
+function New-DeviceCompliancePolicySettingStateObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $setting,
+
+        [Parameter()]
+        [System.String]
+        $settingName,
+
+        [Parameter()]
+        [System.String]
+        $instanceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.Int64]
+        $errorCode,
+
+        [Parameter()]
+        [System.String]
+        $errorDescription,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $userEmail,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.Object[]]
+        $sources,
+
+        [Parameter()]
+        [System.String]
+        $currentValue
+    )
+}
+function New-DeviceCompliancePolicySettingStateSummaryObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $setting,
+
+        [Parameter()]
+        [System.String]
+        $settingName,
+
+        [Parameter()]
+        [System.String]
+        $platformType,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceComplianceSettingStates
+    )
+}
+function New-DeviceCompliancePolicyStateObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $settingStates,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $platformType,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.Int32]
+        $settingCount
+    )
+}
+function New-DeviceComplianceScheduledActionForRuleObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ruleName,
+
+        [Parameter()]
+        [System.Object[]]
+        $scheduledActionConfigurations
+    )
+}
+function New-DeviceComplianceSettingStateObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $setting,
+
+        [Parameter()]
+        [System.String]
+        $settingName,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $userEmail,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime
+    )
+}
+function New-DeviceComplianceUserOverviewObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion
+    )
+}
+function New-DeviceComplianceUserStatusObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $devicesCount,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName
+    )
+}
+function New-DeviceConfigurationAssignmentObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $target
+    )
+}
+function New-DeviceConfigurationDeviceOverviewObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion
+    )
+}
+function New-DeviceConfigurationDeviceStateSummaryObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount
+    )
+}
+function New-DeviceConfigurationDeviceStatusObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName
+    )
+}
+function New-DeviceConfigurationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStatuses,
+
+        [Parameter()]
+        [System.Object]
+        $deviceStatusOverview,
+
+        [Parameter()]
+        [System.Object]
+        $userStatusOverview,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceSettingStateSummaries,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10TeamGeneralConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureOperationalInsightsBlockTelemetry,
+
+        [Parameter()]
+        [System.String]
+        $azureOperationalInsightsWorkspaceId,
+
+        [Parameter()]
+        [System.String]
+        $azureOperationalInsightsWorkspaceKey,
+
+        [Parameter()]
+        [System.Boolean]
+        $connectAppBlockAutoLaunch,
+
+        [Parameter()]
+        [System.Boolean]
+        $maintenanceWindowBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $maintenanceWindowDurationInHours,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $maintenanceWindowStartTime,
+
+        [Parameter()]
+        [System.String]
+        $miracastChannel,
+
+        [Parameter()]
+        [System.Boolean]
+        $miracastBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $miracastRequirePin,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockMyMeetingsAndFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockSessionResume,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockSigninSuggestions,
+
+        [Parameter()]
+        [System.Int32]
+        $settingsDefaultVolume,
+
+        [Parameter()]
+        [System.Int32]
+        $settingsScreenTimeoutInMinutes,
+
+        [Parameter()]
+        [System.Int32]
+        $settingsSessionTimeoutInMinutes,
+
+        [Parameter()]
+        [System.Int32]
+        $settingsSleepTimeoutInMinutes,
+
+        [Parameter()]
+        [System.Boolean]
+        $welcomeScreenBlockAutomaticWakeUp,
+
+        [Parameter()]
+        [System.String]
+        $welcomeScreenBackgroundImageUrl,
+
+        [Parameter()]
+        [System.String]
+        $welcomeScreenMeetingInformation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsPhone81GeneralConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $appsBlockCopyPaste,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $cameraBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockWifiTethering,
+
+        [Parameter()]
+        [System.Object[]]
+        $compliantAppsList,
+
+        [Parameter()]
+        [System.String]
+        $compliantAppListType,
+
+        [Parameter()]
+        [System.Boolean]
+        $diagnosticDataBlockSubmission,
+
+        [Parameter()]
+        [System.Boolean]
+        $emailBlockAddingAccounts,
+
+        [Parameter()]
+        [System.Boolean]
+        $locationServicesBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $microsoftAccountBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $nfcBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinutesOfInactivityBeforeScreenTimeout,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordSignInFailureCountBeforeFactoryReset,
+
+        [Parameter()]
+        [System.String]
+        $passwordRequiredType,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageBlockRemovableStorage,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $webBrowserBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $wifiBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $wifiBlockAutomaticConnectHotspots,
+
+        [Parameter()]
+        [System.Boolean]
+        $wifiBlockHotspotReporting,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsStoreBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows81GeneralConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $accountsBlockAddingNonMicrosoftAccountEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockAutomaticDetectionOfIntranetSites,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockEnterpriseModeAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockJavaScript,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockPlugins,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockSendingDoNotTrackHeader,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockSingleWordEntryOnIntranetSites,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserRequireSmartScreen,
+
+        [Parameter()]
+        [System.String]
+        $browserEnterpriseModeSiteListLocation,
+
+        [Parameter()]
+        [System.String]
+        $browserInternetSecurityLevel,
+
+        [Parameter()]
+        [System.String]
+        $browserIntranetSecurityLevel,
+
+        [Parameter()]
+        [System.String]
+        $browserLoggingReportLocation,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserRequireHighSecurityForRestrictedSites,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserRequireFirewall,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserRequireFraudWarning,
+
+        [Parameter()]
+        [System.String]
+        $browserTrustedSitesSecurityLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockDataRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $diagnosticsBlockDataSubmission,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockPicturePasswordAndPin,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireDeviceEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $updatesRequireAutomaticUpdates,
+
+        [Parameter()]
+        [System.String]
+        $userAccountControlSettings,
+
+        [Parameter()]
+        [System.String]
+        $workFoldersUrl,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsUpdateForBusinessConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $deliveryOptimizationMode,
+
+        [Parameter()]
+        [System.String]
+        $prereleaseFeatures,
+
+        [Parameter()]
+        [System.String]
+        $automaticUpdateMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $microsoftUpdateServiceAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $driversExcluded,
+
+        [Parameter()]
+        [System.Object]
+        $installationSchedule,
+
+        [Parameter()]
+        [System.Int32]
+        $qualityUpdatesDeferralPeriodInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $featureUpdatesDeferralPeriodInDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $qualityUpdatesPaused,
+
+        [Parameter()]
+        [System.Boolean]
+        $featureUpdatesPaused,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $qualityUpdatesPauseExpiryDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $featureUpdatesPauseExpiryDateTime,
+
+        [Parameter()]
+        [System.String]
+        $businessReadyUpdatesOnly,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsPhone81CustomConfiguration,
+
+        [Parameter()]
+        [System.Object[]]
+        $omaSettings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10SecureAssessmentConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $launchUri,
+
+        [Parameter()]
+        [System.String]
+        $configurationAccount,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowPrinting,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowScreenCapture,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowTextSuggestion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $sharedPCConfiguration,
+
+        [Parameter()]
+        [System.Object]
+        $accountManagerPolicy,
+
+        [Parameter()]
+        [System.String]
+        $allowedAccounts,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowLocalStorage,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAccountManager,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableEduPolicies,
+
+        [Parameter()]
+        [System.Boolean]
+        $disablePowerPolicies,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableSignInOnResume,
+
+        [Parameter()]
+        [System.Boolean]
+        $enabled,
+
+        [Parameter()]
+        [System.Int32]
+        $idleTimeBeforeSleepInSeconds,
+
+        [Parameter()]
+        [System.String]
+        $kioskAppDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $kioskAppUserModelId,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $maintenanceStartTime,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10EnterpriseModernAppManagementConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $uninstallBuiltInApps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10CustomConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $editionUpgradeConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $licenseType,
+
+        [Parameter()]
+        [System.String]
+        $targetEdition,
+
+        [Parameter()]
+        [System.String]
+        $license,
+
+        [Parameter()]
+        [System.String]
+        $productKey,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsDefenderAdvancedThreatProtectionConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowSampleSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $enableExpeditedTelemetryReporting,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10GeneralConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintDiscoveryEndPoint,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintOAuthAuthority,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintOAuthClientIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintResourceIdentifier,
+
+        [Parameter()]
+        [System.Int32]
+        $enterpriseCloudPrintDiscoveryMaxLimit,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintMopriaDiscoveryResourceIdentifier,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchBlockDiacritics,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchDisableAutoLanguageDetection,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchDisableIndexingEncryptedItems,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchEnableRemoteQueries,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchDisableIndexerBackoff,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchDisableIndexingRemovableDrive,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchEnableAutomaticIndexSizeManangement,
+
+        [Parameter()]
+        [System.String]
+        $diagnosticsDataSubmissionMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $oneDriveDisableFileSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenEnableAppInstallControl,
+
+        [Parameter()]
+        [System.String]
+        $personalizationDesktopImageUrl,
+
+        [Parameter()]
+        [System.String]
+        $personalizationLockScreenImageUrl,
+
+        [Parameter()]
+        [System.String[]]
+        $bluetoothAllowedServices,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlockAdvertising,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlockDiscoverableMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlockPrePairing,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlocked,
+
+        [Parameter()]
+        [System.String]
+        $edgeCookiePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockDeveloperTools,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockSendingDoNotTrackHeader,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockInPrivateBrowsing,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockJavaScript,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockPasswordManager,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockAddressBarDropdown,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockCompatibilityList,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeClearBrowsingDataOnExit,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeAllowStartPagesModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeDisableFirstRunPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockLiveTileDataCollection,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeSyncFavoritesWithInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockDataWhenRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockVpn,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockVpnWhenRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderBlockEndUserAccess,
+
+        [Parameter()]
+        [System.Int32]
+        $defenderDaysBeforeDeletingQuarantinedMalware,
+
+        [Parameter()]
+        [System.Object]
+        $defenderDetectedMalwareActions,
+
+        [Parameter()]
+        [System.String]
+        $defenderSystemScanSchedule,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderFilesAndFoldersToExclude,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderFileExtensionsToExclude,
+
+        [Parameter()]
+        [System.Int32]
+        $defenderScanMaxCpu,
+
+        [Parameter()]
+        [System.String]
+        $defenderMonitorFileActivity,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderProcessesToExclude,
+
+        [Parameter()]
+        [System.String]
+        $defenderPromptForSampleSubmission,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireBehaviorMonitoring,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireCloudProtection,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireNetworkInspectionSystem,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireRealTimeMonitoring,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanArchiveFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanDownloads,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanNetworkFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanIncomingMail,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanMappedNetworkDrivesDuringFullScan,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanRemovableDrivesDuringFullScan,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanScriptsLoadedInInternetExplorer,
+
+        [Parameter()]
+        [System.Int32]
+        $defenderSignatureUpdateIntervalInHours,
+
+        [Parameter()]
+        [System.String]
+        $defenderScanType,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $defenderScheduledScanTime,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $defenderScheduledQuickScanTime,
+
+        [Parameter()]
+        [System.String]
+        $defenderCloudBlockLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenAllowTimeoutConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockActionCenterNotifications,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockCortana,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockToastNotifications,
+
+        [Parameter()]
+        [System.Int32]
+        $lockScreenTimeoutInSeconds,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequireWhenResumeFromIdleState,
+
+        [Parameter()]
+        [System.String]
+        $privacyAdvertisingId,
+
+        [Parameter()]
+        [System.Boolean]
+        $privacyAutoAcceptPairingAndConsentPrompts,
+
+        [Parameter()]
+        [System.Boolean]
+        $privacyBlockInputPersonalization,
+
+        [Parameter()]
+        [System.Boolean]
+        $startBlockUnpinningAppsFromTaskbar,
+
+        [Parameter()]
+        [System.String]
+        $startMenuAppListVisibility,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideChangeAccountSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideFrequentlyUsedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideHibernate,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideLock,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHidePowerButton,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideRecentJumpLists,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideRecentlyAddedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideRestartOptions,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideShutDown,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideSignOut,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideSleep,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideSwitchAccount,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideUserTile,
+
+        [Parameter()]
+        [System.Byte[]]
+        $startMenuLayoutEdgeAssetsXml,
+
+        [Parameter()]
+        [System.Byte[]]
+        $startMenuLayoutXml,
+
+        [Parameter()]
+        [System.String]
+        $startMenuMode,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderDocuments,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderDownloads,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderFileExplorer,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderHomeGroup,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderMusic,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderNetwork,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderPersonalFolder,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderPictures,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderSettings,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderVideos,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockSettingsApp,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockSystemPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockDevicesPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockNetworkInternetPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockPersonalizationPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockAccountsPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockTimeLanguagePage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockEaseOfAccessPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockPrivacyPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockUpdateSecurityPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockAppsPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockGamingPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockConsumerSpecificFeatures,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockOnActionCenter,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockTailoredExperiences,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockThirdPartyNotifications,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockWelcomeExperience,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockWindowsTips,
+
+        [Parameter()]
+        [System.String]
+        $windowsSpotlightConfigureOnLockScreen,
+
+        [Parameter()]
+        [System.Boolean]
+        $networkProxyApplySettingsDeviceWide,
+
+        [Parameter()]
+        [System.Boolean]
+        $networkProxyDisableAutoDetect,
+
+        [Parameter()]
+        [System.String]
+        $networkProxyAutomaticConfigurationUrl,
+
+        [Parameter()]
+        [System.Object]
+        $networkProxyServer,
+
+        [Parameter()]
+        [System.Boolean]
+        $antiTheftModeBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $connectedDevicesServiceBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $certificatesBlockManualRootCertificateInstallation,
+
+        [Parameter()]
+        [System.Boolean]
+        $copyPasteBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $cortanaBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceManagementBlockFactoryResetOnMobile,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceManagementBlockManualUnenroll,
+
+        [Parameter()]
+        [System.String]
+        $safeSearchFilter,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockSearchSuggestions,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockSendingIntranetTrafficToInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeSendIntranetTrafficToInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeRequireSmartScreen,
+
+        [Parameter()]
+        [System.String]
+        $edgeEnterpriseModeSiteListLocation,
+
+        [Parameter()]
+        [System.String]
+        $edgeFirstRunUrl,
+
+        [Parameter()]
+        [System.Object]
+        $edgeSearchEngine,
+
+        [Parameter()]
+        [System.String[]]
+        $edgeHomepageUrls,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockAccessToAboutFlags,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenBlockPromptOverride,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenBlockPromptOverrideForFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $webRtcBlockLocalhostIpAddress,
+
+        [Parameter()]
+        [System.Boolean]
+        $internetSharingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockAddProvisioningPackage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockRemoveProvisioningPackage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockChangeSystemTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockEditDeviceName,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockChangeRegion,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockChangeLanguage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockChangePowerSleep,
+
+        [Parameter()]
+        [System.Boolean]
+        $microsoftAccountBlockSettingsSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $resetProtectionModeBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireMobileDeviceEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $usbBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $voiceRecordingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $wiFiBlockManualConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $wiFiScanInterval,
+
+        [Parameter()]
+        [System.Boolean]
+        $wirelessDisplayBlockProjectionToThisDevice,
+
+        [Parameter()]
+        [System.Boolean]
+        $wirelessDisplayBlockUserInputFromReceiver,
+
+        [Parameter()]
+        [System.Boolean]
+        $wirelessDisplayRequirePinForPairing,
+
+        [Parameter()]
+        [System.String]
+        $appsAllowTrustedAppsSideloading,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsStoreBlockAutoUpdate,
+
+        [Parameter()]
+        [System.String]
+        $developerUnlockSetting,
+
+        [Parameter()]
+        [System.Boolean]
+        $sharedUserAppDataAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $appsBlockWindowsStoreOriginatedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsStoreEnablePrivateStoreOnly,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRestrictAppDataToSystemVolume,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRestrictAppInstallToSystemVolume,
+
+        [Parameter()]
+        [System.Boolean]
+        $gameDvrBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $experienceBlockDeviceDiscovery,
+
+        [Parameter()]
+        [System.Boolean]
+        $experienceBlockErrorDialogWhenNoSIM,
+
+        [Parameter()]
+        [System.Boolean]
+        $experienceBlockTaskSwitcher,
+
+        [Parameter()]
+        [System.Boolean]
+        $logonBlockFastUserSwitching,
+
+        [Parameter()]
+        [System.Boolean]
+        $tenantLockdownRequireNetworkDuringOutOfBoxExperience,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10EndpointProtectionConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallBlockStatefulFTP,
+
+        [Parameter()]
+        [System.Int32]
+        $firewallIdleTimeoutForSecurityAssociationInSeconds,
+
+        [Parameter()]
+        [System.String]
+        $firewallPreSharedKeyEncodingMethod,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallIPSecExemptionsAllowNeighborDiscovery,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallIPSecExemptionsAllowICMP,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallIPSecExemptionsAllowRouterDiscovery,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallIPSecExemptionsAllowDHCP,
+
+        [Parameter()]
+        [System.String]
+        $firewallCertificateRevocationListCheckMethod,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallMergeKeyingModuleSettings,
+
+        [Parameter()]
+        [System.String]
+        $firewallPacketQueueingMethod,
+
+        [Parameter()]
+        [System.Object]
+        $firewallProfileDomain,
+
+        [Parameter()]
+        [System.Object]
+        $firewallProfilePublic,
+
+        [Parameter()]
+        [System.Object]
+        $firewallProfilePrivate,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderAttackSurfaceReductionExcludedPaths,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderGuardedFoldersAllowedAppPaths,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderAdditionalGuardedFolders,
+
+        [Parameter()]
+        [System.Byte[]]
+        $defenderExploitProtectionXml,
+
+        [Parameter()]
+        [System.String]
+        $defenderExploitProtectionXmlFileName,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderSecurityCenterBlockExploitProtectionOverride,
+
+        [Parameter()]
+        [System.String]
+        $appLockerApplicationControl,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenEnableInShell,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenBlockOverrideForFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardEnabled,
+
+        [Parameter()]
+        [System.String]
+        $applicationGuardBlockFileTransfer,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardBlockNonEnterpriseContent,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPersistence,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardForceAuditing,
+
+        [Parameter()]
+        [System.String]
+        $applicationGuardBlockClipboardSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPrintToPDF,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPrintToXPS,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPrintToLocalPrinters,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPrintToNetworkPrinters,
+
+        [Parameter()]
+        [System.Boolean]
+        $bitLockerDisableWarningForOtherDiskEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $bitLockerEnableStorageCardEncryptionOnMobile,
+
+        [Parameter()]
+        [System.Boolean]
+        $bitLockerEncryptDevice,
+
+        [Parameter()]
+        [System.Object]
+        $bitLockerRemovableDrivePolicy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSDeviceFeaturesConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosDeviceFeaturesConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $assetTagTemplate,
+
+        [Parameter()]
+        [System.String]
+        $lockScreenFootnote,
+
+        [Parameter()]
+        [System.Object[]]
+        $homeScreenDockIcons,
+
+        [Parameter()]
+        [System.Object[]]
+        $homeScreenPages,
+
+        [Parameter()]
+        [System.Object[]]
+        $notificationSettings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSGeneralDeviceConfiguration,
+
+        [Parameter()]
+        [System.String[]]
+        $emailInDomainSuffixes,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSCustomConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $payloadName,
+
+        [Parameter()]
+        [System.String]
+        $payloadFileName,
+
+        [Parameter()]
+        [System.Byte[]]
+        $payload,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosUpdateConfiguration,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $activeHoursStart,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $activeHoursEnd,
+
+        [Parameter()]
+        [System.String[]]
+        $scheduledInstallDays,
+
+        [Parameter()]
+        [System.Int32]
+        $utcTimeOffsetInMinutes,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosGeneralDeviceConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $accountBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $activationLockAllowWhenSupervised,
+
+        [Parameter()]
+        [System.Boolean]
+        $airDropBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $airDropForceUnmanagedDropTarget,
+
+        [Parameter()]
+        [System.Boolean]
+        $airPlayForcePairingPasswordForOutgoingRequests,
+
+        [Parameter()]
+        [System.Boolean]
+        $appleWatchBlockPairing,
+
+        [Parameter()]
+        [System.Boolean]
+        $appleWatchForceWristDetection,
+
+        [Parameter()]
+        [System.Boolean]
+        $appleNewsBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsSingleAppModeList,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsVisibilityList,
+
+        [Parameter()]
+        [System.String]
+        $appsVisibilityListType,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreBlockAutomaticDownloads,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreBlockInAppPurchases,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreBlockUIAppInstallation,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreRequirePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockGlobalBackgroundFetchWhileRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockPerAppDataModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockPersonalHotspot,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockVoiceRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $certificatesBlockUntrustedTlsCertificates,
+
+        [Parameter()]
+        [System.Boolean]
+        $classroomAppBlockRemoteScreenObservation,
+
+        [Parameter()]
+        [System.Boolean]
+        $classroomAppForceUnpromptedScreenObservation,
+
+        [Parameter()]
+        [System.Boolean]
+        $configurationProfileBlockChanges,
+
+        [Parameter()]
+        [System.Boolean]
+        $definitionLookupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceBlockEnableRestrictions,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceBlockEraseContentAndSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceBlockNameModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $diagnosticDataBlockSubmissionModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $documentsBlockManagedDocumentsInUnmanagedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $documentsBlockUnmanagedDocumentsInManagedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseAppBlockTrust,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseAppBlockTrustModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $faceTimeBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $findMyFriendsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $gamingBlockGameCenterFriends,
+
+        [Parameter()]
+        [System.Boolean]
+        $gamingBlockMultiplayer,
+
+        [Parameter()]
+        [System.Boolean]
+        $gameCenterBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $hostPairingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $iBooksStoreBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $iBooksStoreBlockErotica,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockActivityContinuation,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockBackup,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockDocumentSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockManagedAppsSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockPhotoLibrary,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockPhotoStreamSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockSharedPhotoStream,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudRequireEncryptedBackup,
+
+        [Parameter()]
+        [System.Boolean]
+        $iTunesBlockExplicitContent,
+
+        [Parameter()]
+        [System.Boolean]
+        $iTunesBlockMusicService,
+
+        [Parameter()]
+        [System.Boolean]
+        $iTunesBlockRadio,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockAutoCorrect,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockDictation,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockPredictive,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockShortcuts,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockSpellCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowAssistiveSpeak,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowAssistiveTouchSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowAutoLock,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowColorInversionSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowRingerSwitch,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowScreenRotation,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowSleepButton,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowTouchscreen,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowVoiceOverSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowVolumeButtons,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowZoomSettings,
+
+        [Parameter()]
+        [System.String]
+        $kioskModeAppStoreUrl,
+
+        [Parameter()]
+        [System.String]
+        $kioskModeBuiltInAppId,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireAssistiveTouch,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireColorInversion,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireMonoAudio,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireVoiceOver,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireZoom,
+
+        [Parameter()]
+        [System.String]
+        $kioskModeManagedAppId,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockControlCenter,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockNotificationView,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockPassbook,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockTodayView,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingAustralia,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingCanada,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingFrance,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingGermany,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingIreland,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingJapan,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingNewZealand,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingUnitedKingdom,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingUnitedStates,
+
+        [Parameter()]
+        [System.Object[]]
+        $networkUsageRules,
+
+        [Parameter()]
+        [System.String]
+        $mediaContentRatingApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $messagesBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $notificationsBlockSettingsModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockFingerprintUnlock,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockFingerprintModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinutesOfInactivityBeforeScreenTimeout,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodePreviousPasscodeBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeSignInFailureCountBeforeWipe,
+
+        [Parameter()]
+        [System.String]
+        $passcodeRequiredType,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $podcastsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariBlockJavaScript,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariBlocked,
+
+        [Parameter()]
+        [System.String]
+        $safariCookieSettings,
+
+        [Parameter()]
+        [System.String[]]
+        $safariManagedDomains,
+
+        [Parameter()]
+        [System.String[]]
+        $safariPasswordAutoFillDomains,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariRequireFraudWarning,
+
+        [Parameter()]
+        [System.Boolean]
+        $siriBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $siriBlockedWhenLocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $siriBlockUserGeneratedContent,
+
+        [Parameter()]
+        [System.Boolean]
+        $siriRequireProfanityFilter,
+
+        [Parameter()]
+        [System.Boolean]
+        $spotlightBlockInternetResults,
+
+        [Parameter()]
+        [System.Boolean]
+        $voiceDialingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $wallpaperBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $wiFiConnectOnlyToConfiguredNetworks,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosCustomConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidWorkProfileGeneralDeviceConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockFingerprintUnlock,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockTrustAgents,
+
+        [Parameter()]
+        [System.String]
+        $workProfileDataSharingType,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockNotificationsWhileDeviceLocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockAddingAccounts,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBluetoothEnableContactSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockScreenCapture,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockCrossProfileCallerId,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockCamera,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockCrossProfileContactsSearch,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockCrossProfileCopyPaste,
+
+        [Parameter()]
+        [System.String]
+        $workProfileDefaultAppPermissionPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfilePasswordBlockFingerprintUnlock,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfilePasswordBlockTrustAgents,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinNumericCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinNonLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinLowerCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinUpperCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinSymbolCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinutesOfInactivityBeforeScreenTimeout,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordSignInFailureCountBeforeFactoryReset,
+
+        [Parameter()]
+        [System.String]
+        $workProfilePasswordRequiredType,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileRequirePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireVerifyApps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidWorkProfileCustomConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidGeneralDeviceConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $appsBlockClipboardSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $appsBlockYouTube,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockMessaging,
+
+        [Parameter()]
+        [System.Boolean]
+        $googleAccountBlockAutoSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $googlePlayStoreBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeBlockSleepButton,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeBlockVolumeButtons,
+
+        [Parameter()]
+        [System.Object[]]
+        $kioskModeApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $powerOffBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $factoryResetBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceSharingAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageBlockGoogleBackup,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireRemovableStorageEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $voiceAssistantBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $webBrowserBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]
+        $webBrowserBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $webBrowserBlockJavaScript,
+
+        [Parameter()]
+        [System.String]
+        $webBrowserCookieSettings,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsInstallAllowList,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsLaunchBlockList,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsHideList,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidCustomConfiguration
+    )
+}
+function New-DeviceConfigurationSettingStateObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $setting,
+
+        [Parameter()]
+        [System.String]
+        $settingName,
+
+        [Parameter()]
+        [System.String]
+        $instanceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.Int64]
+        $errorCode,
+
+        [Parameter()]
+        [System.String]
+        $errorDescription,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $userEmail,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.Object[]]
+        $sources,
+
+        [Parameter()]
+        [System.String]
+        $currentValue
+    )
+}
+function New-DeviceConfigurationStateObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $settingStates,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $platformType,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.Int32]
+        $settingCount
+    )
+}
+function New-DeviceConfigurationUserOverviewObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion
+    )
+}
+function New-DeviceConfigurationUserStatusObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $devicesCount,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName
+    )
+}
+function New-DeviceDetailObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $operatingSystem,
+
+        [Parameter()]
+        [System.String]
+        $browser,
+
+        [Parameter()]
+        [System.Boolean]
+        $isCompliant,
+
+        [Parameter()]
+        [System.Boolean]
+        $isManaged,
+
+        [Parameter()]
+        [System.String]
+        $trustType
+    )
+}
+function New-DeviceEnrollmentConfigurationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.Int32]
+        $priority,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceEnrollmentWindowsHelloForBusinessConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMaximumLength,
+
+        [Parameter()]
+        [System.String]
+        $pinUppercaseCharactersUsage,
+
+        [Parameter()]
+        [System.String]
+        $pinLowercaseCharactersUsage,
+
+        [Parameter()]
+        [System.String]
+        $pinSpecialCharactersUsage,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityDeviceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $unlockWithBiometricsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $remotePassportEnabled,
+
+        [Parameter()]
+        [System.Int32]
+        $pinPreviousBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $pinExpirationInDays,
+
+        [Parameter()]
+        [System.String]
+        $enhancedBiometricsState,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceEnrollmentPlatformRestrictionsConfiguration,
+
+        [Parameter()]
+        [System.Object]
+        $iosRestriction,
+
+        [Parameter()]
+        [System.Object]
+        $windowsRestriction,
+
+        [Parameter()]
+        [System.Object]
+        $windowsMobileRestriction,
+
+        [Parameter()]
+        [System.Object]
+        $androidRestriction,
+
+        [Parameter()]
+        [System.Object]
+        $macOSRestriction,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceEnrollmentLimitConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $limit
+    )
+}
+function New-DeviceEnrollmentPlatformRestrictionObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $platformBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $personalDeviceEnrollmentBlocked,
+
+        [Parameter()]
+        [System.String]
+        $osMinimumVersion,
+
+        [Parameter()]
+        [System.String]
+        $osMaximumVersion
+    )
+}
+function New-DeviceExchangeAccessStateSummaryObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $allowedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $blockedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $quarantinedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $unavailableDeviceCount
+    )
+}
+function New-DeviceGeoLocationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastCollectedDateTime,
+
+        [Parameter()]
+        [System.Double]
+        $longitude,
+
+        [Parameter()]
+        [System.Double]
+        $latitude,
+
+        [Parameter()]
+        [System.Double]
+        $altitude,
+
+        [Parameter()]
+        [System.Double]
+        $horizontalAccuracy,
+
+        [Parameter()]
+        [System.Double]
+        $verticalAccuracy,
+
+        [Parameter()]
+        [System.Double]
+        $heading,
+
+        [Parameter()]
+        [System.Double]
+        $speed
+    )
+}
+function New-DeviceHealthAttestationStateObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.String]
+        $contentNamespaceUrl,
+
+        [Parameter()]
+        [System.String]
+        $deviceHealthAttestationStatus,
+
+        [Parameter()]
+        [System.String]
+        $contentVersion,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $issuedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $attestationIdentityKey,
+
+        [Parameter()]
+        [System.Int64]
+        $resetCount,
+
+        [Parameter()]
+        [System.Int64]
+        $restartCount,
+
+        [Parameter()]
+        [System.String]
+        $dataExcutionPolicy,
+
+        [Parameter()]
+        [System.String]
+        $bitLockerStatus,
+
+        [Parameter()]
+        [System.String]
+        $bootManagerVersion,
+
+        [Parameter()]
+        [System.String]
+        $codeIntegrityCheckVersion,
+
+        [Parameter()]
+        [System.String]
+        $secureBoot,
+
+        [Parameter()]
+        [System.String]
+        $bootDebugging,
+
+        [Parameter()]
+        [System.String]
+        $operatingSystemKernelDebugging,
+
+        [Parameter()]
+        [System.String]
+        $codeIntegrity,
+
+        [Parameter()]
+        [System.String]
+        $testSigning,
+
+        [Parameter()]
+        [System.String]
+        $safeMode,
+
+        [Parameter()]
+        [System.String]
+        $windowsPE,
+
+        [Parameter()]
+        [System.String]
+        $earlyLaunchAntiMalwareDriverProtection,
+
+        [Parameter()]
+        [System.String]
+        $virtualSecureMode,
+
+        [Parameter()]
+        [System.String]
+        $pcrHashAlgorithm,
+
+        [Parameter()]
+        [System.String]
+        $bootAppSecurityVersion,
+
+        [Parameter()]
+        [System.String]
+        $bootManagerSecurityVersion,
+
+        [Parameter()]
+        [System.String]
+        $tpmVersion,
+
+        [Parameter()]
+        [System.String]
+        $pcr0,
+
+        [Parameter()]
+        [System.String]
+        $secureBootConfigurationPolicyFingerPrint,
+
+        [Parameter()]
+        [System.String]
+        $codeIntegrityPolicy,
+
+        [Parameter()]
+        [System.String]
+        $bootRevisionListInfo,
+
+        [Parameter()]
+        [System.String]
+        $operatingSystemRevListInfo,
+
+        [Parameter()]
+        [System.String]
+        $healthStatusMismatchInfo,
+
+        [Parameter()]
+        [System.String]
+        $healthAttestationSupportedStatus
+    )
+}
+function New-DeviceInstallStateObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $installState,
+
+        [Parameter()]
+        [System.String]
+        $errorCode,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.String]
+        $osDescription,
+
+        [Parameter()]
+        [System.String]
+        $userName
+    )
+}
+function New-DeviceManagement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $subscriptionState,
+
+        [Parameter()]
+        [System.Object]
+        $settings,
+
+        [Parameter()]
+        [System.Object]
+        $intuneBrand,
+
+        [Parameter()]
+        [System.Object[]]
+        $termsAndConditions,
+
+        [Parameter()]
+        [System.Object]
+        $applePushNotificationCertificate,
+
+        [Parameter()]
+        [System.Object]
+        $managedDeviceOverview,
+
+        [Parameter()]
+        [System.Object[]]
+        $detectedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedDevices,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceConfigurations,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceCompliancePolicies,
+
+        [Parameter()]
+        [System.Object]
+        $softwareUpdateStatusSummary,
+
+        [Parameter()]
+        [System.Object]
+        $deviceCompliancePolicyDeviceStateSummary,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceCompliancePolicySettingStateSummaries,
+
+        [Parameter()]
+        [System.Object]
+        $deviceConfigurationDeviceStateSummaries,
+
+        [Parameter()]
+        [System.Object[]]
+        $iosUpdateStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceCategories,
+
+        [Parameter()]
+        [System.Object[]]
+        $exchangeConnectors,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceEnrollmentConfigurations,
+
+        [Parameter()]
+        [System.Object]
+        $conditionalAccessSettings,
+
+        [Parameter()]
+        [System.Object[]]
+        $mobileThreatDefenseConnectors,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceManagementPartners,
+
+        [Parameter()]
+        [System.Object[]]
+        $notificationMessageTemplates,
+
+        [Parameter()]
+        [System.Object[]]
+        $roleDefinitions,
+
+        [Parameter()]
+        [System.Object[]]
+        $roleAssignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $resourceOperations,
+
+        [Parameter()]
+        [System.Object[]]
+        $telecomExpenseManagementPartners,
+
+        [Parameter()]
+        [System.Object[]]
+        $remoteAssistancePartners,
+
+        [Parameter()]
+        [System.Object[]]
+        $windowsInformationProtectionAppLearningSummaries,
+
+        [Parameter()]
+        [System.Object[]]
+        $windowsInformationProtectionNetworkLearningSummaries,
+
+        [Parameter()]
+        [System.Object[]]
+        $troubleshootingEvents,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_ApplePushNotificationCertificate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $appleIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $topicIdentifier,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $expirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $certificate,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_ConditionalAccessSettings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $enabled,
+
+        [Parameter()]
+        [System.Guid[]]
+        $includedGroups,
+
+        [Parameter()]
+        [System.Guid[]]
+        $excludedGroups,
+
+        [Parameter()]
+        [System.Boolean]
+        $overrideDefaultRule,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DetectedApps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.Int64]
+        $sizeInByte,
+
+        [Parameter()]
+        [System.Int32]
+        $deviceCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedDevices,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DetectedApps_ManagedDevicesReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $detectedAppId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceReferenceUrl
+    )
+}
+function New-DeviceManagement_DeviceCategories
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceCompliancePolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $scheduledActionsForRule,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStatuses,
+
+        [Parameter()]
+        [System.Object]
+        $deviceStatusOverview,
+
+        [Parameter()]
+        [System.Object]
+        $userStatusOverview,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceSettingStateSummaries,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsPhone81CompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.String]
+        $passwordRequiredType,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequired,
+
+        [Parameter()]
+        [System.String]
+        $osMinimumVersion,
+
+        [Parameter()]
+        [System.String]
+        $osMaximumVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireEncryption,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows81CompliancePolicy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10MobileCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequireToUnlockFromIdle,
+
+        [Parameter()]
+        [System.Boolean]
+        $earlyLaunchAntiMalwareDriverEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $bitLockerEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $secureBootEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $codeIntegrityEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10CompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequiredToUnlockFromIdle,
+
+        [Parameter()]
+        [System.Boolean]
+        $requireHealthyDeviceReport,
+
+        [Parameter()]
+        [System.String]
+        $mobileOsMinimumVersion,
+
+        [Parameter()]
+        [System.String]
+        $mobileOsMaximumVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $systemIntegrityProtectionEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceThreatProtectionEnabled,
+
+        [Parameter()]
+        [System.String]
+        $deviceThreatProtectionRequiredSecurityLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallBlockAllIncoming,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallEnableStealthMode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodePreviousPasscodeBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.String]
+        $passcodeRequiredType,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityBlockJailbrokenDevices,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedEmailProfileRequired,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidWorkProfileCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityPreventInstallAppsFromUnknownSources,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityDisableUsbDebugging,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireVerifyApps,
+
+        [Parameter()]
+        [System.String]
+        $minAndroidSecurityPatchLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireSafetyNetAttestationBasicIntegrity,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireSafetyNetAttestationCertifiedDevice,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireGooglePlayServices,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireUpToDateSecurityProviders,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireCompanyPortalAppIntegrity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidCompliancePolicy,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceCompliancePolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceCompliancePolicies_DeviceSettingStateSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $settingName,
+
+        [Parameter()]
+        [System.String]
+        $instancePath,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceCompliancePolicies_DeviceStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $deviceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceCompliancePolicies_DeviceStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceCompliancePolicies_ScheduledActionsForRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $ruleName,
+
+        [Parameter()]
+        [System.Object[]]
+        $scheduledActionConfigurations,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceCompliancePolicies_ScheduledActionsForRule_ScheduledActionConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $deviceComplianceScheduledActionForRuleId,
+
+        [Parameter()]
+        [System.Int32]
+        $gracePeriodHours,
+
+        [Parameter()]
+        [System.String]
+        $actionType,
+
+        [Parameter()]
+        [System.String]
+        $notificationTemplateId,
+
+        [Parameter()]
+        [System.String[]]
+        $notificationMessageCCList,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceCompliancePolicies_UserStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $devicesCount,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceCompliancePolicies_UserStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceCompliancePolicyDeviceStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $inGracePeriodCount,
+
+        [Parameter()]
+        [System.Int32]
+        $configManagerCount,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceCompliancePolicySettingStateSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $setting,
+
+        [Parameter()]
+        [System.String]
+        $settingName,
+
+        [Parameter()]
+        [System.String]
+        $platformType,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceComplianceSettingStates,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceCompliancePolicySettingStateSummaries_DeviceComplianceSettingStates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicySettingStateSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $setting,
+
+        [Parameter()]
+        [System.String]
+        $settingName,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $userEmail,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceConfigurationDeviceStateSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStatuses,
+
+        [Parameter()]
+        [System.Object]
+        $deviceStatusOverview,
+
+        [Parameter()]
+        [System.Object]
+        $userStatusOverview,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceSettingStateSummaries,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10TeamGeneralConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureOperationalInsightsBlockTelemetry,
+
+        [Parameter()]
+        [System.String]
+        $azureOperationalInsightsWorkspaceId,
+
+        [Parameter()]
+        [System.String]
+        $azureOperationalInsightsWorkspaceKey,
+
+        [Parameter()]
+        [System.Boolean]
+        $connectAppBlockAutoLaunch,
+
+        [Parameter()]
+        [System.Boolean]
+        $maintenanceWindowBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $maintenanceWindowDurationInHours,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $maintenanceWindowStartTime,
+
+        [Parameter()]
+        [System.String]
+        $miracastChannel,
+
+        [Parameter()]
+        [System.Boolean]
+        $miracastBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $miracastRequirePin,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockMyMeetingsAndFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockSessionResume,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockSigninSuggestions,
+
+        [Parameter()]
+        [System.Int32]
+        $settingsDefaultVolume,
+
+        [Parameter()]
+        [System.Int32]
+        $settingsScreenTimeoutInMinutes,
+
+        [Parameter()]
+        [System.Int32]
+        $settingsSessionTimeoutInMinutes,
+
+        [Parameter()]
+        [System.Int32]
+        $settingsSleepTimeoutInMinutes,
+
+        [Parameter()]
+        [System.Boolean]
+        $welcomeScreenBlockAutomaticWakeUp,
+
+        [Parameter()]
+        [System.String]
+        $welcomeScreenBackgroundImageUrl,
+
+        [Parameter()]
+        [System.String]
+        $welcomeScreenMeetingInformation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsPhone81GeneralConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $appsBlockCopyPaste,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $cameraBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockWifiTethering,
+
+        [Parameter()]
+        [System.Object[]]
+        $compliantAppsList,
+
+        [Parameter()]
+        [System.String]
+        $compliantAppListType,
+
+        [Parameter()]
+        [System.Boolean]
+        $diagnosticDataBlockSubmission,
+
+        [Parameter()]
+        [System.Boolean]
+        $emailBlockAddingAccounts,
+
+        [Parameter()]
+        [System.Boolean]
+        $locationServicesBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $microsoftAccountBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $nfcBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinutesOfInactivityBeforeScreenTimeout,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordSignInFailureCountBeforeFactoryReset,
+
+        [Parameter()]
+        [System.String]
+        $passwordRequiredType,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageBlockRemovableStorage,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $webBrowserBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $wifiBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $wifiBlockAutomaticConnectHotspots,
+
+        [Parameter()]
+        [System.Boolean]
+        $wifiBlockHotspotReporting,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsStoreBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows81GeneralConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $accountsBlockAddingNonMicrosoftAccountEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockAutomaticDetectionOfIntranetSites,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockEnterpriseModeAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockJavaScript,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockPlugins,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockSendingDoNotTrackHeader,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockSingleWordEntryOnIntranetSites,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserRequireSmartScreen,
+
+        [Parameter()]
+        [System.String]
+        $browserEnterpriseModeSiteListLocation,
+
+        [Parameter()]
+        [System.String]
+        $browserInternetSecurityLevel,
+
+        [Parameter()]
+        [System.String]
+        $browserIntranetSecurityLevel,
+
+        [Parameter()]
+        [System.String]
+        $browserLoggingReportLocation,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserRequireHighSecurityForRestrictedSites,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserRequireFirewall,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserRequireFraudWarning,
+
+        [Parameter()]
+        [System.String]
+        $browserTrustedSitesSecurityLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockDataRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $diagnosticsBlockDataSubmission,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockPicturePasswordAndPin,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireDeviceEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $updatesRequireAutomaticUpdates,
+
+        [Parameter()]
+        [System.String]
+        $userAccountControlSettings,
+
+        [Parameter()]
+        [System.String]
+        $workFoldersUrl,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsUpdateForBusinessConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $deliveryOptimizationMode,
+
+        [Parameter()]
+        [System.String]
+        $prereleaseFeatures,
+
+        [Parameter()]
+        [System.String]
+        $automaticUpdateMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $microsoftUpdateServiceAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $driversExcluded,
+
+        [Parameter()]
+        [System.Object]
+        $installationSchedule,
+
+        [Parameter()]
+        [System.Int32]
+        $qualityUpdatesDeferralPeriodInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $featureUpdatesDeferralPeriodInDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $qualityUpdatesPaused,
+
+        [Parameter()]
+        [System.Boolean]
+        $featureUpdatesPaused,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $qualityUpdatesPauseExpiryDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $featureUpdatesPauseExpiryDateTime,
+
+        [Parameter()]
+        [System.String]
+        $businessReadyUpdatesOnly,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsPhone81CustomConfiguration,
+
+        [Parameter()]
+        [System.Object[]]
+        $omaSettings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10SecureAssessmentConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $launchUri,
+
+        [Parameter()]
+        [System.String]
+        $configurationAccount,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowPrinting,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowScreenCapture,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowTextSuggestion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $sharedPCConfiguration,
+
+        [Parameter()]
+        [System.Object]
+        $accountManagerPolicy,
+
+        [Parameter()]
+        [System.String]
+        $allowedAccounts,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowLocalStorage,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAccountManager,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableEduPolicies,
+
+        [Parameter()]
+        [System.Boolean]
+        $disablePowerPolicies,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableSignInOnResume,
+
+        [Parameter()]
+        [System.Boolean]
+        $enabled,
+
+        [Parameter()]
+        [System.Int32]
+        $idleTimeBeforeSleepInSeconds,
+
+        [Parameter()]
+        [System.String]
+        $kioskAppDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $kioskAppUserModelId,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $maintenanceStartTime,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10EnterpriseModernAppManagementConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $uninstallBuiltInApps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10CustomConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $editionUpgradeConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $licenseType,
+
+        [Parameter()]
+        [System.String]
+        $targetEdition,
+
+        [Parameter()]
+        [System.String]
+        $license,
+
+        [Parameter()]
+        [System.String]
+        $productKey,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsDefenderAdvancedThreatProtectionConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowSampleSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $enableExpeditedTelemetryReporting,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10GeneralConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintDiscoveryEndPoint,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintOAuthAuthority,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintOAuthClientIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintResourceIdentifier,
+
+        [Parameter()]
+        [System.Int32]
+        $enterpriseCloudPrintDiscoveryMaxLimit,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintMopriaDiscoveryResourceIdentifier,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchBlockDiacritics,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchDisableAutoLanguageDetection,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchDisableIndexingEncryptedItems,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchEnableRemoteQueries,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchDisableIndexerBackoff,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchDisableIndexingRemovableDrive,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchEnableAutomaticIndexSizeManangement,
+
+        [Parameter()]
+        [System.String]
+        $diagnosticsDataSubmissionMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $oneDriveDisableFileSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenEnableAppInstallControl,
+
+        [Parameter()]
+        [System.String]
+        $personalizationDesktopImageUrl,
+
+        [Parameter()]
+        [System.String]
+        $personalizationLockScreenImageUrl,
+
+        [Parameter()]
+        [System.String[]]
+        $bluetoothAllowedServices,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlockAdvertising,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlockDiscoverableMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlockPrePairing,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlocked,
+
+        [Parameter()]
+        [System.String]
+        $edgeCookiePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockDeveloperTools,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockSendingDoNotTrackHeader,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockInPrivateBrowsing,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockJavaScript,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockPasswordManager,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockAddressBarDropdown,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockCompatibilityList,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeClearBrowsingDataOnExit,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeAllowStartPagesModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeDisableFirstRunPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockLiveTileDataCollection,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeSyncFavoritesWithInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockDataWhenRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockVpn,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockVpnWhenRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderBlockEndUserAccess,
+
+        [Parameter()]
+        [System.Int32]
+        $defenderDaysBeforeDeletingQuarantinedMalware,
+
+        [Parameter()]
+        [System.Object]
+        $defenderDetectedMalwareActions,
+
+        [Parameter()]
+        [System.String]
+        $defenderSystemScanSchedule,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderFilesAndFoldersToExclude,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderFileExtensionsToExclude,
+
+        [Parameter()]
+        [System.Int32]
+        $defenderScanMaxCpu,
+
+        [Parameter()]
+        [System.String]
+        $defenderMonitorFileActivity,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderProcessesToExclude,
+
+        [Parameter()]
+        [System.String]
+        $defenderPromptForSampleSubmission,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireBehaviorMonitoring,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireCloudProtection,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireNetworkInspectionSystem,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireRealTimeMonitoring,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanArchiveFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanDownloads,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanNetworkFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanIncomingMail,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanMappedNetworkDrivesDuringFullScan,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanRemovableDrivesDuringFullScan,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanScriptsLoadedInInternetExplorer,
+
+        [Parameter()]
+        [System.Int32]
+        $defenderSignatureUpdateIntervalInHours,
+
+        [Parameter()]
+        [System.String]
+        $defenderScanType,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $defenderScheduledScanTime,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $defenderScheduledQuickScanTime,
+
+        [Parameter()]
+        [System.String]
+        $defenderCloudBlockLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenAllowTimeoutConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockActionCenterNotifications,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockCortana,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockToastNotifications,
+
+        [Parameter()]
+        [System.Int32]
+        $lockScreenTimeoutInSeconds,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequireWhenResumeFromIdleState,
+
+        [Parameter()]
+        [System.String]
+        $privacyAdvertisingId,
+
+        [Parameter()]
+        [System.Boolean]
+        $privacyAutoAcceptPairingAndConsentPrompts,
+
+        [Parameter()]
+        [System.Boolean]
+        $privacyBlockInputPersonalization,
+
+        [Parameter()]
+        [System.Boolean]
+        $startBlockUnpinningAppsFromTaskbar,
+
+        [Parameter()]
+        [System.String]
+        $startMenuAppListVisibility,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideChangeAccountSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideFrequentlyUsedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideHibernate,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideLock,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHidePowerButton,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideRecentJumpLists,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideRecentlyAddedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideRestartOptions,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideShutDown,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideSignOut,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideSleep,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideSwitchAccount,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideUserTile,
+
+        [Parameter()]
+        [System.Byte[]]
+        $startMenuLayoutEdgeAssetsXml,
+
+        [Parameter()]
+        [System.Byte[]]
+        $startMenuLayoutXml,
+
+        [Parameter()]
+        [System.String]
+        $startMenuMode,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderDocuments,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderDownloads,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderFileExplorer,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderHomeGroup,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderMusic,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderNetwork,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderPersonalFolder,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderPictures,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderSettings,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderVideos,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockSettingsApp,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockSystemPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockDevicesPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockNetworkInternetPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockPersonalizationPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockAccountsPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockTimeLanguagePage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockEaseOfAccessPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockPrivacyPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockUpdateSecurityPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockAppsPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockGamingPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockConsumerSpecificFeatures,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockOnActionCenter,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockTailoredExperiences,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockThirdPartyNotifications,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockWelcomeExperience,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockWindowsTips,
+
+        [Parameter()]
+        [System.String]
+        $windowsSpotlightConfigureOnLockScreen,
+
+        [Parameter()]
+        [System.Boolean]
+        $networkProxyApplySettingsDeviceWide,
+
+        [Parameter()]
+        [System.Boolean]
+        $networkProxyDisableAutoDetect,
+
+        [Parameter()]
+        [System.String]
+        $networkProxyAutomaticConfigurationUrl,
+
+        [Parameter()]
+        [System.Object]
+        $networkProxyServer,
+
+        [Parameter()]
+        [System.Boolean]
+        $antiTheftModeBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $connectedDevicesServiceBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $certificatesBlockManualRootCertificateInstallation,
+
+        [Parameter()]
+        [System.Boolean]
+        $copyPasteBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $cortanaBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceManagementBlockFactoryResetOnMobile,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceManagementBlockManualUnenroll,
+
+        [Parameter()]
+        [System.String]
+        $safeSearchFilter,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockSearchSuggestions,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockSendingIntranetTrafficToInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeSendIntranetTrafficToInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeRequireSmartScreen,
+
+        [Parameter()]
+        [System.String]
+        $edgeEnterpriseModeSiteListLocation,
+
+        [Parameter()]
+        [System.String]
+        $edgeFirstRunUrl,
+
+        [Parameter()]
+        [System.Object]
+        $edgeSearchEngine,
+
+        [Parameter()]
+        [System.String[]]
+        $edgeHomepageUrls,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockAccessToAboutFlags,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenBlockPromptOverride,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenBlockPromptOverrideForFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $webRtcBlockLocalhostIpAddress,
+
+        [Parameter()]
+        [System.Boolean]
+        $internetSharingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockAddProvisioningPackage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockRemoveProvisioningPackage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockChangeSystemTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockEditDeviceName,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockChangeRegion,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockChangeLanguage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockChangePowerSleep,
+
+        [Parameter()]
+        [System.Boolean]
+        $microsoftAccountBlockSettingsSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $resetProtectionModeBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireMobileDeviceEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $usbBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $voiceRecordingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $wiFiBlockManualConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $wiFiScanInterval,
+
+        [Parameter()]
+        [System.Boolean]
+        $wirelessDisplayBlockProjectionToThisDevice,
+
+        [Parameter()]
+        [System.Boolean]
+        $wirelessDisplayBlockUserInputFromReceiver,
+
+        [Parameter()]
+        [System.Boolean]
+        $wirelessDisplayRequirePinForPairing,
+
+        [Parameter()]
+        [System.String]
+        $appsAllowTrustedAppsSideloading,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsStoreBlockAutoUpdate,
+
+        [Parameter()]
+        [System.String]
+        $developerUnlockSetting,
+
+        [Parameter()]
+        [System.Boolean]
+        $sharedUserAppDataAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $appsBlockWindowsStoreOriginatedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsStoreEnablePrivateStoreOnly,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRestrictAppDataToSystemVolume,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRestrictAppInstallToSystemVolume,
+
+        [Parameter()]
+        [System.Boolean]
+        $gameDvrBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $experienceBlockDeviceDiscovery,
+
+        [Parameter()]
+        [System.Boolean]
+        $experienceBlockErrorDialogWhenNoSIM,
+
+        [Parameter()]
+        [System.Boolean]
+        $experienceBlockTaskSwitcher,
+
+        [Parameter()]
+        [System.Boolean]
+        $logonBlockFastUserSwitching,
+
+        [Parameter()]
+        [System.Boolean]
+        $tenantLockdownRequireNetworkDuringOutOfBoxExperience,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10EndpointProtectionConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallBlockStatefulFTP,
+
+        [Parameter()]
+        [System.Int32]
+        $firewallIdleTimeoutForSecurityAssociationInSeconds,
+
+        [Parameter()]
+        [System.String]
+        $firewallPreSharedKeyEncodingMethod,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallIPSecExemptionsAllowNeighborDiscovery,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallIPSecExemptionsAllowICMP,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallIPSecExemptionsAllowRouterDiscovery,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallIPSecExemptionsAllowDHCP,
+
+        [Parameter()]
+        [System.String]
+        $firewallCertificateRevocationListCheckMethod,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallMergeKeyingModuleSettings,
+
+        [Parameter()]
+        [System.String]
+        $firewallPacketQueueingMethod,
+
+        [Parameter()]
+        [System.Object]
+        $firewallProfileDomain,
+
+        [Parameter()]
+        [System.Object]
+        $firewallProfilePublic,
+
+        [Parameter()]
+        [System.Object]
+        $firewallProfilePrivate,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderAttackSurfaceReductionExcludedPaths,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderGuardedFoldersAllowedAppPaths,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderAdditionalGuardedFolders,
+
+        [Parameter()]
+        [System.Byte[]]
+        $defenderExploitProtectionXml,
+
+        [Parameter()]
+        [System.String]
+        $defenderExploitProtectionXmlFileName,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderSecurityCenterBlockExploitProtectionOverride,
+
+        [Parameter()]
+        [System.String]
+        $appLockerApplicationControl,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenEnableInShell,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenBlockOverrideForFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardEnabled,
+
+        [Parameter()]
+        [System.String]
+        $applicationGuardBlockFileTransfer,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardBlockNonEnterpriseContent,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPersistence,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardForceAuditing,
+
+        [Parameter()]
+        [System.String]
+        $applicationGuardBlockClipboardSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPrintToPDF,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPrintToXPS,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPrintToLocalPrinters,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPrintToNetworkPrinters,
+
+        [Parameter()]
+        [System.Boolean]
+        $bitLockerDisableWarningForOtherDiskEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $bitLockerEnableStorageCardEncryptionOnMobile,
+
+        [Parameter()]
+        [System.Boolean]
+        $bitLockerEncryptDevice,
+
+        [Parameter()]
+        [System.Object]
+        $bitLockerRemovableDrivePolicy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSDeviceFeaturesConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosDeviceFeaturesConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $assetTagTemplate,
+
+        [Parameter()]
+        [System.String]
+        $lockScreenFootnote,
+
+        [Parameter()]
+        [System.Object[]]
+        $homeScreenDockIcons,
+
+        [Parameter()]
+        [System.Object[]]
+        $homeScreenPages,
+
+        [Parameter()]
+        [System.Object[]]
+        $notificationSettings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSGeneralDeviceConfiguration,
+
+        [Parameter()]
+        [System.String[]]
+        $emailInDomainSuffixes,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSCustomConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $payloadName,
+
+        [Parameter()]
+        [System.String]
+        $payloadFileName,
+
+        [Parameter()]
+        [System.Byte[]]
+        $payload,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosUpdateConfiguration,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $activeHoursStart,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $activeHoursEnd,
+
+        [Parameter()]
+        [System.String[]]
+        $scheduledInstallDays,
+
+        [Parameter()]
+        [System.Int32]
+        $utcTimeOffsetInMinutes,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosGeneralDeviceConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $accountBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $activationLockAllowWhenSupervised,
+
+        [Parameter()]
+        [System.Boolean]
+        $airDropBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $airDropForceUnmanagedDropTarget,
+
+        [Parameter()]
+        [System.Boolean]
+        $airPlayForcePairingPasswordForOutgoingRequests,
+
+        [Parameter()]
+        [System.Boolean]
+        $appleWatchBlockPairing,
+
+        [Parameter()]
+        [System.Boolean]
+        $appleWatchForceWristDetection,
+
+        [Parameter()]
+        [System.Boolean]
+        $appleNewsBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsSingleAppModeList,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsVisibilityList,
+
+        [Parameter()]
+        [System.String]
+        $appsVisibilityListType,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreBlockAutomaticDownloads,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreBlockInAppPurchases,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreBlockUIAppInstallation,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreRequirePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockGlobalBackgroundFetchWhileRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockPerAppDataModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockPersonalHotspot,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockVoiceRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $certificatesBlockUntrustedTlsCertificates,
+
+        [Parameter()]
+        [System.Boolean]
+        $classroomAppBlockRemoteScreenObservation,
+
+        [Parameter()]
+        [System.Boolean]
+        $classroomAppForceUnpromptedScreenObservation,
+
+        [Parameter()]
+        [System.Boolean]
+        $configurationProfileBlockChanges,
+
+        [Parameter()]
+        [System.Boolean]
+        $definitionLookupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceBlockEnableRestrictions,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceBlockEraseContentAndSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceBlockNameModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $diagnosticDataBlockSubmissionModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $documentsBlockManagedDocumentsInUnmanagedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $documentsBlockUnmanagedDocumentsInManagedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseAppBlockTrust,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseAppBlockTrustModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $faceTimeBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $findMyFriendsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $gamingBlockGameCenterFriends,
+
+        [Parameter()]
+        [System.Boolean]
+        $gamingBlockMultiplayer,
+
+        [Parameter()]
+        [System.Boolean]
+        $gameCenterBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $hostPairingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $iBooksStoreBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $iBooksStoreBlockErotica,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockActivityContinuation,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockBackup,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockDocumentSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockManagedAppsSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockPhotoLibrary,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockPhotoStreamSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockSharedPhotoStream,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudRequireEncryptedBackup,
+
+        [Parameter()]
+        [System.Boolean]
+        $iTunesBlockExplicitContent,
+
+        [Parameter()]
+        [System.Boolean]
+        $iTunesBlockMusicService,
+
+        [Parameter()]
+        [System.Boolean]
+        $iTunesBlockRadio,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockAutoCorrect,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockDictation,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockPredictive,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockShortcuts,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockSpellCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowAssistiveSpeak,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowAssistiveTouchSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowAutoLock,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowColorInversionSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowRingerSwitch,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowScreenRotation,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowSleepButton,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowTouchscreen,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowVoiceOverSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowVolumeButtons,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowZoomSettings,
+
+        [Parameter()]
+        [System.String]
+        $kioskModeAppStoreUrl,
+
+        [Parameter()]
+        [System.String]
+        $kioskModeBuiltInAppId,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireAssistiveTouch,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireColorInversion,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireMonoAudio,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireVoiceOver,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireZoom,
+
+        [Parameter()]
+        [System.String]
+        $kioskModeManagedAppId,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockControlCenter,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockNotificationView,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockPassbook,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockTodayView,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingAustralia,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingCanada,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingFrance,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingGermany,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingIreland,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingJapan,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingNewZealand,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingUnitedKingdom,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingUnitedStates,
+
+        [Parameter()]
+        [System.Object[]]
+        $networkUsageRules,
+
+        [Parameter()]
+        [System.String]
+        $mediaContentRatingApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $messagesBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $notificationsBlockSettingsModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockFingerprintUnlock,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockFingerprintModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinutesOfInactivityBeforeScreenTimeout,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodePreviousPasscodeBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeSignInFailureCountBeforeWipe,
+
+        [Parameter()]
+        [System.String]
+        $passcodeRequiredType,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $podcastsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariBlockJavaScript,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariBlocked,
+
+        [Parameter()]
+        [System.String]
+        $safariCookieSettings,
+
+        [Parameter()]
+        [System.String[]]
+        $safariManagedDomains,
+
+        [Parameter()]
+        [System.String[]]
+        $safariPasswordAutoFillDomains,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariRequireFraudWarning,
+
+        [Parameter()]
+        [System.Boolean]
+        $siriBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $siriBlockedWhenLocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $siriBlockUserGeneratedContent,
+
+        [Parameter()]
+        [System.Boolean]
+        $siriRequireProfanityFilter,
+
+        [Parameter()]
+        [System.Boolean]
+        $spotlightBlockInternetResults,
+
+        [Parameter()]
+        [System.Boolean]
+        $voiceDialingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $wallpaperBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $wiFiConnectOnlyToConfiguredNetworks,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosCustomConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidWorkProfileGeneralDeviceConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockFingerprintUnlock,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockTrustAgents,
+
+        [Parameter()]
+        [System.String]
+        $workProfileDataSharingType,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockNotificationsWhileDeviceLocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockAddingAccounts,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBluetoothEnableContactSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockScreenCapture,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockCrossProfileCallerId,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockCamera,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockCrossProfileContactsSearch,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockCrossProfileCopyPaste,
+
+        [Parameter()]
+        [System.String]
+        $workProfileDefaultAppPermissionPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfilePasswordBlockFingerprintUnlock,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfilePasswordBlockTrustAgents,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinNumericCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinNonLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinLowerCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinUpperCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinSymbolCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinutesOfInactivityBeforeScreenTimeout,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordSignInFailureCountBeforeFactoryReset,
+
+        [Parameter()]
+        [System.String]
+        $workProfilePasswordRequiredType,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileRequirePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireVerifyApps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidWorkProfileCustomConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidGeneralDeviceConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $appsBlockClipboardSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $appsBlockYouTube,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockMessaging,
+
+        [Parameter()]
+        [System.Boolean]
+        $googleAccountBlockAutoSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $googlePlayStoreBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeBlockSleepButton,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeBlockVolumeButtons,
+
+        [Parameter()]
+        [System.Object[]]
+        $kioskModeApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $powerOffBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $factoryResetBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceSharingAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageBlockGoogleBackup,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireRemovableStorageEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $voiceAssistantBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $webBrowserBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]
+        $webBrowserBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $webBrowserBlockJavaScript,
+
+        [Parameter()]
+        [System.String]
+        $webBrowserCookieSettings,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsInstallAllowList,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsLaunchBlockList,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsHideList,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidCustomConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceConfigurations_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceConfigurations_DeviceSettingStateSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $settingName,
+
+        [Parameter()]
+        [System.String]
+        $instancePath,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceConfigurations_DeviceStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $deviceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceConfigurations_DeviceStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceConfigurations_UserStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $devicesCount,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceConfigurations_UserStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceEnrollmentConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.Int32]
+        $priority,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceEnrollmentWindowsHelloForBusinessConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMaximumLength,
+
+        [Parameter()]
+        [System.String]
+        $pinUppercaseCharactersUsage,
+
+        [Parameter()]
+        [System.String]
+        $pinLowercaseCharactersUsage,
+
+        [Parameter()]
+        [System.String]
+        $pinSpecialCharactersUsage,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityDeviceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $unlockWithBiometricsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $remotePassportEnabled,
+
+        [Parameter()]
+        [System.Int32]
+        $pinPreviousBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $pinExpirationInDays,
+
+        [Parameter()]
+        [System.String]
+        $enhancedBiometricsState,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceEnrollmentPlatformRestrictionsConfiguration,
+
+        [Parameter()]
+        [System.Object]
+        $iosRestriction,
+
+        [Parameter()]
+        [System.Object]
+        $windowsRestriction,
+
+        [Parameter()]
+        [System.Object]
+        $windowsMobileRestriction,
+
+        [Parameter()]
+        [System.Object]
+        $androidRestriction,
+
+        [Parameter()]
+        [System.Object]
+        $macOSRestriction,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceEnrollmentLimitConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $limit,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceEnrollmentConfigurations_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentConfigurationId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_DeviceManagementPartners
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastHeartbeatDateTime,
+
+        [Parameter()]
+        [System.String]
+        $partnerState,
+
+        [Parameter()]
+        [System.String]
+        $partnerAppType,
+
+        [Parameter()]
+        [System.String]
+        $singleTenantAppId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $isConfigured,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $whenPartnerDevicesWillBeRemovedDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $whenPartnerDevicesWillBeMarkedAsNonCompliantDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_ExchangeConnectors
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.String]
+        $primarySmtpAddress,
+
+        [Parameter()]
+        [System.String]
+        $serverName,
+
+        [Parameter()]
+        [System.String]
+        $connectorServerName,
+
+        [Parameter()]
+        [System.String]
+        $exchangeConnectorType,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $exchangeAlias,
+
+        [Parameter()]
+        [System.String]
+        $exchangeOrganization,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_IosUpdateStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $installStatus,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $deviceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_ManagedDeviceOverviewReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceOverviewReferenceUrl
+    )
+}
+function New-DeviceManagement_ManagedDevices
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceOwnerType,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceActionResults,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $enrolledDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $operatingSystem,
+
+        [Parameter()]
+        [System.String]
+        $complianceState,
+
+        [Parameter()]
+        [System.String]
+        $jailBroken,
+
+        [Parameter()]
+        [System.String]
+        $managementAgent,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $easActivated,
+
+        [Parameter()]
+        [System.String]
+        $easDeviceId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $easActivationDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureADRegistered,
+
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentType,
+
+        [Parameter()]
+        [System.String]
+        $activationLockBypassCode,
+
+        [Parameter()]
+        [System.String]
+        $emailAddress,
+
+        [Parameter()]
+        [System.String]
+        $azureADDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $deviceRegistrationState,
+
+        [Parameter()]
+        [System.String]
+        $deviceCategoryDisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $isSupervised,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $exchangeLastSuccessfulSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $exchangeAccessState,
+
+        [Parameter()]
+        [System.String]
+        $exchangeAccessStateReason,
+
+        [Parameter()]
+        [System.String]
+        $remoteAssistanceSessionUrl,
+
+        [Parameter()]
+        [System.String]
+        $remoteAssistanceSessionErrorDetails,
+
+        [Parameter()]
+        [System.Boolean]
+        $isEncrypted,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $model,
+
+        [Parameter()]
+        [System.String]
+        $manufacturer,
+
+        [Parameter()]
+        [System.String]
+        $imei,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $serialNumber,
+
+        [Parameter()]
+        [System.String]
+        $phoneNumber,
+
+        [Parameter()]
+        [System.String]
+        $androidSecurityPatchLevel,
+
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Object]
+        $configurationManagerClientEnabledFeatures,
+
+        [Parameter()]
+        [System.String]
+        $wiFiMacAddress,
+
+        [Parameter()]
+        [System.Object]
+        $deviceHealthAttestationState,
+
+        [Parameter()]
+        [System.String]
+        $subscriberCarrier,
+
+        [Parameter()]
+        [System.String]
+        $meid,
+
+        [Parameter()]
+        [System.Int64]
+        $totalStorageSpaceInBytes,
+
+        [Parameter()]
+        [System.Int64]
+        $freeStorageSpaceInBytes,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceName,
+
+        [Parameter()]
+        [System.String]
+        $partnerReportedThreatState,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceConfigurationStates,
+
+        [Parameter()]
+        [System.Object]
+        $deviceCategory,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceCompliancePolicyStates,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_ManagedDevices_DeviceCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_ManagedDevices_DeviceCompliancePolicyStates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.Object[]]
+        $settingStates,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $platformType,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.Int32]
+        $settingCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_ManagedDevices_DeviceConfigurationStates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.Object[]]
+        $settingStates,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $platformType,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.Int32]
+        $settingCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_MobileThreatDefenseConnectors
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastHeartbeatDateTime,
+
+        [Parameter()]
+        [System.String]
+        $partnerState,
+
+        [Parameter()]
+        [System.Boolean]
+        $androidEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $iosEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $androidDeviceBlockedOnMissingPartnerData,
+
+        [Parameter()]
+        [System.Boolean]
+        $iosDeviceBlockedOnMissingPartnerData,
+
+        [Parameter()]
+        [System.Boolean]
+        $partnerUnsupportedOsVersionBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $partnerUnresponsivenessThresholdInDays,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_NotificationMessageTemplates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $defaultLocale,
+
+        [Parameter()]
+        [System.String]
+        $brandingOptions,
+
+        [Parameter()]
+        [System.Object[]]
+        $localizedNotificationMessages,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_NotificationMessageTemplates_LocalizedNotificationMessages
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $notificationMessageTemplateId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $locale,
+
+        [Parameter()]
+        [System.String]
+        $subject,
+
+        [Parameter()]
+        [System.String]
+        $messageTemplate,
+
+        [Parameter()]
+        [System.Boolean]
+        $isDefault,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_RemoteAssistancePartners
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $onboardingUrl,
+
+        [Parameter()]
+        [System.String]
+        $onboardingStatus,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastConnectionDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_ResourceOperations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $resourceName,
+
+        [Parameter()]
+        [System.String]
+        $actionName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_RoleAssignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $members,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String[]]
+        $resourceScopes,
+
+        [Parameter()]
+        [System.Object]
+        $roleDefinition,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_RoleAssignments_RoleDefinitionReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceAndAppManagementRoleAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $roleAssignmentODataType,
+
+        [Parameter()]
+        [System.String]
+        $roleDefinitionReferenceUrl
+    )
+}
+function New-DeviceManagement_RoleDefinitions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $roleDefinition,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.Object[]]
+        $rolePermissions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isBuiltIn,
+
+        [Parameter()]
+        [System.Object[]]
+        $roleAssignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceAndAppManagementRoleDefinition,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_RoleDefinitions_RoleAssignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $roleDefinitionId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $roleAssignment,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String[]]
+        $resourceScopes,
+
+        [Parameter()]
+        [System.Object]
+        $roleDefinition,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceAndAppManagementRoleAssignment,
+
+        [Parameter()]
+        [System.String[]]
+        $members,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_RoleDefinitions_RoleAssignments_RoleDefinitionReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $roleDefinitionId,
+
+        [Parameter()]
+        [System.String]
+        $roleAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $roleDefinitionReferenceUrl
+    )
+}
+function New-DeviceManagement_SoftwareUpdateStatusSummaryReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $softwareUpdateStatusSummaryReferenceUrl
+    )
+}
+function New-DeviceManagement_TelecomExpenseManagementPartners
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $url,
+
+        [Parameter()]
+        [System.Boolean]
+        $appAuthorized,
+
+        [Parameter()]
+        [System.Boolean]
+        $enabled,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastConnectionDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_TermsAndConditions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $title,
+
+        [Parameter()]
+        [System.String]
+        $bodyText,
+
+        [Parameter()]
+        [System.String]
+        $acceptanceStatement,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $acceptanceStatuses,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_TermsAndConditions_AcceptanceStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $termsAndConditionId,
+
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $acceptedVersion,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $acceptedDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $termsAndConditions,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_TermsAndConditions_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $termsAndConditionId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_TroubleshootingEvents
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceManagementTroubleshootingEvent,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $eventDateTime,
+
+        [Parameter()]
+        [System.String]
+        $correlationId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $enrollmentTroubleshootingEvent,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $operatingSystem,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.String]
+        $enrollmentType,
+
+        [Parameter()]
+        [System.String]
+        $failureCategory,
+
+        [Parameter()]
+        [System.String]
+        $failureReason,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_WindowsInformationProtectionAppLearningSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $applicationName,
+
+        [Parameter()]
+        [System.String]
+        $applicationType,
+
+        [Parameter()]
+        [System.Int32]
+        $deviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagement_WindowsInformationProtectionNetworkLearningSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $url,
+
+        [Parameter()]
+        [System.Int32]
+        $deviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-DeviceManagementExchangeConnectorObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.String]
+        $primarySmtpAddress,
+
+        [Parameter()]
+        [System.String]
+        $serverName,
+
+        [Parameter()]
+        [System.String]
+        $connectorServerName,
+
+        [Parameter()]
+        [System.String]
+        $exchangeConnectorType,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $exchangeAlias,
+
+        [Parameter()]
+        [System.String]
+        $exchangeOrganization
+    )
+}
+function New-DeviceManagementObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $subscriptionState,
+
+        [Parameter()]
+        [System.Object]
+        $settings,
+
+        [Parameter()]
+        [System.Object]
+        $intuneBrand,
+
+        [Parameter()]
+        [System.Object[]]
+        $termsAndConditions,
+
+        [Parameter()]
+        [System.Object]
+        $applePushNotificationCertificate,
+
+        [Parameter()]
+        [System.Object]
+        $managedDeviceOverview,
+
+        [Parameter()]
+        [System.Object[]]
+        $detectedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedDevices,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceConfigurations,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceCompliancePolicies,
+
+        [Parameter()]
+        [System.Object]
+        $softwareUpdateStatusSummary,
+
+        [Parameter()]
+        [System.Object]
+        $deviceCompliancePolicyDeviceStateSummary,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceCompliancePolicySettingStateSummaries,
+
+        [Parameter()]
+        [System.Object]
+        $deviceConfigurationDeviceStateSummaries,
+
+        [Parameter()]
+        [System.Object[]]
+        $iosUpdateStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceCategories,
+
+        [Parameter()]
+        [System.Object[]]
+        $exchangeConnectors,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceEnrollmentConfigurations,
+
+        [Parameter()]
+        [System.Object]
+        $conditionalAccessSettings,
+
+        [Parameter()]
+        [System.Object[]]
+        $mobileThreatDefenseConnectors,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceManagementPartners,
+
+        [Parameter()]
+        [System.Object[]]
+        $notificationMessageTemplates,
+
+        [Parameter()]
+        [System.Object[]]
+        $roleDefinitions,
+
+        [Parameter()]
+        [System.Object[]]
+        $roleAssignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $resourceOperations,
+
+        [Parameter()]
+        [System.Object[]]
+        $telecomExpenseManagementPartners,
+
+        [Parameter()]
+        [System.Object[]]
+        $remoteAssistancePartners,
+
+        [Parameter()]
+        [System.Object[]]
+        $windowsInformationProtectionAppLearningSummaries,
+
+        [Parameter()]
+        [System.Object[]]
+        $windowsInformationProtectionNetworkLearningSummaries,
+
+        [Parameter()]
+        [System.Object[]]
+        $troubleshootingEvents
+    )
+}
+function New-DeviceManagementPartnerObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastHeartbeatDateTime,
+
+        [Parameter()]
+        [System.String]
+        $partnerState,
+
+        [Parameter()]
+        [System.String]
+        $partnerAppType,
+
+        [Parameter()]
+        [System.String]
+        $singleTenantAppId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $isConfigured,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $whenPartnerDevicesWillBeRemovedDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $whenPartnerDevicesWillBeMarkedAsNonCompliantDateTime
+    )
+}
+function New-DeviceManagementSettingsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $deviceComplianceCheckinThresholdDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $isScheduledActionEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $secureByDefault
+    )
+}
+function New-DeviceManagementTroubleshootingEventObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceManagementTroubleshootingEvent,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $eventDateTime,
+
+        [Parameter()]
+        [System.String]
+        $correlationId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $enrollmentTroubleshootingEvent,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $operatingSystem,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.String]
+        $enrollmentType,
+
+        [Parameter()]
+        [System.String]
+        $failureCategory,
+
+        [Parameter()]
+        [System.String]
+        $failureReason
+    )
+}
+function New-DeviceOperatingSystemSummaryObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $androidCount,
+
+        [Parameter()]
+        [System.Int32]
+        $iosCount,
+
+        [Parameter()]
+        [System.Int32]
+        $macOSCount,
+
+        [Parameter()]
+        [System.Int32]
+        $windowsMobileCount,
+
+        [Parameter()]
+        [System.Int32]
+        $windowsCount,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownCount
+    )
+}
+function New-DiagnosticObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $message,
+
+        [Parameter()]
+        [System.String]
+        $url
+    )
+}
+function New-DirectoryAuditObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $category,
+
+        [Parameter()]
+        [System.String]
+        $correlationId,
+
+        [Parameter()]
+        [System.String]
+        $result,
+
+        [Parameter()]
+        [System.String]
+        $resultReason,
+
+        [Parameter()]
+        [System.String]
+        $activityDisplayName,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $activityDateTime,
+
+        [Parameter()]
+        [System.String]
+        $loggedByService,
+
+        [Parameter()]
+        [System.String]
+        $operationType,
+
+        [Parameter()]
+        [System.Object]
+        $initiatedBy,
+
+        [Parameter()]
+        [System.Object[]]
+        $targetResources,
+
+        [Parameter()]
+        [System.Object[]]
+        $additionalDetails
+    )
+}
+function New-DirectoryObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $deletedItems
+    )
+}
+function New-DirectoryObjectObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $values
+    )
+}
+function New-DomainDnsRecordObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $domainDnsRecord,
+
+        [Parameter()]
+        [System.Boolean]
+        $isOptional,
+
+        [Parameter()]
+        [System.String]
+        $label,
+
+        [Parameter()]
+        [System.String]
+        $recordType,
+
+        [Parameter()]
+        [System.String]
+        $supportedService,
+
+        [Parameter()]
+        [System.Int32]
+        $ttl,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $domainDnsUnavailableRecord,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $domainDnsTxtRecord,
+
+        [Parameter()]
+        [System.String]
+        $text,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $domainDnsSrvRecord,
+
+        [Parameter()]
+        [System.String]
+        $nameTarget,
+
+        [Parameter()]
+        [System.Int32]
+        $port,
+
+        [Parameter()]
+        [System.Int32]
+        $priority,
+
+        [Parameter()]
+        [System.String]
+        $protocol,
+
+        [Parameter()]
+        [System.String]
+        $service,
+
+        [Parameter()]
+        [System.Int32]
+        $weight,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $domainDnsMxRecord,
+
+        [Parameter()]
+        [System.String]
+        $mailExchange,
+
+        [Parameter()]
+        [System.Int32]
+        $preference,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $domainDnsCnameRecord,
+
+        [Parameter()]
+        [System.String]
+        $canonicalName
+    )
+}
+function New-DomainObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $authenticationType,
+
+        [Parameter()]
+        [System.String]
+        $availabilityStatus,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAdminManaged,
+
+        [Parameter()]
+        [System.Boolean]
+        $isDefault,
+
+        [Parameter()]
+        [System.Boolean]
+        $isInitial,
+
+        [Parameter()]
+        [System.Boolean]
+        $isRoot,
+
+        [Parameter()]
+        [System.Boolean]
+        $isVerified,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordNotificationWindowInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordValidityPeriodInDays,
+
+        [Parameter()]
+        [System.String[]]
+        $supportedServices,
+
+        [Parameter()]
+        [System.Object]
+        $state,
+
+        [Parameter()]
+        [System.Object[]]
+        $serviceConfigurationRecords,
+
+        [Parameter()]
+        [System.Object[]]
+        $verificationDnsRecords,
+
+        [Parameter()]
+        [System.Object[]]
+        $domainNameReferences
+    )
+}
+function New-DomainStateObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.String]
+        $operation,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastActionDateTime
+    )
+}
+function New-DriveItemUploadablePropertiesObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.Object]
+        $fileSystemInfo,
+
+        [Parameter()]
+        [System.String]
+        $name
+    )
+}
+function New-DriveRecipientObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $alias,
+
+        [Parameter()]
+        [System.String]
+        $email,
+
+        [Parameter()]
+        [System.String]
+        $objectId
+    )
+}
+function New-EBookInstallSummaryObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $installedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notInstalledDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $installedUserCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedUserCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notInstalledUserCount
+    )
+}
+function New-EdgeSearchEngineBaseObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $edgeSearchEngine,
+
+        [Parameter()]
+        [System.String]
+        $edgeSearchEngineType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $edgeSearchEngineCustom,
+
+        [Parameter()]
+        [System.String]
+        $edgeSearchEngineOpenSearchXmlUrl
+    )
+}
+function New-EducationClassObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $mailNickname,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.Object]
+        $createdBy,
+
+        [Parameter()]
+        [System.String]
+        $classCode,
+
+        [Parameter()]
+        [System.String]
+        $externalName,
+
+        [Parameter()]
+        [System.String]
+        $externalId,
+
+        [Parameter()]
+        [System.String]
+        $externalSource,
+
+        [Parameter()]
+        [System.Object]
+        $term,
+
+        [Parameter()]
+        [System.Object[]]
+        $schools,
+
+        [Parameter()]
+        [System.Object[]]
+        $members,
+
+        [Parameter()]
+        [System.Object[]]
+        $teachers,
+
+        [Parameter()]
+        [System.Object]
+        $group
+    )
+}
+function New-EducationOrganizationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $externalSource,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $educationSchool,
+
+        [Parameter()]
+        [System.String]
+        $principalEmail,
+
+        [Parameter()]
+        [System.String]
+        $principalName,
+
+        [Parameter()]
+        [System.String]
+        $externalPrincipalId,
+
+        [Parameter()]
+        [System.String]
+        $lowestGrade,
+
+        [Parameter()]
+        [System.String]
+        $highestGrade,
+
+        [Parameter()]
+        [System.String]
+        $schoolNumber,
+
+        [Parameter()]
+        [System.String]
+        $externalId,
+
+        [Parameter()]
+        [System.String]
+        $phone,
+
+        [Parameter()]
+        [System.String]
+        $fax,
+
+        [Parameter()]
+        [System.Object]
+        $createdBy,
+
+        [Parameter()]
+        [System.Object]
+        $address,
+
+        [Parameter()]
+        [System.Object[]]
+        $classes,
+
+        [Parameter()]
+        [System.Object[]]
+        $users
+    )
+}
+function New-EducationRootObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $classes,
+
+        [Parameter()]
+        [System.Object[]]
+        $schools,
+
+        [Parameter()]
+        [System.Object[]]
+        $users,
+
+        [Parameter()]
+        [System.Object]
+        $me
+    )
+}
+function New-EducationStudentObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $graduationYear,
+
+        [Parameter()]
+        [System.String]
+        $grade,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $birthDate,
+
+        [Parameter()]
+        [System.String]
+        $gender,
+
+        [Parameter()]
+        [System.String]
+        $studentNumber,
+
+        [Parameter()]
+        [System.String]
+        $externalId
+    )
+}
+function New-EducationTeacherObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $teacherNumber,
+
+        [Parameter()]
+        [System.String]
+        $externalId
+    )
+}
+function New-EducationTermObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $externalId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $startDate,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $endDate,
+
+        [Parameter()]
+        [System.String]
+        $displayName
+    )
+}
+function New-EducationUserObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $primaryRole,
+
+        [Parameter()]
+        [System.String]
+        $middleName,
+
+        [Parameter()]
+        [System.String]
+        $externalSource,
+
+        [Parameter()]
+        [System.Object]
+        $residenceAddress,
+
+        [Parameter()]
+        [System.Object]
+        $mailingAddress,
+
+        [Parameter()]
+        [System.Object]
+        $student,
+
+        [Parameter()]
+        [System.Object]
+        $teacher,
+
+        [Parameter()]
+        [System.Object]
+        $createdBy,
+
+        [Parameter()]
+        [System.Boolean]
+        $accountEnabled,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignedLicenses,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignedPlans,
+
+        [Parameter()]
+        [System.String[]]
+        $businessPhones,
+
+        [Parameter()]
+        [System.String]
+        $department,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $givenName,
+
+        [Parameter()]
+        [System.String]
+        $mail,
+
+        [Parameter()]
+        [System.String]
+        $mailNickname,
+
+        [Parameter()]
+        [System.String]
+        $mobilePhone,
+
+        [Parameter()]
+        [System.String]
+        $passwordPolicies,
+
+        [Parameter()]
+        [System.Object]
+        $passwordProfile,
+
+        [Parameter()]
+        [System.String]
+        $officeLocation,
+
+        [Parameter()]
+        [System.String]
+        $preferredLanguage,
+
+        [Parameter()]
+        [System.Object[]]
+        $provisionedPlans,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $refreshTokensValidFromDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $showInAddressList,
+
+        [Parameter()]
+        [System.String]
+        $surname,
+
+        [Parameter()]
+        [System.String]
+        $usageLocation,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $userType,
+
+        [Parameter()]
+        [System.Object[]]
+        $schools,
+
+        [Parameter()]
+        [System.Object[]]
+        $classes,
+
+        [Parameter()]
+        [System.Object]
+        $user
+    )
+}
+function New-EmailAddressObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.String]
+        $address
+    )
+}
+function New-EnrollmentConfigurationAssignmentObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $target
+    )
+}
+function New-EntityObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $values
+    )
+}
+function New-ExtensionObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $openTypeExtension,
+
+        [Parameter()]
+        [System.String]
+        $extensionName
+    )
+}
+function New-ExtensionSchemaPropertyObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.String]
+        $type
+    )
+}
+function New-ExternalLinkObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $href
+    )
+}
+function New-FieldValueSetObject
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function New-FileEncryptionInfoObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Byte[]]
+        $encryptionKey,
+
+        [Parameter()]
+        [System.Byte[]]
+        $initializationVector,
+
+        [Parameter()]
+        [System.Byte[]]
+        $mac,
+
+        [Parameter()]
+        [System.Byte[]]
+        $macKey,
+
+        [Parameter()]
+        [System.String]
+        $profileIdentifier,
+
+        [Parameter()]
+        [System.Byte[]]
+        $fileDigest,
+
+        [Parameter()]
+        [System.String]
+        $fileDigestAlgorithm
+    )
+}
+function New-FileHashObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $hashType,
+
+        [Parameter()]
+        [System.String]
+        $hashValue
+    )
+}
+function New-FileObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $hashes,
+
+        [Parameter()]
+        [System.String]
+        $mimeType,
+
+        [Parameter()]
+        [System.Boolean]
+        $processingMetadata
+    )
+}
+function New-FileSecurityStateObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $fileHash,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.String]
+        $path,
+
+        [Parameter()]
+        [System.String]
+        $riskScore
+    )
+}
+function New-FileSystemInfoObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastAccessedDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime
+    )
+}
+function New-FolderObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $childCount,
+
+        [Parameter()]
+        [System.Object]
+        $view
+    )
+}
+function New-FolderViewObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $sortBy,
+
+        [Parameter()]
+        [System.String]
+        $sortOrder,
+
+        [Parameter()]
+        [System.String]
+        $viewType
+    )
+}
+function New-FollowupFlagObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $completedDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $dueDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $startDateTime,
+
+        [Parameter()]
+        [System.String]
+        $flagStatus
+    )
+}
+function New-FreeBusyErrorObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $message,
+
+        [Parameter()]
+        [System.String]
+        $responseCode
+    )
+}
+function New-GeoCoordinatesObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Double]
+        $altitude,
+
+        [Parameter()]
+        [System.Double]
+        $latitude,
+
+        [Parameter()]
+        [System.Double]
+        $longitude
+    )
+}
+function New-GroupLifecyclePolicyObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $groupLifetimeInDays,
+
+        [Parameter()]
+        [System.String]
+        $managedGroupTypes,
+
+        [Parameter()]
+        [System.String]
+        $alternateNotificationEmails
+    )
+}
+function New-Groups
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $assignedLicenses,
+
+        [Parameter()]
+        [System.String]
+        $classification,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $hasMembersWithLicenseErrors,
+
+        [Parameter()]
+        [System.String[]]
+        $groupTypes,
+
+        [Parameter()]
+        [System.Object]
+        $licenseProcessingState,
+
+        [Parameter()]
+        [System.String]
+        $mail,
+
+        [Parameter()]
+        [System.Boolean]
+        $mailEnabled,
+
+        [Parameter()]
+        [System.String]
+        $mailNickname,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $onPremisesLastSyncDateTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $onPremisesProvisioningErrors,
+
+        [Parameter()]
+        [System.String]
+        $onPremisesSecurityIdentifier,
+
+        [Parameter()]
+        [System.Boolean]
+        $onPremisesSyncEnabled,
+
+        [Parameter()]
+        [System.String]
+        $preferredDataLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $proxyAddresses,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $renewedDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityEnabled,
+
+        [Parameter()]
+        [System.String]
+        $visibility,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowExternalSenders,
+
+        [Parameter()]
+        [System.Boolean]
+        $autoSubscribeNewMembers,
+
+        [Parameter()]
+        [System.Boolean]
+        $isSubscribedByMail,
+
+        [Parameter()]
+        [System.Int32]
+        $unseenCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $isArchived,
+
+        [Parameter()]
+        [System.Object[]]
+        $members,
+
+        [Parameter()]
+        [System.Object[]]
+        $memberOf,
+
+        [Parameter()]
+        [System.Object[]]
+        $membersWithLicenseErrors,
+
+        [Parameter()]
+        [System.Object[]]
+        $transitiveMembers,
+
+        [Parameter()]
+        [System.Object[]]
+        $transitiveMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $createdOnBehalfOf,
+
+        [Parameter()]
+        [System.Object[]]
+        $owners,
+
+        [Parameter()]
+        [System.Object[]]
+        $settings,
+
+        [Parameter()]
+        [System.Object]
+        $photo,
+
+        [Parameter()]
+        [System.Object[]]
+        $photos,
+
+        [Parameter()]
+        [System.Object[]]
+        $groupLifecyclePolicies,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $deletedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-Groups_CreatedOnBehalfOfReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectReferenceUrl
+    )
+}
+function New-Groups_GroupLifecyclePolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.Int32]
+        $groupLifetimeInDays,
+
+        [Parameter()]
+        [System.String]
+        $managedGroupTypes,
+
+        [Parameter()]
+        [System.String]
+        $alternateNotificationEmails,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-Groups_MemberOfReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectReferenceUrl
+    )
+}
+function New-Groups_MembersReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectReferenceUrl
+    )
+}
+function New-Groups_MembersWithLicenseErrorsReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectReferenceUrl
+    )
+}
+function New-Groups_OwnersReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectReferenceUrl
+    )
+}
+function New-Groups_PhotoData
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $Data,
+
+        [Parameter()]
+        [System.String]
+        $ContentType
+    )
+}
+function New-Groups_PhotosData
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $profilePhotoId,
+
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $Data,
+
+        [Parameter()]
+        [System.String]
+        $ContentType
+    )
+}
+function New-Groups_Settings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $values
+    )
+}
+function New-Groups_TransitiveMemberOfReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectReferenceUrl
+    )
+}
+function New-Groups_TransitiveMembersReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectReferenceUrl
+    )
+}
+function New-GroupSettingObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $values
+    )
+}
+function New-HashesObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $crc32Hash,
+
+        [Parameter()]
+        [System.String]
+        $quickXorHash,
+
+        [Parameter()]
+        [System.String]
+        $sha1Hash
+    )
+}
+function New-HostSecurityStateObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $fqdn,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAzureAdJoined,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAzureAdRegistered,
+
+        [Parameter()]
+        [System.Boolean]
+        $isHybridAzureDomainJoined,
+
+        [Parameter()]
+        [System.String]
+        $netBiosName,
+
+        [Parameter()]
+        [System.String]
+        $os,
+
+        [Parameter()]
+        [System.String]
+        $privateIpAddress,
+
+        [Parameter()]
+        [System.String]
+        $publicIpAddress,
+
+        [Parameter()]
+        [System.String]
+        $riskScore
+    )
+}
+function New-IdentityObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName
+    )
+}
+function New-IdentityProviderObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $type,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.String]
+        $clientId,
+
+        [Parameter()]
+        [System.String]
+        $clientSecret
+    )
+}
+function New-IdentitySetObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $application,
+
+        [Parameter()]
+        [System.Object]
+        $device,
+
+        [Parameter()]
+        [System.Object]
+        $user
+    )
+}
+function New-ImageInfoObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iconUrl,
+
+        [Parameter()]
+        [System.String]
+        $alternativeText,
+
+        [Parameter()]
+        [System.String]
+        $alternateText,
+
+        [Parameter()]
+        [System.Boolean]
+        $addImageQuery
+    )
+}
+function New-ImageObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $height,
+
+        [Parameter()]
+        [System.Int32]
+        $width
+    )
+}
+function New-IncompleteDataObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $missingDataBeforeDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $wasThrottled
+    )
+}
+function New-InferenceClassificationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $overrides
+    )
+}
+function New-InferenceClassificationOverrideObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $classifyAs,
+
+        [Parameter()]
+        [System.Object]
+        $senderEmailAddress
+    )
+}
+function New-InsightIdentityObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $address
+    )
+}
+function New-InternetMessageHeaderObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.String]
+        $value
+    )
+}
+function New-IntuneBrandObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $contactITName,
+
+        [Parameter()]
+        [System.String]
+        $contactITPhoneNumber,
+
+        [Parameter()]
+        [System.String]
+        $contactITEmailAddress,
+
+        [Parameter()]
+        [System.String]
+        $contactITNotes,
+
+        [Parameter()]
+        [System.String]
+        $privacyUrl,
+
+        [Parameter()]
+        [System.String]
+        $onlineSupportSiteUrl,
+
+        [Parameter()]
+        [System.String]
+        $onlineSupportSiteName,
+
+        [Parameter()]
+        [System.Object]
+        $themeColor,
+
+        [Parameter()]
+        [System.Boolean]
+        $showLogo,
+
+        [Parameter()]
+        [System.Object]
+        $lightBackgroundLogo,
+
+        [Parameter()]
+        [System.Object]
+        $darkBackgroundLogo,
+
+        [Parameter()]
+        [System.Boolean]
+        $showNameNextToLogo,
+
+        [Parameter()]
+        [System.Boolean]
+        $showDisplayNameNextToLogo
+    )
+}
+function New-InvitationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $invitedUserDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $invitedUserType,
+
+        [Parameter()]
+        [System.String]
+        $invitedUserEmailAddress,
+
+        [Parameter()]
+        [System.Object]
+        $invitedUserMessageInfo,
+
+        [Parameter()]
+        [System.Boolean]
+        $sendInvitationMessage,
+
+        [Parameter()]
+        [System.String]
+        $inviteRedirectUrl,
+
+        [Parameter()]
+        [System.String]
+        $inviteRedeemUrl,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.Object]
+        $invitedUser
+    )
+}
+function New-InvitedUserMessageInfoObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $ccRecipients,
+
+        [Parameter()]
+        [System.String]
+        $messageLanguage,
+
+        [Parameter()]
+        [System.String]
+        $customizedMessageBody
+    )
+}
+function New-IosDeviceTypeObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $iPad,
+
+        [Parameter()]
+        [System.Boolean]
+        $iPhoneAndIPod
+    )
+}
+function New-IosHomeScreenFolderPageObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps
+    )
+}
+function New-IosHomeScreenItemObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosHomeScreenApp,
+
+        [Parameter()]
+        [System.String]
+        $bundleID,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosHomeScreenFolder,
+
+        [Parameter()]
+        [System.Object[]]
+        $pages
+    )
+}
+function New-IosHomeScreenPageObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Object[]]
+        $icons
+    )
+}
+function New-IosMinimumOperatingSystemObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $v8_0,
+
+        [Parameter()]
+        [System.Boolean]
+        $v9_0,
+
+        [Parameter()]
+        [System.Boolean]
+        $v10_0,
+
+        [Parameter()]
+        [System.Boolean]
+        $v11_0,
+
+        [Parameter()]
+        [System.Boolean]
+        $v12_0
+    )
+}
+function New-IosNetworkUsageRuleObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $managedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularDataBlockWhenRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularDataBlocked
+    )
+}
+function New-IosNotificationSettingsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $bundleID,
+
+        [Parameter()]
+        [System.String]
+        $appName,
+
+        [Parameter()]
+        [System.String]
+        $publisher,
+
+        [Parameter()]
+        [System.Boolean]
+        $enabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $showInNotificationCenter,
+
+        [Parameter()]
+        [System.Boolean]
+        $showOnLockScreen,
+
+        [Parameter()]
+        [System.String]
+        $alertType,
+
+        [Parameter()]
+        [System.Boolean]
+        $badgesEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $soundsEnabled
+    )
+}
+function New-IosUpdateDeviceStatusObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $installStatus,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $deviceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName
+    )
+}
+function New-IpRangeObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iPv4Range,
+
+        [Parameter()]
+        [System.String]
+        $lowerAddress,
+
+        [Parameter()]
+        [System.String]
+        $upperAddress,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iPv6Range
+    )
+}
+function New-ItemActionStatObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $actionCount,
+
+        [Parameter()]
+        [System.Int32]
+        $actorCount
+    )
+}
+function New-ItemActivityObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $access,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $activityDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $actor,
+
+        [Parameter()]
+        [System.Object]
+        $driveItem
+    )
+}
+function New-ItemActivityStatObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $startDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $endDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $access,
+
+        [Parameter()]
+        [System.Object]
+        $create,
+
+        [Parameter()]
+        [System.Object]
+        $delete,
+
+        [Parameter()]
+        [System.Object]
+        $edit,
+
+        [Parameter()]
+        [System.Object]
+        $move,
+
+        [Parameter()]
+        [System.Boolean]
+        $isTrending,
+
+        [Parameter()]
+        [System.Object]
+        $incompleteData,
+
+        [Parameter()]
+        [System.Object[]]
+        $activities
+    )
+}
+function New-ItemAnalyticsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $itemActivityStats,
+
+        [Parameter()]
+        [System.Object]
+        $allTime,
+
+        [Parameter()]
+        [System.Object]
+        $lastSevenDays
+    )
+}
+function New-ItemBodyObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $contentType,
+
+        [Parameter()]
+        [System.String]
+        $content
+    )
+}
+function New-ItemPreviewInfoObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $getUrl,
+
+        [Parameter()]
+        [System.String]
+        $postParameters,
+
+        [Parameter()]
+        [System.String]
+        $postUrl
+    )
+}
+function New-ItemReferenceObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $driveId,
+
+        [Parameter()]
+        [System.String]
+        $driveType,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.String]
+        $path,
+
+        [Parameter()]
+        [System.String]
+        $shareId,
+
+        [Parameter()]
+        [System.Object]
+        $sharepointIds,
+
+        [Parameter()]
+        [System.String]
+        $siteId
+    )
+}
+function New-JsonObject
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function New-KeyValueObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $key,
+
+        [Parameter()]
+        [System.String]
+        $value
+    )
+}
+function New-KeyValuePairObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.String]
+        $value
+    )
+}
+function New-LicenseAssignmentStateObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Guid]
+        $skuId,
+
+        [Parameter()]
+        [System.Guid[]]
+        $disabledPlans,
+
+        [Parameter()]
+        [System.String]
+        $assignedByGroup,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.String]
+        $error
+    )
+}
+function New-LicenseDetailsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $servicePlans,
+
+        [Parameter()]
+        [System.Guid]
+        $skuId,
+
+        [Parameter()]
+        [System.String]
+        $skuPartNumber
+    )
+}
+function New-LicenseProcessingStateObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $state
+    )
+}
+function New-LicenseUnitsDetailObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $enabled,
+
+        [Parameter()]
+        [System.Int32]
+        $suspended,
+
+        [Parameter()]
+        [System.Int32]
+        $warning
+    )
+}
+function New-ListInfoObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $contentTypesEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $hidden,
+
+        [Parameter()]
+        [System.String]
+        $template
+    )
+}
+function New-LocaleInfoObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $locale,
+
+        [Parameter()]
+        [System.String]
+        $displayName
+    )
+}
+function New-LocalizedNotificationMessageObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $locale,
+
+        [Parameter()]
+        [System.String]
+        $subject,
+
+        [Parameter()]
+        [System.String]
+        $messageTemplate,
+
+        [Parameter()]
+        [System.Boolean]
+        $isDefault
+    )
+}
+function New-LocationConstraintObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $locations,
+
+        [Parameter()]
+        [System.Boolean]
+        $isRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $suggestLocation
+    )
+}
+function New-LocationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $location,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $locationEmailAddress,
+
+        [Parameter()]
+        [System.Object]
+        $address,
+
+        [Parameter()]
+        [System.Object]
+        $coordinates,
+
+        [Parameter()]
+        [System.String]
+        $locationUri,
+
+        [Parameter()]
+        [System.String]
+        $locationType,
+
+        [Parameter()]
+        [System.String]
+        $uniqueId,
+
+        [Parameter()]
+        [System.String]
+        $uniqueIdType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $locationConstraintItem,
+
+        [Parameter()]
+        [System.Boolean]
+        $resolveAvailability
+    )
+}
+function New-LookupColumnObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $allowMultipleValues,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowUnlimitedLength,
+
+        [Parameter()]
+        [System.String]
+        $columnName,
+
+        [Parameter()]
+        [System.String]
+        $listId,
+
+        [Parameter()]
+        [System.String]
+        $primaryLookupColumnId
+    )
+}
+function New-MailboxSettingsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $automaticRepliesSetting,
+
+        [Parameter()]
+        [System.String]
+        $archiveFolder,
+
+        [Parameter()]
+        [System.String]
+        $timeZone,
+
+        [Parameter()]
+        [System.Object]
+        $language,
+
+        [Parameter()]
+        [System.Object]
+        $workingHours
+    )
+}
+function New-MailFolderObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $mailFolder,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $parentFolderId,
+
+        [Parameter()]
+        [System.Int32]
+        $childFolderCount,
+
+        [Parameter()]
+        [System.Int32]
+        $unreadItemCount,
+
+        [Parameter()]
+        [System.Int32]
+        $totalItemCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $messages,
+
+        [Parameter()]
+        [System.Object[]]
+        $messageRules,
+
+        [Parameter()]
+        [System.Object[]]
+        $childFolders,
+
+        [Parameter()]
+        [System.Object[]]
+        $singleValueExtendedProperties,
+
+        [Parameter()]
+        [System.Object[]]
+        $multiValueExtendedProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $mailSearchFolder,
+
+        [Parameter()]
+        [System.Boolean]
+        $isSupported,
+
+        [Parameter()]
+        [System.Boolean]
+        $includeNestedFolders,
+
+        [Parameter()]
+        [System.String[]]
+        $sourceFolderIds,
+
+        [Parameter()]
+        [System.String]
+        $filterQuery
+    )
+}
+function New-MailTipsErrorObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $message,
+
+        [Parameter()]
+        [System.String]
+        $code
+    )
+}
+function New-MailTipsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $emailAddress,
+
+        [Parameter()]
+        [System.Object]
+        $automaticReplies,
+
+        [Parameter()]
+        [System.Boolean]
+        $mailboxFull,
+
+        [Parameter()]
+        [System.String]
+        $customMailTip,
+
+        [Parameter()]
+        [System.Int32]
+        $externalMemberCount,
+
+        [Parameter()]
+        [System.Int32]
+        $totalMemberCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $deliveryRestricted,
+
+        [Parameter()]
+        [System.Boolean]
+        $isModerated,
+
+        [Parameter()]
+        [System.String]
+        $recipientScope,
+
+        [Parameter()]
+        [System.Object[]]
+        $recipientSuggestions,
+
+        [Parameter()]
+        [System.Int32]
+        $maxMessageSize,
+
+        [Parameter()]
+        [System.Object]
+        $error
+    )
+}
+function New-MalwareStateObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $category,
+
+        [Parameter()]
+        [System.String]
+        $family,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.String]
+        $severity,
+
+        [Parameter()]
+        [System.Boolean]
+        $wasRunning
+    )
+}
+function New-ManagedAppDiagnosticStatusObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $validationName,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.String]
+        $mitigationInstruction
+    )
+}
+function New-ManagedAppOperationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.String]
+        $version
+    )
+}
+function New-ManagedAppPolicyDeploymentSummaryObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version
+    )
+}
+function New-ManagedAppPolicyDeploymentSummaryPerAppObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationAppliedUserCount
+    )
+}
+function New-ManagedAppPolicyObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $enforcementLevel,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseDomain,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProtectedDomainNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $protectionUnderLockConfigRequired,
+
+        [Parameter()]
+        [System.Object]
+        $dataRecoveryCertificate,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnUnenrollDisabled,
+
+        [Parameter()]
+        [System.Guid]
+        $rightsManagementServicesTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureRightsManagementServicesAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $iconsVisible,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxiedDomains,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseIPRanges,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseIPRangesAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxyServers,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseInternalProxyServers,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $neutralDomainResources,
+
+        [Parameter()]
+        [System.Boolean]
+        $indexingEncryptedStoresOrItemsBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $smbAutoEncryptedFileExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsInformationProtectionPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnMdmHandoffDisabled,
+
+        [Parameter()]
+        [System.String]
+        $mdmEnrollmentUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsHelloForBusinessBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMinimumLength,
+
+        [Parameter()]
+        [System.String]
+        $pinUppercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinLowercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinSpecialCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $pinExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $numberOfPastPinsRemembered,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMaximumAttemptCount,
+
+        [Parameter()]
+        [System.Int32]
+        $minutesOfInactivityBeforeDeviceLock,
+
+        [Parameter()]
+        [System.Int32]
+        $daysWithoutContactBeforeUnenroll,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $mdmWindowsInformationProtectionPolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $customSettings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $targetedManagedAppConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $allowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Boolean]
+        $organizationalCredentialsRequired,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $dataBackupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceComplianceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $saveAsBlocked,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [System.Boolean]
+        $pinRequired,
+
+        [Parameter()]
+        [System.Int32]
+        $maximumPinRetries,
+
+        [Parameter()]
+        [System.Boolean]
+        $simplePinBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $minimumPinLength,
+
+        [Parameter()]
+        [System.String]
+        $pinCharacterSet,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodBeforePinReset,
+
+        [Parameter()]
+        [System.String[]]
+        $allowedDataStorageLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $contactSyncBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $printBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $fingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningAppVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $defaultManagedAppProtection,
+
+        [Parameter()]
+        [System.String]
+        $appDataEncryptionType,
+
+        [Parameter()]
+        [System.Boolean]
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $encryptAppData,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredSdkVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $faceIdBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidManagedAppProtection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosManagedAppProtection
+    )
+}
+function New-ManagedAppRegistrationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $applicationVersion,
+
+        [Parameter()]
+        [System.String]
+        $managementSdkVersion,
+
+        [Parameter()]
+        [System.String]
+        $platformVersion,
+
+        [Parameter()]
+        [System.String]
+        $deviceType,
+
+        [Parameter()]
+        [System.String]
+        $deviceTag,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String[]]
+        $flaggedReasons,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.Object]
+        $appIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $appliedPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $intendedPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $operations,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidManagedAppRegistration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosManagedAppRegistration
+    )
+}
+function New-ManagedAppStatusObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedAppStatusRaw,
+
+        [Parameter()]
+        [System.Object]
+        $content
+    )
+}
+function New-ManagedDeviceMobileAppConfigurationAssignmentObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $target
+    )
+}
+function New-ManagedDeviceMobileAppConfigurationDeviceStatusObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName
+    )
+}
+function New-ManagedDeviceMobileAppConfigurationDeviceSummaryObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion
+    )
+}
+function New-ManagedDeviceMobileAppConfigurationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $targetedMobileApps,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStatuses,
+
+        [Parameter()]
+        [System.Object]
+        $deviceStatusSummary,
+
+        [Parameter()]
+        [System.Object]
+        $userStatusSummary,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosMobileAppConfiguration,
+
+        [Parameter()]
+        [System.Byte[]]
+        $encodedSettingXml,
+
+        [Parameter()]
+        [System.Object[]]
+        $settings
+    )
+}
+function New-ManagedDeviceMobileAppConfigurationUserStatusObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $devicesCount,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName
+    )
+}
+function New-ManagedDeviceMobileAppConfigurationUserSummaryObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion
+    )
+}
+function New-ManagedDeviceObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceOwnerType,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceActionResults,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $enrolledDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $operatingSystem,
+
+        [Parameter()]
+        [System.String]
+        $complianceState,
+
+        [Parameter()]
+        [System.String]
+        $jailBroken,
+
+        [Parameter()]
+        [System.String]
+        $managementAgent,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $easActivated,
+
+        [Parameter()]
+        [System.String]
+        $easDeviceId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $easActivationDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureADRegistered,
+
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentType,
+
+        [Parameter()]
+        [System.String]
+        $activationLockBypassCode,
+
+        [Parameter()]
+        [System.String]
+        $emailAddress,
+
+        [Parameter()]
+        [System.String]
+        $azureADDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $deviceRegistrationState,
+
+        [Parameter()]
+        [System.String]
+        $deviceCategoryDisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $isSupervised,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $exchangeLastSuccessfulSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $exchangeAccessState,
+
+        [Parameter()]
+        [System.String]
+        $exchangeAccessStateReason,
+
+        [Parameter()]
+        [System.String]
+        $remoteAssistanceSessionUrl,
+
+        [Parameter()]
+        [System.String]
+        $remoteAssistanceSessionErrorDetails,
+
+        [Parameter()]
+        [System.Boolean]
+        $isEncrypted,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $model,
+
+        [Parameter()]
+        [System.String]
+        $manufacturer,
+
+        [Parameter()]
+        [System.String]
+        $imei,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $serialNumber,
+
+        [Parameter()]
+        [System.String]
+        $phoneNumber,
+
+        [Parameter()]
+        [System.String]
+        $androidSecurityPatchLevel,
+
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Object]
+        $configurationManagerClientEnabledFeatures,
+
+        [Parameter()]
+        [System.String]
+        $wiFiMacAddress,
+
+        [Parameter()]
+        [System.Object]
+        $deviceHealthAttestationState,
+
+        [Parameter()]
+        [System.String]
+        $subscriberCarrier,
+
+        [Parameter()]
+        [System.String]
+        $meid,
+
+        [Parameter()]
+        [System.Int64]
+        $totalStorageSpaceInBytes,
+
+        [Parameter()]
+        [System.Int64]
+        $freeStorageSpaceInBytes,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceName,
+
+        [Parameter()]
+        [System.String]
+        $partnerReportedThreatState,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceConfigurationStates,
+
+        [Parameter()]
+        [System.Object]
+        $deviceCategory,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceCompliancePolicyStates
+    )
+}
+function New-ManagedDeviceOverviewObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $enrolledDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $mdmEnrolledCount,
+
+        [Parameter()]
+        [System.Int32]
+        $dualEnrolledDeviceCount,
+
+        [Parameter()]
+        [System.Object]
+        $deviceOperatingSystemSummary,
+
+        [Parameter()]
+        [System.Object]
+        $deviceExchangeAccessStateSummary
+    )
+}
+function New-ManagedEBookAssignmentObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedEBookAssignment,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $installIntent,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosVppEBookAssignment
+    )
+}
+function New-ManagedEBookObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $publisher,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $publishedDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $largeCover,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $informationUrl,
+
+        [Parameter()]
+        [System.String]
+        $privacyInformationUrl,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object]
+        $installSummary,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStates,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStateSummary,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosVppEBook,
+
+        [Parameter()]
+        [System.Guid]
+        $vppTokenId,
+
+        [Parameter()]
+        [System.String]
+        $appleId,
+
+        [Parameter()]
+        [System.String]
+        $vppOrganizationName,
+
+        [Parameter()]
+        [System.String[]]
+        $genres,
+
+        [Parameter()]
+        [System.String]
+        $language,
+
+        [Parameter()]
+        [System.String]
+        $seller,
+
+        [Parameter()]
+        [System.Int32]
+        $totalLicenseCount,
+
+        [Parameter()]
+        [System.Int32]
+        $usedLicenseCount
+    )
+}
+function New-ManagedMobileAppObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version
+    )
+}
+function New-MediaContentRatingAustraliaObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $movieRating,
+
+        [Parameter()]
+        [System.String]
+        $tvRating
+    )
+}
+function New-MediaContentRatingCanadaObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $movieRating,
+
+        [Parameter()]
+        [System.String]
+        $tvRating
+    )
+}
+function New-MediaContentRatingFranceObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $movieRating,
+
+        [Parameter()]
+        [System.String]
+        $tvRating
+    )
+}
+function New-MediaContentRatingGermanyObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $movieRating,
+
+        [Parameter()]
+        [System.String]
+        $tvRating
+    )
+}
+function New-MediaContentRatingIrelandObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $movieRating,
+
+        [Parameter()]
+        [System.String]
+        $tvRating
+    )
+}
+function New-MediaContentRatingJapanObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $movieRating,
+
+        [Parameter()]
+        [System.String]
+        $tvRating
+    )
+}
+function New-MediaContentRatingNewZealandObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $movieRating,
+
+        [Parameter()]
+        [System.String]
+        $tvRating
+    )
+}
+function New-MediaContentRatingUnitedKingdomObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $movieRating,
+
+        [Parameter()]
+        [System.String]
+        $tvRating
+    )
+}
+function New-MediaContentRatingUnitedStatesObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $movieRating,
+
+        [Parameter()]
+        [System.String]
+        $tvRating
+    )
+}
+function New-MeetingTimeSuggestionObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Double]
+        $confidence,
+
+        [Parameter()]
+        [System.Int32]
+        $order,
+
+        [Parameter()]
+        [System.String]
+        $organizerAvailability,
+
+        [Parameter()]
+        [System.Object[]]
+        $attendeeAvailability,
+
+        [Parameter()]
+        [System.Object[]]
+        $locations,
+
+        [Parameter()]
+        [System.String]
+        $suggestionReason,
+
+        [Parameter()]
+        [System.Object]
+        $meetingTimeSlot
+    )
+}
+function New-MeetingTimeSuggestionsResultObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $meetingTimeSuggestions,
+
+        [Parameter()]
+        [System.String]
+        $emptySuggestionsReason
+    )
+}
+function New-MessageRuleActionsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $moveToFolder,
+
+        [Parameter()]
+        [System.String]
+        $copyToFolder,
+
+        [Parameter()]
+        [System.Boolean]
+        $delete,
+
+        [Parameter()]
+        [System.Boolean]
+        $permanentDelete,
+
+        [Parameter()]
+        [System.Boolean]
+        $markAsRead,
+
+        [Parameter()]
+        [System.String]
+        $markImportance,
+
+        [Parameter()]
+        [System.Object[]]
+        $forwardTo,
+
+        [Parameter()]
+        [System.Object[]]
+        $forwardAsAttachmentTo,
+
+        [Parameter()]
+        [System.Object[]]
+        $redirectTo,
+
+        [Parameter()]
+        [System.String[]]
+        $assignCategories,
+
+        [Parameter()]
+        [System.Boolean]
+        $stopProcessingRules
+    )
+}
+function New-MessageRuleObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $sequence,
+
+        [Parameter()]
+        [System.Object]
+        $conditions,
+
+        [Parameter()]
+        [System.Object]
+        $actions,
+
+        [Parameter()]
+        [System.Object]
+        $exceptions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $hasError,
+
+        [Parameter()]
+        [System.Boolean]
+        $isReadOnly
+    )
+}
+function New-MessageRulePredicatesObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $categories,
+
+        [Parameter()]
+        [System.String[]]
+        $subjectContains,
+
+        [Parameter()]
+        [System.String[]]
+        $bodyContains,
+
+        [Parameter()]
+        [System.String[]]
+        $bodyOrSubjectContains,
+
+        [Parameter()]
+        [System.String[]]
+        $senderContains,
+
+        [Parameter()]
+        [System.String[]]
+        $recipientContains,
+
+        [Parameter()]
+        [System.String[]]
+        $headerContains,
+
+        [Parameter()]
+        [System.String]
+        $messageActionFlag,
+
+        [Parameter()]
+        [System.String]
+        $importance,
+
+        [Parameter()]
+        [System.String]
+        $sensitivity,
+
+        [Parameter()]
+        [System.Object[]]
+        $fromAddresses,
+
+        [Parameter()]
+        [System.Object[]]
+        $sentToAddresses,
+
+        [Parameter()]
+        [System.Boolean]
+        $sentToMe,
+
+        [Parameter()]
+        [System.Boolean]
+        $sentOnlyToMe,
+
+        [Parameter()]
+        [System.Boolean]
+        $sentCcMe,
+
+        [Parameter()]
+        [System.Boolean]
+        $sentToOrCcMe,
+
+        [Parameter()]
+        [System.Boolean]
+        $notSentToMe,
+
+        [Parameter()]
+        [System.Boolean]
+        $hasAttachments,
+
+        [Parameter()]
+        [System.Boolean]
+        $isApprovalRequest,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAutomaticForward,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAutomaticReply,
+
+        [Parameter()]
+        [System.Boolean]
+        $isEncrypted,
+
+        [Parameter()]
+        [System.Boolean]
+        $isMeetingRequest,
+
+        [Parameter()]
+        [System.Boolean]
+        $isMeetingResponse,
+
+        [Parameter()]
+        [System.Boolean]
+        $isNonDeliveryReport,
+
+        [Parameter()]
+        [System.Boolean]
+        $isPermissionControlled,
+
+        [Parameter()]
+        [System.Boolean]
+        $isReadReceipt,
+
+        [Parameter()]
+        [System.Boolean]
+        $isSigned,
+
+        [Parameter()]
+        [System.Boolean]
+        $isVoicemail,
+
+        [Parameter()]
+        [System.Object]
+        $withinSizeRange
+    )
+}
+function New-MimeContentObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $type,
+
+        [Parameter()]
+        [System.Byte[]]
+        $value
+    )
+}
+function New-MobileAppAssignmentObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $intent,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.Object]
+        $settings
+    )
+}
+function New-MobileAppAssignmentSettingsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $microsoftStoreForBusinessAppAssignmentSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $useDeviceContext,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosVppAppAssignmentSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $useDeviceLicensing,
+
+        [Parameter()]
+        [System.String]
+        $vpnConfigurationId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosStoreAppAssignmentSettings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosLobAppAssignmentSettings
+    )
+}
+function New-MobileAppCategoryObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime
+    )
+}
+function New-MobileAppContentFileObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $azureStorageUri,
+
+        [Parameter()]
+        [System.Boolean]
+        $isCommitted,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.Int64]
+        $size,
+
+        [Parameter()]
+        [System.Int64]
+        $sizeEncrypted,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $azureStorageUriExpirationDateTime,
+
+        [Parameter()]
+        [System.Byte[]]
+        $manifest,
+
+        [Parameter()]
+        [System.String]
+        $uploadState
+    )
+}
+function New-MobileAppContentObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $files
+    )
+}
+function New-MobileAppIdentifierObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosMobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $bundleId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidMobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $packageId
+    )
+}
+function New-MobileAppObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $publisher,
+
+        [Parameter()]
+        [System.Object]
+        $largeIcon,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $isFeatured,
+
+        [Parameter()]
+        [System.String]
+        $privacyInformationUrl,
+
+        [Parameter()]
+        [System.String]
+        $informationUrl,
+
+        [Parameter()]
+        [System.String]
+        $owner,
+
+        [Parameter()]
+        [System.String]
+        $developer,
+
+        [Parameter()]
+        [System.String]
+        $notes,
+
+        [Parameter()]
+        [System.String]
+        $publishingState,
+
+        [Parameter()]
+        [System.Object[]]
+        $categories,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosStoreApp,
+
+        [Parameter()]
+        [System.String]
+        $bundleId,
+
+        [Parameter()]
+        [System.String]
+        $appStoreUrl,
+
+        [Parameter()]
+        [System.Object]
+        $applicableDeviceType,
+
+        [Parameter()]
+        [System.Object]
+        $minimumSupportedOperatingSystem,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosVppApp,
+
+        [Parameter()]
+        [System.Int32]
+        $usedLicenseCount,
+
+        [Parameter()]
+        [System.Int32]
+        $totalLicenseCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $releaseDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $licensingType,
+
+        [Parameter()]
+        [System.String]
+        $vppTokenOrganizationName,
+
+        [Parameter()]
+        [System.String]
+        $vppTokenAccountType,
+
+        [Parameter()]
+        [System.String]
+        $vppTokenAppleId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidStoreApp,
+
+        [Parameter()]
+        [System.String]
+        $packageId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $webApp,
+
+        [Parameter()]
+        [System.String]
+        $appUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $useManagedBrowser,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $microsoftStoreForBusinessApp,
+
+        [Parameter()]
+        [System.String]
+        $productKey,
+
+        [Parameter()]
+        [System.String]
+        $licenseType,
+
+        [Parameter()]
+        [System.String]
+        $packageIdentityName,
+
+        [Parameter()]
+        [System.String]
+        $committedContentVersion,
+
+        [Parameter()]
+        [System.String]
+        $fileName,
+
+        [Parameter()]
+        [System.Int64]
+        $size,
+
+        [Parameter()]
+        [System.Object[]]
+        $contentVersions,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosLobApp,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $expirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $versionNumber,
+
+        [Parameter()]
+        [System.String]
+        $buildNumber,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidLobApp,
+
+        [Parameter()]
+        [System.String]
+        $versionName,
+
+        [Parameter()]
+        [System.String]
+        $versionCode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsUniversalAppX,
+
+        [Parameter()]
+        [System.String]
+        $applicableArchitectures,
+
+        [Parameter()]
+        [System.String]
+        $applicableDeviceTypes,
+
+        [Parameter()]
+        [System.String]
+        $identityName,
+
+        [Parameter()]
+        [System.String]
+        $identityPublisherHash,
+
+        [Parameter()]
+        [System.String]
+        $identityResourceIdentifier,
+
+        [Parameter()]
+        [System.Boolean]
+        $isBundle,
+
+        [Parameter()]
+        [System.String]
+        $identityVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsMobileMSI,
+
+        [Parameter()]
+        [System.String]
+        $commandLine,
+
+        [Parameter()]
+        [System.String]
+        $productCode,
+
+        [Parameter()]
+        [System.String]
+        $productVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $ignoreVersionDetection,
+
+        [Parameter()]
+        [System.String]
+        $appAvailability,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedIOSLobApp,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedAndroidLobApp,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedIOSStoreApp,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedAndroidStoreApp,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSOfficeSuiteApp
+    )
+}
+function New-MobileThreatDefenseConnectorObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastHeartbeatDateTime,
+
+        [Parameter()]
+        [System.String]
+        $partnerState,
+
+        [Parameter()]
+        [System.Boolean]
+        $androidEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $iosEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $androidDeviceBlockedOnMissingPartnerData,
+
+        [Parameter()]
+        [System.Boolean]
+        $iosDeviceBlockedOnMissingPartnerData,
+
+        [Parameter()]
+        [System.Boolean]
+        $partnerUnsupportedOsVersionBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $partnerUnresponsivenessThresholdInDays
+    )
+}
+function New-ModifiedPropertyObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $oldValue,
+
+        [Parameter()]
+        [System.String]
+        $newValue
+    )
+}
+function New-MultiValueLegacyExtendedPropertyObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $value
+    )
+}
+function New-NetworkConnectionObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $applicationName,
+
+        [Parameter()]
+        [System.String]
+        $destinationAddress,
+
+        [Parameter()]
+        [System.String]
+        $destinationDomain,
+
+        [Parameter()]
+        [System.String]
+        $destinationPort,
+
+        [Parameter()]
+        [System.String]
+        $destinationUrl,
+
+        [Parameter()]
+        [System.String]
+        $direction,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $domainRegisteredDateTime,
+
+        [Parameter()]
+        [System.String]
+        $localDnsName,
+
+        [Parameter()]
+        [System.String]
+        $natDestinationAddress,
+
+        [Parameter()]
+        [System.String]
+        $natDestinationPort,
+
+        [Parameter()]
+        [System.String]
+        $natSourceAddress,
+
+        [Parameter()]
+        [System.String]
+        $natSourcePort,
+
+        [Parameter()]
+        [System.String]
+        $protocol,
+
+        [Parameter()]
+        [System.String]
+        $riskScore,
+
+        [Parameter()]
+        [System.String]
+        $sourceAddress,
+
+        [Parameter()]
+        [System.String]
+        $sourcePort,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.String]
+        $urlParameters
+    )
+}
+function New-NotebookLinksObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $oneNoteClientUrl,
+
+        [Parameter()]
+        [System.Object]
+        $oneNoteWebUrl
+    )
+}
+function New-NotificationMessageTemplateObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $defaultLocale,
+
+        [Parameter()]
+        [System.String]
+        $brandingOptions,
+
+        [Parameter()]
+        [System.Object[]]
+        $localizedNotificationMessages
+    )
+}
+function New-NumberColumnObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $decimalPlaces,
+
+        [Parameter()]
+        [System.String]
+        $displayAs,
+
+        [Parameter()]
+        [System.Double]
+        $maximum,
+
+        [Parameter()]
+        [System.Double]
+        $minimum
+    )
+}
+function New-OfficeGraphInsightsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $trending,
+
+        [Parameter()]
+        [System.Object[]]
+        $shared,
+
+        [Parameter()]
+        [System.Object[]]
+        $used
+    )
+}
+function New-OmaSettingObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $omaUri,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $omaSettingBase64,
+
+        [Parameter()]
+        [System.String]
+        $fileName,
+
+        [Parameter()]
+        [System.Object]
+        $value,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $omaSettingBoolean,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $omaSettingStringXml,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $omaSettingDateTime,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $omaSettingString,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $omaSettingFloatingPoint,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $omaSettingInteger
+    )
+}
+function New-OnenoteEntityBaseModelObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $self,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $onenoteResource,
+
+        [Parameter()]
+        [System.IO.Stream]
+        $content,
+
+        [Parameter()]
+        [System.String]
+        $contentUrl,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $onenotePage,
+
+        [Parameter()]
+        [System.String]
+        $title,
+
+        [Parameter()]
+        [System.String]
+        $createdByAppId,
+
+        [Parameter()]
+        [System.Object]
+        $links,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $level,
+
+        [Parameter()]
+        [System.Int32]
+        $order,
+
+        [Parameter()]
+        [System.String[]]
+        $userTags,
+
+        [Parameter()]
+        [System.Object]
+        $parentSection,
+
+        [Parameter()]
+        [System.Object]
+        $parentNotebook,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Object]
+        $createdBy,
+
+        [Parameter()]
+        [System.Object]
+        $lastModifiedBy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $sectionGroup,
+
+        [Parameter()]
+        [System.String]
+        $sectionsUrl,
+
+        [Parameter()]
+        [System.String]
+        $sectionGroupsUrl,
+
+        [Parameter()]
+        [System.Object]
+        $parentSectionGroup,
+
+        [Parameter()]
+        [System.Object[]]
+        $sections,
+
+        [Parameter()]
+        [System.Object[]]
+        $sectionGroups,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $onenoteSection,
+
+        [Parameter()]
+        [System.Boolean]
+        $isDefault,
+
+        [Parameter()]
+        [System.String]
+        $pagesUrl,
+
+        [Parameter()]
+        [System.Object[]]
+        $pages,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $notebook,
+
+        [Parameter()]
+        [System.String]
+        $userRole,
+
+        [Parameter()]
+        [System.Boolean]
+        $isShared
+    )
+}
+function New-OnenoteObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $notebooks,
+
+        [Parameter()]
+        [System.Object[]]
+        $sections,
+
+        [Parameter()]
+        [System.Object[]]
+        $sectionGroups,
+
+        [Parameter()]
+        [System.Object[]]
+        $pages,
+
+        [Parameter()]
+        [System.Object[]]
+        $resources,
+
+        [Parameter()]
+        [System.Object[]]
+        $operations
+    )
+}
+function New-OnenoteOperationErrorObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $code,
+
+        [Parameter()]
+        [System.String]
+        $message
+    )
+}
+function New-OnenotePagePreviewLinksObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $previewImageUrl
+    )
+}
+function New-OnenotePagePreviewObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $previewText,
+
+        [Parameter()]
+        [System.Object]
+        $links
+    )
+}
+function New-OnenotePatchContentCommandObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $action,
+
+        [Parameter()]
+        [System.String]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $content,
+
+        [Parameter()]
+        [System.String]
+        $position
+    )
+}
+function New-OnPremisesConditionalAccessSettingsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $enabled,
+
+        [Parameter()]
+        [System.Guid[]]
+        $includedGroups,
+
+        [Parameter()]
+        [System.Guid[]]
+        $excludedGroups,
+
+        [Parameter()]
+        [System.Boolean]
+        $overrideDefaultRule
+    )
+}
+function New-OnPremisesExtensionAttributesObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $extensionAttribute1,
+
+        [Parameter()]
+        [System.String]
+        $extensionAttribute2,
+
+        [Parameter()]
+        [System.String]
+        $extensionAttribute3,
+
+        [Parameter()]
+        [System.String]
+        $extensionAttribute4,
+
+        [Parameter()]
+        [System.String]
+        $extensionAttribute5,
+
+        [Parameter()]
+        [System.String]
+        $extensionAttribute6,
+
+        [Parameter()]
+        [System.String]
+        $extensionAttribute7,
+
+        [Parameter()]
+        [System.String]
+        $extensionAttribute8,
+
+        [Parameter()]
+        [System.String]
+        $extensionAttribute9,
+
+        [Parameter()]
+        [System.String]
+        $extensionAttribute10,
+
+        [Parameter()]
+        [System.String]
+        $extensionAttribute11,
+
+        [Parameter()]
+        [System.String]
+        $extensionAttribute12,
+
+        [Parameter()]
+        [System.String]
+        $extensionAttribute13,
+
+        [Parameter()]
+        [System.String]
+        $extensionAttribute14,
+
+        [Parameter()]
+        [System.String]
+        $extensionAttribute15
+    )
+}
+function New-OnPremisesProvisioningErrorObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $value,
+
+        [Parameter()]
+        [System.String]
+        $category,
+
+        [Parameter()]
+        [System.String]
+        $propertyCausingError,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $occurredDateTime
+    )
+}
+function New-OperationErrorObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $code,
+
+        [Parameter()]
+        [System.String]
+        $message
+    )
+}
+function New-OperationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $operation,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastActionDateTime,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $onenoteOperation,
+
+        [Parameter()]
+        [System.String]
+        $resourceLocation,
+
+        [Parameter()]
+        [System.String]
+        $resourceId,
+
+        [Parameter()]
+        [System.Object]
+        $error,
+
+        [Parameter()]
+        [System.String]
+        $percentComplete
+    )
+}
+function New-Organization
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $assignedPlans,
+
+        [Parameter()]
+        [System.String[]]
+        $businessPhones,
+
+        [Parameter()]
+        [System.String]
+        $city,
+
+        [Parameter()]
+        [System.String]
+        $country,
+
+        [Parameter()]
+        [System.String]
+        $countryLetterCode,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String[]]
+        $marketingNotificationEmails,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $onPremisesLastSyncDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $onPremisesSyncEnabled,
+
+        [Parameter()]
+        [System.String]
+        $postalCode,
+
+        [Parameter()]
+        [System.String]
+        $preferredLanguage,
+
+        [Parameter()]
+        [System.Object]
+        $privacyProfile,
+
+        [Parameter()]
+        [System.Object[]]
+        $provisionedPlans,
+
+        [Parameter()]
+        [System.String[]]
+        $securityComplianceNotificationMails,
+
+        [Parameter()]
+        [System.String[]]
+        $securityComplianceNotificationPhones,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.String]
+        $street,
+
+        [Parameter()]
+        [System.String[]]
+        $technicalNotificationMails,
+
+        [Parameter()]
+        [System.Object[]]
+        $verifiedDomains,
+
+        [Parameter()]
+        [System.String]
+        $mobileDeviceManagementAuthority,
+
+        [Parameter()]
+        [System.Object[]]
+        $extensions,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $deletedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-Organization_Extensions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $organizationId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $openTypeExtension,
+
+        [Parameter()]
+        [System.String]
+        $extensionName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-OutlookCategoryObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $color
+    )
+}
+function New-OutlookGeoCoordinatesObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Double]
+        $altitude,
+
+        [Parameter()]
+        [System.Double]
+        $latitude,
+
+        [Parameter()]
+        [System.Double]
+        $longitude,
+
+        [Parameter()]
+        [System.Double]
+        $accuracy,
+
+        [Parameter()]
+        [System.Double]
+        $altitudeAccuracy
+    )
+}
+function New-OutlookItemObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $changeKey,
+
+        [Parameter()]
+        [System.String[]]
+        $categories,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $post,
+
+        [Parameter()]
+        [System.Object]
+        $body,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $receivedDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $hasAttachments,
+
+        [Parameter()]
+        [System.Object]
+        $from,
+
+        [Parameter()]
+        [System.Object]
+        $sender,
+
+        [Parameter()]
+        [System.String]
+        $conversationThreadId,
+
+        [Parameter()]
+        [System.Object[]]
+        $newParticipants,
+
+        [Parameter()]
+        [System.String]
+        $conversationId,
+
+        [Parameter()]
+        [System.Object[]]
+        $extensions,
+
+        [Parameter()]
+        [System.Object]
+        $inReplyTo,
+
+        [Parameter()]
+        [System.Object[]]
+        $attachments,
+
+        [Parameter()]
+        [System.Object[]]
+        $singleValueExtendedProperties,
+
+        [Parameter()]
+        [System.Object[]]
+        $multiValueExtendedProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $contact,
+
+        [Parameter()]
+        [System.String]
+        $parentFolderId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $birthday,
+
+        [Parameter()]
+        [System.String]
+        $fileAs,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $givenName,
+
+        [Parameter()]
+        [System.String]
+        $initials,
+
+        [Parameter()]
+        [System.String]
+        $middleName,
+
+        [Parameter()]
+        [System.String]
+        $nickName,
+
+        [Parameter()]
+        [System.String]
+        $surname,
+
+        [Parameter()]
+        [System.String]
+        $title,
+
+        [Parameter()]
+        [System.String]
+        $yomiGivenName,
+
+        [Parameter()]
+        [System.String]
+        $yomiSurname,
+
+        [Parameter()]
+        [System.String]
+        $yomiCompanyName,
+
+        [Parameter()]
+        [System.String]
+        $generation,
+
+        [Parameter()]
+        [System.Object[]]
+        $emailAddresses,
+
+        [Parameter()]
+        [System.String[]]
+        $imAddresses,
+
+        [Parameter()]
+        [System.String]
+        $jobTitle,
+
+        [Parameter()]
+        [System.String]
+        $companyName,
+
+        [Parameter()]
+        [System.String]
+        $department,
+
+        [Parameter()]
+        [System.String]
+        $officeLocation,
+
+        [Parameter()]
+        [System.String]
+        $profession,
+
+        [Parameter()]
+        [System.String]
+        $businessHomePage,
+
+        [Parameter()]
+        [System.String]
+        $assistantName,
+
+        [Parameter()]
+        [System.String]
+        $manager,
+
+        [Parameter()]
+        [System.String[]]
+        $homePhones,
+
+        [Parameter()]
+        [System.String]
+        $mobilePhone,
+
+        [Parameter()]
+        [System.String[]]
+        $businessPhones,
+
+        [Parameter()]
+        [System.Object]
+        $homeAddress,
+
+        [Parameter()]
+        [System.Object]
+        $businessAddress,
+
+        [Parameter()]
+        [System.Object]
+        $otherAddress,
+
+        [Parameter()]
+        [System.String]
+        $spouseName,
+
+        [Parameter()]
+        [System.String]
+        $personalNotes,
+
+        [Parameter()]
+        [System.String[]]
+        $children,
+
+        [Parameter()]
+        [System.Object]
+        $photo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $message,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $sentDateTime,
+
+        [Parameter()]
+        [System.String]
+        $internetMessageId,
+
+        [Parameter()]
+        [System.Object[]]
+        $internetMessageHeaders,
+
+        [Parameter()]
+        [System.String]
+        $subject,
+
+        [Parameter()]
+        [System.String]
+        $bodyPreview,
+
+        [Parameter()]
+        [System.String]
+        $importance,
+
+        [Parameter()]
+        [System.Object[]]
+        $toRecipients,
+
+        [Parameter()]
+        [System.Object[]]
+        $ccRecipients,
+
+        [Parameter()]
+        [System.Object[]]
+        $bccRecipients,
+
+        [Parameter()]
+        [System.Object[]]
+        $replyTo,
+
+        [Parameter()]
+        [System.Object]
+        $uniqueBody,
+
+        [Parameter()]
+        [System.Boolean]
+        $isDeliveryReceiptRequested,
+
+        [Parameter()]
+        [System.Boolean]
+        $isReadReceiptRequested,
+
+        [Parameter()]
+        [System.Boolean]
+        $isRead,
+
+        [Parameter()]
+        [System.Boolean]
+        $isDraft,
+
+        [Parameter()]
+        [System.String]
+        $webLink,
+
+        [Parameter()]
+        [System.String]
+        $inferenceClassification,
+
+        [Parameter()]
+        [System.Object]
+        $flag,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $eventMessage,
+
+        [Parameter()]
+        [System.String]
+        $meetingMessageType,
+
+        [Parameter()]
+        [System.Object]
+        $event,
+
+        [Parameter()]
+        [System.String]
+        $originalStartTimeZone,
+
+        [Parameter()]
+        [System.String]
+        $originalEndTimeZone,
+
+        [Parameter()]
+        [System.Object]
+        $responseStatus,
+
+        [Parameter()]
+        [System.String]
+        $iCalUId,
+
+        [Parameter()]
+        [System.Int32]
+        $reminderMinutesBeforeStart,
+
+        [Parameter()]
+        [System.Boolean]
+        $isReminderOn,
+
+        [Parameter()]
+        [System.String]
+        $sensitivity,
+
+        [Parameter()]
+        [System.Object]
+        $start,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $originalStart,
+
+        [Parameter()]
+        [System.Object]
+        $end,
+
+        [Parameter()]
+        [System.Object]
+        $location,
+
+        [Parameter()]
+        [System.Object[]]
+        $locations,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAllDay,
+
+        [Parameter()]
+        [System.Boolean]
+        $isCancelled,
+
+        [Parameter()]
+        [System.Boolean]
+        $isOrganizer,
+
+        [Parameter()]
+        [System.Object]
+        $recurrence,
+
+        [Parameter()]
+        [System.Boolean]
+        $responseRequested,
+
+        [Parameter()]
+        [System.String]
+        $seriesMasterId,
+
+        [Parameter()]
+        [System.String]
+        $showAs,
+
+        [Parameter()]
+        [System.String]
+        $type,
+
+        [Parameter()]
+        [System.Object[]]
+        $attendees,
+
+        [Parameter()]
+        [System.Object]
+        $organizer,
+
+        [Parameter()]
+        [System.String]
+        $onlineMeetingUrl,
+
+        [Parameter()]
+        [System.Object]
+        $calendar,
+
+        [Parameter()]
+        [System.Object[]]
+        $instances
+    )
+}
+function New-OutlookUserObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $masterCategories
+    )
+}
+function New-PackageObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $type
+    )
+}
+function New-PageLinksObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $oneNoteClientUrl,
+
+        [Parameter()]
+        [System.Object]
+        $oneNoteWebUrl
+    )
+}
+function New-PasswordProfileObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $password,
+
+        [Parameter()]
+        [System.Boolean]
+        $forceChangePasswordNextSignIn,
+
+        [Parameter()]
+        [System.Boolean]
+        $forceChangePasswordNextSignInWithMfa
+    )
+}
+function New-PatternedRecurrenceObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $pattern,
+
+        [Parameter()]
+        [System.Object]
+        $range
+    )
+}
+function New-PermissionObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $grantedTo,
+
+        [Parameter()]
+        [System.Object]
+        $inheritedFrom,
+
+        [Parameter()]
+        [System.Object]
+        $invitation,
+
+        [Parameter()]
+        [System.Object]
+        $link,
+
+        [Parameter()]
+        [System.String[]]
+        $roles,
+
+        [Parameter()]
+        [System.String]
+        $shareId
+    )
+}
+function New-PersonObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $givenName,
+
+        [Parameter()]
+        [System.String]
+        $surname,
+
+        [Parameter()]
+        [System.String]
+        $birthday,
+
+        [Parameter()]
+        [System.String]
+        $personNotes,
+
+        [Parameter()]
+        [System.Boolean]
+        $isFavorite,
+
+        [Parameter()]
+        [System.Object[]]
+        $scoredEmailAddresses,
+
+        [Parameter()]
+        [System.Object[]]
+        $phones,
+
+        [Parameter()]
+        [System.Object[]]
+        $postalAddresses,
+
+        [Parameter()]
+        [System.Object[]]
+        $websites,
+
+        [Parameter()]
+        [System.String]
+        $jobTitle,
+
+        [Parameter()]
+        [System.String]
+        $companyName,
+
+        [Parameter()]
+        [System.String]
+        $yomiCompany,
+
+        [Parameter()]
+        [System.String]
+        $department,
+
+        [Parameter()]
+        [System.String]
+        $officeLocation,
+
+        [Parameter()]
+        [System.String]
+        $profession,
+
+        [Parameter()]
+        [System.Object]
+        $personType,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $imAddress
+    )
+}
+function New-PersonOrGroupColumnObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $allowMultipleSelection,
+
+        [Parameter()]
+        [System.String]
+        $chooseFromType,
+
+        [Parameter()]
+        [System.String]
+        $displayAs
+    )
+}
+function New-PersonTypeObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $class,
+
+        [Parameter()]
+        [System.String]
+        $subclass
+    )
+}
+function New-PhoneObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $type,
+
+        [Parameter()]
+        [System.String]
+        $number,
+
+        [Parameter()]
+        [System.String]
+        $region,
+
+        [Parameter()]
+        [System.String]
+        $language
+    )
+}
+function New-PhotoObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $cameraMake,
+
+        [Parameter()]
+        [System.String]
+        $cameraModel,
+
+        [Parameter()]
+        [System.Double]
+        $exposureDenominator,
+
+        [Parameter()]
+        [System.Double]
+        $exposureNumerator,
+
+        [Parameter()]
+        [System.Double]
+        $fNumber,
+
+        [Parameter()]
+        [System.Double]
+        $focalLength,
+
+        [Parameter()]
+        [System.Int32]
+        $iso,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $takenDateTime
+    )
+}
+function New-PhysicalAddressObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $street,
+
+        [Parameter()]
+        [System.String]
+        $city,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.String]
+        $countryOrRegion,
+
+        [Parameter()]
+        [System.String]
+        $postalCode
+    )
+}
+function New-PlannerAppliedCategoriesObject
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function New-PlannerAssignedToTaskBoardTaskFormatObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $unassignedOrderHint,
+
+        [Parameter()]
+        [System.Object]
+        $orderHintsByAssignee
+    )
+}
+function New-PlannerAssignmentObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $assignedBy,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $assignedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $orderHint
+    )
+}
+function New-PlannerAssignmentsObject
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function New-PlannerBucketObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.String]
+        $planId,
+
+        [Parameter()]
+        [System.String]
+        $orderHint,
+
+        [Parameter()]
+        [System.Object[]]
+        $tasks
+    )
+}
+function New-PlannerBucketTaskBoardTaskFormatObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $orderHint
+    )
+}
+function New-PlannerCategoryDescriptionsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $category1,
+
+        [Parameter()]
+        [System.String]
+        $category2,
+
+        [Parameter()]
+        [System.String]
+        $category3,
+
+        [Parameter()]
+        [System.String]
+        $category4,
+
+        [Parameter()]
+        [System.String]
+        $category5,
+
+        [Parameter()]
+        [System.String]
+        $category6
+    )
+}
+function New-PlannerChecklistItemObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $isChecked,
+
+        [Parameter()]
+        [System.String]
+        $title,
+
+        [Parameter()]
+        [System.String]
+        $orderHint,
+
+        [Parameter()]
+        [System.Object]
+        $lastModifiedBy,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime
+    )
+}
+function New-PlannerChecklistItemsObject
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function New-PlannerExternalReferenceObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $alias,
+
+        [Parameter()]
+        [System.String]
+        $type,
+
+        [Parameter()]
+        [System.String]
+        $previewPriority,
+
+        [Parameter()]
+        [System.Object]
+        $lastModifiedBy,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime
+    )
+}
+function New-PlannerExternalReferencesObject
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function New-PlannerGroupObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $plans
+    )
+}
+function New-PlannerObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $tasks,
+
+        [Parameter()]
+        [System.Object[]]
+        $plans,
+
+        [Parameter()]
+        [System.Object[]]
+        $buckets
+    )
+}
+function New-PlannerOrderHintsByAssigneeObject
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function New-PlannerPlanDetailsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $sharedWith,
+
+        [Parameter()]
+        [System.Object]
+        $categoryDescriptions
+    )
+}
+function New-PlannerPlanObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $createdBy,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $owner,
+
+        [Parameter()]
+        [System.String]
+        $title,
+
+        [Parameter()]
+        [System.Object[]]
+        $tasks,
+
+        [Parameter()]
+        [System.Object[]]
+        $buckets,
+
+        [Parameter()]
+        [System.Object]
+        $details
+    )
+}
+function New-PlannerProgressTaskBoardTaskFormatObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $orderHint
+    )
+}
+function New-PlannerTaskDetailsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $previewType,
+
+        [Parameter()]
+        [System.Object]
+        $references,
+
+        [Parameter()]
+        [System.Object]
+        $checklist
+    )
+}
+function New-PlannerTaskObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $createdBy,
+
+        [Parameter()]
+        [System.String]
+        $planId,
+
+        [Parameter()]
+        [System.String]
+        $bucketId,
+
+        [Parameter()]
+        [System.String]
+        $title,
+
+        [Parameter()]
+        [System.String]
+        $orderHint,
+
+        [Parameter()]
+        [System.String]
+        $assigneePriority,
+
+        [Parameter()]
+        [System.Int32]
+        $percentComplete,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $startDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $dueDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $hasDescription,
+
+        [Parameter()]
+        [System.String]
+        $previewType,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $completedDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $completedBy,
+
+        [Parameter()]
+        [System.Int32]
+        $referenceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $checklistItemCount,
+
+        [Parameter()]
+        [System.Int32]
+        $activeChecklistItemCount,
+
+        [Parameter()]
+        [System.Object]
+        $appliedCategories,
+
+        [Parameter()]
+        [System.Object]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $conversationThreadId,
+
+        [Parameter()]
+        [System.Object]
+        $details,
+
+        [Parameter()]
+        [System.Object]
+        $assignedToTaskBoardFormat,
+
+        [Parameter()]
+        [System.Object]
+        $progressTaskBoardFormat,
+
+        [Parameter()]
+        [System.Object]
+        $bucketTaskBoardFormat
+    )
+}
+function New-PlannerUserIdsObject
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function New-PlannerUserObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $tasks,
+
+        [Parameter()]
+        [System.Object[]]
+        $plans
+    )
+}
+function New-PrivacyProfileObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $contactEmail,
+
+        [Parameter()]
+        [System.String]
+        $statementUrl
+    )
+}
+function New-ProcessObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $accountName,
+
+        [Parameter()]
+        [System.String]
+        $commandLine,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $fileHash,
+
+        [Parameter()]
+        [System.String]
+        $integrityLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $isElevated,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $parentProcessCreatedDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $parentProcessId,
+
+        [Parameter()]
+        [System.String]
+        $parentProcessName,
+
+        [Parameter()]
+        [System.String]
+        $path,
+
+        [Parameter()]
+        [System.Int32]
+        $processId
+    )
+}
+function New-ProfilePhotoObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $height,
+
+        [Parameter()]
+        [System.Int32]
+        $width
+    )
+}
+function New-ProvisionedPlanObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $capabilityStatus,
+
+        [Parameter()]
+        [System.String]
+        $provisioningStatus,
+
+        [Parameter()]
+        [System.String]
+        $service
+    )
+}
+function New-ProxiedDomainObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ipAddressOrFQDN,
+
+        [Parameter()]
+        [System.String]
+        $proxy
+    )
+}
+function New-PublicationFacetObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $level,
+
+        [Parameter()]
+        [System.String]
+        $versionId
+    )
+}
+function New-QuotaObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int64]
+        $deleted,
+
+        [Parameter()]
+        [System.Int64]
+        $remaining,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.Int64]
+        $total,
+
+        [Parameter()]
+        [System.Int64]
+        $used
+    )
+}
+function New-RecentNotebookLinksObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $oneNoteClientUrl,
+
+        [Parameter()]
+        [System.Object]
+        $oneNoteWebUrl
+    )
+}
+function New-RecentNotebookObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastAccessedTime,
+
+        [Parameter()]
+        [System.Object]
+        $links,
+
+        [Parameter()]
+        [System.String]
+        $sourceService
+    )
+}
+function New-RecipientObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $recipient,
+
+        [Parameter()]
+        [System.Object]
+        $emailAddress,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $attendeeBase,
+
+        [Parameter()]
+        [System.String]
+        $type,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $attendee,
+
+        [Parameter()]
+        [System.Object]
+        $status
+    )
+}
+function New-RecurrencePatternObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $type,
+
+        [Parameter()]
+        [System.Int32]
+        $interval,
+
+        [Parameter()]
+        [System.Int32]
+        $month,
+
+        [Parameter()]
+        [System.Int32]
+        $dayOfMonth,
+
+        [Parameter()]
+        [System.String[]]
+        $daysOfWeek,
+
+        [Parameter()]
+        [System.String]
+        $firstDayOfWeek,
+
+        [Parameter()]
+        [System.String]
+        $index
+    )
+}
+function New-RecurrenceRangeObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $type,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $startDate,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $endDate,
+
+        [Parameter()]
+        [System.String]
+        $recurrenceTimeZone,
+
+        [Parameter()]
+        [System.Int32]
+        $numberOfOccurrences
+    )
+}
+function New-RegistryKeyStateObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $hive,
+
+        [Parameter()]
+        [System.String]
+        $key,
+
+        [Parameter()]
+        [System.String]
+        $oldKey,
+
+        [Parameter()]
+        [System.String]
+        $oldValueData,
+
+        [Parameter()]
+        [System.String]
+        $oldValueName,
+
+        [Parameter()]
+        [System.String]
+        $operation,
+
+        [Parameter()]
+        [System.Int32]
+        $processId,
+
+        [Parameter()]
+        [System.String]
+        $valueData,
+
+        [Parameter()]
+        [System.String]
+        $valueName,
+
+        [Parameter()]
+        [System.String]
+        $valueType
+    )
+}
+function New-ReminderObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $eventId,
+
+        [Parameter()]
+        [System.Object]
+        $eventStartTime,
+
+        [Parameter()]
+        [System.Object]
+        $eventEndTime,
+
+        [Parameter()]
+        [System.String]
+        $changeKey,
+
+        [Parameter()]
+        [System.String]
+        $eventSubject,
+
+        [Parameter()]
+        [System.Object]
+        $eventLocation,
+
+        [Parameter()]
+        [System.String]
+        $eventWebLink,
+
+        [Parameter()]
+        [System.Object]
+        $reminderFireTime
+    )
+}
+function New-RemoteAssistancePartnerObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $onboardingUrl,
+
+        [Parameter()]
+        [System.String]
+        $onboardingStatus,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastConnectionDateTime
+    )
+}
+function New-RemoteItemObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $createdBy,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $file,
+
+        [Parameter()]
+        [System.Object]
+        $fileSystemInfo,
+
+        [Parameter()]
+        [System.Object]
+        $folder,
+
+        [Parameter()]
+        [System.Object]
+        $lastModifiedBy,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.Object]
+        $package,
+
+        [Parameter()]
+        [System.Object]
+        $parentReference,
+
+        [Parameter()]
+        [System.Object]
+        $shared,
+
+        [Parameter()]
+        [System.Object]
+        $sharepointIds,
+
+        [Parameter()]
+        [System.Int64]
+        $size,
+
+        [Parameter()]
+        [System.Object]
+        $specialFolder,
+
+        [Parameter()]
+        [System.String]
+        $webDavUrl,
+
+        [Parameter()]
+        [System.String]
+        $webUrl
+    )
+}
+function New-ReportObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.IO.Stream]
+        $content
+    )
+}
+function New-ReportRootObject
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function New-ResourceActionObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $allowedResourceActions,
+
+        [Parameter()]
+        [System.String[]]
+        $notAllowedResourceActions
+    )
+}
+function New-ResourceOperationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $resourceName,
+
+        [Parameter()]
+        [System.String]
+        $actionName,
+
+        [Parameter()]
+        [System.String]
+        $description
+    )
+}
+function New-ResourceReferenceObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $webUrl,
+
+        [Parameter()]
+        [System.String]
+        $type
+    )
+}
+function New-ResourceVisualizationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $title,
+
+        [Parameter()]
+        [System.String]
+        $type,
+
+        [Parameter()]
+        [System.String]
+        $mediaType,
+
+        [Parameter()]
+        [System.String]
+        $previewImageUrl,
+
+        [Parameter()]
+        [System.String]
+        $previewText,
+
+        [Parameter()]
+        [System.String]
+        $containerWebUrl,
+
+        [Parameter()]
+        [System.String]
+        $containerDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $containerType
+    )
+}
+function New-ResponseStatusObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $response,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $time
+    )
+}
+function New-RgbColorObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Byte]
+        $r,
+
+        [Parameter()]
+        [System.Byte]
+        $g,
+
+        [Parameter()]
+        [System.Byte]
+        $b
+    )
+}
+function New-RoleAssignmentObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $roleAssignment,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String[]]
+        $resourceScopes,
+
+        [Parameter()]
+        [System.Object]
+        $roleDefinition,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceAndAppManagementRoleAssignment,
+
+        [Parameter()]
+        [System.String[]]
+        $members
+    )
+}
+function New-RoleDefinitionObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $roleDefinition,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.Object[]]
+        $rolePermissions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isBuiltIn,
+
+        [Parameter()]
+        [System.Object[]]
+        $roleAssignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceAndAppManagementRoleDefinition
+    )
+}
+function New-RolePermissionObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $resourceActions
+    )
+}
+function New-RootObject
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function New-ScheduleInformationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $scheduleId,
+
+        [Parameter()]
+        [System.Object[]]
+        $scheduleItems,
+
+        [Parameter()]
+        [System.String]
+        $availabilityView,
+
+        [Parameter()]
+        [System.Object]
+        $error,
+
+        [Parameter()]
+        [System.Object]
+        $workingHours
+    )
+}
+function New-ScheduleItemObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $start,
+
+        [Parameter()]
+        [System.Object]
+        $end,
+
+        [Parameter()]
+        [System.Boolean]
+        $isPrivate,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.String]
+        $subject,
+
+        [Parameter()]
+        [System.String]
+        $location
+    )
+}
+function New-SchemaExtensionObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String[]]
+        $targetTypes,
+
+        [Parameter()]
+        [System.Object[]]
+        $properties,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.String]
+        $owner
+    )
+}
+function New-ScoredEmailAddressObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $address,
+
+        [Parameter()]
+        [System.Double]
+        $relevanceScore,
+
+        [Parameter()]
+        [System.String]
+        $selectionLikelihood,
+
+        [Parameter()]
+        [System.String]
+        $ItemId
+    )
+}
+function New-SearchResultObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $onClickTelemetryUrl
+    )
+}
+function New-SectionLinksObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $oneNoteClientUrl,
+
+        [Parameter()]
+        [System.Object]
+        $oneNoteWebUrl
+    )
+}
+function New-SecureScoreControlProfileObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $actionType,
+
+        [Parameter()]
+        [System.String]
+        $actionUrl,
+
+        [Parameter()]
+        [System.String]
+        $azureTenantId,
+
+        [Parameter()]
+        [System.Object[]]
+        $complianceInformation,
+
+        [Parameter()]
+        [System.String]
+        $controlCategory,
+
+        [Parameter()]
+        [System.Object[]]
+        $controlStateUpdates,
+
+        [Parameter()]
+        [System.Boolean]
+        $deprecated,
+
+        [Parameter()]
+        [System.String]
+        $implementationCost,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.Double]
+        $maxScore,
+
+        [Parameter()]
+        [System.Int32]
+        $rank,
+
+        [Parameter()]
+        [System.String]
+        $remediation,
+
+        [Parameter()]
+        [System.String]
+        $remediationImpact,
+
+        [Parameter()]
+        [System.String]
+        $service,
+
+        [Parameter()]
+        [System.String[]]
+        $threats,
+
+        [Parameter()]
+        [System.String]
+        $tier,
+
+        [Parameter()]
+        [System.String]
+        $title,
+
+        [Parameter()]
+        [System.String]
+        $userImpact,
+
+        [Parameter()]
+        [System.Object]
+        $vendorInformation
+    )
+}
+function New-SecureScoreControlStateUpdateObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $assignedTo,
+
+        [Parameter()]
+        [System.String]
+        $comment,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.String]
+        $updatedBy,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $updatedDateTime
+    )
+}
+function New-SecureScoreObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $activeUserCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $averageComparativeScores,
+
+        [Parameter()]
+        [System.String]
+        $azureTenantId,
+
+        [Parameter()]
+        [System.Object[]]
+        $controlScores,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.Double]
+        $currentScore,
+
+        [Parameter()]
+        [System.String[]]
+        $enabledServices,
+
+        [Parameter()]
+        [System.Int32]
+        $licensedUserCount,
+
+        [Parameter()]
+        [System.Double]
+        $maxScore,
+
+        [Parameter()]
+        [System.Object]
+        $vendorInformation
+    )
+}
+function New-SecurityObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $alerts,
+
+        [Parameter()]
+        [System.Object[]]
+        $secureScoreControlProfiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $secureScores
+    )
+}
+function New-SecurityVendorInformationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $provider,
+
+        [Parameter()]
+        [System.String]
+        $providerVersion,
+
+        [Parameter()]
+        [System.String]
+        $subProvider,
+
+        [Parameter()]
+        [System.String]
+        $vendor
+    )
+}
+function New-ServicePlanInfoObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Guid]
+        $servicePlanId,
+
+        [Parameter()]
+        [System.String]
+        $servicePlanName,
+
+        [Parameter()]
+        [System.String]
+        $provisioningStatus,
+
+        [Parameter()]
+        [System.String]
+        $appliesTo
+    )
+}
+function New-SettingSourceObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName
+    )
+}
+function New-SettingStateDeviceSummaryObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $settingName,
+
+        [Parameter()]
+        [System.String]
+        $instancePath,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount
+    )
+}
+function New-SettingTemplateValueObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.String]
+        $type,
+
+        [Parameter()]
+        [System.String]
+        $defaultValue,
+
+        [Parameter()]
+        [System.String]
+        $description
+    )
+}
+function New-SettingValueObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.String]
+        $value
+    )
+}
+function New-SharedInsightObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $lastShared,
+
+        [Parameter()]
+        [System.Object[]]
+        $sharingHistory,
+
+        [Parameter()]
+        [System.Object]
+        $lastSharedMethod,
+
+        [Parameter()]
+        [System.Object]
+        $resource
+    )
+}
+function New-SharedObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $owner,
+
+        [Parameter()]
+        [System.String]
+        $scope,
+
+        [Parameter()]
+        [System.Object]
+        $sharedBy,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $sharedDateTime
+    )
+}
+function New-SharedPCAccountManagerPolicyObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $accountDeletionPolicy,
+
+        [Parameter()]
+        [System.Int32]
+        $cacheAccountsAboveDiskFreePercentage,
+
+        [Parameter()]
+        [System.Int32]
+        $inactiveThresholdDays,
+
+        [Parameter()]
+        [System.Int32]
+        $removeAccountsBelowDiskFreePercentage
+    )
+}
+function New-SharepointIdsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $listId,
+
+        [Parameter()]
+        [System.String]
+        $listItemId,
+
+        [Parameter()]
+        [System.String]
+        $listItemUniqueId,
+
+        [Parameter()]
+        [System.String]
+        $siteId,
+
+        [Parameter()]
+        [System.String]
+        $siteUrl,
+
+        [Parameter()]
+        [System.String]
+        $webId
+    )
+}
+function New-SharingDetailObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $sharedBy,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $sharedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $sharingSubject,
+
+        [Parameter()]
+        [System.String]
+        $sharingType
+    )
+}
+function New-SharingInvitationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $email,
+
+        [Parameter()]
+        [System.Object]
+        $invitedBy,
+
+        [Parameter()]
+        [System.String]
+        $redeemedBy,
+
+        [Parameter()]
+        [System.Boolean]
+        $signInRequired
+    )
+}
+function New-SharingLinkObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $application,
+
+        [Parameter()]
+        [System.String]
+        $scope,
+
+        [Parameter()]
+        [System.String]
+        $type,
+
+        [Parameter()]
+        [System.String]
+        $webUrl
+    )
+}
+function New-SignInLocationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $city,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.String]
+        $countryOrRegion,
+
+        [Parameter()]
+        [System.Object]
+        $geoCoordinates
+    )
+}
+function New-SignInObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $signIn,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $appId,
+
+        [Parameter()]
+        [System.String]
+        $appDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $ipAddress,
+
+        [Parameter()]
+        [System.Object]
+        $status,
+
+        [Parameter()]
+        [System.String]
+        $clientAppUsed,
+
+        [Parameter()]
+        [System.Object]
+        $deviceDetail,
+
+        [Parameter()]
+        [System.Object]
+        $location,
+
+        [Parameter()]
+        [System.String]
+        $correlationId,
+
+        [Parameter()]
+        [System.String]
+        $conditionalAccessStatus,
+
+        [Parameter()]
+        [System.Object[]]
+        $appliedConditionalAccessPolicies,
+
+        [Parameter()]
+        [System.Boolean]
+        $isInteractive,
+
+        [Parameter()]
+        [System.String]
+        $riskDetail,
+
+        [Parameter()]
+        [System.String]
+        $riskLevelAggregated,
+
+        [Parameter()]
+        [System.String]
+        $riskLevelDuringSignIn,
+
+        [Parameter()]
+        [System.String]
+        $riskState,
+
+        [Parameter()]
+        [System.String[]]
+        $riskEventTypes,
+
+        [Parameter()]
+        [System.String]
+        $resourceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $resourceId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $restrictedSignIn,
+
+        [Parameter()]
+        [System.Guid]
+        $targetTenantId
+    )
+}
+function New-SignInStatusObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $errorCode,
+
+        [Parameter()]
+        [System.String]
+        $failureReason,
+
+        [Parameter()]
+        [System.String]
+        $additionalDetails
+    )
+}
+function New-SingleValueLegacyExtendedPropertyObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $value
+    )
+}
+function New-SiteCollectionObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $hostname,
+
+        [Parameter()]
+        [System.Object]
+        $root
+    )
+}
+function New-SizeRangeObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $minimumSize,
+
+        [Parameter()]
+        [System.Int32]
+        $maximumSize
+    )
+}
+function New-SoftwareUpdateStatusSummaryObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantUserCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantUserCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedUserCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorUserCount,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownUserCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictUserCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableUserCount
+    )
+}
+function New-SpecialFolderObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $name
+    )
+}
+function New-StandardTimeZoneOffsetObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $standardTimeZoneOffset,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $time,
+
+        [Parameter()]
+        [System.Int32]
+        $dayOccurrence,
+
+        [Parameter()]
+        [System.String]
+        $dayOfWeek,
+
+        [Parameter()]
+        [System.Int32]
+        $month,
+
+        [Parameter()]
+        [System.Int32]
+        $year,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $daylightTimeZoneOffset,
+
+        [Parameter()]
+        [System.Int32]
+        $daylightBias
+    )
+}
+function New-SubscribedSkuObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $capabilityStatus,
+
+        [Parameter()]
+        [System.Int32]
+        $consumedUnits,
+
+        [Parameter()]
+        [System.Object]
+        $prepaidUnits,
+
+        [Parameter()]
+        [System.Object[]]
+        $servicePlans,
+
+        [Parameter()]
+        [System.Guid]
+        $skuId,
+
+        [Parameter()]
+        [System.String]
+        $skuPartNumber,
+
+        [Parameter()]
+        [System.String]
+        $appliesTo
+    )
+}
+function New-SubscriptionObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $resource,
+
+        [Parameter()]
+        [System.String]
+        $changeType,
+
+        [Parameter()]
+        [System.String]
+        $clientState,
+
+        [Parameter()]
+        [System.String]
+        $notificationUrl,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $expirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $applicationId,
+
+        [Parameter()]
+        [System.String]
+        $creatorId
+    )
+}
+function New-SystemFacetObject
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function New-TargetedManagedAppPolicyAssignmentObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $target
+    )
+}
+function New-TargetResourceObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $type,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $groupType,
+
+        [Parameter()]
+        [System.Object[]]
+        $modifiedProperties
+    )
+}
+function New-TeamClassSettingsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $notifyGuardiansAboutAssignments
+    )
+}
+function New-TeamFunSettingsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $allowGiphy,
+
+        [Parameter()]
+        [System.String]
+        $giphyContentRating,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowStickersAndMemes,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowCustomMemes
+    )
+}
+function New-TeamGuestSettingsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $allowCreateUpdateChannels,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowDeleteChannels
+    )
+}
+function New-TeamMemberSettingsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $allowCreateUpdateChannels,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowDeleteChannels,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowAddRemoveApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowCreateUpdateRemoveTabs,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowCreateUpdateRemoveConnectors
+    )
+}
+function New-TeamMessagingSettingsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $allowUserEditMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowUserDeleteMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowOwnerDeleteMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowTeamMentions,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowChannelMentions
+    )
+}
+function New-TeamObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $webUrl,
+
+        [Parameter()]
+        [System.Object]
+        $memberSettings,
+
+        [Parameter()]
+        [System.Object]
+        $guestSettings,
+
+        [Parameter()]
+        [System.Object]
+        $messagingSettings,
+
+        [Parameter()]
+        [System.Object]
+        $funSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $isArchived,
+
+        [Parameter()]
+        [System.Object[]]
+        $channels,
+
+        [Parameter()]
+        [System.Object[]]
+        $installedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $operations
+    )
+}
+function New-TeamsAppDefinitionObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $teamsAppId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $version
+    )
+}
+function New-TeamsAppInstallationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $teamsApp,
+
+        [Parameter()]
+        [System.Object]
+        $teamsAppDefinition
+    )
+}
+function New-TeamsAppObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $externalId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $distributionMethod,
+
+        [Parameter()]
+        [System.Object[]]
+        $appDefinitions
+    )
+}
+function New-TeamsAsyncOperationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $operationType,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastActionDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $attemptsCount,
+
+        [Parameter()]
+        [System.String]
+        $targetResourceId,
+
+        [Parameter()]
+        [System.String]
+        $targetResourceLocation,
+
+        [Parameter()]
+        [System.Object]
+        $error
+    )
+}
+function New-TeamsTabConfigurationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $entityId,
+
+        [Parameter()]
+        [System.String]
+        $contentUrl,
+
+        [Parameter()]
+        [System.String]
+        $removeUrl,
+
+        [Parameter()]
+        [System.String]
+        $websiteUrl
+    )
+}
+function New-TeamsTabObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $webUrl,
+
+        [Parameter()]
+        [System.Object]
+        $configuration,
+
+        [Parameter()]
+        [System.Object]
+        $teamsApp
+    )
+}
+function New-TelecomExpenseManagementPartnerObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $url,
+
+        [Parameter()]
+        [System.Boolean]
+        $appAuthorized,
+
+        [Parameter()]
+        [System.Boolean]
+        $enabled,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastConnectionDateTime
+    )
+}
+function New-TermsAndConditionsAcceptanceStatusObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $acceptedVersion,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $acceptedDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $termsAndConditions
+    )
+}
+function New-TermsAndConditionsAssignmentObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $target
+    )
+}
+function New-TermsAndConditionsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $title,
+
+        [Parameter()]
+        [System.String]
+        $bodyText,
+
+        [Parameter()]
+        [System.String]
+        $acceptanceStatement,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $acceptanceStatuses
+    )
+}
+function New-TextColumnObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $allowMultipleLines,
+
+        [Parameter()]
+        [System.Boolean]
+        $appendChangesToExistingText,
+
+        [Parameter()]
+        [System.Int32]
+        $linesForEditing,
+
+        [Parameter()]
+        [System.Int32]
+        $maxLength,
+
+        [Parameter()]
+        [System.String]
+        $textType
+    )
+}
+function New-ThumbnailObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.IO.Stream]
+        $content,
+
+        [Parameter()]
+        [System.Int32]
+        $height,
+
+        [Parameter()]
+        [System.String]
+        $sourceItemId,
+
+        [Parameter()]
+        [System.String]
+        $url,
+
+        [Parameter()]
+        [System.Int32]
+        $width
+    )
+}
+function New-ThumbnailSetObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $large,
+
+        [Parameter()]
+        [System.Object]
+        $medium,
+
+        [Parameter()]
+        [System.Object]
+        $small,
+
+        [Parameter()]
+        [System.Object]
+        $source
+    )
+}
+function New-TimeConstraintObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $activityDomain,
+
+        [Parameter()]
+        [System.Object[]]
+        $timeSlots
+    )
+}
+function New-TimeSlotObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $start,
+
+        [Parameter()]
+        [System.Object]
+        $end
+    )
+}
+function New-TimeZoneBaseObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $timeZoneBase,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $customTimeZone,
+
+        [Parameter()]
+        [System.Int32]
+        $bias,
+
+        [Parameter()]
+        [System.Object]
+        $standardOffset,
+
+        [Parameter()]
+        [System.Object]
+        $daylightOffset
+    )
+}
+function New-TimeZoneInformationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $alias,
+
+        [Parameter()]
+        [System.String]
+        $displayName
+    )
+}
+function New-TrendingObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Double]
+        $weight,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $resource
+    )
+}
+function New-UpdateWindowsDeviceAccountActionParameterObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $deviceAccount,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRotationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $calendarSyncEnabled,
+
+        [Parameter()]
+        [System.String]
+        $deviceAccountEmail,
+
+        [Parameter()]
+        [System.String]
+        $exchangeServer,
+
+        [Parameter()]
+        [System.String]
+        $sessionInitiationProtocalAddress
+    )
+}
+function New-UploadSessionObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $expirationDateTime,
+
+        [Parameter()]
+        [System.String[]]
+        $nextExpectedRanges,
+
+        [Parameter()]
+        [System.String]
+        $uploadUrl
+    )
+}
+function New-UsageDetailsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastAccessedDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime
+    )
+}
+function New-UsedInsightObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $lastUsed,
+
+        [Parameter()]
+        [System.Object]
+        $resource
+    )
+}
+function New-UserActivityObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $visualElements,
+
+        [Parameter()]
+        [System.String]
+        $activitySourceHost,
+
+        [Parameter()]
+        [System.String]
+        $activationUrl,
+
+        [Parameter()]
+        [System.String]
+        $appActivityId,
+
+        [Parameter()]
+        [System.String]
+        $appDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $contentUrl,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $expirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $fallbackUrl,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userTimezone,
+
+        [Parameter()]
+        [System.Object]
+        $contentInfo,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.Object[]]
+        $historyItems
+    )
+}
+function New-UserIdentityObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $ipAddress,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName
+    )
+}
+function New-UserInstallStateSummaryObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.Int32]
+        $installedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notInstalledDeviceCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStates
+    )
+}
+function New-UserSecurityStateObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $aadUserId,
+
+        [Parameter()]
+        [System.String]
+        $accountName,
+
+        [Parameter()]
+        [System.String]
+        $domainName,
+
+        [Parameter()]
+        [System.String]
+        $emailRole,
+
+        [Parameter()]
+        [System.Boolean]
+        $isVpn,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $logonDateTime,
+
+        [Parameter()]
+        [System.String]
+        $logonId,
+
+        [Parameter()]
+        [System.String]
+        $logonIp,
+
+        [Parameter()]
+        [System.String]
+        $logonLocation,
+
+        [Parameter()]
+        [System.String]
+        $logonType,
+
+        [Parameter()]
+        [System.String]
+        $onPremisesSecurityIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $riskScore,
+
+        [Parameter()]
+        [System.String]
+        $userAccountType,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName
+    )
+}
+function New-UserSettingsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $contributionToContentDiscoveryDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $contributionToContentDiscoveryAsOrganizationDisabled
+    )
+}
+function New-VerifiedDomainObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $capabilities,
+
+        [Parameter()]
+        [System.Boolean]
+        $isDefault,
+
+        [Parameter()]
+        [System.Boolean]
+        $isInitial,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.String]
+        $type
+    )
+}
+function New-VideoObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $audioBitsPerSample,
+
+        [Parameter()]
+        [System.Int32]
+        $audioChannels,
+
+        [Parameter()]
+        [System.String]
+        $audioFormat,
+
+        [Parameter()]
+        [System.Int32]
+        $audioSamplesPerSecond,
+
+        [Parameter()]
+        [System.Int32]
+        $bitrate,
+
+        [Parameter()]
+        [System.Int64]
+        $duration,
+
+        [Parameter()]
+        [System.String]
+        $fourCC,
+
+        [Parameter()]
+        [System.Double]
+        $frameRate,
+
+        [Parameter()]
+        [System.Int32]
+        $height,
+
+        [Parameter()]
+        [System.Int32]
+        $width
+    )
+}
+function New-VisualInfoObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $attribution,
+
+        [Parameter()]
+        [System.String]
+        $backgroundColor,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $displayText,
+
+        [Parameter()]
+        [System.Object]
+        $content
+    )
+}
+function New-VppLicensingTypeObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $supportsUserLicensing,
+
+        [Parameter()]
+        [System.Boolean]
+        $supportsDeviceLicensing
+    )
+}
+function New-VppTokenObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $organizationName,
+
+        [Parameter()]
+        [System.String]
+        $vppTokenAccountType,
+
+        [Parameter()]
+        [System.String]
+        $appleId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $expirationDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $token,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.String]
+        $lastSyncStatus,
+
+        [Parameter()]
+        [System.Boolean]
+        $automaticallyUpdateApps,
+
+        [Parameter()]
+        [System.String]
+        $countryOrRegion
+    )
+}
+function New-VulnerabilityStateObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $cve,
+
+        [Parameter()]
+        [System.String]
+        $severity,
+
+        [Parameter()]
+        [System.Boolean]
+        $wasRunning
+    )
+}
+function New-WebsiteObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $type,
+
+        [Parameter()]
+        [System.String]
+        $address,
+
+        [Parameter()]
+        [System.String]
+        $displayName
+    )
+}
+function New-Windows10NetworkProxyServerObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $address,
+
+        [Parameter()]
+        [System.String[]]
+        $exceptions,
+
+        [Parameter()]
+        [System.Boolean]
+        $useForLocalAddresses
+    )
+}
+function New-WindowsDeviceAccountObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsDeviceAccount,
+
+        [Parameter()]
+        [System.String]
+        $password,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsDeviceAzureADAccount,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsDeviceADAccount,
+
+        [Parameter()]
+        [System.String]
+        $domainName,
+
+        [Parameter()]
+        [System.String]
+        $userName
+    )
+}
+function New-WindowsFirewallNetworkProfileObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $firewallEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $stealthModeBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $incomingTrafficBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $unicastResponsesToMulticastBroadcastsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $inboundNotificationsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $authorizedApplicationRulesFromGroupPolicyMerged,
+
+        [Parameter()]
+        [System.Boolean]
+        $globalPortRulesFromGroupPolicyMerged,
+
+        [Parameter()]
+        [System.Boolean]
+        $connectionSecurityRulesFromGroupPolicyMerged,
+
+        [Parameter()]
+        [System.Boolean]
+        $outboundConnectionsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $inboundConnectionsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $securedPacketExemptionAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $policyRulesFromGroupPolicyMerged
+    )
+}
+function New-WindowsInformationProtectionAppLearningSummaryObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $applicationName,
+
+        [Parameter()]
+        [System.String]
+        $applicationType,
+
+        [Parameter()]
+        [System.Int32]
+        $deviceCount
+    )
+}
+function New-WindowsInformationProtectionAppLockerFileObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version
+    )
+}
+function New-WindowsInformationProtectionAppObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $publisherName,
+
+        [Parameter()]
+        [System.String]
+        $productName,
+
+        [Parameter()]
+        [System.Boolean]
+        $denied,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsInformationProtectionDesktopApp,
+
+        [Parameter()]
+        [System.String]
+        $binaryName,
+
+        [Parameter()]
+        [System.String]
+        $binaryVersionLow,
+
+        [Parameter()]
+        [System.String]
+        $binaryVersionHigh,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsInformationProtectionStoreApp
+    )
+}
+function New-WindowsInformationProtectionDataRecoveryCertificateObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $subjectName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $expirationDateTime,
+
+        [Parameter()]
+        [System.Byte[]]
+        $certificate
+    )
+}
+function New-WindowsInformationProtectionIPRangeCollectionObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Object[]]
+        $ranges
+    )
+}
+function New-WindowsInformationProtectionNetworkLearningSummaryObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $url,
+
+        [Parameter()]
+        [System.Int32]
+        $deviceCount
+    )
+}
+function New-WindowsInformationProtectionProxiedDomainCollectionObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Object[]]
+        $proxiedDomains
+    )
+}
+function New-WindowsInformationProtectionResourceCollectionObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String[]]
+        $resources
+    )
+}
+function New-WindowsMinimumOperatingSystemObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $v8_0,
+
+        [Parameter()]
+        [System.Boolean]
+        $v8_1,
+
+        [Parameter()]
+        [System.Boolean]
+        $v10_0
+    )
+}
+function New-WindowsUpdateInstallScheduleTypeObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsUpdateActiveHoursInstall,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $activeHoursStart,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $activeHoursEnd,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsUpdateScheduledInstall,
+
+        [Parameter()]
+        [System.String]
+        $scheduledInstallDay,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $scheduledInstallTime
+    )
+}
+function New-WorkbookApplicationObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $calculationMode
+    )
+}
+function New-WorkbookChartAreaFormatObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $fill,
+
+        [Parameter()]
+        [System.Object]
+        $font
+    )
+}
+function New-WorkbookChartAxesObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $categoryAxis,
+
+        [Parameter()]
+        [System.Object]
+        $seriesAxis,
+
+        [Parameter()]
+        [System.Object]
+        $valueAxis
+    )
+}
+function New-WorkbookChartAxisFormatObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $font,
+
+        [Parameter()]
+        [System.Object]
+        $line
+    )
+}
+function New-WorkbookChartAxisObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $majorUnit,
+
+        [Parameter()]
+        [System.Object]
+        $maximum,
+
+        [Parameter()]
+        [System.Object]
+        $minimum,
+
+        [Parameter()]
+        [System.Object]
+        $minorUnit,
+
+        [Parameter()]
+        [System.Object]
+        $format,
+
+        [Parameter()]
+        [System.Object]
+        $majorGridlines,
+
+        [Parameter()]
+        [System.Object]
+        $minorGridlines,
+
+        [Parameter()]
+        [System.Object]
+        $title
+    )
+}
+function New-WorkbookChartAxisTitleFormatObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $font
+    )
+}
+function New-WorkbookChartAxisTitleObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $text,
+
+        [Parameter()]
+        [System.Boolean]
+        $visible,
+
+        [Parameter()]
+        [System.Object]
+        $format
+    )
+}
+function New-WorkbookChartDataLabelFormatObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $fill,
+
+        [Parameter()]
+        [System.Object]
+        $font
+    )
+}
+function New-WorkbookChartDataLabelsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $position,
+
+        [Parameter()]
+        [System.String]
+        $separator,
+
+        [Parameter()]
+        [System.Boolean]
+        $showBubbleSize,
+
+        [Parameter()]
+        [System.Boolean]
+        $showCategoryName,
+
+        [Parameter()]
+        [System.Boolean]
+        $showLegendKey,
+
+        [Parameter()]
+        [System.Boolean]
+        $showPercentage,
+
+        [Parameter()]
+        [System.Boolean]
+        $showSeriesName,
+
+        [Parameter()]
+        [System.Boolean]
+        $showValue,
+
+        [Parameter()]
+        [System.Object]
+        $format
+    )
+}
+function New-WorkbookChartFillObject
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function New-WorkbookChartFontObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $bold,
+
+        [Parameter()]
+        [System.String]
+        $color,
+
+        [Parameter()]
+        [System.Boolean]
+        $italic,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.Double]
+        $size,
+
+        [Parameter()]
+        [System.String]
+        $underline
+    )
+}
+function New-WorkbookChartGridlinesFormatObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $line
+    )
+}
+function New-WorkbookChartGridlinesObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $visible,
+
+        [Parameter()]
+        [System.Object]
+        $format
+    )
+}
+function New-WorkbookChartLegendFormatObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $fill,
+
+        [Parameter()]
+        [System.Object]
+        $font
+    )
+}
+function New-WorkbookChartLegendObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $overlay,
+
+        [Parameter()]
+        [System.String]
+        $position,
+
+        [Parameter()]
+        [System.Boolean]
+        $visible,
+
+        [Parameter()]
+        [System.Object]
+        $format
+    )
+}
+function New-WorkbookChartLineFormatObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $color
+    )
+}
+function New-WorkbookChartObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Double]
+        $height,
+
+        [Parameter()]
+        [System.Double]
+        $left,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.Double]
+        $top,
+
+        [Parameter()]
+        [System.Double]
+        $width,
+
+        [Parameter()]
+        [System.Object]
+        $axes,
+
+        [Parameter()]
+        [System.Object]
+        $dataLabels,
+
+        [Parameter()]
+        [System.Object]
+        $format,
+
+        [Parameter()]
+        [System.Object]
+        $legend,
+
+        [Parameter()]
+        [System.Object[]]
+        $series,
+
+        [Parameter()]
+        [System.Object]
+        $title,
+
+        [Parameter()]
+        [System.Object]
+        $worksheet
+    )
+}
+function New-WorkbookChartPointFormatObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $fill
+    )
+}
+function New-WorkbookChartPointObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $value,
+
+        [Parameter()]
+        [System.Object]
+        $format
+    )
+}
+function New-WorkbookChartSeriesFormatObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $fill,
+
+        [Parameter()]
+        [System.Object]
+        $line
+    )
+}
+function New-WorkbookChartSeriesObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.Object]
+        $format,
+
+        [Parameter()]
+        [System.Object[]]
+        $points
+    )
+}
+function New-WorkbookChartTitleFormatObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $fill,
+
+        [Parameter()]
+        [System.Object]
+        $font
+    )
+}
+function New-WorkbookChartTitleObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $overlay,
+
+        [Parameter()]
+        [System.String]
+        $text,
+
+        [Parameter()]
+        [System.Boolean]
+        $visible,
+
+        [Parameter()]
+        [System.Object]
+        $format
+    )
+}
+function New-WorkbookCommentObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $content,
+
+        [Parameter()]
+        [System.String]
+        $contentType,
+
+        [Parameter()]
+        [System.Object[]]
+        $replies
+    )
+}
+function New-WorkbookCommentReplyObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $content,
+
+        [Parameter()]
+        [System.String]
+        $contentType
+    )
+}
+function New-WorkbookFilterCriteriaObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $values
+    )
+}
+function New-WorkbookFilterDatetimeObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $date,
+
+        [Parameter()]
+        [System.String]
+        $specificity
+    )
+}
+function New-WorkbookFilterObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $criteria
+    )
+}
+function New-WorkbookFormatProtectionObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $formulaHidden,
+
+        [Parameter()]
+        [System.Boolean]
+        $locked
+    )
+}
+function New-WorkbookFunctionResultObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $error,
+
+        [Parameter()]
+        [System.Object]
+        $value
+    )
+}
+function New-WorkbookFunctionsObject
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function New-WorkbookIconObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $index,
+
+        [Parameter()]
+        [System.String]
+        $set
+    )
+}
+function New-WorkbookNamedItemObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $comment,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.String]
+        $scope,
+
+        [Parameter()]
+        [System.String]
+        $type,
+
+        [Parameter()]
+        [System.Object]
+        $value,
+
+        [Parameter()]
+        [System.Boolean]
+        $visible,
+
+        [Parameter()]
+        [System.Object]
+        $worksheet
+    )
+}
+function New-WorkbookObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $application,
+
+        [Parameter()]
+        [System.Object[]]
+        $names,
+
+        [Parameter()]
+        [System.Object[]]
+        $tables,
+
+        [Parameter()]
+        [System.Object[]]
+        $worksheets,
+
+        [Parameter()]
+        [System.Object[]]
+        $comments,
+
+        [Parameter()]
+        [System.Object]
+        $functions
+    )
+}
+function New-WorkbookPivotTableObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.Object]
+        $worksheet
+    )
+}
+function New-WorkbookRangeBorderObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $color,
+
+        [Parameter()]
+        [System.String]
+        $sideIndex,
+
+        [Parameter()]
+        [System.String]
+        $style,
+
+        [Parameter()]
+        [System.String]
+        $weight
+    )
+}
+function New-WorkbookRangeFillObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $color
+    )
+}
+function New-WorkbookRangeFontObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $bold,
+
+        [Parameter()]
+        [System.String]
+        $color,
+
+        [Parameter()]
+        [System.Boolean]
+        $italic,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.Double]
+        $size,
+
+        [Parameter()]
+        [System.String]
+        $underline
+    )
+}
+function New-WorkbookRangeFormatObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Double]
+        $columnWidth,
+
+        [Parameter()]
+        [System.String]
+        $horizontalAlignment,
+
+        [Parameter()]
+        [System.Double]
+        $rowHeight,
+
+        [Parameter()]
+        [System.String]
+        $verticalAlignment,
+
+        [Parameter()]
+        [System.Boolean]
+        $wrapText,
+
+        [Parameter()]
+        [System.Object[]]
+        $borders,
+
+        [Parameter()]
+        [System.Object]
+        $fill,
+
+        [Parameter()]
+        [System.Object]
+        $font,
+
+        [Parameter()]
+        [System.Object]
+        $protection
+    )
+}
+function New-WorkbookRangeObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $values
+    )
+}
+function New-WorkbookRangeReferenceObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $address
+    )
+}
+function New-WorkbookRangeSortObject
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function New-WorkbookRangeViewObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $values
+    )
+}
+function New-WorkbookSessionInfoObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $persistChanges
+    )
+}
+function New-WorkbookSortFieldObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $ascending,
+
+        [Parameter()]
+        [System.String]
+        $color,
+
+        [Parameter()]
+        [System.String]
+        $dataOption,
+
+        [Parameter()]
+        [System.Object]
+        $icon,
+
+        [Parameter()]
+        [System.Int32]
+        $key,
+
+        [Parameter()]
+        [System.String]
+        $sortOn
+    )
+}
+function New-WorkbookTableColumnObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $values
+    )
+}
+function New-WorkbookTableObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $highlightFirstColumn,
+
+        [Parameter()]
+        [System.Boolean]
+        $highlightLastColumn,
+
+        [Parameter()]
+        [System.String]
+        $legacyId,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.Boolean]
+        $showBandedColumns,
+
+        [Parameter()]
+        [System.Boolean]
+        $showBandedRows,
+
+        [Parameter()]
+        [System.Boolean]
+        $showFilterButton,
+
+        [Parameter()]
+        [System.Boolean]
+        $showHeaders,
+
+        [Parameter()]
+        [System.Boolean]
+        $showTotals,
+
+        [Parameter()]
+        [System.String]
+        $style,
+
+        [Parameter()]
+        [System.Object[]]
+        $columns,
+
+        [Parameter()]
+        [System.Object[]]
+        $rows,
+
+        [Parameter()]
+        [System.Object]
+        $sort,
+
+        [Parameter()]
+        [System.Object]
+        $worksheet
+    )
+}
+function New-WorkbookTableRowObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $values
+    )
+}
+function New-WorkbookTableSortObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $fields,
+
+        [Parameter()]
+        [System.Boolean]
+        $matchCase,
+
+        [Parameter()]
+        [System.String]
+        $method
+    )
+}
+function New-WorkbookWorksheetObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.Int32]
+        $position,
+
+        [Parameter()]
+        [System.String]
+        $visibility,
+
+        [Parameter()]
+        [System.Object[]]
+        $charts,
+
+        [Parameter()]
+        [System.Object[]]
+        $names,
+
+        [Parameter()]
+        [System.Object[]]
+        $pivotTables,
+
+        [Parameter()]
+        [System.Object]
+        $protection,
+
+        [Parameter()]
+        [System.Object[]]
+        $tables
+    )
+}
+function New-WorkbookWorksheetProtectionObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $options,
+
+        [Parameter()]
+        [System.Boolean]
+        $protected
+    )
+}
+function New-WorkbookWorksheetProtectionOptionsObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $allowAutoFilter,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowDeleteColumns,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowDeleteRows,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowFormatCells,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowFormatColumns,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowFormatRows,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowInsertColumns,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowInsertHyperlinks,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowInsertRows,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowPivotTables,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowSort
+    )
+}
+function New-WorkingHoursObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $daysOfWeek,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $startTime,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $endTime,
+
+        [Parameter()]
+        [System.Object]
+        $timeZone
+    )
+}
+function Remove-DeviceAppManagement
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Remove-DeviceAppManagement_AndroidManagedAppProtections
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId
+    )
+}
+function Remove-DeviceAppManagement_AndroidManagedAppProtections_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId
+    )
+}
+function Remove-DeviceAppManagement_AndroidManagedAppProtections_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionODataType
+    )
+}
+function Remove-DeviceAppManagement_AndroidManagedAppProtections_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId
+    )
+}
+function Remove-DeviceAppManagement_DefaultManagedAppProtections
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId
+    )
+}
+function Remove-DeviceAppManagement_DefaultManagedAppProtections_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId
+    )
+}
+function Remove-DeviceAppManagement_DefaultManagedAppProtections_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId
+    )
+}
+function Remove-DeviceAppManagement_IosManagedAppProtections
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId
+    )
+}
+function Remove-DeviceAppManagement_IosManagedAppProtections_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId
+    )
+}
+function Remove-DeviceAppManagement_IosManagedAppProtections_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionODataType
+    )
+}
+function Remove-DeviceAppManagement_IosManagedAppProtections_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId
+    )
+}
+function Remove-DeviceAppManagement_ManagedAppPolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId
+    )
+}
+function Remove-DeviceAppManagement_ManagedAppPolicies_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType
+    )
+}
+function Remove-DeviceAppManagement_ManagedAppPolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType
+    )
+}
+function Remove-DeviceAppManagement_ManagedAppPolicies_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType
+    )
+}
+function Remove-DeviceAppManagement_ManagedAppPolicies_ExemptAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType
+    )
+}
+function Remove-DeviceAppManagement_ManagedAppPolicies_ProtectedAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType
+    )
+}
+function Remove-DeviceAppManagement_ManagedAppRegistrations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId
+    )
+}
+function Remove-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId
+    )
+}
+function Remove-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $appliedPolicyODataType
+    )
+}
+function Remove-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $appliedPolicyODataType
+    )
+}
+function Remove-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $appliedPolicyODataType
+    )
+}
+function Remove-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies_ExemptAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $appliedPolicyODataType
+    )
+}
+function Remove-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies_ProtectedAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $appliedPolicyODataType
+    )
+}
+function Remove-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId
+    )
+}
+function Remove-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $intendedPolicyODataType
+    )
+}
+function Remove-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $intendedPolicyODataType
+    )
+}
+function Remove-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $intendedPolicyODataType
+    )
+}
+function Remove-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies_ExemptAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $intendedPolicyODataType
+    )
+}
+function Remove-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies_ProtectedAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $intendedPolicyODataType
+    )
+}
+function Remove-DeviceAppManagement_ManagedAppRegistrations_Operations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppOperationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId
+    )
+}
+function Remove-DeviceAppManagement_ManagedAppStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppStatusId
+    )
+}
+function Remove-DeviceAppManagement_ManagedEBooks
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId
+    )
+}
+function Remove-DeviceAppManagement_ManagedEBooks_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $managedEBookId
+    )
+}
+function Remove-DeviceAppManagement_ManagedEBooks_DeviceStates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceInstallStateId,
+
+        [Parameter()]
+        [System.String]
+        $managedEBookId
+    )
+}
+function Remove-DeviceAppManagement_ManagedEBooks_InstallSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId
+    )
+}
+function Remove-DeviceAppManagement_ManagedEBooks_UserStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $userInstallStateSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $managedEBookId
+    )
+}
+function Remove-DeviceAppManagement_ManagedEBooks_UserStateSummary_DeviceStates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceInstallStateId,
+
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $userInstallStateSummaryId
+    )
+}
+function Remove-DeviceAppManagement_MdmWindowsInformationProtectionPolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId
+    )
+}
+function Remove-DeviceAppManagement_MdmWindowsInformationProtectionPolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType
+    )
+}
+function Remove-DeviceAppManagement_MdmWindowsInformationProtectionPolicies_ExemptAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType
+    )
+}
+function Remove-DeviceAppManagement_MdmWindowsInformationProtectionPolicies_ProtectedAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType
+    )
+}
+function Remove-DeviceAppManagement_MobileAppCategories
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppCategoryId
+    )
+}
+function Remove-DeviceAppManagement_MobileAppConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId
+    )
+}
+function Remove-DeviceAppManagement_MobileAppConfigurations_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId
+    )
+}
+function Remove-DeviceAppManagement_MobileAppConfigurations_DeviceStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationDeviceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId
+    )
+}
+function Remove-DeviceAppManagement_MobileAppConfigurations_DeviceStatusSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId
+    )
+}
+function Remove-DeviceAppManagement_MobileAppConfigurations_UserStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationUserStatusId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId
+    )
+}
+function Remove-DeviceAppManagement_MobileAppConfigurations_UserStatusSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId
+    )
+}
+function Remove-DeviceAppManagement_MobileApps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId
+    )
+}
+function Remove-DeviceAppManagement_MobileApps_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppId
+    )
+}
+function Remove-DeviceAppManagement_MobileApps_CategoriesReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppCategoryId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppId
+    )
+}
+function Remove-DeviceAppManagement_MobileApps_ContentVersions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppContentId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppODataType
+    )
+}
+function Remove-DeviceAppManagement_MobileApps_ContentVersions_Files
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppContentFileId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppODataType,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppContentId
+    )
+}
+function Remove-DeviceAppManagement_TargetedManagedAppConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId
+    )
+}
+function Remove-DeviceAppManagement_TargetedManagedAppConfigurations_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId
+    )
+}
+function Remove-DeviceAppManagement_TargetedManagedAppConfigurations_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId
+    )
+}
+function Remove-DeviceAppManagement_TargetedManagedAppConfigurations_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId
+    )
+}
+function Remove-DeviceAppManagement_VppTokens
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $vppTokenId
+    )
+}
+function Remove-DeviceAppManagement_WindowsInformationProtectionPolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId
+    )
+}
+function Remove-DeviceAppManagement_WindowsInformationProtectionPolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType
+    )
+}
+function Remove-DeviceAppManagement_WindowsInformationProtectionPolicies_ExemptAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType
+    )
+}
+function Remove-DeviceAppManagement_WindowsInformationProtectionPolicies_ProtectedAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType
+    )
+}
+function Remove-DeviceManagement
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Remove-DeviceManagement_ApplePushNotificationCertificate
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Remove-DeviceManagement_ConditionalAccessSettings
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Remove-DeviceManagement_DetectedApps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $detectedAppId
+    )
+}
+function Remove-DeviceManagement_DetectedApps_ManagedDevicesReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $detectedAppId
+    )
+}
+function Remove-DeviceManagement_DeviceCategories
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCategoryId
+    )
+}
+function Remove-DeviceManagement_DeviceCompliancePolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Remove-DeviceManagement_DeviceCompliancePolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Remove-DeviceManagement_DeviceCompliancePolicies_DeviceSettingStateSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $settingStateDeviceSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Remove-DeviceManagement_DeviceCompliancePolicies_DeviceStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceComplianceDeviceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Remove-DeviceManagement_DeviceCompliancePolicies_DeviceStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Remove-DeviceManagement_DeviceCompliancePolicies_ScheduledActionsForRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceComplianceScheduledActionForRuleId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Remove-DeviceManagement_DeviceCompliancePolicies_ScheduledActionsForRule_ScheduledActionConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceComplianceActionItemId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $deviceComplianceScheduledActionForRuleId
+    )
+}
+function Remove-DeviceManagement_DeviceCompliancePolicies_UserStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceComplianceUserStatusId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Remove-DeviceManagement_DeviceCompliancePolicies_UserStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Remove-DeviceManagement_DeviceCompliancePolicyDeviceStateSummary
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Remove-DeviceManagement_DeviceCompliancePolicySettingStateSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicySettingStateSummaryId
+    )
+}
+function Remove-DeviceManagement_DeviceCompliancePolicySettingStateSummaries_DeviceComplianceSettingStates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceComplianceSettingStateId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicySettingStateSummaryId
+    )
+}
+function Remove-DeviceManagement_DeviceConfigurationDeviceStateSummaries
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Remove-DeviceManagement_DeviceConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId
+    )
+}
+function Remove-DeviceManagement_DeviceConfigurations_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId
+    )
+}
+function Remove-DeviceManagement_DeviceConfigurations_DeviceSettingStateSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $settingStateDeviceSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId
+    )
+}
+function Remove-DeviceManagement_DeviceConfigurations_DeviceStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationDeviceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId
+    )
+}
+function Remove-DeviceManagement_DeviceConfigurations_DeviceStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId
+    )
+}
+function Remove-DeviceManagement_DeviceConfigurations_UserStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationUserStatusId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId
+    )
+}
+function Remove-DeviceManagement_DeviceConfigurations_UserStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId
+    )
+}
+function Remove-DeviceManagement_DeviceEnrollmentConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentConfigurationId
+    )
+}
+function Remove-DeviceManagement_DeviceEnrollmentConfigurations_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $enrollmentConfigurationAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentConfigurationId
+    )
+}
+function Remove-DeviceManagement_DeviceManagementPartners
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceManagementPartnerId
+    )
+}
+function Remove-DeviceManagement_ExchangeConnectors
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceManagementExchangeConnectorId
+    )
+}
+function Remove-DeviceManagement_IosUpdateStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosUpdateDeviceStatusId
+    )
+}
+function Remove-DeviceManagement_ManagedDeviceOverviewReference
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Remove-DeviceManagement_ManagedDevices
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Remove-DeviceManagement_ManagedDevices_DeviceCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Remove-DeviceManagement_ManagedDevices_DeviceCompliancePolicyStates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyStateId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Remove-DeviceManagement_ManagedDevices_DeviceConfigurationStates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationStateId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Remove-DeviceManagement_MobileThreatDefenseConnectors
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileThreatDefenseConnectorId
+    )
+}
+function Remove-DeviceManagement_NotificationMessageTemplates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $notificationMessageTemplateId
+    )
+}
+function Remove-DeviceManagement_NotificationMessageTemplates_LocalizedNotificationMessages
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $localizedNotificationMessageId,
+
+        [Parameter()]
+        [System.String]
+        $notificationMessageTemplateId
+    )
+}
+function Remove-DeviceManagement_RemoteAssistancePartners
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $remoteAssistancePartnerId
+    )
+}
+function Remove-DeviceManagement_ResourceOperations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $resourceOperationId
+    )
+}
+function Remove-DeviceManagement_RoleAssignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceAndAppManagementRoleAssignmentId
+    )
+}
+function Remove-DeviceManagement_RoleAssignments_RoleDefinitionReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceAndAppManagementRoleAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $roleAssignmentODataType
+    )
+}
+function Remove-DeviceManagement_RoleDefinitions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $roleDefinitionId
+    )
+}
+function Remove-DeviceManagement_RoleDefinitions_RoleAssignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $roleAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $roleDefinitionId
+    )
+}
+function Remove-DeviceManagement_RoleDefinitions_RoleAssignments_RoleDefinitionReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $roleDefinitionId,
+
+        [Parameter()]
+        [System.String]
+        $roleAssignmentId
+    )
+}
+function Remove-DeviceManagement_SoftwareUpdateStatusSummaryReference
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Remove-DeviceManagement_TelecomExpenseManagementPartners
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $telecomExpenseManagementPartnerId
+    )
+}
+function Remove-DeviceManagement_TermsAndConditions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $termsAndConditionId
+    )
+}
+function Remove-DeviceManagement_TermsAndConditions_AcceptanceStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $termsAndConditionsAcceptanceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $termsAndConditionId
+    )
+}
+function Remove-DeviceManagement_TermsAndConditions_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $termsAndConditionsAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $termsAndConditionId
+    )
+}
+function Remove-DeviceManagement_TroubleshootingEvents
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceManagementTroubleshootingEventId
+    )
+}
+function Remove-DeviceManagement_WindowsInformationProtectionAppLearningSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLearningSummaryId
+    )
+}
+function Remove-DeviceManagement_WindowsInformationProtectionNetworkLearningSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionNetworkLearningSummaryId
+    )
+}
+function Remove-Groups
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Remove-Groups_CreatedOnBehalfOfReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Remove-Groups_GroupLifecyclePolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupLifecyclePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Remove-Groups_MemberOfReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Remove-Groups_MembersReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Remove-Groups_MembersWithLicenseErrorsReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Remove-Groups_OwnersReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Remove-Groups_PhotoData
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Remove-Groups_PhotosData
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $profilePhotoId,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Remove-Groups_Settings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupSettingId,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Remove-Groups_TransitiveMemberOfReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Remove-Groups_TransitiveMembersReferences
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Remove-Organization
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $organizationId
+    )
+}
+function Remove-Organization_Extensions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $extensionId,
+
+        [Parameter()]
+        [System.String]
+        $organizationId
+    )
+}
+function Set-Groups_PhotoData
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $Data,
+
+        [Parameter()]
+        [System.String]
+        $ContentType
+    )
+}
+function Set-Groups_PhotosData
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $profilePhotoId,
+
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $Data,
+
+        [Parameter()]
+        [System.String]
+        $ContentType
+    )
+}
+function Update-DeviceAppManagement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $microsoftStoreForBusinessLastSuccessfulSyncDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $isEnabledForMicrosoftStoreForBusiness,
+
+        [Parameter()]
+        [System.String]
+        $microsoftStoreForBusinessLanguage,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $microsoftStoreForBusinessLastCompletedApplicationSyncTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $mobileApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $mobileAppCategories,
+
+        [Parameter()]
+        [System.Object[]]
+        $mobileAppConfigurations,
+
+        [Parameter()]
+        [System.Object[]]
+        $vppTokens,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedAppPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $iosManagedAppProtections,
+
+        [Parameter()]
+        [System.Object[]]
+        $androidManagedAppProtections,
+
+        [Parameter()]
+        [System.Object[]]
+        $defaultManagedAppProtections,
+
+        [Parameter()]
+        [System.Object[]]
+        $targetedManagedAppConfigurations,
+
+        [Parameter()]
+        [System.Object[]]
+        $mdmWindowsInformationProtectionPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $windowsInformationProtectionPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedAppRegistrations,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedAppStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedEBooks,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_AndroidManagedAppProtections
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.Boolean]
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $encryptAppData,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $allowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Boolean]
+        $organizationalCredentialsRequired,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $dataBackupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceComplianceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $saveAsBlocked,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [System.Boolean]
+        $pinRequired,
+
+        [Parameter()]
+        [System.Int32]
+        $maximumPinRetries,
+
+        [Parameter()]
+        [System.Boolean]
+        $simplePinBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $minimumPinLength,
+
+        [Parameter()]
+        [System.String]
+        $pinCharacterSet,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodBeforePinReset,
+
+        [Parameter()]
+        [System.String[]]
+        $allowedDataStorageLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $contactSyncBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $printBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $fingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_AndroidManagedAppProtections_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_AndroidManagedAppProtections_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_AndroidManagedAppProtections_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_DefaultManagedAppProtections
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $appDataEncryptionType,
+
+        [Parameter()]
+        [System.Boolean]
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $encryptAppData,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredSdkVersion,
+
+        [Parameter()]
+        [System.Object[]]
+        $customSettings,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $faceIdBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $allowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Boolean]
+        $organizationalCredentialsRequired,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $dataBackupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceComplianceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $saveAsBlocked,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [System.Boolean]
+        $pinRequired,
+
+        [Parameter()]
+        [System.Int32]
+        $maximumPinRetries,
+
+        [Parameter()]
+        [System.Boolean]
+        $simplePinBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $minimumPinLength,
+
+        [Parameter()]
+        [System.String]
+        $pinCharacterSet,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodBeforePinReset,
+
+        [Parameter()]
+        [System.String[]]
+        $allowedDataStorageLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $contactSyncBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $printBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $fingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_DefaultManagedAppProtections_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_DefaultManagedAppProtections_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_IosManagedAppProtections
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $appDataEncryptionType,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredSdkVersion,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $faceIdBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $allowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Boolean]
+        $organizationalCredentialsRequired,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $dataBackupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceComplianceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $saveAsBlocked,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [System.Boolean]
+        $pinRequired,
+
+        [Parameter()]
+        [System.Int32]
+        $maximumPinRetries,
+
+        [Parameter()]
+        [System.Boolean]
+        $simplePinBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $minimumPinLength,
+
+        [Parameter()]
+        [System.String]
+        $pinCharacterSet,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodBeforePinReset,
+
+        [Parameter()]
+        [System.String[]]
+        $allowedDataStorageLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $contactSyncBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $printBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $fingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_IosManagedAppProtections_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_IosManagedAppProtections_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_IosManagedAppProtections_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedAppPolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $enforcementLevel,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseDomain,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProtectedDomainNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $protectionUnderLockConfigRequired,
+
+        [Parameter()]
+        [System.Object]
+        $dataRecoveryCertificate,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnUnenrollDisabled,
+
+        [Parameter()]
+        [System.Guid]
+        $rightsManagementServicesTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureRightsManagementServicesAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $iconsVisible,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxiedDomains,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseIPRanges,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseIPRangesAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxyServers,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseInternalProxyServers,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $neutralDomainResources,
+
+        [Parameter()]
+        [System.Boolean]
+        $indexingEncryptedStoresOrItemsBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $smbAutoEncryptedFileExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsInformationProtectionPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnMdmHandoffDisabled,
+
+        [Parameter()]
+        [System.String]
+        $mdmEnrollmentUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsHelloForBusinessBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMinimumLength,
+
+        [Parameter()]
+        [System.String]
+        $pinUppercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinLowercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinSpecialCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $pinExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $numberOfPastPinsRemembered,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMaximumAttemptCount,
+
+        [Parameter()]
+        [System.Int32]
+        $minutesOfInactivityBeforeDeviceLock,
+
+        [Parameter()]
+        [System.Int32]
+        $daysWithoutContactBeforeUnenroll,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $mdmWindowsInformationProtectionPolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $customSettings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $targetedManagedAppConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $allowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Boolean]
+        $organizationalCredentialsRequired,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $dataBackupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceComplianceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $saveAsBlocked,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [System.Boolean]
+        $pinRequired,
+
+        [Parameter()]
+        [System.Int32]
+        $maximumPinRetries,
+
+        [Parameter()]
+        [System.Boolean]
+        $simplePinBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $minimumPinLength,
+
+        [Parameter()]
+        [System.String]
+        $pinCharacterSet,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodBeforePinReset,
+
+        [Parameter()]
+        [System.String[]]
+        $allowedDataStorageLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $contactSyncBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $printBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $fingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningAppVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $defaultManagedAppProtection,
+
+        [Parameter()]
+        [System.String]
+        $appDataEncryptionType,
+
+        [Parameter()]
+        [System.Boolean]
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $encryptAppData,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredSdkVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $faceIdBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidManagedAppProtection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosManagedAppProtection,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedAppPolicies_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedAppPolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedAppPolicies_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedAppPolicies_ExemptAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedAppPolicies_ProtectedAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedAppRegistrations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $applicationVersion,
+
+        [Parameter()]
+        [System.String]
+        $managementSdkVersion,
+
+        [Parameter()]
+        [System.String]
+        $platformVersion,
+
+        [Parameter()]
+        [System.String]
+        $deviceType,
+
+        [Parameter()]
+        [System.String]
+        $deviceTag,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String[]]
+        $flaggedReasons,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.Object]
+        $appIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $appliedPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $intendedPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $operations,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidManagedAppRegistration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosManagedAppRegistration,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $enforcementLevel,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseDomain,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProtectedDomainNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $protectionUnderLockConfigRequired,
+
+        [Parameter()]
+        [System.Object]
+        $dataRecoveryCertificate,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnUnenrollDisabled,
+
+        [Parameter()]
+        [System.Guid]
+        $rightsManagementServicesTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureRightsManagementServicesAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $iconsVisible,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxiedDomains,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseIPRanges,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseIPRangesAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxyServers,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseInternalProxyServers,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $neutralDomainResources,
+
+        [Parameter()]
+        [System.Boolean]
+        $indexingEncryptedStoresOrItemsBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $smbAutoEncryptedFileExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsInformationProtectionPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnMdmHandoffDisabled,
+
+        [Parameter()]
+        [System.String]
+        $mdmEnrollmentUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsHelloForBusinessBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMinimumLength,
+
+        [Parameter()]
+        [System.String]
+        $pinUppercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinLowercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinSpecialCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $pinExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $numberOfPastPinsRemembered,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMaximumAttemptCount,
+
+        [Parameter()]
+        [System.Int32]
+        $minutesOfInactivityBeforeDeviceLock,
+
+        [Parameter()]
+        [System.Int32]
+        $daysWithoutContactBeforeUnenroll,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $mdmWindowsInformationProtectionPolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $customSettings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $targetedManagedAppConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $allowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Boolean]
+        $organizationalCredentialsRequired,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $dataBackupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceComplianceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $saveAsBlocked,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [System.Boolean]
+        $pinRequired,
+
+        [Parameter()]
+        [System.Int32]
+        $maximumPinRetries,
+
+        [Parameter()]
+        [System.Boolean]
+        $simplePinBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $minimumPinLength,
+
+        [Parameter()]
+        [System.String]
+        $pinCharacterSet,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodBeforePinReset,
+
+        [Parameter()]
+        [System.String[]]
+        $allowedDataStorageLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $contactSyncBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $printBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $fingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningAppVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $defaultManagedAppProtection,
+
+        [Parameter()]
+        [System.String]
+        $appDataEncryptionType,
+
+        [Parameter()]
+        [System.Boolean]
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $encryptAppData,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredSdkVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $faceIdBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidManagedAppProtection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosManagedAppProtection,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $appliedPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $appliedPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $appliedPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies_ExemptAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $appliedPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedAppRegistrations_AppliedPolicies_ProtectedAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $appliedPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $enforcementLevel,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseDomain,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProtectedDomainNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $protectionUnderLockConfigRequired,
+
+        [Parameter()]
+        [System.Object]
+        $dataRecoveryCertificate,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnUnenrollDisabled,
+
+        [Parameter()]
+        [System.Guid]
+        $rightsManagementServicesTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureRightsManagementServicesAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $iconsVisible,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxiedDomains,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseIPRanges,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseIPRangesAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxyServers,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseInternalProxyServers,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $neutralDomainResources,
+
+        [Parameter()]
+        [System.Boolean]
+        $indexingEncryptedStoresOrItemsBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $smbAutoEncryptedFileExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsInformationProtectionPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnMdmHandoffDisabled,
+
+        [Parameter()]
+        [System.String]
+        $mdmEnrollmentUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsHelloForBusinessBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMinimumLength,
+
+        [Parameter()]
+        [System.String]
+        $pinUppercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinLowercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinSpecialCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $pinExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $numberOfPastPinsRemembered,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMaximumAttemptCount,
+
+        [Parameter()]
+        [System.Int32]
+        $minutesOfInactivityBeforeDeviceLock,
+
+        [Parameter()]
+        [System.Int32]
+        $daysWithoutContactBeforeUnenroll,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $mdmWindowsInformationProtectionPolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $customSettings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $targetedManagedAppConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $allowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Boolean]
+        $organizationalCredentialsRequired,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $dataBackupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceComplianceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $saveAsBlocked,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [System.Boolean]
+        $pinRequired,
+
+        [Parameter()]
+        [System.Int32]
+        $maximumPinRetries,
+
+        [Parameter()]
+        [System.Boolean]
+        $simplePinBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $minimumPinLength,
+
+        [Parameter()]
+        [System.String]
+        $pinCharacterSet,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodBeforePinReset,
+
+        [Parameter()]
+        [System.String[]]
+        $allowedDataStorageLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $contactSyncBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $printBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $fingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningAppVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $defaultManagedAppProtection,
+
+        [Parameter()]
+        [System.String]
+        $appDataEncryptionType,
+
+        [Parameter()]
+        [System.Boolean]
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $encryptAppData,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredSdkVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $faceIdBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidManagedAppProtection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosManagedAppProtection,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $intendedPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $intendedPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $intendedPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies_ExemptAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $intendedPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedAppRegistrations_IntendedPolicies_ProtectedAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $intendedPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedAppRegistrations_Operations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppOperationId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedAppStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppStatusId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedAppStatusRaw,
+
+        [Parameter()]
+        [System.Object]
+        $content,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedEBooks
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $publisher,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $publishedDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $largeCover,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $informationUrl,
+
+        [Parameter()]
+        [System.String]
+        $privacyInformationUrl,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object]
+        $installSummary,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStates,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStateSummary,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosVppEBook,
+
+        [Parameter()]
+        [System.Guid]
+        $vppTokenId,
+
+        [Parameter()]
+        [System.String]
+        $appleId,
+
+        [Parameter()]
+        [System.String]
+        $vppOrganizationName,
+
+        [Parameter()]
+        [System.String[]]
+        $genres,
+
+        [Parameter()]
+        [System.String]
+        $language,
+
+        [Parameter()]
+        [System.String]
+        $seller,
+
+        [Parameter()]
+        [System.Int32]
+        $totalLicenseCount,
+
+        [Parameter()]
+        [System.Int32]
+        $usedLicenseCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedEBooks_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedEBookAssignment,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $installIntent,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosVppEBookAssignment,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedEBooks_DeviceStates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceInstallStateId,
+
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $installState,
+
+        [Parameter()]
+        [System.String]
+        $errorCode,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.String]
+        $osDescription,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedEBooks_InstallSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.Int32]
+        $installedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notInstalledDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $installedUserCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedUserCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notInstalledUserCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedEBooks_UserStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $userInstallStateSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.Int32]
+        $installedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notInstalledDeviceCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStates,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_ManagedEBooks_UserStateSummary_DeviceStates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceInstallStateId,
+
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $userInstallStateSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $installState,
+
+        [Parameter()]
+        [System.String]
+        $errorCode,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.String]
+        $osDescription,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_MdmWindowsInformationProtectionPolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $enforcementLevel,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseDomain,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProtectedDomainNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $protectionUnderLockConfigRequired,
+
+        [Parameter()]
+        [System.Object]
+        $dataRecoveryCertificate,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnUnenrollDisabled,
+
+        [Parameter()]
+        [System.Guid]
+        $rightsManagementServicesTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureRightsManagementServicesAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $iconsVisible,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxiedDomains,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseIPRanges,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseIPRangesAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxyServers,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseInternalProxyServers,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $neutralDomainResources,
+
+        [Parameter()]
+        [System.Boolean]
+        $indexingEncryptedStoresOrItemsBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $smbAutoEncryptedFileExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_MdmWindowsInformationProtectionPolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_MdmWindowsInformationProtectionPolicies_ExemptAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_MdmWindowsInformationProtectionPolicies_ProtectedAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_MobileAppCategories
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppCategoryId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_MobileAppConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.String[]]
+        $targetedMobileApps,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStatuses,
+
+        [Parameter()]
+        [System.Object]
+        $deviceStatusSummary,
+
+        [Parameter()]
+        [System.Object]
+        $userStatusSummary,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosMobileAppConfiguration,
+
+        [Parameter()]
+        [System.Byte[]]
+        $encodedSettingXml,
+
+        [Parameter()]
+        [System.Object[]]
+        $settings,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_MobileAppConfigurations_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_MobileAppConfigurations_DeviceStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationDeviceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $deviceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_MobileAppConfigurations_DeviceStatusSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_MobileAppConfigurations_UserStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationUserStatusId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $devicesCount,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_MobileAppConfigurations_UserStatusSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_MobileApps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $publisher,
+
+        [Parameter()]
+        [System.Object]
+        $largeIcon,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $isFeatured,
+
+        [Parameter()]
+        [System.String]
+        $privacyInformationUrl,
+
+        [Parameter()]
+        [System.String]
+        $informationUrl,
+
+        [Parameter()]
+        [System.String]
+        $owner,
+
+        [Parameter()]
+        [System.String]
+        $developer,
+
+        [Parameter()]
+        [System.String]
+        $notes,
+
+        [Parameter()]
+        [System.String]
+        $publishingState,
+
+        [Parameter()]
+        [System.Object[]]
+        $categories,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosStoreApp,
+
+        [Parameter()]
+        [System.String]
+        $bundleId,
+
+        [Parameter()]
+        [System.String]
+        $appStoreUrl,
+
+        [Parameter()]
+        [System.Object]
+        $applicableDeviceType,
+
+        [Parameter()]
+        [System.Object]
+        $minimumSupportedOperatingSystem,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosVppApp,
+
+        [Parameter()]
+        [System.Int32]
+        $usedLicenseCount,
+
+        [Parameter()]
+        [System.Int32]
+        $totalLicenseCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $releaseDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $licensingType,
+
+        [Parameter()]
+        [System.String]
+        $vppTokenOrganizationName,
+
+        [Parameter()]
+        [System.String]
+        $vppTokenAccountType,
+
+        [Parameter()]
+        [System.String]
+        $vppTokenAppleId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidStoreApp,
+
+        [Parameter()]
+        [System.String]
+        $packageId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $webApp,
+
+        [Parameter()]
+        [System.String]
+        $appUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $useManagedBrowser,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $microsoftStoreForBusinessApp,
+
+        [Parameter()]
+        [System.String]
+        $productKey,
+
+        [Parameter()]
+        [System.String]
+        $licenseType,
+
+        [Parameter()]
+        [System.String]
+        $packageIdentityName,
+
+        [Parameter()]
+        [System.String]
+        $committedContentVersion,
+
+        [Parameter()]
+        [System.String]
+        $fileName,
+
+        [Parameter()]
+        [System.Int64]
+        $size,
+
+        [Parameter()]
+        [System.Object[]]
+        $contentVersions,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosLobApp,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $expirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $versionNumber,
+
+        [Parameter()]
+        [System.String]
+        $buildNumber,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidLobApp,
+
+        [Parameter()]
+        [System.String]
+        $versionName,
+
+        [Parameter()]
+        [System.String]
+        $versionCode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsUniversalAppX,
+
+        [Parameter()]
+        [System.String]
+        $applicableArchitectures,
+
+        [Parameter()]
+        [System.String]
+        $applicableDeviceTypes,
+
+        [Parameter()]
+        [System.String]
+        $identityName,
+
+        [Parameter()]
+        [System.String]
+        $identityPublisherHash,
+
+        [Parameter()]
+        [System.String]
+        $identityResourceIdentifier,
+
+        [Parameter()]
+        [System.Boolean]
+        $isBundle,
+
+        [Parameter()]
+        [System.String]
+        $identityVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsMobileMSI,
+
+        [Parameter()]
+        [System.String]
+        $commandLine,
+
+        [Parameter()]
+        [System.String]
+        $productCode,
+
+        [Parameter()]
+        [System.String]
+        $productVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $ignoreVersionDetection,
+
+        [Parameter()]
+        [System.String]
+        $appAvailability,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedIOSLobApp,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedAndroidLobApp,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedIOSStoreApp,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedAndroidStoreApp,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSOfficeSuiteApp,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_MobileApps_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $intent,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.Object]
+        $settings,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_MobileApps_ContentVersions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppContentId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppODataType,
+
+        [Parameter()]
+        [System.Object[]]
+        $files,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_MobileApps_ContentVersions_Files
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppContentFileId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppODataType,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppContentId,
+
+        [Parameter()]
+        [System.String]
+        $azureStorageUri,
+
+        [Parameter()]
+        [System.Boolean]
+        $isCommitted,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.Int64]
+        $size,
+
+        [Parameter()]
+        [System.Int64]
+        $sizeEncrypted,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $azureStorageUriExpirationDateTime,
+
+        [Parameter()]
+        [System.Byte[]]
+        $manifest,
+
+        [Parameter()]
+        [System.String]
+        $uploadState,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_TargetedManagedAppConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $customSettings,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_TargetedManagedAppConfigurations_Apps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_TargetedManagedAppConfigurations_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_TargetedManagedAppConfigurations_DeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_VppTokens
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $vppTokenId,
+
+        [Parameter()]
+        [System.String]
+        $organizationName,
+
+        [Parameter()]
+        [System.String]
+        $vppTokenAccountType,
+
+        [Parameter()]
+        [System.String]
+        $appleId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $expirationDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $token,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.String]
+        $lastSyncStatus,
+
+        [Parameter()]
+        [System.Boolean]
+        $automaticallyUpdateApps,
+
+        [Parameter()]
+        [System.String]
+        $countryOrRegion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_WindowsInformationProtectionPolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnMdmHandoffDisabled,
+
+        [Parameter()]
+        [System.String]
+        $mdmEnrollmentUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsHelloForBusinessBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMinimumLength,
+
+        [Parameter()]
+        [System.String]
+        $pinUppercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinLowercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinSpecialCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $pinExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $numberOfPastPinsRemembered,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMaximumAttemptCount,
+
+        [Parameter()]
+        [System.Int32]
+        $minutesOfInactivityBeforeDeviceLock,
+
+        [Parameter()]
+        [System.Int32]
+        $daysWithoutContactBeforeUnenroll,
+
+        [Parameter()]
+        [System.String]
+        $enforcementLevel,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseDomain,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProtectedDomainNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $protectionUnderLockConfigRequired,
+
+        [Parameter()]
+        [System.Object]
+        $dataRecoveryCertificate,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnUnenrollDisabled,
+
+        [Parameter()]
+        [System.Guid]
+        $rightsManagementServicesTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureRightsManagementServicesAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $iconsVisible,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxiedDomains,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseIPRanges,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseIPRangesAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxyServers,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseInternalProxyServers,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $neutralDomainResources,
+
+        [Parameter()]
+        [System.Boolean]
+        $indexingEncryptedStoresOrItemsBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $smbAutoEncryptedFileExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_WindowsInformationProtectionPolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_WindowsInformationProtectionPolicies_ExemptAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceAppManagement_WindowsInformationProtectionPolicies_ProtectedAppLockerFiles
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $subscriptionState,
+
+        [Parameter()]
+        [System.Object]
+        $settings,
+
+        [Parameter()]
+        [System.Object]
+        $intuneBrand,
+
+        [Parameter()]
+        [System.Object[]]
+        $termsAndConditions,
+
+        [Parameter()]
+        [System.Object]
+        $applePushNotificationCertificate,
+
+        [Parameter()]
+        [System.Object]
+        $managedDeviceOverview,
+
+        [Parameter()]
+        [System.Object[]]
+        $detectedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedDevices,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceConfigurations,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceCompliancePolicies,
+
+        [Parameter()]
+        [System.Object]
+        $softwareUpdateStatusSummary,
+
+        [Parameter()]
+        [System.Object]
+        $deviceCompliancePolicyDeviceStateSummary,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceCompliancePolicySettingStateSummaries,
+
+        [Parameter()]
+        [System.Object]
+        $deviceConfigurationDeviceStateSummaries,
+
+        [Parameter()]
+        [System.Object[]]
+        $iosUpdateStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceCategories,
+
+        [Parameter()]
+        [System.Object[]]
+        $exchangeConnectors,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceEnrollmentConfigurations,
+
+        [Parameter()]
+        [System.Object]
+        $conditionalAccessSettings,
+
+        [Parameter()]
+        [System.Object[]]
+        $mobileThreatDefenseConnectors,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceManagementPartners,
+
+        [Parameter()]
+        [System.Object[]]
+        $notificationMessageTemplates,
+
+        [Parameter()]
+        [System.Object[]]
+        $roleDefinitions,
+
+        [Parameter()]
+        [System.Object[]]
+        $roleAssignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $resourceOperations,
+
+        [Parameter()]
+        [System.Object[]]
+        $telecomExpenseManagementPartners,
+
+        [Parameter()]
+        [System.Object[]]
+        $remoteAssistancePartners,
+
+        [Parameter()]
+        [System.Object[]]
+        $windowsInformationProtectionAppLearningSummaries,
+
+        [Parameter()]
+        [System.Object[]]
+        $windowsInformationProtectionNetworkLearningSummaries,
+
+        [Parameter()]
+        [System.Object[]]
+        $troubleshootingEvents,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_ApplePushNotificationCertificate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $appleIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $topicIdentifier,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $expirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $certificate,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_ConditionalAccessSettings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $enabled,
+
+        [Parameter()]
+        [System.Guid[]]
+        $includedGroups,
+
+        [Parameter()]
+        [System.Guid[]]
+        $excludedGroups,
+
+        [Parameter()]
+        [System.Boolean]
+        $overrideDefaultRule,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DetectedApps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $detectedAppId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.Int64]
+        $sizeInByte,
+
+        [Parameter()]
+        [System.Int32]
+        $deviceCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedDevices,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceCategories
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCategoryId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceCompliancePolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $scheduledActionsForRule,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStatuses,
+
+        [Parameter()]
+        [System.Object]
+        $deviceStatusOverview,
+
+        [Parameter()]
+        [System.Object]
+        $userStatusOverview,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceSettingStateSummaries,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsPhone81CompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.String]
+        $passwordRequiredType,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequired,
+
+        [Parameter()]
+        [System.String]
+        $osMinimumVersion,
+
+        [Parameter()]
+        [System.String]
+        $osMaximumVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireEncryption,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows81CompliancePolicy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10MobileCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequireToUnlockFromIdle,
+
+        [Parameter()]
+        [System.Boolean]
+        $earlyLaunchAntiMalwareDriverEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $bitLockerEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $secureBootEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $codeIntegrityEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10CompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequiredToUnlockFromIdle,
+
+        [Parameter()]
+        [System.Boolean]
+        $requireHealthyDeviceReport,
+
+        [Parameter()]
+        [System.String]
+        $mobileOsMinimumVersion,
+
+        [Parameter()]
+        [System.String]
+        $mobileOsMaximumVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $systemIntegrityProtectionEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceThreatProtectionEnabled,
+
+        [Parameter()]
+        [System.String]
+        $deviceThreatProtectionRequiredSecurityLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallBlockAllIncoming,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallEnableStealthMode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodePreviousPasscodeBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.String]
+        $passcodeRequiredType,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityBlockJailbrokenDevices,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedEmailProfileRequired,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidWorkProfileCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityPreventInstallAppsFromUnknownSources,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityDisableUsbDebugging,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireVerifyApps,
+
+        [Parameter()]
+        [System.String]
+        $minAndroidSecurityPatchLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireSafetyNetAttestationBasicIntegrity,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireSafetyNetAttestationCertifiedDevice,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireGooglePlayServices,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireUpToDateSecurityProviders,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireCompanyPortalAppIntegrity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidCompliancePolicy,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceCompliancePolicies_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceCompliancePolicies_DeviceSettingStateSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $settingStateDeviceSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $settingName,
+
+        [Parameter()]
+        [System.String]
+        $instancePath,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceCompliancePolicies_DeviceStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceComplianceDeviceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $deviceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceCompliancePolicies_DeviceStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceCompliancePolicies_ScheduledActionsForRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceComplianceScheduledActionForRuleId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $ruleName,
+
+        [Parameter()]
+        [System.Object[]]
+        $scheduledActionConfigurations,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceCompliancePolicies_ScheduledActionsForRule_ScheduledActionConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceComplianceActionItemId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $deviceComplianceScheduledActionForRuleId,
+
+        [Parameter()]
+        [System.Int32]
+        $gracePeriodHours,
+
+        [Parameter()]
+        [System.String]
+        $actionType,
+
+        [Parameter()]
+        [System.String]
+        $notificationTemplateId,
+
+        [Parameter()]
+        [System.String[]]
+        $notificationMessageCCList,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceCompliancePolicies_UserStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceComplianceUserStatusId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $devicesCount,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceCompliancePolicies_UserStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceCompliancePolicyDeviceStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $inGracePeriodCount,
+
+        [Parameter()]
+        [System.Int32]
+        $configManagerCount,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceCompliancePolicySettingStateSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicySettingStateSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $setting,
+
+        [Parameter()]
+        [System.String]
+        $settingName,
+
+        [Parameter()]
+        [System.String]
+        $platformType,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceComplianceSettingStates,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceCompliancePolicySettingStateSummaries_DeviceComplianceSettingStates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceComplianceSettingStateId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicySettingStateSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $setting,
+
+        [Parameter()]
+        [System.String]
+        $settingName,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $userEmail,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceConfigurationDeviceStateSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStatuses,
+
+        [Parameter()]
+        [System.Object]
+        $deviceStatusOverview,
+
+        [Parameter()]
+        [System.Object]
+        $userStatusOverview,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceSettingStateSummaries,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10TeamGeneralConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureOperationalInsightsBlockTelemetry,
+
+        [Parameter()]
+        [System.String]
+        $azureOperationalInsightsWorkspaceId,
+
+        [Parameter()]
+        [System.String]
+        $azureOperationalInsightsWorkspaceKey,
+
+        [Parameter()]
+        [System.Boolean]
+        $connectAppBlockAutoLaunch,
+
+        [Parameter()]
+        [System.Boolean]
+        $maintenanceWindowBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $maintenanceWindowDurationInHours,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $maintenanceWindowStartTime,
+
+        [Parameter()]
+        [System.String]
+        $miracastChannel,
+
+        [Parameter()]
+        [System.Boolean]
+        $miracastBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $miracastRequirePin,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockMyMeetingsAndFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockSessionResume,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockSigninSuggestions,
+
+        [Parameter()]
+        [System.Int32]
+        $settingsDefaultVolume,
+
+        [Parameter()]
+        [System.Int32]
+        $settingsScreenTimeoutInMinutes,
+
+        [Parameter()]
+        [System.Int32]
+        $settingsSessionTimeoutInMinutes,
+
+        [Parameter()]
+        [System.Int32]
+        $settingsSleepTimeoutInMinutes,
+
+        [Parameter()]
+        [System.Boolean]
+        $welcomeScreenBlockAutomaticWakeUp,
+
+        [Parameter()]
+        [System.String]
+        $welcomeScreenBackgroundImageUrl,
+
+        [Parameter()]
+        [System.String]
+        $welcomeScreenMeetingInformation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsPhone81GeneralConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $appsBlockCopyPaste,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $cameraBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockWifiTethering,
+
+        [Parameter()]
+        [System.Object[]]
+        $compliantAppsList,
+
+        [Parameter()]
+        [System.String]
+        $compliantAppListType,
+
+        [Parameter()]
+        [System.Boolean]
+        $diagnosticDataBlockSubmission,
+
+        [Parameter()]
+        [System.Boolean]
+        $emailBlockAddingAccounts,
+
+        [Parameter()]
+        [System.Boolean]
+        $locationServicesBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $microsoftAccountBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $nfcBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinutesOfInactivityBeforeScreenTimeout,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordSignInFailureCountBeforeFactoryReset,
+
+        [Parameter()]
+        [System.String]
+        $passwordRequiredType,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageBlockRemovableStorage,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $webBrowserBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $wifiBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $wifiBlockAutomaticConnectHotspots,
+
+        [Parameter()]
+        [System.Boolean]
+        $wifiBlockHotspotReporting,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsStoreBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows81GeneralConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $accountsBlockAddingNonMicrosoftAccountEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockAutomaticDetectionOfIntranetSites,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockEnterpriseModeAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockJavaScript,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockPlugins,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockSendingDoNotTrackHeader,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockSingleWordEntryOnIntranetSites,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserRequireSmartScreen,
+
+        [Parameter()]
+        [System.String]
+        $browserEnterpriseModeSiteListLocation,
+
+        [Parameter()]
+        [System.String]
+        $browserInternetSecurityLevel,
+
+        [Parameter()]
+        [System.String]
+        $browserIntranetSecurityLevel,
+
+        [Parameter()]
+        [System.String]
+        $browserLoggingReportLocation,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserRequireHighSecurityForRestrictedSites,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserRequireFirewall,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserRequireFraudWarning,
+
+        [Parameter()]
+        [System.String]
+        $browserTrustedSitesSecurityLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockDataRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $diagnosticsBlockDataSubmission,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockPicturePasswordAndPin,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireDeviceEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $updatesRequireAutomaticUpdates,
+
+        [Parameter()]
+        [System.String]
+        $userAccountControlSettings,
+
+        [Parameter()]
+        [System.String]
+        $workFoldersUrl,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsUpdateForBusinessConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $deliveryOptimizationMode,
+
+        [Parameter()]
+        [System.String]
+        $prereleaseFeatures,
+
+        [Parameter()]
+        [System.String]
+        $automaticUpdateMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $microsoftUpdateServiceAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $driversExcluded,
+
+        [Parameter()]
+        [System.Object]
+        $installationSchedule,
+
+        [Parameter()]
+        [System.Int32]
+        $qualityUpdatesDeferralPeriodInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $featureUpdatesDeferralPeriodInDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $qualityUpdatesPaused,
+
+        [Parameter()]
+        [System.Boolean]
+        $featureUpdatesPaused,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $qualityUpdatesPauseExpiryDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $featureUpdatesPauseExpiryDateTime,
+
+        [Parameter()]
+        [System.String]
+        $businessReadyUpdatesOnly,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsPhone81CustomConfiguration,
+
+        [Parameter()]
+        [System.Object[]]
+        $omaSettings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10SecureAssessmentConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $launchUri,
+
+        [Parameter()]
+        [System.String]
+        $configurationAccount,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowPrinting,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowScreenCapture,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowTextSuggestion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $sharedPCConfiguration,
+
+        [Parameter()]
+        [System.Object]
+        $accountManagerPolicy,
+
+        [Parameter()]
+        [System.String]
+        $allowedAccounts,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowLocalStorage,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAccountManager,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableEduPolicies,
+
+        [Parameter()]
+        [System.Boolean]
+        $disablePowerPolicies,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableSignInOnResume,
+
+        [Parameter()]
+        [System.Boolean]
+        $enabled,
+
+        [Parameter()]
+        [System.Int32]
+        $idleTimeBeforeSleepInSeconds,
+
+        [Parameter()]
+        [System.String]
+        $kioskAppDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $kioskAppUserModelId,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $maintenanceStartTime,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10EnterpriseModernAppManagementConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $uninstallBuiltInApps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10CustomConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $editionUpgradeConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $licenseType,
+
+        [Parameter()]
+        [System.String]
+        $targetEdition,
+
+        [Parameter()]
+        [System.String]
+        $license,
+
+        [Parameter()]
+        [System.String]
+        $productKey,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsDefenderAdvancedThreatProtectionConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowSampleSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $enableExpeditedTelemetryReporting,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10GeneralConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintDiscoveryEndPoint,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintOAuthAuthority,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintOAuthClientIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintResourceIdentifier,
+
+        [Parameter()]
+        [System.Int32]
+        $enterpriseCloudPrintDiscoveryMaxLimit,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintMopriaDiscoveryResourceIdentifier,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchBlockDiacritics,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchDisableAutoLanguageDetection,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchDisableIndexingEncryptedItems,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchEnableRemoteQueries,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchDisableIndexerBackoff,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchDisableIndexingRemovableDrive,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchEnableAutomaticIndexSizeManangement,
+
+        [Parameter()]
+        [System.String]
+        $diagnosticsDataSubmissionMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $oneDriveDisableFileSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenEnableAppInstallControl,
+
+        [Parameter()]
+        [System.String]
+        $personalizationDesktopImageUrl,
+
+        [Parameter()]
+        [System.String]
+        $personalizationLockScreenImageUrl,
+
+        [Parameter()]
+        [System.String[]]
+        $bluetoothAllowedServices,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlockAdvertising,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlockDiscoverableMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlockPrePairing,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlocked,
+
+        [Parameter()]
+        [System.String]
+        $edgeCookiePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockDeveloperTools,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockSendingDoNotTrackHeader,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockInPrivateBrowsing,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockJavaScript,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockPasswordManager,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockAddressBarDropdown,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockCompatibilityList,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeClearBrowsingDataOnExit,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeAllowStartPagesModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeDisableFirstRunPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockLiveTileDataCollection,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeSyncFavoritesWithInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockDataWhenRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockVpn,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockVpnWhenRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderBlockEndUserAccess,
+
+        [Parameter()]
+        [System.Int32]
+        $defenderDaysBeforeDeletingQuarantinedMalware,
+
+        [Parameter()]
+        [System.Object]
+        $defenderDetectedMalwareActions,
+
+        [Parameter()]
+        [System.String]
+        $defenderSystemScanSchedule,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderFilesAndFoldersToExclude,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderFileExtensionsToExclude,
+
+        [Parameter()]
+        [System.Int32]
+        $defenderScanMaxCpu,
+
+        [Parameter()]
+        [System.String]
+        $defenderMonitorFileActivity,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderProcessesToExclude,
+
+        [Parameter()]
+        [System.String]
+        $defenderPromptForSampleSubmission,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireBehaviorMonitoring,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireCloudProtection,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireNetworkInspectionSystem,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireRealTimeMonitoring,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanArchiveFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanDownloads,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanNetworkFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanIncomingMail,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanMappedNetworkDrivesDuringFullScan,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanRemovableDrivesDuringFullScan,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanScriptsLoadedInInternetExplorer,
+
+        [Parameter()]
+        [System.Int32]
+        $defenderSignatureUpdateIntervalInHours,
+
+        [Parameter()]
+        [System.String]
+        $defenderScanType,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $defenderScheduledScanTime,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $defenderScheduledQuickScanTime,
+
+        [Parameter()]
+        [System.String]
+        $defenderCloudBlockLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenAllowTimeoutConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockActionCenterNotifications,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockCortana,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockToastNotifications,
+
+        [Parameter()]
+        [System.Int32]
+        $lockScreenTimeoutInSeconds,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequireWhenResumeFromIdleState,
+
+        [Parameter()]
+        [System.String]
+        $privacyAdvertisingId,
+
+        [Parameter()]
+        [System.Boolean]
+        $privacyAutoAcceptPairingAndConsentPrompts,
+
+        [Parameter()]
+        [System.Boolean]
+        $privacyBlockInputPersonalization,
+
+        [Parameter()]
+        [System.Boolean]
+        $startBlockUnpinningAppsFromTaskbar,
+
+        [Parameter()]
+        [System.String]
+        $startMenuAppListVisibility,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideChangeAccountSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideFrequentlyUsedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideHibernate,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideLock,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHidePowerButton,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideRecentJumpLists,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideRecentlyAddedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideRestartOptions,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideShutDown,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideSignOut,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideSleep,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideSwitchAccount,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideUserTile,
+
+        [Parameter()]
+        [System.Byte[]]
+        $startMenuLayoutEdgeAssetsXml,
+
+        [Parameter()]
+        [System.Byte[]]
+        $startMenuLayoutXml,
+
+        [Parameter()]
+        [System.String]
+        $startMenuMode,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderDocuments,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderDownloads,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderFileExplorer,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderHomeGroup,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderMusic,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderNetwork,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderPersonalFolder,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderPictures,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderSettings,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderVideos,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockSettingsApp,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockSystemPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockDevicesPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockNetworkInternetPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockPersonalizationPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockAccountsPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockTimeLanguagePage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockEaseOfAccessPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockPrivacyPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockUpdateSecurityPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockAppsPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockGamingPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockConsumerSpecificFeatures,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockOnActionCenter,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockTailoredExperiences,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockThirdPartyNotifications,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockWelcomeExperience,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockWindowsTips,
+
+        [Parameter()]
+        [System.String]
+        $windowsSpotlightConfigureOnLockScreen,
+
+        [Parameter()]
+        [System.Boolean]
+        $networkProxyApplySettingsDeviceWide,
+
+        [Parameter()]
+        [System.Boolean]
+        $networkProxyDisableAutoDetect,
+
+        [Parameter()]
+        [System.String]
+        $networkProxyAutomaticConfigurationUrl,
+
+        [Parameter()]
+        [System.Object]
+        $networkProxyServer,
+
+        [Parameter()]
+        [System.Boolean]
+        $antiTheftModeBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $connectedDevicesServiceBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $certificatesBlockManualRootCertificateInstallation,
+
+        [Parameter()]
+        [System.Boolean]
+        $copyPasteBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $cortanaBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceManagementBlockFactoryResetOnMobile,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceManagementBlockManualUnenroll,
+
+        [Parameter()]
+        [System.String]
+        $safeSearchFilter,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockSearchSuggestions,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockSendingIntranetTrafficToInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeSendIntranetTrafficToInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeRequireSmartScreen,
+
+        [Parameter()]
+        [System.String]
+        $edgeEnterpriseModeSiteListLocation,
+
+        [Parameter()]
+        [System.String]
+        $edgeFirstRunUrl,
+
+        [Parameter()]
+        [System.Object]
+        $edgeSearchEngine,
+
+        [Parameter()]
+        [System.String[]]
+        $edgeHomepageUrls,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockAccessToAboutFlags,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenBlockPromptOverride,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenBlockPromptOverrideForFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $webRtcBlockLocalhostIpAddress,
+
+        [Parameter()]
+        [System.Boolean]
+        $internetSharingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockAddProvisioningPackage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockRemoveProvisioningPackage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockChangeSystemTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockEditDeviceName,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockChangeRegion,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockChangeLanguage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockChangePowerSleep,
+
+        [Parameter()]
+        [System.Boolean]
+        $microsoftAccountBlockSettingsSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $resetProtectionModeBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireMobileDeviceEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $usbBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $voiceRecordingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $wiFiBlockManualConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $wiFiScanInterval,
+
+        [Parameter()]
+        [System.Boolean]
+        $wirelessDisplayBlockProjectionToThisDevice,
+
+        [Parameter()]
+        [System.Boolean]
+        $wirelessDisplayBlockUserInputFromReceiver,
+
+        [Parameter()]
+        [System.Boolean]
+        $wirelessDisplayRequirePinForPairing,
+
+        [Parameter()]
+        [System.String]
+        $appsAllowTrustedAppsSideloading,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsStoreBlockAutoUpdate,
+
+        [Parameter()]
+        [System.String]
+        $developerUnlockSetting,
+
+        [Parameter()]
+        [System.Boolean]
+        $sharedUserAppDataAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $appsBlockWindowsStoreOriginatedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsStoreEnablePrivateStoreOnly,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRestrictAppDataToSystemVolume,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRestrictAppInstallToSystemVolume,
+
+        [Parameter()]
+        [System.Boolean]
+        $gameDvrBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $experienceBlockDeviceDiscovery,
+
+        [Parameter()]
+        [System.Boolean]
+        $experienceBlockErrorDialogWhenNoSIM,
+
+        [Parameter()]
+        [System.Boolean]
+        $experienceBlockTaskSwitcher,
+
+        [Parameter()]
+        [System.Boolean]
+        $logonBlockFastUserSwitching,
+
+        [Parameter()]
+        [System.Boolean]
+        $tenantLockdownRequireNetworkDuringOutOfBoxExperience,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10EndpointProtectionConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallBlockStatefulFTP,
+
+        [Parameter()]
+        [System.Int32]
+        $firewallIdleTimeoutForSecurityAssociationInSeconds,
+
+        [Parameter()]
+        [System.String]
+        $firewallPreSharedKeyEncodingMethod,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallIPSecExemptionsAllowNeighborDiscovery,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallIPSecExemptionsAllowICMP,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallIPSecExemptionsAllowRouterDiscovery,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallIPSecExemptionsAllowDHCP,
+
+        [Parameter()]
+        [System.String]
+        $firewallCertificateRevocationListCheckMethod,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallMergeKeyingModuleSettings,
+
+        [Parameter()]
+        [System.String]
+        $firewallPacketQueueingMethod,
+
+        [Parameter()]
+        [System.Object]
+        $firewallProfileDomain,
+
+        [Parameter()]
+        [System.Object]
+        $firewallProfilePublic,
+
+        [Parameter()]
+        [System.Object]
+        $firewallProfilePrivate,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderAttackSurfaceReductionExcludedPaths,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderGuardedFoldersAllowedAppPaths,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderAdditionalGuardedFolders,
+
+        [Parameter()]
+        [System.Byte[]]
+        $defenderExploitProtectionXml,
+
+        [Parameter()]
+        [System.String]
+        $defenderExploitProtectionXmlFileName,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderSecurityCenterBlockExploitProtectionOverride,
+
+        [Parameter()]
+        [System.String]
+        $appLockerApplicationControl,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenEnableInShell,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenBlockOverrideForFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardEnabled,
+
+        [Parameter()]
+        [System.String]
+        $applicationGuardBlockFileTransfer,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardBlockNonEnterpriseContent,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPersistence,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardForceAuditing,
+
+        [Parameter()]
+        [System.String]
+        $applicationGuardBlockClipboardSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPrintToPDF,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPrintToXPS,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPrintToLocalPrinters,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPrintToNetworkPrinters,
+
+        [Parameter()]
+        [System.Boolean]
+        $bitLockerDisableWarningForOtherDiskEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $bitLockerEnableStorageCardEncryptionOnMobile,
+
+        [Parameter()]
+        [System.Boolean]
+        $bitLockerEncryptDevice,
+
+        [Parameter()]
+        [System.Object]
+        $bitLockerRemovableDrivePolicy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSDeviceFeaturesConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosDeviceFeaturesConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $assetTagTemplate,
+
+        [Parameter()]
+        [System.String]
+        $lockScreenFootnote,
+
+        [Parameter()]
+        [System.Object[]]
+        $homeScreenDockIcons,
+
+        [Parameter()]
+        [System.Object[]]
+        $homeScreenPages,
+
+        [Parameter()]
+        [System.Object[]]
+        $notificationSettings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSGeneralDeviceConfiguration,
+
+        [Parameter()]
+        [System.String[]]
+        $emailInDomainSuffixes,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSCustomConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $payloadName,
+
+        [Parameter()]
+        [System.String]
+        $payloadFileName,
+
+        [Parameter()]
+        [System.Byte[]]
+        $payload,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosUpdateConfiguration,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $activeHoursStart,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $activeHoursEnd,
+
+        [Parameter()]
+        [System.String[]]
+        $scheduledInstallDays,
+
+        [Parameter()]
+        [System.Int32]
+        $utcTimeOffsetInMinutes,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosGeneralDeviceConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $accountBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $activationLockAllowWhenSupervised,
+
+        [Parameter()]
+        [System.Boolean]
+        $airDropBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $airDropForceUnmanagedDropTarget,
+
+        [Parameter()]
+        [System.Boolean]
+        $airPlayForcePairingPasswordForOutgoingRequests,
+
+        [Parameter()]
+        [System.Boolean]
+        $appleWatchBlockPairing,
+
+        [Parameter()]
+        [System.Boolean]
+        $appleWatchForceWristDetection,
+
+        [Parameter()]
+        [System.Boolean]
+        $appleNewsBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsSingleAppModeList,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsVisibilityList,
+
+        [Parameter()]
+        [System.String]
+        $appsVisibilityListType,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreBlockAutomaticDownloads,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreBlockInAppPurchases,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreBlockUIAppInstallation,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreRequirePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockGlobalBackgroundFetchWhileRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockPerAppDataModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockPersonalHotspot,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockVoiceRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $certificatesBlockUntrustedTlsCertificates,
+
+        [Parameter()]
+        [System.Boolean]
+        $classroomAppBlockRemoteScreenObservation,
+
+        [Parameter()]
+        [System.Boolean]
+        $classroomAppForceUnpromptedScreenObservation,
+
+        [Parameter()]
+        [System.Boolean]
+        $configurationProfileBlockChanges,
+
+        [Parameter()]
+        [System.Boolean]
+        $definitionLookupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceBlockEnableRestrictions,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceBlockEraseContentAndSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceBlockNameModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $diagnosticDataBlockSubmissionModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $documentsBlockManagedDocumentsInUnmanagedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $documentsBlockUnmanagedDocumentsInManagedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseAppBlockTrust,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseAppBlockTrustModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $faceTimeBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $findMyFriendsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $gamingBlockGameCenterFriends,
+
+        [Parameter()]
+        [System.Boolean]
+        $gamingBlockMultiplayer,
+
+        [Parameter()]
+        [System.Boolean]
+        $gameCenterBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $hostPairingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $iBooksStoreBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $iBooksStoreBlockErotica,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockActivityContinuation,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockBackup,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockDocumentSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockManagedAppsSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockPhotoLibrary,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockPhotoStreamSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockSharedPhotoStream,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudRequireEncryptedBackup,
+
+        [Parameter()]
+        [System.Boolean]
+        $iTunesBlockExplicitContent,
+
+        [Parameter()]
+        [System.Boolean]
+        $iTunesBlockMusicService,
+
+        [Parameter()]
+        [System.Boolean]
+        $iTunesBlockRadio,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockAutoCorrect,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockDictation,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockPredictive,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockShortcuts,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockSpellCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowAssistiveSpeak,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowAssistiveTouchSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowAutoLock,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowColorInversionSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowRingerSwitch,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowScreenRotation,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowSleepButton,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowTouchscreen,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowVoiceOverSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowVolumeButtons,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowZoomSettings,
+
+        [Parameter()]
+        [System.String]
+        $kioskModeAppStoreUrl,
+
+        [Parameter()]
+        [System.String]
+        $kioskModeBuiltInAppId,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireAssistiveTouch,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireColorInversion,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireMonoAudio,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireVoiceOver,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireZoom,
+
+        [Parameter()]
+        [System.String]
+        $kioskModeManagedAppId,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockControlCenter,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockNotificationView,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockPassbook,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockTodayView,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingAustralia,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingCanada,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingFrance,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingGermany,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingIreland,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingJapan,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingNewZealand,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingUnitedKingdom,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingUnitedStates,
+
+        [Parameter()]
+        [System.Object[]]
+        $networkUsageRules,
+
+        [Parameter()]
+        [System.String]
+        $mediaContentRatingApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $messagesBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $notificationsBlockSettingsModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockFingerprintUnlock,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockFingerprintModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinutesOfInactivityBeforeScreenTimeout,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodePreviousPasscodeBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeSignInFailureCountBeforeWipe,
+
+        [Parameter()]
+        [System.String]
+        $passcodeRequiredType,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $podcastsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariBlockJavaScript,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariBlocked,
+
+        [Parameter()]
+        [System.String]
+        $safariCookieSettings,
+
+        [Parameter()]
+        [System.String[]]
+        $safariManagedDomains,
+
+        [Parameter()]
+        [System.String[]]
+        $safariPasswordAutoFillDomains,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariRequireFraudWarning,
+
+        [Parameter()]
+        [System.Boolean]
+        $siriBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $siriBlockedWhenLocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $siriBlockUserGeneratedContent,
+
+        [Parameter()]
+        [System.Boolean]
+        $siriRequireProfanityFilter,
+
+        [Parameter()]
+        [System.Boolean]
+        $spotlightBlockInternetResults,
+
+        [Parameter()]
+        [System.Boolean]
+        $voiceDialingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $wallpaperBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $wiFiConnectOnlyToConfiguredNetworks,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosCustomConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidWorkProfileGeneralDeviceConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockFingerprintUnlock,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockTrustAgents,
+
+        [Parameter()]
+        [System.String]
+        $workProfileDataSharingType,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockNotificationsWhileDeviceLocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockAddingAccounts,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBluetoothEnableContactSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockScreenCapture,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockCrossProfileCallerId,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockCamera,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockCrossProfileContactsSearch,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockCrossProfileCopyPaste,
+
+        [Parameter()]
+        [System.String]
+        $workProfileDefaultAppPermissionPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfilePasswordBlockFingerprintUnlock,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfilePasswordBlockTrustAgents,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinNumericCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinNonLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinLowerCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinUpperCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinSymbolCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinutesOfInactivityBeforeScreenTimeout,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordSignInFailureCountBeforeFactoryReset,
+
+        [Parameter()]
+        [System.String]
+        $workProfilePasswordRequiredType,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileRequirePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireVerifyApps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidWorkProfileCustomConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidGeneralDeviceConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $appsBlockClipboardSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $appsBlockYouTube,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockMessaging,
+
+        [Parameter()]
+        [System.Boolean]
+        $googleAccountBlockAutoSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $googlePlayStoreBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeBlockSleepButton,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeBlockVolumeButtons,
+
+        [Parameter()]
+        [System.Object[]]
+        $kioskModeApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $powerOffBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $factoryResetBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceSharingAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageBlockGoogleBackup,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireRemovableStorageEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $voiceAssistantBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $webBrowserBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]
+        $webBrowserBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $webBrowserBlockJavaScript,
+
+        [Parameter()]
+        [System.String]
+        $webBrowserCookieSettings,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsInstallAllowList,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsLaunchBlockList,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsHideList,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidCustomConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceConfigurations_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceConfigurations_DeviceSettingStateSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $settingStateDeviceSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $settingName,
+
+        [Parameter()]
+        [System.String]
+        $instancePath,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceConfigurations_DeviceStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationDeviceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $deviceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceConfigurations_DeviceStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceConfigurations_UserStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationUserStatusId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $devicesCount,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceConfigurations_UserStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceEnrollmentConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.Int32]
+        $priority,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceEnrollmentWindowsHelloForBusinessConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMaximumLength,
+
+        [Parameter()]
+        [System.String]
+        $pinUppercaseCharactersUsage,
+
+        [Parameter()]
+        [System.String]
+        $pinLowercaseCharactersUsage,
+
+        [Parameter()]
+        [System.String]
+        $pinSpecialCharactersUsage,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityDeviceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $unlockWithBiometricsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $remotePassportEnabled,
+
+        [Parameter()]
+        [System.Int32]
+        $pinPreviousBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $pinExpirationInDays,
+
+        [Parameter()]
+        [System.String]
+        $enhancedBiometricsState,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceEnrollmentPlatformRestrictionsConfiguration,
+
+        [Parameter()]
+        [System.Object]
+        $iosRestriction,
+
+        [Parameter()]
+        [System.Object]
+        $windowsRestriction,
+
+        [Parameter()]
+        [System.Object]
+        $windowsMobileRestriction,
+
+        [Parameter()]
+        [System.Object]
+        $androidRestriction,
+
+        [Parameter()]
+        [System.Object]
+        $macOSRestriction,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceEnrollmentLimitConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $limit,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceEnrollmentConfigurations_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $enrollmentConfigurationAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentConfigurationId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_DeviceManagementPartners
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceManagementPartnerId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastHeartbeatDateTime,
+
+        [Parameter()]
+        [System.String]
+        $partnerState,
+
+        [Parameter()]
+        [System.String]
+        $partnerAppType,
+
+        [Parameter()]
+        [System.String]
+        $singleTenantAppId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $isConfigured,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $whenPartnerDevicesWillBeRemovedDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $whenPartnerDevicesWillBeMarkedAsNonCompliantDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_ExchangeConnectors
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceManagementExchangeConnectorId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.String]
+        $primarySmtpAddress,
+
+        [Parameter()]
+        [System.String]
+        $serverName,
+
+        [Parameter()]
+        [System.String]
+        $connectorServerName,
+
+        [Parameter()]
+        [System.String]
+        $exchangeConnectorType,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $exchangeAlias,
+
+        [Parameter()]
+        [System.String]
+        $exchangeOrganization,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_IosUpdateStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosUpdateDeviceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $installStatus,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $deviceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_ManagedDevices
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceOwnerType,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceActionResults,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $enrolledDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $operatingSystem,
+
+        [Parameter()]
+        [System.String]
+        $complianceState,
+
+        [Parameter()]
+        [System.String]
+        $jailBroken,
+
+        [Parameter()]
+        [System.String]
+        $managementAgent,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $easActivated,
+
+        [Parameter()]
+        [System.String]
+        $easDeviceId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $easActivationDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureADRegistered,
+
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentType,
+
+        [Parameter()]
+        [System.String]
+        $activationLockBypassCode,
+
+        [Parameter()]
+        [System.String]
+        $emailAddress,
+
+        [Parameter()]
+        [System.String]
+        $azureADDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $deviceRegistrationState,
+
+        [Parameter()]
+        [System.String]
+        $deviceCategoryDisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $isSupervised,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $exchangeLastSuccessfulSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $exchangeAccessState,
+
+        [Parameter()]
+        [System.String]
+        $exchangeAccessStateReason,
+
+        [Parameter()]
+        [System.String]
+        $remoteAssistanceSessionUrl,
+
+        [Parameter()]
+        [System.String]
+        $remoteAssistanceSessionErrorDetails,
+
+        [Parameter()]
+        [System.Boolean]
+        $isEncrypted,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $model,
+
+        [Parameter()]
+        [System.String]
+        $manufacturer,
+
+        [Parameter()]
+        [System.String]
+        $imei,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $serialNumber,
+
+        [Parameter()]
+        [System.String]
+        $phoneNumber,
+
+        [Parameter()]
+        [System.String]
+        $androidSecurityPatchLevel,
+
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Object]
+        $configurationManagerClientEnabledFeatures,
+
+        [Parameter()]
+        [System.String]
+        $wiFiMacAddress,
+
+        [Parameter()]
+        [System.Object]
+        $deviceHealthAttestationState,
+
+        [Parameter()]
+        [System.String]
+        $subscriberCarrier,
+
+        [Parameter()]
+        [System.String]
+        $meid,
+
+        [Parameter()]
+        [System.Int64]
+        $totalStorageSpaceInBytes,
+
+        [Parameter()]
+        [System.Int64]
+        $freeStorageSpaceInBytes,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceName,
+
+        [Parameter()]
+        [System.String]
+        $partnerReportedThreatState,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceConfigurationStates,
+
+        [Parameter()]
+        [System.Object]
+        $deviceCategory,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceCompliancePolicyStates,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_ManagedDevices_DeviceCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_ManagedDevices_DeviceCompliancePolicyStates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyStateId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.Object[]]
+        $settingStates,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $platformType,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.Int32]
+        $settingCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_ManagedDevices_DeviceConfigurationStates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationStateId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.Object[]]
+        $settingStates,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $platformType,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.Int32]
+        $settingCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_MobileThreatDefenseConnectors
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileThreatDefenseConnectorId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastHeartbeatDateTime,
+
+        [Parameter()]
+        [System.String]
+        $partnerState,
+
+        [Parameter()]
+        [System.Boolean]
+        $androidEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $iosEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $androidDeviceBlockedOnMissingPartnerData,
+
+        [Parameter()]
+        [System.Boolean]
+        $iosDeviceBlockedOnMissingPartnerData,
+
+        [Parameter()]
+        [System.Boolean]
+        $partnerUnsupportedOsVersionBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $partnerUnresponsivenessThresholdInDays,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_NotificationMessageTemplates
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $notificationMessageTemplateId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $defaultLocale,
+
+        [Parameter()]
+        [System.String]
+        $brandingOptions,
+
+        [Parameter()]
+        [System.Object[]]
+        $localizedNotificationMessages,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_NotificationMessageTemplates_LocalizedNotificationMessages
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $localizedNotificationMessageId,
+
+        [Parameter()]
+        [System.String]
+        $notificationMessageTemplateId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $locale,
+
+        [Parameter()]
+        [System.String]
+        $subject,
+
+        [Parameter()]
+        [System.String]
+        $messageTemplate,
+
+        [Parameter()]
+        [System.Boolean]
+        $isDefault,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_RemoteAssistancePartners
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $remoteAssistancePartnerId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $onboardingUrl,
+
+        [Parameter()]
+        [System.String]
+        $onboardingStatus,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastConnectionDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_ResourceOperations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $resourceOperationId,
+
+        [Parameter()]
+        [System.String]
+        $resourceName,
+
+        [Parameter()]
+        [System.String]
+        $actionName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_RoleAssignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceAndAppManagementRoleAssignmentId,
+
+        [Parameter()]
+        [System.String[]]
+        $members,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String[]]
+        $resourceScopes,
+
+        [Parameter()]
+        [System.Object]
+        $roleDefinition,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_RoleDefinitions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $roleDefinitionId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $roleDefinition,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.Object[]]
+        $rolePermissions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isBuiltIn,
+
+        [Parameter()]
+        [System.Object[]]
+        $roleAssignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceAndAppManagementRoleDefinition,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_RoleDefinitions_RoleAssignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $roleAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $roleDefinitionId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $roleAssignment,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String[]]
+        $resourceScopes,
+
+        [Parameter()]
+        [System.Object]
+        $roleDefinition,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceAndAppManagementRoleAssignment,
+
+        [Parameter()]
+        [System.String[]]
+        $members,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_TelecomExpenseManagementPartners
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $telecomExpenseManagementPartnerId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $url,
+
+        [Parameter()]
+        [System.Boolean]
+        $appAuthorized,
+
+        [Parameter()]
+        [System.Boolean]
+        $enabled,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastConnectionDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_TermsAndConditions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $termsAndConditionId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $title,
+
+        [Parameter()]
+        [System.String]
+        $bodyText,
+
+        [Parameter()]
+        [System.String]
+        $acceptanceStatement,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $acceptanceStatuses,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_TermsAndConditions_AcceptanceStatuses
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $termsAndConditionsAcceptanceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $termsAndConditionId,
+
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $acceptedVersion,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $acceptedDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $termsAndConditions,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_TermsAndConditions_Assignments
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $termsAndConditionsAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $termsAndConditionId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_TroubleshootingEvents
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceManagementTroubleshootingEventId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceManagementTroubleshootingEvent,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $eventDateTime,
+
+        [Parameter()]
+        [System.String]
+        $correlationId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $enrollmentTroubleshootingEvent,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $operatingSystem,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.String]
+        $enrollmentType,
+
+        [Parameter()]
+        [System.String]
+        $failureCategory,
+
+        [Parameter()]
+        [System.String]
+        $failureReason,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_WindowsInformationProtectionAppLearningSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLearningSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $applicationName,
+
+        [Parameter()]
+        [System.String]
+        $applicationType,
+
+        [Parameter()]
+        [System.Int32]
+        $deviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-DeviceManagement_WindowsInformationProtectionNetworkLearningSummaries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionNetworkLearningSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $url,
+
+        [Parameter()]
+        [System.Int32]
+        $deviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-Groups
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignedLicenses,
+
+        [Parameter()]
+        [System.String]
+        $classification,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $hasMembersWithLicenseErrors,
+
+        [Parameter()]
+        [System.String[]]
+        $groupTypes,
+
+        [Parameter()]
+        [System.Object]
+        $licenseProcessingState,
+
+        [Parameter()]
+        [System.String]
+        $mail,
+
+        [Parameter()]
+        [System.Boolean]
+        $mailEnabled,
+
+        [Parameter()]
+        [System.String]
+        $mailNickname,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $onPremisesLastSyncDateTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $onPremisesProvisioningErrors,
+
+        [Parameter()]
+        [System.String]
+        $onPremisesSecurityIdentifier,
+
+        [Parameter()]
+        [System.Boolean]
+        $onPremisesSyncEnabled,
+
+        [Parameter()]
+        [System.String]
+        $preferredDataLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $proxyAddresses,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $renewedDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityEnabled,
+
+        [Parameter()]
+        [System.String]
+        $visibility,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowExternalSenders,
+
+        [Parameter()]
+        [System.Boolean]
+        $autoSubscribeNewMembers,
+
+        [Parameter()]
+        [System.Boolean]
+        $isSubscribedByMail,
+
+        [Parameter()]
+        [System.Int32]
+        $unseenCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $isArchived,
+
+        [Parameter()]
+        [System.Object[]]
+        $members,
+
+        [Parameter()]
+        [System.Object[]]
+        $memberOf,
+
+        [Parameter()]
+        [System.Object[]]
+        $membersWithLicenseErrors,
+
+        [Parameter()]
+        [System.Object[]]
+        $transitiveMembers,
+
+        [Parameter()]
+        [System.Object[]]
+        $transitiveMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $createdOnBehalfOf,
+
+        [Parameter()]
+        [System.Object[]]
+        $owners,
+
+        [Parameter()]
+        [System.Object[]]
+        $settings,
+
+        [Parameter()]
+        [System.Object]
+        $photo,
+
+        [Parameter()]
+        [System.Object[]]
+        $photos,
+
+        [Parameter()]
+        [System.Object[]]
+        $groupLifecyclePolicies,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $deletedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-Groups_GroupLifecyclePolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupLifecyclePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.Int32]
+        $groupLifetimeInDays,
+
+        [Parameter()]
+        [System.String]
+        $managedGroupTypes,
+
+        [Parameter()]
+        [System.String]
+        $alternateNotificationEmails,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-Groups_Photo
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.Int32]
+        $height,
+
+        [Parameter()]
+        [System.Int32]
+        $width,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-Groups_Settings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $values
+    )
+}
+function Update-MSGraphEnvironment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $SchemaVersion,
+
+        [Parameter()]
+        [System.String]
+        $AppId,
+
+        [Parameter()]
+        [System.String]
+        $RedirectLink,
+
+        [Parameter()]
+        [System.String]
+        $AuthUrl,
+
+        [Parameter()]
+        [System.String]
+        $GraphResourceId,
+
+        [Parameter()]
+        [System.String]
+        $GraphBaseUrl,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Quiet
+    )
+}
+function Update-Organization
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $organizationId,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignedPlans,
+
+        [Parameter()]
+        [System.String[]]
+        $businessPhones,
+
+        [Parameter()]
+        [System.String]
+        $city,
+
+        [Parameter()]
+        [System.String]
+        $country,
+
+        [Parameter()]
+        [System.String]
+        $countryLetterCode,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String[]]
+        $marketingNotificationEmails,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $onPremisesLastSyncDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $onPremisesSyncEnabled,
+
+        [Parameter()]
+        [System.String]
+        $postalCode,
+
+        [Parameter()]
+        [System.String]
+        $preferredLanguage,
+
+        [Parameter()]
+        [System.Object]
+        $privacyProfile,
+
+        [Parameter()]
+        [System.Object[]]
+        $provisionedPlans,
+
+        [Parameter()]
+        [System.String[]]
+        $securityComplianceNotificationMails,
+
+        [Parameter()]
+        [System.String[]]
+        $securityComplianceNotificationPhones,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.String]
+        $street,
+
+        [Parameter()]
+        [System.String[]]
+        $technicalNotificationMails,
+
+        [Parameter()]
+        [System.Object[]]
+        $verifiedDomains,
+
+        [Parameter()]
+        [System.String]
+        $mobileDeviceManagementAuthority,
+
+        [Parameter()]
+        [System.Object[]]
+        $extensions,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $deletedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-Organization_Extensions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $extensionId,
+
+        [Parameter()]
+        [System.String]
+        $organizationId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $openTypeExtension,
+
+        [Parameter()]
+        [System.String]
+        $extensionName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
     )
 }
 #endregion
@@ -48863,7 +90693,11 @@ function Get-AdminPowerAppEnvironment
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $GetProtectedEnvironment
+        $GetProtectedEnvironment,
+
+        [Parameter()]
+        [System.String]
+        $InstanceId
     )
 }
 function Get-AdminPowerAppEnvironmentLocations
@@ -49037,6 +90871,23 @@ function Get-JwtToken
         [Parameter()]
         [System.String]
         $Audience
+    )
+}
+function Get-PowerAppDlpPolicyConnectorConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.String]
+        $ApiVersion
     )
 }
 function Get-PowerAppEnvironmentBackups
@@ -49370,6 +91221,27 @@ function New-DlpPolicy
         [Parameter()]
         [System.Object]
         $Environments,
+
+        [Parameter()]
+        [System.String]
+        $ApiVersion
+    )
+}
+function New-PowerAppDlpPolicyConnectorConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Object]
+        $NewDlpPolicyConnectorConfigurations,
 
         [Parameter()]
         [System.String]
@@ -49785,6 +91657,23 @@ function Remove-LegacyCDSDatabase
         [Parameter()]
         [System.String]
         $DatabaseId
+    )
+}
+function Remove-PowerAppDlpPolicyConnectorConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyName,
+
+        [Parameter()]
+        [System.String]
+        $ApiVersion
     )
 }
 function Remove-PowerAppEnvironmentBackup
@@ -50286,6 +92175,27 @@ function Set-DlpPolicy
         $ApiVersion
     )
 }
+function Set-PowerAppDlpPolicyConnectorConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Object]
+        $UpdatedConnectorConfigurations,
+
+        [Parameter()]
+        [System.String]
+        $ApiVersion
+    )
+}
 function Set-PowerAppLockAllEnvironments
 {
     [CmdletBinding()]
@@ -50608,6 +92518,56 @@ function Get-AuditConfigurationRule
         [Parameter()]
         [System.Object]
         $DomainController,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-AutoSensitivityLabelPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $IncludeTestModeResults,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DistributionDetail,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-AutoSensitivityLabelRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $IncludeExecutionRuleInformation,
+
+        [Parameter()]
+        [System.Object]
+        $Policy,
+
+        [Parameter()]
+        [System.Object]
+        $IncludeExecutionRuleGuids,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -51300,6 +93260,10 @@ function Get-DlpSensitiveInformationType
     param(
         [Parameter()]
         [System.Object]
+        $IncludeElements,
+
+        [Parameter()]
+        [System.Object]
         $Identity,
 
         [Parameter()]
@@ -51507,6 +93471,57 @@ function Get-HoldComplianceRule
         [Parameter()]
         [System.Object]
         $Policy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-InformationBarrierPoliciesApplicationStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-InformationBarrierPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $ExoPolicyId,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-InformationBarrierRecipientStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity2,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -52684,6 +94699,224 @@ function New-AuditConfigurationRule
         $AsJob
     )
 }
+function New-AutoSensitivityLabelPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $SharePointLocation,
+
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSenderException,
+
+        [Parameter()]
+        [System.Object]
+        $SharePointLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $OneDriveLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $ApplySensitivityLabel,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSender,
+
+        [Parameter()]
+        [System.Object]
+        $OneDriveLocation,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSenderMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSenderMemberOfException,
+
+        [Parameter()]
+        [System.Object]
+        $Mode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-AutoSensitivityLabelRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFrom,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Object]
+        $ExpiryDate,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $ProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $Policy,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ImmutableId,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $SenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $From,
+
+        [Parameter()]
+        [System.Object]
+        $ContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $Workload,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ActivationDate,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $Disabled,
+
+        [Parameter()]
+        [System.Object]
+        $RuleErrorAction,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $FromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $AccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Object]
+        $ReportSeverityLevel,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function New-CaseHoldPolicy
 {
     [CmdletBinding()]
@@ -53724,20 +95957,12 @@ function New-DlpCompliancePolicy
         $TeamsLocationException,
 
         [Parameter()]
-        [System.Object]
-        $OnPremisesScannerDlpLocation,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Object]
         $OneDriveLocation,
-
-        [Parameter()]
-        [System.Object]
-        $OnPremisesScannerDlpLocationException,
 
         [Parameter()]
         [System.Object]
@@ -54053,6 +96278,23 @@ function New-DlpComplianceRule
         $AsJob
     )
 }
+function New-DlpEdmSchema
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $FileData,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function New-DlpFingerprint
 {
     [CmdletBinding()]
@@ -54347,6 +96589,47 @@ function New-HoldComplianceRule
         [Parameter()]
         [System.Object]
         $HoldDurationDisplayHint,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-InformationBarrierPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $SegmentsAllowed,
+
+        [Parameter()]
+        [System.Object]
+        $AssignedSegment,
+
+        [Parameter()]
+        [System.Object]
+        $SegmentAllowedFilter,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $State,
+
+        [Parameter()]
+        [System.Object]
+        $SegmentsBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -55054,6 +97337,10 @@ function New-RetentionComplianceRule
 
         [Parameter()]
         [System.Object]
+        $MachineLearningModelIDs,
+
+        [Parameter()]
+        [System.Object]
         $ExcludedItemClasses,
 
         [Parameter()]
@@ -55422,6 +97709,40 @@ function Remove-AuditConfigurationRule
         [Parameter()]
         [System.Object]
         $DomainController,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Remove-AutoSensitivityLabelPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Remove-AutoSensitivityLabelRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -56019,6 +98340,23 @@ function Remove-HoldComplianceRule
         $AsJob
     )
 }
+function Remove-InformationBarrierPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Remove-InsiderRiskEntityList
 {
     [CmdletBinding()]
@@ -56492,6 +98830,244 @@ function Set-AuditConfigurationRule
         [Parameter()]
         [System.Object]
         $DomainController,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-AutoSensitivityLabelPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Enabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveOneDriveLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $AddSharePointLocation,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSenderException,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveSharePointLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddOneDriveLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RetryDistribution,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSender,
+
+        [Parameter()]
+        [System.Object]
+        $AddExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddSharePointLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $ApplySensitivityLabel,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveSharePointLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSenderMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeSenderMemberOfException,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveOneDriveLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddOneDriveLocation,
+
+        [Parameter()]
+        [System.Object]
+        $Mode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-AutoSensitivityLabelRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFrom,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Object]
+        $ExpiryDate,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $ProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $SenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $From,
+
+        [Parameter()]
+        [System.Object]
+        $ContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $Workload,
+
+        [Parameter()]
+        [System.Object]
+        $ActivationDate,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $Disabled,
+
+        [Parameter()]
+        [System.Object]
+        $RuleErrorAction,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $FromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $AccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Object]
+        $ReportSeverityLevel,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentIsPasswordProtected,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -57490,16 +100066,8 @@ function Set-DlpCompliancePolicy
         $OneDriveSharedBy,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.Object]
         $Identity,
-
-        [Parameter()]
-        [System.Object]
-        $RemoveTeamsLocationException,
 
         [Parameter()]
         [System.Object]
@@ -57558,8 +100126,8 @@ function Set-DlpCompliancePolicy
         $AddTeamsLocationException,
 
         [Parameter()]
-        [System.Object]
-        $AddOnPremisesScannerDlpLocation,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Object]
@@ -57567,7 +100135,7 @@ function Set-DlpCompliancePolicy
 
         [Parameter()]
         [System.Object]
-        $RemoveExchangeLocation,
+        $RemoveTeamsLocationException,
 
         [Parameter()]
         [System.Object]
@@ -57583,23 +100151,15 @@ function Set-DlpCompliancePolicy
 
         [Parameter()]
         [System.Object]
-        $RemoveOnPremisesScannerDlpLocationException,
-
-        [Parameter()]
-        [System.Object]
         $AddOneDriveLocation,
 
         [Parameter()]
         [System.Object]
-        $RemoveOnPremisesScannerDlpLocation,
+        $RemoveExchangeLocation,
 
         [Parameter()]
         [System.Object]
         $Mode,
-
-        [Parameter()]
-        [System.Object]
-        $AddOnPremisesScannerDlpLocationException,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -58240,6 +100800,43 @@ function Set-HoldComplianceRule
         $AsJob
     )
 }
+function Set-InformationBarrierPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $SegmentsAllowed,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $SegmentAllowedFilter,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $State,
+
+        [Parameter()]
+        [System.Object]
+        $SegmentsBlocked,
+
+        [Parameter()]
+        [System.Object]
+        $Comment,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Set-InsiderRiskEntityList
 {
     [CmdletBinding()]
@@ -58761,6 +101358,10 @@ function Set-PolicyConfig
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Object]
+        $ClassificationScheme,
+
         [Parameter()]
         [System.Object]
         $ProcessingLimitExceededSeverity,
@@ -59421,7 +102022,41 @@ function Start-ComplianceSearch
         $AsJob
     )
 }
+function Start-InformationBarrierPoliciesApplication
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Stop-ComplianceSearch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Stop-InformationBarrierPoliciesApplication
 {
     [CmdletBinding()]
     param(
@@ -59457,6 +102092,23 @@ function Test-DataClassification
         [Parameter()]
         [System.Object]
         $ClassificationNames,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Test-InformationBarrierPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -59856,35 +102508,6 @@ function Export-CsAutoAttendantHolidays
         [Parameter()]
         [System.Object]
         $DomainController,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
-    )
-}
-function Export-CsOrganizationalAutoAttendantHolidays
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Object]
-        $PrimaryUri,
-
-        [Parameter()]
-        [System.Object]
-        $Tenant,
-
-        [Parameter()]
-        [System.Object]
-        $DomainController,
-
-        [Parameter()]
-        [System.Object]
-        $ApplicationId,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -62608,43 +105231,6 @@ function Get-CsOrganizationalAutoAttendant
         [Parameter()]
         [System.Object]
         $Tenant,
-
-        [Parameter()]
-        [System.Object]
-        $DomainController,
-
-        [Parameter()]
-        [System.Object]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
-    )
-}
-function Get-CsOrganizationalAutoAttendantHolidays
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Object]
-        $PrimaryUri,
-
-        [Parameter()]
-        [System.Object]
-        $Names,
-
-        [Parameter()]
-        [System.Object]
-        $Tenant,
-
-        [Parameter()]
-        [System.Object]
-        $Years,
 
         [Parameter()]
         [System.Object]
@@ -65740,39 +108326,6 @@ function Import-CsOnlineAudioFile
         $AsJob
     )
 }
-function Import-CsOrganizationalAutoAttendantHolidays
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Object]
-        $PrimaryUri,
-
-        [Parameter()]
-        [System.Object]
-        $Input,
-
-        [Parameter()]
-        [System.Object]
-        $Tenant,
-
-        [Parameter()]
-        [System.Object]
-        $DomainController,
-
-        [Parameter()]
-        [System.Object]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
-    )
-}
 function Invoke-CsUcsRollback
 {
     [CmdletBinding()]
@@ -66263,6 +108816,10 @@ function New-CsCallQueue
 
         [Parameter()]
         [System.Object]
+        $ChannelId,
+
+        [Parameter()]
+        [System.Object]
         $Tenant,
 
         [Parameter()]
@@ -66336,6 +108893,10 @@ function New-CsCallQueue
         [Parameter()]
         [System.Object]
         $Name,
+
+        [Parameter()]
+        [System.Object]
+        $ChannelUserObjectId,
 
         [Parameter()]
         [System.Object]
@@ -68530,99 +111091,6 @@ function New-CsOnlineVoiceRoutingPolicy
         $AsJob
     )
 }
-function New-CsOrganizationalAutoAttendant
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Object]
-        $TimeZoneId,
-
-        [Parameter()]
-        [System.Object]
-        $ExclusionScope,
-
-        [Parameter()]
-        [System.Object]
-        $Schedules,
-
-        [Parameter()]
-        [System.Object]
-        $Ring,
-
-        [Parameter()]
-        [System.Object]
-        $LineUris,
-
-        [Parameter()]
-        [System.Object]
-        $Name,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $EnableVoiceResponse,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force,
-
-        [Parameter()]
-        [System.Object]
-        $Tenant,
-
-        [Parameter()]
-        [System.Object]
-        $DefaultCallFlow,
-
-        [Parameter()]
-        [System.Object]
-        $Operator,
-
-        [Parameter()]
-        [System.Object]
-        $CallHandlingAssociations,
-
-        [Parameter()]
-        [System.Object]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.Object]
-        $VoiceId,
-
-        [Parameter()]
-        [System.Object]
-        $DomainController,
-
-        [Parameter()]
-        [System.Object]
-        $CallbackUri,
-
-        [Parameter()]
-        [System.Object]
-        $LanguageId,
-
-        [Parameter()]
-        [System.Object]
-        $CallFlows,
-
-        [Parameter()]
-        [System.Object]
-        $ClientAudience,
-
-        [Parameter()]
-        [System.Object]
-        $InclusionScope,
-
-        [Parameter()]
-        [System.Object]
-        $Domain,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
-    )
-}
 function New-CsOrganizationalAutoAttendantCallableEntity
 {
     [CmdletBinding()]
@@ -70692,6 +113160,10 @@ function Remove-CsCallQueue
 
         [Parameter()]
         [System.Object]
+        $ChannelUserObjectId,
+
+        [Parameter()]
+        [System.Object]
         $Identity,
 
         [Parameter()]
@@ -71509,39 +113981,6 @@ function Remove-CsOnlineVoiceRoutingPolicy
         [Parameter()]
         [System.Object]
         $Tenant,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
-    )
-}
-function Remove-CsOrganizationalAutoAttendant
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Object]
-        $PrimaryUri,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $Tenant,
-
-        [Parameter()]
-        [System.Object]
-        $DomainController,
-
-        [Parameter()]
-        [System.Object]
-        $ApplicationId,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -72758,6 +115197,10 @@ function Set-CsCallQueue
 
         [Parameter()]
         [System.Object]
+        $ChannelId,
+
+        [Parameter()]
+        [System.Object]
         $Tenant,
 
         [Parameter()]
@@ -72839,6 +115282,10 @@ function Set-CsCallQueue
         [Parameter()]
         [System.Object]
         $LineUri,
+
+        [Parameter()]
+        [System.Object]
+        $ChannelUserObjectId,
 
         [Parameter()]
         [System.Object]
@@ -76037,35 +118484,6 @@ function Set-CsOnlineVoiceUserBulk
         $AsJob
     )
 }
-function Set-CsOrganizationalAutoAttendant
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $Tenant,
-
-        [Parameter()]
-        [System.Object]
-        $DomainController,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force,
-
-        [Parameter()]
-        [System.Object]
-        $Instance,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
-    )
-}
 function Set-CsPrivacyConfiguration
 {
     [CmdletBinding()]
@@ -79229,35 +121647,6 @@ function Update-CsAutoAttendant
         $AsJob
     )
 }
-function Update-CsOrganizationalAutoAttendant
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Object]
-        $PrimaryUri,
-
-        [Parameter()]
-        [System.Object]
-        $Tenant,
-
-        [Parameter()]
-        [System.Object]
-        $DomainController,
-
-        [Parameter()]
-        [System.Object]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
-    )
-}
 function Update-CsTenantMeetingUrl
 {
     [CmdletBinding()]
@@ -79280,4 +121669,3 @@ function Update-CsTenantMeetingUrl
     )
 }
 #endregion
-
