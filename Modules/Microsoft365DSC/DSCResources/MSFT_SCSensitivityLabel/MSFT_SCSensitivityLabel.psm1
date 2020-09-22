@@ -165,10 +165,6 @@ function Get-TargetResource
         $EncryptionRightsUrl,
 
         [Parameter()]
-        [System.String]
-        $EncryptionTemplateId,
-
-        [Parameter()]
         [System.Boolean]
         $SiteAndGroupProtectionAllowAccessToGuestUsers,
 
@@ -302,7 +298,6 @@ function Get-TargetResource
             EncryptionProtectionType                       = $label.EncryptionProtectionType
             EncryptionRightsDefinitions                    = $EncryptionRightsDefinitionsValue
             EncryptionRightsUrl                            = $label.EncryptionRightsUrl
-            EncryptionTemplateId                           = $label.EncryptionTemplateId
             SiteAndGroupProtectionAllowAccessToGuestUsers  = $label.SiteAndGroupProtectionAllowAccessToGuestUsers
             SiteAndGroupProtectionAllowEmailFromGuestUsers = $label.SiteAndGroupProtectionAllowEmailFromGuestUsers
             SiteAndGroupProtectionAllowFullAccess          = $label.SiteAndGroupProtectionAllowFullAccess
@@ -482,9 +477,6 @@ function Set-TargetResource
         [System.String]
         $EncryptionRightsUrl,
 
-        [Parameter()]
-        [System.String]
-        $EncryptionTemplateId,
 
         [Parameter()]
         [System.Boolean]
@@ -792,10 +784,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $EncryptionRightsUrl,
-
-        [Parameter()]
-        [System.String]
-        $EncryptionTemplateId,
 
         [Parameter()]
         [System.Boolean]

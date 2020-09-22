@@ -52,7 +52,6 @@ class MSFT_SCSensitivityLabel : OMI_BaseResource
     [Write, Description("The EncryptionProtectionType parameter specifies the protection type for encryption."), ValueMap{"Template","RemoveProtection","UserDefined"}, Values{"Template","RemoveProtection","UserDefined"}] String EncryptionProtectionType;
     [Write, Description("The EncryptionRightsDefinitions parameter specifies the rights users have when accessing protected. This parameter uses the syntax Identity1:Rights1,Rights2;Identity2:Rights3,Rights4. For example, john@contoso.com:VIEW,EDIT;microsoft.com:VIEW.")] String EncryptionRightsDefinitions;
     [Write, Description("The EncryptionRightsUrl parameter specifies the URL for hold your own key (HYOK) protection.")] String EncryptionRightsUrl;
-    [Write, Description("The EncryptionTemplateId parameter links an existing Azure RMS template to a new label.")] String EncryptionTemplateId;
     [Write, Description("The SiteAndGroupProtectionAllowAccessToGuestUsers parameter enables or disables access to guest users.")] Boolean SiteAndGroupProtectionAllowAccessToGuestUsers;
     [Write, Description("The SiteAndGroupProtectionAllowEmailFromGuestUsers parameter enables or disables email from guest users.")] Boolean SiteAndGroupProtectionAllowEmailFromGuestUsers;
     [Write, Description("The SiteAndGroupProtectionAllowFullAccess parameter enables or disables full access.")] Boolean SiteAndGroupProtectionAllowFullAccess;

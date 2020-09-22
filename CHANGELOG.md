@@ -2,11 +2,16 @@
 
 ## 1.20.923.1
 
+* SCLabelPolicy
+  * Initial release
 * IntuneDeviceCategory
   * Initial Release;
 * DEPENDENCIES
   * MSCloudLoginAssistant Updated to 1.0.40;
   * ReverseDSC Updated to 2.0.0.7;
+* Misc
+  * Removed EncryptionTemplateID from SCSensitivityLabel (Issue #758)
+  * Added AzureAD app support SPOSiteDesign
 
 ## 1.20.916.1
 
