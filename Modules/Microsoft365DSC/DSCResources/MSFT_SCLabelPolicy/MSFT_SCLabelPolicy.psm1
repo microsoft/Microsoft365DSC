@@ -261,7 +261,7 @@ function Set-TargetResource
             $advanced = Convert-CIMToAdvancedSettings $AdvancedSettings
             $CreationParams["AdvancedSettings"] = $advanced
         }
-        #Remove parameters not used in Set-LabelPolicy
+        #Remove parameters not used in New-LabelPolicy
         $CreationParams.Remove("GlobalAdminAccount") | Out-Null
         $CreationParams.Remove("Ensure") | Out-Null
         $CreationParams.Remove("AddLabels") | Out-Null
@@ -283,6 +283,32 @@ function Set-TargetResource
         catch
         {
             Write-Warning "New-LabelPolicy is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
+        }
+        try
+        {
+            Start-Sleep 5
+            $SetParams = $PSBoundParameters
+
+            if ($PSBoundParameters.ContainsKey("AdvancedSettings"))
+            {
+                $advanced = Convert-CIMToAdvancedSettings  $AdvancedSettings
+                $SetParams["AdvancedSettings"] = $advanced
+            }
+            #Remove unused parameters for Set-Label cmdlet
+            $SetParams.Remove("GlobalAdminAccount") | Out-Null
+            $SetParams.Remove("Ensure") | Out-Null
+            $SetParams.Remove("Name") | Out-Null
+            $SetParams.Remove("ExchangeLocationException") | Out-Null
+            $SetParams.Remove("Labels") | Out-Null
+            $SetParams.Remove("ExchangeLocation") | Out-Null
+            $SetParams.Remove("ModernGroupLocation") | Out-Null
+            $SetParams.Remove("ModernGroupLocationException") | Out-Null
+
+            Set-LabelPolicy @SetParams -Identity $Name
+        }
+        catch
+        {
+            Write-Warning "Set-LabelPolicy is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
         }
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))

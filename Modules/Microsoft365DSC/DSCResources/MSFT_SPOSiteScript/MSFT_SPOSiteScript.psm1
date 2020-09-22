@@ -85,12 +85,7 @@ function Get-TargetResource
 
             $SiteScript = $null
             ##### Check to see if more than one site script is returned
-<<<<<<< HEAD
-            if ($SiteScripts.Length -gt -1)
-            {
-=======
             if ($SiteScripts.Length -gt -1){
->>>>>>> d3fed227cd7dec6dd1ad678526897752598d8503
                 $SiteScript = Get-PnPSiteScript -Identity $SiteScripts[0].Id
             }
 
@@ -174,7 +169,7 @@ function Set-TargetResource
         [System.String]
         $CertificateThumbprint,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -338,7 +333,7 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -367,7 +362,7 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount,
 
