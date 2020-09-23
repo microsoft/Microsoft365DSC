@@ -1600,7 +1600,11 @@ function Assert-M365DSCBlueprint
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $Credentials
+        $Credentials,
+
+        [Parameter()]
+        [System.String]
+        $HeaderFilePath
     )
     $InformationPreference = 'SilentlyContinue'
     $WarningPreference = 'SilentlyContinue'
@@ -1666,7 +1670,8 @@ function Assert-M365DSCBlueprint
             -Destination $LocalBluePrintPath `
             -OutputPath $OutputReportPath `
             -DriftOnly:$true `
-            -IsBlueprintAssessment:$true
+            -IsBlueprintAssessment:$true `
+            -HeaderFilePath $HeaderFilePath
     }
     else
     {

@@ -12,6 +12,8 @@
 * Misc
   * Removed EncryptionTemplateID from SCSensitivityLabel (Issue #758)
   * Added AzureAD app support SPOSiteDesign
+  * Added possibility to provide a custom header to Blueprint
+    assessment and delta reports.
 
 ## 1.20.916.1
 
