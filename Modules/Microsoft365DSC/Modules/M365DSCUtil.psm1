@@ -795,7 +795,7 @@ function Export-M365DSCConfiguration
         $ComponentsToExtract,
 
         [Parameter()]
-        [ValidateSet('AAD', 'SPO', 'EXO', 'SC', 'OD', 'O365', 'PLANNER', 'PP', 'TEAMS')]
+        [ValidateSet('AAD', 'SPO', 'EXO', 'INTUNE', 'SC', 'OD', 'O365', 'PLANNER', 'PP', 'TEAMS')]
         [System.String[]]
         $Workloads,
 
@@ -986,7 +986,7 @@ function New-M365DSCConnection
 {
     param(
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Azure", "AzureAD", "ExchangeOnline", `
+        [ValidateSet("Azure", "AzureAD", "ExchangeOnline", "Intune", `
                 "SecurityComplianceCenter", "PnP", "PowerPlatforms", `
                 "MicrosoftTeams", "SkypeForBusiness", "MicrosoftGraph")]
         [System.String]
@@ -1600,7 +1600,11 @@ function Assert-M365DSCBlueprint
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $Credentials
+        $Credentials,
+
+        [Parameter()]
+        [System.String]
+        $HeaderFilePath
     )
     $InformationPreference = 'SilentlyContinue'
     $WarningPreference = 'SilentlyContinue'
@@ -1666,7 +1670,8 @@ function Assert-M365DSCBlueprint
             -Destination $LocalBluePrintPath `
             -OutputPath $OutputReportPath `
             -DriftOnly:$true `
-            -IsBlueprintAssessment:$true
+            -IsBlueprintAssessment:$true `
+            -HeaderFilePath $HeaderFilePath
     }
     else
     {
