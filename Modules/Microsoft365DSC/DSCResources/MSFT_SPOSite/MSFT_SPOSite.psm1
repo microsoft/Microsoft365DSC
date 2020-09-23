@@ -445,6 +445,15 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
                 -InboundParameters $PSBoundParameters
 
+    $ConnectionParams = @{
+        GlobalAdminAccount    = $GlobalAdminAccount
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePath       = $CertificatePath
+        CertificatePassword   = $CertificatePassword
+        CertificateThumbprint = $CertificateThumbprint
+    }
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("Ensure") | Out-Null
@@ -519,7 +528,8 @@ function Set-TargetResource
             SharingCapability              = $SharingCapability
             StorageMaximumLevel            = $StorageMaximumLevel
             StorageWarningLevel            = $StorageWarningLevel
-            AllowSelfServiceUpgrade        = $AllowSelfServiceUpgrade
+            # Cannot be set, throws an error about Object not being in a valid state;
+            #AllowSelfServiceUpgrade        = $AllowSelfServiceUpgrade
             Owners                         = $Owner
             CommentsOnSitePagesDisabled    = $CommentsOnSitePagesDisabled
             DefaultLinkPermission          = $DefaultLinkPermission
@@ -529,7 +539,6 @@ function Set-TargetResource
             #LCID Cannot be set after a Template has been applied;
             #LocaleId                       = $LocaleId
         }
-
         $UpdateParams = Remove-NullEntriesFromHashtable -Hash $UpdateParams
 
         Set-PnPTenantSite @UpdateParams -ErrorAction Stop
