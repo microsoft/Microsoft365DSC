@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+## 1.20.930.1
+
+* MISC
+  * Refactored error handling to various EXO resources;
+
 ## 1.20.923.1
 
 * IntuneDeviceCategory

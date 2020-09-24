@@ -94,7 +94,7 @@ function Get-TargetResource
 
     try
     {
-        $SafeLinksPolicies = Get-SafeLinksPolicy
+        $SafeLinksPolicies = Get-SafeLinksPolicy -ErrorAction Stop
     }
     catch
     {
@@ -376,44 +376,53 @@ function Export-TargetResource
         -SkipModuleReload $true
 
     $dscContent = ''
-    if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeLinksPolicy)
+
+    try
     {
-        [array]$SafeLinksPolicies = Get-SafeLinksPolicy
-        Write-Host "`r`n" -NoNewLine
-        $i = 1
-        foreach ($SafeLinksPolicy in $SafeLinksPolicies)
+        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeLinksPolicy)
         {
-            Write-Host "    |---[$i/$($SafeLinksPolicies.Length)] $($SafeLinksPolicy.Name)" -NoNewLine
-            $Params = @{
-                GlobalAdminAccount    = $GlobalAdminAccount
-                Identity              = $SafeLinksPolicy.Identity
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
+            [array]$SafeLinksPolicies = Get-SafeLinksPolicy
+            Write-Host "`r`n" -NoNewLine
+            $i = 1
+            foreach ($SafeLinksPolicy in $SafeLinksPolicies)
+            {
+                Write-Host "    |---[$i/$($SafeLinksPolicies.Length)] $($SafeLinksPolicy.Name)" -NoNewLine
+                $Params = @{
+                    GlobalAdminAccount    = $GlobalAdminAccount
+                    Identity              = $SafeLinksPolicy.Identity
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    CertificatePassword   = $CertificatePassword
+                    CertificatePath       = $CertificatePath
+                }
+                $Results = Get-TargetResource @Params
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                $i++
             }
-            $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
-            $i++
+            if ($SafeLinksPolicies.Length -eq 0)
+            {
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
+            }
         }
-        if ($SafeLinksPolicies.Length -eq 0)
+        else
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle)The current tenant is not registered to allow for Safe Attachment Rules."
         }
+        return $dscContent
     }
-    else
+    catch
     {
-        Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle)The current tenant is not registered to allow for Safe Attachment Rules."
+        Write-Verbose -Message $_
+        return ""
     }
-    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

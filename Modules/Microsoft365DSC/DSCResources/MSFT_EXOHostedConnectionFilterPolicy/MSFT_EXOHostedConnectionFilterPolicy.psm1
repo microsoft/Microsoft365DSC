@@ -86,7 +86,7 @@ function Get-TargetResource
 
     try
     {
-        $HostedConnectionFilterPolicys = Get-HostedConnectionFilterPolicy
+        $HostedConnectionFilterPolicys = Get-HostedConnectionFilterPolicy -ErrorAction Stop
     }
     catch
     {
@@ -374,42 +374,50 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
-    [array]$HostedConnectionFilterPolicies = Get-HostedConnectionFilterPolicy
-    $dscContent = ''
+    try
+    {
+        [array]$HostedConnectionFilterPolicies = Get-HostedConnectionFilterPolicy
+        $dscContent = ''
 
-    if ($HostedConnectionFilterPolicies.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-    }
-    else
-    {
-        Write-Host "`r`n" -NoNewLine
-    }
-    $i = 1
-    foreach ($HostedConnectionFilterPolicy in $HostedConnectionFilterPolicies)
-    {
-        $Params = @{
-            GlobalAdminAccount    = $GlobalAdminAccount
-            Identity              = $HostedConnectionFilterPolicy.Identity
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
+        if ($HostedConnectionFilterPolicies.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        Write-Host "    |---[$i/$($HostedConnectionFilterPolicies.Length)] $($HostedConnectionFilterPolicy.Identity)" -NoNewLine
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
+        $i = 1
+        foreach ($HostedConnectionFilterPolicy in $HostedConnectionFilterPolicies)
+        {
+            $Params = @{
+                GlobalAdminAccount    = $GlobalAdminAccount
+                Identity              = $HostedConnectionFilterPolicy.Identity
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+            }
+            Write-Host "    |---[$i/$($HostedConnectionFilterPolicies.Length)] $($HostedConnectionFilterPolicy.Identity)" -NoNewLine
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
+        }
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

@@ -106,7 +106,7 @@ function Get-TargetResource
 
     try
     {
-        $SafeAttachmentRules = Get-SafeAttachmentRule
+        $SafeAttachmentRules = Get-SafeAttachmentRule -ErrorAction Stop
     }
     catch
     {
@@ -425,45 +425,53 @@ function Export-TargetResource
         -SkipModuleReload $true
 
     $dscContent = ''
-    if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
+    try
     {
-        [array]$SafeAttachmentRules = Get-SafeAttachmentRule
-        $i = 1
-        Write-Host "`r`n" -NoNewLine
-        foreach ($SafeAttachmentRule in $SafeAttachmentRules)
+        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
         {
-            Write-Host "    |---[$i/$($SafeAttachmentRules.Length)] $($SafeAttachmentRule.Identity)" -NoNewLine
-            $Params = @{
-                Identity              = $SafeAttachmentRule.Identity
-                SafeAttachmentPolicy  = $SafeAttachmentRule.SafeAttachmentPolicy
-                GlobalAdminAccount    = $GlobalAdminAccount
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
+            [array]$SafeAttachmentRules = Get-SafeAttachmentRule
+            $i = 1
+            Write-Host "`r`n" -NoNewLine
+            foreach ($SafeAttachmentRule in $SafeAttachmentRules)
+            {
+                Write-Host "    |---[$i/$($SafeAttachmentRules.Length)] $($SafeAttachmentRule.Identity)" -NoNewLine
+                $Params = @{
+                    Identity              = $SafeAttachmentRule.Identity
+                    SafeAttachmentPolicy  = $SafeAttachmentRule.SafeAttachmentPolicy
+                    GlobalAdminAccount    = $GlobalAdminAccount
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    CertificatePassword   = $CertificatePassword
+                    CertificatePath       = $CertificatePath
+                }
+                $Results = Get-TargetResource @Params
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                $i++
             }
-            $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
-            $i++
+            if ($SafeAttachmentRules.Length -eq 0)
+            {
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
+            }
         }
-        if ($SafeAttachmentRules.Length -eq 0)
+        else
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant doesn't have access to the Safe Attachment Rule API."
         }
+        return $dscContent
     }
-    else
+    catch
     {
-        Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant doesn't have access to the Safe Attachment Rule API."
+        Write-Verbose -Message $_
+        return ""
     }
-    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

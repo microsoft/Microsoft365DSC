@@ -91,7 +91,6 @@ function Get-TargetResource
         return $nullReturn
     }
 
-
     $AllOfflineAddressBooks = Get-OfflineAddressBook
 
     $OfflineAddressBook = $AllOfflineAddressBooks | Where-Object -FilterScript { $_.Name -eq $Name }
@@ -359,44 +358,52 @@ function Export-TargetResource
         return $nullReturn
     }
 
-    [array]$AllOfflineAddressBooks = Get-OfflineAddressBook
-
-    $dscContent = ""
-
-    if ($AllOfflineAddressBooks.Length -eq 0)
+    try
     {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-    }
-    else
-    {
-        Write-Host "`r`n" -NoNewLine
-    }
-    $i = 1
-    foreach ($OfflineAddressBook in $AllOfflineAddressBooks)
-    {
-        Write-Host "    |---[$i/$($AllOfflineAddressBooks.Count)] $($OfflineAddressBook.Name)" -NoNewLine
+        [array]$AllOfflineAddressBooks = Get-OfflineAddressBook -ErrorAction Stop
 
-        $Params = @{
-            Name                  = $OfflineAddressBook.Name
-            GlobalAdminAccount    = $GlobalAdminAccount
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
+        $dscContent = ""
+
+        if ($AllOfflineAddressBooks.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
+        $i = 1
+        foreach ($OfflineAddressBook in $AllOfflineAddressBooks)
+        {
+            Write-Host "    |---[$i/$($AllOfflineAddressBooks.Count)] $($OfflineAddressBook.Name)" -NoNewLine
+
+            $Params = @{
+                Name                  = $OfflineAddressBook.Name
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
+        }
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

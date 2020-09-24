@@ -316,101 +316,111 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
     }
 
-    $ConfigSettings = Get-OrganizationConfig
-    if ($null -eq $ConfigSettings)
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
+    try
     {
-        throw 'There was an error retrieving values from the Get function in EXOOrganizationConfig.'
-    }
+        $ConfigSettings = Get-OrganizationConfig -ErrorAction Stop
+        if ($null -eq $ConfigSettings)
+        {
+            throw 'There was an error retrieving values from the Get function in EXOOrganizationConfig.'
+        }
 
-    $results = @{
-        IsSingleInstance                                          = 'Yes'
-        ActivityBasedAuthenticationTimeoutEnabled                 = $ConfigSettings.ActivityBasedAuthenticationTimeoutEnabled
-        ActivityBasedAuthenticationTimeoutInterval                = $ConfigSettings.ActivityBasedAuthenticationTimeoutInterval
-        ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled = $ConfigSettings.ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled
-        AppsForOfficeEnabled                                      = $ConfigSettings.AppsForOfficeEnabled
-        AsyncSendEnabled                                          = $ConfigSettings.AsyncSendEnabled
-        AuditDisabled                                             = $ConfigSettings.AuditDisabled
-        AutoExpandingArchive                                      = $ConfigSettings.AutoExpandingArchive
-        BookingsEnabled                                           = $ConfigSettings.BookingsEnabled
-        BookingsPaymentsEnabled                                   = $ConfigSettings.BookingsPaymentsEnabled
-        BookingsSocialSharingRestricted                           = $ConfigSettings.BookingsSocialSharingRestricted
-        ByteEncoderTypeFor7BitCharsets                            = $ConfigSettings.ByteEncoderTypeFor7BitCharsets
-        ConnectorsActionableMessagesEnabled                       = $ConfigSettings.ConnectorsActionableMessagesEnabled
-        ConnectorsEnabled                                         = $ConfigSettings.ConnectorsEnabled
-        ConnectorsEnabledForOutlook                               = $ConfigSettings.ConnectorsEnabledForOutlook
-        ConnectorsEnabledForSharepoint                            = $ConfigSettings.ConnectorsEnabledForSharepoint
-        ConnectorsEnabledForTeams                                 = $ConfigSettings.ConnectorsEnabledForTeams
-        ConnectorsEnabledForYammer                                = $ConfigSettings.ConnectorsEnabledForYammer
-        DefaultAuthenticationPolicy                               = $ConfigSettings.DefaultAuthenticationPolicy
-        DefaultGroupAccessType                                    = $ConfigSettings.DefaultGroupAccessType
-        DefaultPublicFolderAgeLimit                               = $ConfigSettings.DefaultPublicFolderAgeLimit
-        DefaultPublicFolderDeletedItemRetention                   = $ConfigSettings.DefaultPublicFolderDeletedItemRetention
-        DefaultPublicFolderIssueWarningQuota                      = $ConfigSettings.DefaultPublicFolderIssueWarningQuota
-        DefaultPublicFolderMaxItemSize                            = $ConfigSettings.DefaultPublicFolderMaxItemSize
-        DefaultPublicFolderMovedItemRetention                     = $ConfigSettings.DefaultPublicFolderMovedItemRetention
-        DefaultPublicFolderProhibitPostQuota                      = $ConfigSettings.DefaultPublicFolderProhibitPostQuota
-        DirectReportsGroupAutoCreationEnabled                     = $ConfigSettings.DirectReportsGroupAutoCreationEnabled
-        DistributionGroupDefaultOU                                = $ConfigSettings.DistributionGroupDefaultOU
-        DistributionGroupNameBlockedWordsList                     = $ConfigSettings.DistributionGroupNameBlockedWordsList
-        DistributionGroupNamingPolicy                             = $ConfigSettings.DistributionGroupNamingPolicy
-        ElcProcessingDisabled                                     = $ConfigSettings.ElcProcessingDisabled
-        EndUserDLUpgradeFlowsDisabled                             = $ConfigSettings.EndUserDLUpgradeFlowsDisabled
-        EwsAllowEntourage                                         = $ConfigSettings.EwsAllowEntourage
-        EwsAllowList                                              = $ConfigSettings.EwsAllowList
-        EwsAllowMacOutlook                                        = $ConfigSettings.EwsAllowMacOutlook
-        EwsAllowOutlook                                           = $ConfigSettings.EwsAllowOutlook
-        EwsApplicationAccessPolicy                                = $ConfigSettings.EwsApplicationAccessPolicy
-        EwsBlockList                                              = $ConfigSettings.EwsBlockList
-        EwsEnabled                                                = $ConfigSettings.EwsEnabled
-        ExchangeNotificationEnabled                               = $ConfigSettings.ExchangeNotificationEnabled
-        ExchangeNotificationRecipients                            = $ConfigSettings.ExchangeNotificationRecipients
-        FocusedInboxOn                                            = $ConfigSettings.FocusedInboxOn
-        HierarchicalAddressBookRoot                               = $ConfigSettings.HierarchicalAddressBookRoot
-        IPListBlocked                                             = $ConfigSettings.IPListBlocked
-        LeanPopoutEnabled                                         = $ConfigSettings.LeanPopoutEnabled
-        LinkPreviewEnabled                                        = $ConfigSettings.LinkPreviewEnabled
-        MailTipsAllTipsEnabled                                    = $ConfigSettings.MailTipsAllTipsEnabled
-        MailTipsExternalRecipientsTipsEnabled                     = $ConfigSettings.MailTipsExternalRecipientsTipsEnabled
-        MailTipsGroupMetricsEnabled                               = $ConfigSettings.MailTipsGroupMetricsEnabled
-        MailTipsLargeAudienceThreshold                            = $ConfigSettings.MailTipsLargeAudienceThreshold
-        MailTipsMailboxSourcedTipsEnabled                         = $ConfigSettings.MailTipsMailboxSourcedTipsEnabled
-        OAuth2ClientProfileEnabled                                = $ConfigSettings.OAuth2ClientProfileEnabled
-        OutlookMobileGCCRestrictionsEnabled                       = $ConfigSettings.OutlookMobileGCCRestrictionsEnabled
-        OutlookPayEnabled                                         = $ConfigSettings.OutlookPayEnabled
-        PublicComputersDetectionEnabled                           = $ConfigSettings.PublicComputersDetectionEnabled
-        PublicFoldersEnabled                                      = $ConfigSettings.PublicFoldersEnabled
-        PublicFolderShowClientControl                             = $ConfigSettings.PublicFolderShowClientControl
-        ReadTrackingEnabled                                       = $ConfigSettings.ReadTrackingEnabled
-        RemotePublicFolderMailboxes                               = $ConfigSettings.RemotePublicFolderMailboxes
-        SiteMailboxCreationURL                                    = $ConfigSettings.SiteMailboxCreationURL
-        SmtpActionableMessagesEnabled                             = $ConfigSettings.SmtpActionableMessagesEnabled
-        VisibleMeetingUpdateProperties                            = $ConfigSettings.VisibleMeetingUpdateProperties
-        WebPushNotificationsDisabled                              = $ConfigSettings.WebPushNotificationsDisabled
-        WebSuggestedRepliesDisabled                               = $ConfigSettings.WebSuggestedRepliesDisabled
-        GlobalAdminAccount                                        = $GlobalAdminAccount
-    }
+        $results = @{
+            IsSingleInstance                                          = 'Yes'
+            ActivityBasedAuthenticationTimeoutEnabled                 = $ConfigSettings.ActivityBasedAuthenticationTimeoutEnabled
+            ActivityBasedAuthenticationTimeoutInterval                = $ConfigSettings.ActivityBasedAuthenticationTimeoutInterval
+            ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled = $ConfigSettings.ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled
+            AppsForOfficeEnabled                                      = $ConfigSettings.AppsForOfficeEnabled
+            AsyncSendEnabled                                          = $ConfigSettings.AsyncSendEnabled
+            AuditDisabled                                             = $ConfigSettings.AuditDisabled
+            AutoExpandingArchive                                      = $ConfigSettings.AutoExpandingArchive
+            BookingsEnabled                                           = $ConfigSettings.BookingsEnabled
+            BookingsPaymentsEnabled                                   = $ConfigSettings.BookingsPaymentsEnabled
+            BookingsSocialSharingRestricted                           = $ConfigSettings.BookingsSocialSharingRestricted
+            ByteEncoderTypeFor7BitCharsets                            = $ConfigSettings.ByteEncoderTypeFor7BitCharsets
+            ConnectorsActionableMessagesEnabled                       = $ConfigSettings.ConnectorsActionableMessagesEnabled
+            ConnectorsEnabled                                         = $ConfigSettings.ConnectorsEnabled
+            ConnectorsEnabledForOutlook                               = $ConfigSettings.ConnectorsEnabledForOutlook
+            ConnectorsEnabledForSharepoint                            = $ConfigSettings.ConnectorsEnabledForSharepoint
+            ConnectorsEnabledForTeams                                 = $ConfigSettings.ConnectorsEnabledForTeams
+            ConnectorsEnabledForYammer                                = $ConfigSettings.ConnectorsEnabledForYammer
+            DefaultAuthenticationPolicy                               = $ConfigSettings.DefaultAuthenticationPolicy
+            DefaultGroupAccessType                                    = $ConfigSettings.DefaultGroupAccessType
+            DefaultPublicFolderAgeLimit                               = $ConfigSettings.DefaultPublicFolderAgeLimit
+            DefaultPublicFolderDeletedItemRetention                   = $ConfigSettings.DefaultPublicFolderDeletedItemRetention
+            DefaultPublicFolderIssueWarningQuota                      = $ConfigSettings.DefaultPublicFolderIssueWarningQuota
+            DefaultPublicFolderMaxItemSize                            = $ConfigSettings.DefaultPublicFolderMaxItemSize
+            DefaultPublicFolderMovedItemRetention                     = $ConfigSettings.DefaultPublicFolderMovedItemRetention
+            DefaultPublicFolderProhibitPostQuota                      = $ConfigSettings.DefaultPublicFolderProhibitPostQuota
+            DirectReportsGroupAutoCreationEnabled                     = $ConfigSettings.DirectReportsGroupAutoCreationEnabled
+            DistributionGroupDefaultOU                                = $ConfigSettings.DistributionGroupDefaultOU
+            DistributionGroupNameBlockedWordsList                     = $ConfigSettings.DistributionGroupNameBlockedWordsList
+            DistributionGroupNamingPolicy                             = $ConfigSettings.DistributionGroupNamingPolicy
+            ElcProcessingDisabled                                     = $ConfigSettings.ElcProcessingDisabled
+            EndUserDLUpgradeFlowsDisabled                             = $ConfigSettings.EndUserDLUpgradeFlowsDisabled
+            EwsAllowEntourage                                         = $ConfigSettings.EwsAllowEntourage
+            EwsAllowList                                              = $ConfigSettings.EwsAllowList
+            EwsAllowMacOutlook                                        = $ConfigSettings.EwsAllowMacOutlook
+            EwsAllowOutlook                                           = $ConfigSettings.EwsAllowOutlook
+            EwsApplicationAccessPolicy                                = $ConfigSettings.EwsApplicationAccessPolicy
+            EwsBlockList                                              = $ConfigSettings.EwsBlockList
+            EwsEnabled                                                = $ConfigSettings.EwsEnabled
+            ExchangeNotificationEnabled                               = $ConfigSettings.ExchangeNotificationEnabled
+            ExchangeNotificationRecipients                            = $ConfigSettings.ExchangeNotificationRecipients
+            FocusedInboxOn                                            = $ConfigSettings.FocusedInboxOn
+            HierarchicalAddressBookRoot                               = $ConfigSettings.HierarchicalAddressBookRoot
+            IPListBlocked                                             = $ConfigSettings.IPListBlocked
+            LeanPopoutEnabled                                         = $ConfigSettings.LeanPopoutEnabled
+            LinkPreviewEnabled                                        = $ConfigSettings.LinkPreviewEnabled
+            MailTipsAllTipsEnabled                                    = $ConfigSettings.MailTipsAllTipsEnabled
+            MailTipsExternalRecipientsTipsEnabled                     = $ConfigSettings.MailTipsExternalRecipientsTipsEnabled
+            MailTipsGroupMetricsEnabled                               = $ConfigSettings.MailTipsGroupMetricsEnabled
+            MailTipsLargeAudienceThreshold                            = $ConfigSettings.MailTipsLargeAudienceThreshold
+            MailTipsMailboxSourcedTipsEnabled                         = $ConfigSettings.MailTipsMailboxSourcedTipsEnabled
+            OAuth2ClientProfileEnabled                                = $ConfigSettings.OAuth2ClientProfileEnabled
+            OutlookMobileGCCRestrictionsEnabled                       = $ConfigSettings.OutlookMobileGCCRestrictionsEnabled
+            OutlookPayEnabled                                         = $ConfigSettings.OutlookPayEnabled
+            PublicComputersDetectionEnabled                           = $ConfigSettings.PublicComputersDetectionEnabled
+            PublicFoldersEnabled                                      = $ConfigSettings.PublicFoldersEnabled
+            PublicFolderShowClientControl                             = $ConfigSettings.PublicFolderShowClientControl
+            ReadTrackingEnabled                                       = $ConfigSettings.ReadTrackingEnabled
+            RemotePublicFolderMailboxes                               = $ConfigSettings.RemotePublicFolderMailboxes
+            SiteMailboxCreationURL                                    = $ConfigSettings.SiteMailboxCreationURL
+            SmtpActionableMessagesEnabled                             = $ConfigSettings.SmtpActionableMessagesEnabled
+            VisibleMeetingUpdateProperties                            = $ConfigSettings.VisibleMeetingUpdateProperties
+            WebPushNotificationsDisabled                              = $ConfigSettings.WebPushNotificationsDisabled
+            WebSuggestedRepliesDisabled                               = $ConfigSettings.WebSuggestedRepliesDisabled
+            GlobalAdminAccount                                        = $GlobalAdminAccount
+        }
 
-    if ($null -eq $ConfigSettings.AutoExpandingArchive)
+        if ($null -eq $ConfigSettings.AutoExpandingArchive)
+        {
+            $results.AutoExpandingArchive = $false
+        }
+
+        if ([System.String]::IsNullOrEmpty($results.EwsApplicationAccessPolicy))
+        {
+            $results.Remove("EwsApplicationAccessPolicy")
+        }
+
+        if ($null -eq $EwsAllowList)
+        {
+            $results.Remove("EwsAllowList")
+        }
+
+        if ($null -eq $EwsBlockList)
+        {
+            $results.Remove("EwsBlockList")
+        }
+
+        return $results
+    }
+    catch
     {
-        $results.AutoExpandingArchive = $false
+        Write-Verbose -Message $_
+        return $nullReturn
     }
-
-    if ([System.String]::IsNullOrEmpty($results.EwsApplicationAccessPolicy))
-    {
-        $results.Remove("EwsApplicationAccessPolicy")
-    }
-
-    if ($null -eq $EwsAllowList)
-    {
-        $results.Remove("EwsAllowList")
-    }
-
-    if ($null -eq $EwsBlockList)
-    {
-        $results.Remove("EwsBlockList")
-    }
-
-    return $results
 }
 
 function Set-TargetResource

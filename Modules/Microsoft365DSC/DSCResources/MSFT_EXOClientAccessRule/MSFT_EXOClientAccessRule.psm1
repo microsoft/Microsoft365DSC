@@ -110,44 +110,52 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $ClientAccessRules = Get-ClientAccessRule
-
-    $ClientAccessRule = $ClientAccessRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    if (-not $ClientAccessRule)
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = 'Absent'
+    try
     {
-        Write-Verbose -Message "ClientAccessRule $($Identity) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
-    }
-    else
-    {
-        $result = @{
-            Identity                             = $Identity
-            Action                               = $ClientAccessRule.Action
-            AnyOfAuthenticationTypes             = $ClientAccessRule.AnyOfAuthenticationTypes
-            AnyOfClientIPAddressesOrRanges       = $ClientAccessRule.AnyOfClientIPAddressesOrRanges
-            AnyOfProtocols                       = $ClientAccessRule.AnyOfProtocols
-            Enabled                              = $ClientAccessRule.Enabled
-            ExceptAnyOfAuthenticationTypes       = $ClientAccessRule.ExceptAnyOfAuthenticationTypes
-            ExceptAnyOfClientIPAddressesOrRanges = $ClientAccessRule.ExceptAnyOfClientIPAddressesOrRanges
-            ExceptAnyOfProtocols                 = $ClientAccessRule.ExceptAnyOfProtocols
-            ExceptUsernameMatchesAnyOfPatterns   = $ClientAccessRule.ExceptUsernameMatchesAnyOfPatterns
-            Priority                             = $ClientAccessRule.Priority
-            UserRecipientFilter                  = $ClientAccessRule.UserRecipientFilter
-            UsernameMatchesAnyOfPatterns         = $ClientAccessRule.UsernameMatchesAnyOfPatterns
-            Ensure                               = 'Present'
-            GlobalAdminAccount                   = $GlobalAdminAccount
-        }
+        $ClientAccessRules = Get-ClientAccessRule -ErrorAction Stop
 
-        if (-not [System.String]::IsNullOrEmpty($ClientAccessRule.RuleScope))
+        $ClientAccessRule = $ClientAccessRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        if (-not $ClientAccessRule)
         {
-            $result.Add("RuleScope", $ClientAccessRule.RuleScope)
+            Write-Verbose -Message "ClientAccessRule $($Identity) does not exist."
+            return $nullReturn
         }
+        else
+        {
+            $result = @{
+                Identity                             = $Identity
+                Action                               = $ClientAccessRule.Action
+                AnyOfAuthenticationTypes             = $ClientAccessRule.AnyOfAuthenticationTypes
+                AnyOfClientIPAddressesOrRanges       = $ClientAccessRule.AnyOfClientIPAddressesOrRanges
+                AnyOfProtocols                       = $ClientAccessRule.AnyOfProtocols
+                Enabled                              = $ClientAccessRule.Enabled
+                ExceptAnyOfAuthenticationTypes       = $ClientAccessRule.ExceptAnyOfAuthenticationTypes
+                ExceptAnyOfClientIPAddressesOrRanges = $ClientAccessRule.ExceptAnyOfClientIPAddressesOrRanges
+                ExceptAnyOfProtocols                 = $ClientAccessRule.ExceptAnyOfProtocols
+                ExceptUsernameMatchesAnyOfPatterns   = $ClientAccessRule.ExceptUsernameMatchesAnyOfPatterns
+                Priority                             = $ClientAccessRule.Priority
+                UserRecipientFilter                  = $ClientAccessRule.UserRecipientFilter
+                UsernameMatchesAnyOfPatterns         = $ClientAccessRule.UsernameMatchesAnyOfPatterns
+                Ensure                               = 'Present'
+                GlobalAdminAccount                   = $GlobalAdminAccount
+            }
 
-        Write-Verbose -Message "Found ClientAccessRule $($Identity)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+            if (-not [System.String]::IsNullOrEmpty($ClientAccessRule.RuleScope))
+            {
+                $result.Add("RuleScope", $ClientAccessRule.RuleScope)
+            }
+
+            Write-Verbose -Message "Found ClientAccessRule $($Identity)"
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        Write-Verbose $_
+        return $nullReturn
     }
 }
 
@@ -467,43 +475,52 @@ function Export-TargetResource
         -SkipModuleReload $true
 
     $dscContent = ""
-    if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-ClientAccessRule)
+    try
     {
-        $i = 1
-        if ($ClientAccessRules.Length -eq 0)
+        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-ClientAccessRule)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
-        }
-        foreach ($ClientAccessRule in $ClientAccessRules)
-        {
-            Write-Host "    |---[$i/$($ClientAccessRules.Length)] $($ClientAccessRule.Identity)" -NoNewLine
-            $Params = @{
-                Identity              = $ClientAccessRule.Identity
-                Action                = $ClientAccessRule.Action
-                GlobalAdminAccount    = $GlobalAdminAccount
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
+            [array]$ClientAccessRules = Get-ClientAccessRule -ErrorAction Stop
+            $i = 1
+            if ($ClientAccessRules.Length -eq 0)
+            {
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
             }
-            $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
-            $i++
+            foreach ($ClientAccessRule in $ClientAccessRules)
+            {
+                Write-Host "    |---[$i/$($ClientAccessRules.Length)] $($ClientAccessRule.Identity)" -NoNewLine
+                $Params = @{
+                    Identity              = $ClientAccessRule.Identity
+                    Action                = $ClientAccessRule.Action
+                    GlobalAdminAccount    = $GlobalAdminAccount
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    CertificatePassword   = $CertificatePassword
+                    CertificatePath       = $CertificatePath
+                }
+                $Results = Get-TargetResource @Params
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                $i++
+            }
         }
+        else
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        return $dscContent
     }
-    else
+    catch
     {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        Write-Verbose -Message $_
+        return ""
     }
-    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

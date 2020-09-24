@@ -92,27 +92,35 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
     }
 
-    $OrgConfig = Get-OrganizationConfig
-
-    if ($null -eq $OrgConfig)
+    try
     {
-        Write-Verbose -Message "Can't find the information about the Organization Configuration."
+        $OrgConfig = Get-OrganizationConfig -ErrorAction Stop
+
+        if ($null -eq $OrgConfig)
+        {
+            Write-Verbose -Message "Can't find the information about the Organization Configuration."
+            return $nullReturn
+        }
+
+        $result = @{
+            Organization                          = $Organization
+            MailTipsAllTipsEnabled                = $OrgConfig.MailTipsAllTipsEnabled
+            MailTipsGroupMetricsEnabled           = $OrgConfig.MailTipsGroupMetricsEnabled
+            MailTipsLargeAudienceThreshold        = $OrgConfig.MailTipsLargeAudienceThreshold
+            MailTipsMailboxSourcedTipsEnabled     = $OrgConfig.MailTipsMailboxSourcedTipsEnabled
+            MailTipsExternalRecipientsTipsEnabled = $OrgConfig.MailTipsExternalRecipientsTipsEnabled
+            Ensure                                = "Present"
+            GlobalAdminAccount                    = $GlobalAdminAccount
+        }
+
+        Write-Verbose -Message "Found configuration of the Mailtips for $($Organization)"
+        return $result
+    }
+    catch
+    {
+        Write-Verbose -Message $_
         return $nullReturn
     }
-
-    $result = @{
-        Organization                          = $Organization
-        MailTipsAllTipsEnabled                = $OrgConfig.MailTipsAllTipsEnabled
-        MailTipsGroupMetricsEnabled           = $OrgConfig.MailTipsGroupMetricsEnabled
-        MailTipsLargeAudienceThreshold        = $OrgConfig.MailTipsLargeAudienceThreshold
-        MailTipsMailboxSourcedTipsEnabled     = $OrgConfig.MailTipsMailboxSourcedTipsEnabled
-        MailTipsExternalRecipientsTipsEnabled = $OrgConfig.MailTipsExternalRecipientsTipsEnabled
-        Ensure                                = "Present"
-        GlobalAdminAccount                    = $GlobalAdminAccount
-    }
-
-    Write-Verbose -Message "Found configuration of the Mailtips for $($Organization)"
-    return $result
 }
 
 

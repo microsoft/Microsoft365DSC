@@ -532,7 +532,7 @@ function Start-M365DSCConfigurationExtract
     if ([System.String]::IsNullOrEmpty($Path))
     {
         $shouldOpenOutputDirectory = $true
-        $OutputDSCPath = Read-Host "Destination Path"
+        $OutputDSCPath = Read-Host "`r`nDestination Path"
     }
     else
     {

@@ -63,31 +63,38 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
-
-    $IntraOrganizationConnectors = Get-IntraOrganizationConnector
-
-    $IntraOrganizationConnector = $IntraOrganizationConnectors | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    if ($null -eq $IntraOrganizationConnector)
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = 'Absent'
+    try
     {
-        Write-Verbose -Message "IntraOrganizationConnector $($Identity) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
-    }
-    else
-    {
-        $result = @{
-            Identity             = $Identity
-            DiscoveryEndpoint    = $IntraOrganizationConnector.DiscoveryEndpoint.ToString()
-            Enabled              = $IntraOrganizationConnector.Enabled
-            TargetAddressDomains = $IntraOrganizationConnector.TargetAddressDomains
-            GlobalAdminAccount   = $GlobalAdminAccount
-            Ensure               = 'Present'
+        $IntraOrganizationConnectors = Get-IntraOrganizationConnector -ErrorAction Stop
+
+        $IntraOrganizationConnector = $IntraOrganizationConnectors | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        if ($null -eq $IntraOrganizationConnector)
+        {
+            Write-Verbose -Message "IntraOrganizationConnector $($Identity) does not exist."
+            return $nullReturn
         }
+        else
+        {
+            $result = @{
+                Identity             = $Identity
+                DiscoveryEndpoint    = $IntraOrganizationConnector.DiscoveryEndpoint.ToString()
+                Enabled              = $IntraOrganizationConnector.Enabled
+                TargetAddressDomains = $IntraOrganizationConnector.TargetAddressDomains
+                GlobalAdminAccount   = $GlobalAdminAccount
+                Ensure               = 'Present'
+            }
 
-        Write-Verbose -Message "Found IntraOrganizationConnector $($Identity)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+            Write-Verbose -Message "Found IntraOrganizationConnector $($Identity)"
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        return $nullReturn
     }
 }
 function Set-TargetResource
@@ -288,42 +295,50 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
-    [array]$IntraOrganizationConnectors = Get-IntraOrganizationConnector
-    $dscContent = ""
-
-    if ($IntraOrganizationConnectors.Length -eq 0)
+    try
     {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-    }
-    else {
-        Write-Host "`r`n" -NoNewLine
-    }
-    $i = 1
-    foreach ($IntraOrganizationConnector in $IntraOrganizationConnectors)
-    {
-        Write-Host "    |---[$i/$($IntraOrganizationConnectors.length)] $($IntraOrganizationConnector.Identity)" -NoNewLine
+        [array]$IntraOrganizationConnectors = Get-IntraOrganizationConnector -ErrorAction Stop
+        $dscContent = ""
 
-        $Params = @{
-            Identity              = $IntraOrganizationConnector.Identity
-            GlobalAdminAccount    = $GlobalAdminAccount
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
+        if ($IntraOrganizationConnectors.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
+        else {
+            Write-Host "`r`n" -NoNewLine
+        }
+        $i = 1
+        foreach ($IntraOrganizationConnector in $IntraOrganizationConnectors)
+        {
+            Write-Host "    |---[$i/$($IntraOrganizationConnectors.length)] $($IntraOrganizationConnector.Identity)" -NoNewLine
 
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+            $Params = @{
+                Identity              = $IntraOrganizationConnector.Identity
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+            }
+
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
+        }
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        return ""
+    }
 }
 Export-ModuleMember -Function *-TargetResource

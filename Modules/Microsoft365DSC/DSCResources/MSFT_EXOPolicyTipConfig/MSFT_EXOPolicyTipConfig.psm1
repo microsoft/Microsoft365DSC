@@ -72,35 +72,37 @@ function Get-TargetResource
             -Source $MyInvocation.MyCommand.ModuleName
         throw "EXOPolicyTipConfig is not supported in the current tenant."
     }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
-    $AllPolicyTips = Get-PolicyTipConfig
-
-    $PolicyTipConfig = $AllPolicyTips | Where-Object -FilterScript { $_.Name -eq $Name }
-
-    if ($null -eq $PolicyTipConfig)
+    try
     {
-        Write-Verbose -Message "Policy Tip Config $($Name) does not exist."
+        $AllPolicyTips = Get-PolicyTipConfig -Erroraction Stop
 
-        $nullReturn = @{
-            Name               = $Name
-            Value              = $Value
-            Ensure             = 'Absent'
-            GlobalAdminAccount = $GlobalAdminAccount
+        $PolicyTipConfig = $AllPolicyTips | Where-Object -FilterScript { $_.Name -eq $Name }
+
+        if ($null -eq $PolicyTipConfig)
+        {
+            Write-Verbose -Message "Policy Tip Config $($Name) does not exist."
+            return $nullReturn
         }
+        else
+        {
+            $result = @{
+                Name               = $PolicyTipConfig.Name
+                Value              = $PolicyTipConfig.Value
+                Ensure             = 'Present'
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
 
-        return $nullReturn
+            Write-Verbose -Message "Found Policy Tip Config $($Name)"
+            return $result
+        }
     }
-    else
+    catch
     {
-        $result = @{
-            Name               = $PolicyTipConfig.Name
-            Value              = $PolicyTipConfig.Value
-            Ensure             = 'Present'
-            GlobalAdminAccount = $GlobalAdminAccount
-        }
-
-        Write-Verbose -Message "Found Policy Tip Config $($Name)"
-        return $result
+        Write-Verbose -Message $_
+        return $nullReturn
     }
 }
 
