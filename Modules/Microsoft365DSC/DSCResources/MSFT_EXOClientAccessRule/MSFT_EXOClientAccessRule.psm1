@@ -485,6 +485,10 @@ function Export-TargetResource
             {
                 Write-Host $Global:M365DSCEmojiGreenCheckMark
             }
+            else
+            {
+                Write-Host "`r`n" -NoNewLine
+            }
             foreach ($ClientAccessRule in $ClientAccessRules)
             {
                 Write-Host "    |---[$i/$($ClientAccessRules.Length)] $($ClientAccessRule.Identity)" -NoNewLine
