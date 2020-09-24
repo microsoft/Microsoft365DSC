@@ -2,7 +2,7 @@
 
 ## Description
 
-This resource configures an Azure Active Directory Administrative Unit.
+This resource gets current Azure Active Directory Administrative Unit.  This resource cannot set AAD Administrative Units as there is no unique identifier.
 
 ## Azure AD Permissions
 
