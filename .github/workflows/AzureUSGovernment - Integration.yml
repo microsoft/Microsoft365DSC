@@ -43,7 +43,6 @@ jobs:
       env:
         GCC_USERNAME: ${{ secrets.GCC_USERNAME }}
         GCC_PASSWORD: ${{ secrets.GCC_PASSWORD }}
-        GCC_DOMAIN: ${{ secrets.GCC_DOMAIN }}
       run: |
        Set-ExecutionPolicy Unrestricted -Force
        Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
@@ -51,7 +50,6 @@ jobs:
        & ./Tests/Integration/M365DSCIntegration.Master.Tests.ps1 `
        -GlobalAdminUser $env:GCC_USERNAME `
        -GlobalAdminPassword $env:GCC_PASSWORD `
-       -Domain $env:GCC_DOMAIN `
        -Environment 'GCC'
     - name: Validate Configuration
       shell: powershell
