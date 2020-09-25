@@ -141,7 +141,7 @@ function Get-TargetResource
             $NotifyAllowOverrideValue = $PolicyRule.NotifyAllowOverride.Replace(' ', '').Split(',')
         }
 
-        [array] $SensitiveInfo = @($PolicyRule.ContentContainsSensitiveInformation[0])
+        [array] $SensitiveInfo = @($PolicyRule.ContentContainsSensitiveInformation)
 
         if ($null -ne $SensitiveInfo.groups)
         {
