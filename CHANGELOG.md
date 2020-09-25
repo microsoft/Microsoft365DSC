@@ -4,6 +4,8 @@
 
 * MISC
   * Refactored error handling to various EXO resources;
+  * Renamed method Test-Microsoft365DSCParameterState to
+    Test-M365DSCParameterState to align with naming standard;
 
 ## 1.20.923.1
 

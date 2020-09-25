@@ -112,5 +112,7 @@ function Add-M365DSCEvent
     catch
     {
         Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
     }
 }

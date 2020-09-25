@@ -48,20 +48,11 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = @{
-        Url                   = $Url
-        AuditFlags            = 'None'
-        GlobalAdminAccount    = $GlobalAdminAccount
-        ApplicationId         = $ApplicationId
-        TenantId              = $TenantId
-        CertificatePassword   = $CertificatePassword
-        CertificatePath       = $CertificatePath
-        CertificateThumbprint = $CertificateThumbprint
-    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
     try
     {
-
         $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
             -InboundParameters $PSBoundParameters `
             -Url $Url -ErrorAction SilentlyContinue
@@ -89,6 +80,9 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Make sure that you are connected to your PnPConnection"
         }
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
         return $nullReturn
     }
 }
@@ -203,7 +197,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("AuditFlags")
@@ -255,48 +249,58 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
         -InboundParameters $PSBoundParameters
 
-    $sites = Get-PnPTenantSite
-
-    $i = 1
-    Write-Host "`r`n" -NoNewLine
-    $dscContent = ""
-    foreach ($site in $sites)
+    try
     {
-        try
+        $sites = Get-PnPTenantSite -ErrorAction Stop
+
+        $i = 1
+        Write-Host "`r`n" -NoNewLine
+        $dscContent = ""
+        foreach ($site in $sites)
         {
-            Write-Host "    [$i/$($sites.Length)] Audit Settings for {$($site.Url)}" -NoNewLine
-
-            $Params = @{
-                Url                   = $site.Url
-                AuditFlags            = 'None'
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
-                CertificateThumbprint = $CertificateThumbprint
-                GlobalAdminAccount    = $GlobalAdminAccount
-            }
-
-            $Results = Get-TargetResource @params
-
-            if ([System.String]::IsNullOrEmpty($Results.AuditFlags))
+            try
             {
-                $Results.AuditFlags = 'None'
+                Write-Host "    [$i/$($sites.Length)] Audit Settings for {$($site.Url)}" -NoNewLine
+
+                $Params = @{
+                    Url                   = $site.Url
+                    AuditFlags            = 'None'
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificatePassword   = $CertificatePassword
+                    CertificatePath       = $CertificatePath
+                    CertificateThumbprint = $CertificateThumbprint
+                    GlobalAdminAccount    = $GlobalAdminAccount
+                }
+
+                $Results = Get-TargetResource @params
+
+                if ([System.String]::IsNullOrEmpty($Results.AuditFlags))
+                {
+                    $Results.AuditFlags = 'None'
+                }
+                $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
             }
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            catch
+            {
+                Write-Verbose "There was an issue retrieving Audit Settings for $Url"
+            }
+            $i++
         }
-        catch
-        {
-            Write-Verbose "There was an issue retrieving Audit Settings for $Url"
-        }
-        $i++
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

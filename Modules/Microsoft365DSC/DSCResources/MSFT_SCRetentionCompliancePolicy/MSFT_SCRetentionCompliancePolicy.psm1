@@ -115,62 +115,71 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
             -InboundParameters $PSBoundParameters
     }
-
-    $PolicyObject = Get-RetentionCompliancePolicy $Name -ErrorAction SilentlyContinue
-
-    if ($null -eq $PolicyObject)
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = 'Absent'
+    try
     {
-        Write-Verbose -Message "RetentionCompliancePolicy $($Name) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
-    }
-    else
-    {
-        Write-Verbose "Found existing RetentionCompliancePolicy $($Name)"
+        $PolicyObject = Get-RetentionCompliancePolicy $Name -ErrorAction SilentlyContinue
 
-        if ($PolicyObject.TeamsPolicy)
+        if ($null -eq $PolicyObject)
         {
-            $result = @{
-                Ensure                        = 'Present'
-                Name                          = $PolicyObject.Name
-                Comment                       = $PolicyObject.Comment
-                Enabled                       = $PolicyObject.Enabled
-                RestrictiveRetention          = $PolicyObject.RestrictiveRetention
-                TeamsChannelLocation          = [array]$PolicyObject.TeamsChannelLocation
-                TeamsChannelLocationException = $PolicyObject.TeamsChannelLocationException
-                TeamsChatLocation             = [array]$PolicyObject.TeamsChatLocation
-                TeamsChatLocationException    = $PolicyObject.TeamsChatLocationException
-                GlobalAdminAccount            = $GlobalAdminAccount
-            }
+            Write-Verbose -Message "RetentionCompliancePolicy $($Name) does not exist."
+            return $nullReturn
         }
         else
         {
-            $result = @{
-                Ensure                        = 'Present'
-                Name                          = $PolicyObject.Name
-                Comment                       = $PolicyObject.Comment
-                DynamicScopeLocation          = [array]$PolicyObject.DynamicScopeLocation
-                Enabled                       = $PolicyObject.Enabled
-                ExchangeLocation              = [array]$PolicyObject.ExchangeLocation
-                ExchangeLocationException     = [array]$PolicyObject.ExchangeLocationException
-                ModernGroupLocation           = [array]$PolicyObject.ModernGroupLocation
-                ModernGroupLocationException  = [array]$PolicyObject.ModernGroupLocationException
-                OneDriveLocation              = [array]$PolicyObject.OneDriveLocation
-                OneDriveLocationException     = [array]$PolicyObject.OneDriveLocationException
-                PublicFolderLocation          = [array]$PolicyObject.PublicFolderLocation
-                RestrictiveRetention          = $PolicyObject.RestrictiveRetention
-                SharePointLocation            = [array]$PolicyObject.SharePointLocation
-                SharePointLocationException   = $PolicyObject.SharePointLocationException
-                SkypeLocation                 = [array]$PolicyObject.SkypeLocation
-                SkypeLocationException        = $PolicyObject.SkypeLocationException
-                GlobalAdminAccount            = $GlobalAdminAccount
-            }
-        }
+            Write-Verbose "Found existing RetentionCompliancePolicy $($Name)"
 
-        Write-Verbose -Message "Found RetentionCompliancePolicy $($Name)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+            if ($PolicyObject.TeamsPolicy)
+            {
+                $result = @{
+                    Ensure                        = 'Present'
+                    Name                          = $PolicyObject.Name
+                    Comment                       = $PolicyObject.Comment
+                    Enabled                       = $PolicyObject.Enabled
+                    RestrictiveRetention          = $PolicyObject.RestrictiveRetention
+                    TeamsChannelLocation          = [array]$PolicyObject.TeamsChannelLocation
+                    TeamsChannelLocationException = $PolicyObject.TeamsChannelLocationException
+                    TeamsChatLocation             = [array]$PolicyObject.TeamsChatLocation
+                    TeamsChatLocationException    = $PolicyObject.TeamsChatLocationException
+                    GlobalAdminAccount            = $GlobalAdminAccount
+                }
+            }
+            else
+            {
+                $result = @{
+                    Ensure                        = 'Present'
+                    Name                          = $PolicyObject.Name
+                    Comment                       = $PolicyObject.Comment
+                    DynamicScopeLocation          = [array]$PolicyObject.DynamicScopeLocation
+                    Enabled                       = $PolicyObject.Enabled
+                    ExchangeLocation              = [array]$PolicyObject.ExchangeLocation
+                    ExchangeLocationException     = [array]$PolicyObject.ExchangeLocationException
+                    ModernGroupLocation           = [array]$PolicyObject.ModernGroupLocation
+                    ModernGroupLocationException  = [array]$PolicyObject.ModernGroupLocationException
+                    OneDriveLocation              = [array]$PolicyObject.OneDriveLocation
+                    OneDriveLocationException     = [array]$PolicyObject.OneDriveLocationException
+                    PublicFolderLocation          = [array]$PolicyObject.PublicFolderLocation
+                    RestrictiveRetention          = $PolicyObject.RestrictiveRetention
+                    SharePointLocation            = [array]$PolicyObject.SharePointLocation
+                    SharePointLocationException   = $PolicyObject.SharePointLocationException
+                    SkypeLocation                 = [array]$PolicyObject.SkypeLocation
+                    SkypeLocationException        = $PolicyObject.SkypeLocationException
+                    GlobalAdminAccount            = $GlobalAdminAccount
+                }
+            }
+
+            Write-Verbose -Message "Found RetentionCompliancePolicy $($Name)"
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -677,7 +686,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -710,30 +719,40 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
-    $policies = Get-RetentionCompliancePolicy
-
-    $i = 1
-    Write-Host "`r`n" -NoNewLine
-    $dscContent = ''
-    foreach ($policy in $policies)
+    try
     {
-        Write-Host "    |---[$i/$($policies.Length)] $($policy.Name)" -NoNewLine
-        $Params = @{
-            GlobalAdminAccount    = $GlobalAdminAccount
-            Name                  = $policy.Name
+        $policies = Get-RetentionCompliancePolicy -ErrorAction Stop
+
+        $i = 1
+        Write-Host "`r`n" -NoNewLine
+        $dscContent = ''
+        foreach ($policy in $policies)
+        {
+            Write-Host "    |---[$i/$($policies.Length)] $($policy.Name)" -NoNewLine
+            $Params = @{
+                GlobalAdminAccount    = $GlobalAdminAccount
+                Name                  = $policy.Name
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
         }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

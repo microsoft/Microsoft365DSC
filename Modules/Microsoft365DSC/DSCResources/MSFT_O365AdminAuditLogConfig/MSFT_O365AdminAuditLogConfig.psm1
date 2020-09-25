@@ -55,44 +55,47 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = @{
-        IsSingleInstance                = $IsSingleInstance
-        Ensure                          = 'Absent'
-        GlobalAdminAccount              = $GlobalAdminAccount
-        UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabled
-        ApplicationId                   = $ApplicationId
-        TenantId                        = $TenantId
-        CertificateThumbprint           = $CertificateThumbprint
-    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $GetResults = Get-AdminAuditLogConfig
-    if (-not $GetResults)
+    try
     {
-        Write-Warning 'Unable to determine Unified Audit Log Ingestion State.'
-        Write-Verbose -Message "Returning Get-TargetResource NULL Result"
-        return $nullReturn
-    }
-    else
-    {
-        if ($GetResults.UnifiedAuditLogIngestionEnabled)
+        $GetResults = Get-AdminAuditLogConfig -ErrorAction Stop
+        if (-not $GetResults)
         {
-            $UnifiedAuditLogIngestionEnabledReturnValue = 'Enabled'
+            Write-Warning 'Unable to determine Unified Audit Log Ingestion State.'
+            Write-Verbose -Message "Returning Get-TargetResource NULL Result"
+            return $nullReturn
         }
         else
         {
-            $UnifiedAuditLogIngestionEnabledReturnValue = 'Disabled'
-        }
+            if ($GetResults.UnifiedAuditLogIngestionEnabled)
+            {
+                $UnifiedAuditLogIngestionEnabledReturnValue = 'Enabled'
+            }
+            else
+            {
+                $UnifiedAuditLogIngestionEnabledReturnValue = 'Disabled'
+            }
 
-        $Result = @{
-            IsSingleInstance                = $IsSingleInstance
-            Ensure                          = 'Present'
-            GlobalAdminAccount              = $GlobalAdminAccount
-            UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabledReturnValue
+            $Result = @{
+                IsSingleInstance                = $IsSingleInstance
+                Ensure                          = 'Present'
+                GlobalAdminAccount              = $GlobalAdminAccount
+                UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabledReturnValue
+            }
+            return $Result
         }
-        return $Result
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -236,7 +239,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @('UnifiedAuditLogIngestionEnabled')
@@ -288,36 +291,46 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $O365AdminAuditLogConfig = Get-AdminAuditLogConfig
-    $value = "Disabled"
-    if ($O365AdminAuditLogConfig.UnifiedAuditLogIngestionEnabled)
+    try
     {
-        $value = "Enabled"
-    }
+        $O365AdminAuditLogConfig = Get-AdminAuditLogConfig -ErrorAction Stop
+        $value = "Disabled"
+        if ($O365AdminAuditLogConfig.UnifiedAuditLogIngestionEnabled)
+        {
+            $value = "Enabled"
+        }
 
-    $dscContent = ""
-    $Params = @{
-        IsSingleInstance                = 'Yes'
-        UnifiedAuditLogIngestionEnabled = $value
-        GlobalAdminAccount              = $GlobalAdminAccount
-        ApplicationId                   = $ApplicationId
-        TenantId                        = $TenantId
-        CertificateThumbprint           = $CertificateThumbprint
-    }
-    $Results = Get-TargetResource @Params
+        $dscContent = ""
+        $Params = @{
+            IsSingleInstance                = 'Yes'
+            UnifiedAuditLogIngestionEnabled = $value
+            GlobalAdminAccount              = $GlobalAdminAccount
+            ApplicationId                   = $ApplicationId
+            TenantId                        = $TenantId
+            CertificateThumbprint           = $CertificateThumbprint
+        }
+        $Results = Get-TargetResource @Params
 
-    if ($Results.Ensure -eq 'Present')
+        if ($Results.Ensure -eq 'Present')
+        {
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+        }
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        return $dscContent
+    }
+    catch
     {
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
     }
-    Write-Host $Global:M365DSCEmojiGreenCheckMark
-    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

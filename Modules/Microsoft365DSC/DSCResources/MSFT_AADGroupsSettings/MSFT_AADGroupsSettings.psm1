@@ -71,42 +71,51 @@ function Get-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
-
-    $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript {$_.DisplayName -eq "Group.Unified"}
-
-    if ($null -eq $Policy)
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
+    try
     {
-        $currentValues = $PSBoundParameters
-        $currentValues.Ensure = "Absent"
-        return $currentValues
-    }
-    else
-    {
-        Write-Verbose -Message "Found existing AzureAD Groups Settings"
-        $AllowedGroupName = $null
-        if (-not [System.String]::IsNullOrEmpty($Policy["GroupCreationAllowedGroupId"]))
+        $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript {$_.DisplayName -eq "Group.Unified"}
+
+        if ($null -eq $Policy)
         {
-            $groupObject = Get-AzureADGroup -ObjectId $Policy["GroupCreationAllowedGroupId"]
-            $AllowedGroupName = $groupObject.DisplayName
+            return $nullReturn
         }
-        $result = @{
-            IsSingleInstance               = 'Yes'
-            EnableGroupCreation            = [Boolean]::Parse($Policy["EnableGroupCreation"])
-            AllowGuestsToBeGroupOwner      = [Boolean]::Parse($Policy["AllowGuestsToBeGroupOwner"])
-            AllowGuestsToAccessGroups      = [Boolean]::Parse($Policy["AllowGuestsToAccessGroups"])
-            GuestUsageGuidelinesUrl        = $Policy["GuestUsageGuidelinesUrl"]
-            GroupCreationAllowedGroupName  = $AllowedGroupName
-            AllowToAddGuests               = [Boolean]::Parse($Policy["AllowToAddGuests"])
-            UsageGuidelinesUrl             = $Policy["UsageGuidelinesUrl"]
-            Ensure                         = "Present"
-            GlobalAdminAccount             = $GlobalAdminAccount
-            ApplicationId                  = $ApplicationId
-            TenantId                       = $TenantId
-            CertificateThumbprint          = $CertificateThumbprint
-        }
+        else
+        {
+            Write-Verbose -Message "Found existing AzureAD Groups Settings"
+            $AllowedGroupName = $null
+            if (-not [System.String]::IsNullOrEmpty($Policy["GroupCreationAllowedGroupId"]))
+            {
+                $groupObject = Get-AzureADGroup -ObjectId $Policy["GroupCreationAllowedGroupId"]
+                $AllowedGroupName = $groupObject.DisplayName
+            }
+            $result = @{
+                IsSingleInstance               = 'Yes'
+                EnableGroupCreation            = [Boolean]::Parse($Policy["EnableGroupCreation"])
+                AllowGuestsToBeGroupOwner      = [Boolean]::Parse($Policy["AllowGuestsToBeGroupOwner"])
+                AllowGuestsToAccessGroups      = [Boolean]::Parse($Policy["AllowGuestsToAccessGroups"])
+                GuestUsageGuidelinesUrl        = $Policy["GuestUsageGuidelinesUrl"]
+                GroupCreationAllowedGroupName  = $AllowedGroupName
+                AllowToAddGuests               = [Boolean]::Parse($Policy["AllowToAddGuests"])
+                UsageGuidelinesUrl             = $Policy["UsageGuidelinesUrl"]
+                Ensure                         = "Present"
+                GlobalAdminAccount             = $GlobalAdminAccount
+                ApplicationId                  = $ApplicationId
+                TenantId                       = $TenantId
+                CertificateThumbprint          = $CertificateThumbprint
+            }
 
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -289,7 +298,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -330,25 +339,36 @@ function Export-TargetResource
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
-    $Params = @{
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            IsSingleInstance      = 'Yes'
-            GlobalAdminAccount    = $GlobalAdminAccount
+
+    try
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+        $Params = @{
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                IsSingleInstance      = 'Yes'
+                GlobalAdminAccount    = $GlobalAdminAccount
+        }
+        $dscContent = ''
+        $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        return $dscContent
     }
-    $dscContent = ''
-    $Results = Get-TargetResource @Params
-    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-        -Results $Results
-    $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-        -ConnectionMode $ConnectionMode `
-        -ModulePath $PSScriptRoot `
-        -Results $Results `
-        -GlobalAdminAccount $GlobalAdminAccount
-    Write-Host $Global:M365DSCEmojiGreenCheckMark
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

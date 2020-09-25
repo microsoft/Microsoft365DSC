@@ -96,6 +96,8 @@ function Get-TargetResource
     catch
     {
         Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
         return $nullReturn
     }
 }
@@ -232,7 +234,7 @@ function Test-TargetResource
         $DesiredValues.OrgWideAccount = $OrgWideAccount.Split('@')[0]
     }
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $DesiredValues `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -325,6 +327,8 @@ function Export-TargetResource
     catch
     {
         Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
         return ""
     }
 }
