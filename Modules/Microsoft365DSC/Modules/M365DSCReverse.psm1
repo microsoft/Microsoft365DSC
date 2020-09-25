@@ -36,7 +36,7 @@ function Start-M365DSCConfigurationExtract
         $MaxProcesses = 16,
 
         [Parameter()]
-        [ValidateSet('AAD', 'SPO', 'EXO', 'SC', 'OD', 'O365', 'TEAMS', 'PP', 'PLANNER')]
+        [ValidateSet('AAD', 'SPO', 'EXO', 'INTUNE', 'SC', 'OD', 'O365', 'TEAMS', 'PP', 'PLANNER')]
         [System.String[]]
         $Workloads,
 
@@ -153,7 +153,7 @@ function Start-M365DSCConfigurationExtract
 
     if (-not $PSBoundParameters.ContainsKey('Quiet'))
     {
-        $unattendedCommand = "Export-M365DSCConfiguration -Quiet -ComponentsToExport @("
+        $unattendedCommand = "Export-M365DSCConfiguration -Quiet -ComponentsToExtract @("
         foreach ($resource in $ComponentsToExtract)
         {
             if ($resource -ne 'Credential' -and $resource -ne 'Application' -and `
@@ -347,6 +347,11 @@ function Start-M365DSCConfigurationExtract
                 'EX'
                 {
                     $currentWorkload = 'EXO';
+                    break
+                }
+                'IN'
+                {
+                    $currentWorkload = 'INTUNE';
                     break
                 }
                 'O3'

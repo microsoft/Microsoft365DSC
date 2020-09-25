@@ -1,5 +1,24 @@
 # Change log for Microsoft365DSC
 
+## 1.20.923.1
+
+* IntuneDeviceCategory
+  * Initial Release;
+* SPOSite
+  * Fixed an issue where updating a site's properties
+    would throw an error complaining about the object
+    not being in a correct state.
+* DEPENDENCIES
+  * AADPreview Updated to 2.0.2.117;
+  * ExchangeOnlineManagement Updated to 2.0.3;
+  * MSCloudLoginAssistant Updated to 1.0.40;
+  * ReverseDSC Updated to 2.0.0.7;
+* Misc
+  * Removed EncryptionTemplateID from SCSensitivityLabel (Issue #758)
+  * Added AzureAD app support SPOSiteDesign
+  * Added possibility to provide a custom header to Blueprint
+    assessment and delta reports.
+
 ## 1.20.916.1
 
 * AADServicePrincipal

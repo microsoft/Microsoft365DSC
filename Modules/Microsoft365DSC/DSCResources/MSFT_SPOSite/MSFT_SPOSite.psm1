@@ -445,6 +445,15 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
                 -InboundParameters $PSBoundParameters
 
+    $ConnectionParams = @{
+        GlobalAdminAccount    = $GlobalAdminAccount
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePath       = $CertificatePath
+        CertificatePassword   = $CertificatePassword
+        CertificateThumbprint = $CertificateThumbprint
+    }
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("Ensure") | Out-Null
@@ -519,7 +528,8 @@ function Set-TargetResource
             SharingCapability              = $SharingCapability
             StorageMaximumLevel            = $StorageMaximumLevel
             StorageWarningLevel            = $StorageWarningLevel
-            AllowSelfServiceUpgrade        = $AllowSelfServiceUpgrade
+            # Cannot be set, throws an error about Object not being in a valid state;
+            #AllowSelfServiceUpgrade        = $AllowSelfServiceUpgrade
             Owners                         = $Owner
             CommentsOnSitePagesDisabled    = $CommentsOnSitePagesDisabled
             DefaultLinkPermission          = $DefaultLinkPermission
@@ -529,7 +539,6 @@ function Set-TargetResource
             #LCID Cannot be set after a Template has been applied;
             #LocaleId                       = $LocaleId
         }
-
         $UpdateParams = Remove-NullEntriesFromHashtable -Hash $UpdateParams
 
         Set-PnPTenantSite @UpdateParams -ErrorAction Stop
@@ -832,7 +841,22 @@ function Export-TargetResource
                 -InboundParameters $PSBoundParameters
 
     $sites = Get-PnPTenantSite | Where-Object -FilterScript { $_.Template -ne 'SRCHCEN#0' -and $_.Template -ne 'SPSMSITEHOST#0' }
+    $organization = ""
+    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
+    if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
+    {
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
 
+        if ($organization.IndexOf(".") -gt 0)
+        {
+            $principal = $organization.Split(".")[0]
+        }
+    }
+    else
+    {
+        $organization = $TenantId
+        $principal = $organization.Split(".")[0]
+    }
     $dscContent = ''
     $i = 1
     Write-Host "`r`n" -NoNewLine
@@ -882,13 +906,20 @@ function Export-TargetResource
             }
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                         -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+
+            $partialContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                         -ConnectionMode $ConnectionMode `
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
                         -GlobalAdminAccount $GlobalAdminAccount
+            if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+            $partialContent.ToLower().Contains($principal.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+            }
+            $dscContent += $partialContent
             Write-Host $Global:M365DSCEmojiGreenCheckMark
-
         }
         catch
         {

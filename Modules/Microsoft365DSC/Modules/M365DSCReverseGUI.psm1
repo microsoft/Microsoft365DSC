@@ -295,6 +295,33 @@ function Show-M365DSCGUI
         $pnlMain.Controls.Add($chckAllAAD)
         #endregion
 
+        #region Intune
+        $imgIntune = New-Object System.Windows.Forms.PictureBox
+        $imagePath = $PSScriptRoot + "\..\Dependencies\Images\Intune.jpg"
+        $imgIntune.ImageLocation = $imagePath
+        $imgIntune.Left = $fifthColumnLeft
+        $imgIntune.Top = $topBannerHeight
+        $imgIntune.AutoSize = $true
+        $pnlMain.Controls.Add($imgIntune)
+
+        $pnlIntune = New-Object System.Windows.Forms.Panel
+        $pnlIntune.Top = 88 + $topBannerHeight
+        $pnlIntune.Left = $fifthColumnLeft
+        $pnlIntune.Height = 350
+        $pnlIntune.Width = 300
+        $pnlIntune.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+        $pnlIntune.AutoScroll = $true
+        $pnlIntuneNextControlPosition = -20
+
+        $chckAllIntune = New-Object System.Windows.Forms.CheckBox
+        $chckAllIntune.Left = $fifthColumnLeft + 280
+        $chckAllIntune.Top = $topBannerHeight + 40
+        $chckAllIntune.Checked = $true
+        $chckAllIntune.AutoSize = $true
+        $chckAllIntune.Add_CheckedChanged( { SectionChanged -Control $chckAllIntune -Panel $pnlIntune })
+        $pnlMain.Controls.Add($chckAllIntune)
+        #endregion
+
         $allResources = Get-ChildItem -Path ($PSScriptRoot + "\..\DSCResources\")
 
         foreach ($resource in $allResources)
@@ -312,6 +339,12 @@ function Show-M365DSCGUI
                 $panel = $pnlExo
                 $pnlEXONextControlPosition += 20
                 $currentControlTop = $pnlEXONextControlPosition
+            }
+            elseif ($resourceName.StartsWith("Intune"))
+            {
+                $panel = $pnlIntune
+                $pnlIntuneNextControlPosition += 20
+                $currentControlTop = $pnlIntuneNextControlPosition
             }
             elseif ($resourceName.StartsWith("SPO"))
             {
@@ -386,6 +419,7 @@ function Show-M365DSCGUI
 
         $pnlMain.Controls.Add($pnlO365)
         $pnlMain.Controls.Add($pnlExo)
+        $pnlMain.Controls.Add($pnlIntune)
         $pnlMain.Controls.Add($pnlOD)
         $pnlMain.Controls.Add($pnlPP)
         $pnlMain.Controls.Add($pnlPlanner)
@@ -769,7 +803,7 @@ function Show-M365DSCGUI
                 }
             })
         $panelMenu.Controls.Add($btnExtract);
-
+        $panelMenu.Width = $pnlIntune.Left + $pnlIntune.Width
         $pnlMain.Controls.Add($panelMenu);
         #endregion
 
@@ -786,6 +820,7 @@ function Show-M365DSCGUI
         $form.ActiveControl = $txtTenantAdmin
         $form.Text = "Microsoft365DSC - Extract Configuration"
         $form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
+
         $Global:M365DSCExportGui = $form
         Set-M365DSCGUIResourcesAvailability -Credentials $chckCredential.Checked `
                 -Certificate $chckCertificate.Checked `
