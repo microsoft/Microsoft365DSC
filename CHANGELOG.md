@@ -2,6 +2,8 @@
 
 ## 1.20.923.1
 
+* IntuneAppConfigurationPolicy
+  * Initial Release;
 * IntuneDeviceCategory
   * Initial Release;
 * SPOSite
