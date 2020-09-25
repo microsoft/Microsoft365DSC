@@ -35,7 +35,7 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
         -InboundParameters $PSBoundParameters
 
-    $configPolicy = Get-IntuneAppConfigurationPolicyTargeted -Filter "displayName eq '$DisplayName'"
+    $configPolicy = Get-DeviceAppManagement_TargetedManagedAppConfigurations -Filter "displayName eq '$DisplayName'"
 
     $nullResult = $PSBoundParameters
     $nullResult.Ensure = 'Absent'
@@ -95,21 +95,21 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentconfigPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Intune App Configuration Policy {$DisplayName}"
-        New-IntuneAppConfigurationPolicyTargeted -displayName $DisplayName `
+        New-DeviceAppManagement_TargetedManagedAppConfigurations -displayName $DisplayName `
             -customSettings @() -Description $Description
     }
     elseif ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Intune App Configuration Policy {$DisplayName}"
-        $configPolicy = Get-IntuneAppConfigurationPolicyTargeted -Filter "displayName eq '$DisplayName'"
-        Update-IntuneAppConfigurationPolicyTargeted -targetedManagedAppConfigurationId $configPolicy.id `
+        $configPolicy = Get-DeviceAppManagement_TargetedManagedAppConfigurations -Filter "displayName eq '$DisplayName'"
+        Update-DeviceAppManagement_TargetedManagedAppConfigurations -targetedManagedAppConfigurationId $configPolicy.id `
             -displayName $DisplayName -Description $Description
     }
     elseif ($Ensure -eq 'Absent' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Intune App Configuration Policy {$DisplayName}"
-        $configPolicy = Get-IntuneAppConfigurationPolicyTargeted -Filter "displayName eq '$DisplayName'"
-        Remove-IntuneAppConfigurationPolicyTargeted -targetedManagedAppConfigurationId $configPolicy.id
+        $configPolicy = Get-DeviceAppManagement_TargetedManagedAppConfigurations -Filter "displayName eq '$DisplayName'"
+        Remove-DeviceAppManagement_TargetedManagedAppConfigurations -targetedManagedAppConfigurationId $configPolicy.id
     }
 }
 
