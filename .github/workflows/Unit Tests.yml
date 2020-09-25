@@ -35,10 +35,10 @@ jobs:
     - name: Run Test Harness
       shell : powershell
       run: |
-        $MaximumFunctionCount = 9999
         Install-Module Pester -Force
         [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);
         Import-Module './Tests/TestHarness.psm1' -Force;
+        $MaximumFunctionCount = 9999
         $results = Invoke-TestHarness -IgnoreCodeCoverage;
         if ($results.FailedCount -gt 0)
         {
