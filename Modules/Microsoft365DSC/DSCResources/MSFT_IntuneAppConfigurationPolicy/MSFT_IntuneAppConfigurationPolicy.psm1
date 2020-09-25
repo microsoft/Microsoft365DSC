@@ -98,14 +98,14 @@ function Set-TargetResource
         New-DeviceAppManagement_TargetedManagedAppConfigurations -displayName $DisplayName `
             -customSettings @() -Description $Description
     }
-    elseif ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Present' -and $currentconfigPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Intune App Configuration Policy {$DisplayName}"
         $configPolicy = Get-DeviceAppManagement_TargetedManagedAppConfigurations -Filter "displayName eq '$DisplayName'"
         Update-DeviceAppManagement_TargetedManagedAppConfigurations -targetedManagedAppConfigurationId $configPolicy.id `
             -displayName $DisplayName -Description $Description
     }
-    elseif ($Ensure -eq 'Absent' -and $currentCategory.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Absent' -and $currentconfigPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Intune App Configuration Policy {$DisplayName}"
         $configPolicy = Get-DeviceAppManagement_TargetedManagedAppConfigurations -Filter "displayName eq '$DisplayName'"
