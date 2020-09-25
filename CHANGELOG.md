@@ -1,5 +1,9 @@
 # Change log for Microsoft365DSC
 
+## Unreleased
+
+* Fixed issue 777 with export of SCDLPComplianceRule
+
 ## 1.20.923.1
 
 * IntuneDeviceCategory
