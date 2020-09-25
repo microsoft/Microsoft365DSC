@@ -66,7 +66,7 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = $PS
+    $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
 
     if ($Global:CurrentModeIsExport)

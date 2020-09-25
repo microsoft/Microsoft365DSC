@@ -70,12 +70,12 @@ function Get-TargetResource
         #
         if ([System.String]::IsNullOrEmpty($Identity))
         {
-            [Array]$SiteScripts = Get-PnPSiteScript | Where-Object -FilterScript { $_.Title -eq $Title }
+            [Array]$SiteScripts = Get-PnPSiteScript -ErrorAction Stop | Where-Object -FilterScript { $_.Title -eq $Title }
 
             $SiteScript = $null
             ##### Check to see if more than one site script is returned
             if ($SiteScripts.Length -gt -1){
-                $SiteScript = Get-PnPSiteScript -Identity $SiteScripts[0].Id
+                $SiteScript = Get-PnPSiteScript -Identity $SiteScripts[0].Id -ErrorAction Stop
             }
 
             # No script was returned
@@ -335,7 +335,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $CurrentValues.Remove("GlobalAdminAccount")
+    $CurrentValues.Remove("GlobalAdminAccount") | Out-Null
     $keysToCheck = $CurrentValues.Keys
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

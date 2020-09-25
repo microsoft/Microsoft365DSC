@@ -110,7 +110,7 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting OneDrive quota size for tenant"
-        $tenant = Get-PnPTenant
+        $tenant = Get-PnPTenant -ErrorAction Stop
 
         if ($null -eq $tenant)
         {
@@ -120,7 +120,7 @@ function Get-TargetResource
 
         Write-Verbose -Message "Getting OneDrive quota size for tenant $($tenant.OneDriveStorageQuota)"
         Write-Verbose -Message "Getting tenant client sync setting"
-        $tenantRestrictions = Get-PnPTenantSyncClientRestriction
+        $tenantRestrictions = Get-PnPTenantSyncClientRestriction -ErrorAction Stop
 
         if ($null -eq $tenantRestrictions)
         {

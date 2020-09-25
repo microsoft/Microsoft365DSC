@@ -130,7 +130,7 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nulReturn.Ensure = "Absent"
+    $nullReturn.Ensure = "Absent"
 
     Write-Verbose -Message "Checking for existence of Team $DisplayName"
 

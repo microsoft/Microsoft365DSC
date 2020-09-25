@@ -283,65 +283,8 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
-    $nullReturn = @{
-        Name                                     = $Name
-        AllowApplePushNotifications              = $AllowApplePushNotifications
-        AllowGooglePushNotifications             = $AllowGooglePushNotifications
-        AllowMicrosoftPushNotifications          = $AllowMicrosoftPushNotifications
-        AllowBluetooth                           = $AllowBluetooth
-        AllowBrowser                             = $AllowBrowser
-        AllowCamera                              = $AllowCamera
-        AllowConsumerEmail                       = $AllowConsumerEmail
-        AllowDesktopSync                         = $AllowDesktopSync
-        AllowExternalDeviceManagement            = $AllowExternalDeviceManagement
-        AllowHTMLEmail                           = $AllowHTMLEmail
-        AllowInternetSharing                     = $AllowInternetSharing
-        AllowIrDA                                = $AllowIrDA
-        AllowMobileOTAUpdate                     = $AllowMobileOTAUpdate
-        AllowNonProvisionableDevices             = $AllowNonProvisionableDevices
-        AllowPOPIMAPEmail                        = $AllowPOPIMAPEmail
-        AllowRemoteDesktop                       = $AllowRemoteDesktop
-        AllowSimplePassword                      = $AllowSimplePassword
-        AllowSMIMEEncryptionAlgorithmNegotiation = $AllowSMIMEEncryptionAlgorithmNegotiation
-        AllowSMIMESoftCerts                      = $AllowSMIMESoftCerts
-        AllowStorageCard                         = $AllowStorageCard
-        AllowTextMessaging                       = $AllowTextMessaging
-        AllowUnsignedApplications                = $AllowUnsignedApplications
-        AllowUnsignedInstallationPackages        = $AllowUnsignedInstallationPackages
-        AllowWiFi                                = $AllowWiFi
-        AlphanumericPasswordRequired             = $AlphanumericPasswordRequired
-        ApprovedApplicationList                  = $ApprovedApplicationList
-        AttachmentsEnabled                       = $AttachmentsEnabled
-        DeviceEncryptionEnabled                  = $DeviceEncryptionEnabled
-        DevicePolicyRefreshInterval              = $DevicePolicyRefreshInterval
-        IrmEnabled                               = $IrmEnabled
-        IsDefault                                = $IsDefault
-        MaxAttachmentSize                        = $MaxAttachmentSize
-        MaxCalendarAgeFilter                     = $MaxCalendarAgeFilter
-        MaxEmailAgeFilter                        = $MaxEmailAgeFilter
-        MaxEmailBodyTruncationSize               = $MaxEmailBodyTruncationSize
-        MaxEmailHTMLBodyTruncationSize           = $MaxEmailHTMLBodyTruncationSize
-        MaxInactivityTimeLock                    = $MaxInactivityTimeLock
-        MaxPasswordFailedAttempts                = $MaxPasswordFailedAttempts
-        MinPasswordComplexCharacters             = $MinPasswordComplexCharacters
-        MinPasswordLength                        = $MinPasswordLength
-        PasswordEnabled                          = $PasswordEnabled
-        PasswordExpiration                       = $PasswordExpiration
-        PasswordHistory                          = $PasswordHistory
-        PasswordRecoveryEnabled                  = $PasswordRecoveryEnabled
-        RequireDeviceEncryption                  = $RequireDeviceEncryption
-        RequireEncryptedSMIMEMessages            = $RequireSignedSMIMEMessages
-        RequireEncryptionSMIMEAlgorithm          = $RequireEncryptionSMIMEAlgorithm
-        RequireManualSyncWhenRoaming             = $RequireManualSyncWhenRoaming
-        RequireSignedSMIMEAlgorithm              = $RequireSignedSMIMEAlgorithm
-        RequireSignedSMIMEMessages               = $RequireSignedSMIMEMessages
-        RequireStorageCardEncryption             = $RequireStorageCardEncryption
-        UnapprovedInROMApplicationList           = $UnapprovedInROMApplicationList
-        UNCAccessEnabled                         = $UNCAccessEnabled
-        WSSAccessEnabled                         = $WSSAccessEnabled
-        Ensure                                   = 'Absent'
-        GlobalAdminAccount                       = $GlobalAdminAccount
-    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
     try
     {
