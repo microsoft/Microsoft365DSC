@@ -86,7 +86,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-DeviceAppManagement_TargetedManagedAppConfigurations -MockWith {
                     return @{
                         DisplayName = 'Test App Configuration Policy'
-                        Description = "Different Value"
+                        Description = 'Different Value'
+                        Id          = 'A_19dbaff5-9aff-48b0-a60d-d0471ddaf141'
                     }
                 }
             }
@@ -117,7 +118,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-DeviceAppManagement_TargetedManagedAppConfigurations -MockWith {
                     return @{
                         DisplayName = 'Test App Configuration Policy'
-                        Description = "Test Definition"
+                        Description = 'Test Definition'
                     }
                 }
             }
@@ -139,7 +140,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-DeviceAppManagement_TargetedManagedAppConfigurations -MockWith {
                     return @{
                         DisplayName = 'Test App Configuration Policy'
-                        Description = "Test Definition"
+                        Description = 'Test Definition'
+                        Id          = 'A_19dbaff5-9aff-48b0-a60d-d0471ddaf141'
                     }
                 }
             }
@@ -167,7 +169,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-DeviceAppManagement_TargetedManagedAppConfigurations -MockWith {
                     return @{
                         DisplayName = 'Test App Configuration Policy'
-                        Description = "Test Definition"
+                        Description = 'Test Definition'
                     }
                 }
             }
