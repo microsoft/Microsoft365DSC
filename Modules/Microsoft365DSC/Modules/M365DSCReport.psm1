@@ -156,6 +156,8 @@ function New-M365DSCConfigurationToExcel
                 catch
                 {
                     Write-Verbose -Message $_
+                    Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source)
                 }
 
                 if ($property -in @("Identity", "Name", "IsSingleInstance"))
@@ -528,6 +530,8 @@ function New-M365DSCDeltaReport
         catch
         {
             Write-Verbose -Message $_
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
         }
     }
     #endregion

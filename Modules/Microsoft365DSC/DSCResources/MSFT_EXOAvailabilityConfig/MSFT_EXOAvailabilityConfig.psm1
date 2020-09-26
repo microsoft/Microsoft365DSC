@@ -60,33 +60,45 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
-
-    $AvailabilityConfigs = Get-AvailabilityConfig
-
-    $AvailabilityConfig = ($AvailabilityConfigs | Where-Object -FilterScript { $_.OrgWideAccount -IMatch $OrgWideAccount })
-
-    if ($null -eq $AvailabilityConfig)
-    {
-        Write-Verbose -Message "Availability config for $($OrgWideAccount) does not exist."
-
-        $nullReturn = @{
-            OrgWideAccount     = $OrgWideAccount
-            Ensure             = 'Absent'
-            GlobalAdminAccount = $GlobalAdminAccount
-        }
-
-        return $nullReturn
+    $nullReturn = @{
+        OrgWideAccount     = $OrgWideAccount
+        Ensure             = 'Absent'
+        GlobalAdminAccount = $GlobalAdminAccount
     }
-    else
+
+    try
     {
-        $result = @{
-            OrgWideAccount     = $AvailabilityConfig.OrgWideAccount
-            Ensure             = 'Present'
-            GlobalAdminAccount = $GlobalAdminAccount
+        $AvailabilityConfigs = Get-AvailabilityConfig -ErrorAction Stop
+
+        if ($null -ne $AvailabilityConfigs)
+        {
+            $AvailabilityConfig = ($AvailabilityConfigs | Where-Object -FilterScript { $_.OrgWideAccount -IMatch $OrgWideAccount })
         }
 
-        Write-Verbose -Message "Found Availability Config for $($OrgWideAccount)"
-        return $result
+        if ($null -eq $AvailabilityConfig)
+        {
+            Write-Verbose -Message "Availability config for $($OrgWideAccount) does not exist."
+
+            return $nullReturn
+        }
+        else
+        {
+            $result = @{
+                OrgWideAccount     = $AvailabilityConfig.OrgWideAccount
+                Ensure             = 'Present'
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Write-Verbose -Message "Found Availability Config for $($OrgWideAccount)"
+            return $result
+        }
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -222,7 +234,7 @@ function Test-TargetResource
         $DesiredValues.OrgWideAccount = $OrgWideAccount.Split('@')[0]
     }
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $DesiredValues `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -271,43 +283,54 @@ function Export-TargetResource
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
 
-    if ($null -eq (Get-Command Get-AvailabilityConfig -ErrorAction SilentlyContinue))
+    try
     {
-        Write-Host "`r`n    $($Global:M365DSCEmojiRedX) The specified account doesn't have permissions to access Availibility Config"
-        return ""
-    }
-    $AvailabilityConfig = Get-AvailabilityConfig -ErrorAction SilentlyContinue
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
 
-    if ($null -eq $AvailabilityConfig)
-    {
+        if ($null -eq (Get-Command Get-AvailabilityConfig -ErrorAction SilentlyContinue))
+        {
+            Write-Host "`r`n    $($Global:M365DSCEmojiRedX) The specified account doesn't have permissions to access Availibility Config"
+            return ""
+        }
+        $AvailabilityConfig = Get-AvailabilityConfig -ErrorAction Stop
+
+        if ($null -eq $AvailabilityConfig)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            return ""
+        }
+
+        $Params = @{
+            OrgWideAccount        = $AvailabilityConfig.OrgWideAccount.ToString()
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+        }
+        $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+        $dscContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+
         Write-Host $Global:M365DSCEmojiGreenCheckMark
+        return $dscContent
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
         return ""
     }
-
-    $Params = @{
-        OrgWideAccount        = $AvailabilityConfig.OrgWideAccount.ToString()
-        GlobalAdminAccount    = $GlobalAdminAccount
-        ApplicationId         = $ApplicationId
-        TenantId              = $TenantId
-        CertificateThumbprint = $CertificateThumbprint
-        CertificatePassword   = $CertificatePassword
-        CertificatePath       = $CertificatePath
-    }
-    $Results = Get-TargetResource @Params
-    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-    $dscContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-
-    Write-Host $Global:M365DSCEmojiGreenCheckMark
-    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

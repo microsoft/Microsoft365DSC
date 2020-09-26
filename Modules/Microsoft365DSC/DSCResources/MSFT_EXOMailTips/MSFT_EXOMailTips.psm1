@@ -92,27 +92,37 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
     }
 
-    $OrgConfig = Get-OrganizationConfig
-
-    if ($null -eq $OrgConfig)
+    try
     {
-        Write-Verbose -Message "Can't find the information about the Organization Configuration."
+        $OrgConfig = Get-OrganizationConfig -ErrorAction Stop
+
+        if ($null -eq $OrgConfig)
+        {
+            Write-Verbose -Message "Can't find the information about the Organization Configuration."
+            return $nullReturn
+        }
+
+        $result = @{
+            Organization                          = $Organization
+            MailTipsAllTipsEnabled                = $OrgConfig.MailTipsAllTipsEnabled
+            MailTipsGroupMetricsEnabled           = $OrgConfig.MailTipsGroupMetricsEnabled
+            MailTipsLargeAudienceThreshold        = $OrgConfig.MailTipsLargeAudienceThreshold
+            MailTipsMailboxSourcedTipsEnabled     = $OrgConfig.MailTipsMailboxSourcedTipsEnabled
+            MailTipsExternalRecipientsTipsEnabled = $OrgConfig.MailTipsExternalRecipientsTipsEnabled
+            Ensure                                = "Present"
+            GlobalAdminAccount                    = $GlobalAdminAccount
+        }
+
+        Write-Verbose -Message "Found configuration of the Mailtips for $($Organization)"
+        return $result
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
         return $nullReturn
     }
-
-    $result = @{
-        Organization                          = $Organization
-        MailTipsAllTipsEnabled                = $OrgConfig.MailTipsAllTipsEnabled
-        MailTipsGroupMetricsEnabled           = $OrgConfig.MailTipsGroupMetricsEnabled
-        MailTipsLargeAudienceThreshold        = $OrgConfig.MailTipsLargeAudienceThreshold
-        MailTipsMailboxSourcedTipsEnabled     = $OrgConfig.MailTipsMailboxSourcedTipsEnabled
-        MailTipsExternalRecipientsTipsEnabled = $OrgConfig.MailTipsExternalRecipientsTipsEnabled
-        Ensure                                = "Present"
-        GlobalAdminAccount                    = $GlobalAdminAccount
-    }
-
-    Write-Verbose -Message "Found configuration of the Mailtips for $($Organization)"
-    return $result
 }
 
 
@@ -292,7 +302,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("MailTipsAllTipsEnabled",
@@ -351,37 +361,46 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
-
-    $OrganizationName = ""
-    if ($ConnectionMode -eq 'ServicePrincipal')
+    try
     {
-        $OrganizationName = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
-            -TenantId $TenantId `
-            -CertificateThumbprint $CertificateThumbprint
+        $OrganizationName = ""
+        if ($ConnectionMode -eq 'ServicePrincipal')
+        {
+            $OrganizationName = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
+                -TenantId $TenantId `
+                -CertificateThumbprint $CertificateThumbprint
+        }
+        else
+        {
+            $OrganizationName = $GlobalAdminAccount.UserName.Split('@')[1]
+        }
+        $Params = @{
+            GlobalAdminAccount    = $GlobalAdminAccount
+            Organization          = $OrganizationName
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+        }
+        $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+        $dscContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        return $dscContent
     }
-    else
+    catch
     {
-        $OrganizationName = $GlobalAdminAccount.UserName.Split('@')[1]
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
     }
-    $Params = @{
-        GlobalAdminAccount    = $GlobalAdminAccount
-        Organization          = $OrganizationName
-        ApplicationId         = $ApplicationId
-        TenantId              = $TenantId
-        CertificateThumbprint = $CertificateThumbprint
-        CertificatePassword   = $CertificatePassword
-        CertificatePath       = $CertificatePath
-    }
-    $Results = Get-TargetResource @Params
-    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-    $dscContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-    Write-Host $Global:M365DSCEmojiGreenCheckMark
-    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

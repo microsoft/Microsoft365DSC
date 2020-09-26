@@ -33,25 +33,36 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
         -InboundParameters $PSBoundParameters
 
-    $policy = Get-CsTeamsUpgradePolicy -Identity $Identity -ErrorAction SilentlyContinue
-    [array]$users = Get-CSOnlineUser | Where-Object -Filter {$_.TeamsUpgradePolicy -eq $Identity}
-
-    if ($null -eq $policy)
+    try
     {
-        throw "No Teams Upgrade Policy with Identity {$Identity} was found"
-    }
+        $policy = Get-CsTeamsUpgradePolicy -Identity $Identity `
+            -ErrorAction SilentlyContinue
+        [array]$users = Get-CSOnlineUser | Where-Object -Filter {$_.TeamsUpgradePolicy -eq $Identity}
 
-    [array]$usersList = @()
-    foreach ($user in $users)
-    {
-        $usersList += $user.UserPrincipalName
+        if ($null -eq $policy)
+        {
+            throw "No Teams Upgrade Policy with Identity {$Identity} was found"
+        }
+
+        [array]$usersList = @()
+        foreach ($user in $users)
+        {
+            $usersList += $user.UserPrincipalName
+        }
+        Write-Verbose -Message "Found Teams Upgrade Policy with Identity {$Identity}"
+        return @{
+            Identity               = $Identity
+            Users                  = $usersList
+            MigrateMeetingsToTeams = $MigrateMeetingsToTeams
+            GlobalAdminAccount     = $GlobalAdminAccount
+        }
     }
-    Write-Verbose -Message "Found Teams Upgrade Policy with Identity {$Identity}"
-    return @{
-        Identity               = $Identity
-        Users                  = $usersList
-        MigrateMeetingsToTeams = $MigrateMeetingsToTeams
-        GlobalAdminAccount     = $GlobalAdminAccount
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        throw $_
     }
 }
 
@@ -129,7 +140,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
                                                   -Source $($MyInvocation.MyCommand.Source) `
                                                   -DesiredValues $PSBoundParameters `
                                                   -ValuesToCheck $ValuesToCheck.Keys
@@ -166,33 +177,43 @@ function Export-TargetResource
         $organization = $GlobalAdminAccount.UserName.Split("@")[1]
     }
 
-    [array]$policies = Get-CsTeamsUpgradePolicy
-    $i = 1
-    $content = ''
-    Write-Host "`r`n" -NoNewLine
-    foreach ($policy in $policies)
+    try
     {
-        Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity.Replace('Tag:', ''))" -NoNewLine
-        $params = @{
-            Identity           = $policy.Identity.Replace("Tag:", "")
-            GlobalAdminAccount = $GlobalAdminAccount
-        }
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content += "        TeamsUpgradePolicy " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+        [array]$policies = Get-CsTeamsUpgradePolicy -ErrorAction Stop
+        $i = 1
+        $content = ''
+        Write-Host "`r`n" -NoNewLine
+        foreach ($policy in $policies)
         {
-            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+            Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity.Replace('Tag:', ''))" -NoNewLine
+            $params = @{
+                Identity           = $policy.Identity.Replace("Tag:", "")
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $content += "        TeamsUpgradePolicy " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+            }
+            $content += $partialContent
+            $content += "        }`r`n"
+            $i++
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        $content += $partialContent
-        $content += "        }`r`n"
-        $i++
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        return $content
     }
-    return $content
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

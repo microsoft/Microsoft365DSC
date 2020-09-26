@@ -410,7 +410,7 @@ function Compare-PSCustomObjectArrays
     return $DriftedProperties
 }
 
-function Test-Microsoft365DSCParameterState
+function Test-M365DSCParameterState
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
@@ -445,7 +445,7 @@ function Test-Microsoft365DSCParameterState
             -and ($DesiredValues.GetType().Name -ne "CimInstance") `
             -and ($DesiredValues.GetType().Name -ne "PSBoundParametersDictionary"))
     {
-        throw ("Property 'DesiredValues' in Test-Microsoft365DSCParameterState must be either a " + `
+        throw ("Property 'DesiredValues' in Test-M365DSCParameterState must be either a " + `
                 "Hashtable or CimInstance. Type detected was $($DesiredValues.GetType().Name)")
     }
 
@@ -711,7 +711,7 @@ function Test-Microsoft365DSCParameterState
                                 Write-Verbose -Message ("Unable to compare property $fieldName " + `
                                         "as the type ($($desiredType.Name)) is " + `
                                         "not handled by the " + `
-                                        "Test-Microsoft365DSCParameterState cmdlet")
+                                        "Test-M365DSCParameterState cmdlet")
                                 $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
                                 $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
                                 $DriftedParameters.Add($fieldName, $EventValue)
@@ -760,7 +760,8 @@ function Test-Microsoft365DSCParameterState
         $EventMessage += "    </DesiredValues>`r`n"
         $EventMessage += "</M365DSCEvent>"
 
-        Add-M365DSCEvent -Message $EventMessage -EntryType 'Error' -EventID 1 -Source $Source
+        Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+            -EventID 1 -Source $Source
     }
     #region Telemetry
     Add-M365DSCTelemetryEvent -Data $data
@@ -2147,6 +2148,8 @@ function Test-M365DSCNewVersionAvailable
     catch
     {
         Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
     }
 }
 

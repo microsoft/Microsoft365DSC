@@ -77,40 +77,41 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
     }
 
-    $AllAddressBookPolicies = Get-AddressBookPolicy
-
-    $AddressBookPolicy = $AllAddressBookPolicies | Where-Object -FilterScript { $_.Name -eq $Name }
-
-    if ($null -eq $AddressBookPolicy)
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
+    try
     {
-        Write-Verbose -Message "Address Book Policy $($Name) does not exist."
+        $AllAddressBookPolicies = Get-AddressBookPolicy -ErrorAction Stop
 
-        $nullReturn = @{
-            Name               = $Name
-            AddressLists       = $AddressLists
-            GlobalAddressList  = $GlobalAddressList
-            OfflineAddressBook = $OfflineAddressBook
-            RoomList           = $RoomList
-            Ensure             = 'Absent'
-            GlobalAdminAccount = $GlobalAdminAccount
+        $AddressBookPolicy = $AllAddressBookPolicies | Where-Object -FilterScript { $_.Name -eq $Name }
+
+        if ($null -eq $AddressBookPolicy)
+        {
+            Write-Verbose -Message "Address Book Policy $($Name) does not exist."
+            return $nullReturn
         }
+        else
+        {
+            $result = @{
+                Name               = $AddressBookPolicy.Name
+                AddressLists       = $AddressBookPolicy.AddressLists
+                GlobalAddressList  = $AddressBookPolicy.GlobalAddressList
+                OfflineAddressBook = $AddressBookPolicy.OfflineAddressBook
+                RoomList           = $AddressBookPolicy.RoomList
+                Ensure             = 'Present'
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
 
-        return $nullReturn
+            Write-Verbose -Message "Found Address Book Policy $($Name)"
+            return $result
+        }
     }
-    else
+    catch
     {
-        $result = @{
-            Name               = $AddressBookPolicy.Name
-            AddressLists       = $AddressBookPolicy.AddressLists
-            GlobalAddressList  = $AddressBookPolicy.GlobalAddressList
-            OfflineAddressBook = $AddressBookPolicy.OfflineAddressBook
-            RoomList           = $AddressBookPolicy.RoomList
-            Ensure             = 'Present'
-            GlobalAdminAccount = $GlobalAdminAccount
-        }
-
-        Write-Verbose -Message "Found Address Book Policy $($Name)"
-        return $result
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
     }
 }
 
@@ -293,7 +294,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -346,44 +347,54 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
-    [array]$AllAddressBookPolicies = Get-AddressBookPolicy
+    try
+    {
+        [array]$AllAddressBookPolicies = Get-AddressBookPolicy -ErrorAction Stop
 
-    $dscContent = ""
-    $i = 1
-    if ($AllAddressBookPolicies.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-    }
-    else
-    {
-        Write-Host "`r`n" -NoNewLine
-    }
-    foreach ($AddressBookPolicy in $AllAddressBookPolicies)
-    {
-        Write-Host "    |---[$i/$($AllAddressBookPolicies.Count)] $($AddressBookPolicy.Name)" -NoNewLine
-
-        $Params = @{
-            Name                  = $AddressBookPolicy.Name
-            GlobalAdminAccount    = $GlobalAdminAccount
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
+        $dscContent = ""
+        $i = 1
+        if ($AllAddressBookPolicies.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
+        foreach ($AddressBookPolicy in $AllAddressBookPolicies)
+        {
+            Write-Host "    |---[$i/$($AllAddressBookPolicies.Count)] $($AddressBookPolicy.Name)" -NoNewLine
 
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+            $Params = @{
+                Name                  = $AddressBookPolicy.Name
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
+        }
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

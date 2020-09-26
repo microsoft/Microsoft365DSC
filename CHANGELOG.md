@@ -1,8 +1,12 @@
 # Change log for Microsoft365DSC
 
-## Unreleased
+## 1.20.930.1
 
-* Fixed issue 777 with export of SCDLPComplianceRule
+* MISC
+  * Refactored error handling to various EXO resources;
+  * Renamed method Test-Microsoft365DSCParameterState to
+    Test-M365DSCParameterState to align with naming standard;
+  * Fixed issue 777 with export of SCDLPComplianceRule;
 
 ## 1.20.923.1
 

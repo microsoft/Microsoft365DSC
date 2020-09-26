@@ -43,42 +43,52 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
     }
 
-    $PolicyObject = $null
-    Write-Verbose -Message "Current Workload = {$Workload}"
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = 'Absent'
 
-    if ($Workload -eq 'OneDriveForBusiness')
+    try
     {
-        $PolicyObject = Get-AuditConfigurationPolicy | Where-Object -FilterScript { $_.Name -eq 'a415dcce-19a0-4153-b137-eb6fd67995b5' }
-    }
-    else
-    {
-        $PolicyObject = Get-AuditConfigurationPolicy | Where-Object -FilterScript { $_.Workload -eq $Workload }
-    }
+        $PolicyObject = $null
+        Write-Verbose -Message "Current Workload = {$Workload}"
 
-    if ($null -eq $PolicyObject)
-    {
-        Write-Verbose -Message "SCAuditConfigurationPolicy $Workload does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
-    }
-    else
-    {
-        Write-Verbose -Message "Found existing SCAuditConfigurationPolicy $Workload"
-        $result = @{
-            Ensure             = 'Present'
-            Workload           = $Workload
-            GlobalAdminAccount = $GlobalAdminAccount
+        if ($Workload -eq 'OneDriveForBusiness')
+        {
+            $PolicyObject = Get-AuditConfigurationPolicy | Where-Object -FilterScript { $_.Name -eq 'a415dcce-19a0-4153-b137-eb6fd67995b5' }
+        }
+        else
+        {
+            $PolicyObject = Get-AuditConfigurationPolicy | Where-Object -FilterScript { $_.Workload -eq $Workload }
         }
 
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+        if ($null -eq $PolicyObject)
+        {
+            Write-Verbose -Message "SCAuditConfigurationPolicy $Workload does not exist."
+            return $nullReturn
+        }
+        else
+        {
+            Write-Verbose -Message "Found existing SCAuditConfigurationPolicy $Workload"
+            $result = @{
+                Ensure             = 'Present'
+                Workload           = $Workload
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
 function Set-TargetResource
 {
-
     [CmdletBinding()]
     param
     (
@@ -175,7 +185,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -207,31 +217,41 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
-    [array]$policies = Get-AuditConfigurationPolicy
-    $dscContent = ""
-    $i = 1
-    Write-Host "`r`n" -NoNewLine
-    foreach ($policy in $policies)
+    try
     {
-        Write-Host "    |---[$i/$($policies.Length)] $($policy.Workload)" -NoNewLine
+        [array]$policies = Get-AuditConfigurationPolicy -ErrorAction Stop
+        $dscContent = ""
+        $i = 1
+        Write-Host "`r`n" -NoNewLine
+        foreach ($policy in $policies)
+        {
+            Write-Host "    |---[$i/$($policies.Length)] $($policy.Workload)" -NoNewLine
 
-        $Params = @{
-            Workload              = $policy.Workload
-            GlobalAdminAccount    = $GlobalAdminAccount
+            $Params = @{
+                Workload              = $policy.Workload
+                GlobalAdminAccount    = $GlobalAdminAccount
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
         }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
-    }
 
-    return $dscContent
+        return $dscContent
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

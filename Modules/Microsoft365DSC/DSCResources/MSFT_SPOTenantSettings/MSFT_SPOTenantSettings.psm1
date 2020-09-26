@@ -120,37 +120,12 @@ function Get-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
-
-    $nullReturn = @{
-        IsSingleInstance                              = 'Yes'
-        MinCompatibilityLevel                         = $null
-        MaxCompatibilityLevel                         = $null
-        SearchResolveExactEmailOrUPN                  = $null
-        OfficeClientADALDisabled                      = $null
-        LegacyAuthProtocolsEnabled                    = $null
-        RequireAcceptingAccountMatchInvitedAccount    = $null
-        SignInAccelerationDomain                      = $null
-        UsePersistentCookiesForExplorerView           = $null
-        UserVoiceForFeedbackEnabled                   = $null
-        PublicCdnEnabled                              = $null
-        PublicCdnAllowedFileTypes                     = $null
-        UseFindPeopleInPeoplePicker                   = $null
-        NotificationsInSharePointEnabled              = $null
-        OwnerAnonymousNotification                    = $null
-        ApplyAppEnforcedRestrictionsToAdHocRecipients = $null
-        FilePickerExternalImageSearchEnabled          = $null
-        HideDefaultThemes                             = $null
-        GlobalAdminAccount                            = $GlobalAdminAccount
-        ApplicationId                                 = $ApplicationId
-        TenantId                                      = $TenantId
-        CertificatePassword                           = $CertificatePassword
-        CertificatePath                               = $CertificatePath
-        CertificateThumbprint                         = $CertificateThumbprint
-    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
     try
     {
-        $SPOTenantSettings = Get-PNPTenant
+        $SPOTenantSettings = Get-PNPTenant -ErrorAction Stop
 
         $CompatibilityRange = $SPOTenantSettings.CompatibilityRange.Split(',')
         $MinCompat = $null
@@ -194,6 +169,9 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Make sure that you are connected to your SPOService"
         }
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
         return $nullReturn
     }
 }
@@ -453,7 +431,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("IsSingleInstance", `
@@ -523,34 +501,44 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
         -InboundParameters $PSBoundParameters
 
-    $Params = @{
-        IsSingleInstance      = 'Yes'
-        ApplicationId         = $ApplicationId
-        TenantId              = $TenantId
-        CertificatePassword   = $CertificatePassword
-        CertificatePath       = $CertificatePath
-        CertificateThumbprint = $CertificateThumbprint
-        GlobalAdminAccount    = $GlobalAdminAccount
-    }
+    try
+    {
+        $Params = @{
+            IsSingleInstance      = 'Yes'
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
+            GlobalAdminAccount    = $GlobalAdminAccount
+        }
 
-    $Results = Get-TargetResource @Params
-    if ($null -eq $Results.MaxCompatibilityLevel)
-    {
-        $Results.Remove("MaxCompatibilityLevel") | Out-Null
+        $Results = Get-TargetResource @Params
+        if ($null -eq $Results.MaxCompatibilityLevel)
+        {
+            $Results.Remove("MaxCompatibilityLevel") | Out-Null
+        }
+        if ($null -eq $Results.MinCompatibilityLevel)
+        {
+            $Results.Remove("MinCompatibilityLevel") | Out-Null
+        }
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckmark
+        return $dscContent
     }
-    if ($null -eq $Results.MinCompatibilityLevel)
+    catch
     {
-        $Results.Remove("MinCompatibilityLevel") | Out-Null
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
     }
-    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-        -Results $Results
-    $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-        -ConnectionMode $ConnectionMode `
-        -ModulePath $PSScriptRoot `
-        -Results $Results `
-        -GlobalAdminAccount $GlobalAdminAccount
-    Write-Host $Global:M365DSCEmojiGreenCheckmark
-    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

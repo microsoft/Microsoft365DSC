@@ -104,17 +104,16 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
         -InboundParameters $PSBoundParameters
 
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
     try
     {
-        $policy = Get-CsTeamsMessagingPolicy -Identity $Identity -ErrorAction SilentlyContinue
+        $policy = Get-CsTeamsMessagingPolicy -Identity $Identity `
+            -ErrorAction SilentlyContinue
 
         if ($null -eq $policy)
         {
-            return @{
-                Identity           = $Identity
-                Ensure             = 'Absent'
-                GlobalAdminAccount = $GlobalAdminAccount
-            }
+            return $nullReturn
         }
         else
         {
@@ -150,7 +149,10 @@ function Get-TargetResource
     }
     catch
     {
-        throw $_
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -382,7 +384,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('Tenant') | Out-Null
-    $TestResult = Test-Microsoft365DSCParameterState `
+    $TestResult = Test-M365DSCParameterState `
         -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
@@ -413,39 +415,48 @@ function Export-TargetResource
     #endregion
     $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
         -InboundParameters $PSBoundParameters
-
-    $i = 1
-    [array]$policies = Get-CsTeamsMessagingPolicy
-    $content = ''
-    Write-Host "`r`n" -NoNewLine
-    foreach ($policy in $policies)
+    try
     {
-        Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewLine
-        if ($policy.Identity.ToString().contains(":"))
+        $i = 1
+        [array]$policies = Get-CsTeamsMessagingPolicy -ErrorAction Stop
+        $content = ''
+        Write-Host "`r`n" -NoNewLine
+        foreach ($policy in $policies)
         {
-            $currentIdentity = $policy.Identity.split(":")[1]
-        }
-        else
-        {
-            $currentIdentity = $policy.Identity
-        }
+            Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewLine
+            if ($policy.Identity.ToString().contains(":"))
+            {
+                $currentIdentity = $policy.Identity.split(":")[1]
+            }
+            else
+            {
+                $currentIdentity = $policy.Identity
+            }
 
-        $params = @{
-            Identity           = $currentIdentity
-            Ensure             = 'Present'
-            GlobalAdminAccount = $GlobalAdminAccount
+            $params = @{
+                Identity           = $currentIdentity
+                Ensure             = 'Present'
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $content += "        TeamsMessagingPolicy " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $content += "        }`r`n"
+            $i++
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content += "        TeamsMessagingPolicy " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
-        $i++
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        return $content
     }
-    return $content
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource
