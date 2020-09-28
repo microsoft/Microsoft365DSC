@@ -37,8 +37,17 @@ jobs:
       run: |
         Install-Module Pester -Force
         [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);
-        Import-Module './Tests/TestHarness.psm1' -Force;
-        $results = Invoke-TestHarness;
+        $MaximumFunctionCount = 9999
+        try
+        {
+            $results = Invoke-TestHarness -IgnoreCodeCoverage
+        }
+        catch
+        {
+            $MaximumFunctionCount = 9999
+            Import-Module './Tests/TestHarness.psm1' -Force;
+            $results = Invoke-TestHarness -IgnoreCodeCoverage
+        }
         if ($results.FailedCount -gt 0)
         {
             throw "{$($results.FailedCount)} Unit Test(s) Failed"
