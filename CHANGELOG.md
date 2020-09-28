@@ -2,6 +2,8 @@
 
 ## 1.20.930.1
 
+* IntuneAppConfigurationPolicy
+  * Initial Release;
 * MISC
   * Refactored error handling to various EXO resources;
   * Renamed method Test-Microsoft365DSCParameterState to
@@ -10,8 +12,6 @@
 
 ## 1.20.923.1
 
-* IntuneAppConfigurationPolicy
-  * Initial Release;
 * IntuneDeviceCategory
   * Initial Release;
 * SPOSite
