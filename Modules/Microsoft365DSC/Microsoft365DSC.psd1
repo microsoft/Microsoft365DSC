@@ -65,11 +65,11 @@
         },
         @{
             ModuleName      = "Microsoft.Graph.Authentication"
-            RequiredVersion = "0.9.1"
+            RequiredVersion = "1.0.1"
         },
         @{
             ModuleName      = "Microsoft.Graph.Groups.Planner"
-            RequiredVersion = "0.9.1"
+            RequiredVersion = "1.0.1"
         },
         @{
             ModuleName      = "Microsoft.Graph.Identity.ConditionalAccess"
@@ -81,7 +81,7 @@
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
-            RequiredVersion = "2.0.81"
+            RequiredVersion = "2.0.83"
         },
         @{
             ModuleName      = "MicrosoftTeams"
