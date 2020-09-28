@@ -76,40 +76,49 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
+    $nullResult = $PSBoundParameters
+    $nullResult.Ensure = 'Absent'
 
-    $CASMailboxPlans = Get-CASMailboxPlan
-
-    if ($Identity.Contains('-'))
+    try
     {
-        $CASMailboxPlan = $CASMailboxPlans | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    }
-    else
-    {
-        $CASMailboxPlan = $CASMailboxPlans | Where-Object -FilterScript { $_.Identity -like ($Identity + '-*') }
-    }
-
-    if ($null -eq $CASMailboxPlan)
-    {
-        Write-Verbose -Message "CASMailboxPlan $($Identity) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
-    }
-    else
-    {
-        $result = @{
-            Ensure             = 'Present'
-            Identity           = $Identity
-            ActiveSyncEnabled  = $CASMailboxPlan.ActiveSyncEnabled
-            ImapEnabled        = $CASMailboxPlan.ImapEnabled
-            OwaMailboxPolicy   = $CASMailboxPlan.OwaMailboxPolicy
-            PopEnabled         = $CASMailboxPlan.PopEnabled
-            GlobalAdminAccount = $GlobalAdminAccount
+        $CASMailboxPlans = Get-CASMailboxPlan -ErrorAction Stop
+        if ($Identity.Contains('-'))
+        {
+            $CASMailboxPlan = $CASMailboxPlans | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        }
+        else
+        {
+            $CASMailboxPlan = $CASMailboxPlans | Where-Object -FilterScript { $_.Identity -like ($Identity + '-*') }
         }
 
-        Write-Verbose -Message "Found CASMailboxPlan $($Identity)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+        if ($null -eq $CASMailboxPlan)
+        {
+            Write-Verbose -Message "CASMailboxPlan $($Identity) does not exist."
+            return $nullResult
+        }
+        else
+        {
+            $result = @{
+                Ensure             = 'Present'
+                Identity           = $Identity
+                ActiveSyncEnabled  = $CASMailboxPlan.ActiveSyncEnabled
+                ImapEnabled        = $CASMailboxPlan.ImapEnabled
+                OwaMailboxPolicy   = $CASMailboxPlan.OwaMailboxPolicy
+                PopEnabled         = $CASMailboxPlan.PopEnabled
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Write-Verbose -Message "Found CASMailboxPlan $($Identity)"
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullResult
     }
 }
 
@@ -266,7 +275,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -318,43 +327,54 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
-    [array]$CASMailboxPlans = Get-CASMailboxPlan
 
-    if ($CASMailboxPlans.Length -eq 0)
+    try
     {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-    }
-    else
-    {
-        Write-Host "`r`n" -NoNewLine
-    }
-    $dscContent = ""
-    $i = 1
-    foreach ($CASMailboxPlan in $CASMailboxPlans)
-    {
-        Write-Host "    |---[$i/$($CASMailboxPlans.Count)] $($CASMailboxPlan.Identity.Split('-')[0])" -NoNewLine
-        $Params = @{
-            Identity              = $CASMailboxPlan.Identity
-            GlobalAdminAccount    = $GlobalAdminAccount
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
+        [array]$CASMailboxPlans = Get-CASMailboxPlan -ErrorAction Stop
+
+        if ($CASMailboxPlans.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
+        $dscContent = ""
+        $i = 1
+        foreach ($CASMailboxPlan in $CASMailboxPlans)
+        {
+            Write-Host "    |---[$i/$($CASMailboxPlans.Count)] $($CASMailboxPlan.Identity.Split('-')[0])" -NoNewLine
+            $Params = @{
+                Identity              = $CASMailboxPlan.Identity
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+            }
 
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
+        }
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

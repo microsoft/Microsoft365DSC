@@ -50,34 +50,43 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
         -InboundParameters $PSBoundParameters
 
-    $policy = Get-CsTeamsEmergencyCallingPolicy -Identity $Identity -ErrorAction 'SilentlyContinue'
-
-    if ($null -eq $policy)
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
+    try
     {
-        Write-Verbose -Message "Could not find Teams Emergency Calling Policy {$Identity}"
-        return @{
-            Identity           = $Identity
-            Ensure             = 'Absent'
-            GlobalAdminAccount = $GlobalAdminAccount
+        $policy = Get-CsTeamsEmergencyCallingPolicy -Identity $Identity `
+            -ErrorAction 'SilentlyContinue'
+
+        if ($null -eq $policy)
+        {
+            Write-Verbose -Message "Could not find Teams Emergency Calling Policy {$Identity}"
+            return $nullReturn
         }
-    }
-    Write-Verbose -Message "Found Teams Emergency Calling Policy {$Identity}"
-    $result = @{
-        Identity                  = $Identity
-        Description               = $policy.Description
-        NotificationDialOutNumber = $policy.NotificationDialOutNumber
-        NotificationGroup         = $policy.NotificationGroup
-        NotificationMode          = $policy.NotificationMode
-        Ensure                    = "Present"
-        GlobalAdminAccount        = $GlobalAdminAccount
-    }
+        Write-Verbose -Message "Found Teams Emergency Calling Policy {$Identity}"
+        $result = @{
+            Identity                  = $Identity
+            Description               = $policy.Description
+            NotificationDialOutNumber = $policy.NotificationDialOutNumber
+            NotificationGroup         = $policy.NotificationGroup
+            NotificationMode          = $policy.NotificationMode
+            Ensure                    = "Present"
+            GlobalAdminAccount        = $GlobalAdminAccount
+        }
 
-    if ([System.String]::IsNullOrEmpty($result.NotificationMode))
+        if ([System.String]::IsNullOrEmpty($result.NotificationMode))
+        {
+            $result.Remove("NotificationMode") | Out-Null
+        }
+
+        return $result
+    }
+    catch
     {
-        $result.Remove("NotificationMode") | Out-Null
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
-
-    return $result
 }
 
 function Set-TargetResource
@@ -221,7 +230,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -252,40 +261,49 @@ function Export-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
         -InboundParameters $PSBoundParameters
-
-    $organization = ""
-    if ($GlobalAdminAccount.UserName.Contains("@"))
+    try
     {
-        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
-    }
-
-    $i = 1
-    [array]$policies = Get-CsTeamsEmergencyCallingPolicy
-    $content = ''
-    Write-Host "`r`n" -NoNewLine
-    foreach ($policy in $policies)
-    {
-        Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewLine
-        $params = @{
-            Identity           = $policy.Identity
-            GlobalAdminAccount = $GlobalAdminAccount
-        }
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content += "        TeamsEmergencyCallingPolicy " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+        $organization = ""
+        if ($GlobalAdminAccount.UserName.Contains("@"))
         {
-            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+            $organization = $GlobalAdminAccount.UserName.Split("@")[1]
         }
-        $content += $partialContent
-        $content += "        }`r`n"
-        $i++
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+
+        $i = 1
+        [array]$policies = Get-CsTeamsEmergencyCallingPolicy -ErrorAction Stop
+        $content = ''
+        Write-Host "`r`n" -NoNewLine
+        foreach ($policy in $policies)
+        {
+            Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewLine
+            $params = @{
+                Identity           = $policy.Identity
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $content += "        TeamsEmergencyCallingPolicy " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+            }
+            $content += $partialContent
+            $content += "        }`r`n"
+            $i++
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        return $content
     }
-    return $content
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

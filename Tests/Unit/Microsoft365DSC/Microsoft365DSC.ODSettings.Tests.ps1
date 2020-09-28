@@ -47,6 +47,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     OneDriveStorageQuota = 1024
                     IsSingleInstance     = "Yes"
+                    Ensure               = "Present"
                     GlobalAdminAccount   = $GlobalAdminAccount
                 }
 

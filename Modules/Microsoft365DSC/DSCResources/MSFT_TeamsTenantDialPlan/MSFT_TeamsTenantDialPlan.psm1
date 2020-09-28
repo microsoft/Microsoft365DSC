@@ -55,6 +55,8 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
         -InboundParameters $PSBoundParameters
 
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
     try
     {
         $config = Get-CsTenantDialPlan -Identity $Identity -ErrorAction 'SilentlyContinue'
@@ -62,11 +64,7 @@ function Get-TargetResource
         if ($null -eq $config)
         {
             Write-Verbose -Message "Could not find existing Dial Plan {$Identity}"
-            $result = @{
-                Identity              = $Identity
-                Ensure                = 'Absent'
-                GlobalAdminAccount    = $GlobalAdminAccount
-            }
+            return $nullReturn
         }
         else
         {
@@ -91,7 +89,10 @@ function Get-TargetResource
     }
     catch
     {
-        throw $_
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $_
     }
 }
 
@@ -278,7 +279,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove("NormalizationRules") | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -306,37 +307,47 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
-        -InboundParameters $PSBoundParameters
-    [array]$tenantDialPlans = Get-CsTenantDialPlan
-
-    $content = ''
-    $i = 1
-    Write-Host "`r`n" -NoNewLine
-    foreach ($plan in $tenantDialPlans)
+    try
     {
-        Write-Host "    |---[$i/$($tenantDialPlans.Count)] $($plan.Identity)" -NoNewLine
-        $params = @{
-            Identity            = $plan.Identity
-            GlobalAdminAccount  = $GlobalAdminAccount
-        }
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+            -InboundParameters $PSBoundParameters
+        [array]$tenantDialPlans = Get-CsTenantDialPlan -ErrorAction Stop
 
-        if ($result.NormalizationRules.Count -gt 0)
+        $content = ''
+        $i = 1
+        Write-Host "`r`n" -NoNewLine
+        foreach ($plan in $tenantDialPlans)
         {
-            $result.NormalizationRules = Get-M365DSCNormalizationRulesAsString $result.NormalizationRules
+            Write-Host "    |---[$i/$($tenantDialPlans.Count)] $($plan.Identity)" -NoNewLine
+            $params = @{
+                Identity            = $plan.Identity
+                GlobalAdminAccount  = $GlobalAdminAccount
+            }
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+
+            if ($result.NormalizationRules.Count -gt 0)
+            {
+                $result.NormalizationRules = Get-M365DSCNormalizationRulesAsString $result.NormalizationRules
+            }
+            $content += "        TeamsTenantDialPlan " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "NormalizationRules"
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $content += "        }`r`n"
+            $i++
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        $content += "        TeamsTenantDialPlan " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "NormalizationRules"
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
-        $i++
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        return $content
     }
-    return $content
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 function Get-M365DSCNormalizationRules

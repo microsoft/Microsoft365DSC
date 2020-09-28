@@ -97,30 +97,12 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
         -InboundParameters $PSBoundParameters
 
-    $nullReturn = @{
-        IsSingleInstance             = 'Yes'
-        DisplayStartASiteOption      = $null
-        StartASiteFormUrl            = $null
-        IPAddressEnforcement         = $null
-        IPAddressAllowList           = $null
-        IPAddressWACTokenLifetime    = $null
-        CommentsOnSitePagesDisabled  = $null
-        SocialBarOnSitePagesDisabled = $null
-        DisallowInfectedFileDownload = $null
-        ExternalServicesEnabled      = $null
-        EmailAttestationRequired     = $null
-        EmailAttestationReAuthDays   = $null
-        GlobalAdminAccount           = $GlobalAdminAccount
-        ApplicationId                = $ApplicationId
-        TenantId                     = $TenantId
-        CertificatePassword          = $CertificatePassword
-        CertificatePath              = $CertificatePath
-        CertificateThumbprint        = $CertificateThumbprint
-    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
     try
     {
-        $SPOAccessControlSettings = Get-PNPTenant
+        $SPOAccessControlSettings = Get-PNPTenant -ErrorAction Stop
 
         return @{
             IsSingleInstance             = 'Yes'
@@ -149,6 +131,9 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Make sure that you are connected to your SPOService"
         }
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
         return $nullReturn
     }
 }
@@ -363,7 +348,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("IsSingleInstance", `
@@ -429,26 +414,36 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
         -InboundParameters $PSBoundParameters
 
-    $Params = @{
-        IsSingleInstance      = 'Yes'
-        ApplicationId         = $ApplicationId
-        TenantId              = $TenantId
-        CertificatePassword   = $CertificatePassword
-        CertificatePath       = $CertificatePath
-        CertificateThumbprint = $CertificateThumbprint
-        GlobalAdminAccount    = $GlobalAdminAccount
-    }
+    try
+    {
+        $Params = @{
+            IsSingleInstance      = 'Yes'
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
+            GlobalAdminAccount    = $GlobalAdminAccount
+        }
 
-    $Results = Get-TargetResource @Params
-    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-    $dscContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-    Write-Host $Global:M365DSCEmojiGreenCheckMark
-    return $dscContent
+        $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+        $dscContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        return $dscContent
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

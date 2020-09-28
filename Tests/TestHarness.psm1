@@ -16,7 +16,7 @@ function Invoke-TestHarness
         $IgnoreCodeCoverage
     )
 
-
+    $MaximumFunctionCount = 9999
     Write-Verbose -Message 'Starting all Microsoft365DSC tests'
 
     $repoDir = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve

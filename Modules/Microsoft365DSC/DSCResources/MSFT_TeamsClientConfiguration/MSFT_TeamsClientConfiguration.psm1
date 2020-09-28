@@ -88,7 +88,7 @@ function Get-TargetResource
 
     try
     {
-        $config = Get-CsTeamsClientConfiguration
+        $config = Get-CsTeamsClientConfiguration -ErrorAction Stop
 
         $result = @{
             Identity                         = $config.Identity
@@ -116,6 +116,9 @@ function Get-TargetResource
     }
     catch
     {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
         throw $_
     }
 }
@@ -305,7 +308,7 @@ function Test-TargetResource
     {
         $ValuesToCheck.Remove("RestrictedSenderList") | Out-Null
     }
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -334,19 +337,29 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $params = @{
-        Identity           = "Global"
-        GlobalAdminAccount = $GlobalAdminAccount
+    try
+    {
+        $params = @{
+            Identity           = "Global"
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+        $result = Get-TargetResource @params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content = "        TeamsClientConfiguration " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        return $content
     }
-    $result = Get-TargetResource @params
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        TeamsClientConfiguration " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
-    Write-Host $Global:M365DSCEmojiGreenCheckMark
-    return $content
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

@@ -53,34 +53,43 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
             -InboundParameters $PSBoundParameters
     }
-
-    $RuleObjects = Get-SupervisoryReviewRule
-    $RuleObject = $RuleObjects | Where-Object { $_.Name -eq $Name }
-
-    if ($null -eq $RuleObject)
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = 'Absent'
+    try
     {
-        Write-Verbose -Message "SupervisoryReviewRule $($Name) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
-    }
-    else
-    {
-        Write-Verbose "Found existing SupervisoryReviewRule $($Name)"
-        $PolicyName = (Get-SupervisoryReviewPolicyV2 -Identity $RuleObject.Policy).Name
+        $RuleObjects = Get-SupervisoryReviewRule -ErrorAction Stop
+        $RuleObject = $RuleObjects | Where-Object { $_.Name -eq $Name }
 
-        $result = @{
-            Name               = $RuleObject.Name
-            Policy             = $PolicyName
-            Condition          = $RuleObject.Condition
-            SamplingRate       = $RuleObject.SamplingRate
-            Ensure             = 'Present'
-            GlobalAdminAccount = $GlobalAdminAccount
+        if ($null -eq $RuleObject)
+        {
+            Write-Verbose -Message "SupervisoryReviewRule $($Name) does not exist."
+            return $nullReturn
         }
+        else
+        {
+            Write-Verbose "Found existing SupervisoryReviewRule $($Name)"
+            $PolicyName = (Get-SupervisoryReviewPolicyV2 -Identity $RuleObject.Policy).Name
 
-        Write-Verbose -Message "Found SupervisoryReviewRule $($Name)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+            $result = @{
+                Name               = $RuleObject.Name
+                Policy             = $PolicyName
+                Condition          = $RuleObject.Condition
+                SamplingRate       = $RuleObject.SamplingRate
+                Ensure             = 'Present'
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Write-Verbose -Message "Found SupervisoryReviewRule $($Name)"
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -194,7 +203,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -227,30 +236,40 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
-    [array]$rules = Get-SupervisoryReviewRule
-    $i = 1
-    $dscContent = ''
-    Write-Host "`r`n" -NoNewLine
-    foreach ($rule in $rules)
+    try
     {
-        Write-Host "    |---[$i/$($rules.Length)] $($rule.Name)" -NoNewLine
-        $Params = @{
-            GlobalAdminAccount    = $GlobalAdminAccount
-            Name                  = $rule.Name
-            Policy                = $rule.Policy
+        [array]$rules = Get-SupervisoryReviewRule -ErrorAction Stop
+        $i = 1
+        $dscContent = ''
+        Write-Host "`r`n" -NoNewLine
+        foreach ($rule in $rules)
+        {
+            Write-Host "    |---[$i/$($rules.Length)] $($rule.Name)" -NoNewLine
+            $Params = @{
+                GlobalAdminAccount    = $GlobalAdminAccount
+                Name                  = $rule.Name
+                Policy                = $rule.Policy
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
         }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource
