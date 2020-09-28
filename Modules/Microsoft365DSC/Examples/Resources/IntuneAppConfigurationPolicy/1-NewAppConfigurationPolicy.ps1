@@ -16,7 +16,7 @@ Configuration Example
         IntuneAppConfigurationPolicy AddRemoveAppConfigPolicy
         {
             DisplayName          = 'Contoso'
-            Description          = 'Contoso Category'
+            Description          = 'Contoso Policy'
             Ensure               = 'Present'
             GlobalAdminAccount   = $credsGlobalAdmin;
         }

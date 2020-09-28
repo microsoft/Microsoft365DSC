@@ -178,7 +178,7 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
         -InboundParameters $PSBoundParameters
 
-    [array]$configPolicies = Get-DeviceManagement_DeviceCategories
+    [array]$configPolicies = Get-DeviceAppManagement_TargetedManagedAppConfigurations
     $i = 1
     $content = ''
     Write-Host "`r`n" -NoNewLine
@@ -192,7 +192,7 @@ function Export-TargetResource
         }
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content += "        IntuneDeviceCategory " + (New-GUID).ToString() + "`r`n"
+        $content += "        IntuneAppConfigurationPolicy " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
