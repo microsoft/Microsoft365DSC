@@ -4,11 +4,16 @@
 
 * IntuneAppConfigurationPolicy
   * Initial Release;
+* DEPENDENCIES
+  * Microsoft.PowerApps.Administration.PowerShell updated
+    to 2.0.83;
+  * Microsoft.Graph.Authentication updated to 1.0.1;
+  * Microsoft.Graph.Groups.Planner updated to 1.0.1;
 * MISC
   * Refactored error handling to various EXO resources;
   * Renamed method Test-Microsoft365DSCParameterState to
     Test-M365DSCParameterState to align with naming standard;
-  * Fixed issue 777 with export of SCDLPComplianceRule;
+  * Fixed issue #777 with export of SCDLPComplianceRule;
 
 ## 1.20.923.1
 
