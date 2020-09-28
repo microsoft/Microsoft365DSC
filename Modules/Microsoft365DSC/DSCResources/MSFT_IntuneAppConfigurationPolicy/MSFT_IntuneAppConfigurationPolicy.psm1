@@ -146,10 +146,10 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+                                             -Source $($MyInvocation.MyCommand.Source) `
+                                             -DesiredValues $PSBoundParameters `
+                                             -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
