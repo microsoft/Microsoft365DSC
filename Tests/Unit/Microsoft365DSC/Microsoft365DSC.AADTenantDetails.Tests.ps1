@@ -65,7 +65,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-AzureADTenantDetail -MockWith {
-                    return $null
+                    $result = @{
+                        MarketingNotificationEmails             = ""
+                        SecurityComplianceNotificationMails     = ""
+                        SecurityComplianceNotificationPhones    = ""
+                        TechnicalNotificationMails              = ""
+                    }
+                    return $result
                 }
             }
 
@@ -80,17 +86,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     TechnicalNotificationMails             = "exapmle@contoso.com"
                     SecurityComplianceNotificationPhones   = "+1123456789"
                     SecurityComplianceNotificationMails    = "exapmle@contoso.com"
-                    MarketingNotificationEmails            = "exapmle@contoso.com"
                     GlobalAdminAccount                     = $GlobalAdminAccount
                     IsSingleInstance                       = 'Yes'
                 }
 
                 Mock -CommandName Get-AzureADTenantDetail -MockWith {
                     $AADTenantDetails = New-Object PSCustomObject
-                    $AADTenantDetails | Add-Member -MemberType NoteProperty -Name MarketingNotificationEmails -Value "exapmle@contoso.com"
+                    $AADTenantDetails | Add-Member -MemberType NoteProperty -Name MarketingNotificationEmails -Value "exapmle@contoso.com" #should not be 
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name SecurityComplianceNotificationMails -Value "exapmle@contoso.com"
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name SecurityComplianceNotificationPhones -Value "+1123456789"
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name TechnicalNotificationMails -Value "exapmle@contoso.com"
+
                     return $AADTenantDetails
                 }
             }
