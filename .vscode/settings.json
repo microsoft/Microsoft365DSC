@@ -20,5 +20,6 @@
         "**/.DS_Store": true,
         "node_modules": true,
         "markdownissues.txt": true
-    }
+    },
+    "powershell.codeFormatting.addWhitespaceAroundPipe": true
 }
