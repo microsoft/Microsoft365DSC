@@ -55,44 +55,52 @@ function Get-TargetResource
         GlobalAdminAccount   = $GlobalAdminAccount
     }
 
-    if ($Global:CurrentModeIsExport)
+    try
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    # Was a folder name provided?
-    if ([System.String]::IsNullOrEmpty($Identity)){
-        #query the folders
-        $Folders = Get-PublicFolder -Recurse -ErrorAction SilentlyContinue  | Where-Object {$_.Name -ne "IPM_SUBTREE"}
-        if ($null -eq $Folders)
+        if ($Global:CurrentModeIsExport)
         {
-            return $nullReturn
+            $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters `
+                -SkipModuleReload $true
         }
-
-        # Check to see if more than one folder is returned
-        if ($Folders.Length -gt -1){ 
-            $folder = Get-PublicFolder -Identity $Folders[0].Identity
-        }
-
-        # No folder was returned
-        if ($null -eq $Folders)
+        else
         {
-            Write-Verbose -Message "No Public Folers were found."
-            return $nullReturn
+            $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
         }
+        # Was a folder name provided?
+        if ([System.String]::IsNullOrEmpty($Identity)){
+            #query the folders
+            $Folders = Get-PublicFolder -Recurse -ErrorAction SilentlyContinue  | Where-Object {$_.Name -ne "IPM_SUBTREE"}
+            if ($null -eq $Folders)
+            {
+                return $nullReturn
+            }
+
+            # Check to see if more than one folder is returned
+            if ($Folders.Length -gt -1){ 
+                $folder = Get-PublicFolder -Identity $Folders[0].Identity
+            }
+
+            # No folder was returned
+            if ($null -eq $Folders)
+            {
+                Write-Verbose -Message "No Public Folers were found."
+                return $nullReturn
+            }
+        }
+        else
+        {
+            $folder = Get-PublicFolder -Identity $Identity
+        }
+        # end of folder name check
     }
-    else
+    catch
     {
-        $folder = Get-PublicFolder -Identity $Identity
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+        $Message = "Error calling {Get-SafeAttachmentRule}"
+        New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
     }
-    # end of folder name check
 
     #check to see if the folder we just queired exist
     if ($null -eq $folder)
@@ -307,30 +315,38 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
-
-    $content = ""
-    $i = 1
-    [array]$Folders = Get-PublicFolders -Recursive | Where-Object {$_.Name -ne "IPM_SUBTRE"}
-
-    foreach ($folder in $Folders)
+    try
     {
-        Write-Information "    [$i/$($Folders.Length)] $($folder.Name)"
-        $params = @{
-            Identity           = $folder.Identity
-            Name              = $folder.Name
-            GlobalAdminAccount = $GlobalAdminAccount
-        }
+        $content = ""
+        $i = 1
+        [array]$Folders = Get-PublicFolders -Recursive | Where-Object {$_.Name -ne "IPM_SUBTRE"}
 
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content += "        Public Folder " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
-        $i++
+        foreach ($folder in $Folders)
+        {
+            Write-Information "    [$i/$($Folders.Length)] $($folder.Name)"
+            $params = @{
+                Identity           = $folder.Identity
+                Name              = $folder.Name
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $content += "        Public Folder " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $content += "        }`r`n"
+            $i++
+        }
+        return $content
     }
-    return $content
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+        $Message = "Error calling {Get-SafeAttachmentRule}"
+        New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource
