@@ -61,7 +61,7 @@
         },
         @{
             ModuleName      = "ExchangeOnlineManagement"
-            RequiredVersion = "2.0.3"
+            RequiredVersion = "2.0.1"
         },
         @{
             ModuleName      = "Microsoft.Graph.Authentication"
@@ -81,7 +81,7 @@
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
-            RequiredVersion = "2.0.83"
+            RequiredVersion = "2.0.85"
         },
         @{
             ModuleName      = "MicrosoftTeams"
