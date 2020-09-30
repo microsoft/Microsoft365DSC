@@ -9,19 +9,19 @@ function Get-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $MarketingNotificationEmails,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SecurityComplianceNotificationMails,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SecurityComplianceNotificationPhones,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $TechnicalNotificationMails,
 
         [Parameter()]
@@ -71,10 +71,12 @@ function Get-TargetResource
     {
         Write-Verbose -Message "Found existing AzureAD Tenant Details"
         $result = @{
-            MarketingNotificationEmails             = $AADTenantDetails.MarketingNotificationEmails
-            SecurityComplianceNotificationMails     = $AADTenantDetails.SecurityComplianceNotificationMails
-            SecurityComplianceNotificationPhones    = $AADTenantDetails.SecurityComplianceNotificationPhones
-            TechnicalNotificationMails              = $AADTenantDetails.TechnicalNotificationMails
+            GlobalAdminAccount                   = $GlobalAdminAccount
+            IsSingleInstance                     = 'Yes'
+            MarketingNotificationEmails          = $AADTenantDetails.MarketingNotificationEmails
+            SecurityComplianceNotificationMails  = $AADTenantDetails.SecurityComplianceNotificationMails
+            SecurityComplianceNotificationPhones = $AADTenantDetails.SecurityComplianceNotificationPhones
+            TechnicalNotificationMails           = $AADTenantDetails.TechnicalNotificationMails
         }
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DSCHashTabletoString -Hashtable $result)"
         return $result
@@ -91,19 +93,19 @@ function Set-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $MarketingNotificationEmails,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SecurityComplianceNotificationMails,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SecurityComplianceNotificationPhones,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $TechnicalNotificationMails,
 
         [Parameter()]
@@ -159,19 +161,19 @@ function Test-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $MarketingNotificationEmails,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SecurityComplianceNotificationMails,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SecurityComplianceNotificationPhones,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $TechnicalNotificationMails,
 
         [Parameter()]
