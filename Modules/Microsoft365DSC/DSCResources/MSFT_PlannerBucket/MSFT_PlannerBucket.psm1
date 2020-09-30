@@ -45,47 +45,51 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Connect-Graph -Scopes "Group.ReadWrite.All" | Out-Null
-
-    if (-not [System.String]::IsNullOrEmpty($BucketId))
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
+    try
     {
-        [Array]$bucket = Get-MGPlannerPlanBucket -PlannerPlanId $PlanId | Where-Object -FilterScript {$_.Id -eq $BucketId}
-    }
-    else
-    {
-        [Array]$bucket = Get-MGPlannerPlanBucket -PlannerPlanId $PlanId | Where-Object -FilterScript {$_.Name -eq $Name}
+        Connect-Graph -Scopes "Group.ReadWrite.All" | Out-Null
 
-        if ($bucket.Length -gt 1)
+        if (-not [System.String]::IsNullOrEmpty($BucketId))
         {
-            throw "Multiple Buckets with Name {$Name} were found for Plan with ID {$PlanID}." + `
-                " Please use the BucketId property to identify the exact bucket."
+            [Array]$bucket = Get-MGPlannerPlanBucket -PlannerPlanId $PlanId | Where-Object -FilterScript {$_.Id -eq $BucketId}
         }
-    }
+        else
+        {
+            [Array]$bucket = Get-MGPlannerPlanBucket -PlannerPlanId $PlanId | Where-Object -FilterScript {$_.Name -eq $Name}
 
-    if ($null -eq $bucket)
-    {
+            if ($bucket.Length -gt 1)
+            {
+                throw "Multiple Buckets with Name {$Name} were found for Plan with ID {$PlanID}." + `
+                    " Please use the BucketId property to identify the exact bucket."
+            }
+        }
+
+        if ($null -eq $bucket)
+        {
+            return $nullReturn
+        }
+
         $results = @{
             Name                  = $Name
             PlanId                = $PlanId
-            Ensure                = "Absent"
+            BucketId              = $bucket[0].Id
+            Ensure                = "Present"
             ApplicationId         = $ApplicationId
             TenantID              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
         }
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $results)"
         return $results
     }
-
-    $results = @{
-        Name                  = $Name
-        PlanId                = $PlanId
-        BucketId              = $bucket[0].Id
-        Ensure                = "Present"
-        ApplicationId         = $ApplicationId
-        TenantID              = $TenantId
-        CertificateThumbprint = $CertificateThumbprint
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
-    Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $results)"
-    return $results
 }
 
 function Set-TargetResource
@@ -206,7 +210,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -247,55 +251,67 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
         -InboundParameters $PSBoundParameters
 
-    [array]$groups = Get-AzureADGroup -All:$true
-
-    $ConnectionMode = Connect-Graph -Scopes "Group.ReadWrite.All"
-    $i = 1
-    $content = ''
-    Write-Host "`r`n" -NoNewLine
-    foreach ($group in $groups)
+    try
     {
-        Write-Host "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.ObjectID)}"
-        try
-        {
-            [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.ObjectId -ErrorAction 'SilentlyContinue'
+        [array]$groups = Get-AzureADGroup -All:$true -ErrorAction Stop
 
-            $j = 1
-            foreach ($plan in $plans)
-            {
-                Write-Host "        [$j/$($plans.Length)] $($plan.Title)"
-                $buckets = Get-MGPlannerPlanBucket -PlannerPlanId $plan.Id
-                $k = 1
-                foreach ($bucket in $buckets)
-                {
-                    Write-Host "            [$k/$($buckets.Length)] $($bucket.Name)" -NoNewLine
-                    $params = @{
-                        Name                  = $bucket.Name
-                        PlanId                = $plan.Id
-                        BucketId              = $Bucket.Id
-                        ApplicationId         = $ApplicationId
-                        TenantId              = $TenantId
-                        CertificateThumbprint = $CertificateThumbprint
-                    }
-                    $result = Get-TargetResource @params
-                    $content += "        PlannerBucket " + (New-GUID).ToString() + "`r`n"
-                    $content += "        {`r`n"
-                    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-                    $content += $currentDSCBlock
-                    $content += "        }`r`n"
-                    Write-Host $Global:M365DSCEmojiGreenCheckMark
-                    $k++
-                }
-                $j++
-            }
-            $i++
-        }
-        catch
+        $ConnectionMode = Connect-Graph -Scopes "Group.ReadWrite.All"
+        $i = 1
+        $content = ''
+        Write-Host "`r`n" -NoNewLine
+        foreach ($group in $groups)
         {
-            Write-Verbose -Message $_
+            Write-Host "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.ObjectID)}"
+            try
+            {
+                [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.ObjectId -ErrorAction 'SilentlyContinue'
+
+                $j = 1
+                foreach ($plan in $plans)
+                {
+                    Write-Host "        [$j/$($plans.Length)] $($plan.Title)"
+                    $buckets = Get-MGPlannerPlanBucket -PlannerPlanId $plan.Id
+                    $k = 1
+                    foreach ($bucket in $buckets)
+                    {
+                        Write-Host "            [$k/$($buckets.Length)] $($bucket.Name)" -NoNewLine
+                        $params = @{
+                            Name                  = $bucket.Name
+                            PlanId                = $plan.Id
+                            BucketId              = $Bucket.Id
+                            ApplicationId         = $ApplicationId
+                            TenantId              = $TenantId
+                            CertificateThumbprint = $CertificateThumbprint
+                        }
+                        $result = Get-TargetResource @params
+                        $content += "        PlannerBucket " + (New-GUID).ToString() + "`r`n"
+                        $content += "        {`r`n"
+                        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+                        $content += $currentDSCBlock
+                        $content += "        }`r`n"
+                        Write-Host $Global:M365DSCEmojiGreenCheckMark
+                        $k++
+                    }
+                    $j++
+                }
+                $i++
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+                Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                    -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+            }
         }
+        return $content
     }
-    return $content
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

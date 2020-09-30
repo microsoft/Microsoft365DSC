@@ -44,37 +44,48 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
     }
 
-    $parent = Get-FilePlanPropertyCategory | Where-Object -FilterScript { $_.DisplayName -eq $Category }
-    $empty = $PSBoundParameters
-    $empty.Ensure = 'Absent'
-    if ($null -eq $parent)
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = 'Absent'
+    try
     {
-        Write-Warning "Invalid Parent Category {$Category} detected in the Get-TargetResource"
-        return $empty
-    }
+        $parent = Get-FilePlanPropertyCategory -ErrorAction Stop | Where-Object -FilterScript { $_.DisplayName -eq $Category }
 
-    $parentId = $parent.Guid
-    $property = Get-FilePlanPropertySubCategory | Where-Object -FilterScript { $_.DisplayName -eq $Name -and `
-        $_.ParentId -eq $parentId }
-
-    if ($null -eq $property)
-    {
-        Write-Verbose -Message "SCFilePlanPropertySubCategory $($Name) does not exist."
-        return $empty
-    }
-    else
-    {
-        Write-Verbose "Found existing SCFilePlanPropertySubCategory $($Name)"
-
-        $result = @{
-            Name               = $property.DisplayName
-            Category           = $parent.DisplayName
-            GlobalAdminAccount = $GlobalAdminAccount
-            Ensure             = 'Present'
+        if ($null -eq $parent)
+        {
+            Write-Warning "Invalid Parent Category {$Category} detected in the Get-TargetResource"
+            return $nullReturn
         }
 
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+        $parentId = $parent.Guid
+        $property = Get-FilePlanPropertySubCategory | Where-Object -FilterScript { $_.DisplayName -eq $Name -and `
+            $_.ParentId -eq $parentId }
+
+        if ($null -eq $property)
+        {
+            Write-Verbose -Message "SCFilePlanPropertySubCategory $($Name) does not exist."
+            return $nullReturn
+        }
+        else
+        {
+            Write-Verbose "Found existing SCFilePlanPropertySubCategory $($Name)"
+
+            $result = @{
+                Name               = $property.DisplayName
+                Category           = $parent.DisplayName
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = 'Present'
+            }
+
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -185,7 +196,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -216,32 +227,43 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
-    [array]$Properties = Get-FilePlanPropertySubCategory
 
-    $i = 1
-    $dscContent = ""
-    Write-Host "`r`n" -NoNewLine
-    foreach ($Property in $Properties)
+    try
     {
-        $parent = Get-FilePlanPropertyCategory | Where-Object -FilterScript { $_.Guid -like "*$($property.ParentId)*" }
-        Write-Host "    |---[$i/$($Properties.Length)] $($Property.Name)" -NoNewLine
-        $Params = @{
-            Name                  = $Property.DisplayName
-            Category              = $parent.DisplayName
-            GlobalAdminAccount    = $GlobalAdminAccount
+        [array]$Properties = Get-FilePlanPropertySubCategory -ErrorAction Stop
+
+        $i = 1
+        $dscContent = ""
+        Write-Host "`r`n" -NoNewLine
+        foreach ($Property in $Properties)
+        {
+            $parent = Get-FilePlanPropertyCategory | Where-Object -FilterScript { $_.Guid -like "*$($property.ParentId)*" }
+            Write-Host "    |---[$i/$($Properties.Length)] $($Property.Name)" -NoNewLine
+            $Params = @{
+                Name                  = $Property.DisplayName
+                Category              = $parent.DisplayName
+                GlobalAdminAccount    = $GlobalAdminAccount
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
         }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

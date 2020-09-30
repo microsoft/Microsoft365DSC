@@ -39,28 +39,38 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
             -InboundParameters $PSBoundParameters
     }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = 'Absent'
 
-    $property = Get-FilePlanPropertyReferenceId | Where-Object -FilterScript { $_.DisplayName -eq $Name }
-
-    if ($null -eq $property)
+    try
     {
-        Write-Verbose -Message "SCFilePlanPropertyReferenceId $($Name) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
-    }
-    else
-    {
-        Write-Verbose "Found existing SCFilePlanPropertyReferenceId $($Name)"
+        $property = Get-FilePlanPropertyReferenceId -ErrorAction Stop | Where-Object -FilterScript { $_.DisplayName -eq $Name }
 
-        $result = @{
-            Name               = $property.DisplayName
-            GlobalAdminAccount = $GlobalAdminAccount
-            Ensure             = 'Present'
+        if ($null -eq $property)
+        {
+            Write-Verbose -Message "SCFilePlanPropertyReferenceId $($Name) does not exist."
+            return $nullReturn
         }
+        else
+        {
+            Write-Verbose "Found existing SCFilePlanPropertyReferenceId $($Name)"
 
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+            $result = @{
+                Name               = $property.DisplayName
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = 'Present'
+            }
+
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -159,7 +169,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -191,31 +201,42 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
-    $Properties = Get-FilePlanPropertyReferenceId
 
-    $i = 1
-    $dscContent = ""
-    Write-Host "`r`n" -NoNewLine
-    foreach ($Property in $Properties)
+    try
     {
-        Write-Host "    |---[$i/$($Properties.Length)] $($Property.Name)" -NoNewLine
-        $Params = @{
-            Name                  = $Property.DisplayName
-            GlobalAdminAccount    = $GlobalAdminAccount
-        }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
+        $Properties = Get-FilePlanPropertyReferenceId -ErrorAction
 
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        $i = 1
+        $dscContent = ""
+        Write-Host "`r`n" -NoNewLine
+        foreach ($Property in $Properties)
+        {
+            Write-Host "    |---[$i/$($Properties.Length)] $($Property.Name)" -NoNewLine
+            $Params = @{
+                Name                  = $Property.DisplayName
+                GlobalAdminAccount    = $GlobalAdminAccount
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
+        }
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

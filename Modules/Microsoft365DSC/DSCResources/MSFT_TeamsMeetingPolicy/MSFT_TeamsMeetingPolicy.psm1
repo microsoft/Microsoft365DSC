@@ -106,40 +106,49 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
         -InboundParameters $PSBoundParameters
 
-    $policy = Get-CsTeamsMeetingPolicy -Identity $Identity -ErrorAction 'SilentlyContinue'
-
-    if ($null -eq $policy)
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
+    try
     {
-        Write-Verbose -Message "Could not find Teams Meeting Policy ${$Identity}"
+        $policy = Get-CsTeamsMeetingPolicy -Identity $Identity `
+            -ErrorAction 'SilentlyContinue'
+
+        if ($null -eq $policy)
+        {
+            Write-Verbose -Message "Could not find Teams Meeting Policy ${$Identity}"
+            return $nullReturn
+        }
+        Write-Verbose -Message "Found Teams Meeting Policy {$Identity}"
         return @{
-            Identity           = $Identity
-            Ensure             = 'Absent'
-            GlobalAdminAccount = $GlobalAdminAccount
+            Identity                                   = $Identity
+            Description                                = $policy.Description
+            AllowChannelMeetingScheduling              = $policy.AllowChannelMeetingScheduling
+            AllowMeetNow                               = $policy.AllowMeetNow
+            AllowIPVideo                               = $policy.AllowIPVideo
+            AllowAnonymousUsersToStartMeeting          = $policy.AllowAnonymousUsersToStartMeeting
+            AllowPrivateMeetingScheduling              = $policy.AllowPrivateMeetingScheduling
+            AllowPSTNUsersToBypassLobby                = $policy.AllowPSTNUsersToBypassLobby
+            AutoAdmittedUsers                          = $policy.AutoAdmittedUsers
+            AllowCloudRecording                        = $policy.AllowCloudRecording
+            AllowOutlookAddIn                          = $policy.AllowOutlookAddIn
+            AllowPowerPointSharing                     = $policy.AllowPowerPointSharing
+            AllowParticipantGiveRequestControl         = $policy.AllowParticipantGiveRequestControl
+            AllowExternalParticipantGiveRequestControl = $policy.AllowExternalParticipantGiveRequestControl
+            AllowSharedNotes                           = $policy.AllowSharedNotes
+            AllowWhiteboard                            = $policy.AllowWhiteboard
+            AllowTranscription                         = $policy.AllowTranscription
+            MediaBitRateKb                             = $policy.MediaBitRateKb
+            ScreenSharingMode                          = $policy.ScreenSharingMode
+            Ensure                                     = "Present"
+            GlobalAdminAccount                         = $GlobalAdminAccount
         }
     }
-    Write-Verbose -Message "Found Teams Meeting Policy {$Identity}"
-    return @{
-        Identity                                   = $Identity
-        Description                                = $policy.Description
-        AllowChannelMeetingScheduling              = $policy.AllowChannelMeetingScheduling
-        AllowMeetNow                               = $policy.AllowMeetNow
-        AllowIPVideo                               = $policy.AllowIPVideo
-        AllowAnonymousUsersToStartMeeting          = $policy.AllowAnonymousUsersToStartMeeting
-        AllowPrivateMeetingScheduling              = $policy.AllowPrivateMeetingScheduling
-        AllowPSTNUsersToBypassLobby                = $policy.AllowPSTNUsersToBypassLobby
-        AutoAdmittedUsers                          = $policy.AutoAdmittedUsers
-        AllowCloudRecording                        = $policy.AllowCloudRecording
-        AllowOutlookAddIn                          = $policy.AllowOutlookAddIn
-        AllowPowerPointSharing                     = $policy.AllowPowerPointSharing
-        AllowParticipantGiveRequestControl         = $policy.AllowParticipantGiveRequestControl
-        AllowExternalParticipantGiveRequestControl = $policy.AllowExternalParticipantGiveRequestControl
-        AllowSharedNotes                           = $policy.AllowSharedNotes
-        AllowWhiteboard                            = $policy.AllowWhiteboard
-        AllowTranscription                         = $policy.AllowTranscription
-        MediaBitRateKb                             = $policy.MediaBitRateKb
-        ScreenSharingMode                          = $policy.ScreenSharingMode
-        Ensure                                     = "Present"
-        GlobalAdminAccount                         = $GlobalAdminAccount
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -379,7 +388,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -411,28 +420,38 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
         -InboundParameters $PSBoundParameters
 
-    $i = 1
-    [array]$policies = Get-CsTeamsMeetingPolicy
-    $content = ''
-    Write-Host "`r`n" -NoNewLine
-    foreach ($policy in $policies)
+    try
     {
-        Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewLine
-        $params = @{
-            Identity           = $policy.Identity
-            GlobalAdminAccount = $GlobalAdminAccount
+        $i = 1
+        [array]$policies = Get-CsTeamsMeetingPolicy -ErrorAction Stop
+        $content = ''
+        Write-Host "`r`n" -NoNewLine
+        foreach ($policy in $policies)
+        {
+            Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewLine
+            $params = @{
+                Identity           = $policy.Identity
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $content += "        TeamsMeetingPolicy " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $content += "        }`r`n"
+            Write-Host $Global:M365DSCEmojiGreenCheckmark
+            $i++
         }
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content += "        TeamsMeetingPolicy " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
-        Write-Host $Global:M365DSCEmojiGreenCheckmark
-        $i++
+        return $content
     }
-    return $content
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

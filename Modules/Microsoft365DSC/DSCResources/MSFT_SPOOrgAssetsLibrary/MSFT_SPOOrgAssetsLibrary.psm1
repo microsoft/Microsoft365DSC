@@ -61,86 +61,93 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
                 -InboundParameters $PSBoundParameters
 
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
+
     try
     {
-        $orgAssets = Get-PnPOrgAssetsLibrary -ErrorAction SilentlyContinue
+        try
+        {
+            $orgAssets = Get-PnPOrgAssetsLibrary -ErrorAction SilentlyContinue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        }
+
+        $cdn = $null
+        if ($CdnType -eq 'Public')
+        {
+            if (Get-PnPTenantCdnEnabled -cdnType $CdnType)
+            {
+                $cdn = "Public"
+            }
+        }
+
+        if ($CdnType -eq 'Private')
+        {
+            if (Get-PnPTenantCdnEnabled -cdnType $CdnType)
+            {
+                $cdn = "Private"
+            }
+        }
+
+        if ($null -eq $orgAssets)
+        {
+            return $nullReturn
+        }
+        else
+        {
+            if ($ConnectionMode -eq 'Credential')
+            {
+                $tenantName = Get-M365TenantName -GlobalAdminAccount $GlobalAdminAccount
+            }
+            else
+            {
+                $tenantName = $TenantId.Split(".")[0]
+            }
+
+            foreach ($orgAsset in $orgAssets.OrgAssetsLibraries)
+            {
+                $orgLibraryUrl = "https://$tenantName.sharepoint.com/$($orgAsset.libraryurl.DecodedUrl)"
+
+                if ($orgLibraryUrl -eq $LibraryUrl)
+                {
+                    Write-Verbose -Message "Found existing SharePoint Org Site Assets for $LibraryUrl"
+                    if ($null -ne $orgAsset.ThumbnailUrl.DecodedUrl)
+                    {
+                        $orgthumbnailUrl = "https://$tenantName.sharepoint.com/$($orgAsset.LibraryUrl.decodedurl.Substring(0,$orgAsset.LibraryUrl.decodedurl.LastIndexOf("/")))/$($orgAsset.ThumbnailUrl.decodedurl)"
+                    }
+
+                    $result = @{
+                        LibraryUrl            = $orgLibraryUrl
+                        ThumbnailUrl          = $orgthumbnailUrl
+                        CdnType               = $cdn
+                        Ensure                = "Present"
+                        GlobalAdminAccount    = $GlobalAdminAccount
+                        ApplicationId         = $ApplicationId
+                        TenantId              = $TenantId
+                        CertificatePassword   = $CertificatePassword
+                        CertificatePath       = $CertificatePath
+                        CertificateThumbprint = $CertificateThumbprint
+                    }
+                    Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+                    return $result
+                }
+            }
+            $currentValues = $PSBoundParameters
+            $currentValues.Ensure = "Absent"
+            return $currentValues
+        }
     }
     catch
     {
         Write-Verbose -Message $_
-    }
-
-    $cdn = $null
-    if ($CdnType -eq 'Public')
-    {
-        if (Get-PnPTenantCdnEnabled -cdnType $CdnType)
-        {
-            $cdn = "Public"
-        }
-    }
-
-    if ($CdnType -eq 'Private')
-    {
-        if (Get-PnPTenantCdnEnabled -cdnType $CdnType)
-        {
-            $cdn = "Private"
-        }
-    }
-
-    if ($null -eq $orgAssets)
-    {
-        $currentValues = $PSBoundParameters
-        $currentValues.Ensure = "Absent"
-        $currentValues.ApplicationId = $ApplicationId
-        $currentValues.TenantId = $TenantId
-        $currentValues.CertificatePassword = $CertificatePassword
-        $currentValues.CertificatePath = $CertificatePath
-        $currentValues.CertificateThumbprint = $CertificateThumbprint
-        $currentValues.GlobalAdminAccount    = $GlobalAdminAccount
-        return $currentValues
-    }
-    else
-    {
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $tenantName = Get-M365TenantName -GlobalAdminAccount $GlobalAdminAccount
-        }
-        else
-        {
-            $tenantName = $TenantId.Split(".")[0]
-        }
-
-        foreach ($orgAsset in $orgAssets.OrgAssetsLibraries)
-        {
-            $orgLibraryUrl = "https://$tenantName.sharepoint.com/$($orgAsset.libraryurl.DecodedUrl)"
-
-            if ($orgLibraryUrl -eq $LibraryUrl)
-            {
-                Write-Verbose -Message "Found existing SharePoint Org Site Assets for $LibraryUrl"
-                if ($null -ne $orgAsset.ThumbnailUrl.DecodedUrl)
-                {
-                    $orgthumbnailUrl = "https://$tenantName.sharepoint.com/$($orgAsset.LibraryUrl.decodedurl.Substring(0,$orgAsset.LibraryUrl.decodedurl.LastIndexOf("/")))/$($orgAsset.ThumbnailUrl.decodedurl)"
-                }
-
-                $result = @{
-                    LibraryUrl            = $orgLibraryUrl
-                    ThumbnailUrl          = $orgthumbnailUrl
-                    CdnType               = $cdn
-                    Ensure                = "Present"
-                    GlobalAdminAccount    = $GlobalAdminAccount
-                    ApplicationId         = $ApplicationId
-                    TenantId              = $TenantId
-                    CertificatePassword   = $CertificatePassword
-                    CertificatePath       = $CertificatePath
-                    CertificateThumbprint = $CertificateThumbprint
-                }
-                Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-                return $result
-            }
-        }
-        $currentValues = $PSBoundParameters
-        $currentValues.Ensure = "Absent"
-        return $currentValues
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -319,7 +326,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove("CertificatePassword") | Out-Null
     $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -372,39 +379,49 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
                 -InboundParameters $PSBoundParameters
 
-    [array]$orgAssets = Get-PnPOrgAssetsLibrary
-    $i = 1
-    $dscContent = ''
-
-    Write-Host "`r`n" -NoNewLine
-    if ($null -ne $orgAssets)
+    try
     {
-        foreach ($orgAssetLib in $orgAssets.OrgAssetsLibraries)
-        {
-            Write-Host "    [$i/$($orgAssets.Length)] $LibraryUrl" -NoNewLine
-            $Params = @{
-                GlobalAdminAccount = $GlobalAdminAccount
-                LibraryUrl         = "https://$tenantName.sharepoint.com/$($orgAssetLib.libraryurl.DecodedUrl)"
+        [array]$orgAssets = Get-PnPOrgAssetsLibrary -ErrorAction Stop
+        $i = 1
+        $dscContent = ''
 
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
-                CertificateThumbprint = $CertificateThumbprint
+        Write-Host "`r`n" -NoNewLine
+        if ($null -ne $orgAssets)
+        {
+            foreach ($orgAssetLib in $orgAssets.OrgAssetsLibraries)
+            {
+                Write-Host "    [$i/$($orgAssets.Length)] $LibraryUrl" -NoNewLine
+                $Params = @{
+                    GlobalAdminAccount = $GlobalAdminAccount
+                    LibraryUrl         = "https://$tenantName.sharepoint.com/$($orgAssetLib.libraryurl.DecodedUrl)"
+
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificatePassword   = $CertificatePassword
+                    CertificatePath       = $CertificatePath
+                    CertificateThumbprint = $CertificateThumbprint
+                }
+                $Results = Get-TargetResource @Params
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                        -Results $Results
+                $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                        -ConnectionMode $ConnectionMode `
+                        -ModulePath $PSScriptRoot `
+                        -Results $Results `
+                        -GlobalAdminAccount $GlobalAdminAccount
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                $i++
             }
-            $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                    -ConnectionMode $ConnectionMode `
-                    -ModulePath $PSScriptRoot `
-                    -Results $Results `
-                    -GlobalAdminAccount $GlobalAdminAccount
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
-            $i++
         }
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

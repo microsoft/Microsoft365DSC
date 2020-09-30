@@ -131,99 +131,106 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
-
-    $AllOrganizationRelationships = Get-OrganizationRelationship
-
-    $OrganizationRelationship = $AllOrganizationRelationships | Where-Object -FilterScript { $_.Name -eq $Name }
-
-    if ($null -eq $OrganizationRelationship)
-    {
-        Write-Verbose -Message "Organization Relationship configuration for $($Name) does not exist."
-
-        $nullReturn = @{
-            ArchiveAccessEnabled  = $ArchiveAccessEnabled
-            DeliveryReportEnabled = $DeliveryReportEnabled
-            DomainNames           = $DomainNames
-            Enabled               = $Enabled
-            FreeBusyAccessEnabled = $FreeBusyAccessEnabled
-            FreeBusyAccessLevel   = $FreeBusyAccessLevel
-            FreeBusyAccessScope   = $FreeBusyAccessScope
-            MailboxMoveEnabled    = $MailboxMoveEnabled
-            MailTipsAccessEnabled = $MailTipsAccessEnabled
-            MailTipsAccessLevel   = $MailTipsAccessLevel
-            MailTipsAccessScope   = $MailTipsAccessScope
-            Name                  = $Name
-            OrganizationContact   = $OrganizationContact
-            PhotosEnabled         = $PhotosEnabled
-            TargetApplicationUri  = $TargetApplicationUri
-            TargetAutodiscoverEpr = $TargetAutodiscoverEpr
-            TargetOwaURL          = $TargetOwaURL
-            TargetSharingEpr      = $TargetSharingEpr
-            Ensure                = 'Absent'
-            GlobalAdminAccount    = $GlobalAdminAccount
-        }
-
-        return $nullReturn
+    $nullReturn = @{
+        ArchiveAccessEnabled  = $ArchiveAccessEnabled
+        DeliveryReportEnabled = $DeliveryReportEnabled
+        DomainNames           = $DomainNames
+        Enabled               = $Enabled
+        FreeBusyAccessEnabled = $FreeBusyAccessEnabled
+        FreeBusyAccessLevel   = $FreeBusyAccessLevel
+        FreeBusyAccessScope   = $FreeBusyAccessScope
+        MailboxMoveEnabled    = $MailboxMoveEnabled
+        MailTipsAccessEnabled = $MailTipsAccessEnabled
+        MailTipsAccessLevel   = $MailTipsAccessLevel
+        MailTipsAccessScope   = $MailTipsAccessScope
+        Name                  = $Name
+        OrganizationContact   = $OrganizationContact
+        PhotosEnabled         = $PhotosEnabled
+        TargetApplicationUri  = $TargetApplicationUri
+        TargetAutodiscoverEpr = $TargetAutodiscoverEpr
+        TargetOwaURL          = $TargetOwaURL
+        TargetSharingEpr      = $TargetSharingEpr
+        Ensure                = 'Absent'
+        GlobalAdminAccount    = $GlobalAdminAccount
     }
-    else
+    try
     {
-        $result = @{
-            ArchiveAccessEnabled  = $OrganizationRelationship.ArchiveAccessEnabled
-            DeliveryReportEnabled = $OrganizationRelationship.DeliveryReportEnabled
-            DomainNames           = $OrganizationRelationship.DomainNames
-            Enabled               = $OrganizationRelationship.Enabled
-            FreeBusyAccessEnabled = $OrganizationRelationship.FreeBusyAccessEnabled
-            FreeBusyAccessLevel   = $OrganizationRelationship.FreeBusyAccessLevel
-            FreeBusyAccessScope   = $OrganizationRelationship.FreeBusyAccessScope
-            MailboxMoveEnabled    = $OrganizationRelationship.MailboxMoveEnabled
-            MailTipsAccessEnabled = $OrganizationRelationship.MailTipsAccessEnabled
-            MailTipsAccessLevel   = $OrganizationRelationship.MailTipsAccessLevel
-            MailTipsAccessScope   = $OrganizationRelationship.MailTipsAccessScope
-            Name                  = $OrganizationRelationship.Name
-            OrganizationContact   = $OrganizationRelationship.OrganizationContact
-            PhotosEnabled         = $OrganizationRelationship.PhotosEnabled
-            Ensure                = 'Present'
-            GlobalAdminAccount    = $GlobalAdminAccount
-        }
+        $AllOrganizationRelationships = Get-OrganizationRelationship -ErrorAction Stop
 
-        if ($OrganizationRelationship.TargetApplicationUri)
+        $OrganizationRelationship = $AllOrganizationRelationships | Where-Object -FilterScript { $_.Name -eq $Name }
+
+        if ($null -eq $OrganizationRelationship)
         {
-            $result.Add("TargetApplicationUri", $($OrganizationRelationship.TargetApplicationUri.ToString()))
+            Write-Verbose -Message "Organization Relationship configuration for $($Name) does not exist."
+            return $nullReturn
         }
         else
         {
-            $result.Add("TargetApplicationUri", "")
-        }
+            $result = @{
+                ArchiveAccessEnabled  = $OrganizationRelationship.ArchiveAccessEnabled
+                DeliveryReportEnabled = $OrganizationRelationship.DeliveryReportEnabled
+                DomainNames           = $OrganizationRelationship.DomainNames
+                Enabled               = $OrganizationRelationship.Enabled
+                FreeBusyAccessEnabled = $OrganizationRelationship.FreeBusyAccessEnabled
+                FreeBusyAccessLevel   = $OrganizationRelationship.FreeBusyAccessLevel
+                FreeBusyAccessScope   = $OrganizationRelationship.FreeBusyAccessScope
+                MailboxMoveEnabled    = $OrganizationRelationship.MailboxMoveEnabled
+                MailTipsAccessEnabled = $OrganizationRelationship.MailTipsAccessEnabled
+                MailTipsAccessLevel   = $OrganizationRelationship.MailTipsAccessLevel
+                MailTipsAccessScope   = $OrganizationRelationship.MailTipsAccessScope
+                Name                  = $OrganizationRelationship.Name
+                OrganizationContact   = $OrganizationRelationship.OrganizationContact
+                PhotosEnabled         = $OrganizationRelationship.PhotosEnabled
+                Ensure                = 'Present'
+                GlobalAdminAccount    = $GlobalAdminAccount
+            }
 
-        if ($OrganizationRelationship.TargetAutodiscoverEpr)
-        {
-            $result.Add("TargetAutodiscoverEpr", $($OrganizationRelationship.TargetAutodiscoverEpr.ToString()))
-        }
-        else
-        {
-            $result.Add("TargetAutodiscoverEpr", "")
-        }
+            if ($OrganizationRelationship.TargetApplicationUri)
+            {
+                $result.Add("TargetApplicationUri", $($OrganizationRelationship.TargetApplicationUri.ToString()))
+            }
+            else
+            {
+                $result.Add("TargetApplicationUri", "")
+            }
 
-        if ($OrganizationRelationship.TargetSharingEpr)
-        {
-            $result.Add("TargetSharingEpr", $($OrganizationRelationship.TargetSharingEpr.ToString()))
-        }
-        else
-        {
-            $result.Add("TargetSharingEpr", "")
-        }
+            if ($OrganizationRelationship.TargetAutodiscoverEpr)
+            {
+                $result.Add("TargetAutodiscoverEpr", $($OrganizationRelationship.TargetAutodiscoverEpr.ToString()))
+            }
+            else
+            {
+                $result.Add("TargetAutodiscoverEpr", "")
+            }
 
-        if ($OrganizationRelationship.TargetOwaURL)
-        {
-            $result.Add("TargetOwaURL", $($OrganizationRelationship.TargetOwaURL.ToString()))
-        }
-        else
-        {
-            $result.Add("TargetOwaURL", "")
-        }
+            if ($OrganizationRelationship.TargetSharingEpr)
+            {
+                $result.Add("TargetSharingEpr", $($OrganizationRelationship.TargetSharingEpr.ToString()))
+            }
+            else
+            {
+                $result.Add("TargetSharingEpr", "")
+            }
 
-        Write-Verbose -Message "Found Organization Relationship configuration for $($Name)"
-        return $result
+            if ($OrganizationRelationship.TargetOwaURL)
+            {
+                $result.Add("TargetOwaURL", $($OrganizationRelationship.TargetOwaURL.ToString()))
+            }
+            else
+            {
+                $result.Add("TargetOwaURL", "")
+            }
+
+            Write-Verbose -Message "Found Organization Relationship configuration for $($Name)"
+            return $result
+        }
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -545,7 +552,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -598,44 +605,54 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
-    [array]$AllOrgRelationships = Get-OrganizationRelationship
-
-    $dscContent = ""
-
-    if ($AllOrganizationRelationships.Length -eq 0)
+    try
     {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-    }
-    else
-    {
-        Write-Host "`r`n" -NoNewLine
-    }
-    $i = 1
-    foreach ($relationship in $AllOrgRelationships)
-    {
-        Write-Host "    |---[$i/$($AllOrgRelationships.Length)] $($relationship.Name)" -NoNewLine
+        [array]$AllOrgRelationships = Get-OrganizationRelationship -ErrorAction Stop
 
-        $Params = @{
-            Name                  = $relationship.Name
-            GlobalAdminAccount    = $GlobalAdminAccount
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
+        $dscContent = ""
+
+        if ($AllOrganizationRelationships.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
+        $i = 1
+        foreach ($relationship in $AllOrgRelationships)
+        {
+            Write-Host "    |---[$i/$($AllOrgRelationships.Length)] $($relationship.Name)" -NoNewLine
+
+            $Params = @{
+                Name                  = $relationship.Name
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
+        }
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

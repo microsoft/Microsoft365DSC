@@ -80,33 +80,42 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
-
-    $HostedOutboundSpamFilterPolicies = Get-HostedOutboundSpamFilterPolicy
-
-    $HostedOutboundSpamFilterPolicy = $HostedOutboundSpamFilterPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    if (-not $HostedOutboundSpamFilterPolicy)
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = 'Absent'
+    try
     {
-        Write-Verbose -Message "HostedOutboundSpamFilterPolicy $($Identity) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
-    }
-    else
-    {
-        $result = @{
-            Ensure                                    = 'Present'
-            Identity                                  = $Identity
-            AdminDisplayName                          = $HostedOutboundSpamFilterPolicy.AdminDisplayName
-            BccSuspiciousOutboundAdditionalRecipients = $HostedOutboundSpamFilterPolicy.BccSuspiciousOutboundAdditionalRecipients
-            BccSuspiciousOutboundMail                 = $HostedOutboundSpamFilterPolicy.BccSuspiciousOutboundMail
-            NotifyOutboundSpamRecipients              = $HostedOutboundSpamFilterPolicy.NotifyOutboundSpamRecipients
-            NotifyOutboundSpam                        = $HostedOutboundSpamFilterPolicy.NotifyOutboundSpam
-            GlobalAdminAccount                        = $GlobalAdminAccount
+        $HostedOutboundSpamFilterPolicies = Get-HostedOutboundSpamFilterPolicy -ErrorAction Stop
+
+        $HostedOutboundSpamFilterPolicy = $HostedOutboundSpamFilterPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        if (-not $HostedOutboundSpamFilterPolicy)
+        {
+            Write-Verbose -Message "HostedOutboundSpamFilterPolicy $($Identity) does not exist."
+            return $nullReturn
         }
+        else
+        {
+            $result = @{
+                Ensure                                    = 'Present'
+                Identity                                  = $Identity
+                AdminDisplayName                          = $HostedOutboundSpamFilterPolicy.AdminDisplayName
+                BccSuspiciousOutboundAdditionalRecipients = $HostedOutboundSpamFilterPolicy.BccSuspiciousOutboundAdditionalRecipients
+                BccSuspiciousOutboundMail                 = $HostedOutboundSpamFilterPolicy.BccSuspiciousOutboundMail
+                NotifyOutboundSpamRecipients              = $HostedOutboundSpamFilterPolicy.NotifyOutboundSpamRecipients
+                NotifyOutboundSpam                        = $HostedOutboundSpamFilterPolicy.NotifyOutboundSpam
+                GlobalAdminAccount                        = $GlobalAdminAccount
+            }
 
-        Write-Verbose -Message "Found HostedOutboundSpamFilterPolicy $($Identity)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+            Write-Verbose -Message "Found HostedOutboundSpamFilterPolicy $($Identity)"
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -262,7 +271,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('Verbose') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -316,42 +325,52 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
-    [array]$HostedOutboundSpamFilterPolicies = Get-HostedOutboundSpamFilterPolicy
-    $dscContent = ''
+    try
+    {
+        [array]$HostedOutboundSpamFilterPolicies = Get-HostedOutboundSpamFilterPolicy -ErrorAction stop
+        $dscContent = ''
 
-    if ($HostedOutboundSpamFilterPolicies.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-    }
-    else
-    {
-        Write-Host "`r`n" -NoNewLine
-    }
-    $i = 1
-    foreach ($HostedOutboundSpamFilterPolicy in $HostedOutboundSpamFilterPolicies)
-    {
-        $Params = @{
-            GlobalAdminAccount    = $GlobalAdminAccount
-            Identity              = $HostedOutboundSpamFilterPolicy.Identity
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
+        if ($HostedOutboundSpamFilterPolicies.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        Write-Host "    |---[$i/$($HostedOutboundSpamFilterPolicies.Length)] $($HostedOutboundSpamFilterPolicy.Identity)" -NoNewLine
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
+        $i = 1
+        foreach ($HostedOutboundSpamFilterPolicy in $HostedOutboundSpamFilterPolicies)
+        {
+            $Params = @{
+                GlobalAdminAccount    = $GlobalAdminAccount
+                Identity              = $HostedOutboundSpamFilterPolicy.Identity
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+            }
+            Write-Host "    |---[$i/$($HostedOutboundSpamFilterPolicies.Length)] $($HostedOutboundSpamFilterPolicy.Identity)" -NoNewLine
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
+        }
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource
