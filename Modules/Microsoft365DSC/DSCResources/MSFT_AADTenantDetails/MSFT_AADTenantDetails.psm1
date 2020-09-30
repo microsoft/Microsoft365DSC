@@ -58,28 +58,35 @@ function Get-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
 
-    $CurrentParameters = $PSBoundParameters
-
-
-    $AADTenantDetails = Get-AzureADTenantDetail -ErrorAction 'SilentlyContinue'
-
-    if ($null -eq $AADTenantDetails)
+    try
     {
-        throw "Could not retrieve AzureAD Tenant Details"
-    }
-    else
-    {
-        Write-Verbose -Message "Found existing AzureAD Tenant Details"
-        $result = @{
-            GlobalAdminAccount                   = $GlobalAdminAccount
-            IsSingleInstance                     = 'Yes'
-            MarketingNotificationEmails          = $AADTenantDetails.MarketingNotificationEmails
-            SecurityComplianceNotificationMails  = $AADTenantDetails.SecurityComplianceNotificationMails
-            SecurityComplianceNotificationPhones = $AADTenantDetails.SecurityComplianceNotificationPhones
-            TechnicalNotificationMails           = $AADTenantDetails.TechnicalNotificationMails
+        $CurrentParameters = $PSBoundParameters
+
+        $AADTenantDetails = Get-AzureADTenantDetail -ErrorAction 'SilentlyContinue'
+
+        if ($null -eq $AADTenantDetails)
+        {
+            throw "Could not retrieve AzureAD Tenant Details"
         }
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DSCHashTabletoString -Hashtable $result)"
-        return $result
+        else
+        {
+            Write-Verbose -Message "Found existing AzureAD Tenant Details"
+            $result = @{
+                MarketingNotificationEmails             = $AADTenantDetails.MarketingNotificationEmails
+                SecurityComplianceNotificationMails     = $AADTenantDetails.SecurityComplianceNotificationMails
+                SecurityComplianceNotificationPhones    = $AADTenantDetails.SecurityComplianceNotificationPhones
+                TechnicalNotificationMails              = $AADTenantDetails.TechnicalNotificationMails
+            }
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DSCHashTabletoString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        throw "Could not retrieve AzureAD Tenant Details"
     }
 }
 
@@ -257,24 +264,34 @@ function Export-TargetResource {
     $dscContent = ''
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
 
-    $AADTenantDetails = Get-AzureADTenantDetail
+    try
+    {
+        $AADTenantDetails = Get-AzureADTenantDetail -ErrorAction Stop
 
-    $Params = @{
-        MarketingNotificationEmails             = $AADTenantDetails.MarketingNotificationEmails
-        SecurityComplianceNotificationMails     = $AADTenantDetails.SecurityComplianceNotificationMails
-        SecurityComplianceNotificationPhones    = $AADTenantDetails.SecurityComplianceNotificationPhones
-        TechnicalNotificationMails              = $AADTenantDetails.TechnicalNotificationMails
-        GlobalAdminAccount                      = $GlobalAdminAccount
-        IsSingleInstance                       = 'Yes'
+        $Params = @{
+            MarketingNotificationEmails             = $AADTenantDetails.MarketingNotificationEmails
+            SecurityComplianceNotificationMails     = $AADTenantDetails.SecurityComplianceNotificationMails
+            SecurityComplianceNotificationPhones    = $AADTenantDetails.SecurityComplianceNotificationPhones
+            TechnicalNotificationMails              = $AADTenantDetails.TechnicalNotificationMails
+            GlobalAdminAccount                      = $GlobalAdminAccount
+            IsSingleInstance                       = 'Yes'
+        }
+        $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        return $dscContent
     }
-    $Results = Get-TargetResource @Params
-    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode -Results $Results
-    $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName -ConnectionMode $ConnectionMode `
-        -ModulePath $PSScriptRoot `
-        -Results $Results `
-        -GlobalAdminAccount $GlobalAdminAccount
-    Write-Host $Global:M365DSCEmojiGreenCheckMark
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -function *-TargetResource

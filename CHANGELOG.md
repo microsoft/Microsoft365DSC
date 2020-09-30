@@ -5,8 +5,9 @@
 * IntuneAppConfigurationPolicy
   * Initial Release;
 * DEPENDENCIES
+  * Rolled back ExchangeOnlineManagement to 2.0.1
   * Microsoft.PowerApps.Administration.PowerShell updated
-    to 2.0.83;
+    to 2.0.85;
   * Microsoft.Graph.Authentication updated to 1.0.1;
   * Microsoft.Graph.Groups.Planner updated to 1.0.1;
 * MISC
