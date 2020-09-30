@@ -9,19 +9,19 @@ function Get-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $MarketingNotificationEmails,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SecurityComplianceNotificationMails,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SecurityComplianceNotificationPhones,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $TechnicalNotificationMails,
 
         [Parameter()]
@@ -100,19 +100,19 @@ function Set-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $MarketingNotificationEmails,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SecurityComplianceNotificationMails,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SecurityComplianceNotificationPhones,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $TechnicalNotificationMails,
 
         [Parameter()]
@@ -168,19 +168,19 @@ function Test-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $MarketingNotificationEmails,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SecurityComplianceNotificationMails,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SecurityComplianceNotificationPhones,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $TechnicalNotificationMails,
 
         [Parameter()]
