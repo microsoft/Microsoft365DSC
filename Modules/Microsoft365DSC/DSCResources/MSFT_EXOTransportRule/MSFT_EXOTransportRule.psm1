@@ -699,10 +699,10 @@ function Get-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    Add-O365DSCTelemetryEvent -Data $data
+    Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
     $AllTransportRules = Get-TransportRule
@@ -1763,10 +1763,10 @@ function Set-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    Add-O365DSCTelemetryEvent -Data $data
+    Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
     $NewTransportRuleParams = @{
@@ -1958,7 +1958,7 @@ function Set-TargetResource
     elseif ($Ensure -eq "Present" -and $currentTransportRuleConfig.Ensure -eq "Present")
     {
         Write-Verbose -Message "Transport Rule '$($Name)' already exists, but needs updating."
-        Write-Verbose -Message "Setting Transport Rule $($Name) with values: $(Convert-O365DscHashtableToString -Hashtable $SetTransportRuleParams)"
+        Write-Verbose -Message "Setting Transport Rule $($Name) with values: $(Convert-M365DscHashtableToString  -Hashtable $SetTransportRuleParams)"
         Set-TransportRule @SetTransportRuleParams
     }
 }
@@ -2663,13 +2663,13 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString  -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString  -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -2694,9 +2694,9 @@ function Export-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    Add-O365DSCTelemetryEvent -Data $data
+    Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
     [array]$AllTransportRules = Get-TransportRule
