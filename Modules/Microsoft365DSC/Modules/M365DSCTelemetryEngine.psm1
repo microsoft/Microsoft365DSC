@@ -73,6 +73,50 @@ function Add-M365DSCTelemetryEvent
             $Data.Remove("TenandId") | Out-Null
             $Data.Remove("Principal") | Out-Null
 
+            if ($null -ne $Data.Resource)
+            {
+                if ($Data.Resource.StartsWith("MSFT_AAD") -or $Data.Resource.StartsWith("AAD"))
+                {
+                    $Data.Add("Workload", "Azure Active Directory")
+                }
+                elseif ($Data.Resource.StartsWith("MSFT_EXO") -or $Data.Resource.StartsWith("EXO"))
+                {
+                    $Data.Add("Workload", "Exchange Online")
+                }
+                elseif ($Data.Resource.StartsWith("MSFT_Intune") -or $Data.Resource.StartsWith("Intune")) 
+                {
+                    $Data.Add("Workload", "Intune")
+                }
+                elseif ($Data.Resource.StartsWith("MSFT_O365") -or $Data.Resource.StartsWith("O365"))
+                {
+                    $Data.Add("Workload", "Office 365 Admin")
+                }
+                elseif ($Data.Resource.StartsWith("MSFT_OD") -or $Data.Resource.StartsWith("OD"))
+                {
+                    $Data.Add("Workload", "OneDrive for Business")
+                }
+                elseif ($Data.Resource.StartsWith("MSFT_Planner") -or $Data.Resource.StartsWith("Planner"))
+                {
+                    $Data.Add("Workload", "Planner")
+                }
+                elseif ($Data.Resource.StartsWith("MSFT_PP") -or $Data.Resource.StartsWith("PP"))
+                {
+                    $Data.Add("Workload", "Power Platform")
+                }
+                elseif ($Data.Resource.StartsWith("MSFT_SC") -or $Data.Resource.StartsWith("SC"))
+                {
+                    $Data.Add("Workload", "Security and Compliance Center")
+                }
+                elseif ($Data.Resource.StartsWith("MSFT_SPO") -or $Data.Resource.StartsWith("SPO"))
+                {
+                    $Data.Add("Workload", "SharePoint Online")
+                }
+                elseif ($Data.Resource.StartsWith("MSFT_Teams") -or $Data.Resource.StartsWith("Teams"))
+                {
+                    $Data.Add("Workload", "Teams")
+                }
+            }
+
             $version = (Get-Module 'Microsoft365DSC').Version
             $Data.Add("M365DSCVersion", $version)
 
