@@ -97,6 +97,10 @@ function Get-TargetResource
         $AllowGuestDeleteChannels,
 
         [Parameter()]
+        [System.Boolean]
+        $ShowInTeamsSearchAndSuggestions,
+
+        [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
@@ -192,6 +196,7 @@ function Get-TargetResource
             AllowGuestDeleteChannels          = $team.AllowGuestDeleteChannels
             AllowCreateUpdateChannels         = $team.AllowCreateUpdateChannels
             AllowDeleteChannels               = $team.AllowDeleteChannels
+            ShowInTeamsSearchAndSuggestions   = $team.ShowInTeamsSearchAndSuggestions
             Ensure                            = "Present"
         }
 
@@ -312,6 +317,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowGuestDeleteChannels,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShowInTeamsSearchAndSuggestions,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -535,6 +544,10 @@ function Test-TargetResource
         [System.Boolean]
         $AllowGuestDeleteChannels,
 
+        [Parameter()]
+        [System.Boolean]
+        $ShowInTeamsSearchAndSuggestions,
+        
         [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
