@@ -369,7 +369,7 @@ function Test-TargetResource
         [System.String]
         [ValidateSet('Enabled', 'Disabled')]
         $SpamFilteringEnabledType = 'Enabled',
-        
+
         [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]

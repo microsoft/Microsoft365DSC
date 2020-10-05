@@ -547,7 +547,7 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $ShowInTeamsSearchAndSuggestions,
-        
+
         [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
