@@ -9,10 +9,17 @@ class MSFT_TeamsCallingPolicy : OMI_BaseResource
     [Write, Description("Enables inbound calls to be routed to delegates; allows delegates to make outbound calls on behalf of the users for whom they have delegated permissions.")] Boolean AllowDelegation;
     [Write, Description("Enables call forwarding or simultaneous ringing of inbound calls to other users in your tenant.")] Boolean AllowCallForwardingToUser;
     [Write, Description("Enables call forwarding or simultaneous ringing of inbound calls to any phone number.")] Boolean AllowCallForwardingToPhone;
-    [Write, Description("Enables Web PSTN Calling.")] Boolean AllowWebPSTNCalling;
+    [Write, Description("Allows PSTN calling from the Team web client")] Boolean AllowWebPSTNCalling;
     [Write, Description("Setting this parameter to True will send calls through PSTN and incur charges rather than going through the network and bypassing the tolls.")] Boolean PreventTollBypass;
     [Write, Description("Setting this parameter lets you configure how incoming calls are handled when a user is already in a call or conference or has a call placed on hold. New or incoming calls will be rejected with a busy signal. Valid options are: Enabled, Disabled."), ValueMap{"Enabled","Disabled"}, Values{"Enabled","Disabled"}] String BusyOnBusyEnabledType;
+    [Write, Description("Setting this parameter allows you to turn on or turn off music on hold when a PSTN caller is placed on hold. It is turned on by default. Valid options are: Enabled, Disabled, UserOverride. For now setting the value to UserOverride is the same as Enabled. This setting does not apply to call park and SLA boss delegate features. Valid options are: Enabled, Disabled, UserOverride."), ValueMap{"Enabled","Disabled","UserOverride"}, Values{"Enabled","Disabled","UserOverride"}] String MusicOnHoldEnabledType;
+    [Write, Description("This parameter is not available for use. Valid options are: Enabled, Disabled, UserOverride."), ValueMap{"Enabled","Disabled","UserOverride"}, Values{"Enabled","Disabled","UserOverride"}] String SafeTransferEnabled;
+    [Write, Description("Setting this parameter to True will allows 1:1 Calls to be recorded.")] Boolean AllowCloudRecordingForCalls;
+    [Write, Description("Determines whether post-meeting captions and transcriptions are allowed in a user's meetings. Set this to TRUE to allow. Set this to FALSE to prohibit.")] Boolean AllowTranscriptionforCalling;
+    [Write, Description("Determines whether real-time captions are available for the user in Teams meetings. Set this to DisabledUserOverride to allow user to turn on live captions. Set this to Disabled to prohibit."), ValueMap{"DisabledUserOverride", "Disabled"}, Values{"DisabledUserOverride", "Disabled"}] String LiveCaptionsEnabledTypeForCalling;
+    [Write, Description("This setting allows the tenant admin to enable or disable the Auto-Answer setting. Valid options are: Enabled, Disabled."), ValueMap{"Enabled","Disabled"}, Values{"Enabled","Disabled"}] String AutoAnswerEnabledType;
+    [Write, Description("Setting this parameter determines whether calls identified as Spam will be rejected or not (probably). Valid options are: Enabled, Disabled."), ValueMap{"Enabled","Disabled"}, Values{"Enabled","Disabled"}] String SpamFilteringEnabledType;
     [Write, Description("Present ensures the policyexists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Required, Description("Credentials of the Teams Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+    [Required, Description("Credentials of the Teams Global Admin."), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
 };
 
