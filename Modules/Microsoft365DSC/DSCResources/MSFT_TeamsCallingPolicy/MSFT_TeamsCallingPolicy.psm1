@@ -17,6 +17,10 @@ function Get-TargetResource
         $AllowPrivateCalling,
 
         [Parameter()]
+        [System.Boolean]
+        $AllowWebPSTNCalling,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('AlwaysEnabled', 'AlwaysDisabled', 'UserOverride')]
         $AllowVoicemail,
@@ -42,13 +46,42 @@ function Get-TargetResource
         $PreventTollBypass,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled')]
+        $BusyOnBusyEnabledType = 'Enabled',
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled', 'UserOverride')]
+        $MusicOnHoldEnabledType = 'Enabled',
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled', 'UserOverride')]
+        $SafeTransferEnabled = 'Enabled',
+
+        [Parameter()]
         [System.Boolean]
-        $AllowWebPSTNCalling,
+        $AllowCloudRecordingForCalls,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTranscriptionForCalling,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('DisabledUserOverride', 'Disabled')]
+        $LiveCaptionsEnabledTypeForCalling = 'DisabledUserOverride',
 
         [Parameter()]
         [System.String]
         [ValidateSet('Enabled', 'Disabled')]
-        $BusyOnBusyEnabledType = 'Enabled',
+        $AutoAnswerEnabledType = 'Disabled',
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled')]
+        $SpamFilteringEnabledType = 'Enabled',
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -88,19 +121,26 @@ function Get-TargetResource
         }
         Write-Verbose -Message "Found Teams Calling Policy {$Identity}"
         return @{
-            Identity                   = $Identity
-            AllowPrivateCalling        = $policy.AllowPrivateCalling
-            AllowVoicemail             = $policy.AllowVoicemail
-            AllowCallGroups            = $policy.AllowCallGroups
-            AllowDelegation            = $policy.AllowDelegation
-            AllowCallForwardingToUser  = $policy.AllowCallForwardingToUser
-            AllowCallForwardingToPhone = $policy.AllowCallForwardingToPhone
-            Description                = $policy.Description
-            PreventTollBypass          = $policy.PreventTollBypass
-            AllowWebPSTNCalling        = $policy.AllowWebPSTNCalling
-            BusyOnBusyEnabledType      = $policy.BusyOnBusyEnabledType
-            Ensure                     = 'Present'
-            GlobalAdminAccount         = $GlobalAdminAccount
+            Identity                            = $Identity
+            AllowPrivateCalling                 = $policy.AllowPrivateCalling
+            AllowWebPSTNCalling                 = $policy.AllowWebPSTNCalling
+            AllowVoicemail                      = $policy.AllowVoicemail
+            AllowCallGroups                     = $policy.AllowCallGroups
+            AllowDelegation                     = $policy.AllowDelegation
+            AllowCallForwardingToUser           = $policy.AllowCallForwardingToUser
+            AllowCallForwardingToPhone          = $policy.AllowCallForwardingToPhone
+            Description                         = $policy.Description
+            PreventTollBypass                   = $policy.PreventTollBypass
+            BusyOnBusyEnabledType               = $policy.BusyOnBusyEnabledType
+            MusicOnHoldEnabledType              = $policy.MusicOnHoldEnabledType
+            SafeTransferEnabled                 = $policy.SafeTransferEnabled
+            AllowCloudRecordingForCalls         = $policy.AllowCloudRecordingForCalls
+            AllowTranscriptionForCalling        = $policy.AllowTranscriptionForCalling
+            LiveCaptionsEnabledTypeForCalling   = $policy.LiveCaptionsEnabledTypeForCalling
+            AutoAnswerEnabledType               = $policy.AutoAnswerEnabledType
+            SpamFilteringEnabledType            = $policy.SpamFilteringEnabledType
+            Ensure                              = 'Present'
+            GlobalAdminAccount                  = $GlobalAdminAccount
         }
     }
     catch
@@ -130,6 +170,10 @@ function Set-TargetResource
         $AllowPrivateCalling,
 
         [Parameter()]
+        [System.Boolean]
+        $AllowWebPSTNCalling,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('AlwaysEnabled', 'AlwaysDisabled', 'UserOverride')]
         $AllowVoicemail,
@@ -155,13 +199,42 @@ function Set-TargetResource
         $PreventTollBypass,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled')]
+        $BusyOnBusyEnabledType = 'Enabled',
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled', 'UserOverride')]
+        $MusicOnHoldEnabledType = 'Enabled',
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled', 'UserOverride')]
+        $SafeTransferEnabled = 'Enabled',
+
+        [Parameter()]
         [System.Boolean]
-        $AllowWebPSTNCalling,
+        $AllowCloudRecordingForCalls,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTranscriptionForCalling,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('DisabledUserOverride', 'Disabled')]
+        $LiveCaptionsEnabledTypeForCalling = 'DisabledUserOverride',
 
         [Parameter()]
         [System.String]
         [ValidateSet('Enabled', 'Disabled')]
-        $BusyOnBusyEnabledType = 'Enabled',
+        $AutoAnswerEnabledType = 'Disabled',
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled')]
+        $SpamFilteringEnabledType = 'Enabled',
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -218,7 +291,7 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter(Mandatory = $true)]
+       [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
@@ -229,6 +302,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowPrivateCalling,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWebPSTNCalling,
 
         [Parameter()]
         [System.String]
@@ -256,13 +333,42 @@ function Test-TargetResource
         $PreventTollBypass,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled')]
+        $BusyOnBusyEnabledType = 'Enabled',
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled', 'UserOverride')]
+        $MusicOnHoldEnabledType = 'Enabled',
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled', 'UserOverride')]
+        $SafeTransferEnabled = 'Enabled',
+
+        [Parameter()]
         [System.Boolean]
-        $AllowWebPSTNCalling,
+        $AllowCloudRecordingForCalls,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTranscriptionForCalling,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('DisabledUserOverride', 'Disabled')]
+        $LiveCaptionsEnabledTypeForCalling = 'DisabledUserOverride',
 
         [Parameter()]
         [System.String]
         [ValidateSet('Enabled', 'Disabled')]
-        $BusyOnBusyEnabledType = 'Enabled',
+        $AutoAnswerEnabledType = 'Disabled',
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled')]
+        $SpamFilteringEnabledType = 'Enabled',
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]

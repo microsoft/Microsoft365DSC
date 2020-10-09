@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+## 1.20.1007.1
+
+* TeamsCallingPolicy
+  * Added new supported properties;
+* TeamsMeetingPolicy
+  * Added new supported properties;
+* TeamsTeam
+  * Added new supported properties;
+
 ## 1.20.930.1
 
 * IntuneAppConfigurationPolicy

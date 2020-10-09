@@ -22,7 +22,49 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowPrivateMeetNow,
+
+        [Parameter()]
+        [ValidateSet("Disabled", "Enabled")]
+        [System.String]
+        $MeetingChatEnabledType = "Enabled",
+
+        [Parameter()]
+        [ValidateSet("Disabled", "DisabledUserOverride")]
+        [System.String]
+        $LiveCaptionsEnabledType = "DisabledUserOverride",
+
+        [Parameter()]
+        [ValidateSet("OrganizerOnlyUserOverride","EveryoneInCompanyUserOverride","EveryoneUserOverride")]
+        [System.String]
+        $DesignatedPresenterRoleMode = "EveryoneUserOverride",
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowIPAudio,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowIPVideo,
+
+        [Parameter()]
+        [ValidateSet("Enabled", "Disabled")]
+        [System.String]
+        $AllowEngagementReport = "Disabled",
+
+        [Parameter()]
+        [ValidateSet("EnabledOutgoingIncoming", "Disabled")]
+        [System.String]
+        $IPAudioMode = "EnabledOutgoingIncoming",
+
+        [Parameter()]
+        [ValidateSet("EnabledOutgoingIncoming", "Disabled")]
+        [System.String]
+        $IPVideoMode = "EnabledOutgoingIncoming",
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAnonymousUsersToDialOut,
 
         [Parameter()]
         [System.Boolean]
@@ -39,11 +81,16 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllowPSTNUsersToBypassLobby,
+        $AllowCloudRecording,
 
         [Parameter()]
         [System.Boolean]
-        $AllowCloudRecording,
+        $AllowRecordingStorageOutsideRegion,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Stream', 'OneDriveForBusiness')]
+        $RecordingStorageMode,
 
         [Parameter()]
         [System.Boolean]
@@ -81,6 +128,48 @@ function Get-TargetResource
         [System.String]
         [ValidateSet('SingleApplication', 'EntireScreen', 'Disabled')]
         $ScreenSharingMode,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('NoFilters', 'BlurOnly', 'BlurAndDefaultBackgrounds', 'AllFilters')]
+        $VideoFiltersMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPSTNUsersToBypassLobby,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOrganizersToOverrideLobbySettings,
+        
+        [Parameter()]
+        [System.String]
+        [ValidateSet('TeamsAndSfb', 'Teams')]
+        $PreferredMeetingProviderForIslandsMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNDIStreaming,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'FederatedOnly', 'Disabled')]
+        $AllowUserToJoinExternalMeeting,
+        
+        [Parameter()]
+        [ValidateSet("Disabled", "Enabled")]
+        [System.String]
+        $EnrollUserOverride = "Disabled",
+
+        [Parameter()]
+        [ValidateSet("Off", "Distinguish", "Attribute")]
+        [System.String]
+        $RoomAttributeUserOverride = "Off",
+
+        [Parameter()]
+        [ValidateSet("Disabled", "Enabled")]
+        [System.String]
+        $StreamingAttendeeMode = "Enabled",
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -124,12 +213,22 @@ function Get-TargetResource
             Description                                = $policy.Description
             AllowChannelMeetingScheduling              = $policy.AllowChannelMeetingScheduling
             AllowMeetNow                               = $policy.AllowMeetNow
+            AllowPrivateMeetNow                        = $policy.AllowPrivateMeetNow
+            MeetingChatEnabledType                     = $policy.MeetingChatEnabledType
+            LiveCaptionsEnabledType                    = $policy.LiveCaptionsEnabledType
+            DesignatedPresenterRoleMode                = $policy.DesignatedPresenterRoleMode
+            AllowIPAudio                               = $policy.AllowIPAudio
             AllowIPVideo                               = $policy.AllowIPVideo
+            AllowEngagementReport                      = $policy.AllowEngagementReport
+            IPAudioMode                                = $policy.IPAudioMode
+            IPVideoMode                                = $policy.IPVideoMode
+            AllowAnonymousUsersToDialOut               = $policy.AllowAnonymousUsersToDialOut
             AllowAnonymousUsersToStartMeeting          = $policy.AllowAnonymousUsersToStartMeeting
             AllowPrivateMeetingScheduling              = $policy.AllowPrivateMeetingScheduling
-            AllowPSTNUsersToBypassLobby                = $policy.AllowPSTNUsersToBypassLobby
             AutoAdmittedUsers                          = $policy.AutoAdmittedUsers
             AllowCloudRecording                        = $policy.AllowCloudRecording
+            AllowRecordingStorageOutsideRegion         = $policy.AllowRecordingStorageOutsideRegion
+            RecordingStorageMode                       = $policy.RecordingStorageMode
             AllowOutlookAddIn                          = $policy.AllowOutlookAddIn
             AllowPowerPointSharing                     = $policy.AllowPowerPointSharing
             AllowParticipantGiveRequestControl         = $policy.AllowParticipantGiveRequestControl
@@ -139,6 +238,14 @@ function Get-TargetResource
             AllowTranscription                         = $policy.AllowTranscription
             MediaBitRateKb                             = $policy.MediaBitRateKb
             ScreenSharingMode                          = $policy.ScreenSharingMode
+            VideoFiltersMode                           = $policy.VideoFiltersMode
+            AllowPSTNUsersToBypassLobby                = $policy.AllowPSTNUsersToBypassLobby
+            AllowOrganizersToOverrideLobbySettings     = $policy.AllowOrganizersToOverrideLobbySettings
+            PreferredMeetingProviderForIslandsMode     = $policy.PreferredMeetingProviderForIslandsMode
+            AllowNDIStreaming                          = $policy.AllowNDIStreaming
+            AllowUserToJoinExternalMeeting             = $policy.AllowUserToJoinExternalMeeting
+            EnrollUserOverride                         = $policy.EnrollUserOverride
+            StreamingAttendeeMode                      = $policy.StreamingAttendeeMode
             Ensure                                     = "Present"
             GlobalAdminAccount                         = $GlobalAdminAccount
         }
@@ -175,7 +282,49 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowPrivateMeetNow,
+
+        [Parameter()]
+        [ValidateSet("Disabled", "Enabled")]
+        [System.String]
+        $MeetingChatEnabledType = "Enabled",
+
+        [Parameter()]
+        [ValidateSet("Disabled", "DisabledUserOverride")]
+        [System.String]
+        $LiveCaptionsEnabledType = "DisabledUserOverride",
+
+        [Parameter()]
+        [ValidateSet("OrganizerOnlyUserOverride","EveryoneInCompanyUserOverride","EveryoneUserOverride")]
+        [System.String]
+        $DesignatedPresenterRoleMode = "EveryoneUserOverride",
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowIPAudio,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowIPVideo,
+
+        [Parameter()]
+        [ValidateSet("Enabled", "Disabled")]
+        [System.String]
+        $AllowEngagementReport = "Disabled",
+
+        [Parameter()]
+        [ValidateSet("EnabledOutgoingIncoming", "Disabled")]
+        [System.String]
+        $IPAudioMode = "EnabledOutgoingIncoming",
+
+        [Parameter()]
+        [ValidateSet("EnabledOutgoingIncoming", "Disabled")]
+        [System.String]
+        $IPVideoMode = "EnabledOutgoingIncoming",
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAnonymousUsersToDialOut,
 
         [Parameter()]
         [System.Boolean]
@@ -192,11 +341,16 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllowPSTNUsersToBypassLobby,
+        $AllowCloudRecording,
 
         [Parameter()]
         [System.Boolean]
-        $AllowCloudRecording,
+        $AllowRecordingStorageOutsideRegion,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Stream', 'OneDriveForBusiness')]
+        $RecordingStorageMode,
 
         [Parameter()]
         [System.Boolean]
@@ -234,6 +388,48 @@ function Set-TargetResource
         [System.String]
         [ValidateSet('SingleApplication', 'EntireScreen', 'Disabled')]
         $ScreenSharingMode,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('NoFilters', 'BlurOnly', 'BlurAndDefaultBackgrounds', 'AllFilters')]
+        $VideoFiltersMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPSTNUsersToBypassLobby,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOrganizersToOverrideLobbySettings,
+        
+        [Parameter()]
+        [System.String]
+        [ValidateSet('TeamsAndSfb', 'Teams')]
+        $PreferredMeetingProviderForIslandsMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNDIStreaming,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'FederatedOnly', 'Disabled')]
+        $AllowUserToJoinExternalMeeting,
+        
+        [Parameter()]
+        [ValidateSet("Disabled", "Enabled")]
+        [System.String]
+        $EnrollUserOverride = "Disabled",
+
+        [Parameter()]
+        [ValidateSet("Off", "Distinguish", "Attribute")]
+        [System.String]
+        $RoomAttributeUserOverride = "Off",
+
+        [Parameter()]
+        [ValidateSet("Disabled", "Enabled")]
+        [System.String]
+        $StreamingAttendeeMode = "Enabled",
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -308,7 +504,49 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowPrivateMeetNow,
+        
+        [Parameter()]
+        [ValidateSet("Disabled", "Enabled")]
+        [System.String]
+        $MeetingChatEnabledType = "Enabled",
+
+        [Parameter()]
+        [ValidateSet("Disabled", "DisabledUserOverride")]
+        [System.String]
+        $LiveCaptionsEnabledType = "DisabledUserOverride",
+
+        [Parameter()]
+        [ValidateSet("OrganizerOnlyUserOverride","EveryoneInCompanyUserOverride","EveryoneUserOverride")]
+        [System.String]
+        $DesignatedPresenterRoleMode = "EveryoneUserOverride",
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowIPAudio,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowIPVideo,
+
+        [Parameter()]
+        [ValidateSet("Enabled", "Disabled")]
+        [System.String]
+        $AllowEngagementReport = "Disabled",
+
+        [Parameter()]
+        [ValidateSet("EnabledOutgoingIncoming", "Disabled")]
+        [System.String]
+        $IPAudioMode = "EnabledOutgoingIncoming",
+
+        [Parameter()]
+        [ValidateSet("EnabledOutgoingIncoming", "Disabled")]
+        [System.String]
+        $IPVideoMode = "EnabledOutgoingIncoming",
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAnonymousUsersToDialOut,
 
         [Parameter()]
         [System.Boolean]
@@ -325,11 +563,16 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllowPSTNUsersToBypassLobby,
+        $AllowCloudRecording,
 
         [Parameter()]
         [System.Boolean]
-        $AllowCloudRecording,
+        $AllowRecordingStorageOutsideRegion,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Stream', 'OneDriveForBusiness')]
+        $RecordingStorageMode,
 
         [Parameter()]
         [System.Boolean]
@@ -367,6 +610,48 @@ function Test-TargetResource
         [System.String]
         [ValidateSet('SingleApplication', 'EntireScreen', 'Disabled')]
         $ScreenSharingMode,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('NoFilters', 'BlurOnly', 'BlurAndDefaultBackgrounds', 'AllFilters')]
+        $VideoFiltersMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPSTNUsersToBypassLobby,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOrganizersToOverrideLobbySettings,
+        
+        [Parameter()]
+        [System.String]
+        [ValidateSet('TeamsAndSfb', 'Teams')]
+        $PreferredMeetingProviderForIslandsMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNDIStreaming,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'FederatedOnly', 'Disabled')]
+        $AllowUserToJoinExternalMeeting,
+        
+        [Parameter()]
+        [ValidateSet("Disabled", "Enabled")]
+        [System.String]
+        $EnrollUserOverride = "Disabled",
+
+        [Parameter()]
+        [ValidateSet("Off", "Distinguish", "Attribute")]
+        [System.String]
+        $RoomAttributeUserOverride = "Off",
+
+        [Parameter()]
+        [ValidateSet("Disabled", "Enabled")]
+        [System.String]
+        $StreamingAttendeeMode = "Enabled",
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
