@@ -168,13 +168,13 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating a new Voice Route {$Identity}"
-        New-CsOnlineVoiceRoutingPolicy @SetParameters
+        New-CsOnlineVoiceRoute @SetParameters
     }
     elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
     {
         <#
             If we get here, it's because the Test-TargetResource detected a drift, therefore we always call
-            into the Set-CsOnlineVoiceRoutingPolicy cmdlet.
+            into the Set-CsOnlineVoiceRoute cmdlet.
         #>
         Write-Verbose -Message "Updating settings for Voice Route {$Identity}"
         Set-CsOnlineVoiceRoute @SetParameters
