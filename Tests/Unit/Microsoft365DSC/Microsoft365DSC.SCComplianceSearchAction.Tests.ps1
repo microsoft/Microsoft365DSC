@@ -24,8 +24,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
             $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-            Mock -CommandName Test-MSCloudLogin -MockWith {
 
+            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
+                return @{}
+            }
+
+            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
+
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
 
             Mock -CommandName Import-PSSession -MockWith {
@@ -183,7 +192,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ActionScope                         = "IndexedItemsOnly";
                         EnableDedupe                        = $False;
                         Results                             = 'Container url:
-                        https://gabwedisccan.blob.core.windows.net/267bbbb1-2630-41ba-d56b-08d73612df43;
+                        https://contoso.blob.core.windows.net/267bbbb1-2630-41ba-d56b-08d73612df43;
                         SAS token: <Specify -IncludeCredential parameter to show the SAS token>;
                         Scenario: RetentionReports; Scope: IndexedItemsOnly; Scope details:
                         AllUnindexed; Max unindexed size: 0; File type exclusions for unindexed: <null>;
@@ -197,7 +206,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
 

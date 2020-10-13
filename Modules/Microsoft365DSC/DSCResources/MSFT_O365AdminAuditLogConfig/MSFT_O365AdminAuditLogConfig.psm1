@@ -19,54 +19,83 @@ function Get-TargetResource
         [System.String]
         $UnifiedAuditLogIngestionEnabled,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Getting configuration for Office 365 Audit Log"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = @{
-        IsSingleInstance                = $IsSingleInstance
-        Ensure                          = 'Present'
-        GlobalAdminAccount              = $GlobalAdminAccount
-        UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabled
-    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
 
-    $GetResults = Get-AdminAuditLogConfig
-    if (-not $GetResults)
+    try
     {
-        Write-Warning 'Unable to determine Unified Audit Log Ingestion State.'
-        Write-Verbose -Message "Returning Get-TargetResource NULL Result"
-        return $nullReturn
-    }
-    else
-    {
-        if ($GetResults.UnifiedAuditLogIngestionEnabled)
+        $GetResults = Get-AdminAuditLogConfig -ErrorAction Stop
+        if (-not $GetResults)
         {
-            $UnifiedAuditLogIngestionEnabledReturnValue = 'Enabled'
+            Write-Warning 'Unable to determine Unified Audit Log Ingestion State.'
+            Write-Verbose -Message "Returning Get-TargetResource NULL Result"
+            return $nullReturn
         }
         else
         {
-            $UnifiedAuditLogIngestionEnabledReturnValue = 'Disabled'
-        }
+            if ($GetResults.UnifiedAuditLogIngestionEnabled)
+            {
+                $UnifiedAuditLogIngestionEnabledReturnValue = 'Enabled'
+            }
+            else
+            {
+                $UnifiedAuditLogIngestionEnabledReturnValue = 'Disabled'
+            }
 
-        $Result = @{
-            IsSingleInstance                = $IsSingleInstance
-            Ensure                          = 'Present'
-            GlobalAdminAccount              = $GlobalAdminAccount
-            UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabledReturnValue
+            $Result = @{
+                IsSingleInstance                = $IsSingleInstance
+                Ensure                          = 'Present'
+                GlobalAdminAccount              = $GlobalAdminAccount
+                UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabledReturnValue
+            }
+            return $Result
         }
-        return $Result
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -90,21 +119,44 @@ function Set-TargetResource
         [System.String]
         $UnifiedAuditLogIngestionEnabled,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting configuration for Office 365 Audit Log"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
 
     if ($UnifiedAuditLogIngestionEnabled -eq 'Enabled')
     {
@@ -155,9 +207,29 @@ function Test-TargetResource
         [System.String]
         $UnifiedAuditLogIngestionEnabled,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Testing configuration for Office 365 Audit Log"
@@ -167,7 +239,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @('UnifiedAuditLogIngestionEnabled')
@@ -183,40 +255,82 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
 
-    $O365AdminAuditLogConfig = Get-AdminAuditLogConfig
-    $value = "Disabled"
-    if ($O365AdminAuditLogConfig.UnifiedAuditLogIngestionEnabled)
+    try
     {
-        $value = "Enabled"
-    }
+        $O365AdminAuditLogConfig = Get-AdminAuditLogConfig -ErrorAction Stop
+        $value = "Disabled"
+        if ($O365AdminAuditLogConfig.UnifiedAuditLogIngestionEnabled)
+        {
+            $value = "Enabled"
+        }
 
-    $params = @{
-        IsSingleInstance                = 'Yes'
-        UnifiedAuditLogIngestionEnabled = $value
-        GlobalAdminAccount              = $GlobalAdminAccount
-    }
-    $result = Get-TargetResource @params
+        $dscContent = ""
+        $Params = @{
+            IsSingleInstance                = 'Yes'
+            UnifiedAuditLogIngestionEnabled = $value
+            GlobalAdminAccount              = $GlobalAdminAccount
+            ApplicationId                   = $ApplicationId
+            TenantId                        = $TenantId
+            CertificateThumbprint           = $CertificateThumbprint
+        }
+        $Results = Get-TargetResource @Params
 
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        O365AdminAuditLogConfig " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GlobalAdminAccount'
-    $content += "        }`r`n"
-    return $content
+        if ($Results.Ensure -eq 'Present')
+        {
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+        }
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        return $dscContent
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

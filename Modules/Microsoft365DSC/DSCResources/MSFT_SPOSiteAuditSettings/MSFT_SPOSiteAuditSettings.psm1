@@ -12,30 +12,50 @@ function Get-TargetResource
         [System.String]
         $AuditFlags,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting SPOSiteAuditSettings for {$Url}"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = @{
-        Url                = $Url
-        AuditFlags         = 'None'
-        GlobalAdminAccount = $GlobalAdminAccount
-    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
     try
     {
-        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-            -Platform PnP `
-            -ConnectionUrl $Url -ErrorAction SilentlyContinue
+        $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+            -InboundParameters $PSBoundParameters `
+            -Url $Url -ErrorAction SilentlyContinue
         $auditSettings = Get-PnPAuditing -ErrorAction Stop
         $auditFlag = $auditSettings.AuditFlags
         if ($null -eq $auditFlag)
@@ -43,9 +63,15 @@ function Get-TargetResource
             $auditFlag = 'None'
         }
         return @{
-            Url                = $Url
-            AuditFlags         = $auditFlag
-            GlobalAdminAccount = $GlobalAdminAccount
+            Url                   = $Url
+            AuditFlags            = $auditFlag
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
+
         }
     }
     catch
@@ -54,6 +80,9 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Make sure that you are connected to your PnPConnection"
         }
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
         return $nullReturn
     }
 }
@@ -71,23 +100,47 @@ function Set-TargetResource
         [System.String]
         $AuditFlags,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting Audit settings for {$Url}"
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -ConnectionUrl $Url `
-        -Platform PnP
+
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+        -InboundParameters $PSBoundParameters `
+        -Url $Url
 
     if ($AuditFlags -eq 'All')
     {
@@ -113,9 +166,29 @@ function Test-TargetResource
         [System.String]
         $AuditFlags,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing audit settings for {$Url}"
@@ -124,7 +197,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("AuditFlags")
@@ -140,82 +213,94 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-    )
+        $GlobalAdminAccount,
 
-    $InformationPreference = 'Continue'
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
+    )
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Test-MSCloudLogin -Platform PnP -CloudCredential $GlobalAdminAccount
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+        -InboundParameters $PSBoundParameters
 
-    $sites = Get-PnPTenantSite
-
-    $i = 1
-    $organization = ""
-    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-    if ($GlobalAdminAccount.UserName.Contains("@"))
+    try
     {
-        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+        $sites = Get-PnPTenantSite -ErrorAction Stop
 
-        if ($organization.IndexOf(".") -gt 0)
+        $i = 1
+        Write-Host "`r`n" -NoNewLine
+        $dscContent = ""
+        foreach ($site in $sites)
         {
-            $principal = $organization.Split(".")[0]
+            try
+            {
+                Write-Host "    [$i/$($sites.Length)] Audit Settings for {$($site.Url)}" -NoNewLine
+
+                $Params = @{
+                    Url                   = $site.Url
+                    AuditFlags            = 'None'
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificatePassword   = $CertificatePassword
+                    CertificatePath       = $CertificatePath
+                    CertificateThumbprint = $CertificateThumbprint
+                    GlobalAdminAccount    = $GlobalAdminAccount
+                }
+
+                $Results = Get-TargetResource @params
+
+                if ([System.String]::IsNullOrEmpty($Results.AuditFlags))
+                {
+                    $Results.AuditFlags = 'None'
+                }
+                $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
+            }
+            catch
+            {
+                Write-Verbose "There was an issue retrieving Audit Settings for $Url"
+            }
+            $i++
         }
+        return $dscContent
     }
-    $content = ""
-    foreach ($site in $sites)
+    catch
     {
-        try
-        {
-            Write-Information "    [$i/$($sites.Length)] Audit Settings for {$($site.Url)}"
-            $params = @{
-                Url                = $site.Url
-                AuditFlags         = 'None'
-                GlobalAdminAccount = $GlobalAdminAccount
-            }
-            $result = Get-TargetResource @params
-
-            if ([System.String]::IsNullOrEmpty($result.AuditFlags))
-            {
-                $result.AuditFlags = 'None'
-            }
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $content += "        SPOSiteAuditSettings " + (New-GUID).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            if ($partialContent.ToLower().Contains($principal.ToLower() + ".sharepoint.com"))
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape($principal + ".sharepoint.com"), "`$(`$OrganizationName.Split('.')[0]).sharepoint.com"
-            }
-            if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
-            }
-            if ($partialContent.ToLower().Contains("@" + $principal.ToLower()))
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$OrganizationName.Split('.')[0])"
-            }
-            if ($partialContent.ToLower().Contains($principal.ToLower() + "-my.sharepoint.com"))
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape($principal + "-my.sharepoint.com"), "`$(`$OrganizationName.Split('.')[0])-my.sharepoint.com"
-            }
-            $content += $partialContent
-            $content += "        }`r`n"
-        }
-        catch
-        {
-            Write-Verbose "There was an issue retrieving Audit Settings for $Url"
-        }
-        $i++
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
     }
-    return $content
 }
 
 Export-ModuleMember -Function *-TargetResource

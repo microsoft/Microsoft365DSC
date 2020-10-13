@@ -24,8 +24,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
             $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-            Mock -CommandName Test-MSCloudLogin -MockWith {
+            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
+                return @{}
+            }
 
+            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
+
+            }
+
+            Mock -CommandName Add-PnPTenantTheme -MockWith {
+
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
         }
 
@@ -40,7 +52,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Value    = "#eff6fc"
                         } -ClientOnly)
                     GlobalAdminAccount = $GlobalAdminAccount
-                    Ensure             = "Absent"
+                    Ensure             = "Present"
                 }
 
                 Mock -CommandName Add-PnPTenantTheme -MockWith {
@@ -62,7 +74,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Creates the site collection in the Set method" {
+            It "Creates the theme in the Set method" {
                 Set-TargetResource @testParams
             }
         }

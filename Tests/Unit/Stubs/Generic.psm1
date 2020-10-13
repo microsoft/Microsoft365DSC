@@ -85,24 +85,6 @@ function Remove-PSSession
     )
 }
 
-function Get-AzureADMSGroup
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.String]
-        $Id
-    )
-}
-
 function New-AzureADMSGroup
 {
     [CmdletBinding()]
@@ -212,7 +194,7 @@ function New-M365DSCConnection
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Azure", "AzureAD", "SharePointOnline", "ExchangeOnline", `
+        [ValidateSet("Azure", "AzureAD", "SharePointOnline", "ExchangeOnline", 'Intune', `
                 "SecurityComplianceCenter", "MSOnline", "PnP", "PowerPlatforms", `
                 "MicrosoftTeams", "SkypeForBusiness")]
         [System.String]
@@ -220,7 +202,15 @@ function New-M365DSCConnection
 
         [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]
-        $InboundParameters
+        $InboundParameters,
+
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipModuleReload
     )
 }
 
@@ -1013,9 +1003,29 @@ function Get-AllSPOPackages
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable[]])]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 }
 
@@ -1688,5 +1698,171 @@ function New-AddressList
         [Parameter()]
         [System.Boolean]
         $Confirm
+    )
+}
+
+function Connect-Graph
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String[]]
+        $Scopes
+    )
+}
+
+function Get-MGGroupPlannerPlan
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String]
+        $GroupId
+    )
+}
+
+function Update-MGPlannerPlan
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $PlannerPlanId
+    )
+}
+
+function Get-MGPlannerTask
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String]
+        $PlannerTaskId
+    )
+}
+
+function New-MGPlannerTask
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String]
+        $PlanId,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $StartDateTime,
+
+        [Parameter()]
+        [System.String]
+        $CompletedDateTime,
+
+        [Parameter()]
+        [ValidateRange(0, 100)]
+        [System.Uint32]
+        $PercentComplete,
+
+        [Parameter()]
+        [ValidateRange(0, 10)]
+        [System.UInt32]
+        $Priority
+    )
+}
+
+function Update-MGPlannerTask
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String]
+        $PlanId,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $TaskId,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $StartDateTime,
+
+        [Parameter()]
+        [System.String]
+        $CompletedDateTime,
+
+        [Parameter()]
+        [ValidateRange(0, 100)]
+        [System.Uint32]
+        $PercentComplete,
+
+        [Parameter()]
+        [ValidateRange(0, 10)]
+        [System.UInt32]
+        $Priority
+    )
+}
+
+function Get-MgPlannerPlanBucket
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String]
+        $PlannerPlanId
+    )
+}
+
+function New-MgPlannerBucket
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String]
+        $PlanId,
+
+        [Parameter()]
+        [System.String]
+        $Name
+    )
+}
+
+function Update-MgPlannerBucket
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String]
+        $PlanId,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $BucketId
     )
 }

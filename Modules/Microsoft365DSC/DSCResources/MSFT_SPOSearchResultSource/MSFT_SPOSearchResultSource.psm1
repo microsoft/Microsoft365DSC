@@ -76,78 +76,100 @@ function Get-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting configuration for Result Source instance $Name"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters
 
-    $nullReturn = @{
-        Name               = $Name
-        Description        = $null
-        Protocol           = $null
-        Type               = $null
-        QueryTransform     = $null
-        SourceURL          = $null
-        UseAutoDiscover    = $null
-        ShowPartialSearch  = $null
-        GlobalAdminAccount = $GlobalAdminAccount
-        Ensure             = "Absent"
-    }
-
-    if ($null -eq $Script:RecentExtract)
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
+    try
     {
-        $Script:RecentExtract = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
-    }
-    $source = $Script:RecentExtract.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source `
-    | Where-Object -FilterScript { $_.Name -eq $Name }
+        if ($null -eq $Script:RecentExtract)
+        {
+            $Script:RecentExtract = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
+        }
+        $source = $Script:RecentExtract.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source `
+        | Where-Object -FilterScript { $_.Name -eq $Name }
 
-    if ($null -eq $source)
+        if ($null -eq $source)
+        {
+            Write-Verbose -Message "The specified Result Source {$($Name)} doesn't already exist."
+            return $nullReturn
+        }
+
+        $ExoSource = [string] $source.ConnectionUrlTemplate
+        $SourceHasAutoDiscover = $false
+        if ("http://auto?autodiscover=true" -eq $ExoSource)
+        {
+            $SourceHasAutoDiscover = $true
+        }
+
+        $allowPartial = $source.QueryTransform.OverridePropertiesForSeralization.KeyValueOfstringanyType `
+        | Where-Object -FilterScript { $_.Key -eq "AllowPartialResults" }
+
+        $mapping = $InfoMapping | Where-Object -FilterScript { $_.ProviderID -eq $source.ProviderId }
+
+        $returnValue = @{
+            Name               = $Name
+            Description        = [string] $source.Description
+            Protocol           = $mapping.Protocol
+            Type               = $mapping.Type
+            QueryTransform     = [string] $source.QueryTransform._QueryTemplate
+            SourceURL          = [string] $source.ConnectionUrlTemplate
+            UseAutoDiscover    = $SourceHasAutoDiscover
+            GlobalAdminAccount = $GlobalAdminAccount
+            Ensure             = "Present"
+        }
+
+        if ($null -ne $allowPartial)
+        {
+            $returnValue.Add("ShowPartialSearch", [System.Boolean]$allowPartial.Value.InnerText)
+        }
+
+        return $returnValue
+    }
+    catch
     {
-        Write-Verbose -Message "The specified Result Source {$($Name)} doesn't already exist."
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
         return $nullReturn
     }
-
-    $ExoSource = [string] $source.ConnectionUrlTemplate
-    $SourceHasAutoDiscover = $false
-    if ("http://auto?autodiscover=true" -eq $ExoSource)
-    {
-        $SourceHasAutoDiscover = $true
-    }
-
-    $allowPartial = $source.QueryTransform.OverridePropertiesForSeralization.KeyValueOfstringanyType `
-    | Where-Object -FilterScript { $_.Key -eq "AllowPartialResults" }
-
-    $mapping = $InfoMapping | Where-Object -FilterScript { $_.ProviderID -eq $source.ProviderId }
-
-    $returnValue = @{
-        Name               = $Name
-        Description        = [string] $source.Description
-        Protocol           = $mapping.Protocol
-        Type               = $mapping.Type
-        QueryTransform     = [string] $source.QueryTransform._QueryTemplate
-        SourceURL          = [string] $source.ConnectionUrlTemplate
-        UseAutoDiscover    = $SourceHasAutoDiscover
-        GlobalAdminAccount = $GlobalAdminAccount
-        Ensure             = "Present"
-    }
-
-    if ($null -ne $allowPartial)
-    {
-        $returnValue.Add("ShowPartialSearch", [System.Boolean]$allowPartial.Value.InnerText)
-    }
-
-    return $returnValue
 }
 
 function Set-TargetResource
@@ -194,21 +216,44 @@ function Set-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting configuration for Result Source instance $Name"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters
 
     Write-Verbose -Message "Reading SearchConfigurationSettings XML file"
     $SearchConfigTemplatePath = Join-Path -Path $PSScriptRoot `
@@ -392,9 +437,29 @@ function Test-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Testing configuration for Result Source instance $Name"
@@ -404,7 +469,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters
 
@@ -419,53 +484,87 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
-    $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
-    $sources = $SearchConfig.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters
 
-    $content = ''
-    $i = 1
-    $sourcesLength = $sources.Length
-    if ($null -eq $sourcesLength)
+    try
     {
-        $sourcesLength = 1
-    }
-    foreach ($source in $sources)
-    {
-        $mapping = $InfoMapping | Where-Object -FilterScript { $_.ProviderID -eq $source.ProviderId }
-        Write-Information "    [$i/$($sourcesLength)] $($source.Name)"
+        $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
+        [array]$sources = $SearchConfig.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source
 
-        $params = @{
-            Name               = $source.Name
-            Protocol           = $mapping.Protocol
-            GlobalAdminAccount = $GlobalAdminAccount
-        }
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        if ($null -eq $result.ShowPartialSearch)
+        $dscContent = ''
+        $i = 1
+        $sourcesLength = $sources.Length
+        Write-Host "`r`n" -NoNewline
+        foreach ($source in $sources)
         {
-            $result.Remove("ShowPartialSearch")
+            $mapping = $InfoMapping | Where-Object -FilterScript { $_.ProviderID -eq $source.ProviderId }
+            Write-Host "    |---[$i/$($sourcesLength)] $($source.Name)" -NoNewLine
+
+            $Params = @{
+                Name                  = $source.Name
+                Protocol              = $mapping.Protocol
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                        -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                        -ConnectionMode $ConnectionMode `
+                        -ModulePath $PSScriptRoot `
+                        -Results $Results `
+                        -GlobalAdminAccount $GlobalAdminAccount
+            $i++
+            Write-Host $Global:M365DSCEmojiGreenCheckmark
         }
-        $content += "        SPOSearchResultSource " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
-        $i++
+        return $dscContent
     }
-    return $content
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

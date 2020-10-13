@@ -20,36 +20,57 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of SCFilePlanPropertyReferenceId for $Name"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
-
-    $property = Get-FilePlanPropertyReferenceId | Where-Object -FilterScript { $_.DisplayName -eq $Name }
-
-    if ($null -eq $property)
+    if ($Global:CurrentModeIsExport)
     {
-        Write-Verbose -Message "SCFilePlanPropertyReferenceId $($Name) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
     }
     else
     {
-        Write-Verbose "Found existing SCFilePlanPropertyReferenceId $($Name)"
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters
+    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = 'Absent'
 
-        $result = @{
-            Name               = $property.DisplayName
-            GlobalAdminAccount = $GlobalAdminAccount
-            Ensure             = 'Present'
+    try
+    {
+        $property = Get-FilePlanPropertyReferenceId -ErrorAction Stop | Where-Object -FilterScript { $_.DisplayName -eq $Name }
+
+        if ($null -eq $property)
+        {
+            Write-Verbose -Message "SCFilePlanPropertyReferenceId $($Name) does not exist."
+            return $nullReturn
         }
+        else
+        {
+            Write-Verbose "Found existing SCFilePlanPropertyReferenceId $($Name)"
 
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+            $result = @{
+                Name               = $property.DisplayName
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = 'Present'
+            }
+
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -74,14 +95,16 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of SCFilePlanPropertyReferenceId for $Name"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
+    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        -InboundParameters $PSBoundParameters
 
     $Current = Get-TargetResource @PSBoundParameters
 
@@ -146,7 +169,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -167,36 +190,53 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
 
-    $InformationPreference = "Continue"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
-    $Properties = Get-FilePlanPropertyReferenceId
+    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
-    $i = 1
-    $content = ""
-    foreach ($Property in $Properties)
+    try
     {
-        Write-Information "    [$i/$($Properties.Length)] $($Property.Name)"
-        $params = @{
-            Name               = $Property.DisplayName
-            GlobalAdminAccount = $GlobalAdminAccount
+        $Properties = Get-FilePlanPropertyReferenceId -ErrorAction
+
+        $i = 1
+        $dscContent = ""
+        Write-Host "`r`n" -NoNewLine
+        foreach ($Property in $Properties)
+        {
+            Write-Host "    |---[$i/$($Properties.Length)] $($Property.Name)" -NoNewLine
+            $Params = @{
+                Name                  = $Property.DisplayName
+                GlobalAdminAccount    = $GlobalAdminAccount
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
         }
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content += "        SCFilePlanPropertyReferenceId " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
-        $i++
+        return $dscContent
     }
-    return $content
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

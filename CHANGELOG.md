@@ -1,13 +1,251 @@
 # Change log for Microsoft365DSC
 
-## UNRELEASED
+## 1.20.1007.1
 
+* TeamsCallingPolicy
+  * Added new supported properties;
+* TeamsMeetingPolicy
+  * Added new supported properties;
+* TeamsTeam
+  * Added new supported properties;
+
+## 1.20.930.1
+
+* IntuneAppConfigurationPolicy
+  * Initial Release;
+* DEPENDENCIES
+  * Rolled back ExchangeOnlineManagement to 2.0.1
+  * Microsoft.PowerApps.Administration.PowerShell updated
+    to 2.0.85;
+  * Microsoft.Graph.Authentication updated to 1.0.1;
+  * Microsoft.Graph.Groups.Planner updated to 1.0.1;
+* MISC
+  * Refactored error handling to various EXO resources;
+  * Renamed method Test-Microsoft365DSCParameterState to
+    Test-M365DSCParameterState to align with naming standard;
+  * Fixed issue #777 with export of SCDLPComplianceRule;
+
+## 1.20.923.1
+
+* IntuneDeviceCategory
+  * Initial Release;
+* SPOSite
+  * Fixed an issue where updating a site's properties
+    would throw an error complaining about the object
+    not being in a correct state.
+* DEPENDENCIES
+  * AADPreview Updated to 2.0.2.117;
+  * ExchangeOnlineManagement Updated to 2.0.3;
+  * MSCloudLoginAssistant Updated to 1.0.40;
+  * ReverseDSC Updated to 2.0.0.7;
+* Misc
+  * Removed EncryptionTemplateID from SCSensitivityLabel (Issue #758)
+  * Added AzureAD app support SPOSiteDesign
+  * Added possibility to provide a custom header to Blueprint
+    assessment and delta reports.
+
+## 1.20.916.1
+
+* AADServicePrincipal
+  * Initial Release (Issue #492)
+* EXOAvailabilityAddressSpace
+  * Fixed an issue where if the user didn't have proper permissions
+    the entire Export process would stop;
+* EXOAvailabilityConfig
+  * Fixed an issue where if the user didn't have proper permissions
+    the entire Export process would stop;
+* EXOEmailAddressPolicy
+  * Fixed an issue where if the user didn't have proper permissions
+    the entire Export process would stop;
+* DEPENDENCIES
+  * MicrosoftTeams Updated to 1.1.6;
+  * MSCloudLoginAssistant Updated to 1.0.38;
+  * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.81;
+* MISC
+  * Fixed issue with warning about unsupported resources in the
+    Export mode based on authentication selected.
+  * Fixes an issue in the Install-M365DSCDevBranch function
+    where if the manifest file had a leading 0 in the version
+    number (e.g. 1.20.0902.1), it would create the folder as
+    a version with the '0' where the Gallery trims it.
+    (Issue #685)
+
+## 1.20.909.1
+
+* EXOApplicationAccessPolicy
+  * Added some error handling around the
+    Get-ApplicationAccessPolicy cmdlet
+    (Issue #702);
+*EXOSharedMailbox
+  * Fixed an issue where Aliases were not properly removed
+    (Issue #749);
+* TeamsCallingPolicy
+  * Added support for the AllowWebPSTNCalling and Description
+    properties;
+* TeamsChannel
+  * Fixed an error in the Export when trying to connect using
+    only an Azure AD Application without any credentials
+    (Issue #754);
+* TeamsClientConfiguration
+  * Added support for the AllowEgnyte property
+  (Issue #744);
+* TeamsUser
+  * Fixed an issue where for large tenants the Export could
+    failed due to a percentage of completion greater than
+    100% for the Write-Progress
+    (Issue #722);
+* MISC
+  * Fixed an issue where the OD checkbox was always disabled
+    in the GUI;
+  * Changed the logic of the Unselect All button in the GUI
+    so that it doesn't unselect the authentication checkboxes;
+  * Fixed an issue where SPOHubSite was left selected in the
+    Export GUI even when unselecting the entire SPO Workload
+    (Issue #735);
+  * Fixed an issue where if no Destination Path was provided
+    after an export, it would fail. It now defaults to the
+    current location
+    (Issue #698);
+  * Fixed issue SCSensitivityLabel on EncryptionRightsDefinitions parameters
+    format (Issue #758)
+* DEPENDENCIES
+  * MSCloudLoginAssistant Updated to 1.0.34;
+  * Microsoft.PowerApps.Administration.PowerShell Updated to 2.0.77;
+  * SharePointPnPPowerShellOnline Updated to 3.25.2009.1;
+
+## 1.20.902.1
+
+* O365User
+  * Fixed an issue where we were trying to assign an empty
+    license to a user if an empty array was passed for
+    LicenseAssignment.
+* SCComplianceSearchAction
+  * Added 'Preview' as a supported value for Action;
+* ReverseDSC
+  * Fixed an issue where a newline was missing in the
+    credentials section when a certificate password was
+    specified;
+* MISC
+  * Added a new Assert-M365DSCBlueprint function to generate
+    discrepency report between export of tenant and a BluePrint;
+* Metadata
+  * Updated DSCParser Module to version 1.2.0.0;
+  * Updated Microsoft.Graph.Authentication Module to version
+    0.9.1;
+  * Updated Microsoft.Graph.Groups.Planner Module to version
+    0.9.1;
+  * Updated Microsoft.Graph.Identity.ConditionalAccess Module
+    to version 0.9.1;
+  * Updated Microsoft.Graph.Planner Module to version
+    0.9.1;
+  * Updated Microsoft.PowerApps.Administration.PowerShell Module
+    to version 0.9.1;
+  * Updated SharePointPnPPowerShellOnline Module to version
+    3.24.2008.1;
+
+## 1.20.805.1
+
+* EXOAvailabilityConfig
+  * Fixed an issue with the Test-TargetResource where if a full
+    username (with '@') was specified for the OrgWideAccount, it
+    would always return false;
+* EXOMobileDeviceMailboxPolicy
+  * Fixed an error where if no MinPasswordLength was specified
+    the Set-TargetResource threw n error trying to create a new
+    policy;
+* EXOInboundConnector
+  * Fixed an issue where ResourceName was null during the export;
+* EXOOutboundConnector
+  * Fixed an issue where ResourceName was null during the export;
+* ODSettings
+  * Fixed an issue where the GrooveBlockOption setting was never
+    set properly;
+* SCSensitivityLabel
+  * Added new parameters
+
+## 1.20.730.2
+
+* AADMSGroup
+  * Fixed an issue where if GroupID was not passed, we could end up
+    with duplicate teams.
+* MISC
+  * If a newer version of the module is available in the PowerShell
+    Gallery, a notification will be displayed to the user;
+
+## 1.20.730.1
+
+* AADApplication
+  * Removed the ObjectId parameter from the list of parameters
+    checked in the Test-TargetResource;
+* AADGroupsSettings
+  * Fixed an issue where the values returned by Get-TargetResource were
+    always set to true due to an invalid cast;
+* O365User
+  * Fixed an issue where no licenses specified resulted in an error;
+* Metadata
+  * Updated MSCloudLoginAssistant Module to version 1.0.32;
+
+## 1.20.723.1
+
+* MISC
+  * Update to the Telemetry engine to capture information about tenant;
+
+## 1.20.722.1
+
+* AADApplication
+  * Fix an issue where a new AzureAD Application was not created
+    if ObjectId was speficied;
+* O365User
+  * Fixed an issue where the PasswordNeverExpires value returned
+    was incorrect;
+* SPOAPP
+  * Added property Path as a key for the SPOApp resource to
+    prevent conflict where two solutions could have the same
+    name;
+* MISC
+  * Renamed the event log to M365DSC to avoid journal conflicts;
+* Metadata
+  * Updated Microsoft.Graph.Authentication module version to 0.7.1;
+  * Updated Microsoft.PowerApps.Administration.PowerShell version to
+    2.0.72;
+  * Updated SharePointPnPPowerShellOnline version to 3.23.2007.1;
+
+* SPOSiteScript;
+  * Initial Release;
+
+## 1.20.716.1
+
+* MISC
+  * Added visual indicators for the Export feature;
+* EXOMalwareFilterPolicy
+  * Fixed an issue where the value for the for the Action
+    returned by the Get included 'Text' and should not have;
+* EXOOutboundConnector
+  * Fixed an issue where the ConnectorSource value returned
+    was empty. Now defaulting to Default.
+* O365User
+  * Fixed issue with PasswordNeverExpires having incorrect value
+* PlannerBucket
+  * Initial Release;
+* PlannerPlan
+  * Initial Release;
+* PlannerTask
+  * Initial Release;
 * Metadata
   * Updated ExchangeOnline module version to 1.0.1;
+  * Updated Microsoft.Graph module version to 0.7.0;
+  * Updated Microsoft.Graph.Identity.ConditionalAccess
+    module version to 0.7.0;
   * Updated Microsoft.PowerApps.Administration.PowerShell
-    module version to 2.0.65;
+    module version to 2.0.70;
+  * Updated MSCloudLoginAssistant Module to version 1.0.30;
+  * Updated SharePointPnPPowerShellOnline module to version 3.23.2007.0;
   * Updated ReverseDSC module version to 2.0.0.4;
+  * Updated SharePointPnPPowerShellOnline module to
+    version 3.22.2006.2;
   * Updated all Unit Tests to Pester 5;
+  * Added support for Service Principal for PowerPlatforms,
+    SPO & OneDrive, Exchange Online and Office 365 resources;
 
 ## 1.20.0603.1
 

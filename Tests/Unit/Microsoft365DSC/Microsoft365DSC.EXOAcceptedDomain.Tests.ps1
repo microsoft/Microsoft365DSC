@@ -23,8 +23,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
             $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-            Mock -CommandName Test-MSCloudLogin -MockWith {
+            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
+                return @{}
+            }
 
+            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
+
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
 
             Mock -CommandName Get-PSSession -MockWith {
@@ -224,20 +232,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-AcceptedDomain -MockWith {
                     return $acceptedDomain1
                 }
-
-                $exported = Export-TargetResource @testParams
-                ([regex]::Matches($exported, " EXOAcceptedDomain " )).Count | Should -Be 1
-                $exported.Contains("different1.tailspin.com") | Should -Be $true
+                Export-TargetResource @testParams
             }
 
             It "Should Reverse Engineer resource from the Export method when multiple" {
                 Mock -CommandName Get-AcceptedDomain -MockWith {
                     return @($acceptedDomain1, $acceptedDomain2)
                 }
-
-                $exported = Export-TargetResource @testParams
-                ([regex]::Matches($exported, " EXOAcceptedDomain " )).Count | Should -Be 2
-                $exported.Contains("different2.tailspin.com") | Should -Be $true
+                Export-TargetResource @testParams
             }
         }
     }

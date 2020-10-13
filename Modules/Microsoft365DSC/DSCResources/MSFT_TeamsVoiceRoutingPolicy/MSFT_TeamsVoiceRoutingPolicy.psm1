@@ -29,33 +29,45 @@ function Get-TargetResource
     Write-Verbose -Message "Getting the Voice Routing Policy {$Identity}"
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    Add-M365DSCTelemetryEvent  -Data $data
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SkypeForBusiness
+    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+        -InboundParameters $PSBoundParameters
 
-    $policy = Get-CsOnlineVoiceRoutingPolicy -Identity $Identity -ErrorAction 'SilentlyContinue'
+    $policy = Get-CsOnlineVoiceRoutingPolicy -Identity $Identity `
+        -ErrorAction 'SilentlyContinue'
 
-    if ($null -eq $policy)
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
+
+    try
     {
-        Write-Verbose -Message "Could not find Voice Routing Policy ${$Identity}"
+        if ($null -eq $policy)
+        {
+            Write-Verbose -Message "Could not find Voice Routing Policy ${$Identity}"
+            return $nullReturn
+        }
+        Write-Verbose -Message "Found Voice Routing Policy {$Identity}"
         return @{
-            Identity           = $Identity
-            Ensure             = 'Absent'
-            GlobalAdminAccount = $GlobalAdminAccount
+            Identity                   = $Identity
+            OnlinePstnUsages           = $policy.OnlinePstnUsages
+            Description                = $policy.Description
+            Ensure                     = 'Present'
+            GlobalAdminAccount         = $GlobalAdminAccount
         }
     }
-    Write-Verbose -Message "Found Voice Routing Policy {$Identity}"
-    return @{
-        Identity                   = $Identity
-        OnlinePstnUsages           = $policy.OnlinePstnUsages
-        Description                = $policy.Description
-        Ensure                     = 'Present'
-        GlobalAdminAccount         = $GlobalAdminAccount
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -106,14 +118,16 @@ function Set-TargetResource
     Write-Verbose -Message "Setting Voice Routing Policy {$Identity}"
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SkypeForBusiness
+    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+        -InboundParameters $PSBoundParameters
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -180,7 +194,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -200,39 +214,51 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
-
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SkypeForBusiness
+    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+        -InboundParameters $PSBoundParameters
 
-    $i = 1
-    [array]$policies = Get-CsOnlineVoiceRoutingPolicy
-    $content = ''
-    foreach ($policy in $policies)
+    try
     {
-        Write-Information "    [$i/$($policies.Count)] $($policy.Identity)"
-        $params = @{
-            Identity           = $policy.Identity
-            Ensure             = 'Present'
-            GlobalAdminAccount = $GlobalAdminAccount
+        $i = 1
+        [array]$policies = Get-CsOnlineVoiceRoutingPolicy -ErrorAction
+        $content = ''
+        Write-Host "`r`n" -NoNewLine
+        foreach ($policy in $policies)
+        {
+            Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewLine
+            $params = @{
+                Identity           = $policy.Identity
+                Ensure             = 'Present'
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $content += "        TeamsVoiceRoutingPolicy " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $content += "        }`r`n"
+            $i++
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content += "        TeamsVoiceRoutingPolicy " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
-        $i++
+        return $content
     }
-    return $content
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

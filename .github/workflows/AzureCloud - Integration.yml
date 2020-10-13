@@ -20,7 +20,8 @@ jobs:
        $dependencies = $manifest.RequiredModules
        foreach ($dependency in $dependencies)
        {
-           Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -SkipPublisherCheck -AllowClobber -Scope AllUsers
+           Write-Verbose -Message "Installing Module {$($dependency.ModuleName)} Version {$($dependency.RequiredVersion)}"
+           Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -SkipPublisherCheck -AllowClobber -Scope AllUsers -Verbose
            try
            {
                Import-Module $dependency.ModuleName -Force
@@ -37,12 +38,11 @@ jobs:
         $source = "./Modules/Microsoft365DSC/"
         $destination = "C:\Program Files\WindowsPowerShell\Modules"
         Copy-Item -Path $source -Recurse -Destination $destination -Container
-    - name: Run Integration Tests  
-      shell : powershell  
+    - name: Run Integration Tests
+      shell : powershell
       env:
-        PUBLIC_USERNAME: ${{ secrets.PUBLIC_USERNAME }} 
-        PUBLIC_PASSWORD: ${{ secrets.PUBLIC_PASSWORD }}  
-        PUBLIC_DOMAIN: ${{ secrets.PUBLIC_DOMAIN }} 
+        PUBLIC_USERNAME: ${{ secrets.PUBLIC_USERNAME }}
+        PUBLIC_PASSWORD: ${{ secrets.PUBLIC_PASSWORD }}
       run: |
        Set-ExecutionPolicy Unrestricted -Force
        Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
@@ -50,7 +50,9 @@ jobs:
        Set-M365DSCTelemetryOption -Enabled $false
        $VerbosePreference = 'Continue'
        Write-Verbose -Message "Username: $($env:PUBLIC_USERNAME)"
-       & ./Tests/Integration/M365DSCIntegration.Master.Tests.ps1 -GlobalAdminUser $env:PUBLIC_USERNAME -GlobalAdminPassword $env:PUBLIC_PASSWORD -Domain $env:PUBLIC_DOMAIN
+       & ./Tests/Integration/M365DSCIntegration.Master.Tests.ps1 `
+       -GlobalAdminUser $env:PUBLIC_USERNAME `
+       -GlobalAdminPassword $env:PUBLIC_PASSWORD
     - name: Validate Configuration
       shell: powershell
       run: |
@@ -61,4 +63,4 @@ jobs:
            Write-Host $config
            Write-Host $config.ResourcesNotInDesiredState.InstanceName
            throw "Could not validate that the Tenant is in the Desired State"
-       }  
+       }

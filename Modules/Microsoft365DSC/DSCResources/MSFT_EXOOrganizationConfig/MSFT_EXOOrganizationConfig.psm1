@@ -268,117 +268,161 @@ function Get-TargetResource
         [System.Boolean]
         $WebSuggestedRepliesDisabled,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Getting EXOOrganizationConfig"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline
-
-    $ConfigSettings = Get-OrganizationConfig
-    if ($null -eq $ConfigSettings)
+    if ($Global:CurrentModeIsExport)
     {
-        throw 'There was an error retrieving values from the Get function in EXOOrganizationConfig.'
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
     }
-
-    $results = @{
-        IsSingleInstance                                          = 'Yes'
-        ActivityBasedAuthenticationTimeoutEnabled                 = $ConfigSettings.ActivityBasedAuthenticationTimeoutEnabled
-        ActivityBasedAuthenticationTimeoutInterval                = $ConfigSettings.ActivityBasedAuthenticationTimeoutInterval
-        ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled = $ConfigSettings.ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled
-        AppsForOfficeEnabled                                      = $ConfigSettings.AppsForOfficeEnabled
-        AsyncSendEnabled                                          = $ConfigSettings.AsyncSendEnabled
-        AuditDisabled                                             = $ConfigSettings.AuditDisabled
-        AutoExpandingArchive                                      = $ConfigSettings.AutoExpandingArchive
-        BookingsEnabled                                           = $ConfigSettings.BookingsEnabled
-        BookingsPaymentsEnabled                                   = $ConfigSettings.BookingsPaymentsEnabled
-        BookingsSocialSharingRestricted                           = $ConfigSettings.BookingsSocialSharingRestricted
-        ByteEncoderTypeFor7BitCharsets                            = $ConfigSettings.ByteEncoderTypeFor7BitCharsets
-        ConnectorsActionableMessagesEnabled                       = $ConfigSettings.ConnectorsActionableMessagesEnabled
-        ConnectorsEnabled                                         = $ConfigSettings.ConnectorsEnabled
-        ConnectorsEnabledForOutlook                               = $ConfigSettings.ConnectorsEnabledForOutlook
-        ConnectorsEnabledForSharepoint                            = $ConfigSettings.ConnectorsEnabledForSharepoint
-        ConnectorsEnabledForTeams                                 = $ConfigSettings.ConnectorsEnabledForTeams
-        ConnectorsEnabledForYammer                                = $ConfigSettings.ConnectorsEnabledForYammer
-        DefaultAuthenticationPolicy                               = $ConfigSettings.DefaultAuthenticationPolicy
-        DefaultGroupAccessType                                    = $ConfigSettings.DefaultGroupAccessType
-        DefaultPublicFolderAgeLimit                               = $ConfigSettings.DefaultPublicFolderAgeLimit
-        DefaultPublicFolderDeletedItemRetention                   = $ConfigSettings.DefaultPublicFolderDeletedItemRetention
-        DefaultPublicFolderIssueWarningQuota                      = $ConfigSettings.DefaultPublicFolderIssueWarningQuota
-        DefaultPublicFolderMaxItemSize                            = $ConfigSettings.DefaultPublicFolderMaxItemSize
-        DefaultPublicFolderMovedItemRetention                     = $ConfigSettings.DefaultPublicFolderMovedItemRetention
-        DefaultPublicFolderProhibitPostQuota                      = $ConfigSettings.DefaultPublicFolderProhibitPostQuota
-        DirectReportsGroupAutoCreationEnabled                     = $ConfigSettings.DirectReportsGroupAutoCreationEnabled
-        DistributionGroupDefaultOU                                = $ConfigSettings.DistributionGroupDefaultOU
-        DistributionGroupNameBlockedWordsList                     = $ConfigSettings.DistributionGroupNameBlockedWordsList
-        DistributionGroupNamingPolicy                             = $ConfigSettings.DistributionGroupNamingPolicy
-        ElcProcessingDisabled                                     = $ConfigSettings.ElcProcessingDisabled
-        EndUserDLUpgradeFlowsDisabled                             = $ConfigSettings.EndUserDLUpgradeFlowsDisabled
-        EwsAllowEntourage                                         = $ConfigSettings.EwsAllowEntourage
-        EwsAllowList                                              = $ConfigSettings.EwsAllowList
-        EwsAllowMacOutlook                                        = $ConfigSettings.EwsAllowMacOutlook
-        EwsAllowOutlook                                           = $ConfigSettings.EwsAllowOutlook
-        EwsApplicationAccessPolicy                                = $ConfigSettings.EwsApplicationAccessPolicy
-        EwsBlockList                                              = $ConfigSettings.EwsBlockList
-        EwsEnabled                                                = $ConfigSettings.EwsEnabled
-        ExchangeNotificationEnabled                               = $ConfigSettings.ExchangeNotificationEnabled
-        ExchangeNotificationRecipients                            = $ConfigSettings.ExchangeNotificationRecipients
-        FocusedInboxOn                                            = $ConfigSettings.FocusedInboxOn
-        HierarchicalAddressBookRoot                               = $ConfigSettings.HierarchicalAddressBookRoot
-        IPListBlocked                                             = $ConfigSettings.IPListBlocked
-        LeanPopoutEnabled                                         = $ConfigSettings.LeanPopoutEnabled
-        LinkPreviewEnabled                                        = $ConfigSettings.LinkPreviewEnabled
-        MailTipsAllTipsEnabled                                    = $ConfigSettings.MailTipsAllTipsEnabled
-        MailTipsExternalRecipientsTipsEnabled                     = $ConfigSettings.MailTipsExternalRecipientsTipsEnabled
-        MailTipsGroupMetricsEnabled                               = $ConfigSettings.MailTipsGroupMetricsEnabled
-        MailTipsLargeAudienceThreshold                            = $ConfigSettings.MailTipsLargeAudienceThreshold
-        MailTipsMailboxSourcedTipsEnabled                         = $ConfigSettings.MailTipsMailboxSourcedTipsEnabled
-        OAuth2ClientProfileEnabled                                = $ConfigSettings.OAuth2ClientProfileEnabled
-        OutlookMobileGCCRestrictionsEnabled                       = $ConfigSettings.OutlookMobileGCCRestrictionsEnabled
-        OutlookPayEnabled                                         = $ConfigSettings.OutlookPayEnabled
-        PublicComputersDetectionEnabled                           = $ConfigSettings.PublicComputersDetectionEnabled
-        PublicFoldersEnabled                                      = $ConfigSettings.PublicFoldersEnabled
-        PublicFolderShowClientControl                             = $ConfigSettings.PublicFolderShowClientControl
-        ReadTrackingEnabled                                       = $ConfigSettings.ReadTrackingEnabled
-        RemotePublicFolderMailboxes                               = $ConfigSettings.RemotePublicFolderMailboxes
-        SiteMailboxCreationURL                                    = $ConfigSettings.SiteMailboxCreationURL
-        SmtpActionableMessagesEnabled                             = $ConfigSettings.SmtpActionableMessagesEnabled
-        VisibleMeetingUpdateProperties                            = $ConfigSettings.VisibleMeetingUpdateProperties
-        WebPushNotificationsDisabled                              = $ConfigSettings.WebPushNotificationsDisabled
-        WebSuggestedRepliesDisabled                               = $ConfigSettings.WebSuggestedRepliesDisabled
-        GlobalAdminAccount                                        = $GlobalAdminAccount
-    }
-
-    if ($null -eq $ConfigSettings.AutoExpandingArchive)
+    else
     {
-        $results.AutoExpandingArchive = $false
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters
     }
 
-    if ([System.String]::IsNullOrEmpty($results.EwsApplicationAccessPolicy))
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
+    try
     {
-        $results.Remove("EwsApplicationAccessPolicy")
-    }
+        $ConfigSettings = Get-OrganizationConfig -ErrorAction Stop
+        if ($null -eq $ConfigSettings)
+        {
+            throw 'There was an error retrieving values from the Get function in EXOOrganizationConfig.'
+        }
 
-    if ($null -eq $EwsAllowList)
+        $results = @{
+            IsSingleInstance                                          = 'Yes'
+            ActivityBasedAuthenticationTimeoutEnabled                 = $ConfigSettings.ActivityBasedAuthenticationTimeoutEnabled
+            ActivityBasedAuthenticationTimeoutInterval                = $ConfigSettings.ActivityBasedAuthenticationTimeoutInterval
+            ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled = $ConfigSettings.ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled
+            AppsForOfficeEnabled                                      = $ConfigSettings.AppsForOfficeEnabled
+            AsyncSendEnabled                                          = $ConfigSettings.AsyncSendEnabled
+            AuditDisabled                                             = $ConfigSettings.AuditDisabled
+            AutoExpandingArchive                                      = $ConfigSettings.AutoExpandingArchive
+            BookingsEnabled                                           = $ConfigSettings.BookingsEnabled
+            BookingsPaymentsEnabled                                   = $ConfigSettings.BookingsPaymentsEnabled
+            BookingsSocialSharingRestricted                           = $ConfigSettings.BookingsSocialSharingRestricted
+            ByteEncoderTypeFor7BitCharsets                            = $ConfigSettings.ByteEncoderTypeFor7BitCharsets
+            ConnectorsActionableMessagesEnabled                       = $ConfigSettings.ConnectorsActionableMessagesEnabled
+            ConnectorsEnabled                                         = $ConfigSettings.ConnectorsEnabled
+            ConnectorsEnabledForOutlook                               = $ConfigSettings.ConnectorsEnabledForOutlook
+            ConnectorsEnabledForSharepoint                            = $ConfigSettings.ConnectorsEnabledForSharepoint
+            ConnectorsEnabledForTeams                                 = $ConfigSettings.ConnectorsEnabledForTeams
+            ConnectorsEnabledForYammer                                = $ConfigSettings.ConnectorsEnabledForYammer
+            DefaultAuthenticationPolicy                               = $ConfigSettings.DefaultAuthenticationPolicy
+            DefaultGroupAccessType                                    = $ConfigSettings.DefaultGroupAccessType
+            DefaultPublicFolderAgeLimit                               = $ConfigSettings.DefaultPublicFolderAgeLimit
+            DefaultPublicFolderDeletedItemRetention                   = $ConfigSettings.DefaultPublicFolderDeletedItemRetention
+            DefaultPublicFolderIssueWarningQuota                      = $ConfigSettings.DefaultPublicFolderIssueWarningQuota
+            DefaultPublicFolderMaxItemSize                            = $ConfigSettings.DefaultPublicFolderMaxItemSize
+            DefaultPublicFolderMovedItemRetention                     = $ConfigSettings.DefaultPublicFolderMovedItemRetention
+            DefaultPublicFolderProhibitPostQuota                      = $ConfigSettings.DefaultPublicFolderProhibitPostQuota
+            DirectReportsGroupAutoCreationEnabled                     = $ConfigSettings.DirectReportsGroupAutoCreationEnabled
+            DistributionGroupDefaultOU                                = $ConfigSettings.DistributionGroupDefaultOU
+            DistributionGroupNameBlockedWordsList                     = $ConfigSettings.DistributionGroupNameBlockedWordsList
+            DistributionGroupNamingPolicy                             = $ConfigSettings.DistributionGroupNamingPolicy
+            ElcProcessingDisabled                                     = $ConfigSettings.ElcProcessingDisabled
+            EndUserDLUpgradeFlowsDisabled                             = $ConfigSettings.EndUserDLUpgradeFlowsDisabled
+            EwsAllowEntourage                                         = $ConfigSettings.EwsAllowEntourage
+            EwsAllowList                                              = $ConfigSettings.EwsAllowList
+            EwsAllowMacOutlook                                        = $ConfigSettings.EwsAllowMacOutlook
+            EwsAllowOutlook                                           = $ConfigSettings.EwsAllowOutlook
+            EwsApplicationAccessPolicy                                = $ConfigSettings.EwsApplicationAccessPolicy
+            EwsBlockList                                              = $ConfigSettings.EwsBlockList
+            EwsEnabled                                                = $ConfigSettings.EwsEnabled
+            ExchangeNotificationEnabled                               = $ConfigSettings.ExchangeNotificationEnabled
+            ExchangeNotificationRecipients                            = $ConfigSettings.ExchangeNotificationRecipients
+            FocusedInboxOn                                            = $ConfigSettings.FocusedInboxOn
+            HierarchicalAddressBookRoot                               = $ConfigSettings.HierarchicalAddressBookRoot
+            IPListBlocked                                             = $ConfigSettings.IPListBlocked
+            LeanPopoutEnabled                                         = $ConfigSettings.LeanPopoutEnabled
+            LinkPreviewEnabled                                        = $ConfigSettings.LinkPreviewEnabled
+            MailTipsAllTipsEnabled                                    = $ConfigSettings.MailTipsAllTipsEnabled
+            MailTipsExternalRecipientsTipsEnabled                     = $ConfigSettings.MailTipsExternalRecipientsTipsEnabled
+            MailTipsGroupMetricsEnabled                               = $ConfigSettings.MailTipsGroupMetricsEnabled
+            MailTipsLargeAudienceThreshold                            = $ConfigSettings.MailTipsLargeAudienceThreshold
+            MailTipsMailboxSourcedTipsEnabled                         = $ConfigSettings.MailTipsMailboxSourcedTipsEnabled
+            OAuth2ClientProfileEnabled                                = $ConfigSettings.OAuth2ClientProfileEnabled
+            OutlookMobileGCCRestrictionsEnabled                       = $ConfigSettings.OutlookMobileGCCRestrictionsEnabled
+            OutlookPayEnabled                                         = $ConfigSettings.OutlookPayEnabled
+            PublicComputersDetectionEnabled                           = $ConfigSettings.PublicComputersDetectionEnabled
+            PublicFoldersEnabled                                      = $ConfigSettings.PublicFoldersEnabled
+            PublicFolderShowClientControl                             = $ConfigSettings.PublicFolderShowClientControl
+            ReadTrackingEnabled                                       = $ConfigSettings.ReadTrackingEnabled
+            RemotePublicFolderMailboxes                               = $ConfigSettings.RemotePublicFolderMailboxes
+            SiteMailboxCreationURL                                    = $ConfigSettings.SiteMailboxCreationURL
+            SmtpActionableMessagesEnabled                             = $ConfigSettings.SmtpActionableMessagesEnabled
+            VisibleMeetingUpdateProperties                            = $ConfigSettings.VisibleMeetingUpdateProperties
+            WebPushNotificationsDisabled                              = $ConfigSettings.WebPushNotificationsDisabled
+            WebSuggestedRepliesDisabled                               = $ConfigSettings.WebSuggestedRepliesDisabled
+            GlobalAdminAccount                                        = $GlobalAdminAccount
+        }
+
+        if ($null -eq $ConfigSettings.AutoExpandingArchive)
+        {
+            $results.AutoExpandingArchive = $false
+        }
+
+        if ([System.String]::IsNullOrEmpty($results.EwsApplicationAccessPolicy))
+        {
+            $results.Remove("EwsApplicationAccessPolicy")
+        }
+
+        if ($null -eq $EwsAllowList)
+        {
+            $results.Remove("EwsAllowList")
+        }
+
+        if ($null -eq $EwsBlockList)
+        {
+            $results.Remove("EwsBlockList")
+        }
+
+        return $results
+    }
+    catch
     {
-        $results.Remove("EwsAllowList")
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
-
-    if ($null -eq $EwsBlockList)
-    {
-        $results.Remove("EwsBlockList")
-    }
-
-    return $results
 }
 
 function Set-TargetResource
@@ -650,14 +694,37 @@ function Set-TargetResource
         [System.Boolean]
         $WebSuggestedRepliesDisabled,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -668,8 +735,8 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting EXOOrganizationConfig"
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
 
 
     Write-Verbose -Message "Setting EXOOrganizationConfig with values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
@@ -949,9 +1016,29 @@ function Test-TargetResource
         [System.Boolean]
         $WebSuggestedRepliesDisabled,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Testing configuration of EXOOrganizationConfig"
@@ -964,7 +1051,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -980,31 +1067,72 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
-    $InformationPReference = 'Continue'
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
+    try
+    {
+        $Params = @{
+            IsSingleInstance      = 'Yes'
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+        }
 
-    $Params = @{
-        IsSingleInstance   = 'Yes'
-        GlobalAdminAccount = $GlobalAdminAccount
+        $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+        $dscContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        return $dscContent
     }
-
-    $result = Get-TargetResource @Params
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        EXOOrganizationConfig " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
-    return $content
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

@@ -33,41 +33,53 @@ function Get-TargetResource
     Write-Verbose -Message "Getting the Teams Emergency Call Routing Policy $Identity"
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    Add-M365DSCTelemetryEvent  -Data $data
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SkypeForBusiness
+    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+        -InboundParameters $PSBoundParameters
 
-    $policy = Get-CsTeamsEmergencyCallRoutingPolicy -Identity $Identity -ErrorAction 'SilentlyContinue'
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
-    if ($null -eq $policy)
+    try
     {
-        Write-Verbose -Message "Could not find Teams Emergency Call Routing Policy ${$Identity}"
-        return @{
-            Identity           = $Identity
-            Ensure             = 'Absent'
-            GlobalAdminAccount = $GlobalAdminAccount
+        $policy = Get-CsTeamsEmergencyCallRoutingPolicy -Identity $Identity `
+            -ErrorAction 'SilentlyContinue'
+
+        if ($null -eq $policy)
+        {
+            Write-Verbose -Message "Could not find Teams Emergency Call Routing Policy ${$Identity}"
+            return $nullReturn
         }
-    }
-    Write-Verbose -Message "Found Teams Emergency Call Routing Policy {$Identity}"
-    $results = @{
-        Identity                       = $Identity
-        Description                    = $policy.Description
-        AllowEnhancedEmergencyServices = $policy.AllowEnhancedEmergencyServices
-        Ensure                         = "Present"
-        GlobalAdminAccount             = $GlobalAdminAccount
-    }
+        Write-Verbose -Message "Found Teams Emergency Call Routing Policy {$Identity}"
+        $results = @{
+            Identity                       = $Identity
+            Description                    = $policy.Description
+            AllowEnhancedEmergencyServices = $policy.AllowEnhancedEmergencyServices
+            Ensure                         = "Present"
+            GlobalAdminAccount             = $GlobalAdminAccount
+        }
 
-    if ($policy.EmergencyNumbers.Count -gt 0)
-    {
-        $numbers = Get-TeamsEmergencyNumbers -Numbers $policy.EmergencyNumbers
-        $results.Add("EmergencyNumbers", $numbers)
+        if ($policy.EmergencyNumbers.Count -gt 0)
+        {
+            $numbers = Get-TeamsEmergencyNumbers -Numbers $policy.EmergencyNumbers
+            $results.Add("EmergencyNumbers", $numbers)
+        }
+        return $results
     }
-    return $results
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
+    }
 }
 
 function Set-TargetResource
@@ -121,14 +133,16 @@ function Set-TargetResource
     }
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SkypeForBusiness
+    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+        -InboundParameters $PSBoundParameters
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -230,7 +244,7 @@ function Test-TargetResource
     $ValuesToCheck = $DesiredValues
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $DesiredValues `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -250,50 +264,62 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
-
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SkypeForBusiness
+    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+        -InboundParameters $PSBoundParameters
 
-    $i = 1
-    [array]$policies = Get-CsTeamsEmergencyCallRoutingPolicy
-    $content = ''
-    foreach ($policy in $policies)
+    try
     {
-        Write-Information "    [$i/$($policies.Count)] $($policy.Identity)"
-        $params = @{
-            Identity           = $policy.Identity
-            GlobalAdminAccount = $GlobalAdminAccount
-        }
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content += "        TeamsEmergencyCallRoutingPolicy " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-
-        if ($null -ne $result.EmergencyNumbers)
+        $i = 1
+        [array]$policies = Get-CsTeamsEmergencyCallRoutingPolicy -ErrorAction Stop
+        $content = ''
+        Write-Host "`r`n" -NoNewLine
+        foreach ($policy in $policies)
         {
-            $result.EmergencyNumbers = ConvertTo-TeamsEmergencyNumbersString -Numbers $result.EmergencyNumbers
+            Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewLine
+            $params = @{
+                Identity           = $policy.Identity
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $content += "        TeamsEmergencyCallRoutingPolicy " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+
+            if ($null -ne $result.EmergencyNumbers)
+            {
+                $result.EmergencyNumbers = ConvertTo-TeamsEmergencyNumbersString -Numbers $result.EmergencyNumbers
+            }
+
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+
+            if ($null -ne $result.EmergencyNumbers)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "EmergencyNumbers"
+            }
+
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $content += "        }`r`n"
+            $i++
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-
-        if ($null -ne $result.EmergencyNumbers)
-        {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "EmergencyNumbers"
-        }
-
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
-        $i++
+        return $content
     }
-    return $content
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 function Get-TeamsEmergencyNumbers

@@ -103,84 +103,104 @@ function Get-TargetResource
         [System.Boolean]
         $UseSimpleDisplayName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Getting configuration of Remote Domain for $Identity"
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline
-
-    $RemoteDomain = Get-RemoteDomain -Identity $Identity -ErrorAction SilentlyContinue
-
-    if ($null -eq $RemoteDomain)
+    if ($Global:CurrentModeIsExport)
     {
-        Write-Verbose -Message "RemoteDomain configuration for $($Identity) does not exist."
-
-        $nullReturn = @{
-            Identity                             = $Identity
-            DomainName                           = $DomainName
-            AllowedOOFType                       = $AllowedOOFType
-            Ensure                               = $Ensure
-            AutoForwardEnabled                   = $AutoForwardEnabled
-            AutoReplyEnabled                     = $AutoReplyEnabled
-            ByteEncoderTypeFor7BitCharsets       = $ByteEncoderTypeFor7BitCharsets
-            CharacterSet                         = $CharacterSet
-            ContentType                          = $ContentType
-            DeliveryReportEnabled                = $DeliveryReportEnabled
-            DisplaySenderName                    = $DisplaySenderName
-            IsInternal                           = $IsInternal
-            LineWrapSize                         = $LineWrapSize
-            MeetingForwardNotificationEnabled    = $MeetingForwardNotificationEnabled
-            Name                                 = $Name
-            NonMimeCharacterSet                  = $NonMimeCharacterSet
-            PreferredInternetCodePageForShiftJis = $PreferredInternetCodePageForShiftJis
-            RequiredCharsetCoverage              = $RequiredCharsetCoverage
-            TargetDeliveryDomain                 = $TargetDeliveryDomain
-            TNEFEnabled                          = $TNEFEnabled
-            TrustedMailInboundEnabled            = $TrustedMailInboundEnabled
-            TrustedMailOutboundEnabled           = $TrustedMailOutboundEnabled
-            UseSimpleDisplayName                 = $UseSimpleDisplayName
-            GlobalAdminAccount                   = $GlobalAdminAccount
-        }
-
-        return $nullReturn
-
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
     }
     else
     {
-        $result = @{
-            Identity                             = $RemoteDomain.Identity
-            DomainName                           = $RemoteDomain.DomainName
-            AllowedOOFType                       = $RemoteDomain.AllowedOOFType
-            Ensure                               = 'Present'
-            AutoForwardEnabled                   = $RemoteDomain.AutoForwardEnabled
-            AutoReplyEnabled                     = $RemoteDomain.AutoReplyEnabled
-            ByteEncoderTypeFor7BitCharsets       = $RemoteDomain.ByteEncoderTypeFor7BitCharsets
-            CharacterSet                         = $RemoteDomain.CharacterSet
-            ContentType                          = $RemoteDomain.ContentType
-            DeliveryReportEnabled                = $RemoteDomain.DeliveryReportEnabled
-            DisplaySenderName                    = $RemoteDomain.DisplaySenderName
-            IsInternal                           = $RemoteDomain.IsInternal
-            LineWrapSize                         = $RemoteDomain.LineWrapSize
-            MeetingForwardNotificationEnabled    = $RemoteDomain.MeetingForwardNotificationEnabled
-            Name                                 = $RemoteDomain.Name
-            NonMimeCharacterSet                  = $RemoteDomain.NonMimeCharacterSet
-            PreferredInternetCodePageForShiftJis = $RemoteDomain.PreferredInternetCodePageForShiftJis
-            RequiredCharsetCoverage              = $RemoteDomain.RequiredCharsetCoverage
-            TargetDeliveryDomain                 = $RemoteDomain.TargetDeliveryDomain
-            TNEFEnabled                          = $RemoteDomain.TNEFEnabled
-            TrustedMailInboundEnabled            = $RemoteDomain.TrustedMailInboundEnabled
-            TrustedMailOutboundEnabled           = $RemoteDomain.TrustedMailOutboundEnabled
-            UseSimpleDisplayName                 = $RemoteDomain.UseSimpleDisplayName
-            GlobalAdminAccount                   = $GlobalAdminAccount
-        }
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters
+    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
+    try
+    {
+        $RemoteDomain = Get-RemoteDomain -Identity $Identity -ErrorAction SilentlyContinue
 
-        Write-Verbose -Message "Found RemoteDomain configuration for $($Identity)"
-        return $result
+        if ($null -eq $RemoteDomain)
+        {
+            Write-Verbose -Message "RemoteDomain configuration for $($Identity) does not exist."
+            return $nullReturn
+        }
+        else
+        {
+            $result = @{
+                Identity                             = $RemoteDomain.Identity
+                DomainName                           = $RemoteDomain.DomainName
+                AllowedOOFType                       = $RemoteDomain.AllowedOOFType
+                Ensure                               = 'Present'
+                AutoForwardEnabled                   = $RemoteDomain.AutoForwardEnabled
+                AutoReplyEnabled                     = $RemoteDomain.AutoReplyEnabled
+                ByteEncoderTypeFor7BitCharsets       = $RemoteDomain.ByteEncoderTypeFor7BitCharsets
+                CharacterSet                         = $RemoteDomain.CharacterSet
+                ContentType                          = $RemoteDomain.ContentType
+                DeliveryReportEnabled                = $RemoteDomain.DeliveryReportEnabled
+                DisplaySenderName                    = $RemoteDomain.DisplaySenderName
+                IsInternal                           = $RemoteDomain.IsInternal
+                LineWrapSize                         = $RemoteDomain.LineWrapSize
+                MeetingForwardNotificationEnabled    = $RemoteDomain.MeetingForwardNotificationEnabled
+                Name                                 = $RemoteDomain.Name
+                NonMimeCharacterSet                  = $RemoteDomain.NonMimeCharacterSet
+                PreferredInternetCodePageForShiftJis = $RemoteDomain.PreferredInternetCodePageForShiftJis
+                RequiredCharsetCoverage              = $RemoteDomain.RequiredCharsetCoverage
+                TargetDeliveryDomain                 = $RemoteDomain.TargetDeliveryDomain
+                TNEFEnabled                          = $RemoteDomain.TNEFEnabled
+                TrustedMailInboundEnabled            = $RemoteDomain.TrustedMailInboundEnabled
+                TrustedMailOutboundEnabled           = $RemoteDomain.TrustedMailOutboundEnabled
+                UseSimpleDisplayName                 = $RemoteDomain.UseSimpleDisplayName
+                GlobalAdminAccount                   = $GlobalAdminAccount
+            }
+
+            Write-Verbose -Message "Found RemoteDomain configuration for $($Identity)"
+            return $result
+        }
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -288,17 +308,46 @@ function Set-TargetResource
         [System.Boolean]
         $UseSimpleDisplayName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
     Write-Verbose -Message "Setting configuration of Remote Domain for $Identity"
 
     $currentRemoteDomainConfig = Get-TargetResource @PSBoundParameters
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
 
     $RemoteDomainParams = @{
         Identity                             = $Identity
@@ -454,9 +503,29 @@ function Test-TargetResource
         [System.Boolean]
         $UseSimpleDisplayName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Testing configuration of Remote Domain for $Identity"
@@ -469,7 +538,8 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+        -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
 
@@ -484,43 +554,91 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
-    [array]$AllRemoteDomains = Get-RemoteDomain
-
-    $dscContent = ""
-    $i = 1
-    foreach ($domain in $AllRemoteDomains)
+    try
     {
-        Write-Information "    [$i/$($AllRemoteDomains.Count)] $($domain.Identity)"
+        [array]$AllRemoteDomains = Get-RemoteDomain -ErrorAction Stop
 
-        $Params = @{
-            Identity           = $domain.Identity
-            GlobalAdminAccount = $GlobalAdminAccount
+        $dscContent = ""
+
+        if ($AllRemoteDomains.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        $result = Get-TargetResource @Params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content = "        EXORemoteDomain " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
-        $dscContent += $content
-        $i++
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
+        $i = 1
+        foreach ($domain in $AllRemoteDomains)
+        {
+            Write-Host "    |---[$i/$($AllRemoteDomains.Length)] $($domain.Identity)" -NoNewLine
+
+            $Params = @{
+                Identity              = $domain.Identity
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
+        }
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

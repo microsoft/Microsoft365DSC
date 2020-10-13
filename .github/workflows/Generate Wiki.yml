@@ -6,10 +6,10 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Install Modules 
+    - name: Install Modules
       shell: powershell
       run: |
-       git clone https://github.com/PowerShell/DscResource.Tests       
+       git clone https://github.com/PowerShell/DscResource.Tests
        Import-Module -Name "./DscResource.Tests/AppVeyor.psm1"
        Invoke-AppveyorInstallTask
        $env:APPVEYOR_BUILD_FOLDER = Get-Location | select -ExpandProperty Path

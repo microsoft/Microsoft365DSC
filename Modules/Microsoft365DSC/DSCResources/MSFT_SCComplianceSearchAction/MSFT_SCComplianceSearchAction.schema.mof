@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("SCComplianceSearchAction")]
 class MSFT_SCComplianceSearchAction : OMI_BaseResource
 {
-    [Key, Description("The Action parameter specifies what type of action to define. Accepted values are Export, Retention and Purge."), ValueMap{"Export","Purge","Retention"}, Values{"Export","Purge","Retention"}] String Action;
+    [Key, Description("The Action parameter specifies what type of action to define. Accepted values are Export, Retention and Purge."), ValueMap{"Export","Preview","Purge","Retention"}, Values{"Export","Preview","Purge","Retention"}] String Action;
     [Key, Description("The SearchName parameter specifies the name of the existing content search to associate with the content search action. You can specify multiple content searches separated by commas.")] String SearchName;
     [Write, Description("The FileTypeExclusionsForUnindexedItems specifies the file types to exclude because they can't be indexed. You can specify multiple values separated by commas.")] String FileTypeExclusionsForUnindexedItems[];
     [Write, Description("The EnableDedupe parameter eliminates duplication of messages when you export content search results.")] Boolean EnableDedupe;
