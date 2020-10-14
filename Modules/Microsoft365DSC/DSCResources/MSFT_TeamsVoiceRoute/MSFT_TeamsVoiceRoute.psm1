@@ -47,30 +47,41 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent  -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SkypeForBusiness
+    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+        -InboundParameters $PSBoundParameters
 
-    $route = Get-CsOnlineVoiceRoute -Identity $Identity -ErrorAction 'SilentlyContinue'
-
-    if ($null -eq $route)
+    $nullReturn = @{
+        Identity           = $Identity
+        Ensure             = 'Absent'
+        GlobalAdminAccount = $GlobalAdminAccount
+    }
+    try
     {
-        Write-Verbose -Message "Could not find Voice Route {$Identity}"
+        $route = Get-CsOnlineVoiceRoute -Identity $Identity -ErrorAction 'SilentlyContinue'
+
+        if ($null -eq $route)
+        {
+            Write-Verbose -Message "Could not find Voice Route {$Identity}"
+            return $nullReturn
+        }
+        Write-Verbose -Message "Found Voice Route {$Identity}"
         return @{
-            Identity           = $Identity
-            Ensure             = 'Absent'
-            GlobalAdminAccount = $GlobalAdminAccount
+            Identity                   = $Identity
+            Description                = $route.Description
+            NumberPattern              = $route.NumberPattern
+            OnlinePstnGatewayList      = $route.OnlinePstnGatewayList
+            OnlinePstnUsages           = $route.OnlinePstnUsages
+            Priority                   = $route.Priority
+            Ensure                     = 'Present'
+            GlobalAdminAccount         = $GlobalAdminAccount
         }
     }
-    Write-Verbose -Message "Found Voice Route {$Identity}"
-    return @{
-        Identity                   = $Identity
-        Description                = $route.Description
-        NumberPattern              = $route.NumberPattern
-        OnlinePstnGatewayList      = $route.OnlinePstnGatewayList
-        OnlinePstnUsages           = $route.OnlinePstnUsages
-        Priority                   = $route.Priority
-        Ensure                     = 'Present'
-        GlobalAdminAccount         = $GlobalAdminAccount
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -112,6 +123,15 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-M365DSCTelemetryEvent  -Data $data
+    #endregion
+
+    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+        -InboundParameters $PSBoundParameters
 
     # Validate that the selected PSTN usages exist in the environment
     $existingUsages = Get-CsOnlinePstnUsage | Select-Object -ExpandProperty Usage
@@ -155,9 +175,6 @@ function Set-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SkypeForBusiness
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -268,27 +285,39 @@ function Export-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform SkypeForBusiness
 
-    $i = 1
-    [array]$routes = Get-CsOnlineVoiceRoute
-    $content = ''
-    foreach ($route in $routes)
+    try
     {
-        Write-Information "    [$i/$($routes.Count)] $($route.Identity)"
-        $params = @{
-            Identity           = $route.Identity
-            Ensure             = 'Present'
-            GlobalAdminAccount = $GlobalAdminAccount
+        $i = 1
+        [array]$routes = Get-CsOnlineVoiceRoute
+        $content = ''
+        Write-Host "`r`n" -NoNewLine
+        foreach ($route in $routes)
+        {
+            Write-Host "    |---[$i/$($routes.Count)] $($route.Identity)" -NoNewLine
+            $params = @{
+                Identity           = $route.Identity
+                Ensure             = 'Present'
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $content += "        TeamsVoiceRoute " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $content += "        }`r`n"
+            $i++
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content += "        TeamsVoiceRoute " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
-        $i++
+        return $content
     }
-    return $content
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource
