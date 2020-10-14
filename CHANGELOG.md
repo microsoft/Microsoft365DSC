@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+## 1.20.1014.1
+
+* TeamsVoiceRoute
+  * Initial Release
+
 ## 1.20.1007.1
 
 * TeamsCallingPolicy

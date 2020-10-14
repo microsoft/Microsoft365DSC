@@ -2129,10 +2129,10 @@ function Test-M365DSCNewVersionAvailable
         if ($null -eq $Global:M365DSCNewVersionNotification)
         {
             # Get current module used
-            $currentVersion = Get-Module 'Microsoft365DSC'
+            $currentVersion = Get-Module 'Microsoft365DSC' -ErrorAction Stop
 
             # Get module in the Gallery
-            $GalleryVersion = Find-Module 'Microsoft365DSC'
+            $GalleryVersion = Find-Module 'Microsoft365DSC' -ErrorAction Stop
 
             if ([Version]($GalleryVersion.Version) -gt [Version]($currentVersion.Version))
             {
