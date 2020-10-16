@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+## 1.20.1021.1
+
+* MISC
+  * Fix to how Telemetry is retrieving module version;
+
 ## 1.20.1016.1
 
 * Fixed a permissions issue with the
