@@ -4,6 +4,11 @@
 
 * Fixed a permissions issue with the 
   Install-M365DSCDevBranch cmdlet (Issue #699 & #826)
+* DEPENDENCIES
+  * SharePointPnPPowerShellOnline Updated to 3.26.2010.0;
+* MISC
+  * Improved Error log to include StackTrace for additional
+    info to help troubleshooting errors.
 
 ## 1.20.1014.1
 

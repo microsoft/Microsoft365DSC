@@ -23,7 +23,7 @@ function New-M365DSCLogEntry
     try
     {
         $VerbosePreference = 'Continue'
-        Write-Host "$($Global:M365DSCEmojiRedX) Logging a new Error"
+        Write-Host "$($Global:M365DSCEmojiRedX)"
 
         #region Telemetry
         $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -32,6 +32,7 @@ function New-M365DSCLogEntry
         $driftedData.Add("Exception", $Error.Exception.ToString())
         $driftedData.Add("CustomMessage", $Message)
         $driftedData.Add("Source", $Source)
+        $driftedData.Add("StackTrace", $Error.ScriptStackTrace)
         Add-M365DSCTelemetryEvent -Type "Error" -Data $driftedData
         #endregion
 
@@ -47,10 +48,13 @@ function New-M365DSCLogEntry
         $LogContent += "{" + $Error.CategoryInfo.Category.ToString() + "}`r`n"
         $LogContent += $Error.Exception.ToString() + "`r`n"
         $LogContent += "`"" + $Message + "`"`r`n"
+        $LogContent += $Error.ScriptStackTrace + "`r`n"
         $LogContent += "`r`n`r`n"
 
         # Write the error content into the log file;
+        $LogFileName = Join-Path -Path (Get-Location).Path -ChildPath $LogFileName
         $LogContent | Out-File $LogFileName -Append
+        Write-Host "Error Log created at {$LogFileName}" -ForegroundColor Cyan
     }
     catch
     {
