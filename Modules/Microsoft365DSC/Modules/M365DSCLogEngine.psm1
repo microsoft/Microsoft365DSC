@@ -32,6 +32,7 @@ function New-M365DSCLogEntry
         $driftedData.Add("Exception", $Error.Exception.ToString())
         $driftedData.Add("CustomMessage", $Message)
         $driftedData.Add("Source", $Source)
+        $driftedData.Add("StackTrace", $Error.ScriptStackTrace)
         Add-M365DSCTelemetryEvent -Type "Error" -Data $driftedData
         #endregion
 
@@ -47,6 +48,7 @@ function New-M365DSCLogEntry
         $LogContent += "{" + $Error.CategoryInfo.Category.ToString() + "}`r`n"
         $LogContent += $Error.Exception.ToString() + "`r`n"
         $LogContent += "`"" + $Message + "`"`r`n"
+        $LogContent += $Error.ScriptStackTrace + "`r`n"
         $LogContent += "`r`n`r`n"
 
         # Write the error content into the log file;
