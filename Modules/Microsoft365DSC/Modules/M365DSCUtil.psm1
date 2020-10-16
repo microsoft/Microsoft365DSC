@@ -1385,9 +1385,11 @@ function Install-M365DSCDevBranch
     [CmdletBinding()]
     param()
     #region Download and Extract Dev branch's ZIP
+    Write-Host "Downloading the Zip package..." -NoNewline
     $url = "https://github.com/microsoft/Microsoft365DSC/archive/Dev.zip"
     $output = "$($env:Temp)\dev.zip"
     $extractPath = $env:Temp + "\O365Dev"
+    Write-Host "Done" -ForegroundColor Green
 
     Invoke-WebRequest -Uri $url -OutFile $output
 
@@ -1399,19 +1401,41 @@ function Install-M365DSCDevBranch
     $dependencies = $manifest.RequiredModules
     foreach ($dependency in $dependencies)
     {
-        Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -AllowClobber
-        Import-Module $dependency.ModuleName -Force
+        Write-Host "Installing {$($dependency.ModuleName)}..." -NoNewLine
+        $existingModule = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript {$_.Version -eq $dependency.RequiredVersion}
+        if ($null -eq $existingModule)
+        {
+            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -AllowClobber | Out-Null
+        }
+        Import-Module $dependency.ModuleName -Force | Out-Null
+        Write-Host "Done" -ForegroundColor Green
     }
     #endregion
 
     #region Install M365DSC
+    Write-Host "Updating the Core Microsoft365DSC module..." -NoNewline
     $defaultPath = 'C:\Program Files\WindowsPowerShell\Modules\Microsoft365DSC\'
     $currentVersionPath = $defaultPath + ([Version]$($manifest.ModuleVersion)).ToString()
+    
+    Copy-Item "$extractPath\Microsoft365DSC-Dev\Modules\Microsoft365DSC\*" `
+        -Destination $defaultPath -Recurse -Force
+
+    Import-Module ($defaultPath + "Microsoft365DSC.psd1") -Force | Out-Null
+    $oldModule = Get-Module 'Microsoft365DSC' | Where-Object -FilterScript {$_.ModuleBase -eq $currentVersionPath}
+    Remove-Module $oldModule -Force | Out-Null
     if (Test-Path $currentVersionPath)
     {
-        Remove-Item $currentVersionPath -Recurse -Confirm:$false
+        try
+        {
+            Remove-Item $currentVersionPath -Recurse -Confirm:$false -Force `
+                -ErrorAction Stop
+        }
+        catch
+        {
+            Write-Verbose $_
+        }
     }
-    Copy-Item "$extractPath\Microsoft365DSC-Dev\Modules\Microsoft365DSC" -Destination $currentVersionPath -Recurse -Force
+    Write-Host "Done" -ForegroundColor Green
     #endregion
 }
 
