@@ -799,7 +799,7 @@ function Show-M365DSCGUI
                 catch
                 {
                     $Message = "Could not initiate the ReverseDSC Extraction"
-                    New-M365DSCLogEntry -Error $_ -Message $Message_ -Source "[M365DSCReverseGUI]"
+                    New-M365DSCLogEntry -Error $_ -Message $Message -Source "[M365DSCReverseGUI]"
                 }
             })
         $panelMenu.Controls.Add($btnExtract);
