@@ -86,37 +86,37 @@ function Add-M365DSCEvent
 
     $LogName = 'M365DSC'
 
-    if ([System.Diagnostics.EventLog]::SourceExists($Source))
+    try
     {
-        $sourceLogName = [System.Diagnostics.EventLog]::LogNameFromSourceName($Source, ".")
-        if ($LogName -ne $sourceLogName)
+        if ([System.Diagnostics.EventLog]::SourceExists($Source))
         {
-            Write-Verbose -Message "[ERROR] Specified source {$Source} already exists on log {$sourceLogName}"
-            return
-        }
-    }
-    else
-    {
-        if ([System.Diagnostics.EventLog]::Exists($LogName) -eq $false)
-        {
-            #Create event log
-            $null = New-EventLog -LogName $LogName -Source $Source
+            $sourceLogName = [System.Diagnostics.EventLog]::LogNameFromSourceName($Source, ".")
+            if ($LogName -ne $sourceLogName)
+            {
+                Write-Verbose -Message "[ERROR] Specified source {$Source} already exists on log {$sourceLogName}"
+                return
+            }
         }
         else
         {
-            [System.Diagnostics.EventLog]::CreateEventSource($Source, $LogName)
+            if ([System.Diagnostics.EventLog]::Exists($LogName) -eq $false)
+            {
+                #Create event log
+                $null = New-EventLog -LogName $LogName -Source $Source
+            }
+            else
+            {
+                [System.Diagnostics.EventLog]::CreateEventSource($Source, $LogName)
+            }
         }
-    }
 
-    try
-    {
         Write-EventLog -LogName $LogName -Source $Source `
             -EventID $EventID -Message $Message -EntryType $EntryType
     }
     catch
     {
         Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        $Message = "Could not write to event log"
+        New-M365DSCLogEntry -Error $_ -Message $Message -Source "[M365DSCLogEngine]"
     }
 }
