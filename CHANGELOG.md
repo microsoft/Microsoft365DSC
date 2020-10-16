@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+## 1.20.1021.1
+
+* Fixed a permissions issue with the 
+  Install-M365DSCDevBranch cmdlet (Issue #699 & #826)
+
 ## 1.20.1014.1
 
 * TeamsVoiceRoute
