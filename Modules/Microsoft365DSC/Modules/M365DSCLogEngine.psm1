@@ -17,7 +17,11 @@ function New-M365DSCLogEntry
 
         [Parameter()]
         [System.String]
-        $Source
+        $Source,
+
+        [Parameter()]
+        [System.String]
+        $TenantId
     )
 
     try
@@ -33,6 +37,11 @@ function New-M365DSCLogEntry
         $driftedData.Add("CustomMessage", $Message)
         $driftedData.Add("Source", $Source)
         $driftedData.Add("StackTrace", $Error.ScriptStackTrace)
+
+        if ($null -ne $TenantId)
+        {
+            $driftedData.Add("TenantId", $TenantId)
+        }
         Add-M365DSCTelemetryEvent -Type "Error" -Data $driftedData
         #endregion
 

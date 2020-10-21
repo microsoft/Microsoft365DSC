@@ -72,10 +72,15 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Found existing AzureAD Tenant Details"
             $result = @{
-                MarketingNotificationEmails             = $AADTenantDetails.MarketingNotificationEmails
-                SecurityComplianceNotificationMails     = $AADTenantDetails.SecurityComplianceNotificationMails
-                SecurityComplianceNotificationPhones    = $AADTenantDetails.SecurityComplianceNotificationPhones
-                TechnicalNotificationMails              = $AADTenantDetails.TechnicalNotificationMails
+                IsSingleInstance                     = 'Yes'
+                MarketingNotificationEmails          = $AADTenantDetails.MarketingNotificationEmails
+                SecurityComplianceNotificationMails  = $AADTenantDetails.SecurityComplianceNotificationMails
+                SecurityComplianceNotificationPhones = $AADTenantDetails.SecurityComplianceNotificationPhones
+                TechnicalNotificationMails           = $AADTenantDetails.TechnicalNotificationMails
+                GlobalAdminAccount                   = $GlobalAdminAccount
+                ApplicationId                        = $ApplicationId
+                TenantId                             = $TenantId
+                CertificateThumbprint                = $CertificateThumbprint
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DSCHashTabletoString -Hashtable $result)"
             return $result
