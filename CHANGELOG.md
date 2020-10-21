@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-## 1.20.10.21.1
+## 1.20.1021.1
 
 * MISC
   * Added additional error troubleshooting information
