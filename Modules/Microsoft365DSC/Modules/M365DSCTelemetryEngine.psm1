@@ -120,6 +120,25 @@ function Add-M365DSCTelemetryEvent
             $version = (Get-Module 'Microsoft365DSC').Version
             $Data.Add("M365DSCVersion", $version)
 
+            # Get Dependencies loaded versions
+            try
+            {
+                $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
+                $manifest = Import-PowerShellDataFile "$currentPath/Microsoft365DSC.psd1"
+                $dependencies = $manifest.RequiredModules
+
+                $dependenciesContent = ""
+                foreach($dependency in $dependencies)
+                {
+                    $dependenciesContent += Get-Module $dependency.ModuleName | Out-String
+                }
+                $Data.Add("DependenciesVersion", $dependenciesContent)
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+            }
+
             $TelemetryClient.TrackEvent($Type, $Data, $Metrics)
             $TelemetryClient.Flush()
         }

@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+## 1.20.1021.1
+
+* MISC
+  * Added additional error troubleshooting information
+    to telemetry (dependencies version).
+
 ## 1.20.1016.1
 
 * Fixed a permissions issue with the
