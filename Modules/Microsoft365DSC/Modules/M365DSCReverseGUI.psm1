@@ -802,7 +802,7 @@ function Show-M365DSCGUI
                     $tenantId = $null
                     try
                     {
-                        if ($null -ne $txtTenantId.Text)
+                        if (-not [System.String]::IsNullOrEmpty($txtTenantId.Text))
                         {
                             $tenantId = $txtTenantId.Text
                         }
@@ -817,7 +817,7 @@ function Show-M365DSCGUI
                     }
                     New-M365DSCLogEntry -Error $_ `
                         -Message $Message `
-                        -Source "[M365DSCReverseGUI]" 
+                        -Source "[M365DSCReverseGUI]" `
                         -TenantId $tenantId
                 }
             })
