@@ -799,7 +799,26 @@ function Show-M365DSCGUI
                 catch
                 {
                     $Message = "Could not initiate the ReverseDSC Extraction"
-                    New-M365DSCLogEntry -Error $_ -Message $Message -Source "[M365DSCReverseGUI]"
+                    $tenantId = $null
+                    try
+                    {
+                        if ($null -ne $txtTenantId.Text)
+                        {
+                            $tenantId = $txtTenantId.Text
+                        }
+                        elseif ($null -ne $GlobalAdminAccount)
+                        {
+                            $tenantId = $GlobalAdminAccount.UserName.Split('@')[1]
+                        }
+                    }
+                    catch
+                    {
+                        Write-Verbose -Message $_
+                    }
+                    New-M365DSCLogEntry -Error $_ `
+                        -Message $Message `
+                        -Source "[M365DSCReverseGUI]" 
+                        -TenantId $tenantId
                 }
             })
         $panelMenu.Controls.Add($btnExtract);
