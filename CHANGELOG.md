@@ -2,7 +2,11 @@
 
 ## 1.20.1021.1
 
+* AADTenantDetails
+  * Fixed issue where IsSingleInstance was not returned from
+    the Get-TargetResource method;
 * MISC
+  * Fix to how Telemetry is retrieving module version;
   * Added additional error troubleshooting information
     to telemetry (dependencies version).
 
