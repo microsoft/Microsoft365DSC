@@ -108,45 +108,55 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
     }
 
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = 'Absent'
     try
     {
-        $policy = Get-LabelPolicy -Identity $Name -ErrorAction SilentlyContinue
+        try
+        {
+            $policy = Get-LabelPolicy -Identity $Name -ErrorAction SilentlyContinue
+        }
+        catch
+        {
+            throw $_
+        }
+
+        if ($null -eq $policy)
+        {
+            Write-Verbose -Message "Sensitivity label policy $($Name) does not exist."
+            return $nullReturn
+        }
+        else
+        {
+            if ($null -ne $policy.Settings)
+            {
+                $advancedSettingsValue = Convert-StringToAdvancedSettings -AdvancedSettings $policy.Settings
+            }
+
+            Write-Verbose "Found existing Sensitivity Label policy $($Name)"
+            $result = @{
+                Name                         = $policy.Name
+                Comment                      = $policy.Comment
+                AdvancedSettings             = $advancedSettingsValue
+                GlobalAdminAccount           = $GlobalAdminAccount
+                Ensure                       = 'Present'
+                Labels                       = $policy.Labels
+                ExchangeLocation             = Convert-ArrayList -CurrentProperty $policy.ExchangeLocation
+                ExchangeLocationException    = Convert-ArrayList -CurrentProperty $policy.ExchangeLocationException
+                ModernGroupLocation          = Convert-ArrayList -CurrentProperty $policy.ModernGroupLocation
+                ModernGroupLocationException = Convert-ArrayList -CurrentProperty $policy.ModernGroupLocationException
+            }
+
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
     }
     catch
     {
-        throw $_
-    }
-
-    if ($null -eq $policy)
-    {
-        Write-Verbose -Message "Sensitivity label policy $($Name) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
-    }
-    else
-    {
-        if ($null -ne $policy.Settings)
-        {
-            $advancedSettingsValue = Convert-StringToAdvancedSettings -AdvancedSettings $policy.Settings
-        }
-
-        Write-Verbose "Found existing Sensitivity Label policy $($Name)"
-        $result = @{
-            Name                         = $policy.Name
-            Comment                      = $policy.Comment
-            AdvancedSettings             = $advancedSettingsValue
-            GlobalAdminAccount           = $GlobalAdminAccount
-            Ensure                       = 'Present'
-            Labels                       = $policy.Labels
-            ExchangeLocation             = Convert-ArrayList -CurrentProperty $policy.ExchangeLocation
-            ExchangeLocationException    = Convert-ArrayList -CurrentProperty $policy.ExchangeLocationException
-            ModernGroupLocation          = Convert-ArrayList -CurrentProperty $policy.ModernGroupLocation
-            ModernGroupLocationException = Convert-ArrayList -CurrentProperty $policy.ModernGroupLocationException
-        }
-
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -441,11 +451,18 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of Sensitivity label for $Name"
-
     $CurrentValues = Get-TargetResource @PSBoundParameters
-
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
@@ -558,7 +575,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $ValuesToCheck `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -592,7 +609,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$policies = Get-LabelPolicy
+        [array]$policies = Get-LabelPolicy -ErrorAction Stop
 
         $dscContent = ""
         $i = 1
@@ -631,7 +648,10 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Warning "Get-LabelPolicy is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
     }
     return $dscContent
 }

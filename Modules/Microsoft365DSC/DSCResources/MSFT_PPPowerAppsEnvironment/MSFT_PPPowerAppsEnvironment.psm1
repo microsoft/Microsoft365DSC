@@ -53,17 +53,12 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PowerPlatforms' `
         -InboundParameters $PSBoundParameters
 
-    $nullReturn = @{
-        DisplayName        = $DisplayName
-        Location           = $Location
-        EnvironmentSKU     = $EnvironmentSKU
-        Ensure             = 'Absent'
-        GlobalAdminAccount = $null
-    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
     try
     {
-        $environment = Get-AdminPowerAppEnvironment | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
+        $environment = Get-AdminPowerAppEnvironment -ErrorAction Stop | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
 
         if ($null -eq $environment)
         {
@@ -82,7 +77,9 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose $_
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
         return $nullReturn
     }
 }
@@ -210,6 +207,15 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration for PowerApps Environment {$DisplayName}"
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -219,7 +225,7 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove("GlobalAdminAccount") | Out-Null
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -263,38 +269,47 @@ function Export-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PowerPlatforms' `
         -InboundParameters $PSBoundParameters
-
-    [array]$environments = Get-AdminPowerAppEnvironment
-    $dscContent = ''
-    $i = 1
-    Write-Host "`r`n" -NoNewLine
-    foreach ($environment in $environments)
+    try
     {
-        Write-Host "    |---[$i/$($environments.Count)] $($environment.DisplayName)" -NoNewLine
-        if ($environment.EnvironmentType -ne 'Default')
+        [array]$environments = Get-AdminPowerAppEnvironment -ErrorAction Stop
+        $dscContent = ''
+        $i = 1
+        Write-Host "`r`n" -NoNewLine
+        foreach ($environment in $environments)
         {
-            $Params = @{
-                DisplayName           = $environment.DisplayName
-                Location              = $environment.Location
-                EnvironmentSku        = $environment.EnvironmentType
-                GlobalAdminAccount    = $GlobalAdminAccount
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
+            Write-Host "    |---[$i/$($environments.Count)] $($environment.DisplayName)" -NoNewLine
+            if ($environment.EnvironmentType -ne 'Default')
+            {
+                $Params = @{
+                    DisplayName           = $environment.DisplayName
+                    Location              = $environment.Location
+                    EnvironmentSku        = $environment.EnvironmentType
+                    GlobalAdminAccount    = $GlobalAdminAccount
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                }
+                $Results = Get-TargetResource @Params
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
             }
-            $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
         }
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

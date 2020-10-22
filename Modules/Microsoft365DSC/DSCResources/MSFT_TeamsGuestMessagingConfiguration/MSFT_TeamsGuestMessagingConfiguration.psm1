@@ -63,7 +63,7 @@ function Get-TargetResource
 
     try
     {
-        $config = Get-CsTeamsGuestMessagingConfiguration
+        $config = Get-CsTeamsGuestMessagingConfiguration -ErrorAction Stop
 
         return @{
             Identity               = $Identity
@@ -80,6 +80,9 @@ function Get-TargetResource
     }
     catch
     {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
         throw $_
     }
 }
@@ -162,8 +165,6 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-
-
     $SetParams = $PSBoundParameters
     $SetParams.Remove("GlobalAdminAccount") | Out-Null
 
@@ -218,6 +219,15 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of Teams Guest Messaging settings"
 
@@ -228,7 +238,7 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -257,19 +267,29 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $params = @{
-        Identity           = "Global"
-        GlobalAdminAccount = $GlobalAdminAccount
+    try
+    {
+        $params = @{
+            Identity           = "Global"
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+        $result = Get-TargetResource @params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content = "        TeamsGuestMessagingConfiguration " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        return $content
     }
-    $result = Get-TargetResource @params
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        TeamsGuestMessagingConfiguration " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
-    Write-Host $Global:M365DSCEmojiGreenCheckMark
-    return $content
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

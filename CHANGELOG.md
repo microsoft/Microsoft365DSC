@@ -1,5 +1,56 @@
 # Change log for Microsoft365DSC
 
+## 1.20.1021.1
+
+* AADTenantDetails
+  * Fixed issue where IsSingleInstance was not returned from
+    the Get-TargetResource method;
+* MISC
+  * Fix to how Telemetry is retrieving module version;
+  * Added additional error troubleshooting information
+    to telemetry (dependencies version).
+
+## 1.20.1016.1
+
+* Fixed a permissions issue with the
+  Install-M365DSCDevBranch cmdlet (Issue #699 & #826)
+* DEPENDENCIES
+  * MSCloudLoginAssistant Updated to 1.0.41;
+  * SharePointPnPPowerShellOnline Updated to 3.26.2010.0;
+* MISC
+  * Improved Error log to include StackTrace for additional
+    info to help troubleshooting errors.
+
+## 1.20.1014.1
+
+* TeamsVoiceRoute
+  * Initial Release
+
+## 1.20.1007.1
+
+* TeamsCallingPolicy
+  * Added new supported properties;
+* TeamsMeetingPolicy
+  * Added new supported properties;
+* TeamsTeam
+  * Added new supported properties;
+
+## 1.20.930.1
+
+* IntuneAppConfigurationPolicy
+  * Initial Release;
+* DEPENDENCIES
+  * Rolled back ExchangeOnlineManagement to 2.0.1
+  * Microsoft.PowerApps.Administration.PowerShell updated
+    to 2.0.85;
+  * Microsoft.Graph.Authentication updated to 1.0.1;
+  * Microsoft.Graph.Groups.Planner updated to 1.0.1;
+* MISC
+  * Refactored error handling to various EXO resources;
+  * Renamed method Test-Microsoft365DSCParameterState to
+    Test-M365DSCParameterState to align with naming standard;
+  * Fixed issue #777 with export of SCDLPComplianceRule;
+
 ## 1.20.923.1
 
 * IntuneDeviceCategory

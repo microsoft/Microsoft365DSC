@@ -104,33 +104,13 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
         -InboundParameters $PSBoundParameters
 
-    $nullReturn = @{
-        IsSingleInstance                          = "Yes"
-        BlockMacSync                              = $null
-        DisableReportProblemDialog                = $null
-        DomainGuids                               = $null
-        ExcludedFileExtensions                    = $null
-        GrooveBlockOption                         = $null
-        OneDriveStorageQuota                      = $null
-        OrphanedPersonalSitesRetentionPeriod      = $null
-        OneDriveForGuestsEnabled                  = $null
-        ODBAccessRequests                         = $null
-        ODBMembersCanShare                        = $null
-        NotifyOwnersWhenInvitationsAccepted       = $null
-        NotificationsInOneDriveForBusinessEnabled = $null
-        Ensure                                    = "Absent"
-        ApplicationId                             = $ApplicationId
-        TenantId                                  = $TenantId
-        CertificatePassword                       = $CertificatePassword
-        CertificatePath                           = $CertificatePath
-        CertificateThumbprint                     = $CertificateThumbprint
-        GlobalAdminAccount                        = $GlobalAdminAccount
-    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
     try
     {
         Write-Verbose -Message "Getting OneDrive quota size for tenant"
-        $tenant = Get-PnPTenant
+        $tenant = Get-PnPTenant -ErrorAction Stop
 
         if ($null -eq $tenant)
         {
@@ -140,7 +120,7 @@ function Get-TargetResource
 
         Write-Verbose -Message "Getting OneDrive quota size for tenant $($tenant.OneDriveStorageQuota)"
         Write-Verbose -Message "Getting tenant client sync setting"
-        $tenantRestrictions = Get-PnPTenantSyncClientRestriction
+        $tenantRestrictions = Get-PnPTenantSyncClientRestriction -ErrorAction Stop
 
         if ($null -eq $tenantRestrictions)
         {
@@ -209,8 +189,9 @@ function Get-TargetResource
     }
     catch
     {
-        $Message = "Failed to get Tenant client sync settings"
-        New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
         return $nullReturn
     }
 }
@@ -501,6 +482,15 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of OneDrive Settings"
 
@@ -509,7 +499,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("BlockMacSync", `
@@ -574,32 +564,42 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
         -InboundParameters $PSBoundParameters
 
-    $Params = @{
-        IsSingleInstance      = 'Yes'
-        ApplicationId         = $ApplicationId
-        TenantId              = $TenantId
-        CertificatePassword   = $CertificatePassword
-        CertificatePath       = $CertificatePath
-        CertificateThumbprint = $CertificateThumbprint
-        GlobalAdminAccount    = $GlobalAdminAccount
-    }
-
-    $Results = Get-TargetResource @Params
-
-    if ([System.String]::IsNullOrEmpty($Results.GrooveBlockOption))
+    try
     {
-        $Results.Remove("GrooveBlockOption") | Out-Null
-    }
+        $Params = @{
+            IsSingleInstance      = 'Yes'
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
+            GlobalAdminAccount    = $GlobalAdminAccount
+        }
 
-    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-        -Results $Results
-    $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-        -ConnectionMode $ConnectionMode `
-        -ModulePath $PSScriptRoot `
-        -Results $Results `
-        -GlobalAdminAccount $GlobalAdminAccount
-    Write-Host $Global:M365DSCEmojiGreenCheckMark
-    return $dscContent
+        $Results = Get-TargetResource @Params
+
+        if ([System.String]::IsNullOrEmpty($Results.GrooveBlockOption))
+        {
+            $Results.Remove("GrooveBlockOption") | Out-Null
+        }
+
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        return $dscContent
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

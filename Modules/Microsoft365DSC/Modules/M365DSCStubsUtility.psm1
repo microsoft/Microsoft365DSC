@@ -93,6 +93,17 @@ function New-M365DSCStubFiles
         {
             $cmdlets = Get-Command -CommandType 'Function' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
         }
+
+        try
+        {
+            $aliases = Get-Command -CommandType 'Alias' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
+            $cmdlets += $aliases
+            $cmdlets = $cmdlets | select -unique
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         $StubContent = ''
         $i = 1
         foreach ($cmdlet in $cmdlets)
@@ -100,10 +111,10 @@ function New-M365DSCStubFiles
             Write-Host $cmdlet
             Write-Progress -Activity "Generating Stubs" -Status $cmdlet.Name -PercentComplete (($i/$cmdlets.Length)*100)
             $signature = $null
-            $metadata = New-Object -TypeName System.Management.Automation.CommandMetaData -ArgumentList $cmdlet
 
             try
             {
+                $metadata = New-Object -TypeName System.Management.Automation.CommandMetaData -ArgumentList $cmdlet
                 $definition = [System.Management.Automation.ProxyCommand]::Create($metadata)
             }
             catch

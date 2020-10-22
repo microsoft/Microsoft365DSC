@@ -3597,6 +3597,15 @@ function Remove-AzureADMSApplicationPassword
         $KeyId
     )
 }
+function Remove-AzureADMSApplicationVerifiedPublisher
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $AppObjectId
+    )
+}
 function Remove-AzureADMSConditionalAccessPolicy
 {
     [CmdletBinding()]
@@ -4560,6 +4569,19 @@ function Set-AzureADMSApplicationLogo
         [Parameter()]
         [System.Byte[]]
         $Content
+    )
+}
+function Set-AzureADMSApplicationVerifiedPublisher
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $AppObjectId,
+
+        [Parameter()]
+        [Microsoft.Open.MSGraph.Model.SetVerifiedPublisherRequest]
+        $SetVerifiedPublisherRequest
     )
 }
 function Set-AzureADMSAuthorizationPolicy
@@ -15877,6 +15899,10 @@ function New-ClientAccessRule
 
         [Parameter()]
         [System.Object]
+        $AnyOfProtocols,
+
+        [Parameter()]
+        [System.Object]
         $Priority,
 
         [Parameter()]
@@ -15884,16 +15910,12 @@ function New-ClientAccessRule
         $ExceptUsernameMatchesAnyOfPatterns,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.Object]
         $AnyOfAuthenticationTypes,
 
         [Parameter()]
-        [System.Object]
-        $AnyOfProtocols,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Object]
@@ -18543,7 +18565,7 @@ function New-MigrationEndpoint
 
         [Parameter()]
         [System.Object]
-        $Security,
+        $Name,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -18570,10 +18592,6 @@ function New-MigrationEndpoint
         $ExchangeServer,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $SkipVerification,
-
-        [Parameter()]
         [System.Object]
         $Authentication,
 
@@ -18590,10 +18608,6 @@ function New-MigrationEndpoint
         $Credentials,
 
         [Parameter()]
-        [System.Object]
-        $AppSecretKeyVaultUrl,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Compliance,
 
@@ -18606,12 +18620,8 @@ function New-MigrationEndpoint
         $EmailAddress,
 
         [Parameter()]
-        [System.Object]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.Object]
-        $RemoteTenant,
+        [System.Management.Automation.SwitchParameter]
+        $PublicFolderToUnifiedGroup,
 
         [Parameter()]
         [System.Object]
@@ -18642,16 +18652,8 @@ function New-MigrationEndpoint
         $Autodiscover,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PublicFolderToUnifiedGroup,
-
-        [Parameter()]
         [System.Object]
         $NspiServer,
-
-        [Parameter()]
-        [System.Object]
-        $PublicFolderDatabaseServerLegacyDN,
 
         [Parameter()]
         [System.Object]
@@ -18659,7 +18661,15 @@ function New-MigrationEndpoint
 
         [Parameter()]
         [System.Object]
-        $Name,
+        $PublicFolderDatabaseServerLegacyDN,
+
+        [Parameter()]
+        [System.Object]
+        $Security,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipVerification,
 
         [Parameter()]
         [System.Object]
@@ -18940,10 +18950,6 @@ function New-MoveRequest
         $ForceOffline,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Suspend,
-
-        [Parameter()]
         [System.Object]
         $RequestExpiryInterval,
 
@@ -18953,15 +18959,11 @@ function New-MoveRequest
 
         [Parameter()]
         [System.Object]
-        $SuspendComment,
-
-        [Parameter()]
-        [System.Object]
         $LargeItemLimit,
 
         [Parameter()]
-        [System.Object]
-        $RemoteTargetDatabase,
+        [System.Management.Automation.SwitchParameter]
+        $Suspend,
 
         [Parameter()]
         [System.Object]
@@ -18977,7 +18979,7 @@ function New-MoveRequest
 
         [Parameter()]
         [System.Object]
-        $RemoteTenant,
+        $SuspendComment,
 
         [Parameter()]
         [System.Object]
@@ -18993,7 +18995,7 @@ function New-MoveRequest
 
         [Parameter()]
         [System.Object]
-        $TargetDeliveryDomain,
+        $RemoteTargetDatabase,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -19018,6 +19020,10 @@ function New-MoveRequest
         [Parameter()]
         [System.Object]
         $RemoteGlobalCatalog,
+
+        [Parameter()]
+        [System.Object]
+        $TargetDeliveryDomain,
 
         [Parameter()]
         [System.Object]
@@ -19172,10 +19178,6 @@ function New-OrganizationRelationship
 
         [Parameter()]
         [System.Object]
-        $OAuthApplicationId,
-
-        [Parameter()]
-        [System.Object]
         $OrganizationContact,
 
         [Parameter()]
@@ -19213,10 +19215,6 @@ function New-OrganizationRelationship
         [Parameter()]
         [System.Object]
         $MailboxMoveEnabled,
-
-        [Parameter()]
-        [System.Object]
-        $MailboxMoveCapability,
 
         [Parameter()]
         [System.Object]
@@ -29737,7 +29735,7 @@ function Set-MailUser
 
         [Parameter()]
         [System.Object]
-        $AcceptMessagesOnlyFromSendersOrMembers,
+        $RemoveOrphanedHolds,
 
         [Parameter()]
         [System.Object]
@@ -29788,10 +29786,6 @@ function Set-MailUser
         $MailTip,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $EnableLitigationHoldForMigration,
-
-        [Parameter()]
         [System.Object]
         $ModeratedBy,
 
@@ -29817,6 +29811,10 @@ function Set-MailUser
 
         [Parameter()]
         [System.Object]
+        $AcceptMessagesOnlyFromSendersOrMembers,
+
+        [Parameter()]
+        [System.Object]
         $MessageBodyFormat,
 
         [Parameter()]
@@ -29830,10 +29828,6 @@ function Set-MailUser
         [Parameter()]
         [System.Object]
         $WindowsEmailAddress,
-
-        [Parameter()]
-        [System.Object]
-        $RemoveOrphanedHolds,
 
         [Parameter()]
         [System.Object]
@@ -29870,10 +29864,6 @@ function Set-MailUser
         [Parameter()]
         [System.Object]
         $UMDtmfMap,
-
-        [Parameter()]
-        [System.Object]
-        $ArchiveGuid,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -29977,6 +29967,10 @@ function Set-MailUser
 
         [Parameter()]
         [System.Object]
+        $ExtensionCustomAttribute3,
+
+        [Parameter()]
+        [System.Object]
         $CreateDTMFMap,
 
         [Parameter()]
@@ -30008,8 +30002,8 @@ function Set-MailUser
         $Name,
 
         [Parameter()]
-        [System.Object]
-        $ExtensionCustomAttribute3,
+        [System.Management.Automation.SwitchParameter]
+        $EnableLitigationHoldForMigration,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -30482,15 +30476,7 @@ function Set-MigrationEndpoint
 
         [Parameter()]
         [System.Object]
-        $AppSecretKeyVaultUrl,
-
-        [Parameter()]
-        [System.Object]
         $Port,
-
-        [Parameter()]
-        [System.Object]
-        $ApplicationId,
 
         [Parameter()]
         [System.Object]
@@ -31468,11 +31454,11 @@ function Set-OrganizationRelationship
 
         [Parameter()]
         [System.Object]
-        $TargetAutodiscoverEpr,
+        $MailTipsAccessLevel,
 
         [Parameter()]
         [System.Object]
-        $MailTipsAccessLevel,
+        $TargetAutodiscoverEpr,
 
         [Parameter()]
         [System.Object]
@@ -31493,10 +31479,6 @@ function Set-OrganizationRelationship
         [Parameter()]
         [System.Object]
         $DeliveryReportEnabled,
-
-        [Parameter()]
-        [System.Object]
-        $OAuthApplicationId,
 
         [Parameter()]
         [System.Object]
@@ -31537,10 +31519,6 @@ function Set-OrganizationRelationship
         [Parameter()]
         [System.Object]
         $MailboxMoveEnabled,
-
-        [Parameter()]
-        [System.Object]
-        $MailboxMoveCapability,
 
         [Parameter()]
         [System.Object]
@@ -77300,6 +77278,20980 @@ function Update-Organization_Extensions
         $ODataType
     )
 }
+function Get-AADGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-AADGroupCreatedOnBehalfOf
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Get-AADGroupCreatedOnBehalfOfReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Get-AADGroupGroupLifecyclePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $groupLifecyclePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-AADGroupMember
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-AADGroupMemberOf
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-AADGroupMemberOfReferenceSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-AADGroupMemberReferenceSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-AADGroupOwner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-AADGroupOwnerReferenceSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-AADGroupPhoto
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Get-AADGroupPhotoDataData
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Get-AADGroupPhotoSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $profilePhotoId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-AADGroupPhotoSetDataData
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $profilePhotoId,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Get-AADGroupSetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $groupSettingId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneAppConfigurationPolicyTargeted
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneAppConfigurationPolicyTargetedApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneAppConfigurationPolicyTargetedAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneAppConfigurationPolicyTargetedDeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId
+    )
+}
+function Get-IntuneApplePushNotificationCertificate
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Get-IntuneAppProtectionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneAppProtectionPolicyAndroid
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneAppProtectionPolicyAndroidApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneAppProtectionPolicyAndroidAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionODataType,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneAppProtectionPolicyAndroidDeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId
+    )
+}
+function Get-IntuneAppProtectionPolicyApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneAppProtectionPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneAppProtectionPolicyDefault
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneAppProtectionPolicyDefaultApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneAppProtectionPolicyDefaultDeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId
+    )
+}
+function Get-IntuneAppProtectionPolicyDeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType
+    )
+}
+function Get-IntuneAppProtectionPolicyExemptAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneAppProtectionPolicyIos
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneAppProtectionPolicyIosApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneAppProtectionPolicyIosAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionODataType,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneAppProtectionPolicyIosDeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId
+    )
+}
+function Get-IntuneAppProtectionPolicyProtectedAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneConditionalAccessSetting
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Get-IntuneDetectedApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $detectedAppId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneDetectedAppDevice
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $detectedAppId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneDetectedAppDeviceReferenceSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $detectedAppId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneDeviceAppManagement
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Get-IntuneDeviceCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCategoryId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneDeviceCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneDeviceCompliancePolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneDeviceCompliancePolicyDeviceSettingStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $settingStateDeviceSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneDeviceCompliancePolicyDeviceStateSummary
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Get-IntuneDeviceCompliancePolicyDeviceStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $deviceComplianceDeviceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneDeviceCompliancePolicyDeviceStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Get-IntuneDeviceCompliancePolicyScheduledActionsForRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $deviceComplianceScheduledActionForRuleId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneDeviceCompliancePolicyScheduledActionsForRuleConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $deviceComplianceScheduledActionForRuleId,
+
+        [Parameter()]
+        [System.String]
+        $deviceComplianceActionItemId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneDeviceCompliancePolicySettingSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicySettingStateSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneDeviceCompliancePolicyUserStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $deviceComplianceUserStatusId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneDeviceCompliancePolicyUserStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Get-IntuneDeviceComplianceSettingState
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicySettingStateSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $deviceComplianceSettingStateId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneDeviceConfigurationDeviceStateSummary
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Get-IntuneDeviceConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneDeviceConfigurationPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneDeviceConfigurationPolicyDeviceSettingStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $settingStateDeviceSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneDeviceConfigurationPolicyDeviceStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationDeviceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneDeviceConfigurationPolicyDeviceStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId
+    )
+}
+function Get-IntuneDeviceConfigurationPolicyUserStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationUserStatusId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneDeviceConfigurationPolicyUserStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId
+    )
+}
+function Get-IntuneDeviceEnrollmentConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneDeviceEnrollmentConfigurationAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $enrollmentConfigurationAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneDeviceManagement
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Get-IntuneDeviceManagementPartner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceManagementPartnerId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneExchangeConnector
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceManagementExchangeConnectorId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneIosUpdateStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosUpdateDeviceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneLocalizedNotificationMessage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $notificationMessageTemplateId,
+
+        [Parameter()]
+        [System.String]
+        $localizedNotificationMessageId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneManagedAppRegistration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneManagedAppStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppStatusId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneManagedDevice
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneManagedDeviceDeviceCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Get-IntuneManagedDeviceDeviceCompliancePolicyState
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyStateId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneManagedDeviceDeviceConfigurationState
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationStateId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneManagedDeviceOverview
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Get-IntuneManagedDeviceOverviewReference
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Get-IntuneManagedEBook
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneManagedEBookAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $managedEBookAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneManagedEBookDeviceState
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $deviceInstallStateId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneManagedEBookInstallSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId
+    )
+}
+function Get-IntuneManagedEBookUserStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $userInstallStateSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneManagedEBookUserStateSummaryDeviceState
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $userInstallStateSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $deviceInstallStateId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneMdmWindowsInformationProtectionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneMdmWindowsInformationProtectionPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneMdmWindowsInformationProtectionPolicyExemptAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneMdmWindowsInformationProtectionPolicyProtectedAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneMobileApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneMobileAppAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneMobileAppCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppCategoryId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneMobileAppCategorySet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppCategoryId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneMobileAppCategorySetReferenceSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppCategoryId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneMobileAppConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneMobileAppConfigurationPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneMobileAppConfigurationPolicyDeviceStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationDeviceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneMobileAppConfigurationPolicyDeviceStatusSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId
+    )
+}
+function Get-IntuneMobileAppConfigurationPolicyUserStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationUserStatusId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneMobileAppConfigurationPolicyUserStatusSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId
+    )
+}
+function Get-IntuneMobileAppContentVersion
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppODataType,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppContentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneMobileAppContentVersionFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppODataType,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppContentId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppContentFileId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneMobileThreatDefenseConnector
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileThreatDefenseConnectorId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneNotificationMessageTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $notificationMessageTemplateId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneRemoteAssistancePartner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $remoteAssistancePartnerId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneResourceOperation
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $resourceOperationId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneRoleAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceAndAppManagementRoleAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneRoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $roleDefinitionId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneSoftwareUpdateStatusSummary
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Get-IntuneSoftwareUpdateStatusSummaryReference
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Get-IntuneTelecomExpenseManagementPartner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $telecomExpenseManagementPartnerId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneTermsAndConditions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $termsAndConditionId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneTermsAndConditionsAcceptanceStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $termsAndConditionId,
+
+        [Parameter()]
+        [System.String]
+        $termsAndConditionsAcceptanceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneTermsAndConditionsAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $termsAndConditionId,
+
+        [Parameter()]
+        [System.String]
+        $termsAndConditionsAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneTroubleshootingEvent
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceManagementTroubleshootingEventId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneVppToken
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $vppTokenId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneWindowsInformationProtectionAppLearningSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLearningSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneWindowsInformationProtectionNetworkLearningSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionNetworkLearningSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneWindowsInformationProtectionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneWindowsInformationProtectionPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneWindowsInformationProtectionPolicyExemptAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Get-IntuneWindowsInformationProtectionPolicyProtectedAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Invoke-AADGroupAddFavorite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Invoke-AADGroupCheckMemberGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $groupIds,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Invoke-AADGroupDelta
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Invoke-AADGroupGetById
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $ids,
+
+        [Parameter()]
+        [System.String[]]
+        $types
+    )
+}
+function Invoke-AADGroupGetMemberGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $securityEnabledOnly,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Invoke-AADGroupGetMemberObject
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $securityEnabledOnly,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Invoke-AADGroupGroupLifecyclePolicyAddGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $groupLifecyclePolicyId
+    )
+}
+function Invoke-AADGroupGroupLifecyclePolicyRemoveGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $groupLifecyclePolicyId
+    )
+}
+function Invoke-AADGroupRemoveFavorite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Invoke-AADGroupRenew
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Invoke-AADGroupResetUnseenCount
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Invoke-AADGroupRestore
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Invoke-AADGroupSubscribeByMail
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Invoke-AADGroupUnsubscribeByMail
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Invoke-IntuneAppConfigurationPolicyTargetedAssign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId
+    )
+}
+function Invoke-IntuneAppConfigurationPolicyTargetedTargetedApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId
+    )
+}
+function Invoke-IntuneAppProtectionPolicyAndroidAssign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId
+    )
+}
+function Invoke-IntuneAppProtectionPolicyAndroidTargetApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId
+    )
+}
+function Invoke-IntuneAppProtectionPolicyDefaultTargetApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId
+    )
+}
+function Invoke-IntuneAppProtectionPolicyIosAssign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId
+    )
+}
+function Invoke-IntuneAppProtectionPolicyIosTargetApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId
+    )
+}
+function Invoke-IntuneAppProtectionPolicyTargetApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId
+    )
+}
+function Invoke-IntuneDeviceCompliancePolicyAssign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Invoke-IntuneDeviceCompliancePolicyScheduleActionsForRules
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $deviceComplianceScheduledActionForRules,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Invoke-IntuneDeviceConfigurationPolicyAssign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId
+    )
+}
+function Invoke-IntuneDeviceEnrollmentConfigurationAssign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $enrollmentConfigurationAssignments,
+
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentConfigurationId
+    )
+}
+function Invoke-IntuneDeviceEnrollmentConfigurationSetPriority
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $priority,
+
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentConfigurationId
+    )
+}
+function Invoke-IntuneDownloadApplePushNotificationCertificateSigningRequest
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Invoke-IntuneExchangeConnectorSync
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $syncType,
+
+        [Parameter()]
+        [System.String]
+        $deviceManagementExchangeConnectorId
+    )
+}
+function Invoke-IntuneGetEffectivePermission
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $scope,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Invoke-IntuneGetUserIdsWithFlaggedAppRegistration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize
+    )
+}
+function Invoke-IntuneLogoutSharedAppleDeviceActiveUser
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-IntuneManagedDeviceBypassActivationLock
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-IntuneManagedDeviceCleanWindowsDevice
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $keepUserData,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-IntuneManagedDeviceDeleteUserFromSharedAppleDevice
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-IntuneManagedDeviceDisableLostMode
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-IntuneManagedDeviceLocateDevice
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-IntuneManagedDeviceRebootNow
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-IntuneManagedDeviceRecoverPasscode
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-IntuneManagedDeviceRemoteLock
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-IntuneManagedDeviceResetPasscode
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-IntuneManagedDeviceRetire
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-IntuneManagedDeviceShutDownDevice
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-IntuneManagedDeviceSyncDevice
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-IntuneManagedDeviceUpdateWindowsDeviceAccount
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $updateWindowsDeviceAccountActionParameter,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-IntuneManagedDeviceWindowsDefenderScan
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $quickScan,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-IntuneManagedDeviceWindowsDefenderUpdateSignature
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-IntuneManagedDeviceWipeDevice
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $keepEnrollmentData,
+
+        [Parameter()]
+        [System.Boolean]
+        $keepUserData,
+
+        [Parameter()]
+        [System.String]
+        $macOsUnlockCode,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-IntuneManagedEBookAssign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $managedEBookAssignments,
+
+        [Parameter()]
+        [System.String]
+        $managedEBookId
+    )
+}
+function Invoke-IntuneMangedDeviceRequestRemoteAssistance
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Invoke-IntuneMdmWindowsInformationProtectionPolicyAssign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId
+    )
+}
+function Invoke-IntuneMdmWindowsInformationProtectionPolicyTargetApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId
+    )
+}
+function Invoke-IntuneMobileAppAssign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $mobileAppAssignments,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppId
+    )
+}
+function Invoke-IntuneMobileAppContentVersionFileCommit
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $fileEncryptionInfo,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppContentFileId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppODataType,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppContentId
+    )
+}
+function Invoke-IntuneMobileAppContentVersionRenewUpload
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppContentFileId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppODataType,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppContentId
+    )
+}
+function Invoke-IntuneRemoteAssistancePartnerBeginOnboarding
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $remoteAssistancePartnerId
+    )
+}
+function Invoke-IntuneRemoteAssistancePartnerDisconnect
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $remoteAssistancePartnerId
+    )
+}
+function Invoke-IntuneSendTestMessage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $notificationMessageTemplateId
+    )
+}
+function Invoke-IntuneSyncMicrosoftStoreForBusinessApp
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Invoke-IntuneVerifyWindowsEnrollmentAutoDiscovery
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $domainName
+    )
+}
+function Invoke-IntuneVppTokenSyncLicense
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $vppTokenId
+    )
+}
+function Invoke-IntuneWindowsInformationProtectionPolicyAssign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId
+    )
+}
+function Invoke-IntuneWindowsInformationProtectionPolicyTargetApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId
+    )
+}
+function New-AADGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $assignedLicenses,
+
+        [Parameter()]
+        [System.String]
+        $classification,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $hasMembersWithLicenseErrors,
+
+        [Parameter()]
+        [System.String[]]
+        $groupTypes,
+
+        [Parameter()]
+        [System.Object]
+        $licenseProcessingState,
+
+        [Parameter()]
+        [System.String]
+        $mail,
+
+        [Parameter()]
+        [System.Boolean]
+        $mailEnabled,
+
+        [Parameter()]
+        [System.String]
+        $mailNickname,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $onPremisesLastSyncDateTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $onPremisesProvisioningErrors,
+
+        [Parameter()]
+        [System.String]
+        $onPremisesSecurityIdentifier,
+
+        [Parameter()]
+        [System.Boolean]
+        $onPremisesSyncEnabled,
+
+        [Parameter()]
+        [System.String]
+        $preferredDataLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $proxyAddresses,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $renewedDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityEnabled,
+
+        [Parameter()]
+        [System.String]
+        $visibility,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowExternalSenders,
+
+        [Parameter()]
+        [System.Boolean]
+        $autoSubscribeNewMembers,
+
+        [Parameter()]
+        [System.Boolean]
+        $isSubscribedByMail,
+
+        [Parameter()]
+        [System.Int32]
+        $unseenCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $isArchived,
+
+        [Parameter()]
+        [System.Object[]]
+        $members,
+
+        [Parameter()]
+        [System.Object[]]
+        $memberOf,
+
+        [Parameter()]
+        [System.Object[]]
+        $membersWithLicenseErrors,
+
+        [Parameter()]
+        [System.Object[]]
+        $transitiveMembers,
+
+        [Parameter()]
+        [System.Object[]]
+        $transitiveMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $createdOnBehalfOf,
+
+        [Parameter()]
+        [System.Object[]]
+        $owners,
+
+        [Parameter()]
+        [System.Object[]]
+        $settings,
+
+        [Parameter()]
+        [System.Object]
+        $photo,
+
+        [Parameter()]
+        [System.Object[]]
+        $photos,
+
+        [Parameter()]
+        [System.Object[]]
+        $groupLifecyclePolicies,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $deletedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-AADGroupCreatedOnBehalfOfReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectReferenceUrl
+    )
+}
+function New-AADGroupGroupLifecyclePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.Int32]
+        $groupLifetimeInDays,
+
+        [Parameter()]
+        [System.String]
+        $managedGroupTypes,
+
+        [Parameter()]
+        [System.String]
+        $alternateNotificationEmails,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-AADGroupMemberOfReferenceSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectReferenceUrl
+    )
+}
+function New-AADGroupMemberReferenceSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectReferenceUrl
+    )
+}
+function New-AADGroupOwnerReferenceSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $directoryObjectReferenceUrl
+    )
+}
+function New-AADGroupPhotoData
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $Data,
+
+        [Parameter()]
+        [System.String]
+        $ContentType
+    )
+}
+function New-AADGroupPhotoSetData
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $profilePhotoId,
+
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $Data,
+
+        [Parameter()]
+        [System.String]
+        $ContentType
+    )
+}
+function New-AADGroupSetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $values
+    )
+}
+function New-IntuneAppConfigurationPolicyTargeted
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $customSettings,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneAppConfigurationPolicyTargetedApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneAppConfigurationPolicyTargetedAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneAppConfigurationPolicyTargetedDeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneApplePushNotificationCertificate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $appleIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $topicIdentifier,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $expirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $certificate,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneAppProtectionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $enforcementLevel,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseDomain,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProtectedDomainNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $protectionUnderLockConfigRequired,
+
+        [Parameter()]
+        [System.Object]
+        $dataRecoveryCertificate,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnUnenrollDisabled,
+
+        [Parameter()]
+        [System.Guid]
+        $rightsManagementServicesTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureRightsManagementServicesAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $iconsVisible,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxiedDomains,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseIPRanges,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseIPRangesAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxyServers,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseInternalProxyServers,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $neutralDomainResources,
+
+        [Parameter()]
+        [System.Boolean]
+        $indexingEncryptedStoresOrItemsBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $smbAutoEncryptedFileExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsInformationProtectionPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnMdmHandoffDisabled,
+
+        [Parameter()]
+        [System.String]
+        $mdmEnrollmentUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsHelloForBusinessBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMinimumLength,
+
+        [Parameter()]
+        [System.String]
+        $pinUppercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinLowercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinSpecialCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $pinExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $numberOfPastPinsRemembered,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMaximumAttemptCount,
+
+        [Parameter()]
+        [System.Int32]
+        $minutesOfInactivityBeforeDeviceLock,
+
+        [Parameter()]
+        [System.Int32]
+        $daysWithoutContactBeforeUnenroll,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $mdmWindowsInformationProtectionPolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $customSettings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $targetedManagedAppConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $allowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Boolean]
+        $organizationalCredentialsRequired,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $dataBackupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceComplianceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $saveAsBlocked,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [System.Boolean]
+        $pinRequired,
+
+        [Parameter()]
+        [System.Int32]
+        $maximumPinRetries,
+
+        [Parameter()]
+        [System.Boolean]
+        $simplePinBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $minimumPinLength,
+
+        [Parameter()]
+        [System.String]
+        $pinCharacterSet,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodBeforePinReset,
+
+        [Parameter()]
+        [System.String[]]
+        $allowedDataStorageLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $contactSyncBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $printBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $fingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningAppVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $defaultManagedAppProtection,
+
+        [Parameter()]
+        [System.String]
+        $appDataEncryptionType,
+
+        [Parameter()]
+        [System.Boolean]
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $encryptAppData,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredSdkVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $faceIdBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidManagedAppProtection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosManagedAppProtection,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneAppProtectionPolicyAndroid
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $encryptAppData,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $allowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Boolean]
+        $organizationalCredentialsRequired,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $dataBackupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceComplianceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $saveAsBlocked,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [System.Boolean]
+        $pinRequired,
+
+        [Parameter()]
+        [System.Int32]
+        $maximumPinRetries,
+
+        [Parameter()]
+        [System.Boolean]
+        $simplePinBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $minimumPinLength,
+
+        [Parameter()]
+        [System.String]
+        $pinCharacterSet,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodBeforePinReset,
+
+        [Parameter()]
+        [System.String[]]
+        $allowedDataStorageLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $contactSyncBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $printBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $fingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneAppProtectionPolicyAndroidApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneAppProtectionPolicyAndroidAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneAppProtectionPolicyAndroidDeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneAppProtectionPolicyApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneAppProtectionPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneAppProtectionPolicyDefault
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $appDataEncryptionType,
+
+        [Parameter()]
+        [System.Boolean]
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $encryptAppData,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredSdkVersion,
+
+        [Parameter()]
+        [System.Object[]]
+        $customSettings,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $faceIdBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $allowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Boolean]
+        $organizationalCredentialsRequired,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $dataBackupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceComplianceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $saveAsBlocked,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [System.Boolean]
+        $pinRequired,
+
+        [Parameter()]
+        [System.Int32]
+        $maximumPinRetries,
+
+        [Parameter()]
+        [System.Boolean]
+        $simplePinBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $minimumPinLength,
+
+        [Parameter()]
+        [System.String]
+        $pinCharacterSet,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodBeforePinReset,
+
+        [Parameter()]
+        [System.String[]]
+        $allowedDataStorageLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $contactSyncBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $printBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $fingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneAppProtectionPolicyDefaultApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneAppProtectionPolicyDefaultDeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneAppProtectionPolicyDeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneAppProtectionPolicyExemptAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneAppProtectionPolicyIos
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $appDataEncryptionType,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredSdkVersion,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $faceIdBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $allowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Boolean]
+        $organizationalCredentialsRequired,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $dataBackupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceComplianceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $saveAsBlocked,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [System.Boolean]
+        $pinRequired,
+
+        [Parameter()]
+        [System.Int32]
+        $maximumPinRetries,
+
+        [Parameter()]
+        [System.Boolean]
+        $simplePinBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $minimumPinLength,
+
+        [Parameter()]
+        [System.String]
+        $pinCharacterSet,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodBeforePinReset,
+
+        [Parameter()]
+        [System.String[]]
+        $allowedDataStorageLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $contactSyncBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $printBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $fingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneAppProtectionPolicyIosApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneAppProtectionPolicyIosAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneAppProtectionPolicyIosDeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneAppProtectionPolicyProtectedAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneConditionalAccessSetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $enabled,
+
+        [Parameter()]
+        [System.Guid[]]
+        $includedGroups,
+
+        [Parameter()]
+        [System.Guid[]]
+        $excludedGroups,
+
+        [Parameter()]
+        [System.Boolean]
+        $overrideDefaultRule,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDetectedApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.Int64]
+        $sizeInByte,
+
+        [Parameter()]
+        [System.Int32]
+        $deviceCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedDevices,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDetectedAppDeviceReferenceSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $detectedAppId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceReferenceUrl
+    )
+}
+function New-IntuneDeviceAppManagement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $microsoftStoreForBusinessLastSuccessfulSyncDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $isEnabledForMicrosoftStoreForBusiness,
+
+        [Parameter()]
+        [System.String]
+        $microsoftStoreForBusinessLanguage,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $microsoftStoreForBusinessLastCompletedApplicationSyncTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $mobileApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $mobileAppCategories,
+
+        [Parameter()]
+        [System.Object[]]
+        $mobileAppConfigurations,
+
+        [Parameter()]
+        [System.Object[]]
+        $vppTokens,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedAppPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $iosManagedAppProtections,
+
+        [Parameter()]
+        [System.Object[]]
+        $androidManagedAppProtections,
+
+        [Parameter()]
+        [System.Object[]]
+        $defaultManagedAppProtections,
+
+        [Parameter()]
+        [System.Object[]]
+        $targetedManagedAppConfigurations,
+
+        [Parameter()]
+        [System.Object[]]
+        $mdmWindowsInformationProtectionPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $windowsInformationProtectionPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedAppRegistrations,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedAppStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedEBooks,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $scheduledActionsForRule,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStatuses,
+
+        [Parameter()]
+        [System.Object]
+        $deviceStatusOverview,
+
+        [Parameter()]
+        [System.Object]
+        $userStatusOverview,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceSettingStateSummaries,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsPhone81CompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.String]
+        $passwordRequiredType,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequired,
+
+        [Parameter()]
+        [System.String]
+        $osMinimumVersion,
+
+        [Parameter()]
+        [System.String]
+        $osMaximumVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireEncryption,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows81CompliancePolicy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10MobileCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequireToUnlockFromIdle,
+
+        [Parameter()]
+        [System.Boolean]
+        $earlyLaunchAntiMalwareDriverEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $bitLockerEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $secureBootEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $codeIntegrityEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10CompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequiredToUnlockFromIdle,
+
+        [Parameter()]
+        [System.Boolean]
+        $requireHealthyDeviceReport,
+
+        [Parameter()]
+        [System.String]
+        $mobileOsMinimumVersion,
+
+        [Parameter()]
+        [System.String]
+        $mobileOsMaximumVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $systemIntegrityProtectionEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceThreatProtectionEnabled,
+
+        [Parameter()]
+        [System.String]
+        $deviceThreatProtectionRequiredSecurityLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallBlockAllIncoming,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallEnableStealthMode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodePreviousPasscodeBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.String]
+        $passcodeRequiredType,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityBlockJailbrokenDevices,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedEmailProfileRequired,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidWorkProfileCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityPreventInstallAppsFromUnknownSources,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityDisableUsbDebugging,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireVerifyApps,
+
+        [Parameter()]
+        [System.String]
+        $minAndroidSecurityPatchLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireSafetyNetAttestationBasicIntegrity,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireSafetyNetAttestationCertifiedDevice,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireGooglePlayServices,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireUpToDateSecurityProviders,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireCompanyPortalAppIntegrity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidCompliancePolicy,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceCompliancePolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceCompliancePolicyDeviceSettingStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $settingName,
+
+        [Parameter()]
+        [System.String]
+        $instancePath,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceCompliancePolicyDeviceStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $inGracePeriodCount,
+
+        [Parameter()]
+        [System.Int32]
+        $configManagerCount,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceCompliancePolicyDeviceStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $deviceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceCompliancePolicyDeviceStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceCompliancePolicyScheduledActionsForRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $ruleName,
+
+        [Parameter()]
+        [System.Object[]]
+        $scheduledActionConfigurations,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceCompliancePolicyScheduledActionsForRuleConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $deviceComplianceScheduledActionForRuleId,
+
+        [Parameter()]
+        [System.Int32]
+        $gracePeriodHours,
+
+        [Parameter()]
+        [System.String]
+        $actionType,
+
+        [Parameter()]
+        [System.String]
+        $notificationTemplateId,
+
+        [Parameter()]
+        [System.String[]]
+        $notificationMessageCCList,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceCompliancePolicySettingSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $setting,
+
+        [Parameter()]
+        [System.String]
+        $settingName,
+
+        [Parameter()]
+        [System.String]
+        $platformType,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceComplianceSettingStates,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceCompliancePolicyUserStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $devicesCount,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceCompliancePolicyUserStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceComplianceSettingState
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicySettingStateSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $setting,
+
+        [Parameter()]
+        [System.String]
+        $settingName,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $userEmail,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceConfigurationDeviceStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStatuses,
+
+        [Parameter()]
+        [System.Object]
+        $deviceStatusOverview,
+
+        [Parameter()]
+        [System.Object]
+        $userStatusOverview,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceSettingStateSummaries,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10TeamGeneralConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureOperationalInsightsBlockTelemetry,
+
+        [Parameter()]
+        [System.String]
+        $azureOperationalInsightsWorkspaceId,
+
+        [Parameter()]
+        [System.String]
+        $azureOperationalInsightsWorkspaceKey,
+
+        [Parameter()]
+        [System.Boolean]
+        $connectAppBlockAutoLaunch,
+
+        [Parameter()]
+        [System.Boolean]
+        $maintenanceWindowBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $maintenanceWindowDurationInHours,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $maintenanceWindowStartTime,
+
+        [Parameter()]
+        [System.String]
+        $miracastChannel,
+
+        [Parameter()]
+        [System.Boolean]
+        $miracastBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $miracastRequirePin,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockMyMeetingsAndFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockSessionResume,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockSigninSuggestions,
+
+        [Parameter()]
+        [System.Int32]
+        $settingsDefaultVolume,
+
+        [Parameter()]
+        [System.Int32]
+        $settingsScreenTimeoutInMinutes,
+
+        [Parameter()]
+        [System.Int32]
+        $settingsSessionTimeoutInMinutes,
+
+        [Parameter()]
+        [System.Int32]
+        $settingsSleepTimeoutInMinutes,
+
+        [Parameter()]
+        [System.Boolean]
+        $welcomeScreenBlockAutomaticWakeUp,
+
+        [Parameter()]
+        [System.String]
+        $welcomeScreenBackgroundImageUrl,
+
+        [Parameter()]
+        [System.String]
+        $welcomeScreenMeetingInformation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsPhone81GeneralConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $appsBlockCopyPaste,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $cameraBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockWifiTethering,
+
+        [Parameter()]
+        [System.Object[]]
+        $compliantAppsList,
+
+        [Parameter()]
+        [System.String]
+        $compliantAppListType,
+
+        [Parameter()]
+        [System.Boolean]
+        $diagnosticDataBlockSubmission,
+
+        [Parameter()]
+        [System.Boolean]
+        $emailBlockAddingAccounts,
+
+        [Parameter()]
+        [System.Boolean]
+        $locationServicesBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $microsoftAccountBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $nfcBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinutesOfInactivityBeforeScreenTimeout,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordSignInFailureCountBeforeFactoryReset,
+
+        [Parameter()]
+        [System.String]
+        $passwordRequiredType,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageBlockRemovableStorage,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $webBrowserBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $wifiBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $wifiBlockAutomaticConnectHotspots,
+
+        [Parameter()]
+        [System.Boolean]
+        $wifiBlockHotspotReporting,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsStoreBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows81GeneralConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $accountsBlockAddingNonMicrosoftAccountEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockAutomaticDetectionOfIntranetSites,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockEnterpriseModeAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockJavaScript,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockPlugins,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockSendingDoNotTrackHeader,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockSingleWordEntryOnIntranetSites,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserRequireSmartScreen,
+
+        [Parameter()]
+        [System.String]
+        $browserEnterpriseModeSiteListLocation,
+
+        [Parameter()]
+        [System.String]
+        $browserInternetSecurityLevel,
+
+        [Parameter()]
+        [System.String]
+        $browserIntranetSecurityLevel,
+
+        [Parameter()]
+        [System.String]
+        $browserLoggingReportLocation,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserRequireHighSecurityForRestrictedSites,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserRequireFirewall,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserRequireFraudWarning,
+
+        [Parameter()]
+        [System.String]
+        $browserTrustedSitesSecurityLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockDataRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $diagnosticsBlockDataSubmission,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockPicturePasswordAndPin,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireDeviceEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $updatesRequireAutomaticUpdates,
+
+        [Parameter()]
+        [System.String]
+        $userAccountControlSettings,
+
+        [Parameter()]
+        [System.String]
+        $workFoldersUrl,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsUpdateForBusinessConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $deliveryOptimizationMode,
+
+        [Parameter()]
+        [System.String]
+        $prereleaseFeatures,
+
+        [Parameter()]
+        [System.String]
+        $automaticUpdateMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $microsoftUpdateServiceAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $driversExcluded,
+
+        [Parameter()]
+        [System.Object]
+        $installationSchedule,
+
+        [Parameter()]
+        [System.Int32]
+        $qualityUpdatesDeferralPeriodInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $featureUpdatesDeferralPeriodInDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $qualityUpdatesPaused,
+
+        [Parameter()]
+        [System.Boolean]
+        $featureUpdatesPaused,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $qualityUpdatesPauseExpiryDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $featureUpdatesPauseExpiryDateTime,
+
+        [Parameter()]
+        [System.String]
+        $businessReadyUpdatesOnly,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsPhone81CustomConfiguration,
+
+        [Parameter()]
+        [System.Object[]]
+        $omaSettings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10SecureAssessmentConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $launchUri,
+
+        [Parameter()]
+        [System.String]
+        $configurationAccount,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowPrinting,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowScreenCapture,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowTextSuggestion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $sharedPCConfiguration,
+
+        [Parameter()]
+        [System.Object]
+        $accountManagerPolicy,
+
+        [Parameter()]
+        [System.String]
+        $allowedAccounts,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowLocalStorage,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAccountManager,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableEduPolicies,
+
+        [Parameter()]
+        [System.Boolean]
+        $disablePowerPolicies,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableSignInOnResume,
+
+        [Parameter()]
+        [System.Boolean]
+        $enabled,
+
+        [Parameter()]
+        [System.Int32]
+        $idleTimeBeforeSleepInSeconds,
+
+        [Parameter()]
+        [System.String]
+        $kioskAppDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $kioskAppUserModelId,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $maintenanceStartTime,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10EnterpriseModernAppManagementConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $uninstallBuiltInApps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10CustomConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $editionUpgradeConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $licenseType,
+
+        [Parameter()]
+        [System.String]
+        $targetEdition,
+
+        [Parameter()]
+        [System.String]
+        $license,
+
+        [Parameter()]
+        [System.String]
+        $productKey,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsDefenderAdvancedThreatProtectionConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowSampleSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $enableExpeditedTelemetryReporting,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10GeneralConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintDiscoveryEndPoint,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintOAuthAuthority,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintOAuthClientIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintResourceIdentifier,
+
+        [Parameter()]
+        [System.Int32]
+        $enterpriseCloudPrintDiscoveryMaxLimit,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintMopriaDiscoveryResourceIdentifier,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchBlockDiacritics,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchDisableAutoLanguageDetection,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchDisableIndexingEncryptedItems,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchEnableRemoteQueries,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchDisableIndexerBackoff,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchDisableIndexingRemovableDrive,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchEnableAutomaticIndexSizeManangement,
+
+        [Parameter()]
+        [System.String]
+        $diagnosticsDataSubmissionMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $oneDriveDisableFileSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenEnableAppInstallControl,
+
+        [Parameter()]
+        [System.String]
+        $personalizationDesktopImageUrl,
+
+        [Parameter()]
+        [System.String]
+        $personalizationLockScreenImageUrl,
+
+        [Parameter()]
+        [System.String[]]
+        $bluetoothAllowedServices,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlockAdvertising,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlockDiscoverableMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlockPrePairing,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlocked,
+
+        [Parameter()]
+        [System.String]
+        $edgeCookiePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockDeveloperTools,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockSendingDoNotTrackHeader,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockInPrivateBrowsing,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockJavaScript,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockPasswordManager,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockAddressBarDropdown,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockCompatibilityList,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeClearBrowsingDataOnExit,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeAllowStartPagesModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeDisableFirstRunPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockLiveTileDataCollection,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeSyncFavoritesWithInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockDataWhenRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockVpn,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockVpnWhenRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderBlockEndUserAccess,
+
+        [Parameter()]
+        [System.Int32]
+        $defenderDaysBeforeDeletingQuarantinedMalware,
+
+        [Parameter()]
+        [System.Object]
+        $defenderDetectedMalwareActions,
+
+        [Parameter()]
+        [System.String]
+        $defenderSystemScanSchedule,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderFilesAndFoldersToExclude,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderFileExtensionsToExclude,
+
+        [Parameter()]
+        [System.Int32]
+        $defenderScanMaxCpu,
+
+        [Parameter()]
+        [System.String]
+        $defenderMonitorFileActivity,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderProcessesToExclude,
+
+        [Parameter()]
+        [System.String]
+        $defenderPromptForSampleSubmission,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireBehaviorMonitoring,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireCloudProtection,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireNetworkInspectionSystem,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireRealTimeMonitoring,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanArchiveFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanDownloads,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanNetworkFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanIncomingMail,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanMappedNetworkDrivesDuringFullScan,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanRemovableDrivesDuringFullScan,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanScriptsLoadedInInternetExplorer,
+
+        [Parameter()]
+        [System.Int32]
+        $defenderSignatureUpdateIntervalInHours,
+
+        [Parameter()]
+        [System.String]
+        $defenderScanType,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $defenderScheduledScanTime,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $defenderScheduledQuickScanTime,
+
+        [Parameter()]
+        [System.String]
+        $defenderCloudBlockLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenAllowTimeoutConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockActionCenterNotifications,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockCortana,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockToastNotifications,
+
+        [Parameter()]
+        [System.Int32]
+        $lockScreenTimeoutInSeconds,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequireWhenResumeFromIdleState,
+
+        [Parameter()]
+        [System.String]
+        $privacyAdvertisingId,
+
+        [Parameter()]
+        [System.Boolean]
+        $privacyAutoAcceptPairingAndConsentPrompts,
+
+        [Parameter()]
+        [System.Boolean]
+        $privacyBlockInputPersonalization,
+
+        [Parameter()]
+        [System.Boolean]
+        $startBlockUnpinningAppsFromTaskbar,
+
+        [Parameter()]
+        [System.String]
+        $startMenuAppListVisibility,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideChangeAccountSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideFrequentlyUsedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideHibernate,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideLock,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHidePowerButton,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideRecentJumpLists,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideRecentlyAddedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideRestartOptions,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideShutDown,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideSignOut,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideSleep,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideSwitchAccount,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideUserTile,
+
+        [Parameter()]
+        [System.Byte[]]
+        $startMenuLayoutEdgeAssetsXml,
+
+        [Parameter()]
+        [System.Byte[]]
+        $startMenuLayoutXml,
+
+        [Parameter()]
+        [System.String]
+        $startMenuMode,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderDocuments,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderDownloads,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderFileExplorer,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderHomeGroup,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderMusic,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderNetwork,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderPersonalFolder,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderPictures,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderSettings,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderVideos,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockSettingsApp,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockSystemPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockDevicesPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockNetworkInternetPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockPersonalizationPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockAccountsPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockTimeLanguagePage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockEaseOfAccessPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockPrivacyPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockUpdateSecurityPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockAppsPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockGamingPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockConsumerSpecificFeatures,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockOnActionCenter,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockTailoredExperiences,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockThirdPartyNotifications,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockWelcomeExperience,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockWindowsTips,
+
+        [Parameter()]
+        [System.String]
+        $windowsSpotlightConfigureOnLockScreen,
+
+        [Parameter()]
+        [System.Boolean]
+        $networkProxyApplySettingsDeviceWide,
+
+        [Parameter()]
+        [System.Boolean]
+        $networkProxyDisableAutoDetect,
+
+        [Parameter()]
+        [System.String]
+        $networkProxyAutomaticConfigurationUrl,
+
+        [Parameter()]
+        [System.Object]
+        $networkProxyServer,
+
+        [Parameter()]
+        [System.Boolean]
+        $antiTheftModeBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $connectedDevicesServiceBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $certificatesBlockManualRootCertificateInstallation,
+
+        [Parameter()]
+        [System.Boolean]
+        $copyPasteBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $cortanaBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceManagementBlockFactoryResetOnMobile,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceManagementBlockManualUnenroll,
+
+        [Parameter()]
+        [System.String]
+        $safeSearchFilter,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockSearchSuggestions,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockSendingIntranetTrafficToInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeSendIntranetTrafficToInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeRequireSmartScreen,
+
+        [Parameter()]
+        [System.String]
+        $edgeEnterpriseModeSiteListLocation,
+
+        [Parameter()]
+        [System.String]
+        $edgeFirstRunUrl,
+
+        [Parameter()]
+        [System.Object]
+        $edgeSearchEngine,
+
+        [Parameter()]
+        [System.String[]]
+        $edgeHomepageUrls,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockAccessToAboutFlags,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenBlockPromptOverride,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenBlockPromptOverrideForFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $webRtcBlockLocalhostIpAddress,
+
+        [Parameter()]
+        [System.Boolean]
+        $internetSharingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockAddProvisioningPackage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockRemoveProvisioningPackage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockChangeSystemTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockEditDeviceName,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockChangeRegion,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockChangeLanguage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockChangePowerSleep,
+
+        [Parameter()]
+        [System.Boolean]
+        $microsoftAccountBlockSettingsSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $resetProtectionModeBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireMobileDeviceEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $usbBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $voiceRecordingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $wiFiBlockManualConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $wiFiScanInterval,
+
+        [Parameter()]
+        [System.Boolean]
+        $wirelessDisplayBlockProjectionToThisDevice,
+
+        [Parameter()]
+        [System.Boolean]
+        $wirelessDisplayBlockUserInputFromReceiver,
+
+        [Parameter()]
+        [System.Boolean]
+        $wirelessDisplayRequirePinForPairing,
+
+        [Parameter()]
+        [System.String]
+        $appsAllowTrustedAppsSideloading,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsStoreBlockAutoUpdate,
+
+        [Parameter()]
+        [System.String]
+        $developerUnlockSetting,
+
+        [Parameter()]
+        [System.Boolean]
+        $sharedUserAppDataAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $appsBlockWindowsStoreOriginatedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsStoreEnablePrivateStoreOnly,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRestrictAppDataToSystemVolume,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRestrictAppInstallToSystemVolume,
+
+        [Parameter()]
+        [System.Boolean]
+        $gameDvrBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $experienceBlockDeviceDiscovery,
+
+        [Parameter()]
+        [System.Boolean]
+        $experienceBlockErrorDialogWhenNoSIM,
+
+        [Parameter()]
+        [System.Boolean]
+        $experienceBlockTaskSwitcher,
+
+        [Parameter()]
+        [System.Boolean]
+        $logonBlockFastUserSwitching,
+
+        [Parameter()]
+        [System.Boolean]
+        $tenantLockdownRequireNetworkDuringOutOfBoxExperience,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10EndpointProtectionConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallBlockStatefulFTP,
+
+        [Parameter()]
+        [System.Int32]
+        $firewallIdleTimeoutForSecurityAssociationInSeconds,
+
+        [Parameter()]
+        [System.String]
+        $firewallPreSharedKeyEncodingMethod,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallIPSecExemptionsAllowNeighborDiscovery,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallIPSecExemptionsAllowICMP,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallIPSecExemptionsAllowRouterDiscovery,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallIPSecExemptionsAllowDHCP,
+
+        [Parameter()]
+        [System.String]
+        $firewallCertificateRevocationListCheckMethod,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallMergeKeyingModuleSettings,
+
+        [Parameter()]
+        [System.String]
+        $firewallPacketQueueingMethod,
+
+        [Parameter()]
+        [System.Object]
+        $firewallProfileDomain,
+
+        [Parameter()]
+        [System.Object]
+        $firewallProfilePublic,
+
+        [Parameter()]
+        [System.Object]
+        $firewallProfilePrivate,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderAttackSurfaceReductionExcludedPaths,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderGuardedFoldersAllowedAppPaths,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderAdditionalGuardedFolders,
+
+        [Parameter()]
+        [System.Byte[]]
+        $defenderExploitProtectionXml,
+
+        [Parameter()]
+        [System.String]
+        $defenderExploitProtectionXmlFileName,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderSecurityCenterBlockExploitProtectionOverride,
+
+        [Parameter()]
+        [System.String]
+        $appLockerApplicationControl,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenEnableInShell,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenBlockOverrideForFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardEnabled,
+
+        [Parameter()]
+        [System.String]
+        $applicationGuardBlockFileTransfer,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardBlockNonEnterpriseContent,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPersistence,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardForceAuditing,
+
+        [Parameter()]
+        [System.String]
+        $applicationGuardBlockClipboardSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPrintToPDF,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPrintToXPS,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPrintToLocalPrinters,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPrintToNetworkPrinters,
+
+        [Parameter()]
+        [System.Boolean]
+        $bitLockerDisableWarningForOtherDiskEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $bitLockerEnableStorageCardEncryptionOnMobile,
+
+        [Parameter()]
+        [System.Boolean]
+        $bitLockerEncryptDevice,
+
+        [Parameter()]
+        [System.Object]
+        $bitLockerRemovableDrivePolicy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSDeviceFeaturesConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosDeviceFeaturesConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $assetTagTemplate,
+
+        [Parameter()]
+        [System.String]
+        $lockScreenFootnote,
+
+        [Parameter()]
+        [System.Object[]]
+        $homeScreenDockIcons,
+
+        [Parameter()]
+        [System.Object[]]
+        $homeScreenPages,
+
+        [Parameter()]
+        [System.Object[]]
+        $notificationSettings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSGeneralDeviceConfiguration,
+
+        [Parameter()]
+        [System.String[]]
+        $emailInDomainSuffixes,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSCustomConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $payloadName,
+
+        [Parameter()]
+        [System.String]
+        $payloadFileName,
+
+        [Parameter()]
+        [System.Byte[]]
+        $payload,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosUpdateConfiguration,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $activeHoursStart,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $activeHoursEnd,
+
+        [Parameter()]
+        [System.String[]]
+        $scheduledInstallDays,
+
+        [Parameter()]
+        [System.Int32]
+        $utcTimeOffsetInMinutes,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosGeneralDeviceConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $accountBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $activationLockAllowWhenSupervised,
+
+        [Parameter()]
+        [System.Boolean]
+        $airDropBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $airDropForceUnmanagedDropTarget,
+
+        [Parameter()]
+        [System.Boolean]
+        $airPlayForcePairingPasswordForOutgoingRequests,
+
+        [Parameter()]
+        [System.Boolean]
+        $appleWatchBlockPairing,
+
+        [Parameter()]
+        [System.Boolean]
+        $appleWatchForceWristDetection,
+
+        [Parameter()]
+        [System.Boolean]
+        $appleNewsBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsSingleAppModeList,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsVisibilityList,
+
+        [Parameter()]
+        [System.String]
+        $appsVisibilityListType,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreBlockAutomaticDownloads,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreBlockInAppPurchases,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreBlockUIAppInstallation,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreRequirePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockGlobalBackgroundFetchWhileRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockPerAppDataModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockPersonalHotspot,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockVoiceRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $certificatesBlockUntrustedTlsCertificates,
+
+        [Parameter()]
+        [System.Boolean]
+        $classroomAppBlockRemoteScreenObservation,
+
+        [Parameter()]
+        [System.Boolean]
+        $classroomAppForceUnpromptedScreenObservation,
+
+        [Parameter()]
+        [System.Boolean]
+        $configurationProfileBlockChanges,
+
+        [Parameter()]
+        [System.Boolean]
+        $definitionLookupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceBlockEnableRestrictions,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceBlockEraseContentAndSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceBlockNameModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $diagnosticDataBlockSubmissionModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $documentsBlockManagedDocumentsInUnmanagedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $documentsBlockUnmanagedDocumentsInManagedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseAppBlockTrust,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseAppBlockTrustModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $faceTimeBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $findMyFriendsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $gamingBlockGameCenterFriends,
+
+        [Parameter()]
+        [System.Boolean]
+        $gamingBlockMultiplayer,
+
+        [Parameter()]
+        [System.Boolean]
+        $gameCenterBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $hostPairingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $iBooksStoreBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $iBooksStoreBlockErotica,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockActivityContinuation,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockBackup,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockDocumentSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockManagedAppsSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockPhotoLibrary,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockPhotoStreamSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockSharedPhotoStream,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudRequireEncryptedBackup,
+
+        [Parameter()]
+        [System.Boolean]
+        $iTunesBlockExplicitContent,
+
+        [Parameter()]
+        [System.Boolean]
+        $iTunesBlockMusicService,
+
+        [Parameter()]
+        [System.Boolean]
+        $iTunesBlockRadio,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockAutoCorrect,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockDictation,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockPredictive,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockShortcuts,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockSpellCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowAssistiveSpeak,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowAssistiveTouchSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowAutoLock,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowColorInversionSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowRingerSwitch,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowScreenRotation,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowSleepButton,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowTouchscreen,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowVoiceOverSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowVolumeButtons,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowZoomSettings,
+
+        [Parameter()]
+        [System.String]
+        $kioskModeAppStoreUrl,
+
+        [Parameter()]
+        [System.String]
+        $kioskModeBuiltInAppId,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireAssistiveTouch,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireColorInversion,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireMonoAudio,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireVoiceOver,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireZoom,
+
+        [Parameter()]
+        [System.String]
+        $kioskModeManagedAppId,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockControlCenter,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockNotificationView,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockPassbook,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockTodayView,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingAustralia,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingCanada,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingFrance,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingGermany,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingIreland,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingJapan,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingNewZealand,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingUnitedKingdom,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingUnitedStates,
+
+        [Parameter()]
+        [System.Object[]]
+        $networkUsageRules,
+
+        [Parameter()]
+        [System.String]
+        $mediaContentRatingApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $messagesBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $notificationsBlockSettingsModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockFingerprintUnlock,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockFingerprintModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinutesOfInactivityBeforeScreenTimeout,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodePreviousPasscodeBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeSignInFailureCountBeforeWipe,
+
+        [Parameter()]
+        [System.String]
+        $passcodeRequiredType,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $podcastsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariBlockJavaScript,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariBlocked,
+
+        [Parameter()]
+        [System.String]
+        $safariCookieSettings,
+
+        [Parameter()]
+        [System.String[]]
+        $safariManagedDomains,
+
+        [Parameter()]
+        [System.String[]]
+        $safariPasswordAutoFillDomains,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariRequireFraudWarning,
+
+        [Parameter()]
+        [System.Boolean]
+        $siriBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $siriBlockedWhenLocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $siriBlockUserGeneratedContent,
+
+        [Parameter()]
+        [System.Boolean]
+        $siriRequireProfanityFilter,
+
+        [Parameter()]
+        [System.Boolean]
+        $spotlightBlockInternetResults,
+
+        [Parameter()]
+        [System.Boolean]
+        $voiceDialingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $wallpaperBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $wiFiConnectOnlyToConfiguredNetworks,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosCustomConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidWorkProfileGeneralDeviceConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockFingerprintUnlock,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockTrustAgents,
+
+        [Parameter()]
+        [System.String]
+        $workProfileDataSharingType,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockNotificationsWhileDeviceLocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockAddingAccounts,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBluetoothEnableContactSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockScreenCapture,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockCrossProfileCallerId,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockCamera,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockCrossProfileContactsSearch,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockCrossProfileCopyPaste,
+
+        [Parameter()]
+        [System.String]
+        $workProfileDefaultAppPermissionPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfilePasswordBlockFingerprintUnlock,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfilePasswordBlockTrustAgents,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinNumericCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinNonLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinLowerCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinUpperCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinSymbolCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinutesOfInactivityBeforeScreenTimeout,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordSignInFailureCountBeforeFactoryReset,
+
+        [Parameter()]
+        [System.String]
+        $workProfilePasswordRequiredType,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileRequirePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireVerifyApps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidWorkProfileCustomConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidGeneralDeviceConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $appsBlockClipboardSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $appsBlockYouTube,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockMessaging,
+
+        [Parameter()]
+        [System.Boolean]
+        $googleAccountBlockAutoSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $googlePlayStoreBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeBlockSleepButton,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeBlockVolumeButtons,
+
+        [Parameter()]
+        [System.Object[]]
+        $kioskModeApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $powerOffBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $factoryResetBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceSharingAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageBlockGoogleBackup,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireRemovableStorageEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $voiceAssistantBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $webBrowserBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]
+        $webBrowserBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $webBrowserBlockJavaScript,
+
+        [Parameter()]
+        [System.String]
+        $webBrowserCookieSettings,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsInstallAllowList,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsLaunchBlockList,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsHideList,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidCustomConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceConfigurationPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceConfigurationPolicyDeviceSettingStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $settingName,
+
+        [Parameter()]
+        [System.String]
+        $instancePath,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceConfigurationPolicyDeviceStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $deviceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceConfigurationPolicyDeviceStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceConfigurationPolicyUserStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $devicesCount,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceConfigurationPolicyUserStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceEnrollmentConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.Int32]
+        $priority,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceEnrollmentWindowsHelloForBusinessConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMaximumLength,
+
+        [Parameter()]
+        [System.String]
+        $pinUppercaseCharactersUsage,
+
+        [Parameter()]
+        [System.String]
+        $pinLowercaseCharactersUsage,
+
+        [Parameter()]
+        [System.String]
+        $pinSpecialCharactersUsage,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityDeviceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $unlockWithBiometricsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $remotePassportEnabled,
+
+        [Parameter()]
+        [System.Int32]
+        $pinPreviousBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $pinExpirationInDays,
+
+        [Parameter()]
+        [System.String]
+        $enhancedBiometricsState,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceEnrollmentPlatformRestrictionsConfiguration,
+
+        [Parameter()]
+        [System.Object]
+        $iosRestriction,
+
+        [Parameter()]
+        [System.Object]
+        $windowsRestriction,
+
+        [Parameter()]
+        [System.Object]
+        $windowsMobileRestriction,
+
+        [Parameter()]
+        [System.Object]
+        $androidRestriction,
+
+        [Parameter()]
+        [System.Object]
+        $macOSRestriction,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceEnrollmentLimitConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $limit,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceEnrollmentConfigurationAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentConfigurationId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceManagement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $subscriptionState,
+
+        [Parameter()]
+        [System.Object]
+        $settings,
+
+        [Parameter()]
+        [System.Object]
+        $intuneBrand,
+
+        [Parameter()]
+        [System.Object[]]
+        $termsAndConditions,
+
+        [Parameter()]
+        [System.Object]
+        $applePushNotificationCertificate,
+
+        [Parameter()]
+        [System.Object]
+        $managedDeviceOverview,
+
+        [Parameter()]
+        [System.Object[]]
+        $detectedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedDevices,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceConfigurations,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceCompliancePolicies,
+
+        [Parameter()]
+        [System.Object]
+        $softwareUpdateStatusSummary,
+
+        [Parameter()]
+        [System.Object]
+        $deviceCompliancePolicyDeviceStateSummary,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceCompliancePolicySettingStateSummaries,
+
+        [Parameter()]
+        [System.Object]
+        $deviceConfigurationDeviceStateSummaries,
+
+        [Parameter()]
+        [System.Object[]]
+        $iosUpdateStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceCategories,
+
+        [Parameter()]
+        [System.Object[]]
+        $exchangeConnectors,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceEnrollmentConfigurations,
+
+        [Parameter()]
+        [System.Object]
+        $conditionalAccessSettings,
+
+        [Parameter()]
+        [System.Object[]]
+        $mobileThreatDefenseConnectors,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceManagementPartners,
+
+        [Parameter()]
+        [System.Object[]]
+        $notificationMessageTemplates,
+
+        [Parameter()]
+        [System.Object[]]
+        $roleDefinitions,
+
+        [Parameter()]
+        [System.Object[]]
+        $roleAssignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $resourceOperations,
+
+        [Parameter()]
+        [System.Object[]]
+        $telecomExpenseManagementPartners,
+
+        [Parameter()]
+        [System.Object[]]
+        $remoteAssistancePartners,
+
+        [Parameter()]
+        [System.Object[]]
+        $windowsInformationProtectionAppLearningSummaries,
+
+        [Parameter()]
+        [System.Object[]]
+        $windowsInformationProtectionNetworkLearningSummaries,
+
+        [Parameter()]
+        [System.Object[]]
+        $troubleshootingEvents,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneDeviceManagementPartner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastHeartbeatDateTime,
+
+        [Parameter()]
+        [System.String]
+        $partnerState,
+
+        [Parameter()]
+        [System.String]
+        $partnerAppType,
+
+        [Parameter()]
+        [System.String]
+        $singleTenantAppId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $isConfigured,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $whenPartnerDevicesWillBeRemovedDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $whenPartnerDevicesWillBeMarkedAsNonCompliantDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneExchangeConnector
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.String]
+        $primarySmtpAddress,
+
+        [Parameter()]
+        [System.String]
+        $serverName,
+
+        [Parameter()]
+        [System.String]
+        $connectorServerName,
+
+        [Parameter()]
+        [System.String]
+        $exchangeConnectorType,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $exchangeAlias,
+
+        [Parameter()]
+        [System.String]
+        $exchangeOrganization,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneIosUpdateStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $installStatus,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $deviceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneLocalizedNotificationMessage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $notificationMessageTemplateId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $locale,
+
+        [Parameter()]
+        [System.String]
+        $subject,
+
+        [Parameter()]
+        [System.String]
+        $messageTemplate,
+
+        [Parameter()]
+        [System.Boolean]
+        $isDefault,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneManagedAppRegistration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $applicationVersion,
+
+        [Parameter()]
+        [System.String]
+        $managementSdkVersion,
+
+        [Parameter()]
+        [System.String]
+        $platformVersion,
+
+        [Parameter()]
+        [System.String]
+        $deviceType,
+
+        [Parameter()]
+        [System.String]
+        $deviceTag,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String[]]
+        $flaggedReasons,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.Object]
+        $appIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $appliedPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $intendedPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $operations,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidManagedAppRegistration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosManagedAppRegistration,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneManagedAppStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedAppStatusRaw,
+
+        [Parameter()]
+        [System.Object]
+        $content,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneManagedDevice
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceOwnerType,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceActionResults,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $enrolledDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $operatingSystem,
+
+        [Parameter()]
+        [System.String]
+        $complianceState,
+
+        [Parameter()]
+        [System.String]
+        $jailBroken,
+
+        [Parameter()]
+        [System.String]
+        $managementAgent,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $easActivated,
+
+        [Parameter()]
+        [System.String]
+        $easDeviceId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $easActivationDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureADRegistered,
+
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentType,
+
+        [Parameter()]
+        [System.String]
+        $activationLockBypassCode,
+
+        [Parameter()]
+        [System.String]
+        $emailAddress,
+
+        [Parameter()]
+        [System.String]
+        $azureADDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $deviceRegistrationState,
+
+        [Parameter()]
+        [System.String]
+        $deviceCategoryDisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $isSupervised,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $exchangeLastSuccessfulSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $exchangeAccessState,
+
+        [Parameter()]
+        [System.String]
+        $exchangeAccessStateReason,
+
+        [Parameter()]
+        [System.String]
+        $remoteAssistanceSessionUrl,
+
+        [Parameter()]
+        [System.String]
+        $remoteAssistanceSessionErrorDetails,
+
+        [Parameter()]
+        [System.Boolean]
+        $isEncrypted,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $model,
+
+        [Parameter()]
+        [System.String]
+        $manufacturer,
+
+        [Parameter()]
+        [System.String]
+        $imei,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $serialNumber,
+
+        [Parameter()]
+        [System.String]
+        $phoneNumber,
+
+        [Parameter()]
+        [System.String]
+        $androidSecurityPatchLevel,
+
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Object]
+        $configurationManagerClientEnabledFeatures,
+
+        [Parameter()]
+        [System.String]
+        $wiFiMacAddress,
+
+        [Parameter()]
+        [System.Object]
+        $deviceHealthAttestationState,
+
+        [Parameter()]
+        [System.String]
+        $subscriberCarrier,
+
+        [Parameter()]
+        [System.String]
+        $meid,
+
+        [Parameter()]
+        [System.Int64]
+        $totalStorageSpaceInBytes,
+
+        [Parameter()]
+        [System.Int64]
+        $freeStorageSpaceInBytes,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceName,
+
+        [Parameter()]
+        [System.String]
+        $partnerReportedThreatState,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceConfigurationStates,
+
+        [Parameter()]
+        [System.Object]
+        $deviceCategory,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceCompliancePolicyStates,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneManagedDeviceDeviceCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneManagedDeviceDeviceCompliancePolicyState
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.Object[]]
+        $settingStates,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $platformType,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.Int32]
+        $settingCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneManagedDeviceDeviceConfigurationState
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.Object[]]
+        $settingStates,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $platformType,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.Int32]
+        $settingCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneManagedDeviceOverviewReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceOverviewReferenceUrl
+    )
+}
+function New-IntuneManagedEBook
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $publisher,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $publishedDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $largeCover,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $informationUrl,
+
+        [Parameter()]
+        [System.String]
+        $privacyInformationUrl,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object]
+        $installSummary,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStates,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStateSummary,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosVppEBook,
+
+        [Parameter()]
+        [System.Guid]
+        $vppTokenId,
+
+        [Parameter()]
+        [System.String]
+        $appleId,
+
+        [Parameter()]
+        [System.String]
+        $vppOrganizationName,
+
+        [Parameter()]
+        [System.String[]]
+        $genres,
+
+        [Parameter()]
+        [System.String]
+        $language,
+
+        [Parameter()]
+        [System.String]
+        $seller,
+
+        [Parameter()]
+        [System.Int32]
+        $totalLicenseCount,
+
+        [Parameter()]
+        [System.Int32]
+        $usedLicenseCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneManagedEBookAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedEBookAssignment,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $installIntent,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosVppEBookAssignment,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneManagedEBookDeviceState
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $installState,
+
+        [Parameter()]
+        [System.String]
+        $errorCode,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.String]
+        $osDescription,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneManagedEBookInstallSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.Int32]
+        $installedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notInstalledDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $installedUserCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedUserCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notInstalledUserCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneManagedEBookUserStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.Int32]
+        $installedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notInstalledDeviceCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStates,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneManagedEBookUserStateSummaryDeviceState
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $userInstallStateSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $installState,
+
+        [Parameter()]
+        [System.String]
+        $errorCode,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.String]
+        $osDescription,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneMdmWindowsInformationProtectionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $enforcementLevel,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseDomain,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProtectedDomainNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $protectionUnderLockConfigRequired,
+
+        [Parameter()]
+        [System.Object]
+        $dataRecoveryCertificate,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnUnenrollDisabled,
+
+        [Parameter()]
+        [System.Guid]
+        $rightsManagementServicesTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureRightsManagementServicesAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $iconsVisible,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxiedDomains,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseIPRanges,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseIPRangesAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxyServers,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseInternalProxyServers,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $neutralDomainResources,
+
+        [Parameter()]
+        [System.Boolean]
+        $indexingEncryptedStoresOrItemsBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $smbAutoEncryptedFileExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneMdmWindowsInformationProtectionPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneMdmWindowsInformationProtectionPolicyExemptAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneMdmWindowsInformationProtectionPolicyProtectedAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneMobileApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $publisher,
+
+        [Parameter()]
+        [System.Object]
+        $largeIcon,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $isFeatured,
+
+        [Parameter()]
+        [System.String]
+        $privacyInformationUrl,
+
+        [Parameter()]
+        [System.String]
+        $informationUrl,
+
+        [Parameter()]
+        [System.String]
+        $owner,
+
+        [Parameter()]
+        [System.String]
+        $developer,
+
+        [Parameter()]
+        [System.String]
+        $notes,
+
+        [Parameter()]
+        [System.String]
+        $publishingState,
+
+        [Parameter()]
+        [System.Object[]]
+        $categories,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosStoreApp,
+
+        [Parameter()]
+        [System.String]
+        $bundleId,
+
+        [Parameter()]
+        [System.String]
+        $appStoreUrl,
+
+        [Parameter()]
+        [System.Object]
+        $applicableDeviceType,
+
+        [Parameter()]
+        [System.Object]
+        $minimumSupportedOperatingSystem,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosVppApp,
+
+        [Parameter()]
+        [System.Int32]
+        $usedLicenseCount,
+
+        [Parameter()]
+        [System.Int32]
+        $totalLicenseCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $releaseDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $licensingType,
+
+        [Parameter()]
+        [System.String]
+        $vppTokenOrganizationName,
+
+        [Parameter()]
+        [System.String]
+        $vppTokenAccountType,
+
+        [Parameter()]
+        [System.String]
+        $vppTokenAppleId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidStoreApp,
+
+        [Parameter()]
+        [System.String]
+        $packageId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $webApp,
+
+        [Parameter()]
+        [System.String]
+        $appUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $useManagedBrowser,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $microsoftStoreForBusinessApp,
+
+        [Parameter()]
+        [System.String]
+        $productKey,
+
+        [Parameter()]
+        [System.String]
+        $licenseType,
+
+        [Parameter()]
+        [System.String]
+        $packageIdentityName,
+
+        [Parameter()]
+        [System.String]
+        $committedContentVersion,
+
+        [Parameter()]
+        [System.String]
+        $fileName,
+
+        [Parameter()]
+        [System.Int64]
+        $size,
+
+        [Parameter()]
+        [System.Object[]]
+        $contentVersions,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosLobApp,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $expirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $versionNumber,
+
+        [Parameter()]
+        [System.String]
+        $buildNumber,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidLobApp,
+
+        [Parameter()]
+        [System.String]
+        $versionName,
+
+        [Parameter()]
+        [System.String]
+        $versionCode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsUniversalAppX,
+
+        [Parameter()]
+        [System.String]
+        $applicableArchitectures,
+
+        [Parameter()]
+        [System.String]
+        $applicableDeviceTypes,
+
+        [Parameter()]
+        [System.String]
+        $identityName,
+
+        [Parameter()]
+        [System.String]
+        $identityPublisherHash,
+
+        [Parameter()]
+        [System.String]
+        $identityResourceIdentifier,
+
+        [Parameter()]
+        [System.Boolean]
+        $isBundle,
+
+        [Parameter()]
+        [System.String]
+        $identityVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsMobileMSI,
+
+        [Parameter()]
+        [System.String]
+        $commandLine,
+
+        [Parameter()]
+        [System.String]
+        $productCode,
+
+        [Parameter()]
+        [System.String]
+        $productVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $ignoreVersionDetection,
+
+        [Parameter()]
+        [System.String]
+        $appAvailability,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedIOSLobApp,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedAndroidLobApp,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedIOSStoreApp,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedAndroidStoreApp,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSOfficeSuiteApp,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneMobileAppAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $intent,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.Object]
+        $settings,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneMobileAppCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneMobileAppCategorySetReferenceSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppCategoryReferenceUrl
+    )
+}
+function New-IntuneMobileAppConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $targetedMobileApps,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStatuses,
+
+        [Parameter()]
+        [System.Object]
+        $deviceStatusSummary,
+
+        [Parameter()]
+        [System.Object]
+        $userStatusSummary,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosMobileAppConfiguration,
+
+        [Parameter()]
+        [System.Byte[]]
+        $encodedSettingXml,
+
+        [Parameter()]
+        [System.Object[]]
+        $settings,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneMobileAppConfigurationPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneMobileAppConfigurationPolicyDeviceStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $deviceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneMobileAppConfigurationPolicyDeviceStatusSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneMobileAppConfigurationPolicyUserStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $devicesCount,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneMobileAppConfigurationPolicyUserStatusSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneMobileAppContentVersion
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppODataType,
+
+        [Parameter()]
+        [System.Object[]]
+        $files,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneMobileAppContentVersionFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppODataType,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppContentId,
+
+        [Parameter()]
+        [System.String]
+        $azureStorageUri,
+
+        [Parameter()]
+        [System.Boolean]
+        $isCommitted,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.Int64]
+        $size,
+
+        [Parameter()]
+        [System.Int64]
+        $sizeEncrypted,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $azureStorageUriExpirationDateTime,
+
+        [Parameter()]
+        [System.Byte[]]
+        $manifest,
+
+        [Parameter()]
+        [System.String]
+        $uploadState,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneMobileThreatDefenseConnector
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastHeartbeatDateTime,
+
+        [Parameter()]
+        [System.String]
+        $partnerState,
+
+        [Parameter()]
+        [System.Boolean]
+        $androidEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $iosEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $androidDeviceBlockedOnMissingPartnerData,
+
+        [Parameter()]
+        [System.Boolean]
+        $iosDeviceBlockedOnMissingPartnerData,
+
+        [Parameter()]
+        [System.Boolean]
+        $partnerUnsupportedOsVersionBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $partnerUnresponsivenessThresholdInDays,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneNotificationMessageTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $defaultLocale,
+
+        [Parameter()]
+        [System.String]
+        $brandingOptions,
+
+        [Parameter()]
+        [System.Object[]]
+        $localizedNotificationMessages,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneRemoteAssistancePartner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $onboardingUrl,
+
+        [Parameter()]
+        [System.String]
+        $onboardingStatus,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastConnectionDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneResourceOperation
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $resourceName,
+
+        [Parameter()]
+        [System.String]
+        $actionName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneRoleAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $members,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String[]]
+        $resourceScopes,
+
+        [Parameter()]
+        [System.Object]
+        $roleDefinition,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneRoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $roleDefinition,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.Object[]]
+        $rolePermissions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isBuiltIn,
+
+        [Parameter()]
+        [System.Object[]]
+        $roleAssignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceAndAppManagementRoleDefinition,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneSoftwareUpdateStatusSummaryReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $softwareUpdateStatusSummaryReferenceUrl
+    )
+}
+function New-IntuneTelecomExpenseManagementPartner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $url,
+
+        [Parameter()]
+        [System.Boolean]
+        $appAuthorized,
+
+        [Parameter()]
+        [System.Boolean]
+        $enabled,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastConnectionDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneTermsAndConditions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $title,
+
+        [Parameter()]
+        [System.String]
+        $bodyText,
+
+        [Parameter()]
+        [System.String]
+        $acceptanceStatement,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $acceptanceStatuses,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneTermsAndConditionsAcceptanceStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $termsAndConditionId,
+
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $acceptedVersion,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $acceptedDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $termsAndConditions,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneTermsAndConditionsAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $termsAndConditionId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneTroubleshootingEvent
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceManagementTroubleshootingEvent,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $eventDateTime,
+
+        [Parameter()]
+        [System.String]
+        $correlationId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $enrollmentTroubleshootingEvent,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $operatingSystem,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.String]
+        $enrollmentType,
+
+        [Parameter()]
+        [System.String]
+        $failureCategory,
+
+        [Parameter()]
+        [System.String]
+        $failureReason,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneVppToken
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $organizationName,
+
+        [Parameter()]
+        [System.String]
+        $vppTokenAccountType,
+
+        [Parameter()]
+        [System.String]
+        $appleId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $expirationDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $token,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.String]
+        $lastSyncStatus,
+
+        [Parameter()]
+        [System.Boolean]
+        $automaticallyUpdateApps,
+
+        [Parameter()]
+        [System.String]
+        $countryOrRegion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneWindowsInformationProtectionAppLearningSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $applicationName,
+
+        [Parameter()]
+        [System.String]
+        $applicationType,
+
+        [Parameter()]
+        [System.Int32]
+        $deviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneWindowsInformationProtectionNetworkLearningSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $url,
+
+        [Parameter()]
+        [System.Int32]
+        $deviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneWindowsInformationProtectionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnMdmHandoffDisabled,
+
+        [Parameter()]
+        [System.String]
+        $mdmEnrollmentUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsHelloForBusinessBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMinimumLength,
+
+        [Parameter()]
+        [System.String]
+        $pinUppercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinLowercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinSpecialCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $pinExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $numberOfPastPinsRemembered,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMaximumAttemptCount,
+
+        [Parameter()]
+        [System.Int32]
+        $minutesOfInactivityBeforeDeviceLock,
+
+        [Parameter()]
+        [System.Int32]
+        $daysWithoutContactBeforeUnenroll,
+
+        [Parameter()]
+        [System.String]
+        $enforcementLevel,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseDomain,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProtectedDomainNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $protectionUnderLockConfigRequired,
+
+        [Parameter()]
+        [System.Object]
+        $dataRecoveryCertificate,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnUnenrollDisabled,
+
+        [Parameter()]
+        [System.Guid]
+        $rightsManagementServicesTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureRightsManagementServicesAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $iconsVisible,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxiedDomains,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseIPRanges,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseIPRangesAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxyServers,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseInternalProxyServers,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $neutralDomainResources,
+
+        [Parameter()]
+        [System.Boolean]
+        $indexingEncryptedStoresOrItemsBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $smbAutoEncryptedFileExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneWindowsInformationProtectionPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneWindowsInformationProtectionPolicyExemptAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function New-IntuneWindowsInformationProtectionPolicyProtectedAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Remove-AADGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Remove-AADGroupCreatedOnBehalfOfReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Remove-AADGroupGroupLifecyclePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupLifecyclePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Remove-AADGroupMemberOfReferenceSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Remove-AADGroupMemberReferenceSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Remove-AADGroupOwnerReferenceSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $directoryObjectId,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Remove-AADGroupPhotoData
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Remove-AADGroupPhotoSetData
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $profilePhotoId,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Remove-AADGroupSetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupSettingId,
+
+        [Parameter()]
+        [System.String]
+        $groupId
+    )
+}
+function Remove-IntuneAppConfigurationPolicyTargeted
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId
+    )
+}
+function Remove-IntuneAppConfigurationPolicyTargetedApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId
+    )
+}
+function Remove-IntuneAppConfigurationPolicyTargetedAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId
+    )
+}
+function Remove-IntuneAppConfigurationPolicyTargetedDeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId
+    )
+}
+function Remove-IntuneApplePushNotificationCertificate
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Remove-IntuneAppProtectionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId
+    )
+}
+function Remove-IntuneAppProtectionPolicyAndroid
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId
+    )
+}
+function Remove-IntuneAppProtectionPolicyAndroidApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId
+    )
+}
+function Remove-IntuneAppProtectionPolicyAndroidAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionODataType
+    )
+}
+function Remove-IntuneAppProtectionPolicyAndroidDeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId
+    )
+}
+function Remove-IntuneAppProtectionPolicyApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType
+    )
+}
+function Remove-IntuneAppProtectionPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType
+    )
+}
+function Remove-IntuneAppProtectionPolicyDefault
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId
+    )
+}
+function Remove-IntuneAppProtectionPolicyDefaultApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId
+    )
+}
+function Remove-IntuneAppProtectionPolicyDefaultDeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId
+    )
+}
+function Remove-IntuneAppProtectionPolicyDeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType
+    )
+}
+function Remove-IntuneAppProtectionPolicyExemptAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType
+    )
+}
+function Remove-IntuneAppProtectionPolicyIos
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId
+    )
+}
+function Remove-IntuneAppProtectionPolicyIosApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId
+    )
+}
+function Remove-IntuneAppProtectionPolicyIosAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionODataType
+    )
+}
+function Remove-IntuneAppProtectionPolicyIosDeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId
+    )
+}
+function Remove-IntuneAppProtectionPolicyProtectedAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType
+    )
+}
+function Remove-IntuneConditionalAccessSetting
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Remove-IntuneDetectedApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $detectedAppId
+    )
+}
+function Remove-IntuneDetectedAppDeviceReferenceSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $detectedAppId
+    )
+}
+function Remove-IntuneDeviceAppManagement
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Remove-IntuneDeviceCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCategoryId
+    )
+}
+function Remove-IntuneDeviceCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Remove-IntuneDeviceCompliancePolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Remove-IntuneDeviceCompliancePolicyDeviceSettingStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $settingStateDeviceSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Remove-IntuneDeviceCompliancePolicyDeviceStateSummary
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Remove-IntuneDeviceCompliancePolicyDeviceStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceComplianceDeviceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Remove-IntuneDeviceCompliancePolicyDeviceStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Remove-IntuneDeviceCompliancePolicyScheduledActionsForRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceComplianceScheduledActionForRuleId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Remove-IntuneDeviceCompliancePolicyScheduledActionsForRuleConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceComplianceActionItemId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $deviceComplianceScheduledActionForRuleId
+    )
+}
+function Remove-IntuneDeviceCompliancePolicySettingSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicySettingStateSummaryId
+    )
+}
+function Remove-IntuneDeviceCompliancePolicyUserStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceComplianceUserStatusId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Remove-IntuneDeviceCompliancePolicyUserStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
+function Remove-IntuneDeviceComplianceSettingState
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceComplianceSettingStateId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicySettingStateSummaryId
+    )
+}
+function Remove-IntuneDeviceConfigurationDeviceStateSummary
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Remove-IntuneDeviceConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId
+    )
+}
+function Remove-IntuneDeviceConfigurationPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId
+    )
+}
+function Remove-IntuneDeviceConfigurationPolicyDeviceSettingStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $settingStateDeviceSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId
+    )
+}
+function Remove-IntuneDeviceConfigurationPolicyDeviceStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationDeviceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId
+    )
+}
+function Remove-IntuneDeviceConfigurationPolicyDeviceStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId
+    )
+}
+function Remove-IntuneDeviceConfigurationPolicyUserStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationUserStatusId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId
+    )
+}
+function Remove-IntuneDeviceConfigurationPolicyUserStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId
+    )
+}
+function Remove-IntuneDeviceEnrollmentConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentConfigurationId
+    )
+}
+function Remove-IntuneDeviceEnrollmentConfigurationAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $enrollmentConfigurationAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentConfigurationId
+    )
+}
+function Remove-IntuneDeviceManagement
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Remove-IntuneDeviceManagementPartner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceManagementPartnerId
+    )
+}
+function Remove-IntuneExchangeConnector
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceManagementExchangeConnectorId
+    )
+}
+function Remove-IntuneIosUpdateStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosUpdateDeviceStatusId
+    )
+}
+function Remove-IntuneLocalizedNotificationMessage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $localizedNotificationMessageId,
+
+        [Parameter()]
+        [System.String]
+        $notificationMessageTemplateId
+    )
+}
+function Remove-IntuneManagedAppRegistration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId
+    )
+}
+function Remove-IntuneManagedAppStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppStatusId
+    )
+}
+function Remove-IntuneManagedDevice
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Remove-IntuneManagedDeviceDeviceCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Remove-IntuneManagedDeviceDeviceCompliancePolicyState
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyStateId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Remove-IntuneManagedDeviceDeviceConfigurationState
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationStateId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId
+    )
+}
+function Remove-IntuneManagedDeviceOverviewReference
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Remove-IntuneManagedEBook
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId
+    )
+}
+function Remove-IntuneManagedEBookAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $managedEBookId
+    )
+}
+function Remove-IntuneManagedEBookDeviceState
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceInstallStateId,
+
+        [Parameter()]
+        [System.String]
+        $managedEBookId
+    )
+}
+function Remove-IntuneManagedEBookInstallSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId
+    )
+}
+function Remove-IntuneManagedEBookUserStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $userInstallStateSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $managedEBookId
+    )
+}
+function Remove-IntuneManagedEBookUserStateSummaryDeviceState
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceInstallStateId,
+
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $userInstallStateSummaryId
+    )
+}
+function Remove-IntuneMdmWindowsInformationProtectionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId
+    )
+}
+function Remove-IntuneMdmWindowsInformationProtectionPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType
+    )
+}
+function Remove-IntuneMdmWindowsInformationProtectionPolicyExemptAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType
+    )
+}
+function Remove-IntuneMdmWindowsInformationProtectionPolicyProtectedAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType
+    )
+}
+function Remove-IntuneMobileApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId
+    )
+}
+function Remove-IntuneMobileAppAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppId
+    )
+}
+function Remove-IntuneMobileAppCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppCategoryId
+    )
+}
+function Remove-IntuneMobileAppCategorySetReferenceSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppCategoryId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppId
+    )
+}
+function Remove-IntuneMobileAppConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId
+    )
+}
+function Remove-IntuneMobileAppConfigurationPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId
+    )
+}
+function Remove-IntuneMobileAppConfigurationPolicyDeviceStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationDeviceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId
+    )
+}
+function Remove-IntuneMobileAppConfigurationPolicyDeviceStatusSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId
+    )
+}
+function Remove-IntuneMobileAppConfigurationPolicyUserStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationUserStatusId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId
+    )
+}
+function Remove-IntuneMobileAppConfigurationPolicyUserStatusSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId
+    )
+}
+function Remove-IntuneMobileAppContentVersion
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppContentId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppODataType
+    )
+}
+function Remove-IntuneMobileAppContentVersionFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppContentFileId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppODataType,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppContentId
+    )
+}
+function Remove-IntuneMobileThreatDefenseConnector
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileThreatDefenseConnectorId
+    )
+}
+function Remove-IntuneNotificationMessageTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $notificationMessageTemplateId
+    )
+}
+function Remove-IntuneRemoteAssistancePartner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $remoteAssistancePartnerId
+    )
+}
+function Remove-IntuneResourceOperation
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $resourceOperationId
+    )
+}
+function Remove-IntuneRoleAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceAndAppManagementRoleAssignmentId
+    )
+}
+function Remove-IntuneRoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $roleDefinitionId
+    )
+}
+function Remove-IntuneSoftwareUpdateStatusSummaryReference
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function Remove-IntuneTelecomExpenseManagementPartner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $telecomExpenseManagementPartnerId
+    )
+}
+function Remove-IntuneTermsAndConditions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $termsAndConditionId
+    )
+}
+function Remove-IntuneTermsAndConditionsAcceptanceStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $termsAndConditionsAcceptanceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $termsAndConditionId
+    )
+}
+function Remove-IntuneTermsAndConditionsAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $termsAndConditionsAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $termsAndConditionId
+    )
+}
+function Remove-IntuneTroubleshootingEvent
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceManagementTroubleshootingEventId
+    )
+}
+function Remove-IntuneVppToken
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $vppTokenId
+    )
+}
+function Remove-IntuneWindowsInformationProtectionAppLearningSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLearningSummaryId
+    )
+}
+function Remove-IntuneWindowsInformationProtectionNetworkLearningSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionNetworkLearningSummaryId
+    )
+}
+function Remove-IntuneWindowsInformationProtectionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId
+    )
+}
+function Remove-IntuneWindowsInformationProtectionPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType
+    )
+}
+function Remove-IntuneWindowsInformationProtectionPolicyExemptAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType
+    )
+}
+function Remove-IntuneWindowsInformationProtectionPolicyProtectedAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType
+    )
+}
+function Set-AADGroupPhotoData
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $Data,
+
+        [Parameter()]
+        [System.String]
+        $ContentType
+    )
+}
+function Set-AADGroupPhotoSetData
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $profilePhotoId,
+
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.String]
+        $Data,
+
+        [Parameter()]
+        [System.String]
+        $ContentType
+    )
+}
+function Update-AADGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignedLicenses,
+
+        [Parameter()]
+        [System.String]
+        $classification,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $hasMembersWithLicenseErrors,
+
+        [Parameter()]
+        [System.String[]]
+        $groupTypes,
+
+        [Parameter()]
+        [System.Object]
+        $licenseProcessingState,
+
+        [Parameter()]
+        [System.String]
+        $mail,
+
+        [Parameter()]
+        [System.Boolean]
+        $mailEnabled,
+
+        [Parameter()]
+        [System.String]
+        $mailNickname,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $onPremisesLastSyncDateTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $onPremisesProvisioningErrors,
+
+        [Parameter()]
+        [System.String]
+        $onPremisesSecurityIdentifier,
+
+        [Parameter()]
+        [System.Boolean]
+        $onPremisesSyncEnabled,
+
+        [Parameter()]
+        [System.String]
+        $preferredDataLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $proxyAddresses,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $renewedDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityEnabled,
+
+        [Parameter()]
+        [System.String]
+        $visibility,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowExternalSenders,
+
+        [Parameter()]
+        [System.Boolean]
+        $autoSubscribeNewMembers,
+
+        [Parameter()]
+        [System.Boolean]
+        $isSubscribedByMail,
+
+        [Parameter()]
+        [System.Int32]
+        $unseenCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $isArchived,
+
+        [Parameter()]
+        [System.Object[]]
+        $members,
+
+        [Parameter()]
+        [System.Object[]]
+        $memberOf,
+
+        [Parameter()]
+        [System.Object[]]
+        $membersWithLicenseErrors,
+
+        [Parameter()]
+        [System.Object[]]
+        $transitiveMembers,
+
+        [Parameter()]
+        [System.Object[]]
+        $transitiveMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $createdOnBehalfOf,
+
+        [Parameter()]
+        [System.Object[]]
+        $owners,
+
+        [Parameter()]
+        [System.Object[]]
+        $settings,
+
+        [Parameter()]
+        [System.Object]
+        $photo,
+
+        [Parameter()]
+        [System.Object[]]
+        $photos,
+
+        [Parameter()]
+        [System.Object[]]
+        $groupLifecyclePolicies,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $deletedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-AADGroupGroupLifecyclePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupLifecyclePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.Int32]
+        $groupLifetimeInDays,
+
+        [Parameter()]
+        [System.String]
+        $managedGroupTypes,
+
+        [Parameter()]
+        [System.String]
+        $alternateNotificationEmails,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-AADGroupPhoto
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $groupId,
+
+        [Parameter()]
+        [System.Int32]
+        $height,
+
+        [Parameter()]
+        [System.Int32]
+        $width,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-AADGroupSetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $values
+    )
+}
+function Update-IntuneAppConfigurationPolicyTargeted
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $customSettings,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneAppConfigurationPolicyTargetedApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneAppConfigurationPolicyTargetedAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneAppConfigurationPolicyTargetedDeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneApplePushNotificationCertificate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $appleIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $topicIdentifier,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $expirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $certificate,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneAppProtectionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $enforcementLevel,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseDomain,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProtectedDomainNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $protectionUnderLockConfigRequired,
+
+        [Parameter()]
+        [System.Object]
+        $dataRecoveryCertificate,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnUnenrollDisabled,
+
+        [Parameter()]
+        [System.Guid]
+        $rightsManagementServicesTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureRightsManagementServicesAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $iconsVisible,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxiedDomains,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseIPRanges,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseIPRangesAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxyServers,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseInternalProxyServers,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $neutralDomainResources,
+
+        [Parameter()]
+        [System.Boolean]
+        $indexingEncryptedStoresOrItemsBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $smbAutoEncryptedFileExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsInformationProtectionPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnMdmHandoffDisabled,
+
+        [Parameter()]
+        [System.String]
+        $mdmEnrollmentUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsHelloForBusinessBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMinimumLength,
+
+        [Parameter()]
+        [System.String]
+        $pinUppercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinLowercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinSpecialCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $pinExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $numberOfPastPinsRemembered,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMaximumAttemptCount,
+
+        [Parameter()]
+        [System.Int32]
+        $minutesOfInactivityBeforeDeviceLock,
+
+        [Parameter()]
+        [System.Int32]
+        $daysWithoutContactBeforeUnenroll,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $mdmWindowsInformationProtectionPolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $customSettings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $targetedManagedAppConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $allowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Boolean]
+        $organizationalCredentialsRequired,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $dataBackupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceComplianceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $saveAsBlocked,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [System.Boolean]
+        $pinRequired,
+
+        [Parameter()]
+        [System.Int32]
+        $maximumPinRetries,
+
+        [Parameter()]
+        [System.Boolean]
+        $simplePinBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $minimumPinLength,
+
+        [Parameter()]
+        [System.String]
+        $pinCharacterSet,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodBeforePinReset,
+
+        [Parameter()]
+        [System.String[]]
+        $allowedDataStorageLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $contactSyncBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $printBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $fingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningAppVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $defaultManagedAppProtection,
+
+        [Parameter()]
+        [System.String]
+        $appDataEncryptionType,
+
+        [Parameter()]
+        [System.Boolean]
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $encryptAppData,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredSdkVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $faceIdBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidManagedAppProtection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosManagedAppProtection,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneAppProtectionPolicyAndroid
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.Boolean]
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $encryptAppData,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $allowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Boolean]
+        $organizationalCredentialsRequired,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $dataBackupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceComplianceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $saveAsBlocked,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [System.Boolean]
+        $pinRequired,
+
+        [Parameter()]
+        [System.Int32]
+        $maximumPinRetries,
+
+        [Parameter()]
+        [System.Boolean]
+        $simplePinBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $minimumPinLength,
+
+        [Parameter()]
+        [System.String]
+        $pinCharacterSet,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodBeforePinReset,
+
+        [Parameter()]
+        [System.String[]]
+        $allowedDataStorageLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $contactSyncBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $printBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $fingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneAppProtectionPolicyAndroidApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneAppProtectionPolicyAndroidAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneAppProtectionPolicyAndroidDeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $androidManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneAppProtectionPolicyApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneAppProtectionPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneAppProtectionPolicyDefault
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $appDataEncryptionType,
+
+        [Parameter()]
+        [System.Boolean]
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $encryptAppData,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppEncryptionIfDeviceEncryptionIsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredSdkVersion,
+
+        [Parameter()]
+        [System.Object[]]
+        $customSettings,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredPatchVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningPatchVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $faceIdBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $allowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Boolean]
+        $organizationalCredentialsRequired,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $dataBackupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceComplianceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $saveAsBlocked,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [System.Boolean]
+        $pinRequired,
+
+        [Parameter()]
+        [System.Int32]
+        $maximumPinRetries,
+
+        [Parameter()]
+        [System.Boolean]
+        $simplePinBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $minimumPinLength,
+
+        [Parameter()]
+        [System.String]
+        $pinCharacterSet,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodBeforePinReset,
+
+        [Parameter()]
+        [System.String[]]
+        $allowedDataStorageLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $contactSyncBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $printBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $fingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneAppProtectionPolicyDefaultApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneAppProtectionPolicyDefaultDeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $defaultManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneAppProtectionPolicyDeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneAppProtectionPolicyExemptAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneAppProtectionPolicyIos
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $appDataEncryptionType,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredSdkVersion,
+
+        [Parameter()]
+        [System.Int32]
+        $deployedAppCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $faceIdBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $apps,
+
+        [Parameter()]
+        [System.Object]
+        $deploymentSummary,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOnlineBeforeAccessCheck,
+
+        [Parameter()]
+        [System.String]
+        $allowedInboundDataTransferSources,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundDataTransferDestinations,
+
+        [Parameter()]
+        [System.Boolean]
+        $organizationalCredentialsRequired,
+
+        [Parameter()]
+        [System.String]
+        $allowedOutboundClipboardSharingLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $dataBackupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceComplianceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedBrowserToOpenLinksRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $saveAsBlocked,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodOfflineBeforeWipeIsEnforced,
+
+        [Parameter()]
+        [System.Boolean]
+        $pinRequired,
+
+        [Parameter()]
+        [System.Int32]
+        $maximumPinRetries,
+
+        [Parameter()]
+        [System.Boolean]
+        $simplePinBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $minimumPinLength,
+
+        [Parameter()]
+        [System.String]
+        $pinCharacterSet,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $periodBeforePinReset,
+
+        [Parameter()]
+        [System.String[]]
+        $allowedDataStorageLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $contactSyncBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $printBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $fingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningOsVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $minimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneAppProtectionPolicyIosApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedMobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.Object]
+        $mobileAppIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneAppProtectionPolicyIosAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneAppProtectionPolicyIosDeploymentSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosManagedAppProtectionId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationDeployedUserCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastRefreshTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $configurationDeploymentSummaryPerApp,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneAppProtectionPolicyProtectedAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $managedAppPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneConditionalAccessSetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $enabled,
+
+        [Parameter()]
+        [System.Guid[]]
+        $includedGroups,
+
+        [Parameter()]
+        [System.Guid[]]
+        $excludedGroups,
+
+        [Parameter()]
+        [System.Boolean]
+        $overrideDefaultRule,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDetectedApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $detectedAppId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.Int64]
+        $sizeInByte,
+
+        [Parameter()]
+        [System.Int32]
+        $deviceCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedDevices,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceAppManagement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.DateTimeOffset]
+        $microsoftStoreForBusinessLastSuccessfulSyncDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $isEnabledForMicrosoftStoreForBusiness,
+
+        [Parameter()]
+        [System.String]
+        $microsoftStoreForBusinessLanguage,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $microsoftStoreForBusinessLastCompletedApplicationSyncTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $mobileApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $mobileAppCategories,
+
+        [Parameter()]
+        [System.Object[]]
+        $mobileAppConfigurations,
+
+        [Parameter()]
+        [System.Object[]]
+        $vppTokens,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedAppPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $iosManagedAppProtections,
+
+        [Parameter()]
+        [System.Object[]]
+        $androidManagedAppProtections,
+
+        [Parameter()]
+        [System.Object[]]
+        $defaultManagedAppProtections,
+
+        [Parameter()]
+        [System.Object[]]
+        $targetedManagedAppConfigurations,
+
+        [Parameter()]
+        [System.Object[]]
+        $mdmWindowsInformationProtectionPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $windowsInformationProtectionPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedAppRegistrations,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedAppStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedEBooks,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCategoryId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $scheduledActionsForRule,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStatuses,
+
+        [Parameter()]
+        [System.Object]
+        $deviceStatusOverview,
+
+        [Parameter()]
+        [System.Object]
+        $userStatusOverview,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceSettingStateSummaries,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsPhone81CompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.String]
+        $passwordRequiredType,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequired,
+
+        [Parameter()]
+        [System.String]
+        $osMinimumVersion,
+
+        [Parameter()]
+        [System.String]
+        $osMaximumVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireEncryption,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows81CompliancePolicy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10MobileCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequireToUnlockFromIdle,
+
+        [Parameter()]
+        [System.Boolean]
+        $earlyLaunchAntiMalwareDriverEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $bitLockerEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $secureBootEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $codeIntegrityEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10CompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequiredToUnlockFromIdle,
+
+        [Parameter()]
+        [System.Boolean]
+        $requireHealthyDeviceReport,
+
+        [Parameter()]
+        [System.String]
+        $mobileOsMinimumVersion,
+
+        [Parameter()]
+        [System.String]
+        $mobileOsMaximumVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $systemIntegrityProtectionEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceThreatProtectionEnabled,
+
+        [Parameter()]
+        [System.String]
+        $deviceThreatProtectionRequiredSecurityLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallBlockAllIncoming,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallEnableStealthMode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodePreviousPasscodeBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.String]
+        $passcodeRequiredType,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityBlockJailbrokenDevices,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedEmailProfileRequired,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidWorkProfileCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityPreventInstallAppsFromUnknownSources,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityDisableUsbDebugging,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireVerifyApps,
+
+        [Parameter()]
+        [System.String]
+        $minAndroidSecurityPatchLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireSafetyNetAttestationBasicIntegrity,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireSafetyNetAttestationCertifiedDevice,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireGooglePlayServices,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireUpToDateSecurityProviders,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireCompanyPortalAppIntegrity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidCompliancePolicy,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceCompliancePolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceCompliancePolicyDeviceSettingStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $settingStateDeviceSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $settingName,
+
+        [Parameter()]
+        [System.String]
+        $instancePath,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceCompliancePolicyDeviceStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $inGracePeriodCount,
+
+        [Parameter()]
+        [System.Int32]
+        $configManagerCount,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceCompliancePolicyDeviceStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceComplianceDeviceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $deviceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceCompliancePolicyDeviceStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceCompliancePolicyScheduledActionsForRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceComplianceScheduledActionForRuleId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $ruleName,
+
+        [Parameter()]
+        [System.Object[]]
+        $scheduledActionConfigurations,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceCompliancePolicyScheduledActionsForRuleConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceComplianceActionItemId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $deviceComplianceScheduledActionForRuleId,
+
+        [Parameter()]
+        [System.Int32]
+        $gracePeriodHours,
+
+        [Parameter()]
+        [System.String]
+        $actionType,
+
+        [Parameter()]
+        [System.String]
+        $notificationTemplateId,
+
+        [Parameter()]
+        [System.String[]]
+        $notificationMessageCCList,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceCompliancePolicySettingSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicySettingStateSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $setting,
+
+        [Parameter()]
+        [System.String]
+        $settingName,
+
+        [Parameter()]
+        [System.String]
+        $platformType,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceComplianceSettingStates,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceCompliancePolicyUserStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceComplianceUserStatusId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $devicesCount,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceCompliancePolicyUserStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceComplianceSettingState
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceComplianceSettingStateId,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicySettingStateSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $setting,
+
+        [Parameter()]
+        [System.String]
+        $settingName,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $userEmail,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceConfigurationDeviceStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStatuses,
+
+        [Parameter()]
+        [System.Object]
+        $deviceStatusOverview,
+
+        [Parameter()]
+        [System.Object]
+        $userStatusOverview,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceSettingStateSummaries,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10TeamGeneralConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureOperationalInsightsBlockTelemetry,
+
+        [Parameter()]
+        [System.String]
+        $azureOperationalInsightsWorkspaceId,
+
+        [Parameter()]
+        [System.String]
+        $azureOperationalInsightsWorkspaceKey,
+
+        [Parameter()]
+        [System.Boolean]
+        $connectAppBlockAutoLaunch,
+
+        [Parameter()]
+        [System.Boolean]
+        $maintenanceWindowBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $maintenanceWindowDurationInHours,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $maintenanceWindowStartTime,
+
+        [Parameter()]
+        [System.String]
+        $miracastChannel,
+
+        [Parameter()]
+        [System.Boolean]
+        $miracastBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $miracastRequirePin,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockMyMeetingsAndFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockSessionResume,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockSigninSuggestions,
+
+        [Parameter()]
+        [System.Int32]
+        $settingsDefaultVolume,
+
+        [Parameter()]
+        [System.Int32]
+        $settingsScreenTimeoutInMinutes,
+
+        [Parameter()]
+        [System.Int32]
+        $settingsSessionTimeoutInMinutes,
+
+        [Parameter()]
+        [System.Int32]
+        $settingsSleepTimeoutInMinutes,
+
+        [Parameter()]
+        [System.Boolean]
+        $welcomeScreenBlockAutomaticWakeUp,
+
+        [Parameter()]
+        [System.String]
+        $welcomeScreenBackgroundImageUrl,
+
+        [Parameter()]
+        [System.String]
+        $welcomeScreenMeetingInformation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsPhone81GeneralConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $appsBlockCopyPaste,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $cameraBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockWifiTethering,
+
+        [Parameter()]
+        [System.Object[]]
+        $compliantAppsList,
+
+        [Parameter()]
+        [System.String]
+        $compliantAppListType,
+
+        [Parameter()]
+        [System.Boolean]
+        $diagnosticDataBlockSubmission,
+
+        [Parameter()]
+        [System.Boolean]
+        $emailBlockAddingAccounts,
+
+        [Parameter()]
+        [System.Boolean]
+        $locationServicesBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $microsoftAccountBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $nfcBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinutesOfInactivityBeforeScreenTimeout,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordSignInFailureCountBeforeFactoryReset,
+
+        [Parameter()]
+        [System.String]
+        $passwordRequiredType,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageBlockRemovableStorage,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $webBrowserBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $wifiBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $wifiBlockAutomaticConnectHotspots,
+
+        [Parameter()]
+        [System.Boolean]
+        $wifiBlockHotspotReporting,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsStoreBlocked,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows81GeneralConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $accountsBlockAddingNonMicrosoftAccountEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockAutomaticDetectionOfIntranetSites,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockEnterpriseModeAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockJavaScript,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockPlugins,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockSendingDoNotTrackHeader,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserBlockSingleWordEntryOnIntranetSites,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserRequireSmartScreen,
+
+        [Parameter()]
+        [System.String]
+        $browserEnterpriseModeSiteListLocation,
+
+        [Parameter()]
+        [System.String]
+        $browserInternetSecurityLevel,
+
+        [Parameter()]
+        [System.String]
+        $browserIntranetSecurityLevel,
+
+        [Parameter()]
+        [System.String]
+        $browserLoggingReportLocation,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserRequireHighSecurityForRestrictedSites,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserRequireFirewall,
+
+        [Parameter()]
+        [System.Boolean]
+        $browserRequireFraudWarning,
+
+        [Parameter()]
+        [System.String]
+        $browserTrustedSitesSecurityLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockDataRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $diagnosticsBlockDataSubmission,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockPicturePasswordAndPin,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireDeviceEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $updatesRequireAutomaticUpdates,
+
+        [Parameter()]
+        [System.String]
+        $userAccountControlSettings,
+
+        [Parameter()]
+        [System.String]
+        $workFoldersUrl,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsUpdateForBusinessConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $deliveryOptimizationMode,
+
+        [Parameter()]
+        [System.String]
+        $prereleaseFeatures,
+
+        [Parameter()]
+        [System.String]
+        $automaticUpdateMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $microsoftUpdateServiceAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $driversExcluded,
+
+        [Parameter()]
+        [System.Object]
+        $installationSchedule,
+
+        [Parameter()]
+        [System.Int32]
+        $qualityUpdatesDeferralPeriodInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $featureUpdatesDeferralPeriodInDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $qualityUpdatesPaused,
+
+        [Parameter()]
+        [System.Boolean]
+        $featureUpdatesPaused,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $qualityUpdatesPauseExpiryDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $featureUpdatesPauseExpiryDateTime,
+
+        [Parameter()]
+        [System.String]
+        $businessReadyUpdatesOnly,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsPhone81CustomConfiguration,
+
+        [Parameter()]
+        [System.Object[]]
+        $omaSettings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10SecureAssessmentConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $launchUri,
+
+        [Parameter()]
+        [System.String]
+        $configurationAccount,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowPrinting,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowScreenCapture,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowTextSuggestion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $sharedPCConfiguration,
+
+        [Parameter()]
+        [System.Object]
+        $accountManagerPolicy,
+
+        [Parameter()]
+        [System.String]
+        $allowedAccounts,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowLocalStorage,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableAccountManager,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableEduPolicies,
+
+        [Parameter()]
+        [System.Boolean]
+        $disablePowerPolicies,
+
+        [Parameter()]
+        [System.Boolean]
+        $disableSignInOnResume,
+
+        [Parameter()]
+        [System.Boolean]
+        $enabled,
+
+        [Parameter()]
+        [System.Int32]
+        $idleTimeBeforeSleepInSeconds,
+
+        [Parameter()]
+        [System.String]
+        $kioskAppDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $kioskAppUserModelId,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $maintenanceStartTime,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10EnterpriseModernAppManagementConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $uninstallBuiltInApps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10CustomConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $editionUpgradeConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $licenseType,
+
+        [Parameter()]
+        [System.String]
+        $targetEdition,
+
+        [Parameter()]
+        [System.String]
+        $license,
+
+        [Parameter()]
+        [System.String]
+        $productKey,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsDefenderAdvancedThreatProtectionConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $allowSampleSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $enableExpeditedTelemetryReporting,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10GeneralConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintDiscoveryEndPoint,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintOAuthAuthority,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintOAuthClientIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintResourceIdentifier,
+
+        [Parameter()]
+        [System.Int32]
+        $enterpriseCloudPrintDiscoveryMaxLimit,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintMopriaDiscoveryResourceIdentifier,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchBlockDiacritics,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchDisableAutoLanguageDetection,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchDisableIndexingEncryptedItems,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchEnableRemoteQueries,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchDisableIndexerBackoff,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchDisableIndexingRemovableDrive,
+
+        [Parameter()]
+        [System.Boolean]
+        $searchEnableAutomaticIndexSizeManangement,
+
+        [Parameter()]
+        [System.String]
+        $diagnosticsDataSubmissionMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $oneDriveDisableFileSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenEnableAppInstallControl,
+
+        [Parameter()]
+        [System.String]
+        $personalizationDesktopImageUrl,
+
+        [Parameter()]
+        [System.String]
+        $personalizationLockScreenImageUrl,
+
+        [Parameter()]
+        [System.String[]]
+        $bluetoothAllowedServices,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlockAdvertising,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlockDiscoverableMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlockPrePairing,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlocked,
+
+        [Parameter()]
+        [System.String]
+        $edgeCookiePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockDeveloperTools,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockSendingDoNotTrackHeader,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockInPrivateBrowsing,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockJavaScript,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockPasswordManager,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockAddressBarDropdown,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockCompatibilityList,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeClearBrowsingDataOnExit,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeAllowStartPagesModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeDisableFirstRunPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockLiveTileDataCollection,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeSyncFavoritesWithInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockDataWhenRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockVpn,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockVpnWhenRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderBlockEndUserAccess,
+
+        [Parameter()]
+        [System.Int32]
+        $defenderDaysBeforeDeletingQuarantinedMalware,
+
+        [Parameter()]
+        [System.Object]
+        $defenderDetectedMalwareActions,
+
+        [Parameter()]
+        [System.String]
+        $defenderSystemScanSchedule,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderFilesAndFoldersToExclude,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderFileExtensionsToExclude,
+
+        [Parameter()]
+        [System.Int32]
+        $defenderScanMaxCpu,
+
+        [Parameter()]
+        [System.String]
+        $defenderMonitorFileActivity,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderProcessesToExclude,
+
+        [Parameter()]
+        [System.String]
+        $defenderPromptForSampleSubmission,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireBehaviorMonitoring,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireCloudProtection,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireNetworkInspectionSystem,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireRealTimeMonitoring,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanArchiveFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanDownloads,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanNetworkFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanIncomingMail,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanMappedNetworkDrivesDuringFullScan,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanRemovableDrivesDuringFullScan,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanScriptsLoadedInInternetExplorer,
+
+        [Parameter()]
+        [System.Int32]
+        $defenderSignatureUpdateIntervalInHours,
+
+        [Parameter()]
+        [System.String]
+        $defenderScanType,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $defenderScheduledScanTime,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $defenderScheduledQuickScanTime,
+
+        [Parameter()]
+        [System.String]
+        $defenderCloudBlockLevel,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenAllowTimeoutConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockActionCenterNotifications,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockCortana,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockToastNotifications,
+
+        [Parameter()]
+        [System.Int32]
+        $lockScreenTimeoutInSeconds,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequireWhenResumeFromIdleState,
+
+        [Parameter()]
+        [System.String]
+        $privacyAdvertisingId,
+
+        [Parameter()]
+        [System.Boolean]
+        $privacyAutoAcceptPairingAndConsentPrompts,
+
+        [Parameter()]
+        [System.Boolean]
+        $privacyBlockInputPersonalization,
+
+        [Parameter()]
+        [System.Boolean]
+        $startBlockUnpinningAppsFromTaskbar,
+
+        [Parameter()]
+        [System.String]
+        $startMenuAppListVisibility,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideChangeAccountSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideFrequentlyUsedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideHibernate,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideLock,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHidePowerButton,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideRecentJumpLists,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideRecentlyAddedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideRestartOptions,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideShutDown,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideSignOut,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideSleep,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideSwitchAccount,
+
+        [Parameter()]
+        [System.Boolean]
+        $startMenuHideUserTile,
+
+        [Parameter()]
+        [System.Byte[]]
+        $startMenuLayoutEdgeAssetsXml,
+
+        [Parameter()]
+        [System.Byte[]]
+        $startMenuLayoutXml,
+
+        [Parameter()]
+        [System.String]
+        $startMenuMode,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderDocuments,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderDownloads,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderFileExplorer,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderHomeGroup,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderMusic,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderNetwork,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderPersonalFolder,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderPictures,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderSettings,
+
+        [Parameter()]
+        [System.String]
+        $startMenuPinnedFolderVideos,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockSettingsApp,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockSystemPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockDevicesPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockNetworkInternetPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockPersonalizationPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockAccountsPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockTimeLanguagePage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockEaseOfAccessPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockPrivacyPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockUpdateSecurityPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockAppsPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockGamingPage,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockConsumerSpecificFeatures,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockOnActionCenter,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockTailoredExperiences,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockThirdPartyNotifications,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockWelcomeExperience,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsSpotlightBlockWindowsTips,
+
+        [Parameter()]
+        [System.String]
+        $windowsSpotlightConfigureOnLockScreen,
+
+        [Parameter()]
+        [System.Boolean]
+        $networkProxyApplySettingsDeviceWide,
+
+        [Parameter()]
+        [System.Boolean]
+        $networkProxyDisableAutoDetect,
+
+        [Parameter()]
+        [System.String]
+        $networkProxyAutomaticConfigurationUrl,
+
+        [Parameter()]
+        [System.Object]
+        $networkProxyServer,
+
+        [Parameter()]
+        [System.Boolean]
+        $antiTheftModeBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $connectedDevicesServiceBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $certificatesBlockManualRootCertificateInstallation,
+
+        [Parameter()]
+        [System.Boolean]
+        $copyPasteBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $cortanaBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceManagementBlockFactoryResetOnMobile,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceManagementBlockManualUnenroll,
+
+        [Parameter()]
+        [System.String]
+        $safeSearchFilter,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockSearchSuggestions,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockSendingIntranetTrafficToInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeSendIntranetTrafficToInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeRequireSmartScreen,
+
+        [Parameter()]
+        [System.String]
+        $edgeEnterpriseModeSiteListLocation,
+
+        [Parameter()]
+        [System.String]
+        $edgeFirstRunUrl,
+
+        [Parameter()]
+        [System.Object]
+        $edgeSearchEngine,
+
+        [Parameter()]
+        [System.String[]]
+        $edgeHomepageUrls,
+
+        [Parameter()]
+        [System.Boolean]
+        $edgeBlockAccessToAboutFlags,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenBlockPromptOverride,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenBlockPromptOverrideForFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $webRtcBlockLocalhostIpAddress,
+
+        [Parameter()]
+        [System.Boolean]
+        $internetSharingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockAddProvisioningPackage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockRemoveProvisioningPackage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockChangeSystemTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockEditDeviceName,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockChangeRegion,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockChangeLanguage,
+
+        [Parameter()]
+        [System.Boolean]
+        $settingsBlockChangePowerSleep,
+
+        [Parameter()]
+        [System.Boolean]
+        $microsoftAccountBlockSettingsSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $resetProtectionModeBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireMobileDeviceEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $usbBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $voiceRecordingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $wiFiBlockManualConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $wiFiScanInterval,
+
+        [Parameter()]
+        [System.Boolean]
+        $wirelessDisplayBlockProjectionToThisDevice,
+
+        [Parameter()]
+        [System.Boolean]
+        $wirelessDisplayBlockUserInputFromReceiver,
+
+        [Parameter()]
+        [System.Boolean]
+        $wirelessDisplayRequirePinForPairing,
+
+        [Parameter()]
+        [System.String]
+        $appsAllowTrustedAppsSideloading,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsStoreBlockAutoUpdate,
+
+        [Parameter()]
+        [System.String]
+        $developerUnlockSetting,
+
+        [Parameter()]
+        [System.Boolean]
+        $sharedUserAppDataAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $appsBlockWindowsStoreOriginatedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsStoreEnablePrivateStoreOnly,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRestrictAppDataToSystemVolume,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRestrictAppInstallToSystemVolume,
+
+        [Parameter()]
+        [System.Boolean]
+        $gameDvrBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $experienceBlockDeviceDiscovery,
+
+        [Parameter()]
+        [System.Boolean]
+        $experienceBlockErrorDialogWhenNoSIM,
+
+        [Parameter()]
+        [System.Boolean]
+        $experienceBlockTaskSwitcher,
+
+        [Parameter()]
+        [System.Boolean]
+        $logonBlockFastUserSwitching,
+
+        [Parameter()]
+        [System.Boolean]
+        $tenantLockdownRequireNetworkDuringOutOfBoxExperience,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10EndpointProtectionConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallBlockStatefulFTP,
+
+        [Parameter()]
+        [System.Int32]
+        $firewallIdleTimeoutForSecurityAssociationInSeconds,
+
+        [Parameter()]
+        [System.String]
+        $firewallPreSharedKeyEncodingMethod,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallIPSecExemptionsAllowNeighborDiscovery,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallIPSecExemptionsAllowICMP,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallIPSecExemptionsAllowRouterDiscovery,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallIPSecExemptionsAllowDHCP,
+
+        [Parameter()]
+        [System.String]
+        $firewallCertificateRevocationListCheckMethod,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallMergeKeyingModuleSettings,
+
+        [Parameter()]
+        [System.String]
+        $firewallPacketQueueingMethod,
+
+        [Parameter()]
+        [System.Object]
+        $firewallProfileDomain,
+
+        [Parameter()]
+        [System.Object]
+        $firewallProfilePublic,
+
+        [Parameter()]
+        [System.Object]
+        $firewallProfilePrivate,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderAttackSurfaceReductionExcludedPaths,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderGuardedFoldersAllowedAppPaths,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderAdditionalGuardedFolders,
+
+        [Parameter()]
+        [System.Byte[]]
+        $defenderExploitProtectionXml,
+
+        [Parameter()]
+        [System.String]
+        $defenderExploitProtectionXmlFileName,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderSecurityCenterBlockExploitProtectionOverride,
+
+        [Parameter()]
+        [System.String]
+        $appLockerApplicationControl,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenEnableInShell,
+
+        [Parameter()]
+        [System.Boolean]
+        $smartScreenBlockOverrideForFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardEnabled,
+
+        [Parameter()]
+        [System.String]
+        $applicationGuardBlockFileTransfer,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardBlockNonEnterpriseContent,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPersistence,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardForceAuditing,
+
+        [Parameter()]
+        [System.String]
+        $applicationGuardBlockClipboardSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPrintToPDF,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPrintToXPS,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPrintToLocalPrinters,
+
+        [Parameter()]
+        [System.Boolean]
+        $applicationGuardAllowPrintToNetworkPrinters,
+
+        [Parameter()]
+        [System.Boolean]
+        $bitLockerDisableWarningForOtherDiskEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $bitLockerEnableStorageCardEncryptionOnMobile,
+
+        [Parameter()]
+        [System.Boolean]
+        $bitLockerEncryptDevice,
+
+        [Parameter()]
+        [System.Object]
+        $bitLockerRemovableDrivePolicy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSDeviceFeaturesConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosDeviceFeaturesConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $assetTagTemplate,
+
+        [Parameter()]
+        [System.String]
+        $lockScreenFootnote,
+
+        [Parameter()]
+        [System.Object[]]
+        $homeScreenDockIcons,
+
+        [Parameter()]
+        [System.Object[]]
+        $homeScreenPages,
+
+        [Parameter()]
+        [System.Object[]]
+        $notificationSettings,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSGeneralDeviceConfiguration,
+
+        [Parameter()]
+        [System.String[]]
+        $emailInDomainSuffixes,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSCustomConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $payloadName,
+
+        [Parameter()]
+        [System.String]
+        $payloadFileName,
+
+        [Parameter()]
+        [System.Byte[]]
+        $payload,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosUpdateConfiguration,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $activeHoursStart,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $activeHoursEnd,
+
+        [Parameter()]
+        [System.String[]]
+        $scheduledInstallDays,
+
+        [Parameter()]
+        [System.Int32]
+        $utcTimeOffsetInMinutes,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosGeneralDeviceConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $accountBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $activationLockAllowWhenSupervised,
+
+        [Parameter()]
+        [System.Boolean]
+        $airDropBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $airDropForceUnmanagedDropTarget,
+
+        [Parameter()]
+        [System.Boolean]
+        $airPlayForcePairingPasswordForOutgoingRequests,
+
+        [Parameter()]
+        [System.Boolean]
+        $appleWatchBlockPairing,
+
+        [Parameter()]
+        [System.Boolean]
+        $appleWatchForceWristDetection,
+
+        [Parameter()]
+        [System.Boolean]
+        $appleNewsBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsSingleAppModeList,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsVisibilityList,
+
+        [Parameter()]
+        [System.String]
+        $appsVisibilityListType,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreBlockAutomaticDownloads,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreBlockInAppPurchases,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreBlockUIAppInstallation,
+
+        [Parameter()]
+        [System.Boolean]
+        $appStoreRequirePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $bluetoothBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockGlobalBackgroundFetchWhileRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockPerAppDataModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockPersonalHotspot,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockVoiceRoaming,
+
+        [Parameter()]
+        [System.Boolean]
+        $certificatesBlockUntrustedTlsCertificates,
+
+        [Parameter()]
+        [System.Boolean]
+        $classroomAppBlockRemoteScreenObservation,
+
+        [Parameter()]
+        [System.Boolean]
+        $classroomAppForceUnpromptedScreenObservation,
+
+        [Parameter()]
+        [System.Boolean]
+        $configurationProfileBlockChanges,
+
+        [Parameter()]
+        [System.Boolean]
+        $definitionLookupBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceBlockEnableRestrictions,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceBlockEraseContentAndSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceBlockNameModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $diagnosticDataBlockSubmissionModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $documentsBlockManagedDocumentsInUnmanagedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $documentsBlockUnmanagedDocumentsInManagedApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseAppBlockTrust,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseAppBlockTrustModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $faceTimeBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $findMyFriendsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $gamingBlockGameCenterFriends,
+
+        [Parameter()]
+        [System.Boolean]
+        $gamingBlockMultiplayer,
+
+        [Parameter()]
+        [System.Boolean]
+        $gameCenterBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $hostPairingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $iBooksStoreBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $iBooksStoreBlockErotica,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockActivityContinuation,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockBackup,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockDocumentSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockManagedAppsSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockPhotoLibrary,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockPhotoStreamSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudBlockSharedPhotoStream,
+
+        [Parameter()]
+        [System.Boolean]
+        $iCloudRequireEncryptedBackup,
+
+        [Parameter()]
+        [System.Boolean]
+        $iTunesBlockExplicitContent,
+
+        [Parameter()]
+        [System.Boolean]
+        $iTunesBlockMusicService,
+
+        [Parameter()]
+        [System.Boolean]
+        $iTunesBlockRadio,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockAutoCorrect,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockDictation,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockPredictive,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockShortcuts,
+
+        [Parameter()]
+        [System.Boolean]
+        $keyboardBlockSpellCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowAssistiveSpeak,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowAssistiveTouchSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowAutoLock,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowColorInversionSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowRingerSwitch,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowScreenRotation,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowSleepButton,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowTouchscreen,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowVoiceOverSettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowVolumeButtons,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeAllowZoomSettings,
+
+        [Parameter()]
+        [System.String]
+        $kioskModeAppStoreUrl,
+
+        [Parameter()]
+        [System.String]
+        $kioskModeBuiltInAppId,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireAssistiveTouch,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireColorInversion,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireMonoAudio,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireVoiceOver,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeRequireZoom,
+
+        [Parameter()]
+        [System.String]
+        $kioskModeManagedAppId,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockControlCenter,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockNotificationView,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockPassbook,
+
+        [Parameter()]
+        [System.Boolean]
+        $lockScreenBlockTodayView,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingAustralia,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingCanada,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingFrance,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingGermany,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingIreland,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingJapan,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingNewZealand,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingUnitedKingdom,
+
+        [Parameter()]
+        [System.Object]
+        $mediaContentRatingUnitedStates,
+
+        [Parameter()]
+        [System.Object[]]
+        $networkUsageRules,
+
+        [Parameter()]
+        [System.String]
+        $mediaContentRatingApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $messagesBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $notificationsBlockSettingsModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockFingerprintUnlock,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockFingerprintModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinutesOfInactivityBeforeScreenTimeout,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodePreviousPasscodeBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeSignInFailureCountBeforeWipe,
+
+        [Parameter()]
+        [System.String]
+        $passcodeRequiredType,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $podcastsBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariBlockJavaScript,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariBlocked,
+
+        [Parameter()]
+        [System.String]
+        $safariCookieSettings,
+
+        [Parameter()]
+        [System.String[]]
+        $safariManagedDomains,
+
+        [Parameter()]
+        [System.String[]]
+        $safariPasswordAutoFillDomains,
+
+        [Parameter()]
+        [System.Boolean]
+        $safariRequireFraudWarning,
+
+        [Parameter()]
+        [System.Boolean]
+        $siriBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $siriBlockedWhenLocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $siriBlockUserGeneratedContent,
+
+        [Parameter()]
+        [System.Boolean]
+        $siriRequireProfanityFilter,
+
+        [Parameter()]
+        [System.Boolean]
+        $spotlightBlockInternetResults,
+
+        [Parameter()]
+        [System.Boolean]
+        $voiceDialingBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $wallpaperBlockModification,
+
+        [Parameter()]
+        [System.Boolean]
+        $wiFiConnectOnlyToConfiguredNetworks,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosCustomConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidWorkProfileGeneralDeviceConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockFingerprintUnlock,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockTrustAgents,
+
+        [Parameter()]
+        [System.String]
+        $workProfileDataSharingType,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockNotificationsWhileDeviceLocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockAddingAccounts,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBluetoothEnableContactSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockScreenCapture,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockCrossProfileCallerId,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockCamera,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockCrossProfileContactsSearch,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileBlockCrossProfileCopyPaste,
+
+        [Parameter()]
+        [System.String]
+        $workProfileDefaultAppPermissionPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfilePasswordBlockFingerprintUnlock,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfilePasswordBlockTrustAgents,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinNumericCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinNonLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinLowerCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinUpperCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinSymbolCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordMinutesOfInactivityBeforeScreenTimeout,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $workProfilePasswordSignInFailureCountBeforeFactoryReset,
+
+        [Parameter()]
+        [System.String]
+        $workProfilePasswordRequiredType,
+
+        [Parameter()]
+        [System.Boolean]
+        $workProfileRequirePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireVerifyApps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidWorkProfileCustomConfiguration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidGeneralDeviceConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $appsBlockClipboardSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $appsBlockYouTube,
+
+        [Parameter()]
+        [System.Boolean]
+        $cellularBlockMessaging,
+
+        [Parameter()]
+        [System.Boolean]
+        $googleAccountBlockAutoSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $googlePlayStoreBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeBlockSleepButton,
+
+        [Parameter()]
+        [System.Boolean]
+        $kioskModeBlockVolumeButtons,
+
+        [Parameter()]
+        [System.Object[]]
+        $kioskModeApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $powerOffBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $factoryResetBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceSharingAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageBlockGoogleBackup,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireRemovableStorageEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $voiceAssistantBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $webBrowserBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]
+        $webBrowserBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]
+        $webBrowserBlockJavaScript,
+
+        [Parameter()]
+        [System.String]
+        $webBrowserCookieSettings,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsInstallAllowList,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsLaunchBlockList,
+
+        [Parameter()]
+        [System.Object[]]
+        $appsHideList,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidCustomConfiguration,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceConfigurationPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceConfigurationPolicyDeviceSettingStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $settingStateDeviceSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $settingName,
+
+        [Parameter()]
+        [System.String]
+        $instancePath,
+
+        [Parameter()]
+        [System.Int32]
+        $unknownDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $compliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $remediatedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $nonCompliantDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $conflictDeviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceConfigurationPolicyDeviceStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationDeviceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $deviceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceConfigurationPolicyDeviceStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceConfigurationPolicyUserStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationUserStatusId,
+
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $devicesCount,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceConfigurationPolicyUserStatusOverview
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceEnrollmentConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.Int32]
+        $priority,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceEnrollmentWindowsHelloForBusinessConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMaximumLength,
+
+        [Parameter()]
+        [System.String]
+        $pinUppercaseCharactersUsage,
+
+        [Parameter()]
+        [System.String]
+        $pinLowercaseCharactersUsage,
+
+        [Parameter()]
+        [System.String]
+        $pinSpecialCharactersUsage,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityDeviceRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $unlockWithBiometricsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $remotePassportEnabled,
+
+        [Parameter()]
+        [System.Int32]
+        $pinPreviousBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $pinExpirationInDays,
+
+        [Parameter()]
+        [System.String]
+        $enhancedBiometricsState,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceEnrollmentPlatformRestrictionsConfiguration,
+
+        [Parameter()]
+        [System.Object]
+        $iosRestriction,
+
+        [Parameter()]
+        [System.Object]
+        $windowsRestriction,
+
+        [Parameter()]
+        [System.Object]
+        $windowsMobileRestriction,
+
+        [Parameter()]
+        [System.Object]
+        $androidRestriction,
+
+        [Parameter()]
+        [System.Object]
+        $macOSRestriction,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceEnrollmentLimitConfiguration,
+
+        [Parameter()]
+        [System.Int32]
+        $limit,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceEnrollmentConfigurationAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $enrollmentConfigurationAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentConfigurationId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceManagement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $subscriptionState,
+
+        [Parameter()]
+        [System.Object]
+        $settings,
+
+        [Parameter()]
+        [System.Object]
+        $intuneBrand,
+
+        [Parameter()]
+        [System.Object[]]
+        $termsAndConditions,
+
+        [Parameter()]
+        [System.Object]
+        $applePushNotificationCertificate,
+
+        [Parameter()]
+        [System.Object]
+        $managedDeviceOverview,
+
+        [Parameter()]
+        [System.Object[]]
+        $detectedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $managedDevices,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceConfigurations,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceCompliancePolicies,
+
+        [Parameter()]
+        [System.Object]
+        $softwareUpdateStatusSummary,
+
+        [Parameter()]
+        [System.Object]
+        $deviceCompliancePolicyDeviceStateSummary,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceCompliancePolicySettingStateSummaries,
+
+        [Parameter()]
+        [System.Object]
+        $deviceConfigurationDeviceStateSummaries,
+
+        [Parameter()]
+        [System.Object[]]
+        $iosUpdateStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceCategories,
+
+        [Parameter()]
+        [System.Object[]]
+        $exchangeConnectors,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceEnrollmentConfigurations,
+
+        [Parameter()]
+        [System.Object]
+        $conditionalAccessSettings,
+
+        [Parameter()]
+        [System.Object[]]
+        $mobileThreatDefenseConnectors,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceManagementPartners,
+
+        [Parameter()]
+        [System.Object[]]
+        $notificationMessageTemplates,
+
+        [Parameter()]
+        [System.Object[]]
+        $roleDefinitions,
+
+        [Parameter()]
+        [System.Object[]]
+        $roleAssignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $resourceOperations,
+
+        [Parameter()]
+        [System.Object[]]
+        $telecomExpenseManagementPartners,
+
+        [Parameter()]
+        [System.Object[]]
+        $remoteAssistancePartners,
+
+        [Parameter()]
+        [System.Object[]]
+        $windowsInformationProtectionAppLearningSummaries,
+
+        [Parameter()]
+        [System.Object[]]
+        $windowsInformationProtectionNetworkLearningSummaries,
+
+        [Parameter()]
+        [System.Object[]]
+        $troubleshootingEvents,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneDeviceManagementPartner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceManagementPartnerId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastHeartbeatDateTime,
+
+        [Parameter()]
+        [System.String]
+        $partnerState,
+
+        [Parameter()]
+        [System.String]
+        $partnerAppType,
+
+        [Parameter()]
+        [System.String]
+        $singleTenantAppId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $isConfigured,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $whenPartnerDevicesWillBeRemovedDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $whenPartnerDevicesWillBeMarkedAsNonCompliantDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneExchangeConnector
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceManagementExchangeConnectorId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.String]
+        $primarySmtpAddress,
+
+        [Parameter()]
+        [System.String]
+        $serverName,
+
+        [Parameter()]
+        [System.String]
+        $connectorServerName,
+
+        [Parameter()]
+        [System.String]
+        $exchangeConnectorType,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $exchangeAlias,
+
+        [Parameter()]
+        [System.String]
+        $exchangeOrganization,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneIosUpdateStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $iosUpdateDeviceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $installStatus,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $deviceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneLocalizedNotificationMessage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $localizedNotificationMessageId,
+
+        [Parameter()]
+        [System.String]
+        $notificationMessageTemplateId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $locale,
+
+        [Parameter()]
+        [System.String]
+        $subject,
+
+        [Parameter()]
+        [System.String]
+        $messageTemplate,
+
+        [Parameter()]
+        [System.Boolean]
+        $isDefault,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneManagedAppRegistration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppRegistrationId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $applicationVersion,
+
+        [Parameter()]
+        [System.String]
+        $managementSdkVersion,
+
+        [Parameter()]
+        [System.String]
+        $platformVersion,
+
+        [Parameter()]
+        [System.String]
+        $deviceType,
+
+        [Parameter()]
+        [System.String]
+        $deviceTag,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String[]]
+        $flaggedReasons,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.Object]
+        $appIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $appliedPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $intendedPolicies,
+
+        [Parameter()]
+        [System.Object[]]
+        $operations,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidManagedAppRegistration,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosManagedAppRegistration,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneManagedAppStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedAppStatusId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedAppStatusRaw,
+
+        [Parameter()]
+        [System.Object]
+        $content,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneManagedDevice
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceOwnerType,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceActionResults,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $enrolledDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $operatingSystem,
+
+        [Parameter()]
+        [System.String]
+        $complianceState,
+
+        [Parameter()]
+        [System.String]
+        $jailBroken,
+
+        [Parameter()]
+        [System.String]
+        $managementAgent,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $easActivated,
+
+        [Parameter()]
+        [System.String]
+        $easDeviceId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $easActivationDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureADRegistered,
+
+        [Parameter()]
+        [System.String]
+        $deviceEnrollmentType,
+
+        [Parameter()]
+        [System.String]
+        $activationLockBypassCode,
+
+        [Parameter()]
+        [System.String]
+        $emailAddress,
+
+        [Parameter()]
+        [System.String]
+        $azureADDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $deviceRegistrationState,
+
+        [Parameter()]
+        [System.String]
+        $deviceCategoryDisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $isSupervised,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $exchangeLastSuccessfulSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $exchangeAccessState,
+
+        [Parameter()]
+        [System.String]
+        $exchangeAccessStateReason,
+
+        [Parameter()]
+        [System.String]
+        $remoteAssistanceSessionUrl,
+
+        [Parameter()]
+        [System.String]
+        $remoteAssistanceSessionErrorDetails,
+
+        [Parameter()]
+        [System.Boolean]
+        $isEncrypted,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $model,
+
+        [Parameter()]
+        [System.String]
+        $manufacturer,
+
+        [Parameter()]
+        [System.String]
+        $imei,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $serialNumber,
+
+        [Parameter()]
+        [System.String]
+        $phoneNumber,
+
+        [Parameter()]
+        [System.String]
+        $androidSecurityPatchLevel,
+
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Object]
+        $configurationManagerClientEnabledFeatures,
+
+        [Parameter()]
+        [System.String]
+        $wiFiMacAddress,
+
+        [Parameter()]
+        [System.Object]
+        $deviceHealthAttestationState,
+
+        [Parameter()]
+        [System.String]
+        $subscriberCarrier,
+
+        [Parameter()]
+        [System.String]
+        $meid,
+
+        [Parameter()]
+        [System.Int64]
+        $totalStorageSpaceInBytes,
+
+        [Parameter()]
+        [System.Int64]
+        $freeStorageSpaceInBytes,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceName,
+
+        [Parameter()]
+        [System.String]
+        $partnerReportedThreatState,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceConfigurationStates,
+
+        [Parameter()]
+        [System.Object]
+        $deviceCategory,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceCompliancePolicyStates,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneManagedDeviceDeviceCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneManagedDeviceDeviceCompliancePolicyState
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyStateId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.Object[]]
+        $settingStates,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $platformType,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.Int32]
+        $settingCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneManagedDeviceDeviceConfigurationState
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceConfigurationStateId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.Object[]]
+        $settingStates,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $platformType,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.Int32]
+        $settingCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneManagedEBook
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $publisher,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $publishedDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $largeCover,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $informationUrl,
+
+        [Parameter()]
+        [System.String]
+        $privacyInformationUrl,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object]
+        $installSummary,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStates,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStateSummary,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosVppEBook,
+
+        [Parameter()]
+        [System.Guid]
+        $vppTokenId,
+
+        [Parameter()]
+        [System.String]
+        $appleId,
+
+        [Parameter()]
+        [System.String]
+        $vppOrganizationName,
+
+        [Parameter()]
+        [System.String[]]
+        $genres,
+
+        [Parameter()]
+        [System.String]
+        $language,
+
+        [Parameter()]
+        [System.String]
+        $seller,
+
+        [Parameter()]
+        [System.Int32]
+        $totalLicenseCount,
+
+        [Parameter()]
+        [System.Int32]
+        $usedLicenseCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneManagedEBookAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedEBookAssignment,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $installIntent,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosVppEBookAssignment,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneManagedEBookDeviceState
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceInstallStateId,
+
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $installState,
+
+        [Parameter()]
+        [System.String]
+        $errorCode,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.String]
+        $osDescription,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneManagedEBookInstallSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.Int32]
+        $installedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notInstalledDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $installedUserCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedUserCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notInstalledUserCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneManagedEBookUserStateSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $userInstallStateSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.Int32]
+        $installedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedDeviceCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notInstalledDeviceCount,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStates,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneManagedEBookUserStateSummaryDeviceState
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceInstallStateId,
+
+        [Parameter()]
+        [System.String]
+        $managedEBookId,
+
+        [Parameter()]
+        [System.String]
+        $userInstallStateSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $installState,
+
+        [Parameter()]
+        [System.String]
+        $errorCode,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.String]
+        $osDescription,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneMdmWindowsInformationProtectionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $enforcementLevel,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseDomain,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProtectedDomainNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $protectionUnderLockConfigRequired,
+
+        [Parameter()]
+        [System.Object]
+        $dataRecoveryCertificate,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnUnenrollDisabled,
+
+        [Parameter()]
+        [System.Guid]
+        $rightsManagementServicesTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureRightsManagementServicesAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $iconsVisible,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxiedDomains,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseIPRanges,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseIPRangesAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxyServers,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseInternalProxyServers,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $neutralDomainResources,
+
+        [Parameter()]
+        [System.Boolean]
+        $indexingEncryptedStoresOrItemsBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $smbAutoEncryptedFileExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneMdmWindowsInformationProtectionPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneMdmWindowsInformationProtectionPolicyExemptAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneMdmWindowsInformationProtectionPolicyProtectedAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $mdmWindowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneMobileApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $publisher,
+
+        [Parameter()]
+        [System.Object]
+        $largeIcon,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $isFeatured,
+
+        [Parameter()]
+        [System.String]
+        $privacyInformationUrl,
+
+        [Parameter()]
+        [System.String]
+        $informationUrl,
+
+        [Parameter()]
+        [System.String]
+        $owner,
+
+        [Parameter()]
+        [System.String]
+        $developer,
+
+        [Parameter()]
+        [System.String]
+        $notes,
+
+        [Parameter()]
+        [System.String]
+        $publishingState,
+
+        [Parameter()]
+        [System.Object[]]
+        $categories,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosStoreApp,
+
+        [Parameter()]
+        [System.String]
+        $bundleId,
+
+        [Parameter()]
+        [System.String]
+        $appStoreUrl,
+
+        [Parameter()]
+        [System.Object]
+        $applicableDeviceType,
+
+        [Parameter()]
+        [System.Object]
+        $minimumSupportedOperatingSystem,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosVppApp,
+
+        [Parameter()]
+        [System.Int32]
+        $usedLicenseCount,
+
+        [Parameter()]
+        [System.Int32]
+        $totalLicenseCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $releaseDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $licensingType,
+
+        [Parameter()]
+        [System.String]
+        $vppTokenOrganizationName,
+
+        [Parameter()]
+        [System.String]
+        $vppTokenAccountType,
+
+        [Parameter()]
+        [System.String]
+        $vppTokenAppleId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidStoreApp,
+
+        [Parameter()]
+        [System.String]
+        $packageId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $webApp,
+
+        [Parameter()]
+        [System.String]
+        $appUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $useManagedBrowser,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $microsoftStoreForBusinessApp,
+
+        [Parameter()]
+        [System.String]
+        $productKey,
+
+        [Parameter()]
+        [System.String]
+        $licenseType,
+
+        [Parameter()]
+        [System.String]
+        $packageIdentityName,
+
+        [Parameter()]
+        [System.String]
+        $committedContentVersion,
+
+        [Parameter()]
+        [System.String]
+        $fileName,
+
+        [Parameter()]
+        [System.Int64]
+        $size,
+
+        [Parameter()]
+        [System.Object[]]
+        $contentVersions,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosLobApp,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $expirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $versionNumber,
+
+        [Parameter()]
+        [System.String]
+        $buildNumber,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidLobApp,
+
+        [Parameter()]
+        [System.String]
+        $versionName,
+
+        [Parameter()]
+        [System.String]
+        $versionCode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsUniversalAppX,
+
+        [Parameter()]
+        [System.String]
+        $applicableArchitectures,
+
+        [Parameter()]
+        [System.String]
+        $applicableDeviceTypes,
+
+        [Parameter()]
+        [System.String]
+        $identityName,
+
+        [Parameter()]
+        [System.String]
+        $identityPublisherHash,
+
+        [Parameter()]
+        [System.String]
+        $identityResourceIdentifier,
+
+        [Parameter()]
+        [System.Boolean]
+        $isBundle,
+
+        [Parameter()]
+        [System.String]
+        $identityVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsMobileMSI,
+
+        [Parameter()]
+        [System.String]
+        $commandLine,
+
+        [Parameter()]
+        [System.String]
+        $productCode,
+
+        [Parameter()]
+        [System.String]
+        $productVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $ignoreVersionDetection,
+
+        [Parameter()]
+        [System.String]
+        $appAvailability,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedIOSLobApp,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedAndroidLobApp,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedIOSStoreApp,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $managedAndroidStoreApp,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSOfficeSuiteApp,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneMobileAppAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $intent,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.Object]
+        $settings,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneMobileAppCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppCategoryId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneMobileAppConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.String[]]
+        $targetedMobileApps,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStatuses,
+
+        [Parameter()]
+        [System.Object]
+        $deviceStatusSummary,
+
+        [Parameter()]
+        [System.Object]
+        $userStatusSummary,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosMobileAppConfiguration,
+
+        [Parameter()]
+        [System.Byte[]]
+        $encodedSettingXml,
+
+        [Parameter()]
+        [System.Object[]]
+        $settings,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneMobileAppConfigurationPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneMobileAppConfigurationPolicyDeviceStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationDeviceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $deviceDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $userName,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $complianceGracePeriodExpirationDateTime,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneMobileAppConfigurationPolicyDeviceStatusSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneMobileAppConfigurationPolicyUserStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationUserStatusId,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $devicesCount,
+
+        [Parameter()]
+        [System.String]
+        $status,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastReportedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $userPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneMobileAppConfigurationPolicyUserStatusSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $managedDeviceMobileAppConfigurationId,
+
+        [Parameter()]
+        [System.Int32]
+        $pendingCount,
+
+        [Parameter()]
+        [System.Int32]
+        $notApplicableCount,
+
+        [Parameter()]
+        [System.Int32]
+        $successCount,
+
+        [Parameter()]
+        [System.Int32]
+        $errorCount,
+
+        [Parameter()]
+        [System.Int32]
+        $failedCount,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastUpdateDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $configurationVersion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneMobileAppContentVersion
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppContentId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppODataType,
+
+        [Parameter()]
+        [System.Object[]]
+        $files,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneMobileAppContentVersionFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileAppContentFileId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppODataType,
+
+        [Parameter()]
+        [System.String]
+        $mobileAppContentId,
+
+        [Parameter()]
+        [System.String]
+        $azureStorageUri,
+
+        [Parameter()]
+        [System.Boolean]
+        $isCommitted,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $name,
+
+        [Parameter()]
+        [System.Int64]
+        $size,
+
+        [Parameter()]
+        [System.Int64]
+        $sizeEncrypted,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $azureStorageUriExpirationDateTime,
+
+        [Parameter()]
+        [System.Byte[]]
+        $manifest,
+
+        [Parameter()]
+        [System.String]
+        $uploadState,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneMobileThreatDefenseConnector
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $mobileThreatDefenseConnectorId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastHeartbeatDateTime,
+
+        [Parameter()]
+        [System.String]
+        $partnerState,
+
+        [Parameter()]
+        [System.Boolean]
+        $androidEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $iosEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $androidDeviceBlockedOnMissingPartnerData,
+
+        [Parameter()]
+        [System.Boolean]
+        $iosDeviceBlockedOnMissingPartnerData,
+
+        [Parameter()]
+        [System.Boolean]
+        $partnerUnsupportedOsVersionBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $partnerUnresponsivenessThresholdInDays,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneNotificationMessageTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $notificationMessageTemplateId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $defaultLocale,
+
+        [Parameter()]
+        [System.String]
+        $brandingOptions,
+
+        [Parameter()]
+        [System.Object[]]
+        $localizedNotificationMessages,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneRemoteAssistancePartner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $remoteAssistancePartnerId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $onboardingUrl,
+
+        [Parameter()]
+        [System.String]
+        $onboardingStatus,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastConnectionDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneResourceOperation
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $resourceOperationId,
+
+        [Parameter()]
+        [System.String]
+        $resourceName,
+
+        [Parameter()]
+        [System.String]
+        $actionName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneRoleAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceAndAppManagementRoleAssignmentId,
+
+        [Parameter()]
+        [System.String[]]
+        $members,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String[]]
+        $resourceScopes,
+
+        [Parameter()]
+        [System.Object]
+        $roleDefinition,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneRoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $roleDefinitionId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $roleDefinition,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.Object[]]
+        $rolePermissions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isBuiltIn,
+
+        [Parameter()]
+        [System.Object[]]
+        $roleAssignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceAndAppManagementRoleDefinition,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneTelecomExpenseManagementPartner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $telecomExpenseManagementPartnerId,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $url,
+
+        [Parameter()]
+        [System.Boolean]
+        $appAuthorized,
+
+        [Parameter()]
+        [System.Boolean]
+        $enabled,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastConnectionDateTime,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneTermsAndConditions
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $termsAndConditionId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $title,
+
+        [Parameter()]
+        [System.String]
+        $bodyText,
+
+        [Parameter()]
+        [System.String]
+        $acceptanceStatement,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $acceptanceStatuses,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneTermsAndConditionsAcceptanceStatus
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $termsAndConditionsAcceptanceStatusId,
+
+        [Parameter()]
+        [System.String]
+        $termsAndConditionId,
+
+        [Parameter()]
+        [System.String]
+        $userDisplayName,
+
+        [Parameter()]
+        [System.Int32]
+        $acceptedVersion,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $acceptedDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $termsAndConditions,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneTermsAndConditionsAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $termsAndConditionsAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $termsAndConditionId,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneTroubleshootingEvent
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceManagementTroubleshootingEventId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $deviceManagementTroubleshootingEvent,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $eventDateTime,
+
+        [Parameter()]
+        [System.String]
+        $correlationId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $enrollmentTroubleshootingEvent,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $operatingSystem,
+
+        [Parameter()]
+        [System.String]
+        $osVersion,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $deviceId,
+
+        [Parameter()]
+        [System.String]
+        $enrollmentType,
+
+        [Parameter()]
+        [System.String]
+        $failureCategory,
+
+        [Parameter()]
+        [System.String]
+        $failureReason,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneVppToken
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $vppTokenId,
+
+        [Parameter()]
+        [System.String]
+        $organizationName,
+
+        [Parameter()]
+        [System.String]
+        $vppTokenAccountType,
+
+        [Parameter()]
+        [System.String]
+        $appleId,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $expirationDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $token,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $state,
+
+        [Parameter()]
+        [System.String]
+        $lastSyncStatus,
+
+        [Parameter()]
+        [System.Boolean]
+        $automaticallyUpdateApps,
+
+        [Parameter()]
+        [System.String]
+        $countryOrRegion,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneWindowsInformationProtectionAppLearningSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLearningSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $applicationName,
+
+        [Parameter()]
+        [System.String]
+        $applicationType,
+
+        [Parameter()]
+        [System.Int32]
+        $deviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneWindowsInformationProtectionNetworkLearningSummary
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionNetworkLearningSummaryId,
+
+        [Parameter()]
+        [System.String]
+        $url,
+
+        [Parameter()]
+        [System.Int32]
+        $deviceCount,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneWindowsInformationProtectionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnMdmHandoffDisabled,
+
+        [Parameter()]
+        [System.String]
+        $mdmEnrollmentUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $windowsHelloForBusinessBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $pinMinimumLength,
+
+        [Parameter()]
+        [System.String]
+        $pinUppercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinLowercaseLetters,
+
+        [Parameter()]
+        [System.String]
+        $pinSpecialCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $pinExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $numberOfPastPinsRemembered,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMaximumAttemptCount,
+
+        [Parameter()]
+        [System.Int32]
+        $minutesOfInactivityBeforeDeviceLock,
+
+        [Parameter()]
+        [System.Int32]
+        $daysWithoutContactBeforeUnenroll,
+
+        [Parameter()]
+        [System.String]
+        $enforcementLevel,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseDomain,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProtectedDomainNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $protectionUnderLockConfigRequired,
+
+        [Parameter()]
+        [System.Object]
+        $dataRecoveryCertificate,
+
+        [Parameter()]
+        [System.Boolean]
+        $revokeOnUnenrollDisabled,
+
+        [Parameter()]
+        [System.Guid]
+        $rightsManagementServicesTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $azureRightsManagementServicesAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $iconsVisible,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxiedDomains,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseIPRanges,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseIPRangesAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseProxyServers,
+
+        [Parameter()]
+        [System.Object[]]
+        $enterpriseInternalProxyServers,
+
+        [Parameter()]
+        [System.Boolean]
+        $enterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [System.Object[]]
+        $neutralDomainResources,
+
+        [Parameter()]
+        [System.Boolean]
+        $indexingEncryptedStoresOrItemsBlocked,
+
+        [Parameter()]
+        [System.Object[]]
+        $smbAutoEncryptedFileExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $isAssigned,
+
+        [Parameter()]
+        [System.Object[]]
+        $protectedAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $exemptAppLockerFiles,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneWindowsInformationProtectionPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $targetedManagedAppPolicyAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.Object]
+        $target,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneWindowsInformationProtectionPolicyExemptAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
+function Update-IntuneWindowsInformationProtectionPolicyProtectedAppLockerFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionAppLockerFileId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $windowsInformationProtectionPolicyODataType,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $fileHash,
+
+        [Parameter()]
+        [System.Byte[]]
+        $file,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $ODataType
+    )
+}
 #endregion
 #region MicrosoftTeams
 function Add-TeamUser
@@ -90118,6 +111070,540 @@ function Update-PnPTeamsApp
         $ByPassPermissionCheck
     )
 }
+function Add-PnPOffice365GroupToSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.String]
+        $Alias,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Classification,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsPublic,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $KeepOldHomePage,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        $HubSiteId,
+
+        [Parameter()]
+        [System.String[]]
+        $Owners,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection
+    )
+}
+function Add-PnPUnifiedGroupMember
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $Users,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RemoveExisting,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck
+    )
+}
+function Add-PnPUnifiedGroupOwner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $Users,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RemoveExisting,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck
+    )
+}
+function Clear-PnPUnifiedGroupOwner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck
+    )
+}
+function Connect-PnPHubSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $Site,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $HubSite,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection
+    )
+}
+function Disconnect-PnPHubSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        $Site,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection
+    )
+}
+function Ensure-PnPFolder
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $SiteRelativePath,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection
+    )
+}
+function Execute-PnPQuery
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $RetryCount,
+
+        [Parameter()]
+        [System.Int32]
+        $RetryWait,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection
+    )
+}
+function Get-PnPDeletedUnifiedGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck
+    )
+}
+function Get-PnPUnifiedGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ExcludeSiteUrl,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeClassification,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeHasTeam,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck
+    )
+}
+function Get-PnPUnifiedGroupMembers
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck
+    )
+}
+function Get-PnPUnifiedGroupOwners
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck
+    )
+}
+function Invoke-PnPSearchQuery
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Query,
+
+        [Parameter()]
+        [System.Int32]
+        $StartRow,
+
+        [Parameter()]
+        [System.Int32]
+        $MaxResults,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.Boolean]
+        $TrimDuplicates,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Properties,
+
+        [Parameter()]
+        [System.String]
+        $Refiners,
+
+        [Parameter()]
+        [System.Int32]
+        $Culture,
+
+        [Parameter()]
+        [System.String]
+        $QueryTemplate,
+
+        [Parameter()]
+        [System.String[]]
+        $SelectProperties,
+
+        [Parameter()]
+        [System.String[]]
+        $RefinementFilters,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $SortList,
+
+        [Parameter()]
+        [System.String]
+        $RankingModelId,
+
+        [Parameter()]
+        [System.String]
+        $ClientType,
+
+        [Parameter()]
+        [System.String]
+        $CollapseSpecification,
+
+        [Parameter()]
+        [System.String]
+        $HiddenConstraints,
+
+        [Parameter()]
+        [System.Int32]
+        $TimeZoneId,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnablePhonetic,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableStemming,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableQueryRules,
+
+        [Parameter()]
+        [System.Guid]
+        $SourceId,
+
+        [Parameter()]
+        [System.Boolean]
+        $ProcessBestBets,
+
+        [Parameter()]
+        [System.Boolean]
+        $ProcessPersonalFavorites,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RelevantResults,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        $Web,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection
+    )
+}
+function Load-PnPProvisioningTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.String]
+        $Xml,
+
+        [Parameter()]
+        [OfficeDevPnP.Core.Framework.Provisioning.Providers.ITemplateProviderExtension[]]
+        $TemplateProviderExtensions
+    )
+}
+function New-PnPUnifiedGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $MailNickname,
+
+        [Parameter()]
+        [System.String[]]
+        $Owners,
+
+        [Parameter()]
+        [System.String[]]
+        $Members,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsPrivate,
+
+        [Parameter()]
+        [System.String]
+        $GroupLogoPath,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $CreateTeam,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck
+    )
+}
+function Remove-PnPDeletedUnifiedGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck
+    )
+}
+function Remove-PnPUnifiedGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck
+    )
+}
+function Remove-PnPUnifiedGroupMember
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $Users,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck
+    )
+}
+function Remove-PnPUnifiedGroupOwner
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $Users,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck
+    )
+}
+function Reset-PnPUnifiedGroupExpiration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck
+    )
+}
+function Restore-PnPDeletedUnifiedGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck
+    )
+}
+function Set-PnPUnifiedGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.Microsoft365GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $Owners,
+
+        [Parameter()]
+        [System.String[]]
+        $Members,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsPrivate,
+
+        [Parameter()]
+        [System.String]
+        $GroupLogoPath,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $CreateTeam,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $HideFromAddressLists,
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        $HideFromOutlookClients,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ByPassPermissionCheck
+    )
+}
 #endregion
 #region PowerPlatforms
 function Add-AdminPowerAppsSyncUser
@@ -95918,10 +117404,6 @@ function New-DlpCompliancePolicy
     param(
         [Parameter()]
         [System.Object]
-        $OneDriveSharedBy,
-
-        [Parameter()]
-        [System.Object]
         $Name,
 
         [Parameter()]
@@ -95939,6 +117421,10 @@ function New-DlpCompliancePolicy
         [Parameter()]
         [System.Object]
         $ExceptIfOneDriveSharedBy,
+
+        [Parameter()]
+        [System.Object]
+        $SharePointLocationException,
 
         [Parameter()]
         [System.Object]
@@ -95975,10 +117461,6 @@ function New-DlpCompliancePolicy
         [Parameter()]
         [System.Object]
         $Mode,
-
-        [Parameter()]
-        [System.Object]
-        $SharePointLocationException,
 
         [Parameter()]
         [System.Object]
@@ -100061,10 +121543,6 @@ function Set-DlpCompliancePolicy
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.Object]
-        $OneDriveSharedBy,
-
         [Parameter()]
         [System.Object]
         $Identity,

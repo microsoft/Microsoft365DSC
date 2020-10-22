@@ -74,38 +74,41 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
     }
 
-    $AllRoleAssignmentPolicies = Get-RoleAssignmentPolicy
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
-    $RoleAssignmentPolicy = $AllRoleAssignmentPolicies | Where-Object -FilterScript { $_.Name -eq $Name }
-
-    if ($null -eq $RoleAssignmentPolicy)
+    try
     {
-        Write-Verbose -Message "Role Assignment Policy $($Name) does not exist."
+        $AllRoleAssignmentPolicies = Get-RoleAssignmentPolicy -ErrorAction Stop
 
-        $nullReturn = @{
-            Name               = $Name
-            Description        = $Description
-            IsDefault          = $IsDefault
-            Roles              = $Roles
-            Ensure             = 'Absent'
-            GlobalAdminAccount = $GlobalAdminAccount
+        $RoleAssignmentPolicy = $AllRoleAssignmentPolicies | Where-Object -FilterScript { $_.Name -eq $Name }
+
+        if ($null -eq $RoleAssignmentPolicy)
+        {
+            Write-Verbose -Message "Role Assignment Policy $($Name) does not exist."
+            return $nullReturn
         }
+        else
+        {
+            $result = @{
+                Name               = $RoleAssignmentPolicy.Name
+                Description        = $RoleAssignmentPolicy.Description
+                IsDefault          = $RoleAssignmentPolicy.IsDefault
+                Roles              = $RoleAssignmentPolicy.AssignedRoles
+                Ensure             = 'Present'
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
 
-        return $nullReturn
+            Write-Verbose -Message "Found Role Assignment Policy $($Name)"
+            return $result
+        }
     }
-    else
+    catch
     {
-        $result = @{
-            Name               = $RoleAssignmentPolicy.Name
-            Description        = $RoleAssignmentPolicy.Description
-            IsDefault          = $RoleAssignmentPolicy.IsDefault
-            Roles              = $RoleAssignmentPolicy.AssignedRoles
-            Ensure             = 'Present'
-            GlobalAdminAccount = $GlobalAdminAccount
-        }
-
-        Write-Verbose -Message "Found Role Assignment Policy $($Name)"
-        return $result
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -279,6 +282,15 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing Role Assignment Policy configuration for $Name"
 
@@ -290,7 +302,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -343,44 +355,54 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
-    [array]$AllRoleAssignmentPolicies = Get-RoleAssignmentPolicy
-
-    $dscContent = ""
-
-    if ($AllRoleAssignmentPolicies.Length -eq 0)
+    try
     {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-    }
-    else
-    {
-        Write-Host "`r`n" -NoNewLine
-    }
-    $i = 1
-    foreach ($RoleAssignmentPolicy in $AllRoleAssignmentPolicies)
-    {
-        Write-Host "    |---[$i/$($AllRoleAssignmentPolicies.Length)] $($RoleAssignmentPolicy.Name)" -NoNewLine
+        [array]$AllRoleAssignmentPolicies = Get-RoleAssignmentPolicy -ErrorAction
 
-        $Params = @{
-            Name                  = $RoleAssignmentPolicy.Name
-            GlobalAdminAccount    = $GlobalAdminAccount
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
+        $dscContent = ""
+
+        if ($AllRoleAssignmentPolicies.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
+        $i = 1
+        foreach ($RoleAssignmentPolicy in $AllRoleAssignmentPolicies)
+        {
+            Write-Host "    |---[$i/$($AllRoleAssignmentPolicies.Length)] $($RoleAssignmentPolicy.Name)" -NoNewLine
+
+            $Params = @{
+                Name                  = $RoleAssignmentPolicy.Name
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
+        }
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

@@ -76,23 +76,8 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
                 -InboundParameters $PSBoundParameters
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
-                -InboundParameters $PSBoundParameters
-
-    $nullReturn = @{
-        Url                   = $Url
-        Title                 = $null
-        Description           = $null
-        LogoUrl               = $null
-        RequiresJoinApproval  = $null
-        AllowedToJoin         = $null
-        SiteDesignId          = $null
-        Ensure                = "Absent"
-        GlobalAdminAccount    = $GlobalAdminAccount
-        ApplicationId         = $ApplicationId
-        TenantId              = $TenantId
-        CertificateThumbprint = $CertificateThumbprint
-    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
     try
     {
@@ -112,7 +97,8 @@ function Get-TargetResource
         else
         {
             $hubSite = Get-PnPHubSite -Identity $Url
-
+            $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+                        -InboundParameters $PSBoundParameters
             $principals = @()
             foreach ($permission in $hubSite.Permissions.PrincipalName)
             {
@@ -167,7 +153,9 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message "The specified Site Collection doesn't already exist."
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
         return $nullReturn
     }
 }
@@ -491,6 +479,15 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration for hub site collection $Url"
 
@@ -499,7 +496,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("Ensure", `
@@ -559,38 +556,48 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
                 -InboundParameters $PSBoundParameters
 
-    $hubSites = Get-PnPHubSite
-
-    $i = 1
-    Write-Host "`r`n" -NoNewLine
-
-    $dscContent = ''
-    foreach ($hub in $hubSites)
+    try
     {
-        Write-Host "    [$i/$($hubSites.Length)] $($hub.SiteUrl)" -NoNewLine
+        [array]$hubSites = Get-PnPHubSite -ErrorAction Stop
 
-        $Params = @{
-            Url                   = $hub.SiteUrl
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            GlobalAdminAccount    = $GlobalAdminAccount
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
+        $i = 1
+        Write-Host "`r`n" -NoNewLine
+
+        $dscContent = ''
+        foreach ($hub in $hubSites)
+        {
+            Write-Host "    [$i/$($hubSites.Length)] $($hub.SiteUrl)" -NoNewLine
+
+            $Params = @{
+                Url                   = $hub.SiteUrl
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                GlobalAdminAccount    = $GlobalAdminAccount
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+            }
+
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
         }
-
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

@@ -161,7 +161,7 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found User $($UserPrincipalName)"
         $currentLicenseAssignment = @()
-        $skus = Get-AzureADUserLicenseDetail -ObjectId $UserPrincipalName
+        $skus = Get-AzureADUserLicenseDetail -ObjectId $UserPrincipalName -ErrorAction Stop
         foreach ($sku in $skus)
         {
             $currentLicenseAssignment += $sku.SkuPartNumber
@@ -201,11 +201,11 @@ function Get-TargetResource
     }
     catch
     {
-        $Message = "The specified User {$UserPrincipalName} doesn't already exist."
-        Write-Verbose $Message
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
         return $nullReturn
     }
-    return $nullReturn
 }
 
 function Set-TargetResource
@@ -588,6 +588,15 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of Office 365 User $UserPrincipalName"
 
@@ -597,7 +606,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("Ensure", `
@@ -670,45 +679,55 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
         -InboundParameters $PSBoundParameters
 
-    $users = Get-AzureADUser -All $true
-    $dscContent = ""
-    $i = 1
-    Write-Host "`r`n" -NoNewLine
-    foreach ($user in $users)
+    try
     {
-        Write-Host "    |---[$i/$($users.Length)] $($user.UserPrincipalName)" -NoNewLine
-        $userUPN = $user.UserPrincipalName
-        if (-not [System.String]::IsNullOrEmpty($userUPN))
+        $users = Get-AzureADUser -All $true -ErrorAction Stop
+        $dscContent = ""
+        $i = 1
+        Write-Host "`r`n" -NoNewLine
+        foreach ($user in $users)
         {
-            $Params = @{
-                UserPrincipalName     = $userUPN
-                GlobalAdminAccount    = $GlobalAdminAccount
-                Password              = $GlobalAdminAccount
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
-            }
-
-            $Results = Get-TargetResource @Params
-            if ($null -ne $Results.UserPrincipalName)
+            Write-Host "    |---[$i/$($users.Length)] $($user.UserPrincipalName)" -NoNewLine
+            $userUPN = $user.UserPrincipalName
+            if (-not [System.String]::IsNullOrEmpty($userUPN))
             {
-                $Results.Password = Resolve-Credentials -UserName "globaladmin"
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                        -Results $Results
-                $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                    -ConnectionMode $ConnectionMode `
-                    -ModulePath $PSScriptRoot `
-                    -Results $Results `
-                    -GlobalAdminAccount $GlobalAdminAccount
-                $dscContent = Convert-DSCStringParamToVariable -DSCBlock $dscContent -ParameterName "Password"
+                $Params = @{
+                    UserPrincipalName     = $userUPN
+                    GlobalAdminAccount    = $GlobalAdminAccount
+                    Password              = $GlobalAdminAccount
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    CertificatePassword   = $CertificatePassword
+                    CertificatePath       = $CertificatePath
+                }
+
+                $Results = Get-TargetResource @Params
+                if ($null -ne $Results.UserPrincipalName)
+                {
+                    $Results.Password = Resolve-Credentials -UserName "globaladmin"
+                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                            -Results $Results
+                    $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                        -ConnectionMode $ConnectionMode `
+                        -ModulePath $PSScriptRoot `
+                        -Results $Results `
+                        -GlobalAdminAccount $GlobalAdminAccount
+                    $dscContent = Convert-DSCStringParamToVariable -DSCBlock $dscContent -ParameterName "Password"
+                }
             }
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
         }
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource
