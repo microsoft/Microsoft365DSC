@@ -175,7 +175,6 @@ function Set-TargetResource
         Write-Verbose -Message "Availability Config '$($OrgWideAccount)' already exists, but needs updating."
         Set-AvailabilityConfig -OrgWideAccount $OrgWideAccount -Confirm:$false
     }
-
 }
 
 function Test-TargetResource
@@ -217,6 +216,15 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of Availability Config for account $OrgWideAccount"
 

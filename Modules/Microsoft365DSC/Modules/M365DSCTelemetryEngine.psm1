@@ -115,6 +115,7 @@ function Add-M365DSCTelemetryEvent
                 {
                     $Data.Add("Workload", "Teams")
                 }
+                $Data.Resource = $Data.Resource.Replace("MSFT_", "")
             }
 
             [array]$version = (Get-Module 'Microsoft365DSC').Version | Sort-Object -Descending
