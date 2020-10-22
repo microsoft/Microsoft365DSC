@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+## 1.20.1028.1
+
+* DEPENDENCIES
+  * DSCPArser Updated to 1.3.0.0;
+
 ## 1.20.1021.1
 
 * AADTenantDetails
