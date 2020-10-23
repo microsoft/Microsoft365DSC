@@ -47,11 +47,11 @@ function Get-TargetResource
         $RequireAnonymousLinksExpireInDays,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SharingAllowedDomainList,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SharingBlockedDomainList,
 
         [Parameter()]
@@ -237,11 +237,11 @@ function Set-TargetResource
         $RequireAnonymousLinksExpireInDays,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SharingAllowedDomainList,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SharingBlockedDomainList,
 
         [Parameter()]
@@ -340,6 +340,12 @@ function Set-TargetResource
     $CurrentParameters.Remove("CertificatePassword") | Out-Null
     $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
 
+    if ($null -eq $SharingAllowedDomainList -and $null -eq $SharingBlockedDomainList -and $RequireAcceptingAccountMatchInvitedAccount -eq $false)
+    {
+        Write-Verbose -Message "If SharingAllowedDomainList / SharingBlockedDomainList are set to null RequireAcceptingAccountMatchInvitedAccount must be set to True "
+        $CurrentParameters.Remove("RequireAcceptingAccountMatchInvitedAccount") | Out-Null
+    }
+
     if ($null -eq $SignInAccelerationDomain)
     {
         $CurrentParameters.Remove("SignInAccelerationDomain") | Out-Null
@@ -356,6 +362,17 @@ function Set-TargetResource
         $CurrentParameters.Remove("SharingAllowedDomainList") | Out-Null
         $CurrentParameters.Remove("SharingBlockedDomainList") | Out-Null
     }
+
+    if ($SharingCapability -ne 'ExternalUserAndGuestSharing' -and ($null -ne $FileAnonymousLinkType  -or $null -ne $FolderAnonymousLinkType))
+    {
+        Write-Verbose -Message "If anonymous file or folder links are set, SharingCapability must be set to ExternalUserAndGuestSharing "
+        $CurrentParameters.Remove("FolderAnonymousLinkType") | Out-Null
+        $CurrentParameters.Remove("FileAnonymousLinkType") | Out-Null
+    }
+
+    ExternalUserAndGuestSharing 
+
+
     if ($SharingDomainRestrictionMode -eq "None")
     {
         Write-Verbose -Message "SharingDomainRestrictionMode is set to None. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
@@ -427,11 +444,11 @@ function Test-TargetResource
         $RequireAnonymousLinksExpireInDays,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SharingAllowedDomainList,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SharingBlockedDomainList,
 
         [Parameter()]

@@ -1,5 +1,16 @@
 # Change log for Microsoft365DSC
 
+## Unreleased
+
+* Modules
+  * SPOTenantSettings
+    * Removed duplicate parameter RequireAcceptingAccountMatchInvitedAccount (Issue #864)
+  * SPOShareSettings
+    * Fixed issue # 855 
+    * Fixed issue # 866 changed domains to array
+    * Fixed issue where trying to set anonymous link types if sharing not properly configured issue #865
+  * ODSettings
+    * Removed AD group guid dependency issue # 862
 ## 1.20.1028.1
 
 * MODULES
