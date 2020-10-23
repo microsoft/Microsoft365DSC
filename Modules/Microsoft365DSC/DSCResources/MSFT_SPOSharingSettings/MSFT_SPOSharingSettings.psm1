@@ -146,6 +146,16 @@ function Get-TargetResource
     {
         $SPOSharingSettings = Get-PnPTenant -ErrorAction Stop
 
+        if ($null -ne $SPOSharingSettings.SharingAllowedDomainList)
+        {
+            $allowDomains = $SPOSharingSettings.SharingAllowedDomainList.split(" ")
+        }
+
+        if ($null -ne $SPOSharingSettings.SharingBlockedDomainList)
+        {
+            $blockDomains = $SPOSharingSettings.SharingBlockedDomainList.split(" ")
+        }
+
         return @{
             IsSingleInstance                           = 'Yes'
             SharingCapability                          = $SPOSharingSettings.SharingCapability
@@ -157,8 +167,8 @@ function Get-TargetResource
             BccExternalSharingInvitations              = $SPOSharingSettings.BccExternalSharingInvitations
             BccExternalSharingInvitationsList          = $SPOSharingSettings.BccExternalSharingInvitationsList
             RequireAnonymousLinksExpireInDays          = $SPOSharingSettings.RequireAnonymousLinksExpireInDays
-            SharingAllowedDomainList                   = $SPOSharingSettings.SharingAllowedDomainList
-            SharingBlockedDomainList                   = $SPOSharingSettings.SharingBlockedDomainList
+            SharingAllowedDomainList                   = $allowDomains
+            SharingBlockedDomainList                   = $blockDomains
             SharingDomainRestrictionMode               = $SPOSharingSettings.SharingDomainRestrictionMode
             DefaultSharingLinkType                     = $SPOSharingSettings.DefaultSharingLinkType
             PreventExternalUsersFromResharing          = $SPOSharingSettings.PreventExternalUsersFromResharing
@@ -339,8 +349,9 @@ function Set-TargetResource
     $CurrentParameters.Remove("CertificatePath") | Out-Null
     $CurrentParameters.Remove("CertificatePassword") | Out-Null
     $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
-
-    if ($null -eq $SharingAllowedDomainList -and $null -eq $SharingBlockedDomainList -and $RequireAcceptingAccountMatchInvitedAccount -eq $false)
+   
+    if ($null -eq $SharingAllowedDomainList -and $null -eq $SharingBlockedDomainList -and
+    ` ($null -ne $RequireAcceptingAccountMatchInvitedAccount -and $RequireAcceptingAccountMatchInvitedAccount -eq $false))
     {
         Write-Verbose -Message "If SharingAllowedDomainList / SharingBlockedDomainList are set to null RequireAcceptingAccountMatchInvitedAccount must be set to True "
         $CurrentParameters.Remove("RequireAcceptingAccountMatchInvitedAccount") | Out-Null
@@ -369,9 +380,6 @@ function Set-TargetResource
         $CurrentParameters.Remove("FolderAnonymousLinkType") | Out-Null
         $CurrentParameters.Remove("FileAnonymousLinkType") | Out-Null
     }
-
-    ExternalUserAndGuestSharing 
-
 
     if ($SharingDomainRestrictionMode -eq "None")
     {
