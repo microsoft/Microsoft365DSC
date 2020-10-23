@@ -21,11 +21,13 @@ function Get-TargetResource
     Write-Verbose -Message 'Getting Global PSTN Usage(s)'
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add('Resource', $MyInvocation.MyCommand.ModuleName)
-    $data.Add('Method', $MyInvocation.MyCommand)
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
-    Add-M365DSCTelemetryEvent  -Data $data
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
@@ -90,10 +92,12 @@ function Set-TargetResource
     Write-Verbose -Message 'Setting PSTN Usage'
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add('Resource', $MyInvocation.MyCommand.ModuleName)
-    $data.Add('Method', $MyInvocation.MyCommand)
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -178,10 +182,12 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add('Resource', $MyInvocation.MyCommand.ModuleName)
-    $data.Add('Method', $MyInvocation.MyCommand)
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
