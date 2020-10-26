@@ -131,8 +131,17 @@ function Start-M365DSCConfigurationExtract
     {
         $selectedResources = $ComponentsToExtract
     }
-    $compareResourcesResult = Compare-Object -ReferenceObject $allSupportedResources `
-        -DifferenceObject $selectedResources | Where-Object -FilterScript {$_.SideIndicator -eq '=>'}
+
+    try
+    {
+        $compareResourcesResult = Compare-Object -ReferenceObject $allSupportedResources `
+            -DifferenceObject $selectedResources | Where-Object -FilterScript {$_.SideIndicator -eq '=>'}
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+    }
+
     if ($null -ne $compareResourcesResult)
     {
         # The client is trying to extract act least one resource which is not supported

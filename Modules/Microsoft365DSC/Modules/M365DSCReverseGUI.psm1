@@ -25,7 +25,11 @@ function Show-M365DSCGUI
     param(
         [Parameter()]
         [System.String]
-        $Path
+        $Path,
+
+        [Parameter()]
+        [System.String]
+        $FileName
     )
     try
     {
@@ -794,7 +798,8 @@ function Show-M365DSCGUI
                         -CertificatePath $txtCertFile.Text `
                         -CertificatePassword $CertPasswordcreds `
                         -ComponentsToExtract $SelectedComponents `
-                        -Path $Path
+                        -Path $Path `
+                        -FileName $FileName
                 }
                 catch
                 {
