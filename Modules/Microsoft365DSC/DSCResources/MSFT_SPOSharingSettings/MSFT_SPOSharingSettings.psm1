@@ -401,6 +401,24 @@ function Set-TargetResource
     {
         Write-verbose -Message "Configuring Tenant with: $value"
     }
+
+    if ($null -ne $SharingAllowedDomainList)
+    {
+        foreach($allowedDomain in $SharingAllowedDomainList){
+            $allowed += $allowedDomain
+            $allowed += " "
+        }
+        $CurrentParameters["SharingAllowedDomainList"] = $allowed.trim()
+    }
+
+    if ($null -ne $SharingBlockedDomainList)
+    {
+        foreach($blockedDomain in $SharingBlockedDomainList){
+            $blocked += $blockedDomain
+            $blocked += " "
+        }
+        $CurrentParameters["SharingBlockedDomainList"] = $blocked.Trim()
+    }
     Set-PnPTenant @CurrentParameters | Out-Null
 }
 function Test-TargetResource
