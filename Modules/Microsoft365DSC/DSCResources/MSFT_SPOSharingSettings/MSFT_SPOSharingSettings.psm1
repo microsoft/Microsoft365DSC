@@ -137,7 +137,7 @@ function Get-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
@@ -337,7 +337,7 @@ function Set-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount") | Out-Null
@@ -349,9 +349,9 @@ function Set-TargetResource
     $CurrentParameters.Remove("CertificatePath") | Out-Null
     $CurrentParameters.Remove("CertificatePassword") | Out-Null
     $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
-   
+
     if ($null -eq $SharingAllowedDomainList -and $null -eq $SharingBlockedDomainList -and
-    ` ($null -ne $RequireAcceptingAccountMatchInvitedAccount -and $RequireAcceptingAccountMatchInvitedAccount -eq $false))
+        ($null -ne $RequireAcceptingAccountMatchInvitedAccount -and $RequireAcceptingAccountMatchInvitedAccount -eq $false))
     {
         Write-Verbose -Message "If SharingAllowedDomainList / SharingBlockedDomainList are set to null RequireAcceptingAccountMatchInvitedAccount must be set to True "
         $CurrentParameters.Remove("RequireAcceptingAccountMatchInvitedAccount") | Out-Null
@@ -374,7 +374,7 @@ function Set-TargetResource
         $CurrentParameters.Remove("SharingBlockedDomainList") | Out-Null
     }
 
-    if ($SharingCapability -ne 'ExternalUserAndGuestSharing' -and ($null -ne $FileAnonymousLinkType  -or $null -ne $FolderAnonymousLinkType))
+    if ($SharingCapability -ne 'ExternalUserAndGuestSharing' -and ($null -ne $FileAnonymousLinkType -or $null -ne $FolderAnonymousLinkType))
     {
         Write-Verbose -Message "If anonymous file or folder links are set, SharingCapability must be set to ExternalUserAndGuestSharing "
         $CurrentParameters.Remove("FolderAnonymousLinkType") | Out-Null
@@ -399,12 +399,13 @@ function Set-TargetResource
     }
     foreach ($value in $CurrentParameters.GetEnumerator())
     {
-        Write-verbose -Message "Configuring Tenant with: $value"
+        Write-Verbose -Message "Configuring Tenant with: $value"
     }
 
     if ($null -ne $SharingAllowedDomainList)
     {
-        foreach($allowedDomain in $SharingAllowedDomainList){
+        foreach ($allowedDomain in $SharingAllowedDomainList)
+        {
             $allowed += $allowedDomain
             $allowed += " "
         }
@@ -413,7 +414,8 @@ function Set-TargetResource
 
     if ($null -ne $SharingBlockedDomainList)
     {
-        foreach($blockedDomain in $SharingBlockedDomainList){
+        foreach ($blockedDomain in $SharingBlockedDomainList)
+        {
             $blocked += $blockedDomain
             $blocked += " "
         }
@@ -657,12 +659,12 @@ function Export-TargetResource
             $Results.Remove("RequireAnonymousLinksExpireInDays") | Out-Null
         }
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
+            -Results $Results
         $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
         Write-Host $Global:M365DSCEmojiGreenCheckmark
         return $dscContent
     }
