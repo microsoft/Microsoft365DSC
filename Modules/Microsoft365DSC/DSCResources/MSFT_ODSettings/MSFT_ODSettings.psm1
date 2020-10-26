@@ -1,5 +1,4 @@
-function Get-TargetResource
-{
+function Get-TargetResource {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
@@ -107,13 +106,11 @@ function Get-TargetResource
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
 
-    try
-    {
+    try {
         Write-Verbose -Message "Getting OneDrive quota size for tenant"
         $tenant = Get-PnPTenant -ErrorAction Stop
 
-        if ($null -eq $tenant)
-        {
+        if ($null -eq $tenant) {
             Write-Verbose -Message "Failed to get Tenant information"
             return $nullReturn
         }
@@ -122,46 +119,39 @@ function Get-TargetResource
         Write-Verbose -Message "Getting tenant client sync setting"
         $tenantRestrictions = Get-PnPTenantSyncClientRestriction -ErrorAction Stop
 
-        if ($null -eq $tenantRestrictions)
-        {
+        if ($null -eq $tenantRestrictions) {
             Write-Verbose -Message "Failed to get Tenant client synce settings!"
             return $nullReturn
         }
 
         $GrooveOption = $null
 
-        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $true) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $false))
-        {
+        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $true) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $false)) {
             $GrooveOption = "SoftOptIn"
         }
 
-        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $false) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $true))
-        {
+        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $false) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $true)) {
             $GrooveOption = "HardOptIn"
         }
 
-        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $true) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $true))
-        {
+        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $true) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $true)) {
             $GrooveOption = "OptOut"
         }
 
         $FixedExcludedFileExtensions = $tenantRestrictions.ExcludedFileExtensions
         if ($FixedExcludedFileExtensions.Count -eq 0 -or
-            ($FixedExcludedFileExtensions.Count -eq 1 -and $FixedExcludedFileExtensions[0] -eq ""))
-        {
+            ($FixedExcludedFileExtensions.Count -eq 1 -and $FixedExcludedFileExtensions[0] -eq "")) {
             $FixedExcludedFileExtensions = @()
         }
 
         $FixedAllowedDomainList = $tenantRestrictions.AllowedDomainList
         if ($FixedAllowedDomainList.Count -eq 0 -or
-            ($FixedAllowedDomainList.Count -eq 1 -and $FixedAllowedDomainList[0] -eq ""))
-        {
+            ($FixedAllowedDomainList.Count -eq 1 -and $FixedAllowedDomainList[0] -eq "")) {
             $FixedAllowedDomainList = @()
         }
 
         $ODBMembersCanShareValue = $tenant.ODBMembersCanShare
-        if ([System.String]::IsNullOrEmpty($ODBMembersCanShareValue))
-        {
+        if ([System.String]::IsNullOrEmpty($ODBMembersCanShareValue)) {
             $ODBMembersCanShareValue = 'Unspecified'
         }
         return @{
@@ -187,8 +177,7 @@ function Get-TargetResource
             GlobalAdminAccount                        = $GlobalAdminAccount
         }
     }
-    catch
-    {
+    catch {
         Write-Verbose -Message $_
         Add-M365DSCEvent -Message $_ -EntryType 'Error' `
             -EventID 1 -Source $($MyInvocation.MyCommand.Source)
@@ -196,8 +185,7 @@ function Get-TargetResource
     }
 }
 
-function Set-TargetResource
-{
+function Set-TargetResource {
     [CmdletBinding()]
     param
     (
@@ -308,37 +296,30 @@ function Set-TargetResource
     $CurrentParameters.Remove("GlobalAdminAccount") | Out-Null
     $Options = @{}
 
-    if ($CurrentParameters.ContainsKey("Ensure"))
-    {
+    if ($CurrentParameters.ContainsKey("Ensure")) {
         $CurrentParameters.Remove("Ensure") | Out-Null
     }
-    if ($CurrentParameters.ContainsKey("BlockMacSync"))
-    {
+    if ($CurrentParameters.ContainsKey("BlockMacSync")) {
         $Options.Add("BlockMacSync", $CurrentParameters.BlockMacSync)
         $CurrentParameters.Remove("BlockMacSync") | Out-Null
     }
-    if ($CurrentParameters.ContainsKey("DomainGuids"))
-    {
+    if ($CurrentParameters.ContainsKey("DomainGuids")) {
         $Options.Add("DomainGuids", [System.Guid[]]$CurrentParameters.DomainGuids)
-        $CurrentParameters.Remove("DomainGuids")| Out-Null
+        $CurrentParameters.Remove("DomainGuids") | Out-Null
     }
-    if ($CurrentParameters.ContainsKey("DisableReportProblemDialog"))
-    {
+    if ($CurrentParameters.ContainsKey("DisableReportProblemDialog")) {
         $Options.Add("DisableReportProblemDialog", $CurrentParameters.DisableReportProblemDialog)
         $CurrentParameters.Remove("DisableReportProblemDialog") | Out-Null
     }
-    if ($CurrentParameters.ContainsKey("ExcludedFileExtensions"))
-    {
+    if ($CurrentParameters.ContainsKey("ExcludedFileExtensions")) {
         $Options.Add("ExcludedFileExtensions", $CurrentParameters.ExcludedFileExtensions)
         $CurrentParameters.Remove("ExcludedFileExtensions") | Out-Null
     }
-    if ($CurrentParameters.ContainsKey("GrooveBlockOption"))
-    {
+    if ($CurrentParameters.ContainsKey("GrooveBlockOption")) {
         $Options.Add("GrooveBlockOption", $CurrentParameters.GrooveBlockOption)
         $CurrentParameters.Remove("GrooveBlockOption") | Out-Null
     }
-    if ($CurrentParameters.ContainsKey("IsSingleInstance"))
-    {
+    if ($CurrentParameters.ContainsKey("IsSingleInstance")) {
         $CurrentParameters.Remove("IsSingleInstance") | Out-Null
     }
 
@@ -349,51 +330,33 @@ function Set-TargetResource
     $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
 
     Write-Verbose -Message "Configuring OneDrive settings."
-    Set-PnPTenant @CurrentParameters | Out-Null
+    Set-PnPTenant @CurrentParameters  
 
     ## Configure Sync Client restrictions
     ## Set-SPOTenantSyncClientRestriction has different parameter sets and they cannot be combined see article:
     ## https://docs.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenantsyncclientrestriction?view=sharepoint-ps
     Write-Verbose -Message "Setting other configuration parameters"
     Write-Verbose -Message ($Options | Out-String)
-    if ($Options.ContainsKey("BlockMacSync"))
-    {
-        Write-Verbose -Message "Updating BlockMacSync {$($Options.BlockMacSync)}"
-        Set-PnPTenantSyncClientRestriction -BlockMacSync:$Options.BlockMacSync 
-    }
-    if ($Options.ContainsKey("DomainGuids"))
-    {
-        Write-Verbose -Message "Updating DomainGuids"
-        Set-PnPTenantSyncClientRestriction -DomainGuids $Options.DomainGuids -Enable:$true 
-    }
-
-    if ($Options.ContainsKey("ExcludedFileExtensions"))
-    {
+   
+    if ($Options.ContainsKey("ExcludedFileExtensions")) {
         Write-Verbose -Message "Updating ExcludedFileExtensions"
         $BlockedFileTypes = ""
-        foreach ($fileTypes in $Options.ExcludedFileExtensions)
-        {
+        foreach ($fileTypes in $Options.ExcludedFileExtensions) {
             $BlockedFileTypes += $fileTypes + ';'
         }
-
-        Set-PnPTenantSyncClientRestriction -ExcludedFileExtensions $BlockedFileTypes  
-    }
-    if ($Options.ContainsKey("DisableReportProblemDialog"))
-    {
-        Write-Verbose -Message "Updating DisableReportProblemDialog"
-        Set-PnPTenantSyncClientRestriction -DisableReportProblemDialog:$Options.DisableReportProblemDialog  
+        $Options["ExcludedFileExtensions"] = $BlockedFileTypes
     }
 
-    if ($Options.ContainsKey("GrooveBlockOption"))
-    {
-        Write-Verbose -Message "Updating GrooveBlockOption"
-        Set-PnPTenantSyncClientRestriction -GrooveBlockOption $Options.GrooveBlockOption  
+    if ($Options.ContainsKey("DomainGuids")) {
+        Write-Verbose -Message "Updating DomainGuids"
+        Set-PnPTenantSyncClientRestriction @Options -Enable:$true 
     }
- 
+    else {
+        Set-PnPTenantSyncClientRestriction @Options 
+    }
 }
 
-function Test-TargetResource
-{
+function Test-TargetResource {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
@@ -522,8 +485,7 @@ function Test-TargetResource
     return $TestResult
 }
 
-function Export-TargetResource
-{
+function Export-TargetResource {
     [CmdletBinding()]
     [OutputType([System.String])]
     param
@@ -565,8 +527,7 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
         -InboundParameters $PSBoundParameters
 
-    try
-    {
+    try {
         $Params = @{
             IsSingleInstance      = 'Yes'
             ApplicationId         = $ApplicationId
@@ -579,8 +540,7 @@ function Export-TargetResource
 
         $Results = Get-TargetResource @Params
 
-        if ([System.String]::IsNullOrEmpty($Results.GrooveBlockOption))
-        {
+        if ([System.String]::IsNullOrEmpty($Results.GrooveBlockOption)) {
             $Results.Remove("GrooveBlockOption") | Out-Null
         }
 
@@ -594,8 +554,7 @@ function Export-TargetResource
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         return $dscContent
     }
-    catch
-    {
+    catch {
         Write-Verbose -Message $_
         Add-M365DSCEvent -Message $_ -EntryType 'Error' `
             -EventID 1 -Source $($MyInvocation.MyCommand.Source)
