@@ -320,7 +320,7 @@ function Set-TargetResource
     if ($CurrentParameters.ContainsKey("DomainGuids"))
     {
         $Options.Add("DomainGuids", [System.Guid[]]$CurrentParameters.DomainGuids)
-        $CurrentParameters.Remove("DomainGuids")| Out-Null
+        $CurrentParameters.Remove("DomainGuids") | Out-Null
     }
     if ($CurrentParameters.ContainsKey("DisableReportProblemDialog"))
     {
@@ -349,23 +349,13 @@ function Set-TargetResource
     $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
 
     Write-Verbose -Message "Configuring OneDrive settings."
-    Set-PnPTenant @CurrentParameters | Out-Null
+    Set-PnPTenant @CurrentParameters
 
     ## Configure Sync Client restrictions
     ## Set-SPOTenantSyncClientRestriction has different parameter sets and they cannot be combined see article:
     ## https://docs.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenantsyncclientrestriction?view=sharepoint-ps
     Write-Verbose -Message "Setting other configuration parameters"
     Write-Verbose -Message ($Options | Out-String)
-    if ($Options.ContainsKey("BlockMacSync") -and $Options.ContainsKey("DomainGuids"))
-    {
-        Write-Verbose -Message "Updating BlockMacSync {$($Options.BlockMacSync)}"
-        Set-PnPTenantSyncClientRestriction -BlockMacSync:$Options.BlockMacSync -DomainGuids $Options.DomainGuids -Enable:$true | Out-Null
-    }
-    elseif ($Options.ContainsKey("DomainGuids") -and ($Options.ContainsKey("BlockMacSync") -eq $false))
-    {
-        Write-Verbose -Message "Updating DomainGuids"
-        Set-PnPTenantSyncClientRestriction -DomainGuids $Options.DomainGuids -Enable:$true| Out-Null
-    }
 
     if ($Options.ContainsKey("ExcludedFileExtensions"))
     {
@@ -375,19 +365,17 @@ function Set-TargetResource
         {
             $BlockedFileTypes += $fileTypes + ';'
         }
-
-        Set-PnPTenantSyncClientRestriction -ExcludedFileExtensions $BlockedFileTypes | Out-Null
-    }
-    if ($Options.ContainsKey("DisableReportProblemDialog"))
-    {
-        Write-Verbose -Message "Updating DisableReportProblemDialog"
-        Set-PnPTenantSyncClientRestriction -DisableReportProblemDialog:$Options.DisableReportProblemDialog | Out-Null
+        $Options["ExcludedFileExtensions"] = $BlockedFileTypes
     }
 
-    if ($Options.ContainsKey("GrooveBlockOption"))
+    if ($Options.ContainsKey("DomainGuids"))
     {
-        Write-Verbose -Message "Updating GrooveBlockOption"
-        Set-PnPTenantSyncClientRestriction -GrooveBlockOption $Options.GrooveBlockOption | Out-Null
+        Write-Verbose -Message "Updating DomainGuids"
+        Set-PnPTenantSyncClientRestriction @Options -Enable:$true
+    }
+    else
+    {
+        Set-PnPTenantSyncClientRestriction @Options
     }
 }
 
