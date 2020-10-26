@@ -30,10 +30,6 @@ function Get-TargetResource
         $LegacyAuthProtocolsEnabled,
 
         [Parameter()]
-        [System.Boolean]
-        $RequireAcceptingAccountMatchInvitedAccount,
-
-        [Parameter()]
         [System.String]
         $SignInAccelerationDomain,
 
@@ -143,7 +139,6 @@ function Get-TargetResource
             SearchResolveExactEmailOrUPN                  = $SPOTenantSettings.SearchResolveExactEmailOrUPN
             OfficeClientADALDisabled                      = $SPOTenantSettings.OfficeClientADALDisabled
             LegacyAuthProtocolsEnabled                    = $SPOTenantSettings.LegacyAuthProtocolsEnabled
-            RequireAcceptingAccountMatchInvitedAccount    = $SPOTenantSettings.RequireAcceptingAccountMatchInvitedAccount
             SignInAccelerationDomain                      = $SPOTenantSettings.SignInAccelerationDomain
             UsePersistentCookiesForExplorerView           = $SPOTenantSettings.UsePersistentCookiesForExplorerView
             UserVoiceForFeedbackEnabled                   = $SPOTenantSettings.UserVoiceForFeedbackEnabled
@@ -205,10 +200,6 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $LegacyAuthProtocolsEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $RequireAcceptingAccountMatchInvitedAccount,
 
         [Parameter()]
         [System.String]
@@ -348,10 +339,6 @@ function Test-TargetResource
         $LegacyAuthProtocolsEnabled,
 
         [Parameter()]
-        [System.Boolean]
-        $RequireAcceptingAccountMatchInvitedAccount,
-
-        [Parameter()]
         [System.String]
         $SignInAccelerationDomain,
 
@@ -449,7 +436,6 @@ function Test-TargetResource
             "SearchResolveExactEmailOrUPN", `
             "OfficeClientADALDisabled", `
             "LegacyAuthProtocolsEnabled", `
-            "RequireAcceptingAccountMatchInvitedAccount", `
             "SignInAccelerationDomain", `
             "UsePersistentCookiesForExplorerView", `
             "UserVoiceForFeedbackEnabled", `
