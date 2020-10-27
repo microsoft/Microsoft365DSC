@@ -263,13 +263,13 @@ function Export-TargetResource
         $sites = Get-PnPTenantSite -ErrorAction Stop
 
         $i = 1
-        Write-Host "`r`n" -NoNewLine
+        Write-Host "`r`n" -NoNewline
         $dscContent = ""
         foreach ($site in $sites)
         {
             try
             {
-                Write-Host "    [$i/$($sites.Length)] Audit Settings for {$($site.Url)}" -NoNewLine
+                Write-Host "    [$i/$($sites.Length)] Audit Settings for {$($site.Url)}" -NoNewline
 
                 $Params = @{
                     Url                   = $site.Url
@@ -288,6 +288,8 @@ function Export-TargetResource
                 {
                     $Results.AuditFlags = 'None'
                 }
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
                 $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
