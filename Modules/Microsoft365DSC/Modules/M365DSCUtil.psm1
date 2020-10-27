@@ -826,10 +826,6 @@ function Export-M365DSCConfiguration
         $CertificateThumbprint,
 
         [Parameter()]
-        [System.String]
-        $CertificateFile,
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount,
 
