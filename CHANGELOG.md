@@ -20,7 +20,13 @@
     * Fixed an issue where passing in the file name and using the GUI for
       extraction did not store the file at the specified location (Issue #810)
 * DEPENDENCIES
-  * DSCParser Updated to 1.3.0.0;
+  * AzureADPreview Updated to 2.0.2.119
+  * DSCParser Updated to 1.3.0.0
+  * Microsoft.Graph.Authentication Updated to 1.1.0
+  * Microsoft.Graph.Planner Updated to 1.1.0
+  * Microsoft.PowerApps.Administration.PowerShell Updated
+    to 2.0.96;
+
 
 ## 1.20.1021.1
 
