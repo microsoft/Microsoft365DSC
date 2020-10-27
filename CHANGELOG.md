@@ -21,6 +21,9 @@
   * M365DSCReverse
     * Fixed an issue where passing in the file name and using the GUI for
       extraction did not store the file at the specified location (Issue #810)
+    * Fixed and issue where the -GenerateInfo parameter would always generate
+      a link to the same resource.
+    * Added current version module in the Export file.
 * DEPENDENCIES
   * AzureADPreview Updated to 2.0.2.119
   * DSCParser Updated to 1.3.0.0
