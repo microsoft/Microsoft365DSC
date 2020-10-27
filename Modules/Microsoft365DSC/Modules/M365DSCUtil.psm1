@@ -856,7 +856,8 @@ function Export-M365DSCConfiguration
 
     if (-not $Quiet)
     {
-        Show-M365DSCGUI -Path $Path -FileName $FileName
+        Show-M365DSCGUI -Path $Path -FileName $FileName `
+            -GenerateInfo $GenerateInfo
     }
     else
     {
