@@ -4,6 +4,10 @@
 
 * EXOOutboundConnector
   * Fixed issue #821
+* O365OrgCustomizationSetting
+  * Fixes an issue where the resource was not being exported;
+* ODSettings
+  * Removed AD group guid dependency issue # 862
 * SPOTenantSettings
   * Parameter RequireAcceptingAccountMatchInvitedAccount
     is now deprecated (Issue #864)
@@ -12,8 +16,6 @@
   * Fixed issue # 866 changed domains to array
   * Fixed issue where trying to set anonymous link types if
     sharing not properly configured issue #865
-* ODSettings
-  * Removed AD group guid dependency issue # 862
 * MODULES
   * M365DSCUtil
     * Fixed an issue where function Test-M365DSCObjectHasProperty was missing
