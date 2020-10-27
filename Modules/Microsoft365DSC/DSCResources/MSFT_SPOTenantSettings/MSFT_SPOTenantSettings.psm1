@@ -119,7 +119,7 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    if ($PSBoundParameters.Contains("RequireAcceptingAccountMatchInvitedAccount"))
+    if ($PSBoundParameters.ContainsKey("RequireAcceptingAccountMatchInvitedAccount"))
     {
         Write-Warning "RequireAcceptingAccountMatchInvitedAccount is deprecated. Please remove this parameter from your configuration."
     }
@@ -302,7 +302,7 @@ function Set-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
-    if ($PSBoundParameters.Contains("RequireAcceptingAccountMatchInvitedAccount"))
+    if ($PSBoundParameters.ContainsKey("RequireAcceptingAccountMatchInvitedAccount"))
     {
         Write-Warning "RequireAcceptingAccountMatchInvitedAccount is deprecated. Please remove this parameter from your configuration."
     }
@@ -443,7 +443,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    if ($PSBoundParameters.Contains("RequireAcceptingAccountMatchInvitedAccount"))
+    if ($PSBoundParameters.ContainsKey("RequireAcceptingAccountMatchInvitedAccount"))
     {
         Write-Warning "RequireAcceptingAccountMatchInvitedAccount is deprecated. Please remove this parameter from your configuration."
     }
@@ -458,6 +458,7 @@ function Test-TargetResource
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("IsSingleInsta", `
+            "RequireAcceptingAccountMatchInvitedAccount", `
             "RequireAcceptingAccountMatchInvitedAccountnce", `
             "GlobalAdminAccount", `
             "MaxCompatibilityLevel", `
