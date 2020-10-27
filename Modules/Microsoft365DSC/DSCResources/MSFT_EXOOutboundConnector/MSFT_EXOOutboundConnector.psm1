@@ -139,7 +139,7 @@ function Get-TargetResource
         {
             $ConnectorSourceValue = $OutBoundConnector.ConnectorSource
             if ($ConnectorSourceValue -eq 'AdminUI' -or `
-                [System.String]::IsNullOrEmpty($ConnectorSourceValue))
+                    [System.String]::IsNullOrEmpty($ConnectorSourceValue))
             {
                 $ConnectorSourceValue = 'Default'
             }
@@ -149,7 +149,7 @@ function Get-TargetResource
                 AllAcceptedDomains            = $OutBoundConnector.AllAcceptedDomains
                 CloudServicesMailEnabled      = $OutBoundConnector.CloudServicesMailEnabled
                 Comment                       = $OutBoundConnector.Comment
-                ConnectorSource               = $ConnectorSource
+                ConnectorSource               = $ConnectorSourceValue
                 ConnectorType                 = $OutBoundConnector.ConnectorType
                 Enabled                       = $OutBoundConnector.Enabled
                 IsTransportRuleScoped         = $OutBoundConnector.IsTransportRuleScoped
@@ -508,13 +508,13 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
         $dscContent = ""
         $i = 1
         foreach ($OutboundConnector in $OutboundConnectors)
         {
-            Write-Host "    |---[$i/$($OutboundConnectors.Length)] $($OutboundConnector.Identity)" -NoNewLine
+            Write-Host "    |---[$i/$($OutboundConnectors.Length)] $($OutboundConnector.Identity)" -NoNewline
 
             $Params = @{
                 Identity              = $OutboundConnector.Identity
