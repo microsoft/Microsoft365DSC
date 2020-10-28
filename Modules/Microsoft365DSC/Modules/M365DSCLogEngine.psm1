@@ -81,7 +81,7 @@ function Add-M365DSCEvent
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Source = 'Generic',
+        $Source,
 
         [Parameter()]
         [ValidateSet('Error', 'Information', 'FailureAudit', 'SuccessAudit', 'Warning')]
@@ -90,7 +90,11 @@ function Add-M365DSCEvent
 
         [Parameter()]
         [System.UInt32]
-        $EventID = 1
+        $EventID = 1,
+
+        [Parameter()]
+        [System.String]
+        $TenantId
     )
 
     $LogName = 'M365DSC'
@@ -125,7 +129,9 @@ function Add-M365DSCEvent
     catch
     {
         Write-Verbose -Message $_
-        $Message = "Could not write to event log"
-        New-M365DSCLogEntry -Error $_ -Message $Message -Source "[M365DSCLogEngine]"
+        $MessageText = "Could not write to event log Source {$Source} EntryType {$EntryType} Message {$Message}"
+        New-M365DSCLogEntry -Error $_ -Message $MessageText `
+            -Source "[M365DSCLogEngine]" `
+            -TenantId $TenantId
     }
 }

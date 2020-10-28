@@ -67,9 +67,26 @@ function Get-TargetResource
         }
         catch
         {
-            Write-Verbose -Message $_
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+            try
+            {
+                Write-Verbose -Message $_
+                $tenantIdValue = ""
+                if (-not [System.String]::IsNullOrEmpty($TenantId))
+                {
+                    $tenantIdValue = $TenantId
+                }
+                elseif ($null -ne $GlobalAdminAccount)
+                {
+                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+                }
+                Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $tenantIdValue
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+            }
         }
 
         if ($null -eq $Policy)
@@ -97,9 +114,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -363,14 +397,14 @@ function Export-TargetResource
         $dscContent = ''
 
         $Params = @{
-                GlobalAdminAccount          = $GlobalAdminAccount
-                IsSingleInstance            = 'Yes'
-                GroupLifetimeInDays         = 1
-                ManagedGroupTypes           = 'All'
-                AlternateNotificationEmails = 'empty@contoso.com'
-                ApplicationId               = $ApplicationId
-                TenantId                    = $TenantId
-                CertificateThumbprint       = $CertificateThumbprint
+            GlobalAdminAccount          = $GlobalAdminAccount
+            IsSingleInstance            = 'Yes'
+            GroupLifetimeInDays         = 1
+            ManagedGroupTypes           = 'All'
+            AlternateNotificationEmails = 'empty@contoso.com'
+            ApplicationId               = $ApplicationId
+            TenantId                    = $TenantId
+            CertificateThumbprint       = $CertificateThumbprint
         }
         $Results = Get-TargetResource @Params
         if ($Results.Ensure -eq 'Present')
@@ -389,9 +423,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }

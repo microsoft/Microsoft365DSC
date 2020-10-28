@@ -66,11 +66,11 @@ function Get-TargetResource
             Write-Verbose -Message "Connecting to PnP from the Get method"
 
             $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                    -InboundParameters $PSBoundParameters `
-                    -Url $Url
+                -InboundParameters $PSBoundParameters `
+                -Url $Url
 
             Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
-            [array]$property = Get-PnpPropertyBag -Key $Key -ErrorAction 'Stop'
+            [array]$property = Get-PnPPropertyBag -Key $Key -ErrorAction 'Stop'
 
             Write-Verbose -Message "Properties obtained correctly"
         }
@@ -79,7 +79,7 @@ function Get-TargetResource
             Write-Verbose "GlobalAdminAccount or service principal specified does not have admin access to site {$Url}"
             if ($_.Exception -like "*Unable to cast object of type*")
             {
-                [array]$property = Get-PnpPropertyBag | Where-Object -FilterScript { $_.Key -ceq $Key }
+                [array]$property = Get-PnPPropertyBag | Where-Object -FilterScript { $_.Key -ceq $Key }
             }
             elseif ($_.Exception -like "*The underlying connection was closed*")
             {
@@ -88,7 +88,7 @@ function Get-TargetResource
                     -Url $Url
 
                 Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
-                [array]$property = Get-PnpPropertyBag -Key $Key -ErrorAction 'SilentlyContinue'
+                [array]$property = Get-PnPPropertyBag -Key $Key -ErrorAction 'SilentlyContinue'
             }
             else
             {
@@ -98,7 +98,7 @@ function Get-TargetResource
         }
         if ($property.Length -ne 1)
         {
-            [array]$property = Get-PnpPropertyBag | Where-Object -FilterScript { $_.Key -ceq $Key }
+            [array]$property = Get-PnPPropertyBag | Where-Object -FilterScript { $_.Key -ceq $Key }
         }
         if ($property.Length -eq 0)
         {
@@ -127,9 +127,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -193,8 +210,8 @@ function Set-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters `
-                -Url $Url
+        -InboundParameters $PSBoundParameters `
+        -Url $Url
 
     $currentProperty = Get-TargetResource @PSBoundParameters
 
@@ -336,7 +353,7 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters
 
     try
     {
@@ -404,61 +421,61 @@ function Export-TargetResource
                 # the invokation wrapper that handles throttling;
                 $returnValue = ""
                 $returnValue += Invoke-M365DSCCommand -Arguments $PSBoundParameters -InvokationPath $ScriptRoot -ScriptBlock {
-                $VerbosePreference = 'SilentlyContinue'
-                $params = $args[0]
-                $dscContent = ""
-                foreach ($item in $params.instances)
-                {
-                    foreach ($site in $item)
+                    $VerbosePreference = 'SilentlyContinue'
+                    $params = $args[0]
+                    $dscContent = ""
+                    foreach ($item in $params.instances)
                     {
-                        $siteUrl = $site.Url
-                        try
+                        foreach ($site in $item)
                         {
-                            $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                                -InboundParameters $PSBoundParameters `
-                                -Url $siteUrl
-                        }
-                        catch
-                        {
-                            throw "M365DSC - Failed to connect to PnP {$siteUrl}: " + $_
-                        }
-
-                        try
-                        {
-                            $properties = Get-PnPPropertyBag
-                            foreach ($property in $properties)
+                            $siteUrl = $site.Url
+                            try
                             {
-                                $Params = @{
-                                    Url                   = $siteUrl
-                                    Key                   = $property.Key
-                                    Value                 = '*'
-                                    ApplicationId         = $ApplicationId
-                                    TenantId              = $TenantId
-                                    CertificatePassword   = $CertificatePassword
-                                    CertificatePath       = $CertificatePath
-                                    CertificateThumbprint = $CertificateThumbprint
-                                    GlobalAdminAccount    = $GlobalAdminAccount
-                                }
+                                $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                                    -InboundParameters $PSBoundParameters `
+                                    -Url $siteUrl
+                            }
+                            catch
+                            {
+                                throw "M365DSC - Failed to connect to PnP {$siteUrl}: " + $_
+                            }
 
-                                $Results = Get-TargetResource @Params
-                                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                                    -Results $Results
-                                $dscContent += Get-M365DSCExportContentForResource -ResourceName "SPOPropertyBag" `
-                                    -ConnectionMode $ConnectionMode `
-                                    -ModulePath $PSScriptRoot `
-                                    -Results $Results `
-                                    -GlobalAdminAccount $GlobalAdminAccount
+                            try
+                            {
+                                $properties = Get-PnPPropertyBag
+                                foreach ($property in $properties)
+                                {
+                                    $Params = @{
+                                        Url                   = $siteUrl
+                                        Key                   = $property.Key
+                                        Value                 = '*'
+                                        ApplicationId         = $ApplicationId
+                                        TenantId              = $TenantId
+                                        CertificatePassword   = $CertificatePassword
+                                        CertificatePath       = $CertificatePath
+                                        CertificateThumbprint = $CertificateThumbprint
+                                        GlobalAdminAccount    = $GlobalAdminAccount
+                                    }
+
+                                    $Results = Get-TargetResource @Params
+                                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                                        -Results $Results
+                                    $dscContent += Get-M365DSCExportContentForResource -ResourceName "SPOPropertyBag" `
+                                        -ConnectionMode $ConnectionMode `
+                                        -ModulePath $PSScriptRoot `
+                                        -Results $Results `
+                                        -GlobalAdminAccount $GlobalAdminAccount
+                                }
+                            }
+                            catch
+                            {
+                                throw "M365DSC - Failed to Get-PnPPropertyBag {$siteUrl}: " + $_
                             }
                         }
-                        catch
-                        {
-                            throw "M365DSC - Failed to Get-PnPPropertyBag {$siteUrl}: " + $_
-                        }
                     }
+                    return $dscContent
                 }
-                return $dscContent
-            }
-            return $returnValue
+                return $returnValue
             } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount, $ApplicationId, $TenantId, $CertificateThumbprint, $CertificatePassword, $CertificatePath) | Out-Null
             $i++
         }
@@ -476,13 +493,13 @@ function Export-TargetResource
             {
                 if ($job.JobStateInfo.State -eq "Complete")
                 {
-                    $result += Receive-Job -name $job.name
-                    Remove-Job -name $job.name | Out-Null
+                    $result += Receive-Job -Name $job.name
+                    Remove-Job -Name $job.name | Out-Null
                     $jobsCompleted++
                 }
                 elseif ($job.JobStateInfo.State -eq 'Failed')
                 {
-                    Remove-Job -name $job.name | Out-Null
+                    Remove-Job -Name $job.name | Out-Null
                     Write-Warning "{$($job.name)} failed"
                     break
                 }
@@ -522,9 +539,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }
