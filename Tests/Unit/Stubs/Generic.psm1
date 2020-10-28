@@ -983,7 +983,11 @@ function New-M365DSCLogEntry
 
         [Parameter()]
         [System.String]
-        $Source
+        $Source,
+
+        [Parameter()]
+        [System.String]
+        $TenantId
     )
 }
 

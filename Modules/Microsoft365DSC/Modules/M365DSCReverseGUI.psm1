@@ -25,7 +25,15 @@ function Show-M365DSCGUI
     param(
         [Parameter()]
         [System.String]
-        $Path
+        $Path,
+
+        [Parameter()]
+        [System.String]
+        $FileName,
+
+        [Parameter()]
+        [System.Boolean]
+        $GenerateInfo = $false
     )
     try
     {
@@ -547,18 +555,18 @@ function Show-M365DSCGUI
         $chckApplication.Text = "Application"
         $chckApplication.Font = [System.Drawing.Font]::new($chckApplication.Font.Name, 10, [System.Drawing.FontStyle]::Bold)
         $chckApplication.Add_Click( {
-            if ($chckApplication.Checked)
-            {
-                $txtApplicationId.Enabled = $true
-            }
-            else
-            {
-                $txtApplicationId.Enabled = $false
-            }
-            Set-M365DSCGUIResourcesAvailability -Credentials $chckCredential.Checked `
-                -Certificate $chckCertificate.Checked `
-                -Application $chckApplication.Checked
-        })
+                if ($chckApplication.Checked)
+                {
+                    $txtApplicationId.Enabled = $true
+                }
+                else
+                {
+                    $txtApplicationId.Enabled = $false
+                }
+                Set-M365DSCGUIResourcesAvailability -Credentials $chckCredential.Checked `
+                    -Certificate $chckCertificate.Checked `
+                    -Application $chckApplication.Checked
+            })
 
         $panelMenu.Controls.Add($chckApplication)
         $lblApplicationId = New-Object System.Windows.Forms.Label
@@ -587,24 +595,24 @@ function Show-M365DSCGUI
         $chckCertificate.Text = "Certificate"
         $chckCertificate.Font = [System.Drawing.Font]::new($chckCertificate.Font.Name, 10, [System.Drawing.FontStyle]::Bold)
         $chckCertificate.Add_Click( {
-            if ($chckCertificate.Checked)
-            {
-                $txtCertPassword.Enabled = $true
-                $txtCertThumb.Enabled = $true
-                $txtCertFile.Enabled = $true
-                $txtTenantId.Enabled = $true
-            }
-            else
-            {
-                $txtCertPassword.Enabled = $false
-                $txtCertThumb.Enabled = $false
-                $txtCertFile.Enabled = $false
-                $txtTenantId.Enabled = $false
-            }
-            Set-M365DSCGUIResourcesAvailability -Credentials $chckCredential.Checked `
-                -Certificate $chckCertificate.Checked `
-                -Application $chckApplication.Checked
-        })
+                if ($chckCertificate.Checked)
+                {
+                    $txtCertPassword.Enabled = $true
+                    $txtCertThumb.Enabled = $true
+                    $txtCertFile.Enabled = $true
+                    $txtTenantId.Enabled = $true
+                }
+                else
+                {
+                    $txtCertPassword.Enabled = $false
+                    $txtCertThumb.Enabled = $false
+                    $txtCertFile.Enabled = $false
+                    $txtTenantId.Enabled = $false
+                }
+                Set-M365DSCGUIResourcesAvailability -Credentials $chckCredential.Checked `
+                    -Certificate $chckCertificate.Checked `
+                    -Application $chckApplication.Checked
+            })
         $panelMenu.Controls.Add($chckCertificate)
 
         $lblCertThumb = New-Object System.Windows.Forms.Label
@@ -695,20 +703,20 @@ function Show-M365DSCGUI
         $chckCredential.Text = "Credentials"
         $chckCredential.Font = [System.Drawing.Font]::new($chckCredential.Font.Name, 10, [System.Drawing.FontStyle]::Bold)
         $chckCredential.Add_Click( {
-            if ($chckCredential.Checked)
-            {
-                $txtTenantAdmin.Enabled = $true
-                $txtPassword.Enabled = $true
-            }
-            else
-            {
-                $txtTenantAdmin.Enabled = $false
-                $txtPassword.Enabled = $false
-            }
-            Set-M365DSCGUIResourcesAvailability -Credentials $chckCredential.Checked `
-                -Certificate $chckCertificate.Checked `
-                -Application $chckApplication.Checked
-        })
+                if ($chckCredential.Checked)
+                {
+                    $txtTenantAdmin.Enabled = $true
+                    $txtPassword.Enabled = $true
+                }
+                else
+                {
+                    $txtTenantAdmin.Enabled = $false
+                    $txtPassword.Enabled = $false
+                }
+                Set-M365DSCGUIResourcesAvailability -Credentials $chckCredential.Checked `
+                    -Certificate $chckCertificate.Checked `
+                    -Application $chckApplication.Checked
+            })
         $panelMenu.Controls.Add($chckCredential)
 
         $lblTenantAdmin = New-Object System.Windows.Forms.Label
@@ -766,9 +774,9 @@ function Show-M365DSCGUI
                     foreach ($checkbox in ($panel.Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Checkbox" }))
                     {
                         if ($checkbox.Checked -and $checkbox.Enabled -and `
-                            $checkbox.Name -ne 'chckCredential' -and `
-                            $checkbox.Name -ne 'chckApplication' -and `
-                            $checkbox.Name -ne 'chckCertificate')
+                                $checkbox.Name -ne 'chckCredential' -and `
+                                $checkbox.Name -ne 'chckApplication' -and `
+                                $checkbox.Name -ne 'chckCertificate')
                         {
                             $SelectedComponents += $checkbox.Name.Replace("chck", "")
                         }
@@ -794,7 +802,9 @@ function Show-M365DSCGUI
                         -CertificatePath $txtCertFile.Text `
                         -CertificatePassword $CertPasswordcreds `
                         -ComponentsToExtract $SelectedComponents `
-                        -Path $Path
+                        -Path $Path `
+                        -FileName $FileName `
+                        -GenerateInfo $GenerateInfo
                 }
                 catch
                 {
@@ -842,13 +852,13 @@ function Show-M365DSCGUI
 
         $Global:M365DSCExportGui = $form
         Set-M365DSCGUIResourcesAvailability -Credentials $chckCredential.Checked `
-                -Certificate $chckCertificate.Checked `
-                -Application $chckApplication.Checked
-        $return = $form.ShowDialog()
+            -Certificate $chckCertificate.Checked `
+            -Application $chckApplication.Checked
+        $form.ShowDialog() | Out-Null
     }
     catch
     {
-
+        Write-Verbose -Message $_
     }
 }
 
@@ -875,9 +885,9 @@ function SelectComponentsForMode
             foreach ($control in ([System.Windows.Forms.Panel]$parent).Controls)
             {
                 if ($control.GetType().Name -eq 'Checkbox' -and `
-                -not($control.Name -eq 'chckCredential' -or `
-                     $control.Name -eq 'chckApplication' -or `
-                     $control.Name -eq 'chckCertificate'))
+                        -not($control.Name -eq 'chckCredential' -or `
+                            $control.Name -eq 'chckApplication' -or `
+                            $control.Name -eq 'chckCertificate'))
                 {
                     try
                     {
@@ -983,14 +993,14 @@ function Get-M365DSCExportGUIAllControls
         {
             $controlName = ([System.Windows.Forms.CheckBox]$control).Name
             if ($controlName -like 'chckAAD*' -or `
-            $controlName -like 'chckEXO*' -or `
-            $controlName -like 'chckO365*' -or `
-            $controlName -like 'chckOD*' -or `
-            $controlName -like 'chckPP*' -or `
-            $controlName -like 'chckPlanner*' -or `
-            $controlName -like 'chckSC*' -or `
-            $controlName -like 'chckSPO*' -or `
-            $controlName -like 'chckTeams*')
+                    $controlName -like 'chckEXO*' -or `
+                    $controlName -like 'chckO365*' -or `
+                    $controlName -like 'chckOD*' -or `
+                    $controlName -like 'chckPP*' -or `
+                    $controlName -like 'chckPlanner*' -or `
+                    $controlName -like 'chckSC*' -or `
+                    $controlName -like 'chckSPO*' -or `
+                    $controlName -like 'chckTeams*')
             {
                 $result += $control
             }

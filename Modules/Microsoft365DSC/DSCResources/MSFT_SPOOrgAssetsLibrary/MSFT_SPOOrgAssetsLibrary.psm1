@@ -59,7 +59,7 @@ function Get-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
@@ -72,15 +72,32 @@ function Get-TargetResource
         }
         catch
         {
-            Write-Verbose -Message $_
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+            try
+            {
+                Write-Verbose -Message $_
+                $tenantIdValue = ""
+                if (-not [System.String]::IsNullOrEmpty($TenantId))
+                {
+                    $tenantIdValue = $TenantId
+                }
+                elseif ($null -ne $GlobalAdminAccount)
+                {
+                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+                }
+                Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $tenantIdValue
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+            }
         }
 
         $cdn = $null
         if ($CdnType -eq 'Public')
         {
-            if (Get-PnPTenantCdnEnabled -cdnType $CdnType)
+            if (Get-PnPTenantCdnEnabled -CdnType $CdnType)
             {
                 $cdn = "Public"
             }
@@ -88,7 +105,7 @@ function Get-TargetResource
 
         if ($CdnType -eq 'Private')
         {
-            if (Get-PnPTenantCdnEnabled -cdnType $CdnType)
+            if (Get-PnPTenantCdnEnabled -CdnType $CdnType)
             {
                 $cdn = "Private"
             }
@@ -144,9 +161,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -223,7 +257,7 @@ function Set-TargetResource
     $cdn = $null
     if ($CdnType -eq 'Public')
     {
-        if (Get-PnPTenantCdnEnabled -cdnType $CdnType)
+        if (Get-PnPTenantCdnEnabled -CdnType $CdnType)
         {
             $cdn = "Public"
         }
@@ -231,7 +265,7 @@ function Set-TargetResource
 
     if ($CdnType -eq 'Private')
     {
-        if (Get-PnPTenantCdnEnabled -cdnType $CdnType)
+        if (Get-PnPTenantCdnEnabled -CdnType $CdnType)
         {
             $cdn = "Private"
         }
@@ -247,7 +281,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentOrgSiteAsset.Ensure -eq 'Present')
     {
         ## No set so remove / add
-        Remove-PNPOrgAssetsLibrary -libraryUrl $currentOrgSiteAsset.LibraryUrl
+        Remove-PnPOrgAssetsLibrary -LibraryUrl $currentOrgSiteAsset.LibraryUrl
         ### add slight delay fails if you immediately try to add
         Start-Sleep -Seconds 30
         Add-PnPOrgAssetsLibrary @currentParameters
@@ -258,7 +292,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentOrgSiteAsset.Ensure -eq 'Present')
     {
-        Remove-PNPOrgAssetsLibrary -libraryUrl $currentOrgSiteAsset.LibraryUrl
+        Remove-PnPOrgAssetsLibrary -LibraryUrl $currentOrgSiteAsset.LibraryUrl
     }
 }
 
@@ -311,6 +345,15 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of SharePoint Org Site Assets"
 
@@ -377,7 +420,7 @@ function Export-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters
 
     try
     {
@@ -385,15 +428,15 @@ function Export-TargetResource
         $i = 1
         $dscContent = ''
 
-        Write-Host "`r`n" -NoNewLine
+        Write-Host "`r`n" -NoNewline
         if ($null -ne $orgAssets)
         {
             foreach ($orgAssetLib in $orgAssets.OrgAssetsLibraries)
             {
-                Write-Host "    [$i/$($orgAssets.Length)] $LibraryUrl" -NoNewLine
+                Write-Host "    [$i/$($orgAssets.Length)] $LibraryUrl" -NoNewline
                 $Params = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
-                    LibraryUrl         = "https://$tenantName.sharepoint.com/$($orgAssetLib.libraryurl.DecodedUrl)"
+                    GlobalAdminAccount    = $GlobalAdminAccount
+                    LibraryUrl            = "https://$tenantName.sharepoint.com/$($orgAssetLib.libraryurl.DecodedUrl)"
 
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
@@ -403,12 +446,12 @@ function Export-TargetResource
                 }
                 $Results = Get-TargetResource @Params
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                        -Results $Results
+                    -Results $Results
                 $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                        -ConnectionMode $ConnectionMode `
-                        -ModulePath $PSScriptRoot `
-                        -Results $Results `
-                        -GlobalAdminAccount $GlobalAdminAccount
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
                 Write-Host $Global:M365DSCEmojiGreenCheckMark
                 $i++
             }
@@ -417,9 +460,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }

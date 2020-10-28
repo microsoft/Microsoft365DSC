@@ -189,9 +189,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -320,7 +337,7 @@ function Set-TargetResource
     if ($CurrentParameters.ContainsKey("DomainGuids"))
     {
         $Options.Add("DomainGuids", [System.Guid[]]$CurrentParameters.DomainGuids)
-        $CurrentParameters.Remove("DomainGuids")| Out-Null
+        $CurrentParameters.Remove("DomainGuids") | Out-Null
     }
     if ($CurrentParameters.ContainsKey("DisableReportProblemDialog"))
     {
@@ -349,23 +366,13 @@ function Set-TargetResource
     $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
 
     Write-Verbose -Message "Configuring OneDrive settings."
-    Set-PnPTenant @CurrentParameters | Out-Null
+    Set-PnPTenant @CurrentParameters
 
     ## Configure Sync Client restrictions
     ## Set-SPOTenantSyncClientRestriction has different parameter sets and they cannot be combined see article:
     ## https://docs.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenantsyncclientrestriction?view=sharepoint-ps
     Write-Verbose -Message "Setting other configuration parameters"
     Write-Verbose -Message ($Options | Out-String)
-    if ($Options.ContainsKey("BlockMacSync") -and $Options.ContainsKey("DomainGuids"))
-    {
-        Write-Verbose -Message "Updating BlockMacSync {$($Options.BlockMacSync)}"
-        Set-PnPTenantSyncClientRestriction -BlockMacSync:$Options.BlockMacSync -DomainGuids $Options.DomainGuids -Enable:$true | Out-Null
-    }
-    elseif ($Options.ContainsKey("DomainGuids") -and ($Options.ContainsKey("BlockMacSync") -eq $false))
-    {
-        Write-Verbose -Message "Updating DomainGuids"
-        Set-PnPTenantSyncClientRestriction -DomainGuids $Options.DomainGuids -Enable:$true| Out-Null
-    }
 
     if ($Options.ContainsKey("ExcludedFileExtensions"))
     {
@@ -375,19 +382,17 @@ function Set-TargetResource
         {
             $BlockedFileTypes += $fileTypes + ';'
         }
-
-        Set-PnPTenantSyncClientRestriction -ExcludedFileExtensions $BlockedFileTypes | Out-Null
-    }
-    if ($Options.ContainsKey("DisableReportProblemDialog"))
-    {
-        Write-Verbose -Message "Updating DisableReportProblemDialog"
-        Set-PnPTenantSyncClientRestriction -DisableReportProblemDialog:$Options.DisableReportProblemDialog | Out-Null
+        $Options["ExcludedFileExtensions"] = $BlockedFileTypes
     }
 
-    if ($Options.ContainsKey("GrooveBlockOption"))
+    if ($Options.ContainsKey("DomainGuids"))
     {
-        Write-Verbose -Message "Updating GrooveBlockOption"
-        Set-PnPTenantSyncClientRestriction -GrooveBlockOption $Options.GrooveBlockOption | Out-Null
+        Write-Verbose -Message "Updating DomainGuids"
+        Set-PnPTenantSyncClientRestriction @Options -Enable:$true
+    }
+    else
+    {
+        Set-PnPTenantSyncClientRestriction @Options
     }
 }
 
@@ -482,6 +487,15 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of OneDrive Settings"
 
@@ -586,9 +600,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }
