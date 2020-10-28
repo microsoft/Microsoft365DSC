@@ -1016,7 +1016,7 @@ function New-M365DSCConnection
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Source", "M365DSCUtil")
-    $data.Add("Method", "$MyInvocation.MyCommand")
+    $data.Add("Platform", $Platform)
 
     if ($InboundParameters.ContainsKey("TenantId"))
     {
