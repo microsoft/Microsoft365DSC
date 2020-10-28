@@ -26,6 +26,8 @@
     * Fixed and issue where the -GenerateInfo parameter would always generate
       a link to the same resource.
     * Added current version module in the Export file.
+* MISC
+  * Added Authentication Type used to the Telemetry Engine.
 * DEPENDENCIES
   * AzureADPreview Updated to 2.0.2.119
   * DSCParser Updated to 1.3.0.0
