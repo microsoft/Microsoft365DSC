@@ -28,7 +28,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Public", "Private")]
+        [ValidateSet("Public", "Private", "HiddenMembership")]
         $Visibility,
 
         [Parameter()]
@@ -267,7 +267,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Public", "Private")]
+        [ValidateSet("Public", "Private", "HiddenMembership")]
         $Visibility,
 
         [Parameter()]
@@ -493,7 +493,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Public", "Private")]
+        [ValidateSet("Public", "Private", "HiddenMembership")]
         $Visibility,
 
         [Parameter()]

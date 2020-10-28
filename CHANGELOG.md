@@ -22,6 +22,8 @@
 * SPOTheme
   * Fixed issue where Palette was not being properly extracted as
     an array of CIMInstances.
+* TeamsTeam
+  * Added support for visibility HiddenMembership
 * MODULES
   * M365DSCUtil
     * Fixed an issue where function Test-M365DSCObjectHasProperty was missing
