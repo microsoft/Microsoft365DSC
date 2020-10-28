@@ -826,10 +826,6 @@ function Export-M365DSCConfiguration
         $CertificateThumbprint,
 
         [Parameter()]
-        [System.String]
-        $CertificateFile,
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount,
 
@@ -860,7 +856,8 @@ function Export-M365DSCConfiguration
 
     if (-not $Quiet)
     {
-        Show-M365DSCGUI -Path $Path -FileName $FileName
+        Show-M365DSCGUI -Path $Path -FileName $FileName `
+            -GenerateInfo $GenerateInfo
     }
     else
     {
@@ -1016,6 +1013,38 @@ function New-M365DSCConnection
         $Global:CurrentModeIsExport = $false
     }
 
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Source", "M365DSCUtil")
+    $data.Add("Platform", $Platform)
+
+    if ($InboundParameters.ContainsKey("TenantId"))
+    {
+        $tenantId = $InboundParameters.TenantId
+        $data.Add("TenantId", $tenantId)
+    }
+    if ($InboundParameters.ContainsKey("GlobalAdminAccount"))
+    {
+        $data.Add("GlobalAdminAccount", "Yes")
+    }
+    if ($InboundParameters.ContainsKey("ApplicationId"))
+    {
+        $data.Add("ApplicationId", "Yes")
+    }
+    if ($InboundParameters.ContainsKey("CertificatePath"))
+    {
+        $data.Add("CertificatePath", "Yes")
+    }
+    if ($InboundParameters.ContainsKey("CertificateThumbprint"))
+    {
+        $data.Add("CertificateThumbprint", "Yes")
+    }
+    if ($InboundParameters.ContainsKey("CertificatePassword"))
+    {
+        $data.Add("CertificatePassword", "Yes")
+    }
+    #endregion
+
     # Case both authentication methods are attempted
     if ($null -ne $InboundParameters.GlobalAdminAccount -and `
         (-not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -or `
@@ -1053,6 +1082,8 @@ function New-M365DSCConnection
                 -ConnectionUrl $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
+        $data.Add("ConnectionType", "Credential")
+        Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
         return "Credential"
     }
     # Case only the ApplicationID and Credentials parameters are specified
@@ -1075,6 +1106,8 @@ function New-M365DSCConnection
                 -ConnectionUrl $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
+        $data.Add("ConnectionType", "ServicePrincipal")
+        Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
         return 'ServicePrincipal'
     }
     # Case only the ServicePrincipal with Thumbprint parameters are specified
@@ -1101,6 +1134,8 @@ function New-M365DSCConnection
                 -ConnectionUrl $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
+        $data.Add("ConnectionType", "ServicePrincipal")
+        Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
         return 'ServicePrincipal'
     }
     # Case only the ServicePrincipal with Thumbprint parameters are specified
@@ -1130,6 +1165,8 @@ function New-M365DSCConnection
                 -ConnectionUrl $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
+        $data.Add("ConnectionType", "ServicePrincipal")
+        Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
         return 'ServicePrincipal'
     }
     else

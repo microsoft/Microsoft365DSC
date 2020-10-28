@@ -250,6 +250,8 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
     try
     {
         $Params = @{
@@ -263,7 +265,7 @@ function Export-TargetResource
         $Results = Get-TargetResource @Params
 
         $dscContent = ""
-        if ($result.Ensure -eq "Present")
+        if ($Results.Ensure -eq "Present")
         {
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
