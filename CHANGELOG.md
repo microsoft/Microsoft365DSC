@@ -16,6 +16,10 @@
   * Fixed issue # 866 changed domains to array
   * Fixed issue where trying to set anonymous link types if
     sharing not properly configured issue #865
+* ODSettings
+  * Removed AD group guid dependency issue # 862
+* TeamsTeam
+  * Added support for visibility HiddenMembership
 * MODULES
   * M365DSCUtil
     * Fixed an issue where function Test-M365DSCObjectHasProperty was missing
