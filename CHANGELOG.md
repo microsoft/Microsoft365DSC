@@ -44,7 +44,6 @@
   * Microsoft.PowerApps.Administration.PowerShell Updated
     to 2.0.96;
 
-
 ## 1.20.1021.1
 
 * AADTenantDetails
