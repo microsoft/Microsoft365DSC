@@ -28,7 +28,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Public", "Private")]
+        [ValidateSet("Public", "Private", "HiddenMembership")]
         $Visibility,
 
         [Parameter()]
@@ -250,7 +250,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Public", "Private")]
+        [ValidateSet("Public", "Private", "HiddenMembership")]
         $Visibility,
 
         [Parameter()]
@@ -442,7 +442,7 @@ function Set-TargetResource
     elseif ($Ensure -eq "Absent" -and ($team.Ensure -eq "Present"))
     {
         Write-Verbose -Message "Removing team $DisplayName"
-        Remove-team -GroupId $team.GroupId
+        Remove-Team -GroupId $team.GroupId
     }
 }
 
@@ -476,7 +476,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Public", "Private")]
+        [ValidateSet("Public", "Private", "HiddenMembership")]
         $Visibility,
 
         [Parameter()]
@@ -586,8 +586,9 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    If (!$PSBoundParameters.ContainsKey('Ensure')) {
-        $PSBoundParameters.Add('Ensure',$Ensure)
+    If (!$PSBoundParameters.ContainsKey('Ensure'))
+    {
+        $PSBoundParameters.Add('Ensure', $Ensure)
     }
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
@@ -655,10 +656,10 @@ function Export-TargetResource
         $teams = Get-Team
         $i = 1
         $content = ""
-        Write-Host "`r`n" -NoNewLine
+        Write-Host "`r`n" -NoNewline
         foreach ($team in $teams)
         {
-            Write-Host "    |---[$i/$($teams.Length)] $($team.DisplayName)" -NoNewLine
+            Write-Host "    |---[$i/$($teams.Length)] $($team.DisplayName)" -NoNewline
             $params = @{
                 DisplayName           = $team.DisplayName
                 GlobalAdminAccount    = $GlobalAdminAccount
@@ -678,7 +679,7 @@ function Export-TargetResource
             {
                 $result.Remove("Owner")
             }
-            $content += "        TeamsTeam " + (New-GUID).ToString() + "`r`n"
+            $content += "        TeamsTeam " + (New-Guid).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             if ($ConnectionMode -eq 'Credential')
