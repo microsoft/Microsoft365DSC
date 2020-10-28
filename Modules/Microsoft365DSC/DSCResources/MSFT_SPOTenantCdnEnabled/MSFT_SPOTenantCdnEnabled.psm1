@@ -61,13 +61,30 @@ function Get-TargetResource
         try
         {
             $cdnEnabled = Get-PnPTenantCdnEnabled -CdnType $CdnType `
-            -ErrorAction SilentlyContinue
+                -ErrorAction SilentlyContinue
         }
         catch
         {
-            Write-Verbose -Message $_
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+            try
+            {
+                Write-Verbose -Message $_
+                $tenantIdValue = ""
+                if (-not [System.String]::IsNullOrEmpty($TenantId))
+                {
+                    $tenantIdValue = $TenantId
+                }
+                elseif ($null -ne $GlobalAdminAccount)
+                {
+                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+                }
+                Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $tenantIdValue
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+            }
         }
 
         $result = @{
@@ -85,9 +102,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         throw $_
     }
 }
@@ -289,7 +323,7 @@ function Export-TargetResource
         $cdnTypes = "Public", "Private"
 
         $i = 1
-        Write-Host "`r`n" -NoNewLine
+        Write-Host "`r`n" -NoNewline
         foreach ($cType in $cdnTypes)
         {
             Write-Host "    |---[$i/2] $cType" -NoNewline
@@ -323,9 +357,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }

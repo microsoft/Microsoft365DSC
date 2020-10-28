@@ -79,7 +79,7 @@ function Get-TargetResource
             try
             {
                 Write-Verbose -Message "Scanning Group {$($group.DisplayName)} for plan {$Title}"
-                $plan = Get-MGGroupPlannerPlan -GroupId $group.ObjectId | Where-Object -FilterScript {$_.Title -eq $Title}
+                $plan = Get-MgGroupPlannerPlan -GroupId $group.ObjectId | Where-Object -FilterScript { $_.Title -eq $Title }
                 if ($null -ne $plan)
                 {
                     Write-Verbose -Message "Found Plan."
@@ -96,12 +96,26 @@ function Get-TargetResource
             }
             catch
             {
-                Write-Verbose -Message $_
-                Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                    -EventID 1 -Source $($MyInvocation.MyCommand.Source)
-                New-M365DSCLogEntry -Error $_ `
-                    -Message "Couldn't get Planner plans for {$($group.DisplayName)}" `
-                    -Source $MyInvocation.MyCommand.ModuleName
+                try
+                {
+                    Write-Verbose -Message $_
+                    $tenantIdValue = ""
+                    if (-not [System.String]::IsNullOrEmpty($TenantId))
+                    {
+                        $tenantIdValue = $TenantId
+                    }
+                    elseif ($null -ne $GlobalAdminAccount)
+                    {
+                        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+                    }
+                    Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $tenantIdValue
+                }
+                catch
+                {
+                    Write-Verbose -Message $_
+                }
             }
         }
 
@@ -127,9 +141,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -188,7 +219,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Planner Plan {$Title} doesn't already exist. Creating it."
-        New-MGPlannerPlan -Owner $OwnerGroup -Title $Title | Out-Null
+        New-MgPlannerPlan -Owner $OwnerGroup -Title $Title | Out-Null
     }
     elseif ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Present')
     {
@@ -200,11 +231,11 @@ function Set-TargetResource
         {
             [Array]$AllGroups = Get-AzureADGroup -SearchString $OwnerGroup
         }
-        $plan = Get-MGGroupPlannerPlan -GroupId $AllGroups[0].ObjectId | Where-Object -FilterScript {$_.Title -eq $Title}
+        $plan = Get-MgGroupPlannerPlan -GroupId $AllGroups[0].ObjectId | Where-Object -FilterScript { $_.Title -eq $Title }
         $SetParams.Add("PlannerPlanId", $plan.Id)
         $SetParams.Add("Owner", $AllGroups[0].ObjectId)
         $SetParams.Remove("OwnerGroup") | Out-Null
-        Update-MGPlannerPlan @SetParams
+        Update-MgPlannerPlan @SetParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentValues.Ensure -eq 'Present')
     {
@@ -329,7 +360,7 @@ function Export-TargetResource
                     }
                     Write-Information "        [$j/$($plans.Length)] $($plan.Title)"
                     $result = Get-TargetResource @params
-                    $content += "        PlannerPlan " + (New-GUID).ToString() + "`r`n"
+                    $content += "        PlannerPlan " + (New-Guid).ToString() + "`r`n"
                     $content += "        {`r`n"
                     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
                     $content += $currentDSCBlock
@@ -340,18 +371,52 @@ function Export-TargetResource
             }
             catch
             {
-                Write-Verbose -Message $_
-                Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                    -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+                try
+                {
+                    Write-Verbose -Message $_
+                    $tenantIdValue = ""
+                    if (-not [System.String]::IsNullOrEmpty($TenantId))
+                    {
+                        $tenantIdValue = $TenantId
+                    }
+                    elseif ($null -ne $GlobalAdminAccount)
+                    {
+                        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+                    }
+                    Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $tenantIdValue
+                }
+                catch
+                {
+                    Write-Verbose -Message $_
+                }
             }
         }
         return $content
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }

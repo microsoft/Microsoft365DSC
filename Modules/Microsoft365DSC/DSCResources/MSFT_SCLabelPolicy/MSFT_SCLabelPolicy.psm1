@@ -153,9 +153,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -352,7 +369,7 @@ function Set-TargetResource
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
         # If the label exists and it shouldn't, simply remove it;Need to force deletoion
-        Write-Verbose -message "Deleting Sensitivity label policy $Name."
+        Write-Verbose -Message "Deleting Sensitivity label policy $Name."
 
         try
         {
@@ -613,10 +630,10 @@ function Export-TargetResource
 
         $dscContent = ""
         $i = 1
-        Write-Host "`r`n" -NoNewLine
+        Write-Host "`r`n" -NoNewline
         foreach ($policy in $policies)
         {
-            Write-Host "    |---[$i/$($policies.Count)] $($policy.Name)" -NoNewLine
+            Write-Host "    |---[$i/$($policies.Count)] $($policy.Name)" -NoNewline
 
             $Params = @{
                 Name               = $policy.Name
@@ -648,9 +665,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
     return $dscContent

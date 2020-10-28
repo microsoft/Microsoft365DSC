@@ -57,7 +57,7 @@ function Get-TargetResource
 
     try
     {
-        $Policies = Get-PnPTenantCdnPolicies -CDNType $CDNType -ErrorAction Stop
+        $Policies = Get-PnPTenantCdnPolicies -CdnType $CDNType -ErrorAction Stop
 
         return @{
             CDNType                              = $CDNType
@@ -73,9 +73,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         throw $_
     }
 }
@@ -148,7 +165,7 @@ function Set-TargetResource
             $stringValue += $entry + ","
         }
         $stringValue = $stringValue.Remove($stringValue.Length - 1, 1)
-        Set-PnPTenantCdnPolicy -CDNType $CDNType `
+        Set-PnPTenantCdnPolicy -CdnType $CDNType `
             -PolicyType 'IncludeFileExtensions' `
             -PolicyValue $stringValue
     }
@@ -159,7 +176,7 @@ function Set-TargetResource
         Write-Verbose "Found difference in ExcludeRestrictedSiteClassifications"
 
 
-        Set-PnPTenantCdnPolicy -CDNType $CDNType `
+        Set-PnPTenantCdnPolicy -CdnType $CDNType `
             -PolicyType 'ExcludeRestrictedSiteClassifications' `
             -PolicyValue $stringValue
     }
@@ -319,7 +336,7 @@ function Export-TargetResource
         if ($null -ne $result)
         {
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
+                -Results $Results
             $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
@@ -331,9 +348,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }

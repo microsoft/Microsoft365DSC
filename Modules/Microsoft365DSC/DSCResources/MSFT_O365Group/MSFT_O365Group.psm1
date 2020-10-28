@@ -74,11 +74,11 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
 
         Write-Verbose -Message "Retrieving AzureADGroup by MailNickName {$MailNickName}"
-        [array]$ADGroup = Get-AzureADGroup -All:$true | Where-Object -FilterScript {$_.MailNickName -eq $MailNickName}
+        [array]$ADGroup = Get-AzureADGroup -All:$true | Where-Object -FilterScript { $_.MailNickName -eq $MailNickName }
         if ($null -eq $ADGroup)
         {
             Write-Verbose -Message "Retrieving AzureADGroup by DisplayName {$DisplayName}"
-            [array]$ADGroup = Get-AzureADGroup -All:$true | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+            [array]$ADGroup = Get-AzureADGroup -All:$true | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
             if ($null -eq $ADGroup)
             {
                 Write-Verbose -Message "Office 365 Group {$DisplayName} was not found."
@@ -112,8 +112,8 @@ function Get-TargetResource
                 foreach ($member in $membersList)
                 {
                     if ($null -ne $ownersUPN -and $ownersUPN.Length -ge 1 -and `
-                        -not [System.String]::IsNullOrEmpty($member.UserPrincipalName) -and `
-                        -not $ownersUPN.Contains($member.UserPrincipalName))
+                            -not [System.String]::IsNullOrEmpty($member.UserPrincipalName) -and `
+                            -not $ownersUPN.Contains($member.UserPrincipalName))
                     {
                         $newMemberList += $member.UserPrincipalName
                     }
@@ -149,9 +149,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -338,7 +355,7 @@ function Set-TargetResource
             }
         }
     }
-    elseif($Ensure -eq "Absent")
+    elseif ($Ensure -eq "Absent")
     {
         try
         {
@@ -348,7 +365,7 @@ function Set-TargetResource
         {
             Write-Error -Message "Could not find group $($currrentGroup.MailNickName)"
         }
-        if($existingO365Group.Length -eq 1)
+        if ($existingO365Group.Length -eq 1)
         {
             Write-Verbose -Message "Removing O365Group $($existingO365Group.Name)"
             Remove-UnifiedGroup -Identity $existingO365Group.Name -confirm:$false -Force
@@ -493,10 +510,10 @@ function Export-TargetResource
         }
 
         $i = 1
-        Write-Host "`r`n" -NoNewLine
+        Write-Host "`r`n" -NoNewline
         foreach ($group in $groups)
         {
-            Write-Host "    |---[$i/$($groups.Length)] $($group.DisplayName)" -NoNewLine
+            Write-Host "    |---[$i/$($groups.Length)] $($group.DisplayName)" -NoNewline
             $Params = @{
                 GlobalAdminAccount    = $GlobalAdminAccount
                 ApplicationId         = $ApplicationId
@@ -521,9 +538,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }

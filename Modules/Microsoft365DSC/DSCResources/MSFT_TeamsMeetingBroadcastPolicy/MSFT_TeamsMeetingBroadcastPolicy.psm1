@@ -18,12 +18,12 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Everyone","EveryoneInCompany","InvitedUsersInCompany","EveryoneInCompanyAndExternal","InvitedUsersInCompanyAndExternal")]
+        [ValidateSet("Everyone", "EveryoneInCompany", "InvitedUsersInCompany", "EveryoneInCompanyAndExternal", "InvitedUsersInCompanyAndExternal")]
         $BroadcastAttendeeVisibilityMode,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("AlwaysEnabled","AlwaysDisabled","UserOverride")]
+        [ValidateSet("AlwaysEnabled", "AlwaysDisabled", "UserOverride")]
         $BroadcastRecordingMode,
 
         [Parameter()]
@@ -72,9 +72,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -98,12 +115,12 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Everyone","EveryoneInCompany","InvitedUsersInCompany","EveryoneInCompanyAndExternal","InvitedUsersInCompanyAndExternal")]
+        [ValidateSet("Everyone", "EveryoneInCompany", "InvitedUsersInCompany", "EveryoneInCompanyAndExternal", "InvitedUsersInCompanyAndExternal")]
         $BroadcastAttendeeVisibilityMode,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("AlwaysEnabled","AlwaysDisabled","UserOverride")]
+        [ValidateSet("AlwaysEnabled", "AlwaysDisabled", "UserOverride")]
         $BroadcastRecordingMode,
 
         [Parameter()]
@@ -122,7 +139,7 @@ function Set-TargetResource
     foreach ($item in $PSBoundParameters.Keys)
     {
         if (-not [System.String]::IsNullOrEmpty($PSBoundParameters.$item) -and $item -ne 'GlobalAdminAccount' `
-            -and $item -ne 'Identity' -and $item -ne 'Ensure')
+                -and $item -ne 'Identity' -and $item -ne 'Ensure')
         {
             $inputValues += $item
         }
@@ -185,12 +202,12 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Everyone","EveryoneInCompany","InvitedUsersInCompany","EveryoneInCompanyAndExternal","InvitedUsersInCompanyAndExternal")]
+        [ValidateSet("Everyone", "EveryoneInCompany", "InvitedUsersInCompany", "EveryoneInCompanyAndExternal", "InvitedUsersInCompanyAndExternal")]
         $BroadcastAttendeeVisibilityMode,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("AlwaysEnabled","AlwaysDisabled","UserOverride")]
+        [ValidateSet("AlwaysEnabled", "AlwaysDisabled", "UserOverride")]
         $BroadcastRecordingMode,
 
         [Parameter()]
@@ -259,17 +276,17 @@ function Export-TargetResource
 
         $i = 1
         $content = ''
-        Write-Host "`r`n" -NoNewLine
+        Write-Host "`r`n" -NoNewline
         foreach ($policy in $policies)
         {
             $params = @{
                 Identity           = $policy.Identity
                 GlobalAdminAccount = $GlobalAdminAccount
             }
-            Write-Host "    |---[$i/$($policies.Length)] $($policy.Identity)" -NoNewLine
+            Write-Host "    |---[$i/$($policies.Length)] $($policy.Identity)" -NoNewline
             $result = Get-TargetResource @params
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $content += "        TeamsMeetingBroadcastPolicy " + (New-GUID).ToString() + "`r`n"
+            $content += "        TeamsMeetingBroadcastPolicy " + (New-Guid).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             $partial = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
@@ -282,9 +299,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }

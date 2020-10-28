@@ -6,6 +6,9 @@
   * Fixed issue #821
 * O365OrgCustomizationSetting
   * Fixes an issue where the resource was not being exported;
+* O365User
+  * Added additional information in the error log for when
+    we try to set an invalid license
 * ODSettings
   * Removed AD group guid dependency issue # 862
 * SPOTenantSettings
@@ -16,6 +19,9 @@
   * Fixed issue # 866 changed domains to array
   * Fixed issue where trying to set anonymous link types if
     sharing not properly configured issue #865
+* SPOTheme
+  * Fixed issue where Palette was not being properly extracted as
+    an array of CIMInstances.
 * MODULES
   * M365DSCUtil
     * Fixed an issue where function Test-M365DSCObjectHasProperty was missing
