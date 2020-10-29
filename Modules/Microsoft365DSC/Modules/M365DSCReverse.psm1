@@ -163,16 +163,20 @@ function Start-M365DSCConfigurationExtract
     if (-not $PSBoundParameters.ContainsKey('Quiet'))
     {
         $unattendedCommand = "Export-M365DSCConfiguration -Quiet -ComponentsToExtract @("
+        $Components = ""
         foreach ($resource in $ComponentsToExtract)
         {
             if ($resource -ne 'Credential' -and $resource -ne 'Application' -and `
                     $resource -ne 'Certificate')
             {
-                $unattendedCommand += "'$resource',"
+                $Components += "'$resource',"
             }
         }
-        $unattendedCommand = $unattendedCommand.Substring(0, $unattendedCommand.Length - 1)
-        $unattendedCommand += ")"
+        if (-not [System.String]::IsNullOrEmpty($Components))
+        {
+            $Components = $Components.Substring(0, $Components.Length - 1)
+        }
+        $unattendedCommand += $Components + ")"
         Write-Host "[INFO]" -NoNewline -ForegroundColor Cyan
         Write-Host " You can perform an equivalent unattended Export operation by running the following command:" -ForegroundColor Gray
         Write-Host $unattendedCommand -ForegroundColor Blue

@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+## 1.20.1104.1
+
+* MISC
+  * Added checks for mandatory Authentication parameters before
+    attempting an Export.
+
 ## 1.20.1028.1
 
 * EXOOutboundConnector
