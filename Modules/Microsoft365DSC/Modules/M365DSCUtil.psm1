@@ -1582,71 +1582,8 @@ function Assert-M365DSCTemplate
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    if (([System.String]::IsNullOrEmpty($TemplatePath) -and [System.String]::IsNullOrEmpty($TemplateName)) -or
-        (-not [System.String]::IsNullOrEmpty($TemplatePath) -and -not [System.String]::IsNullOrEmpty($TemplateName)))
-    {
-        throw "You need to one of either TemplatePath or TemplateName"
-    }
-    if (-not [System.String]::IsNullOrEmpty($TemplateName))
-    {
-        try
-        {
-            $TemplatePath = Join-Path -Path $env:Temp -ChildPath "$TemplateName.M365"
-            $url = "https://office365dsc.blob.core.windows.net/office365dsc/Templates/$TemplateName.M365"
-            Invoke-WebRequest -Uri $url -OutFile $TemplatePath
-        }
-        catch
-        {
-            throw $_
-        }
-    }
-    if ((Test-Path -Path $TemplatePath) -and ($TemplatePath -like '*.m365' -or $TemplatePath -like '*.ps1'))
-    {
-        $tokens = $null
-        $errors = $null
-        $ast = [System.Management.Automation.Language.Parser]::ParseFile($TemplatePath, [ref] $tokens, [ref] $errors)
-        $configObject = $ast.FindAll( { $args[0] -is [System.Management.Automation.Language.ConfigurationDefinitionAST] }, $true)
-
-        $configurationName = $configObject.InstanceName.ToString()
-        $configContent = $configObject.Extent.ToString()
-
-        $configDataString = "`$configData = @{ `
-            AllNodes = @( `
-                @{ `
-                    NodeName                    = 'localhost' `
-                    PSDscAllowPlainTextPassword = `$true; `
-                    PSDscAllowDomainUser        = `$true; `
-                } `
-            ) `
-        }"
-        $configContent += "`r`n" + $configDataString + "`r`n"
-        $configContent += "`$compileResults = " + $ConfigurationName + " -ConfigurationData `$ConfigData`r`n"
-        $configContent += "`$testResults = Test-DSCConfiguration -ReferenceConfiguration `$compileResults.FullName`r`n"
-
-        $configContent += "if (`$testResults.InDesiredState)`r`n"
-        $configContent += "{`r`n"
-        $configContent += "    Write-Host 'The template was validated against the environment. The tenant is in the Desired State.' -ForeGroundColor Green"
-        $configContent += "}`r`n"
-        $configContent += "elseif (-not `$testResults.InDesiredState)`r`n"
-        $configContent += "{`r`n"
-        $configContent += "    Write-Host 'The environment does not match the template. The following component(s) are not in the Desired State:' -Foreground Red`r`n"
-        $configContent += "    foreach (`$component in `$testResults.ResourcesNotInDesiredState){Write-Host `"    -> `$(`$component.ResourceId)`" -Foreground Red}`r`n"
-        $configContent += "}`r`n"
-
-        $randomName = (New-Guid).ToString() + '.ps1'
-        $tempScriptLocation = Join-Path -Path $env:Temp -ChildPath $randomName
-        $configContent | Out-File $tempScriptLocation
-
-        & $tempScriptLocation
-    }
-    elseif (-not (Test-Path $TemplatePath))
-    {
-        Write-Error "M365DSC Template Path {$TemplatePath} does not exist."
-    }
-    else
-    {
-        Write-Error "You need to specify a path to an Microsoft365DSC Template (*.m365 or *.ps1)"
-    }
+    Write-Host $GLobal:M365DSCEmojiYellowCircle -NoNewline
+    Write-Host " Assert-M365DSCTemplate is deprecated. Please use the new improved Assert-M365DSCBlueprint cmdlet instead." -ForegroundColor Yellow
 }
 
 function Assert-M365DSCBlueprint

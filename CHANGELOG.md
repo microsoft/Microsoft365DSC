@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+## 1.20.1104.1
+
+* MISC
+  * Deprecated the Assert-M365DSCTemplate cmdlet;
+
 ## 1.20.1028.1
 
 * EXOOutboundConnector
