@@ -5,6 +5,7 @@
 * MISC
   * Added checks for mandatory Authentication parameters before
     attempting an Export.
+  * Deprecated the Assert-M365DSCTemplate cmdlet;
 
 ## 1.20.1028.1
 
