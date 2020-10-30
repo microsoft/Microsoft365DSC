@@ -74,6 +74,7 @@ function Add-M365DSCTelemetryEvent
             $Data.Remove("Principal") | Out-Null
 
             # Capture PowerShell Version Info
+            $Data.Add("PSMainVersion", $PSVersionTable.PSVersion.Major.ToString() + "." + $PSVersionTable.PSVersion.Minor.ToString())
             $Data.Add("PSVersion", $PSVersionTable.PSVersion.ToString())
             $Data.Add("PSEdition", $PSVersionTable.PSEdition.ToString())
             $Data.Add("PSBuildVersion", $PSVersionTable.BuildVersion.ToString())
