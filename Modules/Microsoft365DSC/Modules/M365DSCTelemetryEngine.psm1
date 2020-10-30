@@ -30,11 +30,11 @@ function Add-M365DSCTelemetryEvent
         $Type = 'Flow',
 
         [Parameter()]
-        [System.Collections.Generic.Dictionary[[System.String],[System.String]]]
+        [System.Collections.Generic.Dictionary[[System.String], [System.String]]]
         $Data,
 
         [Parameter()]
-        [System.Collections.Generic.Dictionary[[System.String],[System.Double]]]
+        [System.Collections.Generic.Dictionary[[System.String], [System.Double]]]
         $Metrics
     )
 
@@ -43,7 +43,7 @@ function Add-M365DSCTelemetryEvent
     Test-M365DSCNewVersionAvailable
 
     $TelemetryEnabled = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryEnabled', `
-        [System.EnvironmentVariableTarget]::Machine)
+            [System.EnvironmentVariableTarget]::Machine)
 
     if ($null -eq $TelemetryEnabled -or $TelemetryEnabled -eq $true)
     {
@@ -52,7 +52,7 @@ function Add-M365DSCTelemetryEvent
         try
         {
             $ProjectName = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryProjectName', `
-                [System.EnvironmentVariableTarget]::Machine)
+                    [System.EnvironmentVariableTarget]::Machine)
 
             if ($null -ne $ProjectName)
             {
@@ -73,6 +73,12 @@ function Add-M365DSCTelemetryEvent
             $Data.Remove("TenandId") | Out-Null
             $Data.Remove("Principal") | Out-Null
 
+            # Capture PowerShell Version Info
+            $Data.Add("PSVersion", $PSVersionTable.PSVersion.ToString())
+            $Data.Add("PSEdition", $PSVersionTable.PSEdition.ToString())
+            $Data.Add("PSBuildVersion", $PSVersionTable.BuildVersion.ToString())
+            $Data.Add("PSCLRVersion", $PSVersionTable.CLRVersion.ToString())
+
             if ($null -ne $Data.Resource)
             {
                 if ($Data.Resource.StartsWith("MSFT_AAD") -or $Data.Resource.StartsWith("AAD"))
@@ -83,7 +89,7 @@ function Add-M365DSCTelemetryEvent
                 {
                     $Data.Add("Workload", "Exchange Online")
                 }
-                elseif ($Data.Resource.StartsWith("MSFT_Intune") -or $Data.Resource.StartsWith("Intune")) 
+                elseif ($Data.Resource.StartsWith("MSFT_Intune") -or $Data.Resource.StartsWith("Intune"))
                 {
                     $Data.Add("Workload", "Intune")
                 }
@@ -129,7 +135,7 @@ function Add-M365DSCTelemetryEvent
                 $dependencies = $manifest.RequiredModules
 
                 $dependenciesContent = ""
-                foreach($dependency in $dependencies)
+                foreach ($dependency in $dependencies)
                 {
                     $dependenciesContent += Get-Module $dependency.ModuleName | Out-String
                 }
@@ -170,19 +176,19 @@ function Set-M365DSCTelemetryOption
     if ($null -ne $Enabled)
     {
         [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $Enabled, `
-            [System.EnvironmentVariableTarget]::Machine)
+                [System.EnvironmentVariableTarget]::Machine)
     }
 
     if ($null -ne $InstrumentationKey)
     {
         [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryInstrumentationKey', $InstrumentationKey, `
-            [System.EnvironmentVariableTarget]::Machine)
+                [System.EnvironmentVariableTarget]::Machine)
     }
 
     if ($null -ne $ProjectName)
     {
         [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryProjectName', $ProjectName, `
-            [System.EnvironmentVariableTarget]::Machine)
+                [System.EnvironmentVariableTarget]::Machine)
     }
 }
 
@@ -194,15 +200,16 @@ function Get-M365DSCTelemetryOption
     try
     {
         return @{
-            Enabled = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryEnabled', `
-                [System.EnvironmentVariableTarget]::Machine)
+            Enabled            = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryEnabled', `
+                    [System.EnvironmentVariableTarget]::Machine)
             InstrumentationKey = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryInstrumentationKey', `
-                [System.EnvironmentVariableTarget]::Machine)
-            ProjectName = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryProjectName', `
-            [System.EnvironmentVariableTarget]::Machine)
+                    [System.EnvironmentVariableTarget]::Machine)
+            ProjectName        = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryProjectName', `
+                    [System.EnvironmentVariableTarget]::Machine)
         }
     }
-    catch {
+    catch
+    {
         throw $_
     }
 }

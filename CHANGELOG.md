@@ -4,6 +4,7 @@
 
 * MISC
   * Deprecated the Assert-M365DSCTemplate cmdlet;
+  * Added Telemetry for version of PowerShell used;
 
 ## 1.20.1028.1
 

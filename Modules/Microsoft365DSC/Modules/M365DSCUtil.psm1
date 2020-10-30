@@ -1582,7 +1582,7 @@ function Assert-M365DSCTemplate
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Host $GLobal:M365DSCEmojiYellowCircle -NoNewline
+    Write-Host $Global:M365DSCEmojiYellowCircle -NoNewline
     Write-Host " Assert-M365DSCTemplate is deprecated. Please use the new improved Assert-M365DSCBlueprint cmdlet instead." -ForegroundColor Yellow
 }
 
