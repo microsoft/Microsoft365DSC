@@ -4,11 +4,14 @@
 
 * MISC
   * Deprecated the Assert-M365DSCTemplate cmdlet;
+  * Added Telemetry for version of PowerShell used;
+  * Added a timeout on new version check from the
+    PowerShell Gallery;
 
 ## 1.20.1028.1
 
 * EXOOutboundConnector
-  * Fixed issue #821
+  * Fixed issue #821;
 * O365OrgCustomizationSetting
   * Fixes an issue where the resource was not being exported;
 * O365User

@@ -1582,7 +1582,7 @@ function Assert-M365DSCTemplate
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Host $GLobal:M365DSCEmojiYellowCircle -NoNewline
+    Write-Host $Global:M365DSCEmojiYellowCircle -NoNewline
     Write-Host " Assert-M365DSCTemplate is deprecated. Please use the new improved Assert-M365DSCBlueprint cmdlet instead." -ForegroundColor Yellow
 }
 
@@ -2131,8 +2131,22 @@ function Test-M365DSCNewVersionAvailable
             $currentVersion = Get-Module 'Microsoft365DSC' -ErrorAction Stop
 
             # Get module in the Gallery
-            $GalleryVersion = Find-Module 'Microsoft365DSC' -ErrorAction Stop
-
+            $JobID = Start-Job { Find-Module 'Microsoft365DSC' -ErrorAction Stop }
+            $Timeout = $true
+            for ($i = 0; $i -lt 10; $i++)
+            {
+                if ((Get-Job $JobID.id).State -notmatch 'Running')
+                {
+                    $Timeout = $false
+                    break;
+                }
+                Start-Sleep -Seconds 1
+            }
+            if ($Timeout)
+            {
+                return
+            }
+            $GalleryVersion = Get-Job $JobID.id | Receive-Job
             if ([Version]($GalleryVersion.Version) -gt [Version]($currentVersion.Version))
             {
                 $message = "A NEWER VERSION OF MICROSOFT365DSC {v$($GalleryVersion.Version)} IS AVAILABLE IN THE POWERSHELL GALLERY. TO UPDATE, RUN:`r`nInstall-Module Microsoft365DSC -Force -AllowClobber"
