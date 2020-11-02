@@ -421,10 +421,10 @@ function Export-TargetResource
                                 {
                                     $totalCount = 1
                                 }
-                                Write-Information "    > [$j/$totalCount] Team {$($team.DisplayName)}"
+                                Write-Verbose -Message "    > [$j/$totalCount] Team {$($team.DisplayName)}"
                                 foreach ($user in $users)
                                 {
-                                    Write-Information "        - [$i/$($users.Length)] $($user.User)"
+                                    Write-Verbose -Message "        - [$i/$($users.Length)] $($user.User)"
 
                                     if ($ConnectionMode -eq 'Credential')
                                     {
@@ -481,8 +481,8 @@ function Export-TargetResource
                             }
                             catch
                             {
-                                Write-Information $_
-                                Write-Information "The current User doesn't have the required permissions to extract Users for Team {$($team.DisplayName)}."
+                                Write-Verbose -Message $_
+                                Write-Verbose -Message "The current User doesn't have the required permissions to extract Users for Team {$($team.DisplayName)}."
                             }
                             $j++
                         }

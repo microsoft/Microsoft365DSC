@@ -560,7 +560,7 @@ function Start-M365DSCConfigurationExtract
     {
         try
         {
-            Write-Information "Directory `"$OutputDSCPath`" doesn't exist; creating..."
+            Write-Host "Directory `"$OutputDSCPath`" doesn't exist; creating..."
             New-Item -Path $OutputDSCPath -ItemType Directory | Out-Null
             if ($?)
             {
