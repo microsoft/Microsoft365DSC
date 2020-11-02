@@ -209,21 +209,21 @@ function Set-TargetResource
     # Policy should exist but it doesn't
     if($Ensure -eq 'Present' -and $currentAADPolicy.Ensure -eq "Absent")
     {
-        Write-Verbose -Message "Creating New AzureAD Policy {$($Displayname)}"
+        Write-Verbose -Message "Creating New AzureAD Policy {$Displayname)}"
         $currentParameters.Remove("Id") | Out-Null
         New-AzureADPolicy @currentParameters
     }
     # Policy should exist and will be configured to desire state 
     elseif ($Ensure -eq 'Present' -and $CurrentAADPolicy.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating exisitng AzureAD Policy {$($Displayname)}"
+        Write-Verbose -Message "Updating exisitng AzureAD Policy {$Displayname)}"
         $currentParameters.Id = $currentAADPolicy.ID
         Set-AzureADPolicy @currentParameters 
     }
     # Policy exist but should not 
     elseif ($Ensure -eq 'Absent' -and $CurrentAADPolicy.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing AzureAD Policy {$($Displayname)}"
+        Write-Verbose -Message "Removing AzureAD Policy {$Displayname)}"
         Remove-AzureADPolicy -ID $currentAADPolicy.ID
     }
 }
