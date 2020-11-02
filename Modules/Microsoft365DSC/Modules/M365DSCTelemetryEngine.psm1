@@ -61,8 +61,11 @@ function Add-M365DSCTelemetryEvent
 
             if ($null -ne $Data.Principal)
             {
-                $principalValue = $Data.Principal.Split("@")[1]
-                $Data.Add("Tenant", $principalValue)
+                if ($Data.Principal -contains '@')
+                {
+                    $principalValue = $Data.Principal.Split("@")[1]
+                    $Data.Add("Tenant", $principalValue)
+                }
             }
             elseif ($null -ne $Data.TenantId)
             {

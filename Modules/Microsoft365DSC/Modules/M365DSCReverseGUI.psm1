@@ -816,7 +816,8 @@ function Show-M365DSCGUI
                         {
                             $tenantId = $txtTenantId.Text
                         }
-                        elseif ($null -ne $GlobalAdminAccount)
+                        elseif ($null -ne $GlobalAdminAccount -and
+                            $GlobalAdminAccount.UserName -contains '@')
                         {
                             $tenantId = $GlobalAdminAccount.UserName.Split('@')[1]
                         }
