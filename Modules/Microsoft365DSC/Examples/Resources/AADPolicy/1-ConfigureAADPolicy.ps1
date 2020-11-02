@@ -17,10 +17,8 @@ Configuration Example
         AADPolicy DSCPolicy1
         {
             DisplayName                   = "PolicyDisplayName"
-            AlternativeIdentifier         = ""
-            Definition                    = "{{"B2BManagementPolicy":{"InvitationsAllowedAndBlockedDomainsPolicy":{"BlockedDomains":[]},"PreviewPolicy":{"Features":["OneTimePasscode"]},"AutoRedeemPolicy":{"AdminConsentedForUsersIntoTenantIds":[],"NoAADConsentForUsersFromTenantsIds":[]}}}}"
+            Definition                    = @('{"TokenIssuancePolicy":{"Version": 1,"SigningAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1","TokenResponseSigningPolicy": "TokenOnly","SamlTokenVersion": "2.0"}}')
             IsOrganizationDefault         = $false
-            KeyCredentials                = {}
             Type                          = "TokenIssuancePolicy"
             Ensure                        = "Present"
             GlobalAdminAccount            = $credsGlobalAdmin
