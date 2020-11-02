@@ -1719,12 +1719,12 @@ function Test-M365DSCDependenciesForNewVersions
             $moduleInstalled = $modules[0]
             if ([Version]($moduleInGallery.Version) -gt [Version]($moduleInstalled[0].Version))
             {
-                Write-Host -MessageData "New version of {$($dependency.ModuleName)} is available {$($moduleInGallery.Version)}"
+                Write-Host "New version of {$($dependency.ModuleName)} is available {$($moduleInGallery.Version)}"
             }
         }
         catch
         {
-            Write-Host -MessageData "New version of {$($dependency.ModuleName)} is available"
+            Write-Host "New version of {$($dependency.ModuleName)} is available"
         }
         $i++
     }

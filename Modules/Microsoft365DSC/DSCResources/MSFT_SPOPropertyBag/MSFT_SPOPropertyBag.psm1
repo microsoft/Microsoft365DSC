@@ -480,7 +480,7 @@ function Export-TargetResource
             $i++
         }
 
-        Write-Information "    Broke extraction process down into {$MaxProcesses} jobs of {$($instances[0].Length)} item(s) each"
+        Write-Verbose -Message "    Broke extraction process down into {$MaxProcesses} jobs of {$($instances[0].Length)} item(s) each"
         $totalJobs = $MaxProcesses
         $jobsCompleted = 0
         $status = "Running..."
