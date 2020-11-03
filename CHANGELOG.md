@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+## Unreleased changes
+
+* AADMSGroup
+  * Added parameter IsAssignableToRole Issue #879
+  * Fixed issue on Set Issue #863
+
 ## 1.20.1104.1
 
 * MISC
