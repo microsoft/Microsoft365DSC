@@ -273,12 +273,19 @@ function Set-TargetResource
     {
         try
         {
-            if ($IsAssignableToRole -eq $true)
+            if ($true -eq $currentParameters.ContainsKey("IsAssignableToRole"))
             {
                 Write-Verbose -Message "Cannot set IsAssignableToRole once group is created."
                 $currentParameters.Remove("IsAssignableToRole") | Out-Null
             }
-            Set-AzureADMSGroup @currentParameters -Id $currentGroup.Id
+            if ($false -eq $currentParameters.ContainsKey("Id"))
+            {
+                Set-AzureADMSGroup @currentParameters -Id $currentGroup.Id
+            }
+            else
+            {
+                Set-AzureADMSGroup @currentParameters
+            }
         }
         catch
         {

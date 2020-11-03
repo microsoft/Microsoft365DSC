@@ -3,7 +3,7 @@
 ## Unreleased changes
 
 * AADMSGroup
-  * Added parameterIsAssignableToRole Issue #879
+  * Added parameter IsAssignableToRole Issue #879
   * Fixed issue on Set Issue #863
 
 ## 1.20.1104.1
