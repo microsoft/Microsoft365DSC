@@ -92,6 +92,10 @@ function Add-M365DSCTelemetryEvent
             {
                 $Data.Add("PowerShellAgent", "ISE")
             }
+            elseif ($host.Name -eq "ConsoleHost" -and $null -ne $env:WT_SESSION)
+            {
+                $Data.Add("PowerShellAgent", "Windows Terminal")
+            }
             elseif ($host.Name -eq "ConsoleHost" -and $null -eq $env:WT_SESSION -and `
                     $null -ne $env:BUILD_BUILDID -and $env:SYSTEM -eq "build")
             {
