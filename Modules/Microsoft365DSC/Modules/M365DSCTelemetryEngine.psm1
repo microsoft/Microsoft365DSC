@@ -61,8 +61,11 @@ function Add-M365DSCTelemetryEvent
 
             if ($null -ne $Data.Principal)
             {
-                $principalValue = $Data.Principal.Split("@")[1]
-                $Data.Add("Tenant", $principalValue)
+                if ($Data.Principal -contains '@')
+                {
+                    $principalValue = $Data.Principal.Split("@")[1]
+                    $Data.Add("Tenant", $principalValue)
+                }
             }
             elseif ($null -ne $Data.TenantId)
             {
@@ -79,6 +82,40 @@ function Add-M365DSCTelemetryEvent
             $Data.Add("PSEdition", $PSVersionTable.PSEdition.ToString())
             $Data.Add("PSBuildVersion", $PSVersionTable.BuildVersion.ToString())
             $Data.Add("PSCLRVersion", $PSVersionTable.CLRVersion.ToString())
+
+            # Capture Console/Host Information
+            if ($host.Name -eq "ConsoleHost" -and $null -eq $env:WT_SESSION)
+            {
+                $Data.Add("PowerShellAgent", "Console")
+            }
+            elseif ($host.Name -eq "Windows PowerShell ISE Host")
+            {
+                $Data.Add("PowerShellAgent", "ISE")
+            }
+            elseif ($host.Name -eq "ConsoleHost" -and $null -eq $env:WT_SESSION -and `
+                    $null -ne $env:BUILD_BUILDID -and $env:SYSTEM -eq "build")
+            {
+                $Data.Add("PowerShellAgent", "Azure DevOPS")
+                $Data.Add("AzureDevOPSPipelineType", "Build")
+                $Data.Add("AzureDevOPSAgent", $env:POWERSHELL_DISTRIBUTION_CHANNEL)
+            }
+            elseif ($host.Name -eq "ConsoleHost" -and $null -eq $env:WT_SESSION -and `
+                    $null -ne $env:BUILD_BUILDID -and $env:SYSTEM -eq "release")
+            {
+                $Data.Add("PowerShellAgent", "Azure DevOPS")
+                $Data.Add("AzureDevOPSPipelineType", "Release")
+                $Data.Add("AzureDevOPSAgent", $env:POWERSHELL_DISTRIBUTION_CHANNEL)
+            }
+            elseif ($host.Name -eq "Default Host" -and `
+                    $null -ne $env:APPSETTING_FUNCTIONS_EXTENSION_VERSION)
+            {
+                $Data.Add("PowerShellAgent", "Azure Function")
+                $Data.Add("AzureFunctionWorkerVersion", $env:FUNCTIONS_WORKER_RUNTIME_VERSION)
+            }
+            elseif ($host.Name -eq "CloudShell")
+            {
+                $Data.Add("PowerShellAgent", "Cloud Shell")
+            }
 
             if ($null -ne $Data.Resource)
             {

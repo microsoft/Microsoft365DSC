@@ -399,7 +399,7 @@ function Export-TargetResource
         }
         else
         {
-            Write-Information "    * App Catalog is not configured on tenant. Cannot extract information about SharePoint apps."
+            Write-Verbose -Message "    * App Catalog is not configured on tenant. Cannot extract information about SharePoint apps."
         }
         return $dscContent
     }

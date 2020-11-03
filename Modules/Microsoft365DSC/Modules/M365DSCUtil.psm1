@@ -1023,23 +1023,28 @@ function New-M365DSCConnection
         $tenantId = $InboundParameters.TenantId
         $data.Add("TenantId", $tenantId)
     }
-    if ($InboundParameters.ContainsKey("GlobalAdminAccount"))
+    if ($InboundParameters.ContainsKey("GlobalAdminAccount") -and
+        $null -ne $InboundParameters.GlobalAdminAccount)
     {
         $data.Add("GlobalAdminAccount", "Yes")
     }
-    if ($InboundParameters.ContainsKey("ApplicationId"))
+    if ($InboundParameters.ContainsKey("ApplicationId") -and
+        -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
     {
         $data.Add("ApplicationId", "Yes")
     }
-    if ($InboundParameters.ContainsKey("CertificatePath"))
+    if ($InboundParameters.ContainsKey("CertificatePath") -and
+        -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePath))
     {
         $data.Add("CertificatePath", "Yes")
     }
-    if ($InboundParameters.ContainsKey("CertificateThumbprint"))
+    if ($InboundParameters.ContainsKey("CertificateThumbprint") -and
+        -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
     {
         $data.Add("CertificateThumbprint", "Yes")
     }
-    if ($InboundParameters.ContainsKey("CertificatePassword"))
+    if ($InboundParameters.ContainsKey("CertificatePassword") -and
+        -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePassword))
     {
         $data.Add("CertificatePassword", "Yes")
     }
@@ -1050,8 +1055,14 @@ function New-M365DSCConnection
         (-not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -or `
                 -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint)))
     {
-        Write-Verbose -Message 'Both Authentication methods are attempted'
-        throw "You can't specify both the GlobalAdminAccount and one of {TenantId, CertificateThumbprint}"
+        $message = 'Both Authentication methods are attempted'
+        Write-Verbose -Message $message
+        $data.Add("Event", "Error")
+        $data.Add("Exception", $message)
+        $errorText = "You can't specify both the GlobalAdminAccount and one of {TenantId, CertificateThumbprint}"
+        $data.Add("CustomMessage", $errorText)
+        Add-M365DSCTelemetryEvent -Type "Error" -Data $data
+        throw $errorText
     }
     # Case no authentication method is specified
     elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
@@ -1059,8 +1070,14 @@ function New-M365DSCConnection
             [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
             [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
     {
-        Write-Verbose -Message "No Authentication method was provided"
-        throw "You must specify either the GlobalAdminAccount or ApplicationId, TenantId and CertificateThumbprint parameters."
+        $message = 'No Authentication method was provided'
+        Write-Verbose -Message $message
+        $data.Add("Event", "Error")
+        $data.Add("Exception", $message)
+        $errorText = "You must specify either the GlobalAdminAccount or ApplicationId, TenantId and CertificateThumbprint parameters."
+        $data.Add("CustomMessage", $errorText)
+        Add-M365DSCTelemetryEvent -Type "Error" -Data $data
+        throw $errorText
     }
     # Case only GlobalAdminAccount is specified
     elseif ($null -ne $InboundParameters.GlobalAdminAccount -and `
@@ -1171,7 +1188,11 @@ function New-M365DSCConnection
     }
     else
     {
-        throw 'Unexpected error getting the Authentication Method'
+        $data.Add("Event", "Error")
+        $errorText = 'Unexpected error getting the Authentication Method'
+        $data.Add("CustomMessage", $errorText)
+        Add-M365DSCTelemetryEvent -Data $data -Type "Error"
+        throw $errorText
     }
 }
 
@@ -1698,12 +1719,12 @@ function Test-M365DSCDependenciesForNewVersions
             $moduleInstalled = $modules[0]
             if ([Version]($moduleInGallery.Version) -gt [Version]($moduleInstalled[0].Version))
             {
-                Write-Information -MessageData "New version of {$($dependency.ModuleName)} is available {$($moduleInGallery.Version)}"
+                Write-Host "New version of {$($dependency.ModuleName)} is available {$($moduleInGallery.Version)}"
             }
         }
         catch
         {
-            Write-Information -MessageData "New version of {$($dependency.ModuleName)} is available"
+            Write-Host "New version of {$($dependency.ModuleName)} is available"
         }
         $i++
     }
@@ -1726,7 +1747,7 @@ function Update-M365DSCDependencies
         }
         catch
         {
-            Write-Information -MessageData "Could not update {$($dependency.ModuleName)}"
+            Write-Host "Could not update {$($dependency.ModuleName)}"
         }
         $i++
     }
