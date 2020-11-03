@@ -106,6 +106,12 @@ function Add-M365DSCTelemetryEvent
                 $Data.Add("AzureDevOPSPipelineType", "Release")
                 $Data.Add("AzureDevOPSAgent", $env:POWERSHELL_DISTRIBUTION_CHANNEL)
             }
+            elseif ($host.Name -eq "Default Host" -and `
+                    $null -ne $env:APPSETTING_FUNCTIONS_EXTENSION_VERSION)
+            {
+                $Data.Add("PowerShellAgent", "Azure Function")
+                $Data.Add("AzureFunctionWorkerVersion", $env:FUNCTIONS_WORKER_RUNTIME_VERSION)
+            }
 
             if ($null -ne $Data.Resource)
             {
