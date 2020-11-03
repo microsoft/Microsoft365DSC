@@ -112,6 +112,10 @@ function Add-M365DSCTelemetryEvent
                 $Data.Add("PowerShellAgent", "Azure Function")
                 $Data.Add("AzureFunctionWorkerVersion", $env:FUNCTIONS_WORKER_RUNTIME_VERSION)
             }
+            elseif ($host.Name -eq "CloudShell")
+            {
+                $Data.Add("PowerShellAgent", "Cloud Shell")
+            }
 
             if ($null -ne $Data.Resource)
             {
