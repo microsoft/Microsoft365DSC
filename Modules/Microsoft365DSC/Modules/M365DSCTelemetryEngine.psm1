@@ -83,6 +83,30 @@ function Add-M365DSCTelemetryEvent
             $Data.Add("PSBuildVersion", $PSVersionTable.BuildVersion.ToString())
             $Data.Add("PSCLRVersion", $PSVersionTable.CLRVersion.ToString())
 
+            # Capture Console/Host Information
+            if ($host.Name -eq "ConsoleHost" -and $null -eq $env:WT_SESSION)
+            {
+                $Data.Add("PowerShellAgent", "Console")
+            }
+            elseif ($host.Name -eq "Windows PowerShell ISE Host")
+            {
+                $Data.Add("PowerShellAgent", "ISE")
+            }
+            elseif ($host.Name -eq "ConsoleHost" -and $null -eq $env:WT_SESSION -and `
+                    $null -ne $env:BUILD_BUILDID -and $env:SYSTEM -eq "build")
+            {
+                $Data.Add("PowerShellAgent", "Azure DevOPS")
+                $Data.Add("AzureDevOPSPipelineType", "Build")
+                $Data.Add("AzureDevOPSAgent", $env:POWERSHELL_DISTRIBUTION_CHANNEL)
+            }
+            elseif ($host.Name -eq "ConsoleHost" -and $null -eq $env:WT_SESSION -and `
+                    $null -ne $env:BUILD_BUILDID -and $env:SYSTEM -eq "release")
+            {
+                $Data.Add("PowerShellAgent", "Azure DevOPS")
+                $Data.Add("AzureDevOPSPipelineType", "Release")
+                $Data.Add("AzureDevOPSAgent", $env:POWERSHELL_DISTRIBUTION_CHANNEL)
+            }
+
             if ($null -ne $Data.Resource)
             {
                 if ($Data.Resource.StartsWith("MSFT_AAD") -or $Data.Resource.StartsWith("AAD"))
