@@ -119,9 +119,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the app from the set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "Remove-AzureADAzureADPolicy" -Exactly 1
+                Should -Invoke -CommandName "Remove-AzureADPolicy" -Exactly 1
             }
         }
+
         Context -Name "The Policy exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
@@ -158,7 +159,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Values are not in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName                   = "PolicyDisplayName"
+                    DisplayName                   = "PolicyDisplayName1"
                     Definition                    = @('{"TokenIssuancePolicy":{"Version": 1,"SigningAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1","TokenResponseSigningPolicy": "TokenOnly","SamlTokenVersion": "2.0"}}')
                     IsOrganizationDefault         = $true
                     Type                          = "TokenIssuancePolicy"
@@ -180,7 +181,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return values from the get method" {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-AzureADPolicy"
+                Should -Invoke -CommandName "Get-AzureADPolicy" -Exactly 1
             }
 
             It 'Should return false from the test method' {
@@ -189,7 +190,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Set-AzureADPolicy'
+                Should -Invoke -CommandName "Set-AzureADPolicy" -Exactly 1
             }
         }
 
