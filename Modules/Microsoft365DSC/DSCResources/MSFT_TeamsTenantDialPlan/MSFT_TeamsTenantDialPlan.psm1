@@ -5,12 +5,12 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateLength(1,49)]
+        [ValidateLength(1, 49)]
         [System.String]
         $Identity,
 
         [Parameter()]
-        [ValidateLength(1,512)]
+        [ValidateLength(1, 512)]
         [System.String]
         $Description,
 
@@ -27,7 +27,7 @@ function Get-TargetResource
         $OptimizeDeviceDialing = $false,
 
         [Parameter()]
-        [ValidateLength(1,49)]
+        [ValidateLength(1, 49)]
         [System.String]
         $SimpleName,
 
@@ -89,9 +89,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $_
     }
 }
@@ -102,12 +119,12 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateLength(1,49)]
+        [ValidateLength(1, 49)]
         [System.String]
         $Identity,
 
         [Parameter()]
-        [ValidateLength(1,512)]
+        [ValidateLength(1, 512)]
         [System.String]
         $Description,
 
@@ -124,7 +141,7 @@ function Set-TargetResource
         $OptimizeDeviceDialing = $false,
 
         [Parameter()]
-        [ValidateLength(1,49)]
+        [ValidateLength(1, 49)]
         [System.String]
         $SimpleName,
 
@@ -159,7 +176,7 @@ function Set-TargetResource
         foreach ($rule in $CurrentValues.NormalizationRules)
         {
             $ruleName = $rule.Identity.Replace("Tag:", "")
-            $ruleObject = Get-CsVoiceNormalizationRule | Where-Object -FilterScript {$_.Name -eq $ruleName}
+            $ruleObject = Get-CsVoiceNormalizationRule | Where-Object -FilterScript { $_.Name -eq $ruleName }
             if ($null -eq $ruleObject)
             {
                 # Need to create the rule
@@ -176,7 +193,7 @@ function Set-TargetResource
         $NewParameters = $PSBoundParameters
         $NewParameters.Remove("GlobalAdminAccount")
         $NewParameters.Remove("Ensure")
-        $NewParameters.NormalizationRules = @{Add=$AllRules}
+        $NewParameters.NormalizationRules = @{Add = $AllRules }
 
         New-CSTenantDialPlan @NewParameters
     }
@@ -191,11 +208,11 @@ function Set-TargetResource
         $differences = Get-M365DSCNormalizationRulesDifference -Current $CurrentValues -Desired $PSBoundParameters
 
         $rulesToRemove = @()
-        $rulesToAdd    = @()
+        $rulesToAdd = @()
 
         foreach ($entry in $differences)
         {
-            $rule = Get-CsVoiceNormalizationRule | Where-Object -FilterScript {$_.Name -eq $entry.InputObject}
+            $rule = Get-CsVoiceNormalizationRule | Where-Object -FilterScript { $_.Name -eq $entry.InputObject }
             if ($entry.SideIndicator -eq '=>')
             {
                 $rulesToAdd += $rule
@@ -206,7 +223,7 @@ function Set-TargetResource
             }
         }
 
-        $SetParameters.NormalizationRules = @{Add=$rulesToAdd;Remove=$rulesToRemove}
+        $SetParameters.NormalizationRules = @{Add = $rulesToAdd; Remove = $rulesToRemove }
 
         Set-CSTenantDialPlan @SetParameters
     }
@@ -224,12 +241,12 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateLength(1,49)]
+        [ValidateLength(1, 49)]
         [System.String]
         $Identity,
 
         [Parameter()]
-        [ValidateLength(1,512)]
+        [ValidateLength(1, 512)]
         [System.String]
         $Description,
 
@@ -246,7 +263,7 @@ function Test-TargetResource
         $OptimizeDeviceDialing = $false,
 
         [Parameter()]
-        [ValidateLength(1,49)]
+        [ValidateLength(1, 49)]
         [System.String]
         $SimpleName,
 
@@ -324,13 +341,13 @@ function Export-TargetResource
 
         $content = ''
         $i = 1
-        Write-Host "`r`n" -NoNewLine
+        Write-Host "`r`n" -NoNewline
         foreach ($plan in $tenantDialPlans)
         {
-            Write-Host "    |---[$i/$($tenantDialPlans.Count)] $($plan.Identity)" -NoNewLine
+            Write-Host "    |---[$i/$($tenantDialPlans.Count)] $($plan.Identity)" -NoNewline
             $params = @{
-                Identity            = $plan.Identity
-                GlobalAdminAccount  = $GlobalAdminAccount
+                Identity           = $plan.Identity
+                GlobalAdminAccount = $GlobalAdminAccount
             }
             $result = Get-TargetResource @params
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
@@ -339,7 +356,7 @@ function Export-TargetResource
             {
                 $result.NormalizationRules = Get-M365DSCNormalizationRulesAsString $result.NormalizationRules
             }
-            $content += "        TeamsTenantDialPlan " + (New-GUID).ToString() + "`r`n"
+            $content += "        TeamsTenantDialPlan " + (New-Guid).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "NormalizationRules"
@@ -352,9 +369,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }
@@ -377,7 +411,7 @@ function Get-M365DSCNormalizationRules
     foreach ($rule in $Rules)
     {
         $ruleName = $rule.Name.Replace("Tag:", "")
-        $ruleObject = Get-CsVoiceNormalizationRule | Where-Object -FilterScript {$_.Name -eq $ruleName}
+        $ruleObject = Get-CsVoiceNormalizationRule | Where-Object -FilterScript { $_.Name -eq $ruleName }
         $currentRule = @{
             Identity            = $ruleName
             Priority            = $ruleObject.Priority

@@ -100,9 +100,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -404,10 +421,10 @@ function Export-TargetResource
                                 {
                                     $totalCount = 1
                                 }
-                                Write-Information "    > [$j/$totalCount] Team {$($team.DisplayName)}"
+                                Write-Verbose -Message "    > [$j/$totalCount] Team {$($team.DisplayName)}"
                                 foreach ($user in $users)
                                 {
-                                    Write-Information "        - [$i/$($users.Length)] $($user.User)"
+                                    Write-Verbose -Message "        - [$i/$($users.Length)] $($user.User)"
 
                                     if ($ConnectionMode -eq 'Credential')
                                     {
@@ -442,7 +459,7 @@ function Export-TargetResource
                                     {
                                         $result.Remove("GlobalAdminAccount")
                                     }
-                                    $content += "        TeamsUser " + (New-GUID).ToString() + "`r`n"
+                                    $content += "        TeamsUser " + (New-Guid).ToString() + "`r`n"
                                     $content += "        {`r`n"
                                     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
                                     if ($ConnectionMode -eq 'Credential')
@@ -464,8 +481,8 @@ function Export-TargetResource
                             }
                             catch
                             {
-                                Write-Information $_
-                                Write-Information "The current User doesn't have the required permissions to extract Users for Team {$($team.DisplayName)}."
+                                Write-Verbose -Message $_
+                                Write-Verbose -Message "The current User doesn't have the required permissions to extract Users for Team {$($team.DisplayName)}."
                             }
                             $j++
                         }
@@ -479,7 +496,7 @@ function Export-TargetResource
 
         try
         {
-            Write-Host "    `r`nBroke extraction process down into {$MaxProcesses} jobs of {$($instances[0].Length)} item(s) each" -NoNewLine
+            Write-Host "    `r`nBroke extraction process down into {$MaxProcesses} jobs of {$($instances[0].Length)} item(s) each" -NoNewline
         }
         catch
         {
@@ -498,14 +515,14 @@ function Export-TargetResource
             {
                 if ($job.JobStateInfo.State -eq "Complete")
                 {
-                    $partialResult = Receive-Job -name $job.name
+                    $partialResult = Receive-Job -Name $job.name
                     $result += $partialResult
-                    Remove-Job -name $job.name
+                    Remove-Job -Name $job.name
                     $jobsCompleted++
                 }
                 elseif ($job.JobStateInfo.State -eq 'Failed')
                 {
-                    Remove-Job -name $job.name
+                    Remove-Job -Name $job.name
                     Write-Warning "{$($job.name)} failed"
                     break
                 }
@@ -530,9 +547,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }

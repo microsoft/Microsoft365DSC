@@ -53,11 +53,11 @@ function Get-TargetResource
 
         if (-not [System.String]::IsNullOrEmpty($BucketId))
         {
-            [Array]$bucket = Get-MGPlannerPlanBucket -PlannerPlanId $PlanId | Where-Object -FilterScript {$_.Id -eq $BucketId}
+            [Array]$bucket = Get-MgPlannerPlanBucket -PlannerPlanId $PlanId | Where-Object -FilterScript { $_.Id -eq $BucketId }
         }
         else
         {
-            [Array]$bucket = Get-MGPlannerPlanBucket -PlannerPlanId $PlanId | Where-Object -FilterScript {$_.Name -eq $Name}
+            [Array]$bucket = Get-MgPlannerPlanBucket -PlannerPlanId $PlanId | Where-Object -FilterScript { $_.Name -eq $Name }
 
             if ($bucket.Length -gt 1)
             {
@@ -85,9 +85,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -150,13 +167,13 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Planner Bucket {$Name} doesn't already exist. Creating it."
-        New-MGPlannerBucket -Name $Name -PlanId $PlanId | Out-Null
+        New-MgPlannerBucket -Name $Name -PlanId $PlanId | Out-Null
     }
     elseif ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Planner Bucket {$Bucket} already exists, but is not in the " + `
             "Desired State. Updating it."
-        Update-MGPlannerPlan @SetParams
+        Update-MgPlannerPlan @SetParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentValues.Ensure -eq 'Present')
     {
@@ -267,7 +284,7 @@ function Export-TargetResource
         $ConnectionMode = Connect-Graph -Scopes "Group.ReadWrite.All"
         $i = 1
         $content = ''
-        Write-Host "`r`n" -NoNewLine
+        Write-Host "`r`n" -NoNewline
         foreach ($group in $groups)
         {
             Write-Host "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.ObjectID)}"
@@ -279,11 +296,11 @@ function Export-TargetResource
                 foreach ($plan in $plans)
                 {
                     Write-Host "        [$j/$($plans.Length)] $($plan.Title)"
-                    $buckets = Get-MGPlannerPlanBucket -PlannerPlanId $plan.Id
+                    $buckets = Get-MgPlannerPlanBucket -PlannerPlanId $plan.Id
                     $k = 1
                     foreach ($bucket in $buckets)
                     {
-                        Write-Host "            [$k/$($buckets.Length)] $($bucket.Name)" -NoNewLine
+                        Write-Host "            [$k/$($buckets.Length)] $($bucket.Name)" -NoNewline
                         $params = @{
                             Name                  = $bucket.Name
                             PlanId                = $plan.Id
@@ -293,7 +310,7 @@ function Export-TargetResource
                             CertificateThumbprint = $CertificateThumbprint
                         }
                         $result = Get-TargetResource @params
-                        $content += "        PlannerBucket " + (New-GUID).ToString() + "`r`n"
+                        $content += "        PlannerBucket " + (New-Guid).ToString() + "`r`n"
                         $content += "        {`r`n"
                         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
                         $content += $currentDSCBlock
@@ -307,18 +324,52 @@ function Export-TargetResource
             }
             catch
             {
-                Write-Verbose -Message $_
-                Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                    -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+                try
+                {
+                    Write-Verbose -Message $_
+                    $tenantIdValue = ""
+                    if (-not [System.String]::IsNullOrEmpty($TenantId))
+                    {
+                        $tenantIdValue = $TenantId
+                    }
+                    elseif ($null -ne $GlobalAdminAccount)
+                    {
+                        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+                    }
+                    Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $tenantIdValue
+                }
+                catch
+                {
+                    Write-Verbose -Message $_
+                }
             }
         }
         return $content
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }

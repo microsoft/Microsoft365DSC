@@ -139,7 +139,7 @@ function Get-TargetResource
         {
             $ConnectorSourceValue = $OutBoundConnector.ConnectorSource
             if ($ConnectorSourceValue -eq 'AdminUI' -or `
-                [System.String]::IsNullOrEmpty($ConnectorSourceValue))
+                    [System.String]::IsNullOrEmpty($ConnectorSourceValue))
             {
                 $ConnectorSourceValue = 'Default'
             }
@@ -149,7 +149,7 @@ function Get-TargetResource
                 AllAcceptedDomains            = $OutBoundConnector.AllAcceptedDomains
                 CloudServicesMailEnabled      = $OutBoundConnector.CloudServicesMailEnabled
                 Comment                       = $OutBoundConnector.Comment
-                ConnectorSource               = $ConnectorSource
+                ConnectorSource               = $ConnectorSourceValue
                 ConnectorType                 = $OutBoundConnector.ConnectorType
                 Enabled                       = $OutBoundConnector.Enabled
                 IsTransportRuleScoped         = $OutBoundConnector.IsTransportRuleScoped
@@ -172,9 +172,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -508,13 +525,13 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
         $dscContent = ""
         $i = 1
         foreach ($OutboundConnector in $OutboundConnectors)
         {
-            Write-Host "    |---[$i/$($OutboundConnectors.Length)] $($OutboundConnector.Identity)" -NoNewLine
+            Write-Host "    |---[$i/$($OutboundConnectors.Length)] $($OutboundConnector.Identity)" -NoNewline
 
             $Params = @{
                 Identity              = $OutboundConnector.Identity
@@ -540,9 +557,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }
