@@ -14,6 +14,8 @@
   * Added parameter IsAssignableToRole Issue #879
   * Fixed issue on Set Issue #863
 * MISC
+  * Added checks for mandatory Authentication parameters before
+    attempting an Export.
   * Deprecated the Assert-M365DSCTemplate cmdlet;
   * Added Telemetry for version of PowerShell used;
   * Added a timeout on new version check from the
