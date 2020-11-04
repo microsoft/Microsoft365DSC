@@ -2,14 +2,14 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath "..\..\Unit" `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath "\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
@@ -104,7 +104,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowedSenderDomains                     = @('contoso.com', 'fabrikam.com')
                     BlockedSenders                           = @('me@privacy.net', 'thedude@contoso.com')
                     BlockedSenderDomains                     = @('privacy.net', 'facebook.com')
-                    ZapEnabled                               = $true
+                    PhishZapEnabled                          = $true
+                    SpamZapEnabled                           = $true
                     InlineSafetyTipsEnabled                  = $true
                     BulkSpamAction                           = 'MoveToJmf'
                     PhishSpamAction                          = 'Quarantine'
@@ -174,7 +175,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowedSenderDomains                     = @('contoso.com', 'fabrikam.com')
                     BlockedSenders                           = @('me@privacy.net', 'thedude@contoso.com')
                     BlockedSenderDomains                     = @('privacy.net', 'facebook.com')
-                    ZapEnabled                               = $true
+                    PhishZapEnabled                          = $true
+                    SpamZapEnabled                           = $true
                     InlineSafetyTipsEnabled                  = $true
                     BulkSpamAction                           = 'MoveToJmf'
                     PhishSpamAction                          = 'Quarantine'
@@ -227,7 +229,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowedSenderDomains                     = @('contoso.com', 'fabrikam.com')
                         BlockedSenders                           = @('me@privacy.net', 'thedude@contoso.com')
                         BlockedSenderDomains                     = @('privacy.net', 'facebook.com')
-                        ZapEnabled                               = $true
+                        PhishZapEnabled                          = $true
+                        SpamZapEnabled                           = $true
                         InlineSafetyTipsEnabled                  = $true
                         BulkSpamAction                           = 'MoveToJmf'
                         PhishSpamAction                          = 'Quarantine'
@@ -288,7 +291,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowedSenderDomains                     = @('contoso.com', 'fabrikam.com')
                     BlockedSenders                           = @('me@privacy.net', 'thedude@contoso.com')
                     BlockedSenderDomains                     = @('privacy.net', 'facebook.com')
-                    ZapEnabled                               = $true
+                    PhishZapEnabled                          = $true
+                    SpamZapEnabled                           = $true
                     InlineSafetyTipsEnabled                  = $true
                     BulkSpamAction                           = 'MoveToJmf'
                     PhishSpamAction                          = 'Quarantine'
@@ -341,7 +345,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowedSenderDomains                     = @('contoso.com')
                         BlockedSenders                           = @('me@privacy.net')
                         BlockedSenderDomains                     = @('facebook.com')
-                        ZapEnabled                               = $false
+                        PhishZapEnabled                          = $true
+                        SpamZapEnabled                           = $true
                         InlineSafetyTipsEnabled                  = $true
                         BulkSpamAction                           = 'MoveToJmf'
                         PhishSpamAction                          = 'MoveToJmf'

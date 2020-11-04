@@ -43,8 +43,8 @@ function New-M365DSCStubFiles
             RandomCmdlet = 'Add-AvailabilityAddressSpace'
         },
         @{
-            Platform     = 'Intune'
-            ModuleName   = "Microsoft.Graph.Intune"
+            Platform   = 'Intune'
+            ModuleName = "Microsoft.Graph.Intune"
         },
         @{
             Platform   = 'MicrosoftTeams'
@@ -78,7 +78,7 @@ function New-M365DSCStubFiles
         {
             $ConnectionMode = New-M365DSCConnection -Platform $Module.Platform `
                 -InboundParameters $PSBoundParameters
-            $foundModule = Get-Module | Where-Object -FilterScript {$_.ExportedCommands.Values.Name -ccontains $Module.RandomCmdlet}
+            $foundModule = Get-Module | Where-Object -FilterScript { $_.ExportedCommands.Values.Name -ccontains $Module.RandomCmdlet }
             $CurrentModuleName = $foundModule.Name
         }
         else
@@ -98,7 +98,7 @@ function New-M365DSCStubFiles
         {
             $aliases = Get-Command -CommandType 'Alias' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
             $cmdlets += $aliases
-            $cmdlets = $cmdlets | select -unique
+            $cmdlets = $cmdlets | Select-Object -Unique
         }
         catch
         {
@@ -109,38 +109,44 @@ function New-M365DSCStubFiles
         foreach ($cmdlet in $cmdlets)
         {
             Write-Host $cmdlet
-            Write-Progress -Activity "Generating Stubs" -Status $cmdlet.Name -PercentComplete (($i/$cmdlets.Length)*100)
-            $signature = $null
+            Write-Progress -Activity "Generating Stubs" -Status $cmdlet.Name -PercentComplete (($i / $cmdlets.Length) * 100)
 
             try
             {
                 $metadata = New-Object -TypeName System.Management.Automation.CommandMetaData -ArgumentList $cmdlet
-                $definition = [System.Management.Automation.ProxyCommand]::Create($metadata)
+                $parameters = $metadata.Parameters
             }
             catch
             {
-                $definition = (Get-Command $cmdlet.Name).Definition
+                Write-Verbose -Message $_
             }
-            $metadata = New-Object -TypeName System.Management.Automation.CommandMetaData -ArgumentList $cmdlet
-            $parameters = $metadata.Parameters
-            $StubContent += "function $($cmdlet.Name)`n{`r`n    [CmdletBinding()]`r`n    param(`r`n"
-            if ($parameters.Count -eq 0 -or ($parameters.Count -eq 1 -and $parameters.Keys[0] -eq 'ObjectId'))
-            {
-                $parameters = (Get-Command $cmdlet.Name).Parameters
-            }
-            $invalidTypes = @("ActionPreference")
+
             $invalidParameters = @("ErrorVariable", `
-                "ErrorAction", `
-                "InformationVariable", `
-                "InformationAction", `
-                "WarningVariable", `
-                "WarningAction", `
-                "OutVariable", `
-                "OutBuffer", `
-                "PipelineVariable", `
-                "Verbose", `
-                "WhatIf", `
-                "Debug")
+                    "ErrorAction", `
+                    "InformationVariable", `
+                    "InformationAction", `
+                    "WarningVariable", `
+                    "WarningAction", `
+                    "OutVariable", `
+                    "OutBuffer", `
+                    "PipelineVariable", `
+                    "Verbose", `
+                    "WhatIf", `
+                    "Debug")
+
+            $additionalParameters = (Get-Command $cmdlet.Name).Parameters
+
+            foreach ($additionalParam in $additionalParameters.Keys)
+            {
+                if (-not $parameters.ContainsKey($additionalParam) -and `
+                        -not $invalidParameters.Contains($additionalParameter))
+                {
+                    $parameters += @{$additionalParam = $additionalParameters.$additionalParam }
+                }
+            }
+            $StubContent += "function $($cmdlet.Name)`n{`r`n    [CmdletBinding()]`r`n    param(`r`n"
+            $invalidTypes = @("ActionPreference")
+
             $foundParamNames = @()
             foreach ($param in $parameters.Values)
             {
@@ -148,10 +154,19 @@ function New-M365DSCStubFiles
                 {
                     $foundParamNames += $param.Name
                     if ($param.ParameterType.Name -notin $invalidTypes -and `
-                        $param.Name -notin $invalidParameters)
+                            $param.Name -notin $invalidParameters -and `
+                            -not [System.String]::IsNullOrEmpty($param.Name))
                     {
                         $StubContent += "        [Parameter()]`r`n"
                         $ParamType = $param.ParameterType.ToString()
+                        if ($ParamType -eq 'System.Collections.Generic.List`1[System.String]')
+                        {
+                            $ParamType = "System.String[]"
+                        }
+                        elseif ($ParamType -eq 'System.Nullable`1[System.Boolean]')
+                        {
+                            $ParamType = "System.Boolean"
+                        }
                         $StubContent += "        [$ParamType]`r`n"
                         $StubContent += "        `$$($param.Name),`r`n`r`n"
                     }
@@ -162,7 +177,7 @@ function New-M365DSCStubFiles
                 $endOfString = $StubContent.SubString($StubContent.Length - 5, 5)
                 if ($endOfString -eq ",`r`n`r`n")
                 {
-                    $StubContent = $StubContent.Remove($StubContent.Length-5, 5)
+                    $StubContent = $StubContent.Remove($StubContent.Length - 5, 5)
                 }
             }
             $StubContent += "`r`n    )`r`n}`n"
@@ -173,7 +188,7 @@ function New-M365DSCStubFiles
         $Content += "#region $($Module.Platform)`r`n"
 
         $TypesToConvert = @('Microsoft.Online.SharePoint.PowerShell.SpoHubSitePipeBind', `
-            'Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind'
+                'Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind'
         )
 
         foreach ($type in $TypesToConvert)
