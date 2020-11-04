@@ -127,97 +127,87 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
                 -InboundParameters $PSBoundParameters
 
-    $nullReturn = @{
-        Name                        = $Name
-        Type                        = $null
-        Description                 = $null
-        Searchable                  = $null
-        FullTextIndex               = $null
-        FullTextContext             = $null
-        Queryable                   = $null
-        Retrievable                 = $null
-        AllowMultipleValues         = $null
-        Refinable                   = $null
-        Sortable                    = $null
-        Safe                        = $null
-        Aliases                     = $null
-        TokenNormalization          = $null
-        CompleteMatching            = $null
-        LanguageNeutralTokenization = $null
-        FinerQueryTokenization      = $null
-        MappedCrawledProperties     = $null
-        CompanyNameExtraction       = $null
-        Ensure                      = "Absent"
-    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
-    if ($null -eq $Script:RecentMPExtract)
+    try
     {
-        $Script:RecentMPExtract = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
-    }
-    $property = $Script:RecentMPExtract.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
-    | Where-Object -FilterScript { $_.Value.Name -eq $Name }
+        if ($null -eq $Script:RecentMPExtract)
+        {
+            $Script:RecentMPExtract = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
+        }
+        $property = $Script:RecentMPExtract.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
+        | Where-Object -FilterScript { $_.Value.Name -eq $Name }
 
-    if ($null -eq $property)
+        if ($null -eq $property)
+        {
+            Write-Verbose -Message "The specified Managed Property {$($Name)} doesn't already exist."
+            return $nullReturn
+        }
+
+        $CompanyNameExtraction = $false
+        if ($property.Value.EntityExtractorBitMap -eq "4161")
+        {
+            $CompanyNameExtraction = $true
+        }
+        $FullTextIndex = $null
+        if ([string] $property.Value.FullTextIndex -ne "System.Xml.XmlElement")
+        {
+            $FullTextIndex = [string] $property.Value.FullTextIndex
+        }
+
+        # Get Mapped Crawled Properties
+        $currentManagedPID = [string] $property.Value.Pid
+        $mappedProperties = $Script:RecentMPExtract.SearchConfigurationSettings.SearchSchemaConfigurationSettings.Mappings.dictionary.KeyValueOfstringMappingInfoy6h3NzC8 `
+        | Where-Object -FilterScript { $_.Value.ManagedPid -eq $currentManagedPID }
+
+        $mappings = @()
+        foreach ($mappedProperty in $mappedProperties)
+        {
+            $mappings += $mappedProperty.Value.CrawledPropertyName.ToString()
+        }
+
+        $fixedRefinable = "No"
+        if ([boolean] $property.Value.Refinable)
+        {
+            $fixedRefinable = "Yes"
+        }
+
+        $fixedSortable = "No"
+        if ([boolean] $property.Value.Sortable)
+        {
+            $fixedSortable = "Yes"
+        }
+        Write-Verbose -Message "Retrieved Property"
+        return @{
+                Name                        = [string] $property.Value.Name
+                Type                        = [string] $property.Value.ManagedType
+                Description                 = [string] $property.Value.Description
+                Searchable                  = [boolean] $property.Value.Searchable
+                FullTextIndex               = $FullTextIndex
+                FullTextContext             = [UInt32] $property.Value.Context
+                Queryable                   = [boolean] $property.Value.Queryable
+                Retrievable                 = [boolean] $property.Value.Retrievable
+                AllowMultipleValues         = [boolean] $property.Value.HasMultipleValues
+                Refinable                   = $fixedRefinable
+                Sortable                    = $fixedSortable
+                Safe                        = [boolean] $property.Value.SafeForAnonymous
+                Aliases                     = [boolean] $property.Value.Aliases
+                TokenNormalization          = [boolean] $property.Value.TokenNormalization
+                CompleteMatching            = [boolean] $property.Value.CompleteMatching
+                LanguageNeutralTokenization = [boolean] $property.Value.LanguageNeutralWordBreaker
+                FinerQueryTokenization      = [boolean] $property.Value.ExpandSegments
+                MappedCrawledProperties     = $mappings
+                CompanyNameExtraction       = $CompanyNameExtraction
+                Ensure                      = "Present"
+        }
+    }
+    catch
     {
-        Write-Verbose -Message "The specified Managed Property {$($Name)} doesn't already exist."
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
         return $nullReturn
-    }
-
-    $CompanyNameExtraction = $false
-    if ($property.Value.EntityExtractorBitMap -eq "4161")
-    {
-        $CompanyNameExtraction = $true
-    }
-    $FullTextIndex = $null
-    if ([string] $property.Value.FullTextIndex -ne "System.Xml.XmlElement")
-    {
-        $FullTextIndex = [string] $property.Value.FullTextIndex
-    }
-
-    # Get Mapped Crawled Properties
-    $currentManagedPID = [string] $property.Value.Pid
-    $mappedProperties = $Script:RecentMPExtract.SearchConfigurationSettings.SearchSchemaConfigurationSettings.Mappings.dictionary.KeyValueOfstringMappingInfoy6h3NzC8 `
-    | Where-Object -FilterScript { $_.Value.ManagedPid -eq $currentManagedPID }
-
-    $mappings = @()
-    foreach ($mappedProperty in $mappedProperties)
-    {
-        $mappings += $mappedProperty.Value.CrawledPropertyName.ToString()
-    }
-
-    $fixedRefinable = "No"
-    if ([boolean] $property.Value.Refinable)
-    {
-        $fixedRefinable = "Yes"
-    }
-
-    $fixedSortable = "No"
-    if ([boolean] $property.Value.Sortable)
-    {
-        $fixedSortable = "Yes"
-    }
-    Write-Verbose -Message "Retrieved Property"
-    return @{
-        Name                        = [string] $property.Value.Name
-        Type                        = [string] $property.Value.ManagedType
-        Description                 = [string] $property.Value.Description
-        Searchable                  = [boolean] $property.Value.Searchable
-        FullTextIndex               = $FullTextIndex
-        FullTextContext             = [UInt32] $property.Value.Context
-        Queryable                   = [boolean] $property.Value.Queryable
-        Retrievable                 = [boolean] $property.Value.Retrievable
-        AllowMultipleValues         = [boolean] $property.Value.HasMultipleValues
-        Refinable                   = $fixedRefinable
-        Sortable                    = $fixedSortable
-        Safe                        = [boolean] $property.Value.SafeForAnonymous
-        Aliases                     = [boolean] $property.Value.Aliases
-        TokenNormalization          = [boolean] $property.Value.TokenNormalization
-        CompleteMatching            = [boolean] $property.Value.CompleteMatching
-        LanguageNeutralTokenization = [boolean] $property.Value.LanguageNeutralWordBreaker
-        FinerQueryTokenization      = [boolean] $property.Value.ExpandSegments
-        MappedCrawledProperties     = $mappings
-        CompanyNameExtraction       = $CompanyNameExtraction
-        Ensure                      = "Present"
     }
 }
 
@@ -782,7 +772,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("Ensure", `
@@ -836,16 +826,18 @@ function Export-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
                 -InboundParameters $PSBoundParameters
-    $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
-    [array]$properties = $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
-
-    $dscContent = ""
-    $i = 1
-    Write-Host "`r`n" -NoNewline
-    foreach ($property in $properties)
+    try
     {
-        Write-Host "    |---[$i/$($properties.Length)] $($property.Value.Name)" -NoNewline
-        $Params = @{
+        $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
+        [array]$properties = $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
+
+        $dscContent = ""
+        $i = 1
+        Write-Host "`r`n" -NoNewline
+        foreach ($property in $properties)
+        {
+            Write-Host "    |---[$i/$($properties.Length)] $($property.Value.Name)" -NoNewline
+            $Params = @{
                 GlobalAdminAccount    = $GlobalAdminAccount
                 Name                  = $property.Value.Name
                 Type                  = $property.Value.ManagedType
@@ -854,19 +846,27 @@ function Export-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePath       = $CertificatePath
                 CertificatePassword   = $CertificatePassword
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+            $i++
+            Write-Host $Global:M365DSCEmojiGreenCheckmark
         }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
-        $i++
-        Write-Host $Global:M365DSCEmojiGreenCheckmark
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

@@ -58,60 +58,60 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+        -InboundParameters $PSBoundParameters
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
-    $nullReturn = @{
-        SiteDesignTitle       = $SiteDesignTitle
-        UserPrincipals        = $UserPrincipals
-        Rights                = $Rights
-        Ensure                = "Absent"
-        GlobalAdminAccount    = $GlobalAdminAccount
-        ApplicationId         = $ApplicationId
-        TenantId              = $TenantId
-        CertificatePassword   = $CertificatePassword
-        CertificatePath       = $CertificatePath
-        CertificateThumbprint = $CertificateThumbprint
-    }
-
-    Write-Verbose -Message "Getting Site Design Rights for $SiteDesignTitle"
-
-    $siteDesign = Get-PnPSiteDesign -Identity $SiteDesignTitle
-    if ($null -eq $siteDesign)
+    try
     {
-        throw "Site Design with title $SiteDesignTitle doesn't exist in tenant"
+        Write-Verbose -Message "Getting Site Design Rights for $SiteDesignTitle"
+
+        $siteDesign = Get-PnPSiteDesign -Identity $SiteDesignTitle -ErrorAction Stop
+        if ($null -eq $siteDesign)
+        {
+            throw "Site Design with title $SiteDesignTitle doesn't exist in tenant"
+        }
+
+        Write-Verbose -Message "Site Design ID is $($siteDesign.Id)"
+
+        $siteDesignRights = Get-PnPSiteDesignRights -Identity $siteDesign.Id -ErrorAction SilentlyContinue | `
+            Where-Object -FilterScript { $_.Rights -eq $Rights }
+
+        if ($null -eq $siteDesignRights)
+        {
+            Write-Verbose -Message "No Site Design Rights exist for site design $SiteDesignTitle."
+            return $nullReturn
+        }
+
+        $curUserPrincipals = @()
+
+        foreach ($siteDesignRight in $siteDesignRights)
+        {
+            $curUserPrincipals += $siteDesignRight.PrincipalName.split("|")[2]
+        }
+
+        Write-Verbose -Message "Site Design Rights User Principals = $($curUserPrincipals)"
+        return @{
+            SiteDesignTitle       = $SiteDesignTitle
+            UserPrincipals        = $curUserPrincipals
+            Rights                = $Rights
+            Ensure                = "Present"
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
+        }
     }
-
-    Write-Verbose -Message "Site Design ID is $($siteDesign.Id)"
-
-    $siteDesignRights = Get-PnPSiteDesignRights -Identity $siteDesign.Id -ErrorAction SilentlyContinue | `
-        Where-Object -FilterScript { $_.Rights -eq $Rights }
-
-    if ($null -eq $siteDesignRights)
+    catch
     {
-        Write-Verbose -Message "No Site Design Rights exist for site design $SiteDesignTitle."
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
         return $nullReturn
-    }
-
-    $curUserPrincipals = @()
-
-    foreach ($siteDesignRight in $siteDesignRights)
-    {
-        $curUserPrincipals += $siteDesignRight.PrincipalName.split("|")[2]
-    }
-
-    Write-Verbose -Message "Site Design Rights User Principals = $($curUserPrincipals)"
-    return @{
-        SiteDesignTitle       = $SiteDesignTitle
-        UserPrincipals        = $curUserPrincipals
-        Rights                = $Rights
-        Ensure                = "Present"
-        GlobalAdminAccount    = $GlobalAdminAccount
-        ApplicationId         = $ApplicationId
-        TenantId              = $TenantId
-        CertificatePassword   = $CertificatePassword
-        CertificatePath       = $CertificatePath
-        CertificateThumbprint = $CertificateThumbprint
     }
 }
 
@@ -290,7 +290,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("UserPrincipals", `
@@ -346,63 +346,73 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
         -InboundParameters $PSBoundParameters
 
-    [array]$siteDesigns = Get-PnPSiteDesign
-
-    $dscContent = ""
-    $i = 1
-    Write-Host "`r`n" -NoNewLine
-    foreach ($siteDesign in $siteDesigns)
+    try
     {
-        Write-Host "    |---[$i/$($siteDesigns.Count)] $($siteDesign.Title)" -NoNewLine
+        [array]$siteDesigns = Get-PnPSiteDesign -ErrorAction Stop
 
-        $Params = @{
-            SiteDesignTitle       = $siteDesign.Title
-            Rights                = "View"
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
-            CertificateThumbprint = $CertificateThumbprint
-            GlobalAdminAccount    = $GlobalAdminAccount
-        }
-        $Results = Get-TargetResource @PArams
-        if ($Results.Ensure -eq "Present")
+        $dscContent = ""
+        $i = 1
+        Write-Host "`r`n" -NoNewLine
+        foreach ($siteDesign in $siteDesigns)
         {
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host "    |---[$i/$($siteDesigns.Count)] $($siteDesign.Title)" -NoNewLine
+
+            $Params = @{
+                SiteDesignTitle       = $siteDesign.Title
+                Rights                = "View"
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+                CertificateThumbprint = $CertificateThumbprint
+                GlobalAdminAccount    = $GlobalAdminAccount
+            }
+            $Results = Get-TargetResource @Paarams
+            if ($Results.Ensure -eq "Present")
+            {
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+            }
+
+            $Params = @{
+                SiteDesignTitle       = $siteDesign.Title
+                Rights                = "None"
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+                CertificateThumbprint = $CertificateThumbprint
+                GlobalAdminAccount    = $GlobalAdminAccount
+            }
+            $Results = Get-TargetResource @Params
+            if ($Results.Ensure -eq "Present")
+            {
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+            }
+            Write-Host $Global:M365DSCEmojiGreenCheckmark
+            $i++
         }
 
-        $Params = @{
-            SiteDesignTitle       = $siteDesign.Title
-            Rights                = "None"
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
-            CertificateThumbprint = $CertificateThumbprint
-            GlobalAdminAccount    = $GlobalAdminAccount
-        }
-        $Results = Get-TargetResource @Params
-        if ($Results.Ensure -eq "Present")
-        {
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
-        }
-        Write-Host $Global:M365DSCEmojiGreenCheckmark
-        $i++
+        return $dscContent
     }
-
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

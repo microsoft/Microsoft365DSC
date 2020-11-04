@@ -99,48 +99,58 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = 'Absent'
 
-    $SafeLinksRules = Get-SafeLinksRule
-    $SafeLinksRule = $SafeLinksRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
-
-    if (-not $SafeLinksRule)
+    try
     {
-        Write-Verbose -Message "SafeLinksRule $($Identity) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
-    }
-    else
-    {
-        $result = @{
-            Identity                  = $SafeLinksRule.Identity
-            SafeLinksPolicy           = $SafeLinksRule.SafeLinksPolicy
-            Comments                  = $SafeLinksRule.Comments
-            Enabled                   = $true
-            ExceptIfRecipientDomainIs = $SafeLinksRule.ExceptIfRecipientDomainIs
-            ExceptIfSentTo            = $SafeLinksRule.ExceptIfSentTo
-            ExceptIfSentToMemberOf    = $SafeLinksRule.ExceptIfSentToMemberOf
-            Priority                  = $SafeLinksRule.Priority
-            RecipientDomainIs         = $SafeLinksRule.RecipientDomainIs
-            SentTo                    = $SafeLinksRule.SentTo
-            SentToMemberOf            = $SafeLinksRule.SentToMemberOf
-            GlobalAdminAccount        = $GlobalAdminAccount
-            Ensure                    = 'Present'
-        }
+        $SafeLinksRules = Get-SafeLinksRule -ErrorAction Stop
+        $SafeLinksRule = $SafeLinksRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
 
-        if ('Enabled' -eq $SafeLinksRule.State)
+        if (-not $SafeLinksRule)
         {
-            # Accounts for Get-SafeLinksRule returning 'State' instead of 'Enabled' used by New/Set
-            $result.Enabled = $true
+            Write-Verbose -Message "SafeLinksRule $($Identity) does not exist."
+            return $nullReturn
         }
         else
         {
-            $result.Enabled = $false
-        }
+            $result = @{
+                Identity                  = $SafeLinksRule.Identity
+                SafeLinksPolicy           = $SafeLinksRule.SafeLinksPolicy
+                Comments                  = $SafeLinksRule.Comments
+                Enabled                   = $true
+                ExceptIfRecipientDomainIs = $SafeLinksRule.ExceptIfRecipientDomainIs
+                ExceptIfSentTo            = $SafeLinksRule.ExceptIfSentTo
+                ExceptIfSentToMemberOf    = $SafeLinksRule.ExceptIfSentToMemberOf
+                Priority                  = $SafeLinksRule.Priority
+                RecipientDomainIs         = $SafeLinksRule.RecipientDomainIs
+                SentTo                    = $SafeLinksRule.SentTo
+                SentToMemberOf            = $SafeLinksRule.SentToMemberOf
+                GlobalAdminAccount        = $GlobalAdminAccount
+                Ensure                    = 'Present'
+            }
 
-        Write-Verbose -Message "Found SafeLinksRule $($Identity)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+            if ('Enabled' -eq $SafeLinksRule.State)
+            {
+                # Accounts for Get-SafeLinksRule returning 'State' instead of 'Enabled' used by New/Set
+                $result.Enabled = $true
+            }
+            else
+            {
+                $result.Enabled = $false
+            }
+
+            Write-Verbose -Message "Found SafeLinksRule $($Identity)"
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -359,7 +369,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -414,49 +424,60 @@ function Export-TargetResource
         -SkipModuleReload $true
 
     $dscContent = ''
-    if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeLinksRule)
-    {
-        [array]$SafeLinksRules = Get-SafeLinksRule
 
-        if ($SafeLinksRules.Length -eq 0)
+    try
+    {
+        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeLinksRule)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            [array]$SafeLinksRules = Get-SafeLinksRule -ErrorAction Stop
+
+            if ($SafeLinksRules.Length -eq 0)
+            {
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
+            }
+            else
+            {
+                Write-Host "`r`n" -NoNewLine
+            }
+            $i = 1
+            foreach ($SafeLinksRule in $SafeLinksRules)
+            {
+                Write-Host "    |---[$i/$($SafeLinksRules.Length)] $($SafeLinksRule.Identity)" -NoNewLine
+                $Params = @{
+                    Identity              = $SafeLinksRule.Identity
+                    SafeLinksPolicy       = $SafeLinksRule.SafeLinksPolicy
+                    GlobalAdminAccount    = $GlobalAdminAccount
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    CertificatePassword   = $CertificatePassword
+                    CertificatePath       = $CertificatePath
+                }
+                $Results = Get-TargetResource @Params
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                $i++
+            }
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for Safe Links Rules."
         }
-        $i = 1
-        foreach ($SafeLinksRule in $SafeLinksRules)
-        {
-            Write-Host "    |---[$i/$($SafeLinksRules.Length)] $($SafeLinksRule.Identity)" -NoNewLine
-            $Params = @{
-                Identity              = $SafeLinksRule.Identity
-                SafeLinksPolicy       = $SafeLinksRule.SafeLinksPolicy
-                GlobalAdminAccount    = $GlobalAdminAccount
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
-            }
-            $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
-            $i++
-        }
+        return $dscContent
     }
-    else
+    catch
     {
-        Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for Safe Links Rules."
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
     }
-    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

@@ -78,51 +78,54 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
     }
 
-    $nullReturn = @{
-        Identity           = $Identity
-        AccessRight        = $AccessRight
-        AppID              = $AppID
-        PolicyScopeGroupId = $PolicyScopeGroupId
-        Description        = $Description
-        Ensure             = 'Absent'
-        GlobalAdminAccount = $GlobalAdminAccount
-    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
     try
     {
-        $AllApplicationAccessPolicies = Get-ApplicationAccessPolicy -ErrorAction Stop
+        try
+        {
+            $AllApplicationAccessPolicies = Get-ApplicationAccessPolicy -ErrorAction Stop
+        }
+        catch
+        {
+            if ($_.Exception -like "The operation couldn't be performed because object*")
+            {
+                Write-Verbose "Could not obtain Application Access Policies for Tenant"
+                return $nullReturn
+            }
+        }
+
+
+        $ApplicationAccessPolicy = $AllApplicationAccessPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+
+        if ($null -eq $ApplicationAccessPolicy)
+        {
+            Write-Verbose -Message "Application Access Policy $($Identity) does not exist."
+            return $nullReturn
+        }
+        else
+        {
+            $result = @{
+                Identity           = $ApplicationAccessPolicy.Identity
+                AccessRight        = $ApplicationAccessPolicy.AccessRight
+                AppID              = $ApplicationAccessPolicy.AppID
+                PolicyScopeGroupId = $ApplicationAccessPolicy.ScopeIdentity
+                Description        = $ApplicationAccessPolicy.Description
+                Ensure             = 'Present'
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Write-Verbose -Message "Found Application Access Policy $($Identity)"
+            return $result
+        }
     }
     catch
     {
-        if ($_.Exception -like "The operation couldn't be performed because object*")
-        {
-            Write-Verbose "Could not obtain Application Access Policies for Tenant"
-            return $nullReturn
-        }
-    }
-
-
-    $ApplicationAccessPolicy = $AllApplicationAccessPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
-
-    if ($null -eq $ApplicationAccessPolicy)
-    {
-        Write-Verbose -Message "Application Access Policy $($Identity) does not exist."
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
         return $nullReturn
-    }
-    else
-    {
-        $result = @{
-            Identity           = $ApplicationAccessPolicy.Identity
-            AccessRight        = $ApplicationAccessPolicy.AccessRight
-            AppID              = $ApplicationAccessPolicy.AppID
-            PolicyScopeGroupId = $ApplicationAccessPolicy.ScopeIdentity
-            Description        = $ApplicationAccessPolicy.Description
-            Ensure             = 'Present'
-            GlobalAdminAccount = $GlobalAdminAccount
-        }
-
-        Write-Verbose -Message "Found Application Access Policy $($Identity)"
-        return $result
     }
 }
 
@@ -311,7 +314,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -366,53 +369,63 @@ function Export-TargetResource
 
     try
     {
-        [array]$AllApplicationAccessPolicies = Get-ApplicationAccessPolicy -ErrorAction SilentlyContinue
+        try
+        {
+            [array]$AllApplicationAccessPolicies = Get-ApplicationAccessPolicy -ErrorAction SilentlyContinue
+        }
+        catch
+        {
+            if ($_.Exception -like "*The operation couldn't be performed because object*")
+            {
+                Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for Application Access Policies"
+                return ""
+            }
+            throw $_
+        }
+
+        $dscContent = ""
+        if ($AllApplicationAccessPolicies.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
+        $i = 1
+        foreach ($ApplicationAccessPolicy in $AllApplicationAccessPolicies)
+        {
+            Write-Host "    |---[$i/$($AllApplicationAccessPolicies.Count)] $($ApplicationAccessPolicy.Identity)" -NoNewLine
+
+            $Params = @{
+                Identity              = $ApplicationAccessPolicy.Identity
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
+        }
+        return $dscContent
     }
     catch
     {
-        if ($_.Exception -like "*The operation couldn't be performed because object*")
-        {
-            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for Application Access Policies"
-            return ""
-        }
-        throw $_
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
     }
-
-    $dscContent = ""
-    if ($AllApplicationAccessPolicies.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-    }
-    else
-    {
-        Write-Host "`r`n" -NoNewLine
-    }
-    $i = 1
-    foreach ($ApplicationAccessPolicy in $AllApplicationAccessPolicies)
-    {
-        Write-Host "    |---[$i/$($AllApplicationAccessPolicies.Count)] $($ApplicationAccessPolicy.Identity)" -NoNewLine
-
-        $Params = @{
-            Identity              = $ApplicationAccessPolicy.Identity
-            GlobalAdminAccount    = $GlobalAdminAccount
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
-        }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
-    }
-    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

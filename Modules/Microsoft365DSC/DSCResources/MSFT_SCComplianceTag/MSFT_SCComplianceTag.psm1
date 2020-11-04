@@ -81,42 +81,52 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
             -InboundParameters $PSBoundParameters
     }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = 'Absent'
 
-    $tagObject = Get-ComplianceTag -Identity $Name -ErrorAction SilentlyContinue
-
-    if ($null -eq $tagObject)
+    try
     {
-        Write-Verbose -Message "ComplianceTag $($Name) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
-    }
-    else
-    {
-        Write-Verbose "Found existing ComplianceTag $($Name)"
-        $result = @{
-            Name               = $tagObject.Name
-            Comment            = $tagObject.Comment
-            RetentionDuration  = $tagObject.RetentionDuration
-            IsRecordLabel      = $tagObject.IsRecordLabel
-            Regulatory         = $tagObject.Regulatory
-            Notes              = $tagObject.Notes
-            ReviewerEmail      = $tagObject.ReviewerEmail
-            RetentionAction    = $tagObject.RetentionAction
-            EventType          = $tagObject.EventType
-            RetentionType      = $tagObject.RetentionType
-            GlobalAdminAccount = $GlobalAdminAccount
-            Ensure             = 'Present'
-        }
+        $tagObject = Get-ComplianceTag -Identity $Name -ErrorAction SilentlyContinue
 
-        if (-not [System.String]::IsNullOrEmpty($tagObject.FilePlanMetadata))
+        if ($null -eq $tagObject)
         {
-            $ConvertedFilePlanProperty = Get-SCFilePlanProperty $tagObject.FilePlanMetadata
-            $result.Add("FilePlanProperty", $ConvertedFilePlanProperty)
+            Write-Verbose -Message "ComplianceTag $($Name) does not exist."
+            return $nullReturn
         }
+        else
+        {
+            Write-Verbose "Found existing ComplianceTag $($Name)"
+            $result = @{
+                Name               = $tagObject.Name
+                Comment            = $tagObject.Comment
+                RetentionDuration  = $tagObject.RetentionDuration
+                IsRecordLabel      = $tagObject.IsRecordLabel
+                Regulatory         = $tagObject.Regulatory
+                Notes              = $tagObject.Notes
+                ReviewerEmail      = $tagObject.ReviewerEmail
+                RetentionAction    = $tagObject.RetentionAction
+                EventType          = $tagObject.EventType
+                RetentionType      = $tagObject.RetentionType
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = 'Present'
+            }
 
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+            if (-not [System.String]::IsNullOrEmpty($tagObject.FilePlanMetadata))
+            {
+                $ConvertedFilePlanProperty = Get-SCFilePlanProperty $tagObject.FilePlanMetadata
+                $result.Add("FilePlanProperty", $ConvertedFilePlanProperty)
+            }
+
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -350,7 +360,7 @@ function Test-TargetResource
         return $false
     }
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -381,41 +391,52 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
-    $tags = Get-ComplianceTag
 
-    $totalTags = $tags.Length
-    if ($null -eq $totalTags)
+    try
     {
-        $totalTags = 1
-    }
-    $i = 1
-    Write-Host "`r`n" -NoNewLine
-    $dscContent = ''
-    foreach ($tag in $tags)
-    {
-        Write-Host "    |---[$i/$($totalTags)] $($tag.Name)" -NoNewLine
-        $Params = @{
-            Name                  = $tag.Name
-            GlobalAdminAccount    = $GlobalAdminAccount
-        }
-        $Results = Get-TargetResource @Params
-        $Results.FilePlanProperty = Get-SCFilePlanPropertyAsString $Results.FilePlanProperty
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
-        if ($null -ne $Results.FilePlanProperty)
+        $tags = Get-ComplianceTag -ErrorAction Stop
+
+        $totalTags = $tags.Length
+        if ($null -eq $totalTags)
         {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "FilePlanProperty"
+            $totalTags = 1
         }
-        $dscContent += $currentDSCBlock
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        $i = 1
+        Write-Host "`r`n" -NoNewLine
+        $dscContent = ''
+        foreach ($tag in $tags)
+        {
+            Write-Host "    |---[$i/$($totalTags)] $($tag.Name)" -NoNewLine
+            $Params = @{
+                Name                  = $tag.Name
+                GlobalAdminAccount    = $GlobalAdminAccount
+            }
+            $Results = Get-TargetResource @Params
+            $Results.FilePlanProperty = Get-SCFilePlanPropertyAsString $Results.FilePlanProperty
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+            if ($null -ne $Results.FilePlanProperty)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "FilePlanProperty"
+            }
+            $dscContent += $currentDSCBlock
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
+        }
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 function Get-SCFilePlanPropertyObject

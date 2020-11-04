@@ -88,47 +88,55 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
-
-    $AllOnPremisesOrganizations = Get-OnPremisesOrganization
-
-    $OnPremisesOrganization = $AllOnPremisesOrganizations | Where-Object -FilterScript { $_.Identity -eq $Identity }
-
-    if ($null -eq $OnPremisesOrganization)
-    {
-        Write-Verbose -Message "On-premises Organization $($Identity) does not exist."
-
-        $nullReturn = @{
-            Identity                 = $Identity
-            Comment                  = $Comment
-            HybridDomains            = $HybridDomains
-            InboundConnector         = $InboundConnector
-            OrganizationName         = $OrganizationName
-            OrganizationGuid         = $OrganizationGuid
-            OrganizationRelationship = $OrganizationRelationship
-            OutboundConnector        = $OutboundConnector
-            Ensure                   = 'Absent'
-            GlobalAdminAccount       = $GlobalAdminAccount
-        }
-
-        return $nullReturn
+    $nullReturn = @{
+        Identity                 = $Identity
+        Comment                  = $Comment
+        HybridDomains            = $HybridDomains
+        InboundConnector         = $InboundConnector
+        OrganizationName         = $OrganizationName
+        OrganizationGuid         = $OrganizationGuid
+        OrganizationRelationship = $OrganizationRelationship
+        OutboundConnector        = $OutboundConnector
+        Ensure                   = 'Absent'
+        GlobalAdminAccount       = $GlobalAdminAccount
     }
-    else
-    {
-        $result = @{
-            Identity                 = $OnPremisesOrganization.Identity
-            Comment                  = $OnPremisesOrganization.Comment
-            HybridDomains            = $OnPremisesOrganization.HybridDomains
-            InboundConnector         = $OnPremisesOrganization.InboundConnector
-            OrganizationName         = $OnPremisesOrganization.OrganizationName
-            OrganizationGuid         = $OnPremisesOrganization.OrganizationGuid
-            OrganizationRelationship = $OnPremisesOrganization.OrganizationRelationship
-            OutboundConnector        = $OnPremisesOrganization.OutboundConnector
-            Ensure                   = 'Present'
-            GlobalAdminAccount       = $GlobalAdminAccount
-        }
 
-        Write-Verbose -Message "Found On-premises Organization $($Identity)"
-        return $result
+    try
+    {
+        $AllOnPremisesOrganizations = Get-OnPremisesOrganization -ErrorAction Stop
+
+        $OnPremisesOrganization = $AllOnPremisesOrganizations | Where-Object -FilterScript { $_.Identity -eq $Identity }
+
+        if ($null -eq $OnPremisesOrganization)
+        {
+            Write-Verbose -Message "On-premises Organization $($Identity) does not exist."
+            return $nullReturn
+        }
+        else
+        {
+            $result = @{
+                Identity                 = $OnPremisesOrganization.Identity
+                Comment                  = $OnPremisesOrganization.Comment
+                HybridDomains            = $OnPremisesOrganization.HybridDomains
+                InboundConnector         = $OnPremisesOrganization.InboundConnector
+                OrganizationName         = $OnPremisesOrganization.OrganizationName
+                OrganizationGuid         = $OnPremisesOrganization.OrganizationGuid
+                OrganizationRelationship = $OnPremisesOrganization.OrganizationRelationship
+                OutboundConnector        = $OnPremisesOrganization.OutboundConnector
+                Ensure                   = 'Present'
+                GlobalAdminAccount       = $GlobalAdminAccount
+            }
+
+            Write-Verbose -Message "Found On-premises Organization $($Identity)"
+            return $result
+        }
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -340,7 +348,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -393,44 +401,54 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
-    [array]$AllOnPremisesOrganizations = Get-OnPremisesOrganization
-
-    $dscContent = ""
-
-    if ($AllOnPremisesOrganizations.Length -eq 0)
+    try
     {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-    }
-    else
-    {
-        Write-Host "`r`n" -NoNewLine
-    }
-    $i = 1
-    foreach ($OnPremisesOrganization in $AllOnPremisesOrganizations)
-    {
-        Write-Host "    |---[$i/$($AllOnPremisesOrganizations.Count)] $($OnPremisesOrganization.Identity)" -NoNewLine
+        [array]$AllOnPremisesOrganizations = Get-OnPremisesOrganization -ErrorAction Stop
 
-        $Params = @{
-            Identity              = $OnPremisesOrganization.Identity
-            GlobalAdminAccount    = $GlobalAdminAccount
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
+        $dscContent = ""
+
+        if ($AllOnPremisesOrganizations.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
+        $i = 1
+        foreach ($OnPremisesOrganization in $AllOnPremisesOrganizations)
+        {
+            Write-Host "    |---[$i/$($AllOnPremisesOrganizations.Count)] $($OnPremisesOrganization.Identity)" -NoNewLine
+
+            $Params = @{
+                Identity              = $OnPremisesOrganization.Identity
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
+        }
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

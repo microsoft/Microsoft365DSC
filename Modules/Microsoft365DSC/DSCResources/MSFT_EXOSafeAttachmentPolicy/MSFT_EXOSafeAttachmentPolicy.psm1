@@ -85,34 +85,44 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
-    $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
+    try
+    {
+        $SafeAttachmentPolicies = Get-SafeAttachmentPolicy -ErrorAction Stop
 
-    $SafeAttachmentPolicy = $SafeAttachmentPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    if (-not $SafeAttachmentPolicy)
-    {
-        Write-Verbose -Message "SafeAttachmentPolicy $($Identity) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
-    }
-    else
-    {
-        $result = @{
-            Ensure             = 'Present'
-            Identity           = $Identity
-            Action             = $SafeAttachmentPolicy.Action
-            ActionOnError      = $SafeAttachmentPolicy.ActionOnError
-            AdminDisplayName   = $SafeAttachmentPolicy.AdminDisplayName
-            Enable             = $SafeAttachmentPolicy.Enable
-            Redirect           = $SafeAttachmentPolicy.Redirect
-            RedirectAddress    = $SafeAttachmentPolicy.RedirectAddress
-            GlobalAdminAccount = $GlobalAdminAccount
+        $SafeAttachmentPolicy = $SafeAttachmentPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        if (-not $SafeAttachmentPolicy)
+        {
+            Write-Verbose -Message "SafeAttachmentPolicy $($Identity) does not exist."
+            return $nullReturn
         }
+        else
+        {
+            $result = @{
+                Ensure             = 'Present'
+                Identity           = $Identity
+                Action             = $SafeAttachmentPolicy.Action
+                ActionOnError      = $SafeAttachmentPolicy.ActionOnError
+                AdminDisplayName   = $SafeAttachmentPolicy.AdminDisplayName
+                Enable             = $SafeAttachmentPolicy.Enable
+                Redirect           = $SafeAttachmentPolicy.Redirect
+                RedirectAddress    = $SafeAttachmentPolicy.RedirectAddress
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
 
-        Write-Verbose -Message "Found SafeAttachmentPolicy $($Identity)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+            Write-Verbose -Message "Found SafeAttachmentPolicy $($Identity)"
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $nullReturn
     }
 }
 
@@ -300,7 +310,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -355,44 +365,54 @@ function Export-TargetResource
         -SkipModuleReload $true
 
     $dscContent = ''
-    if (Confirm-ImportedCmdletIsAvailable -CmdletName 'Get-SafeAttachmentPolicy')
+    try
     {
-        $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
-        Write-Host "`r`n" -NoNewLine
-        $i = 1
-        foreach ($SafeAttachmentPolicy in $SafeAttachmentPolicies)
+        if (Confirm-ImportedCmdletIsAvailable -CmdletName 'Get-SafeAttachmentPolicy')
         {
-            Write-Host "    |---[$i/$($SafeAttachmentPolicies.Length)] $($SafeAttachmentPolicy.Identity)" -NoNewLine
-            $Params = @{
-                GlobalAdminAccount    = $GlobalAdminAccount
-                Identity              = $SafeAttachmentPolicy.Identity
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
+            [array]$SafeAttachmentPolicies = Get-SafeAttachmentPolicy -ErrorAction Stop
+            Write-Host "`r`n" -NoNewLine
+            $i = 1
+            foreach ($SafeAttachmentPolicy in $SafeAttachmentPolicies)
+            {
+                Write-Host "    |---[$i/$($SafeAttachmentPolicies.Length)] $($SafeAttachmentPolicy.Identity)" -NoNewLine
+                $Params = @{
+                    GlobalAdminAccount    = $GlobalAdminAccount
+                    Identity              = $SafeAttachmentPolicy.Identity
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    CertificatePassword   = $CertificatePassword
+                    CertificatePath       = $CertificatePath
+                }
+                $Results = Get-TargetResource @Params
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                $i++
             }
-            $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
-            $i++
+            if ($SafeAttachmentPolicies.Length -eq 0)
+            {
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
+            }
         }
-        if ($SafeAttachmentPolicies.Length -eq 0)
+        else
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant doesn't have access to Safe Attachment Policy APIs."
         }
+        return $dscContent
     }
-    else
+    catch
     {
-        Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant doesn't have access to Safe Attachment Policy APIs."
+        Write-Verbose -Message $_
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return ""
     }
-    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource
