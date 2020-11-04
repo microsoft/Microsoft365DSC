@@ -1,9 +1,26 @@
 # Change log for Microsoft365DSC
 
+## 1.20.1104.1
+
+* AADMSGroup
+  * Added parameter IsAssignableToRole Issue #879
+  * Fixed issue on Set Issue #863
+* EXOHostedContentFilterPolicy
+  * Deprecated ZapEnabled property and added PhishZapEnabled
+    and SpamZapEnabled instead.
+* MISC
+  * Added checks for mandatory Authentication parameters before
+    attempting an Export.
+  * Deprecated the Assert-M365DSCTemplate cmdlet;
+  * Added Telemetry for version of PowerShell used;
+  * Added a timeout on new version check from the
+    PowerShell Gallery;
+  * Fixed Unit Test stubs;
+
 ## 1.20.1028.1
 
 * EXOOutboundConnector
-  * Fixed issue #821
+  * Fixed issue #821;
 * O365OrgCustomizationSetting
   * Fixes an issue where the resource was not being exported;
 * O365User

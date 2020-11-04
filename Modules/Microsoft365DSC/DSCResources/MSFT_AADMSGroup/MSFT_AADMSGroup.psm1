@@ -38,6 +38,10 @@ function Get-TargetResource
         $MailEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $IsAssignableToRole,
+
+        [Parameter()]
         [System.String]
         $MailNickname,
 
@@ -89,7 +93,7 @@ function Get-TargetResource
             Write-Verbose -Message "GroupID was specified"
             try
             {
-                $Group = Get-AzureADMSGroup -id $Id -ErrorAction Stop
+                $Group = Get-AzureADMSGroup -Id $Id -ErrorAction Stop
             }
             catch
             {
@@ -128,6 +132,7 @@ function Get-TargetResource
                 MembershipRuleProcessingState = $Group.MembershipRuleProcessingState
                 SecurityEnabled               = $Group.SecurityEnabled
                 MailEnabled                   = $Group.MailEnabled
+                IsAssignableToRole            = $Group.IsAssignableToRole
                 MailNickname                  = $Group.MailNickname
                 Visibility                    = $Group.Visibility
                 Ensure                        = "Present"
@@ -205,6 +210,10 @@ function Set-TargetResource
         $MailEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $IsAssignableToRole,
+
+        [Parameter()]
         [System.String]
         $MailNickname,
 
@@ -264,7 +273,19 @@ function Set-TargetResource
     {
         try
         {
-            Set-AzureADMSGroup @currentParameters
+            if ($true -eq $currentParameters.ContainsKey("IsAssignableToRole"))
+            {
+                Write-Verbose -Message "Cannot set IsAssignableToRole once group is created."
+                $currentParameters.Remove("IsAssignableToRole") | Out-Null
+            }
+            if ($false -eq $currentParameters.ContainsKey("Id"))
+            {
+                Set-AzureADMSGroup @currentParameters -Id $currentGroup.Id
+            }
+            else
+            {
+                Set-AzureADMSGroup @currentParameters
+            }
         }
         catch
         {
@@ -334,6 +355,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $MailEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsAssignableToRole,
 
         [Parameter()]
         [System.String]
@@ -433,10 +458,10 @@ function Export-TargetResource
         [array] $groups = Get-AzureADMSGroup -All:$true -ErrorAction Stop
         $i = 1
         $dscContent = ''
-        Write-Host "`r`n" -NoNewLine
+        Write-Host "`r`n" -NoNewline
         foreach ($group in $groups)
         {
-            Write-Host "    |---[$i/$($groups.Count)] $($group.DisplayName)" -NoNewLine
+            Write-Host "    |---[$i/$($groups.Count)] $($group.DisplayName)" -NoNewline
             $Params = @{
                 GlobalAdminAccount    = $GlobalAdminAccount
                 DisplayName           = $group.DisplayName

@@ -304,7 +304,7 @@ function Export-TargetResource
             }
             catch
             {
-                Write-Information "You are not authorized to access Case Hold Policy {$($Rule.Policy)}"
+                Write-Verbose -Message "You are not authorized to access Case Hold Policy {$($Rule.Policy)}"
             }
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++

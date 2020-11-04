@@ -767,7 +767,6 @@ function Show-M365DSCGUI
         $btnExtract.ForeColor = [System.Drawing.Color]::White
         $btnExtract.Text = "Start Extraction"
         $btnExtract.Add_Click( {
-                $form.Hide()
                 $SelectedComponents = @()
                 foreach ($panel in ($form.Controls[0].Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Panel" }))
                 {
@@ -795,16 +794,40 @@ function Show-M365DSCGUI
                         [securestring]$secStringPassword = ConvertTo-SecureString $txtCertPassword.Text -AsPlainText -Force
                         [pscredential]$CertPasswordcreds = New-Object System.Management.Automation.PSCredential ("M365DSCExport", $secStringPassword)
                     }
-                    Start-M365DSCConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
-                        -ApplicationId $txtApplicationId.Text `
-                        -TenantId $txtTenantId.Text `
-                        -CertificateThumbprint $txtCertThumb.Text `
-                        -CertificatePath $txtCertFile.Text `
-                        -CertificatePassword $CertPasswordcreds `
-                        -ComponentsToExtract $SelectedComponents `
-                        -Path $Path `
-                        -FileName $FileName `
-                        -GenerateInfo $GenerateInfo
+
+                    if ($chckCredential.Checked -and `
+                        ([System.String]::IsNullOrEmpty($txtTenantAdmin.Text) -or `
+                                [System.String]::IsNullOrEmpty($txtPassword.Text)))
+                    {
+                        [System.Windows.Forms.MessageBox]::Show("You need to provide your Admininistrative account Username & Password.")
+                    }
+                    elseif ($chckApplication.Checked -and `
+                            [System.String]::IsNullOrEmpty($txtApplicationId.Text))
+                    {
+                        [System.Windows.Forms.MessageBox]::Show("You need to provide your the Application Id to authenticate with.")
+                    }
+                    elseif ($chckCertificate.Checked -and `
+                            [System.String]::IsNullOrEmpty($txtCertThumb.Text) -and `
+                            [System.String]::IsNullOrEmpty($txtCertFile.Text) -and `
+                            [System.String]::IsNullOrEmpty($txtCertPassword.Text) -and `
+                            [System.String]::IsNullOrEmpty($txtTenantId.Text))
+                    {
+                        [System.Windows.Forms.MessageBox]::Show("You need to provide one of Thumbprint, File Path, Password or Tenant Id to authenticate with a certificate.")
+                    }
+                    else
+                    {
+                        $form.Hide()
+                        Start-M365DSCConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
+                            -ApplicationId $txtApplicationId.Text `
+                            -TenantId $txtTenantId.Text `
+                            -CertificateThumbprint $txtCertThumb.Text `
+                            -CertificatePath $txtCertFile.Text `
+                            -CertificatePassword $CertPasswordcreds `
+                            -ComponentsToExtract $SelectedComponents `
+                            -Path $Path `
+                            -FileName $FileName `
+                            -GenerateInfo $GenerateInfo
+                    }
                 }
                 catch
                 {
@@ -816,7 +839,8 @@ function Show-M365DSCGUI
                         {
                             $tenantId = $txtTenantId.Text
                         }
-                        elseif ($null -ne $GlobalAdminAccount)
+                        elseif ($null -ne $GlobalAdminAccount -and
+                            $GlobalAdminAccount.UserName -contains '@')
                         {
                             $tenantId = $GlobalAdminAccount.UserName.Split('@')[1]
                         }
@@ -920,7 +944,7 @@ function SelectComponentsForMode
         }
         catch
         {
-
+            Write-Verbose -Message $_
         }
     }
 }
@@ -943,7 +967,6 @@ function Set-M365DSCGUIResourcesAvailability
     )
 
     $AuthMethods = @()
-    $controlCredentials = @()
     if ($Credentials)
     {
         $AuthMethods += "Credentials"
@@ -994,6 +1017,7 @@ function Get-M365DSCExportGUIAllControls
             $controlName = ([System.Windows.Forms.CheckBox]$control).Name
             if ($controlName -like 'chckAAD*' -or `
                     $controlName -like 'chckEXO*' -or `
+                    $controlName -like 'chckIntune*' -or `
                     $controlName -like 'chckO365*' -or `
                     $controlName -like 'chckOD*' -or `
                     $controlName -like 'chckPP*' -or `

@@ -216,7 +216,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ZapEnabled = $true,
+        $PhishZapEnabled = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $SpamZapEnabled = $true,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -333,7 +337,8 @@ function Get-TargetResource
                 SpamAction                               = $HostedContentFilterPolicy.SpamAction
                 TestModeAction                           = $HostedContentFilterPolicy.TestModeAction
                 TestModeBccToRecipients                  = $HostedContentFilterPolicy.TestModeBccToRecipients
-                ZapEnabled                               = $HostedContentFilterPolicy.ZapEnabled
+                PhishZapEnabled                          = $HostedContentFilterPolicy.PhishZapEnabled
+                SpamZapEnabled                           = $HostedContentFilterPolicy.SpamZapEnabled
                 GlobalAdminAccount                       = $GlobalAdminAccount
             }
 
@@ -590,7 +595,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ZapEnabled = $true,
+        $PhishZapEnabled = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $SpamZapEnabled = $true,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -890,7 +899,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ZapEnabled = $true,
+        $PhishZapEnabled = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $SpamZapEnabled = $true,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]

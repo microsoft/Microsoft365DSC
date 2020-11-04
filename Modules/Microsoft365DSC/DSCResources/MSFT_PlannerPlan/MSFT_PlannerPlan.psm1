@@ -343,7 +343,7 @@ function Export-TargetResource
         $content = ''
         foreach ($group in $groups)
         {
-            Write-Information "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.ObjectID)}"
+            Write-Host "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.ObjectID)}"
             try
             {
                 [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.ObjectId -ErrorAction 'SilentlyContinue'
@@ -358,7 +358,7 @@ function Export-TargetResource
                         TenantId              = $TenantId
                         CertificateThumbprint = $CertificateThumbprint
                     }
-                    Write-Information "        [$j/$($plans.Length)] $($plan.Title)"
+                    Write-Host "        [$j/$($plans.Length)] $($plan.Title)"
                     $result = Get-TargetResource @params
                     $content += "        PlannerPlan " + (New-Guid).ToString() + "`r`n"
                     $content += "        {`r`n"
