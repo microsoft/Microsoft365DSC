@@ -138,7 +138,7 @@ function Get-TargetResource
         $SignInFrequency_Value,
 
         [Parameter()]
-        [ValidateSet('Days', 'Hours')]
+        [ValidateSet('Days', 'Hours','')]
         [System.String]
         $SignInFrequency_Type,
 
@@ -147,7 +147,7 @@ function Get-TargetResource
         $SignInFrequency_IsEnabled,
 
         [Parameter()]
-        [ValidateSet('Always', 'Never')]
+        [ValidateSet('Always', 'Never','')]
         [System.String]
         $PersistentBrowser_Mode,
 
@@ -302,8 +302,8 @@ function Set-TargetResource
         $Id,
 
         [Parameter()]
-        [ValidateSet('disabled', 'enabled','enabledForReportingButNotEnforced')]
         [System.String]
+        [ValidateSet('disabled', 'enabled','enabledForReportingButNotEnforced')]
         $State,
 
         #ConditionalAccessApplicationCondition
@@ -427,7 +427,7 @@ function Set-TargetResource
         $SignInFrequency_Value,
 
         [Parameter()]
-        [ValidateSet('Days', 'Hours')]
+        [ValidateSet('Days', 'Hours','')]
         [System.String]
         $SignInFrequency_Type,
 
@@ -436,7 +436,7 @@ function Set-TargetResource
         $SignInFrequency_IsEnabled,
 
         [Parameter()]
-        [ValidateSet('Always', 'Never')]
+        [ValidateSet('Always', 'Never','')]
         [System.String]
         $PersistentBrowser_Mode,
 
@@ -500,8 +500,9 @@ function Set-TargetResource
         $conditions.Applications.IncludeUserActions = $IncludeUserActions
         #create and provision User Condition object
         $conditions.Users = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessUserCondition
-        $IncludeUsers | foreach-object#translate user UPNs to GUID, except id value is GuestsOrExternalUsers or All
+        $IncludeUsers | foreach-object
         {
+            #translate user UPNs to GUID, except id value is GuestsOrExternalUsers or All
             if($_)
             {
                 if($_ -notmatch 'GuestsOrExternalUsers|All')
@@ -523,8 +524,9 @@ function Set-TargetResource
                 }
             }
         }
-        $ExcludeUsers | foreach-object#translate user UPNs to GUID, except id value is GuestsOrExternalUsers or All
+        $ExcludeUsers | foreach-object
         {
+            #translate user UPNs to GUID, except id value is GuestsOrExternalUsers or All
             if($_)
             {
                 if($_ -notmatch 'GuestsOrExternalUsers|All')
@@ -546,8 +548,9 @@ function Set-TargetResource
                 }
             }
         }
-        $IncludeGroups | foreach-object#translate user Group names to GUID
+        $IncludeGroups | foreach-object
         {
+            #translate user Group names to GUID
             if($_)
             {
                 $Group=$null
@@ -567,8 +570,9 @@ function Set-TargetResource
 
             }
         }
-        $ExcludeGroups | foreach-object#translate user Group names to GUID
+        $ExcludeGroups | foreach-object
         {
+            #translate user Group names to GUID
             if($_)
             {
                 $Group=$null
@@ -588,8 +592,9 @@ function Set-TargetResource
 
             }
         }
-        if ($IncludeRoles)#translate role names to template guid if defined
+        if ($IncludeRoles)
         {
+            #translate role names to template guid if defined
             $rolelookup=@{}
             Get-AzureADDirectoryRoleTemplate | ForEach-Object {$rolelookup[$_.DisplayName]=$_.ObjectId}
             $IncludeRoles | foreach-object
@@ -609,8 +614,9 @@ function Set-TargetResource
                 }
             }
         }
-        if ($ExcludeRoles)#translate role names to template guid if defined
+        if ($ExcludeRoles)
         {
+            #translate role names to template guid if defined
             $rolelookup=@{}
             Get-AzureADDirectoryRoleTemplate | ForEach-Object {$rolelookup[$_.DisplayName]=$_.ObjectId}
             $ExcludeRoles | foreach-object
@@ -630,15 +636,17 @@ function Set-TargetResource
                 }
             }
         }
-        if ($IncludePlatforms -or $ExcludePlatforms)#create and provision Platform condition object if used
+        if ($IncludePlatforms -or $ExcludePlatforms)
         {
+            #create and provision Platform condition object if used
             $conditions.Platforms = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessPlatformCondition
             $conditions.Platforms.IncludePlatforms=$IncludePlatforms #no translation or conversion needed
             $conditions.Platforms.ExcludePlatforms=$ExcludePlatforms#no translation or conversion needed
         }
 
-        if ($IncludeLocations -or $ExcludeLocations)#create and provision Location condition object if used, translate Location names to guid
+        if ($IncludeLocations -or $ExcludeLocations)
         {
+            #create and provision Location condition object if used, translate Location names to guid
             $conditions.Locations = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessLocationCondition
             $LocationLookup=@{}
             Get-AzureADMSNamedLocationPolicy | ForEach-Object {$LocationLookup[$_.DisplayName]=$_.Id}
@@ -680,8 +688,9 @@ function Set-TargetResource
         }
 
 
-        if ($IncludeDeviceStates -or $ExcludeDeviceStates)#create and provision Device condition object if used
+        if ($IncludeDeviceStates -or $ExcludeDeviceStates)
         {
+            #create and provision Device condition object if used
             $conditions.Devices = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessDevicesCondition
             $conditions.Devices.IncludeDeviceStates=$IncludeDeviceStates#no translation or conversion needed
             $conditions.Devices.ExcludeDeviceStates=$ExcludeDeviceStates#no translation or conversion needed
@@ -701,26 +710,30 @@ function Set-TargetResource
         {
             #create and provision Session Control object if used
             $sessioncontrols = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessSessionControls
-            if ($ApplicationEnforcedRestrictions_IsEnabled)#create and provision ApplicationEnforcedRestrictions object if used
+            if ($ApplicationEnforcedRestrictions_IsEnabled)
             {
+                #create and provision ApplicationEnforcedRestrictions object if used
                 $sessioncontrols.ApplicationEnforcedRestrictions = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessApplicationEnforcedRestrictions
                 $sessioncontrols.ApplicationEnforcedRestrictions.IsEnabled = $true
             }
-            if ($CloudAppSecurity_IsEnabled)#create and provision CloudAppSecurity object if used
+            if ($CloudAppSecurity_IsEnabled)
             {
+                #create and provision CloudAppSecurity object if used
                 $sessioncontrols.CloudAppSecurity = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessCloudAppSecurity
                 $sessioncontrols.CloudAppSecurity.IsEnabled=$true
                 $sessioncontrols.CloudAppSecurity.CloudAppSecurityType=$CloudAppSecurity_Type
             }
-            if ($SignInFrequency_IsEnabled)#create and provision SignInFrequency object if used
+            if ($SignInFrequency_IsEnabled)
             {
+                #create and provision SignInFrequency object if used
                 $sessioncontrols.SignInFrequency = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessSignInFrequency
                 $sessioncontrols.SignInFrequency.IsEnabled =$true
                 $sessioncontrols.SignInFrequency.Type = $SignInFrequency_Type
                 $sessioncontrols.SignInFrequency.Value = $SignInFrequency_Value
             }
-            if ($PersistentBrowser_IsEnabled)#create and provision PersistentBrowser object if used
+            if ($PersistentBrowser_IsEnabled)
             {
+                #create and provision PersistentBrowser object if used
                 $sessioncontrols.PersistentBrowser = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessPersistentBrowser
                 $sessioncontrols.PersistentBrowser.IsEnabled =$true
                 $sessioncontrols.PersistentBrowser.Mode=$PersistentBrowser_Mode
@@ -783,8 +796,8 @@ function Test-TargetResource
         $Id,
 
         [Parameter()]
-        [ValidateSet('disabled', 'enabled','enabledForReportingButNotEnforced')]
         [System.String]
+        [ValidateSet('disabled', 'enabled','enabledForReportingButNotEnforced')]
         $State,
 
         #ConditionalAccessApplicationCondition
@@ -908,7 +921,7 @@ function Test-TargetResource
         $SignInFrequency_Value,
 
         [Parameter()]
-        [ValidateSet('Days', 'Hours')]
+        [ValidateSet('Days', 'Hours','')]
         [System.String]
         $SignInFrequency_Type,
 
@@ -917,7 +930,7 @@ function Test-TargetResource
         $SignInFrequency_IsEnabled,
 
         [Parameter()]
-        [ValidateSet('Always', 'Never')]
+        [ValidateSet('Always', 'Never','')]
         [System.String]
         $PersistentBrowser_Mode,
 
@@ -926,7 +939,6 @@ function Test-TargetResource
         $PersistentBrowser_IsEnabled,
 
         #generic
-
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
@@ -949,7 +961,7 @@ function Test-TargetResource
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Testing configuration of AzureAD Groups"
+    Write-Verbose -Message "Testing configuration of AzureAD CA Policies"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -959,7 +971,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('Id') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
