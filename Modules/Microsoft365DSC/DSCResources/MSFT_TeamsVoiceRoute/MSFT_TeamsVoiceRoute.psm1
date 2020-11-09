@@ -307,13 +307,13 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SkypeForBusiness
+    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+        -InboundParameters $PSBoundParameters
 
     try
     {
         $i = 1
-        [array]$routes = Get-CsOnlineVoiceRoute
+        [array]$routes = Get-CsOnlineVoiceRoute -ErrorAction Stop
         $content = ''
         Write-Host "`r`n" -NoNewline
         foreach ($route in $routes)

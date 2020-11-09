@@ -55,11 +55,11 @@ function Get-TargetResource
         }
         Write-Verbose -Message "Found Voice Routing Policy {$Identity}"
         return @{
-            Identity                   = $Identity
-            OnlinePstnUsages           = $policy.OnlinePstnUsages
-            Description                = $policy.Description
-            Ensure                     = 'Present'
-            GlobalAdminAccount         = $GlobalAdminAccount
+            Identity           = $Identity
+            OnlinePstnUsages   = $policy.OnlinePstnUsages
+            Description        = $policy.Description
+            Ensure             = 'Present'
+            GlobalAdminAccount = $GlobalAdminAccount
         }
     }
     catch
@@ -255,12 +255,12 @@ function Export-TargetResource
     try
     {
         $i = 1
-        [array]$policies = Get-CsOnlineVoiceRoutingPolicy -ErrorAction
+        [array]$policies = Get-CsOnlineVoiceRoutingPolicy -ErrorAction Stop
         $content = ''
-        Write-Host "`r`n" -NoNewLine
+        Write-Host "`r`n" -NoNewline
         foreach ($policy in $policies)
         {
-            Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewLine
+            Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewline
             $params = @{
                 Identity           = $policy.Identity
                 Ensure             = 'Present'
@@ -268,7 +268,7 @@ function Export-TargetResource
             }
             $result = Get-TargetResource @params
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $content += "        TeamsVoiceRoutingPolicy " + (New-GUID).ToString() + "`r`n"
+            $content += "        TeamsVoiceRoutingPolicy " + (New-Guid).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
