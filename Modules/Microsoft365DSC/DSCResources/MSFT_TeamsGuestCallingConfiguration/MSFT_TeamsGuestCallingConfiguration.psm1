@@ -55,7 +55,7 @@ function Get-TargetResource
             }
             elseif ($null -ne $GlobalAdminAccount)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -209,7 +209,7 @@ function Export-TargetResource
             }
             elseif ($null -ne $GlobalAdminAccount)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
