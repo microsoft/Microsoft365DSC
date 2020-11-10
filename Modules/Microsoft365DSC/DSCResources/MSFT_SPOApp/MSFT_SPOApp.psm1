@@ -67,7 +67,7 @@ function Get-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters
+            -InboundParameters $PSBoundParameters
 
         $app = Get-PnPApp -Identity $Identity -ErrorAction SilentlyContinue
         if ($null -eq $app)
@@ -93,9 +93,26 @@ function Get-TargetResource
     catch
     {
         Write-Verbose -Message "The specified app doesn't already exist."
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -179,7 +196,7 @@ function Set-TargetResource
     elseif ($Ensure -eq "Absent" -and $currentApp.Ensure -eq "Present")
     {
         Write-Verbose -Message "Removing app instance $Identity"
-        Remove-PnpApp -Identity $Identity
+        Remove-PnPApp -Identity $Identity
     }
 }
 
@@ -234,6 +251,15 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration for app $Identity"
 
@@ -295,15 +321,15 @@ function Export-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters
 
     try
     {
         $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl -ErrorAction Stop
 
         $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                    -InboundParameters $PSBoundParameters `
-                    -Url $tenantAppCatalogUrl
+            -InboundParameters $PSBoundParameters `
+            -Url $tenantAppCatalogUrl
 
         if (-not [string]::IsNullOrEmpty($tenantAppCatalogUrl))
         {
@@ -327,12 +353,12 @@ function Export-TargetResource
                 Write-Host "    |---[$i/$($filesToDownload.Length)] $($file.Name)" -NoNewline
 
                 $identity = $file.Name.ToLower().Replace(".app", "").Replace(".sppkg", "")
-                $app = Get-PnpApp -Identity $identity -ErrorAction SilentlyContinue
+                $app = Get-PnPApp -Identity $identity -ErrorAction SilentlyContinue
 
                 if ($null -eq $app)
                 {
                     $identity = $file.Title
-                    $app = Get-PnpApp -Identity $file.Title -ErrorAction SilentlyContinue
+                    $app = Get-PnPApp -Identity $file.Title -ErrorAction SilentlyContinue
                 }
                 if ($null -ne $app)
                 {
@@ -349,20 +375,20 @@ function Export-TargetResource
 
                     $Results = Get-TargetResource @Params
                     $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                            -Results $Results
+                        -Results $Results
                     $dscContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                            -ConnectionMode $ConnectionMode `
-                            -ModulePath $PSScriptRoot `
-                            -Results $Results `
-                            -GlobalAdminAccount $GlobalAdminAccount
+                        -ConnectionMode $ConnectionMode `
+                        -ModulePath $PSScriptRoot `
+                        -Results $Results `
+                        -GlobalAdminAccount $GlobalAdminAccount
                 }
                 $i++
                 Write-Host $Global:M365DSCEmojiGreenCheckmark
             }
 
             $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                    -InboundParameters $PSBoundParameters `
-                    -Url $tenantAppCatalogUrl
+                -InboundParameters $PSBoundParameters `
+                -Url $tenantAppCatalogUrl
 
             foreach ($file in $filesToDownload)
             {
@@ -373,15 +399,32 @@ function Export-TargetResource
         }
         else
         {
-            Write-Information "    * App Catalog is not configured on tenant. Cannot extract information about SharePoint apps."
+            Write-Verbose -Message "    * App Catalog is not configured on tenant. Cannot extract information about SharePoint apps."
         }
         return $dscContent
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }

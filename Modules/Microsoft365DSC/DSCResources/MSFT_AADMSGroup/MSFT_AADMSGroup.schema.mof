@@ -9,6 +9,7 @@ class MSFT_AADMSGroup : OMI_BaseResource
     [Write, Description("Specifies the rule processing state. The acceptable values for this parameter are: On. Process the group rule or Paused. Stop processing the group rule."), ValueMap{"On","Paused"}, Values{"On","Paused"}] String MembershipRuleProcessingState;
     [Write, Description("Specifies whether the group is security enabled. For security groups, this value must be $True.")] Boolean SecurityEnabled;
     [Write, Description("Specifies whether this group is mail enabled. Currently, you cannot create mail enabled groups in Azure AD.")] Boolean MailEnabled;
+    [Write, Description("Specifies whether this group can be assigned a role. Only available when creating a group and can't be modified after group is created.")] Boolean IsAssignableToRole;
     [Write, Description("Specifies a mail nickname for the group. If MailEnabled is $False you must still specify a mail nickname.")] String MailNickname;
     [Write, Description("This parameter determines the visibility of the group's content and members list."), ValueMap{"Public","Private","HiddenMembership"}, Values{"Public","Private","HiddenMembership"}] String Visibility;
     [Write, Description("Specify if the Azure AD Group should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;

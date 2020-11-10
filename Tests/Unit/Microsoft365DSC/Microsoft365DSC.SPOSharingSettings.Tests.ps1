@@ -53,8 +53,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     BccExternalSharingInvitations              = $false
                     BccExternalSharingInvitationsList          = ""
                     RequireAnonymousLinksExpireInDays          = 730
-                    SharingAllowedDomainList                   = "contoso.com"
-                    SharingBlockedDomainList                   = "contoso.com"
+                    SharingAllowedDomainList                   = @("contoso.com")
+                    SharingBlockedDomainList                   = @("contoso.com")
                     SharingDomainRestrictionMode               = "None"
                     DefaultSharingLinkType                     = "AnonymousAccess"
                     PreventExternalUsersFromResharing          = $false
@@ -77,8 +77,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         BccExternalSharingInvitations              = $false
                         BccExternalSharingInvitationsList          = ""
                         RequireAnonymousLinksExpireInDays          = 730
-                        SharingAllowedDomainList                   = "contoso.com"
-                        SharingBlockedDomainList                   = "contoso.com"
+                        SharingAllowedDomainList                   = @("contoso.com")
+                        SharingBlockedDomainList                   = @("contoso.com")
                         SharingDomainRestrictionMode               = "None"
                         DefaultSharingLinkType                     = "AnonymousAccess"
                         PreventExternalUsersFromResharing          = $false
@@ -143,8 +143,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         BccExternalSharingInvitations              = $false
                         BccExternalSharingInvitationsList          = ""
                         RequireAnonymousLinksExpireInDays          = 730
-                        SharingAllowedDomainList                   = "contoso.com"
-                        SharingBlockedDomainList                   = "contoso.com"
+                        SharingAllowedDomainList                   = @("contoso.com")
+                        SharingBlockedDomainList                   = @("contoso.com")
                         SharingDomainRestrictionMode               = "None"
                         DefaultSharingLinkType                     = "AnonymousAccess"
                         PreventExternalUsersFromResharing          = $false

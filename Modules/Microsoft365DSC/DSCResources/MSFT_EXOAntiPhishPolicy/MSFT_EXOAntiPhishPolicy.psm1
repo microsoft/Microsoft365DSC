@@ -175,30 +175,30 @@ function Get-TargetResource
             }
 
             $result = @{
-                Identity                              = $Identity
-                AdminDisplayName                      = $AntiPhishPolicy.AdminDisplayName
-                AuthenticationFailAction              = $AntiPhishPolicy.AuthenticationFailAction
-                Enabled                               = $AntiPhishPolicy.Enabled
-                EnableAntispoofEnforcement            = $AntiPhishPolicy.EnableAntispoofEnforcement
-                EnableMailboxIntelligence             = $AntiPhishPolicy.EnableMailboxIntelligence
-                EnableOrganizationDomainsProtection   = $AntiPhishPolicy.EnableOrganizationDomainsProtection
-                EnableSimilarDomainsSafetyTips        = $AntiPhishPolicy.EnableSimilarDomainsSafetyTips
-                EnableSimilarUsersSafetyTips          = $AntiPhishPolicy.EnableSimilarUsersSafetyTips
-                EnableTargetedDomainsProtection       = $AntiPhishPolicy.EnableTargetedDomainsProtection
-                EnableTargetedUserProtection          = $AntiPhishPolicy.EnableTargetedUserProtection
-                EnableUnusualCharactersSafetyTips     = $AntiPhishPolicy.EnableUnusualCharactersSafetyTips
-                ExcludedDomains                       = $AntiPhishPolicy.ExcludedDomains
-                ExcludedSenders                       = $AntiPhishPolicy.ExcludedSenders
-                MakeDefault                           = $AntiPhishPolicy.MakeDefault
-                PhishThresholdLevel                   = $PhishThresholdLevelValue
-                TargetedDomainActionRecipients        = $AntiPhishPolicy.TargetedDomainActionRecipients
-                TargetedDomainProtectionAction        = $TargetedDomainProtectionAction
-                TargetedDomainsToProtect              = $AntiPhishPolicy.TargetedDomainsToProtect
-                TargetedUserActionRecipients          = $AntiPhishPolicy.TargetedUserActionRecipients
-                TargetedUserProtectionAction          = $TargetedUserProtectionActionValue
-                TargetedUsersToProtect                = $AntiPhishPolicy.TargetedUsersToProtect
-                GlobalAdminAccount                    = $GlobalAdminAccount
-                Ensure                                = 'Present'
+                Identity                            = $Identity
+                AdminDisplayName                    = $AntiPhishPolicy.AdminDisplayName
+                AuthenticationFailAction            = $AntiPhishPolicy.AuthenticationFailAction
+                Enabled                             = $AntiPhishPolicy.Enabled
+                EnableAntispoofEnforcement          = $AntiPhishPolicy.EnableAntispoofEnforcement
+                EnableMailboxIntelligence           = $AntiPhishPolicy.EnableMailboxIntelligence
+                EnableOrganizationDomainsProtection = $AntiPhishPolicy.EnableOrganizationDomainsProtection
+                EnableSimilarDomainsSafetyTips      = $AntiPhishPolicy.EnableSimilarDomainsSafetyTips
+                EnableSimilarUsersSafetyTips        = $AntiPhishPolicy.EnableSimilarUsersSafetyTips
+                EnableTargetedDomainsProtection     = $AntiPhishPolicy.EnableTargetedDomainsProtection
+                EnableTargetedUserProtection        = $AntiPhishPolicy.EnableTargetedUserProtection
+                EnableUnusualCharactersSafetyTips   = $AntiPhishPolicy.EnableUnusualCharactersSafetyTips
+                ExcludedDomains                     = $AntiPhishPolicy.ExcludedDomains
+                ExcludedSenders                     = $AntiPhishPolicy.ExcludedSenders
+                MakeDefault                         = $AntiPhishPolicy.MakeDefault
+                PhishThresholdLevel                 = $PhishThresholdLevelValue
+                TargetedDomainActionRecipients      = $AntiPhishPolicy.TargetedDomainActionRecipients
+                TargetedDomainProtectionAction      = $TargetedDomainProtectionAction
+                TargetedDomainsToProtect            = $AntiPhishPolicy.TargetedDomainsToProtect
+                TargetedUserActionRecipients        = $AntiPhishPolicy.TargetedUserActionRecipients
+                TargetedUserProtectionAction        = $TargetedUserProtectionActionValue
+                TargetedUsersToProtect              = $AntiPhishPolicy.TargetedUsersToProtect
+                GlobalAdminAccount                  = $GlobalAdminAccount
+                Ensure                              = 'Present'
             }
 
             Write-Verbose -Message "Found AntiPhishPolicy $($Identity)"
@@ -208,9 +208,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -509,6 +526,15 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of AntiPhishPolicy for $Identity"
 
@@ -585,11 +611,11 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
         foreach ($Policy in $AntiPhishPolicies)
         {
-            Write-Host "    |---[$i/$($AntiphishPolicies.Length)] $($Policy.Identity)" -NoNewLine
+            Write-Host "    |---[$i/$($AntiphishPolicies.Length)] $($Policy.Identity)" -NoNewline
 
             $Params = @{
                 Identity              = $Policy.Identity
@@ -615,9 +641,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }

@@ -29,6 +29,7 @@ function Get-TargetResource
         [System.Boolean]
         $LegacyAuthProtocolsEnabled,
 
+        # DEPRECATED
         [Parameter()]
         [System.Boolean]
         $RequireAcceptingAccountMatchInvitedAccount,
@@ -118,6 +119,10 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    if ($PSBoundParameters.ContainsKey("RequireAcceptingAccountMatchInvitedAccount"))
+    {
+        Write-Warning "RequireAcceptingAccountMatchInvitedAccount is deprecated. Please remove this parameter from your configuration."
+    }
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $nullReturn = $PSBoundParameters
@@ -125,7 +130,7 @@ function Get-TargetResource
 
     try
     {
-        $SPOTenantSettings = Get-PNPTenant -ErrorAction Stop
+        $SPOTenantSettings = Get-PnPTenant -ErrorAction Stop
 
         $CompatibilityRange = $SPOTenantSettings.CompatibilityRange.Split(',')
         $MinCompat = $null
@@ -143,7 +148,6 @@ function Get-TargetResource
             SearchResolveExactEmailOrUPN                  = $SPOTenantSettings.SearchResolveExactEmailOrUPN
             OfficeClientADALDisabled                      = $SPOTenantSettings.OfficeClientADALDisabled
             LegacyAuthProtocolsEnabled                    = $SPOTenantSettings.LegacyAuthProtocolsEnabled
-            RequireAcceptingAccountMatchInvitedAccount    = $SPOTenantSettings.RequireAcceptingAccountMatchInvitedAccount
             SignInAccelerationDomain                      = $SPOTenantSettings.SignInAccelerationDomain
             UsePersistentCookiesForExplorerView           = $SPOTenantSettings.UsePersistentCookiesForExplorerView
             UserVoiceForFeedbackEnabled                   = $SPOTenantSettings.UserVoiceForFeedbackEnabled
@@ -169,9 +173,26 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Make sure that you are connected to your SPOService"
         }
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -206,6 +227,7 @@ function Set-TargetResource
         [System.Boolean]
         $LegacyAuthProtocolsEnabled,
 
+        # DEPRECATED
         [Parameter()]
         [System.Boolean]
         $RequireAcceptingAccountMatchInvitedAccount,
@@ -297,6 +319,10 @@ function Set-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
+    if ($PSBoundParameters.ContainsKey("RequireAcceptingAccountMatchInvitedAccount"))
+    {
+        Write-Warning "RequireAcceptingAccountMatchInvitedAccount is deprecated. Please remove this parameter from your configuration."
+    }
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount") | Out-Null
@@ -424,6 +450,20 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    if ($PSBoundParameters.ContainsKey("RequireAcceptingAccountMatchInvitedAccount"))
+    {
+        Write-Warning "RequireAcceptingAccountMatchInvitedAccount is deprecated. Please remove this parameter from your configuration."
+    }
 
     Write-Verbose -Message "Testing configuration for SPO Tenant"
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -434,7 +474,9 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("IsSingleInstance", `
+        -ValuesToCheck @("IsSingleInsta", `
+            "RequireAcceptingAccountMatchInvitedAccount", `
+            "RequireAcceptingAccountMatchInvitedAccountnce", `
             "GlobalAdminAccount", `
             "MaxCompatibilityLevel", `
             "SearchResolveExactEmailOrUPN", `
@@ -534,9 +576,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }

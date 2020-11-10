@@ -148,24 +148,24 @@ function Get-TargetResource
             else
             {
                 $result = @{
-                    Ensure                        = 'Present'
-                    Name                          = $PolicyObject.Name
-                    Comment                       = $PolicyObject.Comment
-                    DynamicScopeLocation          = [array]$PolicyObject.DynamicScopeLocation
-                    Enabled                       = $PolicyObject.Enabled
-                    ExchangeLocation              = [array]$PolicyObject.ExchangeLocation
-                    ExchangeLocationException     = [array]$PolicyObject.ExchangeLocationException
-                    ModernGroupLocation           = [array]$PolicyObject.ModernGroupLocation
-                    ModernGroupLocationException  = [array]$PolicyObject.ModernGroupLocationException
-                    OneDriveLocation              = [array]$PolicyObject.OneDriveLocation
-                    OneDriveLocationException     = [array]$PolicyObject.OneDriveLocationException
-                    PublicFolderLocation          = [array]$PolicyObject.PublicFolderLocation
-                    RestrictiveRetention          = $PolicyObject.RestrictiveRetention
-                    SharePointLocation            = [array]$PolicyObject.SharePointLocation
-                    SharePointLocationException   = $PolicyObject.SharePointLocationException
-                    SkypeLocation                 = [array]$PolicyObject.SkypeLocation
-                    SkypeLocationException        = $PolicyObject.SkypeLocationException
-                    GlobalAdminAccount            = $GlobalAdminAccount
+                    Ensure                       = 'Present'
+                    Name                         = $PolicyObject.Name
+                    Comment                      = $PolicyObject.Comment
+                    DynamicScopeLocation         = [array]$PolicyObject.DynamicScopeLocation
+                    Enabled                      = $PolicyObject.Enabled
+                    ExchangeLocation             = [array]$PolicyObject.ExchangeLocation
+                    ExchangeLocationException    = [array]$PolicyObject.ExchangeLocationException
+                    ModernGroupLocation          = [array]$PolicyObject.ModernGroupLocation
+                    ModernGroupLocationException = [array]$PolicyObject.ModernGroupLocationException
+                    OneDriveLocation             = [array]$PolicyObject.OneDriveLocation
+                    OneDriveLocationException    = [array]$PolicyObject.OneDriveLocationException
+                    PublicFolderLocation         = [array]$PolicyObject.PublicFolderLocation
+                    RestrictiveRetention         = $PolicyObject.RestrictiveRetention
+                    SharePointLocation           = [array]$PolicyObject.SharePointLocation
+                    SharePointLocationException  = $PolicyObject.SharePointLocationException
+                    SkypeLocation                = [array]$PolicyObject.SkypeLocation
+                    SkypeLocationException       = $PolicyObject.SkypeLocationException
+                    GlobalAdminAccount           = $GlobalAdminAccount
                 }
             }
 
@@ -176,9 +176,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -280,8 +297,8 @@ function Set-TargetResource
     )
 
     if ($null -eq $SharePointLocation -and $null -eq $ExchangeLocation -and $null -eq $OneDriveLocation -and `
-        $null -eq $SkypeLocation -and $null -eq $PublicFolderLocation -and $null -eq $ModernGroupLocation -and `
-        $null -eq $TeamsChannelLocation -and $null -eq $TeamsChatLocation -and $Ensure -eq 'Present')
+            $null -eq $SkypeLocation -and $null -eq $PublicFolderLocation -and $null -eq $ModernGroupLocation -and `
+            $null -eq $TeamsChannelLocation -and $null -eq $TeamsChatLocation -and $Ensure -eq 'Present')
     {
         throw "You need to specify at least one Location for this Policy."
     }
@@ -318,7 +335,7 @@ function Set-TargetResource
         # Exchange Location is specified or already existing, we need to determine
         # the delta.
         if ($null -ne $CurrentPolicy.ExchangeLocation -or `
-        $null -ne $ExchangeLocation)
+                $null -ne $ExchangeLocation)
         {
             $ToBeRemoved = $CurrentPolicy.ExchangeLocation | `
                 Where-Object { $ExchangeLocation -NotContains $_ }
@@ -675,6 +692,15 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of RetentionCompliancePolicy for $Name"
 
@@ -724,23 +750,23 @@ function Export-TargetResource
         $policies = Get-RetentionCompliancePolicy -ErrorAction Stop
 
         $i = 1
-        Write-Host "`r`n" -NoNewLine
+        Write-Host "`r`n" -NoNewline
         $dscContent = ''
         foreach ($policy in $policies)
         {
-            Write-Host "    |---[$i/$($policies.Length)] $($policy.Name)" -NoNewLine
+            Write-Host "    |---[$i/$($policies.Length)] $($policy.Name)" -NoNewline
             $Params = @{
-                GlobalAdminAccount    = $GlobalAdminAccount
-                Name                  = $policy.Name
+                GlobalAdminAccount = $GlobalAdminAccount
+                Name               = $policy.Name
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
+                -Results $Results
             $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                    -ConnectionMode $ConnectionMode `
-                    -ModulePath $PSScriptRoot `
-                    -Results $Results `
-                    -GlobalAdminAccount $GlobalAdminAccount
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
@@ -748,9 +774,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[0]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }
