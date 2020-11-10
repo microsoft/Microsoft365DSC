@@ -15,19 +15,19 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $AlternativeIdentifier,
-     
+
         [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
+        [System.Collections.Generic.List`1[String]]
         $Definition,
-     
+
         [Parameter()]
         [Boolean]
-        $isOrganizationDefault,
-     
+        $IsOrganizationDefault,
+
         [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
+        [System.Collections.Generic.List`1[String]]
         $KeyCredentials,
-     
+
         [Parameter()]
         [System.String]
         $Type,
@@ -71,22 +71,22 @@ function Get-TargetResource
     {
         $nullReturn = $PSBoundParameters
         $nullReturn.Ensure = "Absent"
-        try 
+        try
         {
             if ($null -ne $Id)
             {
                 $Policy = Get-AzureADPolicy -ID $Id
             }
         }
-        catch 
+        catch
         {
             Write-Verbose -Message "Could not retrieve AzureAD Policy by ID {$Id}"
         }
-        if ($null -eq $Policy) 
+        if ($null -eq $Policy)
         {
             try
             {
-                $Policy = Get-AzureADPolicy -All $True -ErrorAction SilentlyContinue | Where-Object {$_.DisplayName -like $DisplayName}
+                $Policy = Get-AzureADPolicy -All $True -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -like $DisplayName }
             }
             catch
             {
@@ -95,29 +95,29 @@ function Get-TargetResource
                     -EventID 1 -Source $($MyInvocation.MyCommand.Source)
             }
         }
-        if ($null -eq $Policy) 
+        if ($null -eq $Policy)
         {
             return $nullReturn
         }
-        else 
+        else
         {
             Write-Verbose "Found existing AzureAD Policys"
             $Result = @{
-                Id                          = $Policy.Id
-                OdataType                   = $Policy.OdataType
-                AlternativeIdentifier       = $Policy.AlternativeIdentifier
-                Definition                  = $Policy.Definition
-                DisplayName                 = $Policy.DisplayName
-                IsOrganizationDefault       = $Policy.IsOrganizationDefault
-                KeyCredentials              = $Policy.KeyCredentials
-                Type                        = $policy.Type
-                Ensure                      = "Present"
-                GlobalAdminAccount          = $GlobalAdminAccount
-                ApplicationId               = $ApplicationId
-                TenantId                    = $TenantId
-                CertificateThumbprint       = $CertificateThumbprint
-            }  
-            
+                Id                    = $Policy.Id
+                OdataType             = $Policy.OdataType
+                AlternativeIdentifier = $Policy.AlternativeIdentifier
+                Definition            = $Policy.Definition
+                DisplayName           = $Policy.DisplayName
+                IsOrganizationDefault = $Policy.IsOrganizationDefault
+                KeyCredentials        = $Policy.KeyCredentials
+                Type                  = $policy.Type
+                Ensure                = "Present"
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+            }
+
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
         }
@@ -147,19 +147,19 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $AlternativeIdentifier,
-     
+
         [Parameter()]
         [System.Collections.Generic.List`1[System.String]]
         $Definition,
-     
+
         [Parameter()]
         [Boolean]
-        $isOrganizationDefault,
-     
+        $IsOrganizationDefault,
+
         [Parameter()]
         [System.Collections.Generic.List`1[System.String]]
         $KeyCredentials,
-     
+
         [Parameter()]
         [System.String]
         $Type,
@@ -207,20 +207,20 @@ function Set-TargetResource
     $currentParameters.Remove("Ensure")  | Out-Null
 
     # Policy should exist but it doesn't
-    if($Ensure -eq 'Present' -and $currentAADPolicy.Ensure -eq "Absent")
+    if ($Ensure -eq 'Present' -and $currentAADPolicy.Ensure -eq "Absent")
     {
         Write-Verbose -Message "Creating New AzureAD Policy {$Displayname)}"
         $currentParameters.Remove("Id") | Out-Null
         New-AzureADPolicy @currentParameters
     }
-    # Policy should exist and will be configured to desire state 
+    # Policy should exist and will be configured to desire state
     elseif ($Ensure -eq 'Present' -and $CurrentAADPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating exisitng AzureAD Policy {$Displayname)}"
         $currentParameters.Id = $currentAADPolicy.ID
-        Set-AzureADPolicy @currentParameters 
+        Set-AzureADPolicy @currentParameters
     }
-    # Policy exist but should not 
+    # Policy exist but should not
     elseif ($Ensure -eq 'Absent' -and $CurrentAADPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing AzureAD Policy {$Displayname)}"
@@ -245,19 +245,19 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $AlternativeIdentifier,
-     
+
         [Parameter()]
         [System.Collections.Generic.List`1[System.String]]
         $Definition,
-     
+
         [Parameter()]
         [Boolean]
-        $isOrganizationDefault,
-     
+        $IsOrganizationDefault,
+
         [Parameter()]
         [System.Collections.Generic.List`1[System.String]]
         $KeyCredentials,
-     
+
         [Parameter()]
         [System.String]
         $Type,
@@ -284,7 +284,7 @@ function Test-TargetResource
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message	"Testing configuration of AzureAD Policy"
+    Write-Verbose -Message "Testing configuration of AzureAD Policy"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -292,12 +292,15 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
-    $ValuesToCheck.Remove("Id") | Out-Null   
+    $ValuesToCheck.Remove("Id") | Out-Null
+    $ValuesToCheck.Remove("ApplicationId") | Out-Null
+    $ValuesToCheck.Remove("TenantId") | Out-Null
+    $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-    -Source $($MyInvocation.MyCommand.Source) `
-    -DesiredValues $PSBoundParameters `
-    -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -339,20 +342,20 @@ function Export-TargetResource
     $dscContent = ''
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
     $i = 1
-    Write-Host "`r`n" -NoNewLine
+    Write-Host "`r`n" -NoNewline
     try
     {
-        $AADPolicy = Get-AzureADPolicy -ErrorAction Stop
-        foreach($AADPolicy in $AADPolicys)
+        $AADPolicys = Get-AzureADPolicy -ErrorAction Stop
+        foreach ($AADPolicy in $AADPolicys)
         {
-            Write-Host "    |---[$i/$($AADPolicys.Count)] $($AADPolicy.DisplayName)" -NoNewLine
+            Write-Host "    |---[$i/$($AADPolicys.Count)] $($AADPolicy.DisplayName)" -NoNewline
             $Params = @{
-                    GlobalAdminAccount            = $GlobalAdminAccount
-                    ApplicationId                 = $ApplicationId
-                    TenantId                      = $TenantId
-                    CertificateThumbprint         = $CertificateThumbprint
-                    DisplayName                   = $AADPolicy.DisplayName
-                    ID                            = $AADPolicy.ID
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                DisplayName           = $AADPolicy.DisplayName
+                ID                    = $AADPolicy.ID
             }
             $Results = Get-TargetResource @Params
 

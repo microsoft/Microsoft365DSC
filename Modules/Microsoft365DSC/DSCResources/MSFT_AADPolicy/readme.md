@@ -2,7 +2,7 @@
 
 ## Description
 
-This resource configures the Azure AD Policys
+This resource configures the Azure AD Policies
 
 ## Azure AD Permissions
 
