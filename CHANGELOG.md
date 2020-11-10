@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+## 1.20.1111.1
+
+* Fixes an issue with SCRetentionCompliancePolicy where
+  the wrong parameter sets was being passed for creation.
+  (Issue #890)
+
 ## 1.20.1104.1
 
 * AADMSGroup
