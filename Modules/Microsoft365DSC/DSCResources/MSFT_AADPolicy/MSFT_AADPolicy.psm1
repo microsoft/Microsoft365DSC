@@ -97,7 +97,7 @@ function Get-TargetResource
         }
         else
         {
-            Write-Verbose "Found existing AzureAD Policys"
+            Write-Verbose "Found existing AzureAD Policy {$($Policy.DisplayName)}"
             $Result = @{
                 Id                    = $Policy.Id
                 OdataType             = $Policy.OdataType
@@ -105,7 +105,7 @@ function Get-TargetResource
                 Definition            = $Policy.Definition
                 DisplayName           = $Policy.DisplayName
                 IsOrganizationDefault = $Policy.IsOrganizationDefault
-                Type                  = $policy.Type
+                Type                  = $Policy.Type
                 Ensure                = "Present"
                 GlobalAdminAccount    = $GlobalAdminAccount
                 ApplicationId         = $ApplicationId
@@ -345,6 +345,15 @@ function Export-TargetResource
                 ID                    = $AADPolicy.ID
             }
             $Results = Get-TargetResource @Params
+
+            # Fix quotes inside the Definition's JSON;
+            $NewDefinition = @()
+            foreach ($item in $Results.Definition)
+            {
+                $fixedContent = $item.Replace('"', '`"')
+                $NewDefinition += $fixedContent
+            }
+            $results.Definition = $NewDefinition
 
             if ($Results.Ensure -eq 'Present')
             {
