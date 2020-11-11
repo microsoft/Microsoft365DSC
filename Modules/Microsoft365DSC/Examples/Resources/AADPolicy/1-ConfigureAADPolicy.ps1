@@ -19,7 +19,7 @@ Configuration Example
             DisplayName                   = "PolicyDisplayName"
             Definition                    = @('{"TokenIssuancePolicy":{"Version": 1,"SigningAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1","TokenResponseSigningPolicy": "TokenOnly","SamlTokenVersion": "2.0"}}')
             IsOrganizationDefault         = $false
-            type                          = "TokenIssuancePolicy"
+            Type                          = "TokenIssuancePolicy"
             Ensure                        = "Present"
             GlobalAdminAccount            = $credsGlobalAdmin
         }
