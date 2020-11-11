@@ -2,14 +2,14 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath "..\..\Unit" `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath "\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
@@ -60,12 +60,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The Policy should exist but it does not" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName                   = "PolicyDisplayName"
-                    Definition                    = @('{"TokenIssuancePolicy":{"Version": 1,"SigningAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1","TokenResponseSigningPolicy": "TokenOnly","SamlTokenVersion": "2.0"}}')
-                    IsOrganizationDefault         = $false
-                    Type                          = "TokenIssuancePolicy"
-                    Ensure                        = "Present"
-                    GlobalAdminAccount            = $credsGlobalAdmin
+                    DisplayName           = "PolicyDisplayName"
+                    Definition            = @('{"TokenIssuancePolicy":{"Version": 1,"SigningAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1","TokenResponseSigningPolicy": "TokenOnly","SamlTokenVersion": "2.0"}}')
+                    IsOrganizationDefault = $false
+                    Type                  = "TokenIssuancePolicy"
+                    Ensure                = "Present"
+                    GlobalAdminAccount    = $credsGlobalAdmin
                 }
 
                 Mock -CommandName Get-AzureADPolicy -MockWith {
@@ -88,12 +88,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The Policy exists but it should not" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName                   = "PolicyDisplayName"
-                    Definition                    = @('{"TokenIssuancePolicy":{"Version": 1,"SigningAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1","TokenResponseSigningPolicy": "TokenOnly","SamlTokenVersion": "2.0"}}')
-                    IsOrganizationDefault         = $false
-                    Type                          = "TokenIssuancePolicy"
-                    Ensure                        = "Absent"
-                    GlobalAdminAccount            = $credsGlobalAdmin
+                    DisplayName           = "PolicyDisplayName"
+                    Definition            = @('{"TokenIssuancePolicy":{"Version": 1,"SigningAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1","TokenResponseSigningPolicy": "TokenOnly","SamlTokenVersion": "2.0"}}')
+                    IsOrganizationDefault = $false
+                    Type                  = "TokenIssuancePolicy"
+                    Ensure                = "Absent"
+                    GlobalAdminAccount    = $credsGlobalAdmin
                 }
 
                 Mock -CommandName Get-AzureADPolicy -MockWith {
@@ -126,12 +126,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The Policy exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName                   = "PolicyDisplayName"
-                    Definition                    = @('{"TokenIssuancePolicy":{"Version": 1,"SigningAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1","TokenResponseSigningPolicy": "TokenOnly","SamlTokenVersion": "2.0"}}')
-                    IsOrganizationDefault         = $false
-                    Type                          = "TokenIssuancePolicy"
-                    Ensure                        = "Present"
-                    GlobalAdminAccount            = $credsGlobalAdmin
+                    DisplayName           = "PolicyDisplayName"
+                    Definition            = @('{"TokenIssuancePolicy":{"Version": 1,"SigningAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1","TokenResponseSigningPolicy": "TokenOnly","SamlTokenVersion": "2.0"}}')
+                    IsOrganizationDefault = $false
+                    Type                  = "TokenIssuancePolicy"
+                    Ensure                = "Present"
+                    GlobalAdminAccount    = $credsGlobalAdmin
                 }
 
                 Mock -CommandName Get-AzureADPolicy -MockWith {
@@ -159,12 +159,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Values are not in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName                   = "PolicyDisplayName1"
-                    Definition                    = @('{"TokenIssuancePolicy":{"Version": 1,"SigningAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1","TokenResponseSigningPolicy": "TokenOnly","SamlTokenVersion": "2.0"}}')
-                    IsOrganizationDefault         = $true
-                    Type                          = "TokenIssuancePolicy"
-                    Ensure                        = "Present"
-                    GlobalAdminAccount            = $credsGlobalAdmin
+                    DisplayName           = "PolicyDisplayName1"
+                    Definition            = @('{"TokenIssuancePolicy":{"Version": 1,"SigningAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1","TokenResponseSigningPolicy": "TokenOnly","SamlTokenVersion": "2.0"}}')
+                    IsOrganizationDefault = $true
+                    Type                  = "TokenIssuancePolicy"
+                    Ensure                = "Present"
+                    GlobalAdminAccount    = $credsGlobalAdmin
                 }
 
                 Mock -CommandName Get-AzureADPolicy -MockWith {

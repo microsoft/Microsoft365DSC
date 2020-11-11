@@ -17,16 +17,12 @@ function Get-TargetResource
         $AlternativeIdentifier,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[String]]
+        [System.String[]]
         $Definition,
 
         [Parameter()]
         [Boolean]
         $IsOrganizationDefault,
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[String]]
-        $KeyCredentials,
 
         [Parameter()]
         [System.String]
@@ -109,7 +105,6 @@ function Get-TargetResource
                 Definition            = $Policy.Definition
                 DisplayName           = $Policy.DisplayName
                 IsOrganizationDefault = $Policy.IsOrganizationDefault
-                KeyCredentials        = $Policy.KeyCredentials
                 Type                  = $policy.Type
                 Ensure                = "Present"
                 GlobalAdminAccount    = $GlobalAdminAccount
@@ -149,16 +144,12 @@ function Set-TargetResource
         $AlternativeIdentifier,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
+        [System.String[]]
         $Definition,
 
         [Parameter()]
         [Boolean]
         $IsOrganizationDefault,
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        $KeyCredentials,
 
         [Parameter()]
         [System.String]
@@ -247,16 +238,12 @@ function Test-TargetResource
         $AlternativeIdentifier,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
+        [System.String[]]
         $Definition,
 
         [Parameter()]
         [Boolean]
         $IsOrganizationDefault,
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        $KeyCredentials,
 
         [Parameter()]
         [System.String]
