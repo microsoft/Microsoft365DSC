@@ -2,6 +2,8 @@
 
 ## 1.20.1111.1
 
+* AADPolicy
+  Initial Release;
 * Fixes an issue with SCRetentionCompliancePolicy where
   the wrong parameter sets was being passed for creation.
   (Issue #890)
