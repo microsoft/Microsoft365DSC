@@ -136,7 +136,7 @@ function Add-M365DSCEvent
     }
 }
 
-function Export-M365DiagnosticData
+function Export-M365DSCDiagnosticData
 {
     [CmdletBinding(DefaultParametersetName = 'None')]
     param
