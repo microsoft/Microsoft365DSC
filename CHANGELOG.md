@@ -1,7 +1,11 @@
 # Change log for Microsoft365DSC
 
-## Unreleased
+## 1.20.1118.1
 
+* EXORemoteDomain
+  * Fixed an issue where only non-null parameters are
+    used in the Set-TargetResource resource;
+    (Issue #898)
 * MODULES
   * M365DSCLogEngine
     Added Export-M365DiagnosticData function to export diagnostic
