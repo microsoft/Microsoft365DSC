@@ -6,6 +6,10 @@
   * Fixed an issue where only non-null parameters are
     used in the Set-TargetResource resource;
     (Issue #898)
+* MODULES
+  * M365DSCLogEngine
+    Added Export-M365DiagnosticData function to export diagnostic
+    information to a Zip file.
 
 ## 1.20.1111.1
 

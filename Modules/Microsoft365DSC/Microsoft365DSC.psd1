@@ -138,6 +138,7 @@
         'Assert-M365DSCTemplate',
         'Compare-M365DSCConfigurations',
         'Export-M365DSCConfiguration',
+        'Export-M365DSCDiagnosticData',
         'New-M365DSCDeltaReport',
         'New-M365DSCReportFromConfiguration',
         'New-M365DSCStubFiles',
