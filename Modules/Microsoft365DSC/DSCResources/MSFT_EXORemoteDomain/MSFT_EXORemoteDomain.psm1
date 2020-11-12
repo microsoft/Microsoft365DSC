@@ -366,37 +366,26 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $RemoteDomainParams = @{
-        Identity                             = $Identity
-        AllowedOOFType                       = $AllowedOOFType
-        AutoForwardEnabled                   = $AutoForwardEnabled
-        AutoReplyEnabled                     = $AutoReplyEnabled
-        ByteEncoderTypeFor7BitCharsets       = $ByteEncoderTypeFor7BitCharsets
-        CharacterSet                         = $CharacterSet
-        ContentType                          = $ContentType
-        DeliveryReportEnabled                = $DeliveryReportEnabled
-        DisplaySenderName                    = $DisplaySenderName
-        IsInternal                           = $IsInternal
-        LineWrapSize                         = $LineWrapSize
-        MeetingForwardNotificationEnabled    = $MeetingForwardNotificationEnabled
-        Name                                 = $Name
-        NonMimeCharacterSet                  = $NonMimeCharacterSet
-        PreferredInternetCodePageForShiftJis = $PreferredInternetCodePageForShiftJis
-        RequiredCharsetCoverage              = $RequiredCharsetCoverage
-        TargetDeliveryDomain                 = $TargetDeliveryDomain
-        TNEFEnabled                          = $TNEFEnabled
-        TrustedMailInboundEnabled            = $TrustedMailInboundEnabled
-        TrustedMailOutboundEnabled           = $TrustedMailOutboundEnabled
-        UseSimpleDisplayName                 = $UseSimpleDisplayName
-    }
+    $RemoteDomainParams = $PSBoundParameters
+    $RemoteDomainParams.Remove("GlobalAdminAccount") | Out-Null
+    $RemoteDomainParams.Remove("Ensure") | Out-Null
+    $RemoteDomainParams.Remove("ApplicationId") | Out-Null
+    $RemoteDomainParams.Remove("TenantId") | Out-Null
+    $RemoteDomainParams.Remove("CertificateThumbprint") | Out-Null
 
     # CASE: Remote Domain doesn't exist but should;
     if ($Ensure -eq "Present" -and $currentRemoteDomainConfig.Ensure -eq "Absent")
     {
         Write-Verbose -Message "Remote Domain '$($Name)' does not exist but it should. Create and configure it."
         # Create remote domain
+        if ([System.String]::IsNullOrEmpty($Name))
+        {
+            $Name = $Identity
+        }
         New-RemoteDomain -Name $Name -DomainName $DomainName
+
         # Configure new remote domain
+        $RemoteDomainParams.Remove("DomainName") | Out-Null
         Set-RemoteDomain @RemoteDomainParams
     }
     # CASE: Remote Domain exists but it shouldn't;
@@ -410,6 +399,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Remote Domain '$($Name)' already exists, but needs updating."
         Write-Verbose -Message "Setting RemoteDomain for $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $RemoteDomainParams)"
+        $RemoteDomainParams.Remove("DomainName") | Out-Null
         Set-RemoteDomain @RemoteDomainParams
     }
 }
