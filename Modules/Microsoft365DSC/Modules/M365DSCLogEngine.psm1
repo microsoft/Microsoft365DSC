@@ -245,6 +245,11 @@ function Export-M365DSCDiagnosticData
         'OsLanguage',
         'OsMuiLanguages') | Out-File -FilePath $computerInfoFile
 
+    # LCM settings
+    Write-Host '  * Exporting LCM Configuration info' -ForegroundColor Grey
+    $lcmInfoFile = Join-Path -Path $tempPath -ChildPath 'LCMInfo.txt'
+    Get-DscLocalConfigurationManager | Out-File -FilePath $lcmInfoFile
+
     # Creating export package
     Write-Host '  * Creating Zip file with all collected information' -ForegroundColor Grey
     Compress-Archive -Path $tempPath -DestinationPath $ExportFilePath -Force
