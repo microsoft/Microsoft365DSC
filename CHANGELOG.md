@@ -6,6 +6,10 @@
   * Fixed an issue where only non-null parameters are
     used in the Set-TargetResource resource;
     (Issue #898)
+* SPOSiteScript
+  * BREAKING CHANGE: Title is now the primary key for the
+    resource and Service Principal is now supported for
+    authentication.
 * MODULES
   * M365DSCLogEngine
     Added Export-M365DiagnosticData function to export diagnostic
