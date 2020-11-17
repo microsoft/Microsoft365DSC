@@ -102,9 +102,9 @@ function Start-M365DSCConfigurationExtract
         $AuthMethods += "Credentials"
     }
     if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint) -or `
-        -not [System.String]::IsNullOrEmpty($CertificatePassword) -or `
-        -not [System.String]::IsNullOrEmpty($CertificatePath) -or `
-        -not [System.String]::IsNullOrEmpty($TenantId))
+            -not [System.String]::IsNullOrEmpty($CertificatePassword) -or `
+            -not [System.String]::IsNullOrEmpty($CertificatePath) -or `
+            -not [System.String]::IsNullOrEmpty($TenantId))
     {
         $AuthMethods += "Certificate"
     }
@@ -120,7 +120,7 @@ function Start-M365DSCConfigurationExtract
     {
         $allResourcesInModule = Get-M365DSCAllResources
         $selectedItems = Compare-Object -ReferenceObject $allResourcesInModule `
-            -DifferenceObject $ComponentsToSkip | Where-Object -FilterScript {$_.SideIndicator -eq '<='}
+            -DifferenceObject $ComponentsToSkip | Where-Object -FilterScript { $_.SideIndicator -eq '<=' }
         $selectedResources = @()
         foreach ($item in $selectedItems)
         {
@@ -131,8 +131,17 @@ function Start-M365DSCConfigurationExtract
     {
         $selectedResources = $ComponentsToExtract
     }
-    $compareResourcesResult = Compare-Object -ReferenceObject $allSupportedResources `
-        -DifferenceObject $selectedResources | Where-Object -FilterScript {$_.SideIndicator -eq '=>'}
+
+    try
+    {
+        $compareResourcesResult = Compare-Object -ReferenceObject $allSupportedResources `
+            -DifferenceObject $selectedResources | Where-Object -FilterScript { $_.SideIndicator -eq '=>' }
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+    }
+
     if ($null -ne $compareResourcesResult)
     {
         # The client is trying to extract act least one resource which is not supported
@@ -146,7 +155,7 @@ function Start-M365DSCConfigurationExtract
             $ComponentsToSkip += $resource.InputObject
         }
 
-        Write-Host "[WARNING]" -NoNewLine -ForegroundColor Yellow
+        Write-Host "[WARNING]" -NoNewline -ForegroundColor Yellow
         Write-Host " Based on the provided Authentication parameters, the following resources cannot be extracted: " -ForegroundColor Gray
         Write-Host "$resourcesNotSupported" -ForegroundColor Gray
     }
@@ -154,17 +163,21 @@ function Start-M365DSCConfigurationExtract
     if (-not $PSBoundParameters.ContainsKey('Quiet'))
     {
         $unattendedCommand = "Export-M365DSCConfiguration -Quiet -ComponentsToExtract @("
+        $Components = ""
         foreach ($resource in $ComponentsToExtract)
         {
             if ($resource -ne 'Credential' -and $resource -ne 'Application' -and `
-            $resource -ne 'Certificate')
+                    $resource -ne 'Certificate')
             {
-                $unattendedCommand += "'$resource',"
+                $Components += "'$resource',"
             }
         }
-        $unattendedCommand = $unattendedCommand.Substring(0, $unattendedCommand.Length -1)
-        $unattendedCommand += ")"
-        Write-Host "[INFO]" -NoNewLine -ForegroundColor Cyan
+        if (-not [System.String]::IsNullOrEmpty($Components))
+        {
+            $Components = $Components.Substring(0, $Components.Length - 1)
+        }
+        $unattendedCommand += $Components + ")"
+        Write-Host "[INFO]" -NoNewline -ForegroundColor Cyan
         Write-Host " You can perform an equivalent unattended Export operation by running the following command:" -ForegroundColor Gray
         Write-Host $unattendedCommand -ForegroundColor Blue
     }
@@ -198,7 +211,8 @@ function Start-M365DSCConfigurationExtract
         $principal = $organization.Split(".")[0]
     }
     $AzureAutomation = $false
-    $version = (Get-Module 'Microsoft365DSC').Version
+    [array] $version = Get-Module 'Microsoft365DSC'
+    $version = $version[0].Version
     $DSCContent = "# Generated with Microsoft365DSC version $version`r`n"
     $DSCContent += "# For additional information on how to use Microsoft365DSC, please visit https://aka.ms/M365DSC`r`n"
     if ($ConnectionMode -eq 'Credential')
@@ -305,7 +319,9 @@ function Start-M365DSCConfigurationExtract
                 -Description "Thumbprint of the certificate to use for authentication"
         }
     }
-    $DSCContent += "    Import-DscResource -ModuleName Microsoft365DSC`r`n`r`n"
+    [array]$ModuleVersion = Get-Module Microsoft365DSC
+    $ModuleVersion = $ModuleVersion[0]
+    $DSCContent += "    Import-DscResource -ModuleName 'Microsoft365DSC' -ModuleVersion '$version'`r`n`r`n"
     $DSCContent += "    Node localhost`r`n"
     $DSCContent += "    {`r`n"
 
@@ -396,7 +412,7 @@ function Start-M365DSCConfigurationExtract
                 }
             }
             if (($null -ne $ComponentsToExtract -and
-                ($ComponentsToExtract -contains $resourceName -or $ComponentsToExtract -contains ("chck" + $resourceName))) -or
+                    ($ComponentsToExtract -contains $resourceName -or $ComponentsToExtract -contains ("chck" + $resourceName))) -or
                 $AllComponents -or ($null -ne $Workloads -and $Workloads -contains $currentWorkload) -or `
                 ($null -eq $ComponentsToExtract -and $null -eq $Workloads) -and `
                 ($ComponentsToExtractSpecified -or -not $ComponentsToSkip.Contains($resourceName)))
@@ -423,7 +439,7 @@ function Start-M365DSCConfigurationExtract
         $CertPasswordExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("CertificatePassword")
 
         $parameters = @{}
-        if ($GlobalAdminExists-and -not [System.String]::IsNullOrEmpty($GlobalAdminAccount))
+        if ($GlobalAdminExists -and -not [System.String]::IsNullOrEmpty($GlobalAdminAccount))
         {
             $parameters.Add("GlobalAdminAccount", $GlobalAdminAccount)
         }
@@ -462,7 +478,7 @@ function Start-M365DSCConfigurationExtract
             if ($GenerateInfo)
             {
                 $exportString += "`r`n        # For information on how to use this resource, please refer to:`r`n"
-                $exportString += "        # https://github.com/microsoft/Microsoft365DSC/wiki/$resourceName`r`n"
+                $exportString += "        # https://github.com/microsoft/Microsoft365DSC/wiki/$($resource.Name.Split('.')[0].Replace('MSFT_', ''))`r`n"
             }
             $exportString += Export-TargetResource @parameters
             $i++
@@ -504,7 +520,7 @@ function Start-M365DSCConfigurationExtract
     {
         if (-not [System.String]::IsNullOrEmpty($CertificatePassword))
         {
-            $certCreds =$Global:CredsRepo[0]
+            $certCreds = $Global:CredsRepo[0]
             $credsContent = ""
             $credsContent += "        " + (Resolve-Credentials $certCreds) + " = Get-Credential -Message `"Certificate Password`""
             $credsContent += "`r`n"
@@ -520,10 +536,10 @@ function Start-M365DSCConfigurationExtract
 
     #region Benchmarks
     $M365DSCExportEndTime = [System.DateTime]::Now
-    $timeTaken = New-Timespan -Start ($M365DSCExportStartTime.ToString()) `
+    $timeTaken = New-TimeSpan -Start ($M365DSCExportStartTime.ToString()) `
         -End ($M365DSCExportEndTime.ToString())
-    Write-Host "$($Global:M365DSCEmojiHourglass) Export took {" -NoNewLine
-    Write-Host "$($timeTaken.TotalSeconds) seconds" -NoNewLine -ForegroundColor Cyan
+    Write-Host "$($Global:M365DSCEmojiHourglass) Export took {" -NoNewline
+    Write-Host "$($timeTaken.TotalSeconds) seconds" -NoNewline -ForegroundColor Cyan
     Write-Host "}"
     #endregion
 
@@ -548,7 +564,7 @@ function Start-M365DSCConfigurationExtract
     {
         try
         {
-            Write-Information "Directory `"$OutputDSCPath`" doesn't exist; creating..."
+            Write-Host "Directory `"$OutputDSCPath`" doesn't exist; creating..."
             New-Item -Path $OutputDSCPath -ItemType Directory | Out-Null
             if ($?)
             {

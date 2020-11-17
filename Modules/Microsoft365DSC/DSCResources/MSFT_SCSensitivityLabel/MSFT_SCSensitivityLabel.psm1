@@ -255,7 +255,7 @@ function Get-TargetResource
             {
                 $advancedSettingsValue = Convert-StringToAdvancedSettings -AdvancedSettings $label.Settings
             }
-            if($null -ne $label.EncryptionRightsDefinitions)
+            if ($null -ne $label.EncryptionRightsDefinitions)
             {
                 $EncryptionRightsDefinitionsValue = Convert-EncryptionRightDefinition -RightsDefinition $label.EncryptionRightsDefinitions
             }
@@ -316,9 +316,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -617,7 +634,7 @@ function Set-TargetResource
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $label.Ensure))
     {
         # If the label exists and it shouldn't, simply remove it;Need to force deletoion
-        Write-Verbose -message "Deleting Sensitivity label $Name."
+        Write-Verbose -Message "Deleting Sensitivity label $Name."
 
         try
         {
@@ -825,11 +842,19 @@ function Test-TargetResource
         [System.String]
         $SiteAndGroupProtectionPrivacy,
 
-
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of Sensitivity label for $Name"
 
@@ -899,10 +924,10 @@ function Export-TargetResource
 
         $dscContent = ""
         $i = 1
-        Write-Host "`r`n" -NoNewLine
+        Write-Host "`r`n" -NoNewline
         foreach ($label in $labels)
         {
-            Write-Host "    |---[$i/$($labels.Count)] $($label.Name)" -NoNewLine
+            Write-Host "    |---[$i/$($labels.Count)] $($label.Name)" -NoNewline
 
             $Params = @{
                 Name               = $label.Name
@@ -942,9 +967,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
     return $dscContent
@@ -958,7 +1000,7 @@ function Convert-JSONToLocaleSettings
         [parameter(Mandatory = $true)]
         $JSONLocalSettings
     )
-    $localeSettings = $JSONLocalSettings | Convertfrom-Json
+    $localeSettings = $JSONLocalSettings | ConvertFrom-Json
 
     $entries = @()
     $settings = @()
@@ -1056,7 +1098,7 @@ function Convert-EncryptionRightDefinition
     }
     if ($StringContent.EndsWith(";"))
     {
-        $StringContent = $StringContent.Substring(0,($StringContent.Length-1))
+        $StringContent = $StringContent.Substring(0, ($StringContent.Length - 1))
     }
     return $StringContent
 

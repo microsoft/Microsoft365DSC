@@ -72,10 +72,15 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Found existing AzureAD Tenant Details"
             $result = @{
-                MarketingNotificationEmails             = $AADTenantDetails.MarketingNotificationEmails
-                SecurityComplianceNotificationMails     = $AADTenantDetails.SecurityComplianceNotificationMails
-                SecurityComplianceNotificationPhones    = $AADTenantDetails.SecurityComplianceNotificationPhones
-                TechnicalNotificationMails              = $AADTenantDetails.TechnicalNotificationMails
+                IsSingleInstance                     = 'Yes'
+                MarketingNotificationEmails          = $AADTenantDetails.MarketingNotificationEmails
+                SecurityComplianceNotificationMails  = $AADTenantDetails.SecurityComplianceNotificationMails
+                SecurityComplianceNotificationPhones = $AADTenantDetails.SecurityComplianceNotificationPhones
+                TechnicalNotificationMails           = $AADTenantDetails.TechnicalNotificationMails
+                GlobalAdminAccount                   = $GlobalAdminAccount
+                ApplicationId                        = $ApplicationId
+                TenantId                             = $TenantId
+                CertificateThumbprint                = $CertificateThumbprint
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DSCHashTabletoString -Hashtable $result)"
             return $result
@@ -83,9 +88,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         throw "Could not retrieve AzureAD Tenant Details"
     }
 }
@@ -149,10 +171,12 @@ function Set-TargetResource
     $currentParameters
     $currentParameters.Remove("GlobalAdminAccount") | Out-Null
     $currentParameters.Remove("isSingleInstance") | Out-Null
-    try {
+    try
+    {
         Set-AzureADTenantDetail @currentParameters
     }
-    catch {
+    catch
+    {
         Write-Verbose -Message "Cannot Set AzureAD Tenant Details"
     }
 }
@@ -230,7 +254,8 @@ function Test-TargetResource
 
 }
 
-function Export-TargetResource {
+function Export-TargetResource
+{
     [CmdletBinding()]
     [OutputType([System.String])]
     param
@@ -269,12 +294,12 @@ function Export-TargetResource {
         $AADTenantDetails = Get-AzureADTenantDetail -ErrorAction Stop
 
         $Params = @{
-            MarketingNotificationEmails             = $AADTenantDetails.MarketingNotificationEmails
-            SecurityComplianceNotificationMails     = $AADTenantDetails.SecurityComplianceNotificationMails
-            SecurityComplianceNotificationPhones    = $AADTenantDetails.SecurityComplianceNotificationPhones
-            TechnicalNotificationMails              = $AADTenantDetails.TechnicalNotificationMails
-            GlobalAdminAccount                      = $GlobalAdminAccount
-            IsSingleInstance                       = 'Yes'
+            MarketingNotificationEmails          = $AADTenantDetails.MarketingNotificationEmails
+            SecurityComplianceNotificationMails  = $AADTenantDetails.SecurityComplianceNotificationMails
+            SecurityComplianceNotificationPhones = $AADTenantDetails.SecurityComplianceNotificationPhones
+            TechnicalNotificationMails           = $AADTenantDetails.TechnicalNotificationMails
+            GlobalAdminAccount                   = $GlobalAdminAccount
+            IsSingleInstance                     = 'Yes'
         }
         $Results = Get-TargetResource @Params
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode -Results $Results
@@ -287,11 +312,28 @@ function Export-TargetResource {
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }
 
-Export-ModuleMember -function *-TargetResource
+Export-ModuleMember -Function *-TargetResource

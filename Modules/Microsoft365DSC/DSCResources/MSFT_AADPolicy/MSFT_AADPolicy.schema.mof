@@ -1,0 +1,16 @@
+[ClassVersion("1.0.0.0"), FriendlyName("AADPolicy")]
+class MSFT_AADPolicy : OMI_BaseResource
+{
+    [Key, Description("DisplayName of the Policy")] string DisplayName;
+    [Write, Description("ObjectID of the Policy.")] String Id;
+    [Write, Description("AlternativeIdentifier Policy.")] string AlternativeIdentifier;
+    [Write, Description("Definition of the Policy.")] String Definition[];
+    [Write, Description("IsOrganizationDefault of the Policy.")] Boolean IsOrganizationDefault;
+    [Write, Description("Type of the Policy.")] string Type;
+    [Write, Description("Specify if the Azure AD Policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Credentials of the Azure AD Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+
+};

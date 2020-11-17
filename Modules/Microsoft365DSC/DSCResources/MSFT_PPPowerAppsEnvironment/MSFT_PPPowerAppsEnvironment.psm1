@@ -14,7 +14,7 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production','Standard', 'Trial', 'Sandbox')]
+        [ValidateSet('Production', 'Standard', 'Trial', 'Sandbox')]
         $EnvironmentSKU,
 
         [Parameter()]
@@ -77,9 +77,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -99,7 +116,7 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production','Standard', 'Trial', 'Sandbox')]
+        [ValidateSet('Production', 'Standard', 'Trial', 'Sandbox')]
         $EnvironmentSKU,
 
         [Parameter()]
@@ -183,7 +200,7 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production','Standard', 'Trial', 'Sandbox')]
+        [ValidateSet('Production', 'Standard', 'Trial', 'Sandbox')]
         $EnvironmentSKU,
 
         [Parameter()]
@@ -207,6 +224,15 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration for PowerApps Environment {$DisplayName}"
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -265,10 +291,10 @@ function Export-TargetResource
         [array]$environments = Get-AdminPowerAppEnvironment -ErrorAction Stop
         $dscContent = ''
         $i = 1
-        Write-Host "`r`n" -NoNewLine
+        Write-Host "`r`n" -NoNewline
         foreach ($environment in $environments)
         {
-            Write-Host "    |---[$i/$($environments.Count)] $($environment.DisplayName)" -NoNewLine
+            Write-Host "    |---[$i/$($environments.Count)] $($environment.DisplayName)" -NoNewline
             if ($environment.EnvironmentType -ne 'Default')
             {
                 $Params = @{
@@ -296,9 +322,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }

@@ -1,0 +1,13 @@
+[ClassVersion("1.0.0.0"), FriendlyName("TeamsVoiceRoute")]
+class MSFT_TeamsVoiceRoute : OMI_BaseResource
+{
+    [Key, Description("Identity of the Teams Voice Route.")] String Identity;
+    [Write, Description("A description of what this online voice route is for.")] String Description;
+    [Write, Description("A regular expression that specifies the phone numbers to which this route applies. Numbers matching this pattern will be routed according to the rest of the routing settings.")] String NumberPattern;
+    [Write, Description("This parameter contains a list of online gateways associated with this online voice route.  Each member of this list must be the service Identity of the online PSTN gateway.")] String OnlinePstnGatewayList[];
+    [Write, Description("A list of online PSTN usages (such as Local, Long Distance, etc.) that can be applied to this online voice route. The PSTN usage must be an existing usage (PSTN usages can be retrieved by calling the Get-CsOnlinePstnUsage cmdlet).")] String OnlinePstnUsages[];
+    [Write, Description("A number could resolve to multiple online voice routes. The priority determines the order in which the routes will be applied if more than one route is possible.")] UInt32 Priority;
+    [Write, Description("Present ensures the route exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Required, Description("Credentials of the Teams Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+};
+

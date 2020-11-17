@@ -28,7 +28,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Public", "Private")]
+        [ValidateSet("Public", "Private", "HiddenMembership")]
         $Visibility,
 
         [Parameter()]
@@ -214,9 +214,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -250,7 +267,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Public", "Private")]
+        [ValidateSet("Public", "Private", "HiddenMembership")]
         $Visibility,
 
         [Parameter()]
@@ -442,7 +459,7 @@ function Set-TargetResource
     elseif ($Ensure -eq "Absent" -and ($team.Ensure -eq "Present"))
     {
         Write-Verbose -Message "Removing team $DisplayName"
-        Remove-team -GroupId $team.GroupId
+        Remove-Team -GroupId $team.GroupId
     }
 }
 
@@ -476,7 +493,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Public", "Private")]
+        [ValidateSet("Public", "Private", "HiddenMembership")]
         $Visibility,
 
         [Parameter()]
@@ -569,6 +586,15 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of Team $DisplayName"
 
@@ -577,8 +603,9 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    If (!$PSBoundParameters.ContainsKey('Ensure')) {
-        $PSBoundParameters.Add('Ensure',$Ensure)
+    If (!$PSBoundParameters.ContainsKey('Ensure'))
+    {
+        $PSBoundParameters.Add('Ensure', $Ensure)
     }
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
@@ -646,10 +673,10 @@ function Export-TargetResource
         $teams = Get-Team
         $i = 1
         $content = ""
-        Write-Host "`r`n" -NoNewLine
+        Write-Host "`r`n" -NoNewline
         foreach ($team in $teams)
         {
-            Write-Host "    |---[$i/$($teams.Length)] $($team.DisplayName)" -NoNewLine
+            Write-Host "    |---[$i/$($teams.Length)] $($team.DisplayName)" -NoNewline
             $params = @{
                 DisplayName           = $team.DisplayName
                 GlobalAdminAccount    = $GlobalAdminAccount
@@ -669,7 +696,7 @@ function Export-TargetResource
             {
                 $result.Remove("Owner")
             }
-            $content += "        TeamsTeam " + (New-GUID).ToString() + "`r`n"
+            $content += "        TeamsTeam " + (New-Guid).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             if ($ConnectionMode -eq 'Credential')
@@ -694,9 +721,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }
