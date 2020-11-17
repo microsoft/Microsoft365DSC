@@ -882,8 +882,8 @@ function Export-TargetResource
         Write-Host "`r`n" -NoNewline
         foreach ($site in $sites)
         {
-            $site = Get-PnPTenantSite -Url $site.Url
             Write-Host "    [$i/$($sites.Length)] $($site.Url)" -NoNewline
+            $site = Get-PnPTenantSite -Url $site.Url
             $siteTitle = "Null"
             if (-not [System.String]::IsNullOrEmpty($site.Title))
             {
