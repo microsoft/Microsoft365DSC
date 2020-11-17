@@ -145,9 +145,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -358,6 +375,15 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
     Write-Verbose -Message "Testing configuration of SCComplianceSearchAction"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -410,7 +436,7 @@ function Export-TargetResource
         $dscContent = ""
         foreach ($action in $actions)
         {
-            Write-Host "        |---[$i/$($actions.Length)] $($action.Name)" -NoNewLine
+            Write-Host "        |---[$i/$($actions.Length)] $($action.Name)" -NoNewline
             $Params = @{
                 Action             = $action.Action
                 SearchName         = $action.SearchName
@@ -447,12 +473,12 @@ function Export-TargetResource
             $i = 1
             foreach ($action in $actions)
             {
-                Write-Host "        |---[$i/$($actions.Length)] $($action.Name)" -NoNewLine
+                Write-Host "        |---[$i/$($actions.Length)] $($action.Name)" -NoNewline
 
                 $Params = @{
-                    Action                = $action.Action
-                    SearchName            = $action.SearchName
-                    GlobalAdminAccount    = $GlobalAdminAccount
+                    Action             = $action.Action
+                    SearchName         = $action.SearchName
+                    GlobalAdminAccount = $GlobalAdminAccount
                 }
 
                 $Scenario = Get-ResultProperty -ResultString $action.Results -PropertyName "Scenario"
@@ -478,9 +504,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }

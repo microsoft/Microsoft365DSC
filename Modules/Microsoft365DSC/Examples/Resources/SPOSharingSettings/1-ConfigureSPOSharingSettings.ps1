@@ -27,8 +27,8 @@ Configuration Example
             BccExternalSharingInvitations              = $false
             BccExternalSharingInvitationsList          = ""
             RequireAnonymousLinksExpireInDays          = 730
-            SharingAllowedDomainList                   = "contoso.com"
-            SharingBlockedDomainList                   = "contoso.com"
+            SharingAllowedDomainList                   = @("contoso.com")
+            SharingBlockedDomainList                   = @("contoso.com")
             SharingDomainRestrictionMode               = "None"
             DefaultSharingLinkType                     = "AnonymousAccess"
             PreventExternalUsersFromResharing          = $false

@@ -49,7 +49,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SearchResolveExactEmailOrUPN                  = $false
                     OfficeClientADALDisabled                      = $false
                     LegacyAuthProtocolsEnabled                    = $true
-                    RequireAcceptingAccountMatchInvitedAccount    = $true
                     SignInAccelerationDomain                      = ""
                     UsePersistentCookiesForExplorerView           = $false
                     UserVoiceForFeedbackEnabled                   = $true
@@ -69,7 +68,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SearchResolveExactEmailOrUPN                  = $false
                         OfficeClientADALDisabled                      = $false
                         LegacyAuthProtocolsEnabled                    = $true
-                        RequireAcceptingAccountMatchInvitedAccount    = $true
                         SignInAccelerationDomain                      = ""
                         UsePersistentCookiesForExplorerView           = $false
                         UserVoiceForFeedbackEnabled                   = $true
@@ -90,7 +88,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SearchResolveExactEmailOrUPN                  = $false
                         OfficeClientADALDisabled                      = $false
                         LegacyAuthProtocolsEnabled                    = $true
-                        RequireAcceptingAccountMatchInvitedAccount    = $true
                         SignInAccelerationDomain                      = ""
                         UsePersistentCookiesForExplorerView           = $false
                         UserVoiceForFeedbackEnabled                   = $true
@@ -127,7 +124,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SearchResolveExactEmailOrUPN                  = $false
                         OfficeClientADALDisabled                      = $false
                         LegacyAuthProtocolsEnabled                    = $true
-                        RequireAcceptingAccountMatchInvitedAccount    = $true
                         SignInAccelerationDomain                      = ""
                         UsePersistentCookiesForExplorerView           = $false
                         UserVoiceForFeedbackEnabled                   = $true

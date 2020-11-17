@@ -1,5 +1,115 @@
 # Change log for Microsoft365DSC
 
+## 1.20.1118.1
+
+* EXORemoteDomain
+  * Fixed an issue where only non-null parameters are
+    used in the Set-TargetResource resource;
+    (Issue #898)
+* SPOSiteScript
+  * BREAKING CHANGE: Title is now the primary key for the
+    resource and Service Principal is now supported for
+    authentication.
+* MODULES
+  * M365DSCLogEngine
+    Added Export-M365DiagnosticData function to export diagnostic
+    information to a Zip file.
+
+## 1.20.1111.1
+
+* AADPolicy
+  Initial Release;
+* Fixes an issue with SCRetentionCompliancePolicy where
+  the wrong parameter sets was being passed for creation.
+  (Issue #890)
+
+## 1.20.1104.1
+
+* AADMSGroup
+  * Added parameter IsAssignableToRole Issue #879
+  * Fixed issue on Set Issue #863
+* EXOHostedContentFilterPolicy
+  * Deprecated ZapEnabled property and added PhishZapEnabled
+    and SpamZapEnabled instead.
+* MISC
+  * Added checks for mandatory Authentication parameters before
+    attempting an Export.
+  * Deprecated the Assert-M365DSCTemplate cmdlet;
+  * Added Telemetry for version of PowerShell used;
+  * Added a timeout on new version check from the
+    PowerShell Gallery;
+  * Fixed Unit Test stubs;
+
+## 1.20.1028.1
+
+* EXOOutboundConnector
+  * Fixed issue #821;
+* O365OrgCustomizationSetting
+  * Fixes an issue where the resource was not being exported;
+* O365User
+  * Added additional information in the error log for when
+    we try to set an invalid license
+* ODSettings
+  * Removed AD group guid dependency issue # 862
+* SPOTenantSettings
+  * Parameter RequireAcceptingAccountMatchInvitedAccount
+    is now deprecated (Issue #864)
+* SPOSharingSettings
+  * Fixed issue # 855
+  * Fixed issue # 866 changed domains to array
+  * Fixed issue where trying to set anonymous link types if
+    sharing not properly configured issue #865
+* SPOTheme
+  * Fixed issue where Palette was not being properly extracted as
+    an array of CIMInstances.
+* TeamsTeam
+  * Added support for visibility HiddenMembership
+* MODULES
+  * M365DSCUtil
+    * Fixed an issue where function Test-M365DSCObjectHasProperty was missing
+    (Issue #861)
+  * M365DSCReverse
+    * Fixed an issue where passing in the file name and using the GUI for
+      extraction did not store the file at the specified location (Issue #810)
+    * Fixed and issue where the -GenerateInfo parameter would always generate
+      a link to the same resource.
+    * Added current version module in the Export file.
+* MISC
+  * Added Authentication Type used to the Telemetry Engine.
+* DEPENDENCIES
+  * AzureADPreview Updated to 2.0.2.119
+  * DSCParser Updated to 1.3.0.0
+  * Microsoft.Graph.Authentication Updated to 1.1.0
+  * Microsoft.Graph.Planner Updated to 1.1.0
+  * Microsoft.PowerApps.Administration.PowerShell Updated
+    to 2.0.96;
+
+## 1.20.1021.1
+
+* AADTenantDetails
+  * Fixed issue where IsSingleInstance was not returned from
+    the Get-TargetResource method;
+* MISC
+  * Fix to how Telemetry is retrieving module version;
+  * Added additional error troubleshooting information
+    to telemetry (dependencies version).
+
+## 1.20.1016.1
+
+* Fixed a permissions issue with the
+  Install-M365DSCDevBranch cmdlet (Issue #699 & #826)
+* DEPENDENCIES
+  * MSCloudLoginAssistant Updated to 1.0.41;
+  * SharePointPnPPowerShellOnline Updated to 3.26.2010.0;
+* MISC
+  * Improved Error log to include StackTrace for additional
+    info to help troubleshooting errors.
+
+## 1.20.1014.1
+
+* TeamsVoiceRoute
+  * Initial Release
+
 ## 1.20.1007.1
 
 * TeamsCallingPolicy
