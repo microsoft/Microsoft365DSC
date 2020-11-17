@@ -3,7 +3,7 @@ on: [push]
 
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  FullCircle-EXO:
     # The type of runner that the job will run on
     runs-on: self-hosted
 
