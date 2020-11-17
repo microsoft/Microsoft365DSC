@@ -2,6 +2,9 @@
 
 ## 1.20.1118.1
 
+* EXOMalwareFilterPolicy
+  * Fix an issue when the CustomFromAddress is empty;
+    (Issue #901)
 * EXORemoteDomain
   * Fixed an issue where only non-null parameters are
     used in the Set-TargetResource resource;
