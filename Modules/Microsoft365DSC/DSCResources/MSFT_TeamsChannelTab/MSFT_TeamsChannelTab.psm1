@@ -125,7 +125,7 @@ function Get-TargetResource
             TeamName              = $TeamName
             ChannelName           = $ChannelName
             ContentUrl            = $ContentUrl
-            $WebSiteUrl           = $WebSiteUrl
+            WebSiteUrl            = $WebSiteUrl
             ApplicationId         = $ApplicationId
             TenantId              = $TenantID
             CertificateThumbprint = $CertificateThumbprint
@@ -637,10 +637,6 @@ function Export-TargetResource
                     }
                     $Results = Get-TargetResource @params
 
-<<<<<<< Updated upstream
-                    $dscContent = ""
-=======
->>>>>>> Stashed changes
                     if ($null -ne $Results)
                     {
                         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
