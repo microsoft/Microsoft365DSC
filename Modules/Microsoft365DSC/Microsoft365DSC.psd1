@@ -68,6 +68,10 @@
             RequiredVersion = "1.1.0"
         },
         @{
+            ModuleName      = "Microsoft.Graph.Groups"
+            RequiredVersion = "1.1.0"
+        },
+        @{
             ModuleName      = "Microsoft.Graph.Groups.Planner"
             RequiredVersion = "0.9.1"
         },
@@ -84,6 +88,10 @@
             RequiredVersion = "1.1.0"
         },
         @{
+            ModuleName      = "Microsoft.Graph.Teams"
+            RequiredVersion = "1.1.0"
+        },
+        @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
             RequiredVersion = "2.0.96"
         },
@@ -93,7 +101,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.41"
+            RequiredVersion = "1.0.42"
         },
         @{
             ModuleName      = "ReverseDSC"
