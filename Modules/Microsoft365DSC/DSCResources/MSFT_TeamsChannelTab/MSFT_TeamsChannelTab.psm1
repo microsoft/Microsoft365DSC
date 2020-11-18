@@ -21,6 +21,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $TeamId,
+
+        [Parameter()]
+        [System.String]
         $ContentUrl,
 
         [Parameter()]
@@ -61,7 +65,7 @@ function Get-TargetResource
 
     Write-Verbose -Message "Checking for existence of Team $DisplayName"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraphBeta' `
         -InboundParameters $PSBoundParameters
 
     try
@@ -69,7 +73,14 @@ function Get-TargetResource
         # Get the Team ID
         try
         {
-            $teamInstance = get-MgGroup -filter "displayName eq '$TeamName'" -ErrorAction Stop | %{ @{ TeamId=$_.Id } } | get-MgTeam -ErrorAction Stop
+            if ($null -eq $TeamId)
+            {
+                $teamInstance = get-MgGroup -filter "displayName eq '$TeamName' and resourceProvisioningOptions/Any(x:x eq 'Team')" -ErrorAction Stop | %{ @{ TeamId=$_.Id } } | get-MgTeam -ErrorAction Stop
+            }
+            else
+            {
+                $teamInstance = get-MgTeam -TeamId $TeamId -ErrorAction Stop
+            }
         }
         catch
         {
@@ -617,6 +628,7 @@ function Export-TargetResource
                     Write-Host "            |---[$k/$($tabs.Length)] $($tab.DisplayName)" -NoNewline
                     $params = @{
                         TeamName              = $team.DisplayName
+                        TeamId                = $team.Id
                         ChannelName           = $channel.DisplayName
                         DisplayName           = $tab.DisplayName
                         ApplicationId         = $ApplicationId
