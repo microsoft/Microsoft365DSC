@@ -637,7 +637,10 @@ function Export-TargetResource
                     }
                     $Results = Get-TargetResource @params
 
+<<<<<<< Updated upstream
                     $dscContent = ""
+=======
+>>>>>>> Stashed changes
                     if ($null -ne $Results)
                     {
                         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
