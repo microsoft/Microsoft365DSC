@@ -2090,7 +2090,10 @@ function Get-M365DSCExportContentForResource
         $OrganizationName = $GlobalAdminAccount.UserName.Split('@')[1]
     }
 
-    $principal = $OrganizationName.Split('.')[0]
+    # Ensure the string properties are properly formatted;
+    $Results = Format-M365DSCString -Properties $Results `
+        -ResourceName $ResourceName
+
     $content = "        $ResourceName " + (New-Guid).ToString() + "`r`n"
     $content += "        {`r`n"
     $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath
