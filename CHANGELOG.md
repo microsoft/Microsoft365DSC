@@ -9,6 +9,8 @@
   * Fixed an issue where only non-null parameters are
     used in the Set-TargetResource resource;
     (Issue #898)
+* SCRetentionEventType
+  * Initial Release;
 * SPOSiteScript
   * BREAKING CHANGE: Title is now the primary key for the
     resource and Service Principal is now supported for
