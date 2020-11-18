@@ -124,7 +124,7 @@ function Add-M365DSCEvent
         }
 
         Write-EventLog -LogName $LogName -Source $Source `
-            -EventID $EventID -Message $Message -EntryType $EntryType
+            -EventId $EventID -Message $Message -EntryType $EntryType
     }
     catch
     {
@@ -134,4 +134,129 @@ function Add-M365DSCEvent
             -Source "[M365DSCLogEngine]" `
             -TenantId $TenantId
     }
+}
+
+function Export-M365DSCDiagnosticData
+{
+    [CmdletBinding(DefaultParametersetName = 'None')]
+    param
+    (
+        [Parameter(Mandatory = $true, Position = 0)]
+        [System.String]
+        $ExportFilePath,
+
+        [Parameter()]
+        [System.UInt32]
+        $NumberOfDays = 7,
+
+        [Parameter(ParameterSetName = 'Anon')]
+        [Switch]
+        $Anonymize,
+
+        [Parameter(ParameterSetName = 'Anon', Mandatory = $true)]
+        [System.String]
+        $Server,
+
+        [Parameter(ParameterSetName = 'Anon', Mandatory = $true)]
+        [System.String]
+        $Domain,
+
+        [Parameter(ParameterSetName = 'Anon', Mandatory = $true)]
+        [System.String]
+        $Url
+    )
+    Write-Host 'Exporting logging information' -ForegroundColor Yellow
+
+    if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator") -eq $false)
+    {
+        Write-Host -Object "[ERROR] You need to run this cmdlet with Administrator privileges!" -ForegroundColor Red
+        return
+    }
+
+    $afterDate = (Get-Date).AddDays(($NumberOfDays * -1))
+
+    # Create Temp folder
+    $guid = [Guid]::NewGuid()
+    $tempPath = Join-Path -Path $env:TEMP -ChildPath $guid
+    $null = New-Item -Path $tempPath -ItemType 'Directory'
+
+    # Copy DSC Verbose Logs
+    Write-Host '  * Copying DSC Verbose Logs' -ForegroundColor Grey
+    $logPath = Join-Path -Path $tempPath -ChildPath 'DSCLogs'
+    $null = New-Item -Path $logPath -ItemType 'Directory'
+
+    $sourceLogPath = Join-Path -Path $env:windir -ChildPath 'System32\Configuration\ConfigurationStatus'
+    $items = Get-ChildItem -Path "$sourceLogPath\*.json" | Where-Object { $_.LastWriteTime -gt $afterDate }
+    Copy-Item -Path $items -Destination $logPath -ErrorAction 'SilentlyContinue' #-ErrorVariable $err
+
+    if ($Anonymize)
+    {
+        Write-Host '    * Anonymizing DSC Verbose Logs' -ForegroundColor Grey
+        foreach ($file in (Get-ChildItem -Path $logPath))
+        {
+            $content = Get-Content -Path $file.FullName -Raw -Encoding Unicode
+            $content = $content -replace $Domain, '[DOMAIN]' -replace $Url, 'fqdn.com' -replace $Server, '[SERVER]'
+            Set-Content -Path $file.FullName -Value $content
+        }
+    }
+
+    # Export M365Dsc event log
+    Write-Host '  * Exporting DSC Event Log' -ForegroundColor Grey
+    $evtExportLog = Join-Path -Path $tempPath -ChildPath 'M365Dsc.csv'
+
+    try
+    {
+        Write-Host '    * Anonymizing DSC Event Log' -ForegroundColor Grey
+        Get-EventLog -LogName 'M365Dsc' -After $afterDate | Export-Csv $evtExportLog -NoTypeInformation
+        if ($Anonymize)
+        {
+            $newLog = Import-Csv $evtExportLog
+            foreach ($entry in $newLog)
+            {
+                $entry.MachineName = "[SERVER]"
+                $entry.UserName = "[USER]"
+                $entry.Message = $entry.Message -replace $Domain, '[DOMAIN]' -replace $Url, 'fqdn.com' -replace $Server, '[SERVER]'
+            }
+
+            $newLog | Export-Csv -Path $evtExportLog -NoTypeInformation
+        }
+    }
+    catch
+    {
+        $txtExportLog = Join-Path -Path $tempPath -ChildPath 'M365Dsc.txt'
+        Add-Content -Value 'M365Dsc event log does not exist!' -Path $txtExportLog
+    }
+
+    # PowerShell Version
+    Write-Host '  * Exporting PowerShell Version info' -ForegroundColor Grey
+    $psInfoFile = Join-Path -Path $tempPath -ChildPath 'PSInfo.txt'
+    $PSVersionTable | Out-File -FilePath $psInfoFile
+
+    # OS Version
+    Write-Host '  * Exporting OS Version info' -ForegroundColor Grey
+    $computerInfoFile = Join-Path -Path $tempPath -ChildPath 'OSInfo.txt'
+
+    Get-ComputerInfo -Property @(
+        'OsName',
+        'OsOperatingSystemSKU',
+        'OSArchitecture',
+        'WindowsVersion',
+        'WindowsBuildLabEx',
+        'OsLanguage',
+        'OsMuiLanguages') | Out-File -FilePath $computerInfoFile
+
+    # LCM settings
+    Write-Host '  * Exporting LCM Configuration info' -ForegroundColor Grey
+    $lcmInfoFile = Join-Path -Path $tempPath -ChildPath 'LCMInfo.txt'
+    Get-DscLocalConfigurationManager | Out-File -FilePath $lcmInfoFile
+
+    # Creating export package
+    Write-Host '  * Creating Zip file with all collected information' -ForegroundColor Grey
+    Compress-Archive -Path $tempPath -DestinationPath $ExportFilePath -Force
+
+    # Cleaning up temporary data
+    Write-Host '  * Removing temporary data' -ForegroundColor Grey
+    Remove-Item $tempPath -Recurse -Force -Confirm:$false
+
+    Write-Host ('Completed with export. Information exported to {0}' -f $ExportFilePath) -ForegroundColor Yellow
 }
