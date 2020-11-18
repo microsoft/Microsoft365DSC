@@ -14,6 +14,9 @@
     resource and Service Principal is now supported for
     authentication.
 * MODULES
+  * M365DSCStringEncoding
+    New resource to handle encoding issues in exported content;
+    (Issue #904)
   * M365DSCLogEngine
     Added Export-M365DiagnosticData function to export diagnostic
     information to a Zip file.

@@ -420,7 +420,7 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
         -InboundParameters $PSBoundParameters
 
-    $content = ""
+    $dscContent = ""
     $i = 1
     try
     {
