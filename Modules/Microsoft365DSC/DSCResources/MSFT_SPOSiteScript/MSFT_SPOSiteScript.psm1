@@ -4,7 +4,7 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Title,
 
@@ -420,7 +420,7 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
         -InboundParameters $PSBoundParameters
 
-    $content = ""
+    $dscContent = ""
     $i = 1
     try
     {

@@ -2,7 +2,7 @@ name: Generate Wiki Content
 on: [pull_request]
 
 jobs:
-  build:
+  GenerateWiki:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2

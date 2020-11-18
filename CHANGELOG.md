@@ -1,5 +1,28 @@
 # Change log for Microsoft365DSC
 
+## 1.20.1118.1
+
+* EXOMalwareFilterPolicy
+  * Fix an issue when the CustomFromAddress is empty;
+    (Issue #901)
+* EXORemoteDomain
+  * Fixed an issue where only non-null parameters are
+    used in the Set-TargetResource resource;
+    (Issue #898)
+* SCRetentionEventType
+  * Initial Release;
+* SPOSiteScript
+  * BREAKING CHANGE: Title is now the primary key for the
+    resource and Service Principal is now supported for
+    authentication.
+* MODULES
+  * M365DSCStringEncoding
+    New resource to handle encoding issues in exported content;
+    (Issue #904)
+  * M365DSCLogEngine
+    Added Export-M365DiagnosticData function to export diagnostic
+    information to a Zip file.
+
 ## 1.20.1111.1
 
 * AADPolicy
