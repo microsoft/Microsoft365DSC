@@ -138,22 +138,22 @@ function Set-TargetResource
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentEventType.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove("GlobalAdminAccount")
-        $CreationParams.Remove("Ensure")
+        $CreationParams.Remove("GlobalAdminAccount") | Out-Null
+        $CreationParams.Remove("Ensure") | Out-Null
         New-ComplianceRetentionEventType @CreationParams
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentEventType.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove("GlobalAdminAccount")
-        $CreationParams.Remove("Ensure")
-        $CreationParams.Remove("Name")
+        $CreationParams.Remove("GlobalAdminAccount") | Out-Null
+        $CreationParams.Remove("Ensure") | Out-Null
+        $CreationParams.Remove("Name") | Out-Null
         $CreationParams.Add("Identity", $Name)
         Set-ComplianceRetentionEventType @CreationParams
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentEventType.Ensure))
     {
-        # If the Rule exists and it shouldn't, simply remove it;
+        # If the Event Type exists and it shouldn't, simply remove it;
         Remove-ComplianceRetentionEventType -Identity $Name -confirm:$false
         Remove-ComplianceRetentionEventType -Identity $Name -confirm:$false -forcedeletion
     }
@@ -188,7 +188,6 @@ function Test-TargetResource
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -240,9 +239,12 @@ function Export-TargetResource
         $dscContent = ''
 
         Write-Host "`r`n" -NoNewline
+        $i = 1
 
         foreach ($eventType in $EventTypes)
         {
+            Write-Host "        |---[$i/$($EventTypes.Length)] $($eventType.Name)" -NoNewline
+
             $Params = @{
                 GlobalAdminAccount = $GlobalAdminAccount
                 Name               = $eventType.Name
@@ -256,6 +258,7 @@ function Export-TargetResource
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
             Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
         }
         return $dscContent
     }
