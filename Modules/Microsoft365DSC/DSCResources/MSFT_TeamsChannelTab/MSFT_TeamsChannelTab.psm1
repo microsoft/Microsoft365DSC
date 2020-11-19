@@ -14,7 +14,7 @@ function Get-TargetResource
         [ValidateLength(1, 256)]
         $TeamName,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateLength(1, 256)]
         $ChannelName,
@@ -48,7 +48,7 @@ function Get-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    Write-Verbose -Message "Getting configuration of Team $DisplayName"
+    Write-Verbose -Message "Getting configuration of Tab $DisplayName"
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -63,8 +63,6 @@ function Get-TargetResource
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
 
-    Write-Verbose -Message "Checking for existence of Team $DisplayName"
-
     $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraphBeta' `
         -InboundParameters $PSBoundParameters
 
@@ -73,18 +71,22 @@ function Get-TargetResource
         # Get the Team ID
         try
         {
-            if ($null -eq $TeamId)
+            if ([System.String]::IsNullOrEmpty($TeamId))
             {
-                $teamInstance = get-MgGroup -filter "displayName eq '$TeamName' and resourceProvisioningOptions/Any(x:x eq 'Team')" -ErrorAction Stop | %{ @{ TeamId=$_.Id } } | get-MgTeam -ErrorAction Stop
+                Write-Verbose -Message "Getting team by Name {$TeamName}"
+                $filter = "displayName eq '$TeamName' and resourceProvisioningOptions/Any(x:x eq 'Team')"
+                $teamInstance = get-MgGroup -filter $filter -ErrorAction Stop | %{ @{ TeamId=$_.Id } } | get-MgTeam -ErrorAction Stop
             }
             else
             {
+                Write-Verbose -Message "Getting team by Id {$TeamId}"
                 $teamInstance = get-MgTeam -TeamId $TeamId -ErrorAction Stop
             }
         }
         catch
         {
-            Write-Host "            $($Global:M365DSCEmojiRedX) The specified Service Principal doesn't have access to read Group information. Permission Required: Group.Read.All & Team.ReadBasic.All"
+            Write-Verbose -Message "$($_.Message)`r`n$($_.StackTrace)"
+            Write-Verbose "The specified Service Principal doesn't have access to read Group information. Permission Required: Group.Read.All & Team.ReadBasic.All"
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
                 -TenantId $TenantId
@@ -92,10 +94,11 @@ function Get-TargetResource
 
         if ($null -eq $teamInstance)
         {
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            $Message = "Team {$TeamName} was not found."
+            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
                 -TenantId $TenantID
-            throw "Team {$TeamName} was not found."
+            throw $Message
         }
 
         # Get the Channel ID
@@ -123,6 +126,7 @@ function Get-TargetResource
         return @{
             DisplayName           = $DisplayName
             TeamName              = $TeamName
+            TeamId                = $TeamId
             ChannelName           = $ChannelName
             ContentUrl            = $ContentUrl
             WebSiteUrl            = $WebSiteUrl
@@ -167,117 +171,44 @@ function Set-TargetResource
         [ValidateLength(1, 256)]
         $DisplayName,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupID,
+        [ValidateLength(1, 256)]
+        $TeamName,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateLength(1, 1024)]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $MailNickName,
-
-        [Parameter()]
-        [System.String[]]
-        $Owner,
+        [ValidateLength(1, 256)]
+        $ChannelName,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Public", "Private", "HiddenMembership")]
-        $Visibility,
+        $TeamId,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowAddRemoveApps,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowGiphy,
-
-        [Parameter()]
-        [ValidateSet("Strict", "Moderate")]
         [System.String]
-        $GiphyContentRating,
+        $ContentUrl,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowStickersAndMemes,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCustomMemes,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserEditMessages,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserDeleteMessages,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowOwnerDeleteMessages,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCreateUpdateRemoveConnectors,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCreateUpdateRemoveTabs,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCreateUpdateChannels,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowDeleteChannels,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowTeamMentions,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowChannelMentions,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowGuestCreateUpdateChannels,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowGuestDeleteChannels,
-
-        [Parameter()]
-        [System.Boolean]
-        $ShowInTeamsSearchAndSuggestions,
+        [System.String]
+        $WebSiteUrl,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $ApplicationId,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $TenantId,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $CertificateThumbprint,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration of Team $DisplayName"
@@ -292,93 +223,44 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraphBeta' `
+        -InboundParameters $PSBoundParameters
 
-    $team = Get-TargetResource @PSBoundParameters
+    $tab = Get-TargetResource @PSBoundParameters
 
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("Ensure")
+    $CurrentParameters.Remove("Ensure") | Out-Null
+    $CurrentParameters.Remove("ApplicationId") | Out-Null
+    $CurrentParameters.Remove("TenantId") | Out-Null
+    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
 
-    if ($Ensure -eq "Present" -and ($team.Ensure -eq "Present"))
+    $ChannelInstance = Get-MgTeamChannel -TeamId $tab.TeamId `
+        -Filter "DisplayName eq '$ChannelName'"
+    $tabInstance = Get-MgTeamChannelTab -TeamId $tab.TeamId `
+        -ChannelId $ChannelInstance.Id `
+        -Filter "DisplayName eq '$DisplayName"
+    if ($Ensure -eq "Present" -and ($tab.Ensure -eq "Present"))
     {
-        ## Can't pass Owner parm into set opertaion
-        if ($CurrentParameters.ContainsKey("Owner"))
-        {
-            $CurrentParameters.Remove("Owner")
-        }
-        if (-not $CurrentParameters.ContainsKey("GroupID"))
-        {
-            $CurrentParameters.Add("GroupID", $team.GroupID)
-        }
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $CurrentParameters.Remove("GlobalAdminAccount")
-        }
-        else
-        {
-            $CurrentParameters.Remove("ApplicationId")
-            $CurrentParameters.Remove("TenantId")
-            $CurrentParameters.Remove("CertificateThumbprint")
-        }
-        Set-Team @CurrentParameters
-        Write-Verbose -Message "Updating team $DisplayName"
+        Write-Verbose -Message "Updating current instance of tab {$($tabInstance.DisplayName)}"
+        $CurrentParameters.Add("ChannelId", $ChannelInstance.Id)
+        $CurrentParameters.Add("TeamsTabId", $tabInstance.Id)
+        Update-MgTeamChannelTab @CurrentParameters | Out-Null
     }
     elseif ($Ensure -eq "Present" -and ($team.Ensure -eq "Absent"))
     {
-        ## GroupID not used on New-Team cmdlet
-        if ($CurrentParameters.ContainsKey("GroupID"))
-        {
-            $CurrentParameters.Remove("GroupID")
-        }
-        Write-Verbose -Message "Creating team $DisplayName"
-        if ($null -ne $Owner)
-        {
-            $CurrentParameters.Owner = ([array]$Owner[0]).ToString()
-        }
-
-        if ($ConnectionMode -eq "ServicePrincipal")
-        {
-            $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
-                -InboundParameters $PSBoundParameters
-            $group = New-AzureADMSGroup -DisplayName $DisplayName -GroupTypes "Unified" -MailEnabled $true -SecurityEnabled $true -MailNickname $MailNickName
-            $currentOwner = (($CurrentParameters.Owner)[0])
-
-            Write-Verbose -Message "Retrieving Group Owner {$currentOwner}"
-            $ownerUser = Get-AzureADUser -SearchString $currentOwner
-
-            Write-Verbose -Message "Adding Owner {$($ownerUser.ObjectId)} to Group {$($group.Id)}"
-            try
-            {
-                Add-AzureADGroupOwner -ObjectId $group.Id -RefObjectId $ownerUser.ObjectId -ErrorAction Stop
-            }
-            catch
-            {
-                Write-Verbose -Message "Adding Owner - Sleeping for 15 seconds"
-                Start-Sleep -Seconds 15
-                Add-AzureADGroupOwner -ObjectId $group.Id -RefObjectId $ownerUser.ObjectId
-            }
-
-            try
-            {
-                New-Team -GroupId $group.Id -ErrorAction Stop
-            }
-            catch
-            {
-                Write-Verbose -Message "Creating Team - Sleeping for 15 seconds"
-                Start-Sleep -Seconds 15
-                New-Team -GroupId $group.Id
-            }
-        }
-        else
-        {
-            $CurrentParameters.Remove("GlobalAdminAccount")
-            New-Team @CurrentParameters
-        }
+        Write-Verbose -Message "Creating new tab {$DisplayName}"
+        $CurrentParameters.Add("ChannelId", $ChannelInstance.Id)
+        New-MgTeamChannelTab @CurrentParameters | Out-Null
     }
     elseif ($Ensure -eq "Absent" -and ($team.Ensure -eq "Present"))
     {
-        Write-Verbose -Message "Removing team $DisplayName"
-        Remove-Team -GroupId $team.GroupId
+        Write-Verbose -Message "Removing existing tab {$DisplayName}"
+        $RemoveParams = @{
+            ChannelId  = $ChannelInstance.Id
+            TeamId     = $tab.TeamId
+            TeamsTabId = $tabInstance.Id
+        }
+        Remove-MgTeamChannelTab @RemoveParams | Out-Null
     }
 }
 
@@ -393,117 +275,44 @@ function Test-TargetResource
         [ValidateLength(1, 256)]
         $DisplayName,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupID,
+        [ValidateLength(1, 256)]
+        $TeamName,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateLength(1, 1024)]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $MailNickName,
-
-        [Parameter()]
-        [System.String[]]
-        $Owner,
+        [ValidateLength(1, 256)]
+        $ChannelName,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Public", "Private", "HiddenMembership")]
-        $Visibility,
+        $TeamId,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowAddRemoveApps,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowGiphy,
-
-        [Parameter()]
-        [ValidateSet("Strict", "Moderate")]
         [System.String]
-        $GiphyContentRating,
+        $ContentUrl,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowStickersAndMemes,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCustomMemes,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserEditMessages,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserDeleteMessages,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowOwnerDeleteMessages,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCreateUpdateRemoveConnectors,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCreateUpdateRemoveTabs,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCreateUpdateChannels,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowDeleteChannels,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowTeamMentions,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowChannelMentions,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowGuestCreateUpdateChannels,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowGuestDeleteChannels,
-
-        [Parameter()]
-        [System.Boolean]
-        $ShowInTeamsSearchAndSuggestions,
+        [System.String]
+        $WebSiteUrl,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $ApplicationId,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $TenantId,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $CertificateThumbprint,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $CertificateThumbprint
     )
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -515,25 +324,17 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Team $DisplayName"
+    Write-Verbose -Message "Testing configuration of Tab $DisplayName"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    If (!$PSBoundParameters.ContainsKey('Ensure'))
-    {
-        $PSBoundParameters.Add('Ensure', $Ensure)
-    }
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
-    $ValuesToCheck.Remove('GroupID') | Out-Null
-
-    if ($null -eq $CurrentValues.Owner)
-    {
-        $ValuesToCheck.Remove("Owner") | Out-Null
-    }
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
