@@ -757,12 +757,13 @@ function Show-M365DSCGUI
                 }
             })
         $panelMenu.Controls.Add($txtPassword)
+        $panelMenu.Width = $pnlIntune.Left + $pnlIntune.Width
 
         $btnExtract = New-Object System.Windows.Forms.Button
         $btnExtract.Width = 178
         $btnExtract.Height = 70
         $btnExtract.Top = 5
-        $btnExtract.Left = $form.Width - 200
+        $btnExtract.Left = $panelMenu.Width - 200
         $btnExtract.BackColor = [System.Drawing.Color]::ForestGreen
         $btnExtract.ForeColor = [System.Drawing.Color]::White
         $btnExtract.Text = "Start Extraction"
@@ -856,7 +857,6 @@ function Show-M365DSCGUI
                 }
             })
         $panelMenu.Controls.Add($btnExtract);
-        $panelMenu.Width = $pnlIntune.Left + $pnlIntune.Width
         $pnlMain.Controls.Add($panelMenu);
         #endregion
 
