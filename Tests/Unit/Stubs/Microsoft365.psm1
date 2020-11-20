@@ -2915,7 +2915,7 @@ function New-AzureADMSRoleDefinition
         $Version,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.RolePermission]]
+        [System.String[]]
         $RolePermissions,
 
         [Parameter()]
@@ -5121,7 +5121,7 @@ function Set-AzureADMSRoleDefinition
         $Version,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.RolePermission]]
+        [System.String[]]
         $RolePermissions,
 
         [Parameter()]
