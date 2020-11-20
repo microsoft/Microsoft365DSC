@@ -34,21 +34,21 @@ Configuration Master
     {
         AADApplication DSCApp1
         {
-            DisplayName                   = "App1"
-            AvailableToOtherTenants       = $false
-            GroupMembershipClaims         = $null
-            Homepage                      = "https://app.contoso.com"
-            IdentifierUris                = "https://app.contoso.com"
-            KnownClientApplications       = ""
-            LogoutURL                     = "https://app.contoso.com/logout"
-            Oauth2AllowImplicitFlow       = $false
-            Oauth2AllowUrlPathMatching    = $false
-            Oauth2RequirePostResponse     = $false
-            PublicClient                  = $false
-            ReplyURLs                     = "https://app.contoso.com"
-            SamlMetadataUrl               = ""
-            Ensure                        = "Present"
-            GlobalAdminAccount            = $GlobalAdmin
+            DisplayName                = "App1"
+            AvailableToOtherTenants    = $false
+            GroupMembershipClaims      = $null
+            Homepage                   = "https://app.contoso.com"
+            IdentifierUris             = "https://app.contoso.com"
+            KnownClientApplications    = ""
+            LogoutURL                  = "https://app.contoso.com/logout"
+            Oauth2AllowImplicitFlow    = $false
+            Oauth2AllowUrlPathMatching = $false
+            Oauth2RequirePostResponse  = $false
+            PublicClient               = $false
+            ReplyURLs                  = "https://app.contoso.com"
+            SamlMetadataUrl            = ""
+            Ensure                     = "Present"
+            GlobalAdminAccount         = $GlobalAdmin
         }
 
         AADGroupsNamingPolicy GroupsNamingPolicy
@@ -75,15 +75,15 @@ Configuration Master
 
         AADMSGroup AzureADMSGroup
         {
-            DisplayName                   = "DSCCoreGroup"
-            Description                   = "Microsoft DSC Group"
-            SecurityEnabled               = $True
-            MailEnabled                   = $True
-            MailNickname                  = "M365DSCCoreGroup"
-            Visibility                    = "Private"
-            GroupTypes                    = @("Unified");
-            GlobalAdminAccount            = $GlobalAdmin;
-            Ensure                        = "Present"
+            DisplayName        = "DSCCoreGroup"
+            Description        = "Microsoft DSC Group"
+            SecurityEnabled    = $True
+            MailEnabled        = $True
+            MailNickname       = "M365DSCCoreGroup"
+            Visibility         = "Private"
+            GroupTypes         = @("Unified");
+            GlobalAdminAccount = $GlobalAdmin;
+            Ensure             = "Present"
         }
 
         EXOAcceptedDomain O365DSCDomain
@@ -440,25 +440,25 @@ Configuration Master
             Ensure                              = "Present";
             GlobalAdminAccount                  = $GlobalAdmin
             ContentContainsSensitiveInformation = @(MSFT_SCDLPSensitiveInformation
-            {
-                name = 'U.S. Social Security Number (SSN)'
-                id = 'a44669fe-0d48-453d-a9b1-2cc83f2cba77'
-                maxconfidence = '100'
-                minconfidence = '-1'
-                classifiertype = 'Content'
-                mincount = '1'
-                maxcount = '-1'
-            }
-            MSFT_SCDLPSensitiveInformation
-            {
-                name = 'Azure DocumentDB Auth Key'
-                id = '0f587d92-eb28-44a9-bd1c-90f2892b47aa'
-                maxconfidence = '100'
-                minconfidence = '85'
-                classifiertype = 'Content'
-                mincount = '1'
-                maxcount = '-1'
-            })
+                {
+                    name           = 'U.S. Social Security Number (SSN)'
+                    id             = 'a44669fe-0d48-453d-a9b1-2cc83f2cba77'
+                    maxconfidence  = '100'
+                    minconfidence  = '-1'
+                    classifiertype = 'Content'
+                    mincount       = '1'
+                    maxcount       = '-1'
+                }
+                MSFT_SCDLPSensitiveInformation
+                {
+                    name           = 'Azure DocumentDB Auth Key'
+                    id             = '0f587d92-eb28-44a9-bd1c-90f2892b47aa'
+                    maxconfidence  = '100'
+                    minconfidence  = '85'
+                    classifiertype = 'Content'
+                    mincount       = '1'
+                    maxcount       = '-1'
+                })
         }
 
         SCFilePlanPropertyAuthority FilePlanPropertyAuthority
@@ -517,6 +517,15 @@ Configuration Master
             RetentionDurationDisplayHint = "Days"
             GlobalAdminAccount           = $GlobalAdmin
             Ensure                       = "Present"
+        }
+
+        SCRetentionEventType SCEventType
+        {
+            Comment            = "DSC Event Type description.";
+            Name               = "DSCEventType";
+            Ensure             = "Present";
+            GlobalAdminAccount = $GlobalAdmin;
+
         }
 
         SCSupervisoryReviewPolicy SRPolicy
@@ -589,8 +598,8 @@ Configuration Master
             SocialBarOnSitePagesDisabled                = $False;
             StorageMaximumLevel                         = 26214400;
             StorageWarningLevel                         = 25574400;
-            GlobalAdminAccount = $GlobalAdmin
-            Ensure             = "Present"
+            GlobalAdminAccount                          = $GlobalAdmin
+            Ensure                                      = "Present"
         }
 
         SPOPropertyBag MyKey
@@ -621,11 +630,11 @@ Configuration Master
 
         SPOSiteGroup TestSiteGroup
         {
-            Url                                         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
-            Identity                                    = "TestSiteGroup"
-            PermissionLevels                            = @("Edit", "Read")
-            Ensure                                      = "Present"
-            GlobalAdminAccount                          = $GlobalAdmin
+            Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
+            Identity           = "TestSiteGroup"
+            PermissionLevels   = @("Edit", "Read")
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
         }
         SPOTheme SPTheme01
         {
@@ -680,10 +689,10 @@ Configuration Master
 
         TeamsUpgradeConfiguration UpgradeConfig
         {
-            DownloadTeams        = $True;
-            GlobalAdminAccount   = $GlobalAdmin
-            IsSingleInstance     = "Yes"
-            SfBMeetingJoinUx     = "NativeLimitedClient"
+            DownloadTeams      = $True;
+            GlobalAdminAccount = $GlobalAdmin
+            IsSingleInstance   = "Yes"
+            SfBMeetingJoinUx   = "NativeLimitedClient"
         }
 
         TeamsMeetingBroadcastPolicy IntegrationBroadcastPolicy
@@ -873,12 +882,13 @@ Configuration Master
             Ensure                = "Present";
             GlobalAdminAccount    = $GlobalAdmin;
             Identity              = "DemoPlan";
-            NormalizationRules    = MSFT_TeamsVoiceNormalizationRule{
-                Pattern = '^00(\d+)$'
-                Description = 'LB International Dialing Rule'
-                Identity = 'LB Intl Dialing'
-                Translation = '+$1'
-                Priority = 0
+            NormalizationRules    = MSFT_TeamsVoiceNormalizationRule
+            {
+                Pattern             = '^00(\d+)$'
+                Description         = 'LB International Dialing Rule'
+                Identity            = 'LB Intl Dialing'
+                Translation         = '+$1'
+                Priority            = 0
                 IsInternalExtension = $False
             };
             OptimizeDeviceDialing = $true;

@@ -1,5 +1,17 @@
 # Change log for Microsoft365DSC
 
+## 1.20.1125.1
+
+* AADRoleDefinition
+  * Initial Release;
+* O365User
+  * Fixes an issue where only the first O365User instance
+    extracted had the PSCredential Password property set
+    correctly;
+* TeamsMeetingPolicy
+  * Added the AllowBreakoutRooms, TeamsCameraFarEndPTZMode
+    & AllowMeetingReactions parameters;
+
 ## 1.20.1118.1
 
 * EXOMalwareFilterPolicy
@@ -9,6 +21,8 @@
   * Fixed an issue where only non-null parameters are
     used in the Set-TargetResource resource;
     (Issue #898)
+* SCRetentionEventType
+  * Initial Release;
 * SPOSiteScript
   * BREAKING CHANGE: Title is now the primary key for the
     resource and Service Principal is now supported for
