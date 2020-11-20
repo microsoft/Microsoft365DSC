@@ -8,6 +8,9 @@
   * Fixes an issue where only the first O365User instance
     extracted had the PSCredential Password property set
     correctly;
+* TeamsMeetingPolicy
+  * Added the AllowBreakoutRooms, TeamsCameraFarEndPTZMode
+    & AllowMeetingReactions parameters;
 
 ## 1.20.1118.1
 
