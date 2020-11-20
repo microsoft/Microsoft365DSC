@@ -111,7 +111,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name Description -Value "Role description"
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name ResourceScopes -Value "/"
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name IsEnabled -Value "True"
-                    $AADRoleDef | Add-Member -MemberType NoteProperty -Name RolePermissions -Value "microsoft.directory/applicationPolicies/allProperties/read","microsoft.directory/applicationPolicies/allProperties/update","microsoft.directory/applicationPolicies/basic/update"
+                    $AADRoleDef | Add-Member -MemberType NoteProperty -Name RolePermissions -Value @{AllowedResourceActions = "microsoft.directory/applicationPolicies/allProperties/read","microsoft.directory/applicationPolicies/allProperties/update","microsoft.directory/applicationPolicies/basic/update"}
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name Version -Value "1.0"
                     return $AADRoleDef
                 }
@@ -154,7 +154,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name Description -Value "This is a custom role"
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name ResourceScopes -Value "/"
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name IsEnabled -Value "True"
-                    $AADRoleDef | Add-Member -MemberType NoteProperty -Name RolePermissions -Value "microsoft.directory/applicationPolicies/allProperties/read"
+                    $AADRoleDef | Add-Member -MemberType NoteProperty -Name RolePermissions -Value @{AllowedResourceActions = "microsoft.directory/applicationPolicies/allProperties/read"}
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name Version -Value "1.0"
                     return $AADRoleDef
                 }
@@ -193,7 +193,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name Description -Value "This is a custom role"
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name ResourceScopes -Value "/"
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name IsEnabled -Value "True"
-                    $AADRoleDef | Add-Member -MemberType NoteProperty -Name RolePermissions -Value "microsoft.directory/applicationPolicies/allProperties/read","microsoft.directory/applicationPolicies/allProperties/update","microsoft.directory/applicationPolicies/basic/update"
+                    $AADRoleDef | Add-Member -MemberType NoteProperty -Name RolePermissions -Value @{AllowedResourceActions = "microsoft.directory/applicationPolicies/allProperties/read","microsoft.directory/applicationPolicies/allProperties/update","microsoft.directory/applicationPolicies/basic/update"}
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name Version -Value "1.0"
                     return $AADRoleDef
                 }
@@ -230,7 +230,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name Description -Value "This is a custom role"
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name ResourceScopes -Value "/"
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name IsEnabled -Value "True"
-                    $AADRoleDef | Add-Member -MemberType NoteProperty -Name RolePermissions -Value "microsoft.directory/applicationPolicies/allProperties/read","microsoft.directory/applicationPolicies/allProperties/update","microsoft.directory/applicationPolicies/basic/update"
+                    $AADRoleDef | Add-Member -MemberType NoteProperty -Name RolePermissions -Value @{AllowedResourceActions = "microsoft.directory/applicationPolicies/allProperties/read","microsoft.directory/applicationPolicies/allProperties/update","microsoft.directory/applicationPolicies/basic/update"}
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name Version -Value "1.0"
                     return $AADRoleDef
                 }
