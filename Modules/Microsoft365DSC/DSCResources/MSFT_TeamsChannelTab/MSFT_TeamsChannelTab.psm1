@@ -74,13 +74,14 @@ function Get-TargetResource
             if ([System.String]::IsNullOrEmpty($TeamId))
             {
                 Write-Verbose -Message "Getting team by Name {$TeamName}"
+                Write-Verbose -Message "PROFILE === $((Get-MgProfile).Name)"
                 $filter = "displayName eq '$TeamName' and resourceProvisioningOptions/Any(x:x eq 'Team')"
-                $teamInstance = get-MgGroup -filter $filter -ErrorAction Stop | %{ @{ TeamId=$_.Id } } | get-MgTeam -ErrorAction Stop
+                $teamInstance = Get-MgGroup -Filter $filter -ErrorAction Stop | ForEach-Object { @{ TeamId = $_.Id } } | Get-MgTeam -ErrorAction Stop
             }
             else
             {
                 Write-Verbose -Message "Getting team by Id {$TeamId}"
-                $teamInstance = get-MgTeam -TeamId $TeamId -ErrorAction Stop
+                $teamInstance = Get-MgTeam -TeamId $TeamId -ErrorAction Stop
             }
         }
         catch
@@ -102,7 +103,7 @@ function Get-TargetResource
         }
 
         # Get the Channel ID
-        $channelInstance = Get-MgTeamChannel -TeamId $teamInstance.Id | Where-Object -FilterScript {$_.DisplayName -eq $ChannelName}
+        $channelInstance = Get-MgTeamChannel -TeamId $teamInstance.Id | Where-Object -FilterScript { $_.DisplayName -eq $ChannelName }
 
         if ($null -eq $channelInstance)
         {
@@ -114,7 +115,7 @@ function Get-TargetResource
 
         # Get the Channel Tab
         $tabInstance = Get-MgTeamChannelTab -TeamId $teamInstance.Id `
-            -ChannelId $channelInstance.Id | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+            -ChannelId $channelInstance.Id | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
 
         if ($null -eq $tabInstance)
         {
@@ -382,8 +383,8 @@ function Export-TargetResource
     {
         $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraphBeta' `
             -InboundParameters $PSBoundParameters
-            
-        [array]$teams = get-mggroup -filter "resourceProvisioningOptions/Any(x:x eq 'Team')"
+
+        [array]$teams = Get-MgGroup -Filter "resourceProvisioningOptions/Any(x:x eq 'Team')"
         $i = 1
         $dscContent = ""
         Write-Host "`r`n" -NoNewline
@@ -423,7 +424,7 @@ function Export-TargetResource
                         -TenantId $TenantId
                 }
 
-                $k =1
+                $k = 1
                 foreach ($tab in $tabs)
                 {
                     Write-Host "            |---[$k/$($tabs.Length)] $($tab.DisplayName)" -NoNewline
