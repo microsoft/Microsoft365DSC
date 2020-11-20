@@ -20,11 +20,11 @@ function Get-TargetResource
         [System.String[]]
         $ResourceScopes,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $IsEnabled,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String[]]
         $RolePermissions,
 
@@ -58,7 +58,7 @@ function Get-TargetResource
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Getting configuration of Azure AD Application"
+    Write-Verbose -Message "Getting configuration of Azure AD role definition"
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -146,11 +146,11 @@ function Set-TargetResource
         [System.String[]]
         $ResourceScopes,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $IsEnabled,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String[]]
         $RolePermissions,
 
@@ -220,14 +220,14 @@ function Set-TargetResource
         $currentParameters.Remove("Id") | Out-Null
         New-AzureADMSRoleDefinition @currentParameters
     }
-    # App should exist and will be configured to desired state
+    # Role definition should exist and will be configured to desired state
     if ($Ensure -eq 'Present' -and $currentAADRoleDef.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing AzureAD role definition {$DisplayName}"
         $currentParameters.Id = $currentAADRoleDef.Id
         Set-AzureADMSRoleDefinition @currentParameters
     }
-    # App exists but should not
+    # Role definition exists but should not
     elseif ($Ensure -eq 'Absent' -and $currentAADRoleDef.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing AzureAD role definition {$DisplayName}"
@@ -257,11 +257,11 @@ function Test-TargetResource
         [System.String[]]
         $ResourceScopes,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $IsEnabled,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String[]]
         $RolePermissions,
 
@@ -367,7 +367,7 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewLine
     try
     {
-        $AADRoleDefinitions = Get-AzureADMSRoleDefinition -ErrorAction Stop
+        [array]$AADRoleDefinitions = Get-AzureADMSRoleDefinition -ErrorAction Stop
         foreach($AADRoleDefinition in $AADRoleDefinitions)
         {
             Write-Host "    |---[$i/$($AADRoleDefinitions.Count)] $($AADRoleDefinition.DisplayName)" -NoNewLine
