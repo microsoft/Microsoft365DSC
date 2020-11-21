@@ -73,57 +73,70 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters `
         -Url $SiteUrl
 
-    $nullReturn = @{
-        Key                   = $Key
-        Value                 = $Value
-        EntityScope           = $EntityScope
-        Description           = $Description
-        Comment               = $Comment
-        Ensure                = "Absent"
-        SiteUrl               = $SiteUrl
-        GlobalAdminAccount    = $GlobalAdminAccount
-        ApplicationId         = $ApplicationId
-        TenantId              = $TenantId
-        CertificatePassword   = $CertificatePassword
-        CertificatePath       = $CertificatePath
-        CertificateThumbprint = $CertificateThumbprint
-    }
-
-    Write-Verbose -Message "Getting storage entity $Key"
-
-    $entityStorageParms = @{ }
-    $entityStorageParms.Add("Key", $Key)
-
-    if ($null -ne $EntityScope -and "" -ne $EntityScope)
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
+    try
     {
-        $entityStorageParms.Add("Scope", $EntityScope)
-    }
+        Write-Verbose -Message "Getting storage entity $Key"
 
-    $Entity = Get-PnPStorageEntity @entityStorageParms -ErrorAction SilentlyContinue
-    ## Get-PnPStorageEntity seems to not return $null when not found
-    ## so checking key
-    if ($null -eq $Entity.Key)
+        $entityStorageParms = @{ }
+        $entityStorageParms.Add("Key", $Key)
+
+        if ($null -ne $EntityScope -and "" -ne $EntityScope)
+        {
+            $entityStorageParms.Add("Scope", $EntityScope)
+        }
+
+        $Entity = Get-PnPStorageEntity @entityStorageParms -ErrorAction SilentlyContinue
+        ## Get-PnPStorageEntity seems to not return $null when not found
+        ## so checking key
+        if ($null -eq $Entity.Key)
+        {
+            Write-Verbose -Message "No storage entity found for $Key"
+            return $nullReturn
+        }
+
+        Write-Verbose -Message "Found storage entity $($Entity.Key)"
+
+        return @{
+            Key                   = $Entity.Key
+            Value                 = $Entity.Value
+            EntityScope           = $EntityScope
+            Description           = $Entity.Description
+            Comment               = $Entity.Comment
+            Ensure                = "Present"
+            SiteUrl               = $SiteUrl
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
+        }
+    }
+    catch
     {
-        Write-Verbose -Message "No storage entity found for $Key"
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
-    }
-
-    Write-Verbose -Message "Found storage entity $($Entity.Key)"
-
-    return @{
-        Key                   = $Entity.Key
-        Value                 = $Entity.Value
-        EntityScope           = $EntityScope
-        Description           = $Entity.Description
-        Comment               = $Entity.Comment
-        Ensure                = "Present"
-        SiteUrl               = $SiteUrl
-        GlobalAdminAccount    = $GlobalAdminAccount
-        ApplicationId         = $ApplicationId
-        TenantId              = $TenantId
-        CertificatePassword   = $CertificatePassword
-        CertificatePath       = $CertificatePath
-        CertificateThumbprint = $CertificateThumbprint
     }
 }
 
@@ -298,6 +311,15 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration for SPO Storage Entity for $Key"
 
@@ -306,7 +328,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("Key", `
@@ -365,53 +387,80 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
         -InboundParameters $PSBoundParameters
 
-    $storageEntities = Get-PnPStorageEntity -ErrorAction SilentlyContinue
+    try
+    {
+        $storageEntities = Get-PnPStorageEntity -ErrorAction SilentlyContinue
 
-    $i = 1
-    $dscContent = ''
-    $organization = ""
-    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-    $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
-    if ($organization.IndexOf(".") -gt 0)
-    {
-        $principal = $organization.Split(".")[0]
-    }
-
-    # Obtain central administration url from a User Principal Name
-    if ($ConnectionMode -eq 'Credential')
-    {
-        $centralAdminUrl = Get-SPOAdministrationUrl -GlobalAdminAccount $GlobalAdminAccount
-    }
-    else
-    {
-        $centralAdminUrl = "https://$principal-admin.sharepoint.com"
-    }
-    Write-Host "`r`n" -NoNewline
-    foreach ($storageEntity in $storageEntities)
-    {
-        $Params = @{
-            GlobalAdminAccount    = $GlobalAdminAccount
-            Key                   = $storageEntity.Key
-            SiteUrl               = $centralAdminUrl
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
-            CertificateThumbprint = $CertificateThumbprint
+        $i = 1
+        $dscContent = ''
+        $organization = ""
+        $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
+        $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
+        if ($organization.IndexOf(".") -gt 0)
+        {
+            $principal = $organization.Split(".")[0]
         }
-        Write-Host "    |---[$i/$($storageEntities.Length)] $($storageEntity.Key)" -NoNewline
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+
+        # Obtain central administration url from a User Principal Name
+        if ($ConnectionMode -eq 'Credential')
+        {
+            $centralAdminUrl = Get-SPOAdministrationUrl -GlobalAdminAccount $GlobalAdminAccount
+        }
+        else
+        {
+            $centralAdminUrl = "https://$principal-admin.sharepoint.com"
+        }
+        Write-Host "`r`n" -NoNewline
+        foreach ($storageEntity in $storageEntities)
+        {
+            $Params = @{
+                GlobalAdminAccount    = $GlobalAdminAccount
+                Key                   = $storageEntity.Key
+                SiteUrl               = $centralAdminUrl
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+                CertificateThumbprint = $CertificateThumbprint
+            }
+            Write-Host "    |---[$i/$($storageEntities.Length)] $($storageEntity.Key)" -NoNewline
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-        $i++
-        Write-Host $Global:M365DSCEmojiGreenCheckmark
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            $i++
+            Write-Host $Global:M365DSCEmojiGreenCheckmark
+        }
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

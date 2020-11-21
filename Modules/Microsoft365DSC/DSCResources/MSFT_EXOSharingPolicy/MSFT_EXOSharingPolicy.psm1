@@ -74,38 +74,57 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
     }
 
-    $AllSharingPolicies = Get-SharingPolicy
-
-    $SharingPolicy = $AllSharingPolicies | Where-Object -FilterScript { $_.Name -eq $Name }
-
-    if ($null -eq $SharingPolicy)
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
+    try
     {
-        Write-Verbose -Message "Sharing Policy $($Name) does not exist."
+        $AllSharingPolicies = Get-SharingPolicy -ErrorAction Stop
 
-        $nullReturn = @{
-            Name               = $Name
-            Default            = $Default
-            Domains            = $Domains
-            Enabled            = $Enabled
-            Ensure             = 'Absent'
-            GlobalAdminAccount = $GlobalAdminAccount
+        $SharingPolicy = $AllSharingPolicies | Where-Object -FilterScript { $_.Name -eq $Name }
+
+        if ($null -eq $SharingPolicy)
+        {
+            Write-Verbose -Message "Sharing Policy $($Name) does not exist."
+            return $nullReturn
         }
+        else
+        {
+            $result = @{
+                Name               = $SharingPolicy.Name
+                Default            = $SharingPolicy.Default
+                Domains            = $SharingPolicy.Domains
+                Enabled            = $SharingPolicy.Enabled
+                Ensure             = 'Present'
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
 
-        return $nullReturn
+            Write-Verbose -Message "Found Sharing Policy $($Name)"
+            return $result
+        }
     }
-    else
+    catch
     {
-        $result = @{
-            Name               = $SharingPolicy.Name
-            Default            = $SharingPolicy.Default
-            Domains            = $SharingPolicy.Domains
-            Enabled            = $SharingPolicy.Enabled
-            Ensure             = 'Present'
-            GlobalAdminAccount = $GlobalAdminAccount
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
         }
-
-        Write-Verbose -Message "Found Sharing Policy $($Name)"
-        return $result
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return $nullReturn
     }
 }
 
@@ -270,6 +289,15 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing Sharing Policy configuration for $Name"
 
@@ -281,7 +309,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -334,44 +362,71 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
-    [array]$AllSharingPolicies = Get-SharingPolicy
-
-    $dscContent = ""
-
-    if ($AllSharingPolicies.Length -eq 0)
+    try
     {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-    }
-    else
-    {
-        Write-Host "`r`n" -NoNewLine
-    }
-    $i = 1
-    foreach ($SharingPolicy in $AllSharingPolicies)
-    {
-        Write-Host "    |---[$i/$($AllSharingPolicies.Length)] $($SharingPolicy.Name)" -NoNewLine
+        [array]$AllSharingPolicies = Get-SharingPolicy -ErrorAction Stop
 
-        $Params = @{
-            Name                  = $SharingPolicy.Name
-            GlobalAdminAccount    = $GlobalAdminAccount
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
+        $dscContent = ""
+
+        if ($AllSharingPolicies.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
+        $i = 1
+        foreach ($SharingPolicy in $AllSharingPolicies)
+        {
+            Write-Host "    |---[$i/$($AllSharingPolicies.Length)] $($SharingPolicy.Name)" -NoNewline
+
+            $Params = @{
+                Name                  = $SharingPolicy.Name
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
+        }
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

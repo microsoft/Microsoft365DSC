@@ -2,6 +2,8 @@
 {
     "powershell.scriptAnalysis.enable": true,
     "powershell.scriptAnalysis.settingsPath": ".vscode/ScriptAnalyzerSettings.psd1",
+    "powershell.codeFormatting.autoCorrectAliases": true,
+    "powershell.codeFormatting.useCorrectCasing": true,
     "powershell.codeFormatting.openBraceOnSameLine": false,
     "powershell.codeFormatting.newLineAfterOpenBrace": false,
     "powershell.codeFormatting.newLineAfterCloseBrace": true,
@@ -10,7 +12,9 @@
     "powershell.codeFormatting.whitespaceAroundOperator": true,
     "powershell.codeFormatting.whitespaceAfterSeparator": true,
     "powershell.codeFormatting.ignoreOneLineBlock": false,
+    "powershell.codeFormatting.alignPropertyValuePairs": true,
     "powershell.codeFormatting.preset": "Custom",
+    "editor.formatOnSave": true,
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true,
     "files.exclude": {

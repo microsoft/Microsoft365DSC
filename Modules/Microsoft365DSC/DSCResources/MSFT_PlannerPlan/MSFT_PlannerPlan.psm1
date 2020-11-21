@@ -43,89 +43,126 @@ function Get-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
         -InboundParameters $PSBoundParameters
-
-    $UsedID = $false
-    $AllGroups = Get-AzureADGroup -ObjectId $OwnerGroup -ErrorAction 'SilentlyContinue'
-    if ($AllGroups -eq $null)
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
+    try
     {
-        Write-Verbose -Message "Could not get Azure AD Group {$OwnerGroup} by ID. `
-             Trying by Name."
-        [Array]$AllGroups = Get-AzureADGroup -SearchString $OwnerGroup
-    }
-    else
-    {
-        Write-Verbose -Message "Found group {$OwnerGroup} by ID"
-        $UsedID = $true
-    }
+        $UsedID = $false
+        $AllGroups = Get-AzureADGroup -ObjectId $OwnerGroup -ErrorAction 'SilentlyContinue'
+        if ($AllGroups -eq $null)
+        {
+            Write-Verbose -Message "Could not get Azure AD Group {$OwnerGroup} by ID. `
+                Trying by Name."
+            [Array]$AllGroups = Get-AzureADGroup -SearchString $OwnerGroup
+        }
+        else
+        {
+            Write-Verbose -Message "Found group {$OwnerGroup} by ID"
+            $UsedID = $true
+        }
 
-    if ($AllGroups -eq $null)
-    {
-        Write-Verbose -Message "No Azure AD Group found for {$OwnerGroup}"
-    }
-    elseif ($AllGroups.Length -gt 1)
-    {
-        Write-Verbose -Message "Multiple Groups with name {$OwnerGroup} found."
-    }
+        if ($AllGroups -eq $null)
+        {
+            Write-Verbose -Message "No Azure AD Group found for {$OwnerGroup}"
+        }
+        elseif ($AllGroups.Length -gt 1)
+        {
+            Write-Verbose -Message "Multiple Groups with name {$OwnerGroup} found."
+        }
 
-    Write-Verbose -Message "Connecting to the Microsoft Graph"
-    $ConnectionMode = Connect-Graph -Scopes "Group.ReadWrite.All"
+        Write-Verbose -Message "Connecting to the Microsoft Graph"
+        $ConnectionMode = Connect-Graph -Scopes "Group.ReadWrite.All"
 
-    $plan = $null
-    foreach ($group in $AllGroups)
+        $plan = $null
+        foreach ($group in $AllGroups)
+        {
+            try
+            {
+                Write-Verbose -Message "Scanning Group {$($group.DisplayName)} for plan {$Title}"
+                $plan = Get-MgGroupPlannerPlan -GroupId $group.ObjectId | Where-Object -FilterScript { $_.Title -eq $Title }
+                if ($null -ne $plan)
+                {
+                    Write-Verbose -Message "Found Plan."
+                    if ($UsedID)
+                    {
+                        $OwnerGroupValue = $group.ObjectId
+                    }
+                    else
+                    {
+                        $OwnerGroupValue = $group.DisplayName
+                    }
+                    break;
+                }
+            }
+            catch
+            {
+                try
+                {
+                    Write-Verbose -Message $_
+                    $tenantIdValue = ""
+                    if (-not [System.String]::IsNullOrEmpty($TenantId))
+                    {
+                        $tenantIdValue = $TenantId
+                    }
+                    elseif ($null -ne $GlobalAdminAccount)
+                    {
+                        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                    }
+                    Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $tenantIdValue
+                }
+                catch
+                {
+                    Write-Verbose -Message $_
+                }
+            }
+        }
+
+        if ($null -eq $plan)
+        {
+            Write-Verbose -Message "Plan not found, returning Ensure = Absent"
+            return $nullReturn
+        }
+        else
+        {
+            Write-Verbose -Message "Plan found, returning Ensure = Present"
+            $results = @{
+                Title                 = $Title
+                OwnerGroup            = $OwnerGroupValue
+                Ensure                = 'Present'
+                CertificateThumbprint = $CertificateThumbprint
+                ApplicationId         = $ApplicationId
+                TenantID              = $TenantId
+            }
+        }
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $results)"
+        return $results
+    }
+    catch
     {
         try
         {
-            Write-Verbose -Message "Scanning Group {$($group.DisplayName)} for plan {$Title}"
-            $plan = Get-MGGroupPlannerPlan -GroupId $group.ObjectId | Where-Object -FilterScript {$_.Title -eq $Title}
-            if ($null -ne $plan)
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
-                Write-Verbose -Message "Found Plan."
-                if ($UsedID)
-                {
-                    $OwnerGroupValue = $group.ObjectId
-                }
-                else
-                {
-                    $OwnerGroupValue = $group.DisplayName
-                }
-                break;
+                $tenantIdValue = $TenantId
             }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
         }
         catch
         {
             Write-Verbose -Message $_
-            New-M365DSCLogEntry -Error $_ `
-                -Message "Couldn't get Planner plans for {$($group.DisplayName)}" `
-                -Source $MyInvocation.MyCommand.ModuleName
         }
+        return $nullReturn
     }
-
-    if ($null -eq $plan)
-    {
-        Write-Verbose -Message "Plan not found, returning Ensure = Absent"
-        $results = @{
-            Title                 = $Title
-            OwnerGroup            = $OwnerGroup
-            Ensure                = 'Absent'
-            CertificateThumbprint = $CertificateThumbprint
-            ApplicationId         = $ApplicationId
-            TenantID              = $TenantId
-        }
-    }
-    else
-    {
-        Write-Verbose -Message "Plan found, returning Ensure = Present"
-        $results = @{
-            Title                 = $Title
-            OwnerGroup            = $OwnerGroupValue
-            Ensure                = 'Present'
-            CertificateThumbprint = $CertificateThumbprint
-            ApplicationId         = $ApplicationId
-            TenantID              = $TenantId
-        }
-    }
-    Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $results)"
-    return $results
 }
 
 function Set-TargetResource
@@ -182,7 +219,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Planner Plan {$Title} doesn't already exist. Creating it."
-        New-MGPlannerPlan -Owner $OwnerGroup -Title $Title | Out-Null
+        New-MgPlannerPlan -Owner $OwnerGroup -Title $Title | Out-Null
     }
     elseif ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Present')
     {
@@ -194,11 +231,11 @@ function Set-TargetResource
         {
             [Array]$AllGroups = Get-AzureADGroup -SearchString $OwnerGroup
         }
-        $plan = Get-MGGroupPlannerPlan -GroupId $AllGroups[0].ObjectId | Where-Object -FilterScript {$_.Title -eq $Title}
+        $plan = Get-MgGroupPlannerPlan -GroupId $AllGroups[0].ObjectId | Where-Object -FilterScript { $_.Title -eq $Title }
         $SetParams.Add("PlannerPlanId", $plan.Id)
         $SetParams.Add("Owner", $AllGroups[0].ObjectId)
         $SetParams.Remove("OwnerGroup") | Out-Null
-        Update-MGPlannerPlan @SetParams
+        Update-MgPlannerPlan @SetParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentValues.Ensure -eq 'Present')
     {
@@ -237,6 +274,15 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of Planner Plan {$Title}"
 
@@ -247,7 +293,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -288,45 +334,91 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
         -InboundParameters $PSBoundParameters
 
-    [array]$groups = Get-AzureADGroup -All:$true
-
-    $ConnectionMode = Connect-Graph -Scopes "Group.ReadWrite.All"
-    $i = 1
-    $content = ''
-    foreach ($group in $groups)
+    try
     {
-        Write-Information "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.ObjectID)}"
+        [array]$groups = Get-AzureADGroup -All:$true -ErrorAction Stop
+
+        $ConnectionMode = Connect-Graph -Scopes "Group.ReadWrite.All"
+        $i = 1
+        $content = ''
+        foreach ($group in $groups)
+        {
+            Write-Host "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.ObjectID)}"
+            try
+            {
+                [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.ObjectId -ErrorAction 'SilentlyContinue'
+
+                $j = 1
+                foreach ($plan in $plans)
+                {
+                    $params = @{
+                        Title                 = $plan.Title
+                        OwnerGroup            = $group.ObjectId
+                        ApplicationId         = $ApplicationId
+                        TenantId              = $TenantId
+                        CertificateThumbprint = $CertificateThumbprint
+                    }
+                    Write-Host "        [$j/$($plans.Length)] $($plan.Title)"
+                    $result = Get-TargetResource @params
+                    $content += "        PlannerPlan " + (New-Guid).ToString() + "`r`n"
+                    $content += "        {`r`n"
+                    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+                    $content += $currentDSCBlock
+                    $content += "        }`r`n"
+                    $j++
+                }
+                $i++
+            }
+            catch
+            {
+                try
+                {
+                    Write-Verbose -Message $_
+                    $tenantIdValue = ""
+                    if (-not [System.String]::IsNullOrEmpty($TenantId))
+                    {
+                        $tenantIdValue = $TenantId
+                    }
+                    elseif ($null -ne $GlobalAdminAccount)
+                    {
+                        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                    }
+                    Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $tenantIdValue
+                }
+                catch
+                {
+                    Write-Verbose -Message $_
+                }
+            }
+        }
+        return $content
+    }
+    catch
+    {
         try
         {
-            [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.ObjectId -ErrorAction 'SilentlyContinue'
-
-            $j = 1
-            foreach ($plan in $plans)
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
-                $params = @{
-                    Title                 = $plan.Title
-                    OwnerGroup            = $group.ObjectId
-                    ApplicationId         = $ApplicationId
-                    TenantId              = $TenantId
-                    CertificateThumbprint = $CertificateThumbprint
-                }
-                Write-Information "        [$j/$($plans.Length)] $($plan.Title)"
-                $result = Get-TargetResource @params
-                $content += "        PlannerPlan " + (New-GUID).ToString() + "`r`n"
-                $content += "        {`r`n"
-                $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-                $content += $currentDSCBlock
-                $content += "        }`r`n"
-                $j++
+                $tenantIdValue = $TenantId
             }
-            $i++
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
         }
         catch
         {
             Write-Verbose -Message $_
         }
+        return ""
     }
-    return $content
 }
 
 Export-ModuleMember -Function *-TargetResource

@@ -59,41 +59,56 @@ function Get-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
-    $nullReturn = @{
-        Name                  = $Name
-        IsInverted            = $null
-        Palette               = $null
-        Ensure                = "Absent"
-        GlobalAdminAccount    = $GlobalAdminAccount
-        ApplicationId         = $ApplicationId
-        TenantId              = $TenantId
-        CertificatePassword   = $CertificatePassword
-        CertificatePath       = $CertificatePath
-        CertificateThumbprint = $CertificateThumbprint
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
-    }
-
-    Write-Verbose -Message "Getting theme $Name"
-    $theme = Get-PnPTenantTheme | Where-Object -FilterScript { $_.Name -eq $Name }
-    if ($null -eq $theme)
+    try
     {
-        Write-Verbose -Message "The specified theme doesn't exist."
-        return $nullReturn
+        Write-Verbose -Message "Getting theme $Name"
+        $theme = Get-PnPTenantTheme -ErrorAction Stop | Where-Object -FilterScript { $_.Name -eq $Name }
+        if ($null -eq $theme)
+        {
+            Write-Verbose -Message "The specified theme doesn't exist."
+            return $nullReturn
+        }
+        $convertedPalette = Convert-ExistingThemePaletteToHashTable -Palette ([System.Collections.Hashtable]$theme.Palette)
+
+        return @{
+            Name                  = $theme.Name
+            IsInverted            = $theme.IsInverted
+            Palette               = $convertedPalette
+            GlobalAdminAccount    = $GlobalAdminAccount
+            Ensure                = "Present"
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
+        }
     }
-    $convertedPalette = Convert-ExistingThemePaletteToHashTable -Palette ([System.Collections.Hashtable]$theme.Palette)
-
-    return @{
-        Name                  = $theme.Name
-        IsInverted            = $theme.IsInverted
-        Palette               = $convertedPalette
-        GlobalAdminAccount    = $GlobalAdminAccount
-        Ensure                = "Present"
-        ApplicationId         = $ApplicationId
-        TenantId              = $TenantId
-        CertificatePassword   = $CertificatePassword
-        CertificatePath       = $CertificatePath
-        CertificateThumbprint = $CertificateThumbprint
-
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return $nullReturn
     }
 }
 
@@ -251,6 +266,15 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration for SPO Theme $Name"
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -267,7 +291,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove("CertificatePassword") | Out-Null
     $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -325,34 +349,68 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
         -InboundParameters $PSBoundParameters
 
-    [array]$themes = Get-PnPTenantTheme
-    $dscContent = ""
-    $i = 1
-    Write-Host "`r`n" -NoNewLine
-    foreach ($theme in $themes)
+    try
     {
-        Write-Host "    |---[$i/$($themes.Length)] $($theme.Name)" -NoNewLine
-        $Params = @{
-            Name                  = $theme.Name
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
-            CertificateThumbprint = $CertificateThumbprint
-            GlobalAdminAccount    = $GlobalAdminAccount
+        [array]$themes = Get-PnPTenantTheme -ErrorAction Stop
+        $dscContent = ""
+        $i = 1
+        Write-Host "`r`n" -NoNewline
+        foreach ($theme in $themes)
+        {
+            Write-Host "    |---[$i/$($themes.Length)] $($theme.Name)" -NoNewline
+            $Params = @{
+                Name                  = $theme.Name
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+                CertificateThumbprint = $CertificateThumbprint
+                GlobalAdminAccount    = $GlobalAdminAccount
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $Results.Palette = ConvertTo-SPOThemePalettePropertyString $Results.Palette
+            $partialDSC = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            if ($null -ne $Results.Palette)
+            {
+                $partialDSC = Convert-DSCStringParamToVariable -DSCBlock $partialDSC `
+                    -ParameterName "Palette"
+            }
+            $dscContent += $partialDSC
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
         }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return ""
+    }
 }
 
 function Convert-ExistingThemePaletteToHashTable

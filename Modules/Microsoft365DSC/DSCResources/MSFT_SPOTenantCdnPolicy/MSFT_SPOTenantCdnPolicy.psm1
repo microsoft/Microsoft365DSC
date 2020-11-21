@@ -57,7 +57,7 @@ function Get-TargetResource
 
     try
     {
-        $Policies = Get-PnPTenantCdnPolicies -CDNType $CDNType -ErrorAction Stop
+        $Policies = Get-PnPTenantCdnPolicies -CdnType $CDNType -ErrorAction Stop
 
         return @{
             CDNType                              = $CDNType
@@ -73,7 +73,27 @@ function Get-TargetResource
     }
     catch
     {
-        return $null
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        throw $_
     }
 }
 
@@ -145,7 +165,7 @@ function Set-TargetResource
             $stringValue += $entry + ","
         }
         $stringValue = $stringValue.Remove($stringValue.Length - 1, 1)
-        Set-PnPTenantCdnPolicy -CDNType $CDNType `
+        Set-PnPTenantCdnPolicy -CdnType $CDNType `
             -PolicyType 'IncludeFileExtensions' `
             -PolicyValue $stringValue
     }
@@ -156,7 +176,7 @@ function Set-TargetResource
         Write-Verbose "Found difference in ExcludeRestrictedSiteClassifications"
 
 
-        Set-PnPTenantCdnPolicy -CDNType $CDNType `
+        Set-PnPTenantCdnPolicy -CdnType $CDNType `
             -PolicyType 'ExcludeRestrictedSiteClassifications' `
             -PolicyValue $stringValue
     }
@@ -205,6 +225,15 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration for SPO Storage Entity for $Key"
 
@@ -213,7 +242,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("CDNType", `
@@ -277,43 +306,70 @@ function Export-TargetResource
         GlobalAdminAccount    = $GlobalAdminAccount
     }
 
-    Write-Host "`r`n    [1/2] Public" -NoNewline
-    $Results = Get-TargetResource @Params
-    $dscContent = ""
-    if ($null -ne $Results)
+    try
     {
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-    }
-
-    $Params = @{
-        CdnType               = 'Private'
-        ApplicationId         = $ApplicationId
-        TenantId              = $TenantId
-        CertificatePassword   = $CertificatePassword
-        CertificatePath       = $CertificatePath
-        CertificateThumbprint = $CertificateThumbprint
-        GlobalAdminAccount    = $GlobalAdminAccount
-    }
-    Write-Host "    |---[2/2] Private" -NoNewline
-    $Results = Get-TargetResource @params
-    if ($null -ne $result)
-    {
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+        Write-Host "`r`n    [1/2] Public" -NoNewline
+        $Results = Get-TargetResource @Params
+        $dscContent = ""
+        if ($null -ne $Results)
+        {
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+        }
+
+        $Params = @{
+            CdnType               = 'Private'
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
+            GlobalAdminAccount    = $GlobalAdminAccount
+        }
+        Write-Host "    |---[2/2] Private" -NoNewline
+        $Results = Get-TargetResource @params
+        if ($null -ne $result)
+        {
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+        }
+        Write-Host $Global:M365DSCEmojiGreenCheckmark
+        return $dscContent
     }
-    Write-Host $Global:M365DSCEmojiGreenCheckmark
-    return $dscContent
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

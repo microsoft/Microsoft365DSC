@@ -61,24 +61,13 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = @{
-        Identity              = ""
-        Path                  = $null
-        Publish               = $Publish
-        Overwrite             = $Overwrite
-        Ensure                = "Absent"
-        ApplicationId         = $ApplicationId
-        TenantId              = $TenantId
-        CertificatePassword   = $CertificatePassword
-        CertificatePath       = $CertificatePath
-        CertificateThumbprint = $CertificateThumbprint
-        GlobalAdminAccount    = $GlobalAdminAccount
-    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
     try
     {
         $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters
+            -InboundParameters $PSBoundParameters
 
         $app = Get-PnPApp -Identity $Identity -ErrorAction SilentlyContinue
         if ($null -eq $app)
@@ -104,6 +93,26 @@ function Get-TargetResource
     catch
     {
         Write-Verbose -Message "The specified app doesn't already exist."
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -187,7 +196,7 @@ function Set-TargetResource
     elseif ($Ensure -eq "Absent" -and $currentApp.Ensure -eq "Present")
     {
         Write-Verbose -Message "Removing app instance $Identity"
-        Remove-PnpApp -Identity $Identity
+        Remove-PnPApp -Identity $Identity
     }
 }
 
@@ -242,6 +251,15 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration for app $Identity"
 
@@ -250,7 +268,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("Ensure", `
@@ -303,85 +321,112 @@ function Export-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters
 
-    $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters `
-                -Url $tenantAppCatalogUrl
-
-    if (-not [string]::IsNullOrEmpty($tenantAppCatalogUrl))
+    try
     {
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $filesToDownload = Get-AllSPOPackages -GlobalAdminAccount $GlobalAdminAccount
-        }
-        else
-        {
-            $filesToDownload = Get-AllSPOPackages -ApplicationId $ApplicationId -CertificateThumbprint $CertificateThumbprint `
-                -CertificatePassword $CertificatePassword -TenantId $TenantId -CertificatePath $CertificatePath
-        }
-        $tenantAppCatalogPath = $tenantAppCatalogUrl.Replace("https://", "")
-        $tenantAppCatalogPath = $tenantAppCatalogPath.Replace($tenantAppCatalogPath.Split('/')[0], "")
+        $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl -ErrorAction Stop
 
-        $dscContent = ''
-        $i = 1
-        Write-Host "`r`n" -NoNewline
-        foreach ($file in $filesToDownload)
+        $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+            -InboundParameters $PSBoundParameters `
+            -Url $tenantAppCatalogUrl
+
+        if (-not [string]::IsNullOrEmpty($tenantAppCatalogUrl))
         {
-            Write-Host "    |---[$i/$($filesToDownload.Length)] $($file.Name)" -NoNewline
-
-            $identity = $file.Name.ToLower().Replace(".app", "").Replace(".sppkg", "")
-            $app = Get-PnpApp -Identity $identity -ErrorAction SilentlyContinue
-
-            if ($null -eq $app)
+            if ($ConnectionMode -eq 'Credential')
             {
-                $identity = $file.Title
-                $app = Get-PnpApp -Identity $file.Title -ErrorAction SilentlyContinue
+                $filesToDownload = Get-AllSPOPackages -GlobalAdminAccount $GlobalAdminAccount
             }
-            if ($null -ne $app)
+            else
             {
-                $Params = @{
-                    Identity              = $identity
-                    Path                  = ("`$PSScriptRoot\" + $file.Name)
-                    ApplicationId         = $ApplicationId
-                    TenantId              = $TenantId
-                    CertificatePassword   = $CertificatePassword
-                    CertificatePath       = $CertificatePath
-                    CertificateThumbprint = $CertificateThumbprint
-                    GlobalAdminAccount    = $GlobalAdminAccount
-                }
+                $filesToDownload = Get-AllSPOPackages -ApplicationId $ApplicationId -CertificateThumbprint $CertificateThumbprint `
+                    -CertificatePassword $CertificatePassword -TenantId $TenantId -CertificatePath $CertificatePath
+            }
+            $tenantAppCatalogPath = $tenantAppCatalogUrl.Replace("https://", "")
+            $tenantAppCatalogPath = $tenantAppCatalogPath.Replace($tenantAppCatalogPath.Split('/')[0], "")
 
-                $Results = Get-TargetResource @Params
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            $dscContent = ''
+            $i = 1
+            Write-Host "`r`n" -NoNewline
+            foreach ($file in $filesToDownload)
+            {
+                Write-Host "    |---[$i/$($filesToDownload.Length)] $($file.Name)" -NoNewline
+
+                $identity = $file.Name.ToLower().Replace(".app", "").Replace(".sppkg", "")
+                $app = Get-PnPApp -Identity $identity -ErrorAction SilentlyContinue
+
+                if ($null -eq $app)
+                {
+                    $identity = $file.Title
+                    $app = Get-PnPApp -Identity $file.Title -ErrorAction SilentlyContinue
+                }
+                if ($null -ne $app)
+                {
+                    $Params = @{
+                        Identity              = $identity
+                        Path                  = ("`$PSScriptRoot\" + $file.Name)
+                        ApplicationId         = $ApplicationId
+                        TenantId              = $TenantId
+                        CertificatePassword   = $CertificatePassword
+                        CertificatePath       = $CertificatePath
+                        CertificateThumbprint = $CertificateThumbprint
+                        GlobalAdminAccount    = $GlobalAdminAccount
+                    }
+
+                    $Results = Get-TargetResource @Params
+                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                         -Results $Results
-                $dscContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    $dscContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                         -ConnectionMode $ConnectionMode `
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
                         -GlobalAdminAccount $GlobalAdminAccount
+                }
+                $i++
+                Write-Host $Global:M365DSCEmojiGreenCheckmark
             }
-            $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckmark
-        }
 
-        $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+            $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
                 -InboundParameters $PSBoundParameters `
                 -Url $tenantAppCatalogUrl
 
-        foreach ($file in $filesToDownload)
-        {
-            $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name
-            $appFileName = $appInstanceUrl.Split('/')[$appInstanceUrl.Split('/').Length - 1]
-            Get-PnPFile -Url $appInstanceUrl -Path $env:Temp -Filename $appFileName -AsFile -Force | Out-Null
+            foreach ($file in $filesToDownload)
+            {
+                $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name
+                $appFileName = $appInstanceUrl.Split('/')[$appInstanceUrl.Split('/').Length - 1]
+                Get-PnPFile -Url $appInstanceUrl -Path $env:Temp -Filename $appFileName -AsFile -Force | Out-Null
+            }
         }
+        else
+        {
+            Write-Verbose -Message "    * App Catalog is not configured on tenant. Cannot extract information about SharePoint apps."
+        }
+        return $dscContent
     }
-    else
+    catch
     {
-        Write-Information "    * App Catalog is not configured on tenant. Cannot extract information about SharePoint apps."
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return ""
     }
-    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

@@ -69,37 +69,64 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
-
-    $AllManagementRoles = Get-ManagementRole
-
-    $ManagementRole = $AllManagementRoles | Where-Object -FilterScript { $_.Name -eq $Name }
-
-    if ($null -eq $ManagementRole)
-    {
-        Write-Verbose -Message "Management Role $($Name) does not exist."
-
-        $nullReturn = @{
-            Name               = $Name
-            Parent             = $Parent
-            Description        = $Description
-            Ensure             = 'Absent'
-            GlobalAdminAccount = $GlobalAdminAccount
-        }
-
-        return $nullReturn
+    $nullReturn = @{
+        Name               = $Name
+        Parent             = $Parent
+        Description        = $Description
+        Ensure             = 'Absent'
+        GlobalAdminAccount = $GlobalAdminAccount
     }
-    else
+    try
     {
-        $result = @{
-            Name               = $ManagementRole.Name
-            Parent             = $ManagementRole.Parent
-            Description        = $ManagementRole.Description
-            Ensure             = 'Present'
-            GlobalAdminAccount = $GlobalAdminAccount
-        }
+        $AllManagementRoles = Get-ManagementRole -ErrorAction Stop
 
-        Write-Verbose -Message "Found Management Role $($Name)"
-        return $result
+        $ManagementRole = $AllManagementRoles | Where-Object -FilterScript { $_.Name -eq $Name }
+
+        if ($null -eq $ManagementRole)
+        {
+            Write-Verbose -Message "Management Role $($Name) does not exist."
+
+
+
+            return $nullReturn
+        }
+        else
+        {
+            $result = @{
+                Name               = $ManagementRole.Name
+                Parent             = $ManagementRole.Parent
+                Description        = $ManagementRole.Description
+                Ensure             = 'Present'
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Write-Verbose -Message "Found Management Role $($Name)"
+            return $result
+        }
+    }
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return $nullReturn
     }
 }
 
@@ -248,6 +275,15 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing Management Role configuration for $Name"
 
@@ -259,7 +295,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -312,44 +348,71 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
-    [array]$AllManagementRoles = Get-ManagementRole
-
-    $dscContent = ""
-
-    if ($AllManagementRoles.Length -eq 0)
+    try
     {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-    }
-    else
-    {
-        Write-Host "`r`n" -NoNewLine
-    }
-    $i = 1
-    foreach ($ManagementRole in $AllManagementRoles)
-    {
-        Write-Host "    |---[$i/$($AllManagementRoles.Count)] $($ManagementRole.Name)" -NoNewLine
+        [array]$AllManagementRoles = Get-ManagementRole -ErrorAction Stop
 
-        $Params = @{
-            Name                  = $ManagementRole.Name
-            GlobalAdminAccount    = $GlobalAdminAccount
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
+        $dscContent = ""
+
+        if ($AllManagementRoles.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
+        $i = 1
+        foreach ($ManagementRole in $AllManagementRoles)
+        {
+            Write-Host "    |---[$i/$($AllManagementRoles.Count)] $($ManagementRole.Name)" -NoNewline
+
+            $Params = @{
+                Name                  = $ManagementRole.Name
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
+        }
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

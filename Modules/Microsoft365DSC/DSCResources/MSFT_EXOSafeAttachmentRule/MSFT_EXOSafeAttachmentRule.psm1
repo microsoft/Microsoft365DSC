@@ -101,57 +101,85 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
     }
 
-    Write-Verbose -Message "Global ExchangeOnlineSession status:"
-    Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
     try
     {
-        $SafeAttachmentRules = Get-SafeAttachmentRule
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-        $Message = "Error calling {Get-SafeAttachmentRule}"
-        New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
-    }
-    $SafeAttachmentRule = $SafeAttachmentRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    if (-not $SafeAttachmentRule)
-    {
-        Write-Verbose -Message "SafeAttachmentRule $($Identity) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
-    }
-    else
-    {
-        $result = @{
-            Ensure = 'Present'
-            Identity                  = $SafeAttachmentRule.Identity
-            SafeAttachmentPolicy      = $SafeAttachmentRule.SafeAttachmentPolicy
-            Comments                  = $SafeAttachmentRule.Comments
-            Enabled                   = $true
-            ExceptIfRecipientDomainIs = $SafeAttachmentRule.ExceptIfRecipientDomainIs
-            ExceptIfSentTo            = $SafeAttachmentRule.ExceptIfSentTo
-            ExceptIfSentToMemberOf    = $SafeAttachmentRule.ExceptIfSentToMemberOf
-            Priority                  = $SafeAttachmentRule.Priority
-            RecipientDomainIs         = $SafeAttachmentRule.RecipientDomainIs
-            SentTo                    = $SafeAttachmentRule.SentTo
-            SentToMemberOf            = $SafeAttachmentRule.SentToMemberOf
-            GlobalAdminAccount        = $GlobalAdminAccount
-        }
-        if ('Enabled' -eq $SafeAttachmentRule.State)
+        Write-Verbose -Message "Global ExchangeOnlineSession status:"
+        Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
+
+        try
         {
-            # Accounts for Get-SafeAttachmentRule returning 'State' instead of 'Enabled' used by New/Set
-            $result.Enabled = $true
+            $SafeAttachmentRules = Get-SafeAttachmentRule -ErrorAction Stop
+        }
+        catch
+        {
+            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+            $Message = "Error calling {Get-SafeAttachmentRule}"
+            New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+        }
+        $SafeAttachmentRule = $SafeAttachmentRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        if (-not $SafeAttachmentRule)
+        {
+            Write-Verbose -Message "SafeAttachmentRule $($Identity) does not exist."
+            return $nullReturn
         }
         else
         {
-            $result.Enabled = $false
-        }
+            $result = @{
+                Ensure                    = 'Present'
+                Identity                  = $SafeAttachmentRule.Identity
+                SafeAttachmentPolicy      = $SafeAttachmentRule.SafeAttachmentPolicy
+                Comments                  = $SafeAttachmentRule.Comments
+                Enabled                   = $true
+                ExceptIfRecipientDomainIs = $SafeAttachmentRule.ExceptIfRecipientDomainIs
+                ExceptIfSentTo            = $SafeAttachmentRule.ExceptIfSentTo
+                ExceptIfSentToMemberOf    = $SafeAttachmentRule.ExceptIfSentToMemberOf
+                Priority                  = $SafeAttachmentRule.Priority
+                RecipientDomainIs         = $SafeAttachmentRule.RecipientDomainIs
+                SentTo                    = $SafeAttachmentRule.SentTo
+                SentToMemberOf            = $SafeAttachmentRule.SentToMemberOf
+                GlobalAdminAccount        = $GlobalAdminAccount
+            }
+            if ('Enabled' -eq $SafeAttachmentRule.State)
+            {
+                # Accounts for Get-SafeAttachmentRule returning 'State' instead of 'Enabled' used by New/Set
+                $result.Enabled = $true
+            }
+            else
+            {
+                $result.Enabled = $false
+            }
 
-        Write-Verbose -Message "Found SafeAttachmentRule $($Identity)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+            Write-Verbose -Message "Found SafeAttachmentRule $($Identity)"
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return $nullReturn
     }
 }
 
@@ -359,6 +387,15 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of SafeAttachmentRule for $Identity"
 
@@ -370,7 +407,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -425,45 +462,72 @@ function Export-TargetResource
         -SkipModuleReload $true
 
     $dscContent = ''
-    if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
+    try
     {
-        [array]$SafeAttachmentRules = Get-SafeAttachmentRule
-        $i = 1
-        Write-Host "`r`n" -NoNewLine
-        foreach ($SafeAttachmentRule in $SafeAttachmentRules)
+        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
         {
-            Write-Host "    |---[$i/$($SafeAttachmentRules.Length)] $($SafeAttachmentRule.Identity)" -NoNewLine
-            $Params = @{
-                Identity              = $SafeAttachmentRule.Identity
-                SafeAttachmentPolicy  = $SafeAttachmentRule.SafeAttachmentPolicy
-                GlobalAdminAccount    = $GlobalAdminAccount
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
+            [array]$SafeAttachmentRules = Get-SafeAttachmentRule
+            $i = 1
+            Write-Host "`r`n" -NoNewline
+            foreach ($SafeAttachmentRule in $SafeAttachmentRules)
+            {
+                Write-Host "    |---[$i/$($SafeAttachmentRules.Length)] $($SafeAttachmentRule.Identity)" -NoNewline
+                $Params = @{
+                    Identity              = $SafeAttachmentRule.Identity
+                    SafeAttachmentPolicy  = $SafeAttachmentRule.SafeAttachmentPolicy
+                    GlobalAdminAccount    = $GlobalAdminAccount
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    CertificatePassword   = $CertificatePassword
+                    CertificatePath       = $CertificatePath
+                }
+                $Results = Get-TargetResource @Params
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                $i++
             }
-            $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
-            $i++
+            if ($SafeAttachmentRules.Length -eq 0)
+            {
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
+            }
         }
-        if ($SafeAttachmentRules.Length -eq 0)
+        else
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant doesn't have access to the Safe Attachment Rule API."
         }
+        return $dscContent
     }
-    else
+    catch
     {
-        Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant doesn't have access to the Safe Attachment Rule API."
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return ""
     }
-    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

@@ -3,7 +3,7 @@ on: [push]
 
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  FullCircle-SC:
     # The type of runner that the job will run on
     runs-on: windows-latest
 
@@ -37,7 +37,7 @@ jobs:
         winrm quickconfig -force
         $source = "./Modules/Microsoft365DSC/"
         $destination = "C:\Program Files\WindowsPowerShell\Modules"
-        Copy-Item -Path $source -Recurse -Destination $destination -Container
+        Copy-Item -Path $source -Recurse -Destination $destination -Container -Force
     - name: Run ReverseDSC
       shell : powershell
       env:

@@ -55,6 +55,15 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Getting configuration of AvailabilityAddressSpace for $($Identity)"
 
@@ -69,50 +78,77 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = 'Absent'
 
     try
     {
-        $AvailabilityAddressSpaces = Get-AvailabilityAddressSpace -ea stop
-    }
-    catch
-    {
-        New-M365DSCLogEntry -Error $_ -Message "Couldn't get AvailabilityAddressSpaces" -Source $MyInvocation.MyCommand.ModuleName
-    }
-
-    $AvailabilityAddressSpace = $AvailabilityAddressSpaces | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    if ($null -eq $AvailabilityAddressSpace)
-    {
-        Write-Verbose -Message "AvailabilityAddressSpace $($Identity) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
-    }
-    else
-    {
-
-
-        if ($Null -eq $AvailabilityAddressSpace.TargetAutodiscoverEpr -or $AvailabilityAddressSpace.TargetAutodiscoverEpr -eq "" )
+        try
         {
-            $TargetAutodiscoverEpr = ""
+            $AvailabilityAddressSpaces = Get-AvailabilityAddressSpace -ErrorAction Stop
+        }
+        catch
+        {
+            New-M365DSCLogEntry -Error $_ -Message "Couldn't get AvailabilityAddressSpaces" -Source $MyInvocation.MyCommand.ModuleName
+        }
+
+        $AvailabilityAddressSpace = $AvailabilityAddressSpaces | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        if ($null -eq $AvailabilityAddressSpace)
+        {
+            Write-Verbose -Message "AvailabilityAddressSpace $($Identity) does not exist."
+            return $nullReturn
         }
         else
         {
-            $TargetAutodiscoverEpr = $AvailabilityAddressSpace.TargetAutodiscoverEpr.tostring()
-        }
 
-        $result = @{
-            Identity              = $Identity
-            AccessMethod          = $AvailabilityAddressSpace.AccessMethod
-            Credentials           = $AvailabilityAddressSpace.Credentials
-            ForestName            = $AvailabilityAddressSpace.ForestName
-            TargetAutodiscoverEpr = $TargetAutodiscoverEpr
-            GlobalAdminAccount    = $GlobalAdminAccount
-            Ensure                = 'Present'
-        }
 
-        Write-Verbose -Message "Found AvailabilityAddressSpace $($Identity)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+            if ($Null -eq $AvailabilityAddressSpace.TargetAutodiscoverEpr -or $AvailabilityAddressSpace.TargetAutodiscoverEpr -eq "" )
+            {
+                $TargetAutodiscoverEpr = ""
+            }
+            else
+            {
+                $TargetAutodiscoverEpr = $AvailabilityAddressSpace.TargetAutodiscoverEpr.tostring()
+            }
+
+            $result = @{
+                Identity              = $Identity
+                AccessMethod          = $AvailabilityAddressSpace.AccessMethod
+                Credentials           = $AvailabilityAddressSpace.Credentials
+                ForestName            = $AvailabilityAddressSpace.ForestName
+                TargetAutodiscoverEpr = $TargetAutodiscoverEpr
+                GlobalAdminAccount    = $GlobalAdminAccount
+                Ensure                = 'Present'
+            }
+
+            Write-Verbose -Message "Found AvailabilityAddressSpace $($Identity)"
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return $nullReturn
     }
 }
 
@@ -172,6 +208,15 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Setting configuration of AvailabilityAddressSpace for $($Identity)"
 
@@ -297,6 +342,15 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of AvailabilityAddressSpace for $($Identity)"
 
@@ -308,7 +362,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -364,47 +418,79 @@ function Export-TargetResource
 
     try
     {
+        if ($null -eq (Get-Command Get-AvailabilityAddressSpace -ErrorAction SilentlyContinue))
+        {
+            Write-Host "`r`n    $($Global:M365DSCEmojiRedX) The specified account doesn't have permissions to access Availibility Address Space"
+            return ""
+        }
+        try
+        {
             [array]$AvailabilityAddressSpaces = Get-AvailabilityAddressSpace -ErrorAction stop
+        }
+        catch
+        {
+            New-M365DSCLogEntry -Error $_ -Message "Couldn't get AvailabilityAddressSpaces" -Source $MyInvocation.MyCommand.ModuleName
+        }
+
+        $dscContent = ""
+        if ($AvailabilityAddressSpaces.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
+        $i = 1
+        foreach ($AvailabilityAddressSpace in $AvailabilityAddressSpaces)
+        {
+            Write-Host "    |---[$i/$($AvailabilityAddressSpaces.length)] $($AvailabilityAddressSpace.Identity)" -NoNewline
+
+            $Params = @{
+                Identity              = $AvailabilityAddressSpace.Identity
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
+        }
+        return $dscContent
     }
     catch
     {
-        New-M365DSCLogEntry -Error $_ -Message "Couldn't get AvailabilityAddressSpaces" -Source $MyInvocation.MyCommand.ModuleName
-    }
-
-    $dscContent = ""
-    if ($AvailabilityAddressSpaces.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-    }
-    else
-    {
-        Write-Host "`r`n" -NoNewLine
-    }
-    $i = 1
-    foreach ($AvailabilityAddressSpace in $AvailabilityAddressSpaces)
-    {
-        Write-Host "    |---[$i/$($AvailabilityAddressSpaces.length)] $($AvailabilityAddressSpace.Identity)" -NoNewLine
-
-        $Params = @{
-            Identity              = $AvailabilityAddressSpace.Identity
-            GlobalAdminAccount    = $GlobalAdminAccount
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
         }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return ""
     }
-    return $dscContent
 }
 Export-ModuleMember -Function *-TargetResource

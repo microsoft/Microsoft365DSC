@@ -48,34 +48,60 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
             -InboundParameters $PSBoundParameters
     }
-
-    $Case = Get-ComplianceCase -Identity $Name -ErrorAction SilentlyContinue
-
-    if ($null -eq $Case)
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = 'Absent'
+    try
     {
-        Write-Verbose -Message "SCComplianceCase $($Name) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
-    }
-    else
-    {
-        Write-Verbose "Found existing SCComplianceCase $($Name)"
-        $Status = $Case.Status
-        if ('Closing' -eq $Status)
+        $Case = Get-ComplianceCase -Identity $Name -ErrorAction SilentlyContinue
+
+        if ($null -eq $Case)
         {
-            $Status = "Closed"
+            Write-Verbose -Message "SCComplianceCase $($Name) does not exist."
+            return $nullReturn
         }
-        $result = @{
-            Name               = $Case.Name
-            Description        = $Case.Description
-            Status             = $Status
-            GlobalAdminAccount = $GlobalAdminAccount
-            Ensure             = 'Present'
-        }
+        else
+        {
+            Write-Verbose "Found existing SCComplianceCase $($Name)"
+            $Status = $Case.Status
+            if ('Closing' -eq $Status)
+            {
+                $Status = "Closed"
+            }
+            $result = @{
+                Name               = $Case.Name
+                Description        = $Case.Description
+                Status             = $Status
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = 'Present'
+            }
 
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return $nullReturn
     }
 }
 
@@ -194,6 +220,15 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of SCComplianceCase for $Name"
 
@@ -203,7 +238,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -235,53 +270,81 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
-    [array]$Cases = Get-ComplianceCase
 
-    $dscContent = ""
-    $i = 1
-    Write-Host "`r`n" -NoNewLine
-    foreach ($Case in $Cases)
+    try
     {
-        Write-Host "    eDiscovery: [$i/$($Cases.Count)] $($Case.Name)" -NoNewLine
-        $Params = @{
-            Name                  = $Case.Name
-            GlobalAdminAccount    = $GlobalAdminAccount
+        [array]$Cases = Get-ComplianceCase -ErrorAction Stop
+
+        $dscContent = ""
+        $i = 1
+        Write-Host "`r`n" -NoNewline
+        foreach ($Case in $Cases)
+        {
+            Write-Host "    eDiscovery: [$i/$($Cases.Count)] $($Case.Name)" -NoNewline
+            $Params = @{
+                Name               = $Case.Name
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
         }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+
+        [array]$Cases = Get-ComplianceCase -CaseType "DSR" -ErrorAction Stop
+
+        $i = 1
+        foreach ($Case in $Cases)
+        {
+            Write-Host "    GDPR: [$i/$($Cases.Count)] $($Case.Name)" -NoNewline
+            $Params = @{
+                Name               = $Case.Name
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
+        }
+        return $dscContent
     }
-
-    [array]$Cases = Get-ComplianceCase -CaseType "DSR"
-
-    $i = 1
-    foreach ($Case in $Cases)
+    catch
     {
-        Write-Host "    GDPR: [$i/$($Cases.Count)] $($Case.Name)" -NoNewLine
-        $Params = @{
-            Name                  = $Case.Name
-            GlobalAdminAccount    = $GlobalAdminAccount
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
         }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return ""
     }
-    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

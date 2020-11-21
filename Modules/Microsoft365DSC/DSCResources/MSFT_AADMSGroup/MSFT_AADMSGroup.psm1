@@ -38,6 +38,10 @@ function Get-TargetResource
         $MailEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $IsAssignableToRole,
+
+        [Parameter()]
         [System.String]
         $MailNickname,
 
@@ -80,65 +84,91 @@ function Get-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
-
-    if ($PSBoundParameters.ContainsKey("Id"))
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
+    try
     {
-        Write-Verbose -Message "GroupID was specified"
-        try
+        if ($PSBoundParameters.ContainsKey("Id"))
         {
-            $Group = Get-AzureADMSGroup -id $Id
+            Write-Verbose -Message "GroupID was specified"
+            try
+            {
+                $Group = Get-AzureADMSGroup -Id $Id -ErrorAction Stop
+            }
+            catch
+            {
+                $Group = Get-AzureADMSGroup -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+                if ($Group.Length -gt 1)
+                {
+                    throw "Duplicate AzureAD Groups named $DisplayName exist in tenant"
+                }
+            }
         }
-        catch
+        else
         {
-            $Group = Get-AzureADMSGroup -Filter "DisplayName eq '$DisplayName'"
+            Write-Verbose -Message "Id was NOT specified"
+            ## Can retreive multiple AAD Groups since displayname is not unique
+            $Group = Get-AzureADMSGroup -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
             if ($Group.Length -gt 1)
             {
                 throw "Duplicate AzureAD Groups named $DisplayName exist in tenant"
             }
         }
-    }
-    else
-    {
-        Write-Verbose -Message "Id was NOT specified"
-        ## Can retreive multiple AAD Groups since displayname is not unique
-        $Group = Get-AzureADMSGroup -Filter "DisplayName eq '$DisplayName'"
-        if ($Group.Length -gt 1)
+
+        if ($null -eq $Group)
         {
-            throw "Duplicate AzureAD Groups named $DisplayName exist in tenant"
+            return $nullReturn
+        }
+        else
+        {
+            Write-Verbose -Message "Found existing AzureAD Group"
+
+            $result = @{
+                DisplayName                   = $Group.DisplayName
+                Id                            = $Group.Id
+                Description                   = $Group.Description
+                GroupTypes                    = [System.String[]]$Group.GroupTypes
+                MembershipRule                = $Group.MembershipRule
+                MembershipRuleProcessingState = $Group.MembershipRuleProcessingState
+                SecurityEnabled               = $Group.SecurityEnabled
+                MailEnabled                   = $Group.MailEnabled
+                IsAssignableToRole            = $Group.IsAssignableToRole
+                MailNickname                  = $Group.MailNickname
+                Visibility                    = $Group.Visibility
+                Ensure                        = "Present"
+                GlobalAdminAccount            = $GlobalAdminAccount
+                ApplicationId                 = $ApplicationId
+                TenantId                      = $TenantId
+                CertificateThumbprint         = $CertificateThumbprint
+            }
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
         }
     }
-
-    if ($null -eq $Group)
+    catch
     {
-        $currentValues = $PSBoundParameters
-        $currentValues.Ensure = "Absent"
-        return $currentValues
-    }
-    else
-    {
-        Write-Verbose -Message "Found existing AzureAD Group"
-
-        $result = @{
-            DisplayName                   = $Group.DisplayName
-            Id                            = $Group.Id
-            Description                   = $Group.Description
-            GroupTypes                    = [System.String[]]$Group.GroupTypes
-            MembershipRule                = $Group.MembershipRule
-            MembershipRuleProcessingState = $Group.MembershipRuleProcessingState
-            SecurityEnabled               = $Group.SecurityEnabled
-            MailEnabled                   = $Group.MailEnabled
-            MailNickname                  = $Group.MailNickname
-            Visibility                    = $Group.Visibility
-            Ensure                        = "Present"
-            GlobalAdminAccount            = $GlobalAdminAccount
-            ApplicationId                 = $ApplicationId
-            TenantId                      = $TenantId
-            CertificateThumbprint         = $CertificateThumbprint
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
         }
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return $nullReturn
     }
-
 }
 
 function Set-TargetResource
@@ -178,6 +208,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $MailEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsAssignableToRole,
 
         [Parameter()]
         [System.String]
@@ -239,7 +273,19 @@ function Set-TargetResource
     {
         try
         {
-            Set-AzureADMSGroup @currentParameters
+            if ($true -eq $currentParameters.ContainsKey("IsAssignableToRole"))
+            {
+                Write-Verbose -Message "Cannot set IsAssignableToRole once group is created."
+                $currentParameters.Remove("IsAssignableToRole") | Out-Null
+            }
+            if ($false -eq $currentParameters.ContainsKey("Id"))
+            {
+                Set-AzureADMSGroup @currentParameters -Id $currentGroup.Id
+            }
+            else
+            {
+                Set-AzureADMSGroup @currentParameters
+            }
         }
         catch
         {
@@ -311,6 +357,10 @@ function Test-TargetResource
         $MailEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $IsAssignableToRole,
+
+        [Parameter()]
         [System.String]
         $MailNickname,
 
@@ -340,6 +390,15 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of AzureAD Groups"
 
@@ -351,7 +410,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('Id') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -394,34 +453,60 @@ function Export-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
-
-    [array] $groups = Get-AzureADMSGroup -All:$true
-    $i = 1
-    $dscContent = ''
-    Write-Host "`r`n" -NoNewLine
-    foreach ($group in $groups)
+    try
     {
-        Write-Host "    |---[$i/$($groups.Count)] $($group.DisplayName)" -NoNewLine
-        $Params = @{
-            GlobalAdminAccount    = $GlobalAdminAccount
-            DisplayName           = $group.DisplayName
-            Id                    = $group.Id
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
+        [array] $groups = Get-AzureADMSGroup -All:$true -ErrorAction Stop
+        $i = 1
+        $dscContent = ''
+        Write-Host "`r`n" -NoNewline
+        foreach ($group in $groups)
+        {
+            Write-Host "    |---[$i/$($groups.Count)] $($group.DisplayName)" -NoNewline
+            $Params = @{
+                GlobalAdminAccount    = $GlobalAdminAccount
+                DisplayName           = $group.DisplayName
+                Id                    = $group.Id
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
         }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

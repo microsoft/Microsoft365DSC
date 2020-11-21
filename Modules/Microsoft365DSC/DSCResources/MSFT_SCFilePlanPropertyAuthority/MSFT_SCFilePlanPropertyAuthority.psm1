@@ -39,28 +39,55 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
             -InboundParameters $PSBoundParameters
     }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = 'Absent'
 
-    $property = Get-FilePlanPropertyAuthority | Where-Object -FilterScript { $_.DisplayName -eq $Name }
-
-    if ($null -eq $property)
+    try
     {
-        Write-Verbose -Message "SCFilePlanPropertyAuthority $($Name) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
-    }
-    else
-    {
-        Write-Verbose "Found existing SCFilePlanPropertyAuthority $($Name)"
+        $property = Get-FilePlanPropertyAuthority -ErrorAction Stop | Where-Object -FilterScript { $_.DisplayName -eq $Name }
 
-        $result = @{
-            Name               = $property.DisplayName
-            GlobalAdminAccount = $GlobalAdminAccount
-            Ensure             = 'Present'
+        if ($null -eq $property)
+        {
+            Write-Verbose -Message "SCFilePlanPropertyAuthority $($Name) does not exist."
+            return $nullReturn
         }
+        else
+        {
+            Write-Verbose "Found existing SCFilePlanPropertyAuthority $($Name)"
 
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+            $result = @{
+                Name               = $property.DisplayName
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = 'Present'
+            }
+
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return $nullReturn
     }
 }
 
@@ -150,6 +177,15 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of SCFilePlanPropertyAuthority for $Name"
 
@@ -159,7 +195,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -190,30 +226,58 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
-    $Properties = Get-FilePlanPropertyAuthority
 
-    $i = 1
-    $dscContent = ""
-    Write-Host "`r`n" -NoNewLine
-    foreach ($Property in $Properties)
+    try
     {
-        Write-Host "    |---[$i/$($Properties.Length)] $($Property.Name)" -NoNewLine
-        $Params = @{
-            Name                  = $Property.DisplayName
-            GlobalAdminAccount    = $GlobalAdminAccount
-        }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+        $Properties = Get-FilePlanPropertyAuthority -ErrorAction Stop
+
+        $i = 1
+        $dscContent = ""
+        Write-Host "`r`n" -NoNewline
+        foreach ($Property in $Properties)
+        {
+            Write-Host "    |---[$i/$($Properties.Length)] $($Property.Name)" -NoNewline
+            $Params = @{
+                Name               = $Property.DisplayName
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
+        }
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

@@ -21,41 +21,69 @@ function Get-TargetResource
     Write-Verbose -Message 'Getting Global PSTN Usage(s)'
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add('Resource', $MyInvocation.MyCommand.ModuleName)
-    $data.Add('Method', $MyInvocation.MyCommand)
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
-    Add-M365DSCTelemetryEvent  -Data $data
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
         -InboundParameters $PSBoundParameters
 
-    $deployedUsages = Get-CsOnlinePstnUsage | Select-Object -ExpandProperty Usage
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
-    if ($deployedUsages -match $Usage)
+    try
     {
-        $foundUsage = $Usage
-    }
-    else
-    {
-        $foundUsage = $null
-    }
+        $deployedUsages = Get-CsOnlinePstnUsage -ErrorAction Stop | Select-Object -ExpandProperty Usage
 
-    if ($null -eq $foundUsage)
-    {
-        Write-Verbose -Message "Could not find PSTN usage {$Usage}"
+        if ($deployedUsages -match $Usage)
+        {
+            $foundUsage = $Usage
+        }
+        else
+        {
+            $foundUsage = $null
+        }
+
+        if ($null -eq $foundUsage)
+        {
+            Write-Verbose -Message "Could not find PSTN usage {$Usage}"
+            return $nullReturn
+        }
+        Write-Verbose -Message "Found PSTN usage {$Usage}"
         return @{
             Usage              = $Usage
-            Ensure             = 'Absent'
+            Ensure             = 'Present'
             GlobalAdminAccount = $GlobalAdminAccount
         }
     }
-    Write-Verbose -Message "Found PSTN usage {$Usage}"
-    return @{
-        Usage              = $Usage
-        Ensure             = 'Present'
-        GlobalAdminAccount = $GlobalAdminAccount
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return $nullReturn
     }
 }
 
@@ -81,10 +109,12 @@ function Set-TargetResource
     Write-Verbose -Message 'Setting PSTN Usage'
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add('Resource', $MyInvocation.MyCommand.ModuleName)
-    $data.Add('Method', $MyInvocation.MyCommand)
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -128,6 +158,15 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of PSTN Usage {$Usage}"
 
@@ -139,7 +178,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -160,39 +199,68 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add('Resource', $MyInvocation.MyCommand.ModuleName)
-    $data.Add('Method', $MyInvocation.MyCommand)
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
         -InboundParameters $PSBoundParameters
 
-    $i = 1
-    [array]$usages = Get-CsOnlinePstnUsage | Select-Object -ExpandProperty Usage
-    $content = ''
-    Write-Host "`r`n" -NoNewLine
-    foreach ($usage in $usages)
+    try
     {
-        Write-Host "    |---[$i/$($usages.Count)] $usage" -NoNewLine
-        $params = @{
-            Usage              = $usage
-            Ensure             = 'Present'
-            GlobalAdminAccount = $GlobalAdminAccount
+        $i = 1
+        [array]$usages = Get-CsOnlinePstnUsage -ErrorAction Stop | Select-Object -ExpandProperty Usage
+        $content = ''
+        Write-Host "`r`n" -NoNewline
+        foreach ($usage in $usages)
+        {
+            Write-Host "    |---[$i/$($usages.Count)] $usage" -NoNewline
+            $params = @{
+                Usage              = $usage
+                Ensure             = 'Present'
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName 'globaladmin'
+            $content += "        TeamsPstnUsage " + (New-Guid).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GlobalAdminAccount'
+            $content += "        }`r`n"
+            $i++
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName 'globaladmin'
-        $content += "        TeamsPstnUsage " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GlobalAdminAccount'
-        $content += "        }`r`n"
-        $i++
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        return $content
     }
-    return $content
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

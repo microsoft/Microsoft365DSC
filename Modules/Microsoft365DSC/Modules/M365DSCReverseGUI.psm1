@@ -25,7 +25,15 @@ function Show-M365DSCGUI
     param(
         [Parameter()]
         [System.String]
-        $Path
+        $Path,
+
+        [Parameter()]
+        [System.String]
+        $FileName,
+
+        [Parameter()]
+        [System.Boolean]
+        $GenerateInfo = $false
     )
     try
     {
@@ -295,6 +303,33 @@ function Show-M365DSCGUI
         $pnlMain.Controls.Add($chckAllAAD)
         #endregion
 
+        #region Intune
+        $imgIntune = New-Object System.Windows.Forms.PictureBox
+        $imagePath = $PSScriptRoot + "\..\Dependencies\Images\Intune.jpg"
+        $imgIntune.ImageLocation = $imagePath
+        $imgIntune.Left = $fifthColumnLeft
+        $imgIntune.Top = $topBannerHeight
+        $imgIntune.AutoSize = $true
+        $pnlMain.Controls.Add($imgIntune)
+
+        $pnlIntune = New-Object System.Windows.Forms.Panel
+        $pnlIntune.Top = 88 + $topBannerHeight
+        $pnlIntune.Left = $fifthColumnLeft
+        $pnlIntune.Height = 350
+        $pnlIntune.Width = 300
+        $pnlIntune.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+        $pnlIntune.AutoScroll = $true
+        $pnlIntuneNextControlPosition = -20
+
+        $chckAllIntune = New-Object System.Windows.Forms.CheckBox
+        $chckAllIntune.Left = $fifthColumnLeft + 280
+        $chckAllIntune.Top = $topBannerHeight + 40
+        $chckAllIntune.Checked = $true
+        $chckAllIntune.AutoSize = $true
+        $chckAllIntune.Add_CheckedChanged( { SectionChanged -Control $chckAllIntune -Panel $pnlIntune })
+        $pnlMain.Controls.Add($chckAllIntune)
+        #endregion
+
         $allResources = Get-ChildItem -Path ($PSScriptRoot + "\..\DSCResources\")
 
         foreach ($resource in $allResources)
@@ -312,6 +347,12 @@ function Show-M365DSCGUI
                 $panel = $pnlExo
                 $pnlEXONextControlPosition += 20
                 $currentControlTop = $pnlEXONextControlPosition
+            }
+            elseif ($resourceName.StartsWith("Intune"))
+            {
+                $panel = $pnlIntune
+                $pnlIntuneNextControlPosition += 20
+                $currentControlTop = $pnlIntuneNextControlPosition
             }
             elseif ($resourceName.StartsWith("SPO"))
             {
@@ -386,6 +427,7 @@ function Show-M365DSCGUI
 
         $pnlMain.Controls.Add($pnlO365)
         $pnlMain.Controls.Add($pnlExo)
+        $pnlMain.Controls.Add($pnlIntune)
         $pnlMain.Controls.Add($pnlOD)
         $pnlMain.Controls.Add($pnlPP)
         $pnlMain.Controls.Add($pnlPlanner)
@@ -513,18 +555,18 @@ function Show-M365DSCGUI
         $chckApplication.Text = "Application"
         $chckApplication.Font = [System.Drawing.Font]::new($chckApplication.Font.Name, 10, [System.Drawing.FontStyle]::Bold)
         $chckApplication.Add_Click( {
-            if ($chckApplication.Checked)
-            {
-                $txtApplicationId.Enabled = $true
-            }
-            else
-            {
-                $txtApplicationId.Enabled = $false
-            }
-            Set-M365DSCGUIResourcesAvailability -Credentials $chckCredential.Checked `
-                -Certificate $chckCertificate.Checked `
-                -Application $chckApplication.Checked
-        })
+                if ($chckApplication.Checked)
+                {
+                    $txtApplicationId.Enabled = $true
+                }
+                else
+                {
+                    $txtApplicationId.Enabled = $false
+                }
+                Set-M365DSCGUIResourcesAvailability -Credentials $chckCredential.Checked `
+                    -Certificate $chckCertificate.Checked `
+                    -Application $chckApplication.Checked
+            })
 
         $panelMenu.Controls.Add($chckApplication)
         $lblApplicationId = New-Object System.Windows.Forms.Label
@@ -553,24 +595,24 @@ function Show-M365DSCGUI
         $chckCertificate.Text = "Certificate"
         $chckCertificate.Font = [System.Drawing.Font]::new($chckCertificate.Font.Name, 10, [System.Drawing.FontStyle]::Bold)
         $chckCertificate.Add_Click( {
-            if ($chckCertificate.Checked)
-            {
-                $txtCertPassword.Enabled = $true
-                $txtCertThumb.Enabled = $true
-                $txtCertFile.Enabled = $true
-                $txtTenantId.Enabled = $true
-            }
-            else
-            {
-                $txtCertPassword.Enabled = $false
-                $txtCertThumb.Enabled = $false
-                $txtCertFile.Enabled = $false
-                $txtTenantId.Enabled = $false
-            }
-            Set-M365DSCGUIResourcesAvailability -Credentials $chckCredential.Checked `
-                -Certificate $chckCertificate.Checked `
-                -Application $chckApplication.Checked
-        })
+                if ($chckCertificate.Checked)
+                {
+                    $txtCertPassword.Enabled = $true
+                    $txtCertThumb.Enabled = $true
+                    $txtCertFile.Enabled = $true
+                    $txtTenantId.Enabled = $true
+                }
+                else
+                {
+                    $txtCertPassword.Enabled = $false
+                    $txtCertThumb.Enabled = $false
+                    $txtCertFile.Enabled = $false
+                    $txtTenantId.Enabled = $false
+                }
+                Set-M365DSCGUIResourcesAvailability -Credentials $chckCredential.Checked `
+                    -Certificate $chckCertificate.Checked `
+                    -Application $chckApplication.Checked
+            })
         $panelMenu.Controls.Add($chckCertificate)
 
         $lblCertThumb = New-Object System.Windows.Forms.Label
@@ -661,20 +703,20 @@ function Show-M365DSCGUI
         $chckCredential.Text = "Credentials"
         $chckCredential.Font = [System.Drawing.Font]::new($chckCredential.Font.Name, 10, [System.Drawing.FontStyle]::Bold)
         $chckCredential.Add_Click( {
-            if ($chckCredential.Checked)
-            {
-                $txtTenantAdmin.Enabled = $true
-                $txtPassword.Enabled = $true
-            }
-            else
-            {
-                $txtTenantAdmin.Enabled = $false
-                $txtPassword.Enabled = $false
-            }
-            Set-M365DSCGUIResourcesAvailability -Credentials $chckCredential.Checked `
-                -Certificate $chckCertificate.Checked `
-                -Application $chckApplication.Checked
-        })
+                if ($chckCredential.Checked)
+                {
+                    $txtTenantAdmin.Enabled = $true
+                    $txtPassword.Enabled = $true
+                }
+                else
+                {
+                    $txtTenantAdmin.Enabled = $false
+                    $txtPassword.Enabled = $false
+                }
+                Set-M365DSCGUIResourcesAvailability -Credentials $chckCredential.Checked `
+                    -Certificate $chckCertificate.Checked `
+                    -Application $chckApplication.Checked
+            })
         $panelMenu.Controls.Add($chckCredential)
 
         $lblTenantAdmin = New-Object System.Windows.Forms.Label
@@ -715,23 +757,26 @@ function Show-M365DSCGUI
                 }
             })
         $panelMenu.Controls.Add($txtPassword)
+        $panelMenu.Width = $pnlIntune.Left + $pnlIntune.Width
 
         $btnExtract = New-Object System.Windows.Forms.Button
         $btnExtract.Width = 178
         $btnExtract.Height = 70
         $btnExtract.Top = 5
-        $btnExtract.Left = $form.Width - 200
+        $btnExtract.Left = $panelMenu.Width - 200
         $btnExtract.BackColor = [System.Drawing.Color]::ForestGreen
         $btnExtract.ForeColor = [System.Drawing.Color]::White
         $btnExtract.Text = "Start Extraction"
         $btnExtract.Add_Click( {
-                $form.Hide()
                 $SelectedComponents = @()
                 foreach ($panel in ($form.Controls[0].Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Panel" }))
                 {
                     foreach ($checkbox in ($panel.Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Checkbox" }))
                     {
-                        if ($checkbox.Checked -and $checkbox.Enabled)
+                        if ($checkbox.Checked -and $checkbox.Enabled -and `
+                                $checkbox.Name -ne 'chckCredential' -and `
+                                $checkbox.Name -ne 'chckApplication' -and `
+                                $checkbox.Name -ne 'chckCertificate')
                         {
                             $SelectedComponents += $checkbox.Name.Replace("chck", "")
                         }
@@ -750,23 +795,68 @@ function Show-M365DSCGUI
                         [securestring]$secStringPassword = ConvertTo-SecureString $txtCertPassword.Text -AsPlainText -Force
                         [pscredential]$CertPasswordcreds = New-Object System.Management.Automation.PSCredential ("M365DSCExport", $secStringPassword)
                     }
-                    Start-M365DSCConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
-                        -ApplicationId $txtApplicationId.Text `
-                        -TenantId $txtTenantId.Text `
-                        -CertificateThumbprint $txtCertThumb.Text `
-                        -CertificatePath $txtCertFile.Text `
-                        -CertificatePassword $CertPasswordcreds `
-                        -ComponentsToExtract $SelectedComponents `
-                        -Path $Path
+
+                    if ($chckCredential.Checked -and `
+                        ([System.String]::IsNullOrEmpty($txtTenantAdmin.Text) -or `
+                                [System.String]::IsNullOrEmpty($txtPassword.Text)))
+                    {
+                        [System.Windows.Forms.MessageBox]::Show("You need to provide your Admininistrative account Username & Password.")
+                    }
+                    elseif ($chckApplication.Checked -and `
+                            [System.String]::IsNullOrEmpty($txtApplicationId.Text))
+                    {
+                        [System.Windows.Forms.MessageBox]::Show("You need to provide your the Application Id to authenticate with.")
+                    }
+                    elseif ($chckCertificate.Checked -and `
+                            [System.String]::IsNullOrEmpty($txtCertThumb.Text) -and `
+                            [System.String]::IsNullOrEmpty($txtCertFile.Text) -and `
+                            [System.String]::IsNullOrEmpty($txtCertPassword.Text) -and `
+                            [System.String]::IsNullOrEmpty($txtTenantId.Text))
+                    {
+                        [System.Windows.Forms.MessageBox]::Show("You need to provide one of Thumbprint, File Path, Password or Tenant Id to authenticate with a certificate.")
+                    }
+                    else
+                    {
+                        $form.Hide()
+                        Start-M365DSCConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
+                            -ApplicationId $txtApplicationId.Text `
+                            -TenantId $txtTenantId.Text `
+                            -CertificateThumbprint $txtCertThumb.Text `
+                            -CertificatePath $txtCertFile.Text `
+                            -CertificatePassword $CertPasswordcreds `
+                            -ComponentsToExtract $SelectedComponents `
+                            -Path $Path `
+                            -FileName $FileName `
+                            -GenerateInfo $GenerateInfo
+                    }
                 }
                 catch
                 {
                     $Message = "Could not initiate the ReverseDSC Extraction"
-                    New-M365DSCLogEntry -Error $_ -Message $Message_ -Source "[M365DSCReverseGUI]"
+                    $tenantId = $null
+                    try
+                    {
+                        if (-not [System.String]::IsNullOrEmpty($txtTenantId.Text))
+                        {
+                            $tenantId = $txtTenantId.Text
+                        }
+                        elseif ($null -ne $GlobalAdminAccount -and
+                            $GlobalAdminAccount.UserName -contains '@')
+                        {
+                            $tenantId = $GlobalAdminAccount.UserName.Split('@')[1]
+                        }
+                    }
+                    catch
+                    {
+                        Write-Verbose -Message $_
+                    }
+                    New-M365DSCLogEntry -Error $_ `
+                        -Message $Message `
+                        -Source "[M365DSCReverseGUI]" `
+                        -TenantId $tenantId
                 }
             })
         $panelMenu.Controls.Add($btnExtract);
-
         $pnlMain.Controls.Add($panelMenu);
         #endregion
 
@@ -783,15 +873,16 @@ function Show-M365DSCGUI
         $form.ActiveControl = $txtTenantAdmin
         $form.Text = "Microsoft365DSC - Extract Configuration"
         $form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
+
         $Global:M365DSCExportGui = $form
         Set-M365DSCGUIResourcesAvailability -Credentials $chckCredential.Checked `
-                -Certificate $chckCertificate.Checked `
-                -Application $chckApplication.Checked
-        $return = $form.ShowDialog()
+            -Certificate $chckCertificate.Checked `
+            -Application $chckApplication.Checked
+        $form.ShowDialog() | Out-Null
     }
     catch
     {
-
+        Write-Verbose -Message $_
     }
 }
 
@@ -818,9 +909,9 @@ function SelectComponentsForMode
             foreach ($control in ([System.Windows.Forms.Panel]$parent).Controls)
             {
                 if ($control.GetType().Name -eq 'Checkbox' -and `
-                -not($control.Name -eq 'chckCredential' -or `
-                     $control.Name -eq 'chckApplication' -or `
-                     $control.Name -eq 'chckCertificate'))
+                        -not($control.Name -eq 'chckCredential' -or `
+                            $control.Name -eq 'chckApplication' -or `
+                            $control.Name -eq 'chckCertificate'))
                 {
                     try
                     {
@@ -853,7 +944,7 @@ function SelectComponentsForMode
         }
         catch
         {
-
+            Write-Verbose -Message $_
         }
     }
 }
@@ -876,7 +967,6 @@ function Set-M365DSCGUIResourcesAvailability
     )
 
     $AuthMethods = @()
-    $controlCredentials = @()
     if ($Credentials)
     {
         $AuthMethods += "Credentials"
@@ -926,14 +1016,15 @@ function Get-M365DSCExportGUIAllControls
         {
             $controlName = ([System.Windows.Forms.CheckBox]$control).Name
             if ($controlName -like 'chckAAD*' -or `
-            $controlName -like 'chckEXO*' -or `
-            $controlName -like 'chckO365*' -or `
-            $controlName -like 'chckOD*' -or `
-            $controlName -like 'chckPP*' -or `
-            $controlName -like 'chckPlanner*' -or `
-            $controlName -like 'chckSC*' -or `
-            $controlName -like 'chckSPO*' -or `
-            $controlName -like 'chckTeams*')
+                    $controlName -like 'chckEXO*' -or `
+                    $controlName -like 'chckIntune*' -or `
+                    $controlName -like 'chckO365*' -or `
+                    $controlName -like 'chckOD*' -or `
+                    $controlName -like 'chckPP*' -or `
+                    $controlName -like 'chckPlanner*' -or `
+                    $controlName -like 'chckSC*' -or `
+                    $controlName -like 'chckSPO*' -or `
+                    $controlName -like 'chckTeams*')
             {
                 $result += $control
             }

@@ -101,55 +101,82 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
     }
 
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
     try
     {
-        $HostedContentFilterRules = Get-HostedContentFilterRule
-    }
-    catch
-    {
-        $Message = "Error calling {Get-HostedContentFilterRule}"
-        New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
-    }
-
-    $HostedContentFilterRule = $HostedContentFilterRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    if (-not $HostedContentFilterRule)
-    {
-        Write-Verbose -Message "HostedContentFilterRule $($Identity) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
-    }
-    else
-    {
-        $result = @{
-            Ensure                    = 'Present'
-            Identity                  = $Identity
-            HostedContentFilterPolicy = $HostedContentFilterRule.HostedContentFilterPolicy
-            Comments                  = $HostedContentFilterRule.Comments
-            Enabled                   = $false
-            ExceptIfRecipientDomainIs = $HostedContentFilterRule.ExceptIfRecipientDomainIs
-            ExceptIfSentTo            = $HostedContentFilterRule.ExceptIfSentTo
-            ExceptIfSentToMemberOf    = $HostedContentFilterRule.ExceptIfSentToMemberOf
-            Priority                  = $HostedContentFilterRule.Priority
-            RecipientDomainIs         = $HostedContentFilterRule.RecipientDomainIs
-            SentTo                    = $HostedContentFilterRule.SentTo
-            SentToMemberOf            = $HostedContentFilterRule.SentToMemberOf
-            GlobalAdminAccount        = $GlobalAdminAccount
+        try
+        {
+            $HostedContentFilterRules = Get-HostedContentFilterRule -ErrorAction Stop
+        }
+        catch
+        {
+            $Message = "Error calling {Get-HostedContentFilterRule}"
+            New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
         }
 
-        if ('Enabled' -eq $HostedContentFilterRule.State)
+        $HostedContentFilterRule = $HostedContentFilterRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        if (-not $HostedContentFilterRule)
         {
-            # Accounts for Get-HostedContentFilterRule returning 'State' instead of 'Enabled' used by New/Set
-            $result.Enabled = $true
+            Write-Verbose -Message "HostedContentFilterRule $($Identity) does not exist."
+            return $nullReturn
         }
         else
         {
-            $result.Enabled = $false
-        }
+            $result = @{
+                Ensure                    = 'Present'
+                Identity                  = $Identity
+                HostedContentFilterPolicy = $HostedContentFilterRule.HostedContentFilterPolicy
+                Comments                  = $HostedContentFilterRule.Comments
+                Enabled                   = $false
+                ExceptIfRecipientDomainIs = $HostedContentFilterRule.ExceptIfRecipientDomainIs
+                ExceptIfSentTo            = $HostedContentFilterRule.ExceptIfSentTo
+                ExceptIfSentToMemberOf    = $HostedContentFilterRule.ExceptIfSentToMemberOf
+                Priority                  = $HostedContentFilterRule.Priority
+                RecipientDomainIs         = $HostedContentFilterRule.RecipientDomainIs
+                SentTo                    = $HostedContentFilterRule.SentTo
+                SentToMemberOf            = $HostedContentFilterRule.SentToMemberOf
+                GlobalAdminAccount        = $GlobalAdminAccount
+            }
 
-        Write-Verbose -Message "Found HostedContentFilterRule $($Identity)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+            if ('Enabled' -eq $HostedContentFilterRule.State)
+            {
+                # Accounts for Get-HostedContentFilterRule returning 'State' instead of 'Enabled' used by New/Set
+                $result.Enabled = $true
+            }
+            else
+            {
+                $result.Enabled = $false
+            }
+
+            Write-Verbose -Message "Found HostedContentFilterRule $($Identity)"
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return $nullReturn
     }
 }
 
@@ -269,6 +296,8 @@ function Set-TargetResource
             Remove-HostedContentFilterRule -Identity $Identity -Confirm:$false
         }
         Write-Verbose -Message "Creating new HostedContentFilterRule {$Identity}"
+        $CreationParams.Add("Name", $Identity)
+        $CreationParams.Remove("Identity") | Out-Null
         New-HostedContentFilterRule @CreationParams
     }
     elseif ($Ensure -eq 'Present' -and $CurrentValues -eq 'Present')
@@ -365,6 +394,15 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of HostedContentFilterRule for $Identity"
 
@@ -376,7 +414,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -430,43 +468,70 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
-    [array] $HostedContentFilterRules = Get-HostedContentFilterRule
-    $dscContent = ''
+    try
+    {
+        [array] $HostedContentFilterRules = Get-HostedContentFilterRule -ErrorAction Stop
+        $dscContent = ''
 
-    $i = 1
-    if ($HostedContentFilterRules.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-    }
-    else
-    {
-        Write-Host "`r`n" -NoNewLine
-    }
-    foreach ($HostedContentFilterRule in $HostedContentFilterRules)
-    {
-        Write-Host "    |---[$i/$($HostedContentFilterRules.Count)] $($HostedContentFilterRule.Identity)" -NoNewLine
-        $Params = @{
-            GlobalAdminAccount        = $GlobalAdminAccount
-            Identity                  = $HostedContentFilterRule.Identity
-            HostedContentFilterPolicy = $HostedContentFilterRule.HostedContentFilterPolicy
-            ApplicationId             = $ApplicationId
-            TenantId                  = $TenantId
-            CertificateThumbprint     = $CertificateThumbprint
-            CertificatePassword       = $CertificatePassword
-            CertificatePath           = $CertificatePath
+        $i = 1
+        if ($HostedContentFilterRules.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
+        foreach ($HostedContentFilterRule in $HostedContentFilterRules)
+        {
+            Write-Host "    |---[$i/$($HostedContentFilterRules.Count)] $($HostedContentFilterRule.Identity)" -NoNewline
+            $Params = @{
+                GlobalAdminAccount        = $GlobalAdminAccount
+                Identity                  = $HostedContentFilterRule.Identity
+                HostedContentFilterPolicy = $HostedContentFilterRule.HostedContentFilterPolicy
+                ApplicationId             = $ApplicationId
+                TenantId                  = $TenantId
+                CertificateThumbprint     = $CertificateThumbprint
+                CertificatePassword       = $CertificatePassword
+                CertificatePath           = $CertificatePath
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
+        }
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

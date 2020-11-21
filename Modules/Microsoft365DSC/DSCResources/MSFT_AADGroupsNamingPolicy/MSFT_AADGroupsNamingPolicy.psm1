@@ -52,30 +52,57 @@ function Get-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
 
-    $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript {$_.DisplayName -eq "Group.Unified"}
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
+    try
+    {
+        $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq "Group.Unified" }
 
-    if ($null -eq $Policy)
-    {
-        $currentValues = $PSBoundParameters
-        $currentValues.Ensure = "Absent"
-        return $currentValues
-    }
-    else
-    {
-        Write-Verbose "Found existing AzureAD Groups Naming Policy"
-        $result = @{
-            IsSingleInstance              = 'Yes'
-            PrefixSuffixNamingRequirement = $Policy["PrefixSuffixNamingRequirement"]
-            CustomBlockedWordsList        = $Policy["CustomBlockedWordsList"].Split(',')
-            Ensure                        = "Present"
-            GlobalAdminAccount            = $GlobalAdminAccount
-            ApplicationId                 = $ApplicationId
-            TenantId                      = $TenantId
-            CertificateThumbprint         = $CertificateThumbprint
+        if ($null -eq $Policy)
+        {
+            return $nullReturn
         }
+        else
+        {
+            Write-Verbose "Found existing AzureAD Groups Naming Policy"
+            $result = @{
+                IsSingleInstance              = 'Yes'
+                PrefixSuffixNamingRequirement = $Policy["PrefixSuffixNamingRequirement"]
+                CustomBlockedWordsList        = $Policy["CustomBlockedWordsList"].Split(',')
+                Ensure                        = "Present"
+                GlobalAdminAccount            = $GlobalAdminAccount
+                ApplicationId                 = $ApplicationId
+                TenantId                      = $TenantId
+                CertificateThumbprint         = $CertificateThumbprint
+            }
 
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return $nullReturn
     }
 }
 
@@ -141,7 +168,7 @@ function Set-TargetResource
         $needToUpdate = $true
     }
 
-    $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript {$_.DisplayName -eq "Group.Unified"}
+    $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq "Group.Unified" }
 
     if (($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present') -or $needToUpdate)
     {
@@ -156,7 +183,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
-        $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript {$_.DisplayName -eq "Group.Unified"}
+        $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq "Group.Unified" }
         Remove-AzureADDirectorySetting -Id $policy.Id
     }
 }
@@ -202,6 +229,15 @@ function Test-TargetResource
         $CertificateThumbprint
     )
 
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
     Write-Verbose -Message "Testing configuration of AzureAD Groups Naming Policy"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -211,7 +247,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $ValuesToCheck `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -253,30 +289,57 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $dscContent = ''
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
-    $Params = @{
-        ApplicationId          = $ApplicationId
-        TenantId               = $TenantId
-        CertificateThumbprint  = $CertificateThumbprint
-        IsSingleInstance       = 'Yes'
-        GlobalAdminAccount = $GlobalAdminAccount
-    }
-
-    $Results = Get-TargetResource @Params
-
-    if ($Results.Ensure -eq 'Present')
+    try
     {
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
+        $dscContent = ''
+        $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+        $Params = @{
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            IsSingleInstance      = 'Yes'
+            GlobalAdminAccount    = $GlobalAdminAccount
+        }
+
+        $Results = Get-TargetResource @Params
+
+        if ($Results.Ensure -eq 'Present')
+        {
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+        }
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        return $dscContent
     }
-    Write-Host $Global:M365DSCEmojiGreenCheckMark
-    return $dscContent
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

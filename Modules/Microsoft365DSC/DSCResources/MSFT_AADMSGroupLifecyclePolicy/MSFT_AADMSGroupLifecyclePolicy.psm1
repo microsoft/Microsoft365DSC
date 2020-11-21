@@ -59,36 +59,82 @@ function Get-TargetResource
 
     try
     {
-        $Policy = Get-AzureADMSGroupLifecyclePolicy -ErrorAction SilentlyContinue
+        $nullReturn = $PSBoundParameters
+        $nullReturn.Ensure = "Absent"
+        try
+        {
+            $Policy = Get-AzureADMSGroupLifecyclePolicy -ErrorAction SilentlyContinue
+        }
+        catch
+        {
+            try
+            {
+                Write-Verbose -Message $_
+                $tenantIdValue = ""
+                if (-not [System.String]::IsNullOrEmpty($TenantId))
+                {
+                    $tenantIdValue = $TenantId
+                }
+                elseif ($null -ne $GlobalAdminAccount)
+                {
+                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                }
+                Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $tenantIdValue
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+            }
+        }
+
+        if ($null -eq $Policy)
+        {
+            return $nullReturn
+        }
+        else
+        {
+            Write-Verbose "Found existing AzureAD Groups Lifecycle Policy"
+            $result = @{
+                IsSingleInstance            = 'Yes'
+                GroupLifetimeInDays         = $Policy.GroupLifetimeInDays
+                ManagedGroupTypes           = $Policy.ManagedGroupTypes
+                AlternateNotificationEmails = $Policy.AlternateNotificationEmails.Split(';')
+                Ensure                      = "Present"
+                GlobalAdminAccount          = $GlobalAdminAccount
+                ApplicationId               = $ApplicationId
+                TenantId                    = $TenantId
+                CertificateThumbprint       = $CertificateThumbprint
+            }
+
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
     }
     catch
     {
-        Write-Verbose -Message $_
-    }
-
-    if ($null -eq $Policy)
-    {
-        $currentValues = $PSBoundParameters
-        $currentValues.Ensure = "Absent"
-        return $currentValues
-    }
-    else
-    {
-        Write-Verbose "Found existing AzureAD Groups Lifecycle Policy"
-        $result = @{
-            IsSingleInstance            = 'Yes'
-            GroupLifetimeInDays         = $Policy.GroupLifetimeInDays
-            ManagedGroupTypes           = $Policy.ManagedGroupTypes
-            AlternateNotificationEmails = $Policy.AlternateNotificationEmails.Split(';')
-            Ensure                      = "Present"
-            GlobalAdminAccount          = $GlobalAdminAccount
-            ApplicationId               = $ApplicationId
-            TenantId                    = $TenantId
-            CertificateThumbprint       = $CertificateThumbprint
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
         }
-
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return $nullReturn
     }
 }
 
@@ -256,6 +302,15 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of AzureAD Groups Lifecycle Policy"
 
@@ -265,7 +320,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -309,38 +364,39 @@ function Export-TargetResource
 
     $organization = ""
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
-    if ($ConnectionMode -eq 'ServicePrincipal')
-    {
-        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
-            -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
-    }
-    else
-    {
-        if ($GlobalAdminAccount.UserName.Contains("@"))
-        {
-            $organization = $GlobalAdminAccount.UserName.Split("@")[1]
-        }
-    }
-    if ($organization.IndexOf(".") -gt 0)
-    {
-        $principal = $organization.Split(".")[0]
-    }
-
     try
     {
-        $Policy = Get-AzureADMSGroupLifecyclePolicy -ErrorAction SilentlyContinue
-    }
-    catch
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        return ""
-    }
+        $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+        if ($ConnectionMode -eq 'ServicePrincipal')
+        {
+            $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
+                -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
+        }
+        else
+        {
+            if ($GlobalAdminAccount.UserName.Contains("@"))
+            {
+                $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+            }
+        }
+        if ($organization.IndexOf(".") -gt 0)
+        {
+            $principal = $organization.Split(".")[0]
+        }
 
-    $dscContent = ''
+        try
+        {
+            $Policy = Get-AzureADMSGroupLifecyclePolicy -ErrorAction SilentlyContinue
+        }
+        catch
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            return ""
+        }
 
-    $Params = @{
+        $dscContent = ''
+
+        $Params = @{
             GlobalAdminAccount          = $GlobalAdminAccount
             IsSingleInstance            = 'Yes'
             GroupLifetimeInDays         = 1
@@ -349,21 +405,46 @@ function Export-TargetResource
             ApplicationId               = $ApplicationId
             TenantId                    = $TenantId
             CertificateThumbprint       = $CertificateThumbprint
-    }
-    $Results = Get-TargetResource @Params
-    if ($Results.Ensure -eq 'Present')
-    {
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-    }
-    Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        $Results = Get-TargetResource @Params
+        if ($Results.Ensure -eq 'Present')
+        {
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+        }
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
 
-    return $dscContent
+        return $dscContent
+    }
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource
