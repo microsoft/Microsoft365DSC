@@ -74,8 +74,10 @@ function Get-TargetResource
             if ([System.String]::IsNullOrEmpty($TeamId))
             {
                 Write-Verbose -Message "Getting team by Name {$TeamName}"
-                Write-Verbose -Message "PROFILE === $((Get-MgProfile).Name)"
+                Write-Verbose -Message "PROFILE === $(Get-MgProfile -Verbose | Out-String)"
                 $filter = "displayName eq '$TeamName' and resourceProvisioningOptions/Any(x:x eq 'Team')"
+                Write-Verbose -Message "Filter == $filter"
+                Select-MgProfile Beta
                 $teamInstance = Get-MgGroup -Filter $filter -ErrorAction Stop | ForEach-Object { @{ TeamId = $_.Id } } | Get-MgTeam -ErrorAction Stop
             }
             else
@@ -86,7 +88,7 @@ function Get-TargetResource
         }
         catch
         {
-            Write-Verbose -Message "$($_.Message)`r`n$($_.StackTrace)"
+            Write-Verbose -Message $_
             Write-Verbose "The specified Service Principal doesn't have access to read Group information. Permission Required: Group.Read.All & Team.ReadBasic.All"
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -120,7 +122,7 @@ function Get-TargetResource
         if ($null -eq $tabInstance)
         {
             $nullResult = $PSBoundParameters
-            $nullResult.Ensure = "Present"
+            $nullResult.Ensure = "Absent"
             return $nullResult
         }
 
@@ -134,6 +136,7 @@ function Get-TargetResource
             ApplicationId         = $ApplicationId
             TenantId              = $TenantID
             CertificateThumbprint = $CertificateThumbprint
+            Ensure                = "Present"
         }
     }
     catch
