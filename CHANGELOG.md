@@ -11,6 +11,10 @@
 * TeamsMeetingPolicy
   * Added the AllowBreakoutRooms, TeamsCameraFarEndPTZMode
     & AllowMeetingReactions parameters;
+* DEPENDENCIES
+  * MSCloudLoginAssistant Updated to 1.0.42;
+  * Microsoft.PowerApps.Administration.PowerShell Updated
+    to 2.0.99;
 
 ## 1.20.1118.1
 
