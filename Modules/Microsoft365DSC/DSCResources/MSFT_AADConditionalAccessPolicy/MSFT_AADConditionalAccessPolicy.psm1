@@ -14,7 +14,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('disabled', 'enabled','enabledForReportingButNotEnforced')]
+        [ValidateSet('disabled', 'enabled', 'enabledForReportingButNotEnforced')]
         $State,
 
         #ConditionalAccessApplicationCondition
@@ -138,7 +138,7 @@ function Get-TargetResource
         $SignInFrequency_Value,
 
         [Parameter()]
-        [ValidateSet('Days', 'Hours','')]
+        [ValidateSet('Days', 'Hours', '')]
         [System.String]
         $SignInFrequency_Type,
 
@@ -147,7 +147,7 @@ function Get-TargetResource
         $SignInFrequency_IsEnabled,
 
         [Parameter()]
-        [ValidateSet('Always', 'Never','')]
+        [ValidateSet('Always', 'Never', '')]
         [System.String]
         $PersistentBrowser_Mode,
 
@@ -200,7 +200,7 @@ function Get-TargetResource
         }
         catch
         {
-            $Policy = Get-AzureADMSConditionalAccessPolicy | Where-Object { $_.DisplayName -eq $DisplayName}
+            $Policy = Get-AzureADMSConditionalAccessPolicy | Where-Object { $_.DisplayName -eq $DisplayName }
             if ($Policy.Length -gt 1)
             {
                 throw "Duplicate CA Policies named $DisplayName exist in tenant"
@@ -211,7 +211,7 @@ function Get-TargetResource
     {
         Write-Verbose -Message "Id was NOT specified"
         ## Can retreive multiple CA Policies since displayname is not unique
-        $Policy = Get-AzureADMSConditionalAccessPolicy | Where-Object { $_.DisplayName -eq $DisplayName}
+        $Policy = Get-AzureADMSConditionalAccessPolicy | Where-Object { $_.DisplayName -eq $DisplayName }
         if ($Policy.Length -gt 1)
         {
             throw "Duplicate CA Policies named $DisplayName exist in tenant"
@@ -226,61 +226,287 @@ function Get-TargetResource
     }
     else
     {
-        Write-Verbose -Message "Found existing Conditional Access policy"
+        Write-Verbose -Message "Get-TargetResource: Found existing Conditional Access policy"
+        $PolicyDisplayName = $Policy.DisplayName
+
+        Write-Verbose -Message "Get-TargetResource: Process IncludeUsers"
+        #translate IncludeUser GUIDs to UPN, except id value is GuestsOrExternalUsers or All
+        $IncludeUsers = $null
+        if ($Policy.Conditions.Users.IncludeUsers)
+        {
+            $IncludeUsers = @()
+            foreach ($IncludeUserGUID in $Policy.Conditions.Users.IncludeUsers)
+            {
+                if ($IncludeUserGUID -notin "GuestsOrExternalUsers", "All")
+                {
+                    $IncludeUser = $null
+                    try
+                    {
+                        $IncludeUser = (Get-AzureADUser -ObjectId $IncludeUserGUID).userprincipalname
+                    }
+                    catch
+                    {
+                        New-M365DSCLogEntry -Error "$_" -Message "Couldn't find user $IncludeUserGUID , that is defined in policy $PolicyDisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                    }
+                    if ($IncludeUser)
+                    {
+                        $IncludeUsers += $IncludeUser
+                    }
+                }
+                else
+                {
+                    $IncludeUsers += $IncludeUserGUID
+                }
+            }
+        }
+
+        Write-Verbose -Message "Get-TargetResource: Process ExcludeUsers"
+        #translate ExcludeUser GUIDs to UPN, except id value is GuestsOrExternalUsers or All
+        $ExcludeUsers = $null
+        if ($Policy.Conditions.Users.ExcludeUsers)
+        {
+            $ExcludeUsers = @()
+            foreach ($ExcludeUserGUID in $Policy.Conditions.Users.ExcludeUsers)
+            {
+                if ($ExcludeUserGUID -notin "GuestsOrExternalUsers", "All")
+                {
+                    $ExcludeUser = $null
+                    try
+                    {
+                        $ExcludeUser = (Get-AzureADUser -ObjectId $ExcludeUserGUID).userprincipalname
+                    }
+                    catch
+                    {
+                        New-M365DSCLogEntry -Error "$_" -Message "Couldn't find user $ExcludeUserGUID , that is defined in policy $PolicyDisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                    }
+                    if ($ExcludeUser)
+                    {
+                        $ExcludeUsers += $ExcludeUser
+                    }
+                }
+                else
+                {
+                    $ExcludeUsers += $ExcludeUserGUID
+                }
+            }
+        }
+
+        Write-Verbose -Message "Get-TargetResource: Process IncludeGroups"
+        #translate IncludeGroup GUIDs to DisplayName
+        $IncludeGroups = $null
+        if ($Policy.Conditions.Users.IncludeGroups)
+        {
+            $IncludeGroups = @()
+            foreach ($IncludeGroupGUID in $Policy.Conditions.Users.IncludeGroups)
+            {
+                $IncludeGroup = $null
+                try
+                {
+                    $IncludeGroup = (Get-AzureADGroup -ObjectId $IncludeGroupGUID).displayname
+                }
+                catch
+                {
+                    New-M365DSCLogEntry -Error "$_" -Message "Couldn't find Group $IncludeGroupGUID , that is defined in policy $PolicyDisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                }
+                if ($IncludeGroup)
+                {
+                    $IncludeGroups += $IncludeGroup
+                }
+            }
+        }
+
+        Write-Verbose -Message "Get-TargetResource: Process ExcludeGroups"
+        #translate ExcludeGroup GUIDs to DisplayName
+        $ExcludeGroups = $null
+        if ($Policy.Conditions.Users.ExcludeGroups)
+        {
+            $ExcludeGroups = @()
+            foreach ($ExcludeGroupGUID in $Policy.Conditions.Users.ExcludeGroups)
+            {
+                $ExcludeGroup = $null
+                try
+                {
+                    $ExcludeGroup = (Get-AzureADGroup -ObjectId $ExcludeGroupGUID).displayname
+                }
+                catch
+                {
+                    New-M365DSCLogEntry -Error "$_" -Message "Couldn't find Group $ExcludeGroupGUID , that is defined in policy $PolicyDisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                }
+                if ($ExcludeGroup)
+                {
+                    $ExcludeGroups += $ExcludeGroup
+                }
+            }
+        }
+
+
+        $IncludeRoles = $null
+        $ExcludeRoles = $null
+        #translate role template guids to role name
+        if ($Policy.Conditions.Users.IncludeRoles -or $Policy.Conditions.Users.ExcludeRoles)
+        {
+            Write-Verbose -Message "Get-TargetResource: Role condition defined, processing"
+            #build role translation table
+            $rolelookup = @{}
+            foreach ($role in Get-AzureADDirectoryRoleTemplate)
+            {
+                $rolelookup[$role.ObjectId] = $role.DisplayName
+            }
+
+            Write-Verbose -Message "Get-TargetResource: Processing IncludeRoles"
+            if ($Policy.Conditions.Users.IncludeRoles)
+            {
+                $IncludeRoles = @()
+                foreach ($IncludeRoleGUID in $Policy.Conditions.Users.IncludeRoles)
+                {
+                    if ($null -eq $rolelookup[$IncludeRoleGUID])
+                    {
+                        New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find role $IncludeRoleGUID , couldn't add to policy $PolicyDisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                    }
+                    else
+                    {
+                        $IncludeRoles += $rolelookup[$IncludeRoleGUID]
+                    }
+                }
+            }
+
+            Write-Verbose -Message "Get-TargetResource: Processing ExcludeRoles"
+            if ($Policy.Conditions.Users.ExcludeRoles)
+            {
+                $ExcludeRoles = @()
+                foreach ($ExcludeRoleGUID in $Policy.Conditions.Users.ExcludeRoles)
+                {
+                    if ($null -eq $rolelookup[$ExcludeRoleGUID])
+                    {
+                        New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find role $ExcludeRoleGUID , couldn't add to policy $PolicyDisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                    }
+                    else
+                    {
+                        $ExcludeRoles += $rolelookup[$ExcludeRoleGUID]
+                    }
+                }
+            }
+
+        }
+
+        $IncludeLocations = $null
+        $ExcludeLocations = $null
+        #translate Location template guids to Location name
+        if ($Policy.Conditions.Locations.IncludeLocations -or $Policy.Conditions.Locations.ExcludeLocations)
+        {
+            Write-Verbose -Message "Get-TargetResource: Location condition defined, processing"
+            #build Location translation table
+            $Locationlookup = @{}
+            foreach ($Location in Get-AzureADMSNamedLocationPolicy)
+            {
+                $Locationlookup[$Location.Id] = $Location.DisplayName
+            }
+
+            Write-Verbose -Message "Get-TargetResource: Processing IncludeLocations"
+            if ($Policy.Conditions.Locations.IncludeLocations)
+            {
+                $IncludeLocations = @()
+                foreach ($IncludeLocationGUID in $Policy.Conditions.Locations.IncludeLocations)
+                {
+                    if ($IncludeLocationGUID -in "All", "AllTrusted")
+                    {
+                        $IncludeLocations += $IncludeLocationGUID
+                    }
+                    elseif ($null -eq $Locationlookup[$IncludeLocationGUID])
+                    {
+                        New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find Location $IncludeLocationGUID , couldn't add to policy $PolicyDisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                    }
+                    else
+                    {
+                        $IncludeLocations += $Locationlookup[$IncludeLocationGUID]
+                    }
+                }
+            }
+
+            Write-Verbose -Message "Get-TargetResource: Processing ExcludeLocations"
+            if ($Policy.Conditions.Locations.ExcludeLocations)
+            {
+                $ExcludeLocations = @()
+                foreach ($ExcludeLocationGUID in $Policy.Conditions.Locations.ExcludeLocations)
+                {
+                    if ($ExcludeLocationGUID -in "All", "AllTrusted")
+                    {
+                        $ExcludeLocations += $ExcludeLocationGUID
+                    }
+                    elseif ($null -eq $Locationlookup[$ExcludeLocationGUID])
+                    {
+                        New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find Location $ExcludeLocationGUID , couldn't add to policy $PolicyDisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                    }
+                    else
+                    {
+                        $ExcludeLocations += $Locationlookup[$ExcludeLocationGUID]
+                    }
+                }
+            }
+
+
+        }
 
         $result = @{
-            DisplayName                   = $Policy.DisplayName
-            Id                            = $Policy.Id
-            State                         = $Policy.State
-            IncludeApplications           = [System.String[]]$Policy.Conditions.Applications.IncludeApplications#no translation of GUIDs
-            ExcludeApplications           = [System.String[]]$Policy.Conditions.Applications.ExcludeApplications#no translation of GUIDs
-            IncludeUserActions            = [System.String[]]$Policy.Conditions.Applications.IncludeUserActions#no translation needed
+            DisplayName                               = $Policy.DisplayName
+            Id                                        = $Policy.Id
+            State                                     = $Policy.State
+            IncludeApplications                       = [System.String[]]$Policy.Conditions.Applications.IncludeApplications
+            #no translation of Application GUIDs
+            ExcludeApplications                       = [System.String[]]$Policy.Conditions.Applications.ExcludeApplications
+            #no translation of GUIDs
+            IncludeUserActions                        = [System.String[]]$Policy.Conditions.Applications.IncludeUserActions
+            #no translation needed
             #IncludeProtectionLevels      = [System.String[]]$Policy.Conditions.Applications.IncludeProtectionLevels
-            IncludeUsers                  = $Policy.Conditions.Users.IncludeUsers | ForEach-Object { if($_ -notmatch 'GuestsOrExternalUsers|All' -and $_){ (Get-AzureADUser -ObjectId $_).userprincipalname} else {$_}}#translate user GUIDs to UPN, except id value is GuestsOrExternalUsers or All
-            ExcludeUsers                  = $Policy.Conditions.Users.ExcludeUsers | ForEach-Object { if($_ -notmatch 'GuestsOrExternalUsers|All' -and $_){ (Get-AzureADUser -ObjectId $_).userprincipalname} else {$_}}#translate user GUIDs to UPN, except id value is GuestsOrExternalUsers or All
-            IncludeGroups                 = $policy.Conditions.Users.IncludeGroups | ForEach-Object { if($_){(Get-AzureADGroup -ObjectId $_).displayname}}#convert Group GUIDs to displayname
-            ExcludeGroups                 = $Policy.Conditions.Users.ExcludeGroups | ForEach-Object { if($_){(Get-AzureADGroup -ObjectId $_).displayname}}#convert Group GUIDs to displayname
-            IncludeRoles                  = if($Policy.Conditions.Users.IncludeRoles)#translate role template guids to role name
-            {
-            $rolelookup=@{}
-            Get-AzureADDirectoryRoleTemplate | ForEach-Object {$rolelookup[$_.ObjectId]=$_.DisplayName}
-            $Policy.Conditions.Users.IncludeRoles | ForEach-Object {$rolelookup[$_]}
-            }
-            else {$null}
+            IncludeUsers                              = $IncludeUsers
+            ExcludeUsers                              = $ExcludeUsers
+            IncludeGroups                             = $IncludeGroups
+            ExcludeGroups                             = $ExcludeGroups
+            IncludeRoles                              = $IncludeRoles
+            ExcludeRoles                              = $ExcludeRoles
 
-            ExcludeRoles                  = if($Policy.Conditions.Users.ExcludeRoles)#translate role template guids to role name
-            {
-            $rolelookup=@{}
-            Get-AzureADDirectoryRoleTemplate | ForEach-Object {$rolelookup[$_.ObjectId]=$_.DisplayName}
-            $Policy.Conditions.Users.ExcludeRoles | ForEach-Object {$rolelookup[$_]}
-            }
-            else {$null}
-
-            IncludePlatforms              = [System.String[]]$Policy.Conditions.Platforms.IncludePlatforms#no translation needed
-            ExcludePlatforms              = [System.String[]]$Policy.Conditions.Platforms.ExcludePlatforms#no translation needed
-            IncludeLocations              = $Policy.Conditions.Locations.IncludeLocations | ForEach-Object { if($_ -notmatch 'All' -and $_){ (Get-AzureADMSNamedLocationPolicy -PolicyId $_).DisplayName} else {$_}}#translate location GUIDs to Displayname, except if value is All or AllTrusted
-            ExcludeLocations              = $Policy.Conditions.Locations.ExcludeLocations | ForEach-Object { if($_ -notmatch 'All' -and $_){ (Get-AzureADMSNamedLocationPolicy -PolicyId $_).DisplayName} else {$_}}#translate location GUIDs to Displayname, except if value is All or AllTrusted
-            IncludeDeviceStates           = [System.String[]]$Policy.Conditions.Devices.IncludeDeviceStates#no translation needed
-            ExcludeDeviceStates           = [System.String[]]$Policy.Conditions.Devices.ExcludeDeviceStates#no translation needed
-            UserRiskLevels                = [System.String[]]$Policy.Conditions.UserRiskLevels#no translation needed
-            SignInRiskLevels              = [System.String[]]$Policy.Conditions.SignInRiskLevels#no translation needed
-            ClientAppTypes                = [System.String[]]$Policy.Conditions.ClientAppTypes#no translation needed
-            GrantControl_Operator         = $Policy.GrantControls._Operator#no translation or conversion needed
-            BuiltInControls               = [System.String[]]$Policy.GrantControls.BuiltInControls#no translation needed
-            ApplicationEnforcedRestrictions_IsEnabled = $Policy.SessionControls.ApplicationEnforcedRestrictions.IsEnabled#no translation or conversion needed
-            CloudAppSecurity_IsEnabled    = $Policy.SessionControls.CloudAppSecurity.IsEnabled#no translation or conversion needed
-            CloudAppSecurity_Type         = [System.String]$Policy.SessionControls.CloudAppSecurity.CloudAppSecurityType#no translation needed
-            SignInFrequency_Value         = $Policy.SessionControls.SignInFrequency.Value#no translation or conversion needed
-            SignInFrequency_Type          = [System.String]$Policy.SessionControls.SignInFrequency.Type#no translation needed
-            SignInFrequency_IsEnabled     = $Policy.SessionControls.SignInFrequency.IsEnabled#no translation or conversion needed
-            PersistentBrowser_Mode        = [System.String]$Policy.SessionControls.PersistentBrowser.Mode#no translation needed
-            PersistentBrowser_IsEnabled   = $Policy.SessionControls.PersistentBrowser.IsEnabled#no translation or conversion needed
-#Standard part
-            Ensure                        = "Present"
-            GlobalAdminAccount            = $GlobalAdminAccount
-            ApplicationId                 = $ApplicationId
-            TenantId                      = $TenantId
-            CertificateThumbprint         = $CertificateThumbprint
+            IncludePlatforms                          = [System.String[]]$Policy.Conditions.Platforms.IncludePlatforms
+            #no translation needed
+            ExcludePlatforms                          = [System.String[]]$Policy.Conditions.Platforms.ExcludePlatforms
+            #no translation needed
+            IncludeLocations                          = $IncludeLocations
+            ExcludeLocations                          = $ExcludeLocations
+            IncludeDeviceStates                       = [System.String[]]$Policy.Conditions.Devices.IncludeDeviceStates
+            #no translation needed
+            ExcludeDeviceStates                       = [System.String[]]$Policy.Conditions.Devices.ExcludeDeviceStates
+            #no translation needed
+            UserRiskLevels                            = [System.String[]]$Policy.Conditions.UserRiskLevels
+            #no translation needed
+            SignInRiskLevels                          = [System.String[]]$Policy.Conditions.SignInRiskLevels
+            #no translation needed
+            ClientAppTypes                            = [System.String[]]$Policy.Conditions.ClientAppTypes
+            #no translation needed
+            GrantControl_Operator                     = $Policy.GrantControls._Operator
+            #no translation or conversion needed
+            BuiltInControls                           = [System.String[]]$Policy.GrantControls.BuiltInControls
+            #no translation needed
+            ApplicationEnforcedRestrictions_IsEnabled = $Policy.SessionControls.ApplicationEnforcedRestrictions.IsEnabled
+            #no translation or conversion needed
+            CloudAppSecurity_IsEnabled                = $Policy.SessionControls.CloudAppSecurity.IsEnabled
+            #no translation or conversion needed
+            CloudAppSecurity_Type                     = [System.String]$Policy.SessionControls.CloudAppSecurity.CloudAppSecurityType
+            #no translation needed
+            SignInFrequency_Value                     = $Policy.SessionControls.SignInFrequency.Value
+            #no translation or conversion needed
+            SignInFrequency_Type                      = [System.String]$Policy.SessionControls.SignInFrequency.Type
+            #no translation needed
+            SignInFrequency_IsEnabled                 = $Policy.SessionControls.SignInFrequency.IsEnabled
+            #no translation or conversion needed
+            PersistentBrowser_Mode                    = [System.String]$Policy.SessionControls.PersistentBrowser.Mode
+            #no translation needed
+            PersistentBrowser_IsEnabled               = $Policy.SessionControls.PersistentBrowser.IsEnabled
+            #no translation or conversion needed
+            #Standard part
+            Ensure                                    = "Present"
+            GlobalAdminAccount                        = $GlobalAdminAccount
+            ApplicationId                             = $ApplicationId
+            TenantId                                  = $TenantId
+            CertificateThumbprint                     = $CertificateThumbprint
         }
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
@@ -303,7 +529,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('disabled', 'enabled','enabledForReportingButNotEnforced')]
+        [ValidateSet('disabled', 'enabled', 'enabledForReportingButNotEnforced')]
         $State,
 
         #ConditionalAccessApplicationCondition
@@ -427,7 +653,7 @@ function Set-TargetResource
         $SignInFrequency_Value,
 
         [Parameter()]
-        [ValidateSet('Days', 'Hours','')]
+        [ValidateSet('Days', 'Hours', '')]
         [System.String]
         $SignInFrequency_Type,
 
@@ -436,7 +662,7 @@ function Set-TargetResource
         $SignInFrequency_IsEnabled,
 
         [Parameter()]
-        [ValidateSet('Always', 'Never','')]
+        [ValidateSet('Always', 'Never', '')]
         [System.String]
         $PersistentBrowser_Mode,
 
@@ -492,9 +718,9 @@ function Set-TargetResource
     if ($Ensure -eq 'Present')#create policy attribute objects
     {
         Write-Verbose -Message "Set-Targetresource: Policy $Displayname Ensure Present"
-        $NewParameters=@{}
-        $NewParameters.Add("DisplayName",$DisplayName)
-        $NewParameters.Add("State",$State)
+        $NewParameters = @{}
+        $NewParameters.Add("DisplayName", $DisplayName)
+        $NewParameters.Add("State", $State)
         #create Conditions object
         Write-Verbose -Message "Set-Targetresource: create Conditions object"
         $conditions = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessConditionSet
@@ -511,17 +737,22 @@ function Set-TargetResource
         foreach ($includeuser in $IncludeUsers)
         {
             #translate user UPNs to GUID, except id value is GuestsOrExternalUsers or All
-            if($includeuser)
+            if ($includeuser)
             {
-                if($includeuser -notmatch 'GuestsOrExternalUsers|All')
+                if ($includeuser -notin "GuestsOrExternalUsers", "All")
                 {
-                    $userguid=$null
-                    $userguid=(Get-AzureADUser -ObjectId $includeuser).ObjectId
-                    if($null -eq $userguid)
-                    {
-                        New-M365DSCLogEntry -Error $includeuser -Message "Couldn't find user $includeuser , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                    $userguid = $null
+                    try
+                    { $userguid = (Get-AzureADUser -ObjectId $includeuser).ObjectId
                     }
-                    elseif (condition)
+                    catch
+                    { New-M365DSCLogEntry -Error $_ -Source $MyInvocation.MyCommand.ModuleName
+                    }
+                    if ($null -eq $userguid)
+                    {
+                        New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find user $includeuser , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                    }
+                    else
                     {
                         $conditions.Users.IncludeUsers += $userguid
                     }
@@ -536,17 +767,22 @@ function Set-TargetResource
         foreach ($excludeuser in $ExcludeUsers)
         {
             #translate user UPNs to GUID, except id value is GuestsOrExternalUsers or All
-            if($excludeuser)
+            if ($excludeuser)
             {
-                if($excludeuser -notmatch 'GuestsOrExternalUsers|All')
+                if ($excludeuser -notin "GuestsOrExternalUsers", "All")
                 {
-                    $userguid=$null
-                    $userguid=(Get-AzureADUser -ObjectId $excludeuser).ObjectId
-                    if($null -eq $userguid)
-                    {
-                        New-M365DSCLogEntry -Error $excludeuser -Message "Couldn't find user $excludeuser , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                    $userguid = $null
+                    try
+                    { $userguid = (Get-AzureADUser -ObjectId $excludeuser).ObjectId
                     }
-                    elseif (condition)
+                    catch
+                    { New-M365DSCLogEntry -Error $_ -Source $MyInvocation.MyCommand.ModuleName
+                    }
+                    if ($null -eq $userguid)
+                    {
+                        New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find user $excludeuser , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                    }
+                    else
                     {
                         $conditions.Users.ExcludeUsers += $userguid
                     }
@@ -558,20 +794,25 @@ function Set-TargetResource
             }
         }
         Write-Verbose -Message "Set-Targetresource: process includegroups"
-        foreach($includegroup in $IncludeGroups)
+        foreach ($includegroup in $IncludeGroups)
         {
             #translate user Group names to GUID
-            if($includegroup)
+            if ($includegroup)
             {
-                $Groupguid=$null
-                $Groupguid = Get-AzureADGroup -Filter "DisplayName eq '$includegroup'"
+                $Groupguid = $null
+                try
+                { $Groupguid = (Get-AzureADGroup -Filter "DisplayName eq '$includegroup'").ObjectId
+                }
+                catch
+                { New-M365DSCLogEntry -Error $_ -Source $MyInvocation.MyCommand.ModuleName
+                }
                 if ($Groupguid.Length -gt 1)
                 {
-                    New-M365DSCLogEntry -Error $includegroup -Message "Duplicate group found with displayname $includegroup , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                    New-M365DSCLogEntry -Error "Duplicate Object found" -Message "Duplicate group found with displayname $includegroup , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
                 }
-                elseif($null -eq $Groupguid)
+                elseif ($null -eq $Groupguid)
                 {
-                    New-M365DSCLogEntry -Error $includegroup -Message "Couldn't find group $includegroup , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                    New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find group $includegroup , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
                 }
                 else
                 {
@@ -581,20 +822,25 @@ function Set-TargetResource
             }
         }
         Write-Verbose -Message "Set-Targetresource: process excludegroups"
-        foreach($excludegroup in $ExcludeGroups)
+        foreach ($excludegroup in $ExcludeGroups)
         {
             #translate user Group names to GUID
-            if($excludegroup)
+            if ($excludegroup)
             {
-                $Groupguid=$null
-                $Groupguid = Get-AzureADGroup -Filter "DisplayName eq '$excludegroup'"
+                $Groupguid = $null
+                try
+                { $Groupguid = (Get-AzureADGroup -Filter "DisplayName eq '$excludegroup'").ObjectId
+                }
+                catch
+                { New-M365DSCLogEntry -Error $_ -Source $MyInvocation.MyCommand.ModuleName
+                }
                 if ($Groupguid.Length -gt 1)
                 {
-                    New-M365DSCLogEntry -Error $excludegroup -Message "Duplicate group found with displayname $excludegroup , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                    New-M365DSCLogEntry -Error "Duplicate Object found" -Message "Duplicate group found with displayname $excludegroup , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
                 }
-                elseif($null -eq $Groupguid)
+                elseif ($null -eq $Groupguid)
                 {
-                    New-M365DSCLogEntry -Error $excludegroup -Message "Couldn't find group $excludegroup , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                    New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find group $excludegroup , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
                 }
                 else
                 {
@@ -607,22 +853,22 @@ function Set-TargetResource
         if ($IncludeRoles)
         {
             #translate role names to template guid if defined
-            $rolelookup=@{}
-            Get-AzureADDirectoryRoleTemplate | ForEach-Object {$rolelookup[$_.DisplayName]=$_.ObjectId}
-            $IncludeRoles | foreach-object
+            $rolelookup = @{}
+            foreach ($role in Get-AzureADDirectoryRoleTemplate)
+            { $rolelookup[$role.DisplayName] = $role.ObjectId
+            }
+            foreach ($IncludeRole in $IncludeRoles)
             {
-                if($_)
+                if ($IncludeRole)
                 {
-                    if($null -eq $rolelookup[$_])
+                    if ($null -eq $rolelookup[$IncludeRole])
                     {
-                        New-M365DSCLogEntry -Error $_ -Message "Couldn't find role $_ , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                        New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find role $IncludeRole , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
                     }
-                    else {
-                        {
-                            $conditions.Users.IncludeRoles += $rolelookup[$_]
-                        }
+                    else
+                    {
+                        $conditions.Users.IncludeRoles += $rolelookup[$IncludeRole]
                     }
-
                 }
             }
         }
@@ -630,20 +876,21 @@ function Set-TargetResource
         if ($ExcludeRoles)
         {
             #translate role names to template guid if defined
-            $rolelookup=@{}
-            Get-AzureADDirectoryRoleTemplate | ForEach-Object {$rolelookup[$_.DisplayName]=$_.ObjectId}
-            $ExcludeRoles | foreach-object
+            $rolelookup = @{}
+            foreach ($role in Get-AzureADDirectoryRoleTemplate)
+            { $rolelookup[$role.DisplayName] = $role.ObjectId
+            }
+            foreach ($ExcludeRole in $ExcludeRoles)
             {
-                if($_)
+                if ($ExcludeRole)
                 {
-                    if($null -eq $rolelookup[$_])
+                    if ($null -eq $rolelookup[$ExcludeRole])
                     {
-                        New-M365DSCLogEntry -Error $_ -Message "Couldn't find role $_ , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                        New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find role $ExcludeRole , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
                     }
-                    else {
-                        {
-                            $conditions.Users.ExcludeRoles += $rolelookup[$_]
-                        }
+                    else
+                    {
+                        $conditions.Users.ExcludeRoles += $rolelookup[$ExcludeRole]
                     }
 
                 }
@@ -654,132 +901,148 @@ function Set-TargetResource
         {
             #create and provision Platform condition object if used
             $conditions.Platforms = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessPlatformCondition
-            $conditions.Platforms.IncludePlatforms=$IncludePlatforms #no translation or conversion needed
-            $conditions.Platforms.ExcludePlatforms=$ExcludePlatforms#no translation or conversion needed
+            $conditions.Platforms.IncludePlatforms = $IncludePlatforms
+            #no translation or conversion needed
+            $conditions.Platforms.ExcludePlatforms = $ExcludePlatforms
+            #no translation or conversion needed
         }
         Write-Verbose -Message "Set-Targetresource: process include and exclude locations"
         if ($IncludeLocations -or $ExcludeLocations)
         {
+            Write-Verbose -Message "Set-Targetresource: locations specified"
             #create and provision Location condition object if used, translate Location names to guid
             $conditions.Locations = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessLocationCondition
-            $LocationLookup=@{}
-            Get-AzureADMSNamedLocationPolicy | ForEach-Object {$LocationLookup[$_.DisplayName]=$_.Id}
-            $IncludeLocations| foreach-object
+            $LocationLookup = @{}
+            foreach ($Location in Get-AzureADMSNamedLocationPolicy)
             {
-                if($_)
-                {
-                    if($null -eq $LocationLookup[$_])
-                    {
-                        New-M365DSCLogEntry -Error $_ -Message "Couldn't find Location $_ , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
-                    }
-                    elseif ($_ -eq "All" -or $_ -eq "AllTrusted") {
-                        $conditions.Locations.IncludeLocations += $_
-                    }
-                    else {
-                        {
-                            $conditions.Locations.IncludeLocations += $LocationLookup[$_]
-                        }
-                    }
-                }
-            $ExcludeLocations| foreach-object
+                $LocationLookup[$Location.DisplayName] = $Location.Id
+            }
+            foreach ($IncludeLocation in $IncludeLocations)
             {
-                if($_)
+                if ($IncludeLocation)
                 {
-                    if($null -eq $LocationLookup[$_])
+                    if ($IncludeLocation -in "All", "AllTrusted")
                     {
-                        New-M365DSCLogEntry -Error $_ -Message "Couldn't find Location $_ , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                        $conditions.Locations.IncludeLocations += $IncludeLocation
                     }
-                    elseif ($_ -eq "All" -or $_ -eq "AllTrusted") {
-                        $conditions.Locations.ExcludeLocations += $_
+                    elseif ($null -eq $LocationLookup[$IncludeLocation])
+                    {
+                        New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find Location $IncludeLocation , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
                     }
-                    else {
-                        {
-                            $conditions.Locations.ExcludeLocations += $LocationLookup[$_]
-                        }
+                    else
+                    {
+                            $conditions.Locations.IncludeLocations += $LocationLookup[$IncludeLocation]
                     }
                 }
             }
+            foreach ($ExcludeLocation in $ExcludeLocations)
+            {
+                if ($ExcludeLocation)
+                {
+                    if ($ExcludeLocation -eq "All" -or $ExcludeLocation -eq "AllTrusted")
+                    {
+                        $conditions.Locations.ExcludeLocations += $ExcludeLocation
+                    }
+                    elseif ($null -eq $LocationLookup[$ExcludeLocation])
+                    {
+                        New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find Location $ExcludeLocation , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                    }
+                    else
+                    {
+                        $conditions.Locations.ExcludeLocations += $LocationLookup[$ExcludeLocation]
+                    }
+                }
+            }
         }
 
-Write-Verbose -Message "Set-Targetresource: process device states"
-        if ($IncludeDeviceStates -or $ExcludeDeviceStates)
-        {
-            #create and provision Device condition object if used
-            $conditions.Devices = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessDevicesCondition
-            $conditions.Devices.IncludeDeviceStates=$IncludeDeviceStates#no translation or conversion needed
-            $conditions.Devices.ExcludeDeviceStates=$ExcludeDeviceStates#no translation or conversion needed
+            Write-Verbose -Message "Set-Targetresource: process device states"
+            if ($IncludeDeviceStates -or $ExcludeDeviceStates)
+            {
+                #create and provision Device condition object if used
+                $conditions.Devices = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessDevicesCondition
+                $conditions.Devices.IncludeDeviceStates = $IncludeDeviceStates
+                #no translation or conversion needed
+                $conditions.Devices.ExcludeDeviceStates = $ExcludeDeviceStates
+                #no translation or conversion needed
+            }
+            Write-Verbose -Message "Set-Targetresource: process risk levels and app types"
+            $Conditions.UserRiskLevels = $UserRiskLevels
+            #no translation or conversion needed
+            $Conditions.SignInRiskLevels = $SignInRiskLevels
+            #no translation or conversion needed
+            $Conditions.ClientAppTypes = $ClientAppTypes
+            #no translation or conversion needed
+            Write-Verbose -Message "Set-Targetresource: Adding processed conditions"
+            #add all conditions to the parameter list
+            $NewParameters.Add("Conditions", $Conditions)
+            #create and provision Grant Control object
+            Write-Verbose -Message "Set-Targetresource: create and provision Grant Control object"
+            $GrantControls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessGrantControls
+            $GrantControls._Operator = $GrantControl_Operator
+            $GrantControls.BuiltInControls = $BuiltInControls
+            #no translation or conversion needed
+            Write-Verbose -Message "Set-Targetresource: Adding processed grant controls"
+            $NewParameters.Add("GrantControls", $GrantControls)
+            #add GrantControls to the parameter list
+            Write-Verbose -Message "Set-Targetresource: process session controls"
+            if ($ApplicationEnforcedRestrictions_IsEnabled -or $CloudAppSecurity_IsEnabled -or $SignInFrequency_IsEnabled -or $PersistentBrowser_IsEnabled)
+            {
+                #create and provision Session Control object if used
+                Write-Verbose -Message "Set-Targetresource: Create and provision Session Control object"
+                $sessioncontrols = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessSessionControls
+                if ($ApplicationEnforcedRestrictions_IsEnabled)
+                {
+                    #create and provision ApplicationEnforcedRestrictions object if used
+                    $sessioncontrols.ApplicationEnforcedRestrictions = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessApplicationEnforcedRestrictions
+                    $sessioncontrols.ApplicationEnforcedRestrictions.IsEnabled = $true
+                }
+                if ($CloudAppSecurity_IsEnabled)
+                {
+                    #create and provision CloudAppSecurity object if used
+                    $sessioncontrols.CloudAppSecurity = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessCloudAppSecurity
+                    $sessioncontrols.CloudAppSecurity.IsEnabled = $true
+                    $sessioncontrols.CloudAppSecurity.CloudAppSecurityType = $CloudAppSecurity_Type
+                }
+                if ($SignInFrequency_IsEnabled)
+                {
+                    #create and provision SignInFrequency object if used
+                    $sessioncontrols.SignInFrequency = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessSignInFrequency
+                    $sessioncontrols.SignInFrequency.IsEnabled = $true
+                    $sessioncontrols.SignInFrequency.Type = $SignInFrequency_Type
+                    $sessioncontrols.SignInFrequency.Value = $SignInFrequency_Value
+                }
+                if ($PersistentBrowser_IsEnabled)
+                {
+                    #create and provision PersistentBrowser object if used
+                    $sessioncontrols.PersistentBrowser = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessPersistentBrowser
+                    $sessioncontrols.PersistentBrowser.IsEnabled = $true
+                    $sessioncontrols.PersistentBrowser.Mode = $PersistentBrowser_Mode
+                }
+                $NewParameters.Add("SessionControls", $sessioncontrols)
+                #add SessionControls to the parameter list
+            }
+
+
+
         }
-Write-Verbose -Message "Set-Targetresource: process risk levels and app types"
-        $Conditions.UserRiskLevels = $UserRiskLevels#no translation or conversion needed
-        $Conditions.SignInRiskLevels = $SignInRiskLevels #no translation or conversion needed
-        $Conditions.ClientAppTypes = $ClientAppTypes#no translation or conversion needed
-Write-Verbose -Message "Set-Targetresource: Adding processed conditions"
-        $NewParameters.Add("Conditions",$Conditions)#add all conditions to the parameter list
-        #create and provision Grant Control object
-Write-Verbose -Message "Set-Targetresource: create and provision Grant Control object"
-        $GrantControls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessGrantControls
-        $GrantControls._Operator = $GrantControl_Operator
-        $GrantControls.BuiltInControls = $BuiltInControls #no translation or conversion needed
-        Write-Verbose -Message "Set-Targetresource: Adding processed grant controls"        
-        $NewParameters.Add("GrantControls",$GrantControls)#add GrantControls to the parameter list
-Write-Verbose -Message "Set-Targetresource: process session controls"
-        if ($ApplicationEnforcedRestrictions_IsEnabled -or $CloudAppSecurity_IsEnabled -or $SignInFrequency_IsEnabled -or $PersistentBrowser_IsEnabled)
-        {
-            #create and provision Session Control object if used
-            Write-Verbose -Message "Set-Targetresource:reate and provision Session Control object"
-            $sessioncontrols = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessSessionControls
-            if ($ApplicationEnforcedRestrictions_IsEnabled)
-            {
-                #create and provision ApplicationEnforcedRestrictions object if used
-                $sessioncontrols.ApplicationEnforcedRestrictions = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessApplicationEnforcedRestrictions
-                $sessioncontrols.ApplicationEnforcedRestrictions.IsEnabled = $true
-            }
-            if ($CloudAppSecurity_IsEnabled)
-            {
-                #create and provision CloudAppSecurity object if used
-                $sessioncontrols.CloudAppSecurity = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessCloudAppSecurity
-                $sessioncontrols.CloudAppSecurity.IsEnabled=$true
-                $sessioncontrols.CloudAppSecurity.CloudAppSecurityType=$CloudAppSecurity_Type
-            }
-            if ($SignInFrequency_IsEnabled)
-            {
-                #create and provision SignInFrequency object if used
-                $sessioncontrols.SignInFrequency = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessSignInFrequency
-                $sessioncontrols.SignInFrequency.IsEnabled =$true
-                $sessioncontrols.SignInFrequency.Type = $SignInFrequency_Type
-                $sessioncontrols.SignInFrequency.Value = $SignInFrequency_Value
-            }
-            if ($PersistentBrowser_IsEnabled)
-            {
-                #create and provision PersistentBrowser object if used
-                $sessioncontrols.PersistentBrowser = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessPersistentBrowser
-                $sessioncontrols.PersistentBrowser.IsEnabled =$true
-                $sessioncontrols.PersistentBrowser.Mode=$PersistentBrowser_Mode
-            }
-            $NewParameters.Add("SessionControls",$sessioncontrols)#add SessionControls to the parameter list
-        }
-
-
-
-    }
-    }
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
-        
-        $NewParameters.Add("PolicyId",$Id)
+        Write-Verbose -Message "Set-Targetresource: Change policy $DisplayName"
+        $NewParameters.Add("PolicyId", $Id)
         try
         {
-            Write-Verbose -Message "Set-Targetresource: execute policy change in AAD"
-            Set-AzureADMSConditionalAccessPolicy @NewParameters
-            Write-Verbose -Message "Set-Targetresource: executed policy change in AAD"
+             Set-AzureADMSConditionalAccessPolicy @NewParameters
         }
         catch
         {
             New-M365DSCLogEntry -Error $_ -Message "Couldn't set policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+            Write-Verbose -Message "Set-Targetresource: Failed change policy $DisplayName"
+            Write-Verbose -Message $_
         }
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
+        Write-Verbose -Message "Set-Targetresource: create policy $DisplayName"
         try
         {
             New-AzureADMSConditionalAccessPolicy @NewParameters
@@ -787,10 +1050,13 @@ Write-Verbose -Message "Set-Targetresource: process session controls"
         catch
         {
             New-M365DSCLogEntry -Error $_ -Message "Couldn't create Policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+            Write-Verbose -Message "Set-Targetresource: Failed creating policy"
+            Write-Verbose -Message $_
         }
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
+        Write-Verbose -Message "Set-Targetresource: delete policy $DisplayName"
         try
         {
             Remove-AzureADMSConditionalAccessPolicy -PolicyId $currentPolicy.ID
@@ -798,6 +1064,8 @@ Write-Verbose -Message "Set-Targetresource: process session controls"
         catch
         {
             New-M365DSCLogEntry -Error $_ -Message "Couldn't delete Policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+            Write-Verbose -Message "Set-Targetresource: Failed deleting policy $DisplayName"
+            Write-Verbose -Message $_
         }
     }
     Write-Verbose -Message "Set-Targetresource: finished processing Policy $Displayname"
@@ -819,7 +1087,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('disabled', 'enabled','enabledForReportingButNotEnforced')]
+        [ValidateSet('disabled', 'enabled', 'enabledForReportingButNotEnforced')]
         $State,
 
         #ConditionalAccessApplicationCondition
@@ -943,7 +1211,7 @@ function Test-TargetResource
         $SignInFrequency_Value,
 
         [Parameter()]
-        [ValidateSet('Days', 'Hours','')]
+        [ValidateSet('Days', 'Hours', '')]
         [System.String]
         $SignInFrequency_Type,
 
@@ -952,7 +1220,7 @@ function Test-TargetResource
         $SignInFrequency_IsEnabled,
 
         [Parameter()]
-        [ValidateSet('Always', 'Never','')]
+        [ValidateSet('Always', 'Never', '')]
         [System.String]
         $PersistentBrowser_Mode,
 
@@ -1040,10 +1308,10 @@ function Export-TargetResource
     [array] $Policies = Get-AzureADMSConditionalAccessPolicy
     $i = 1
     $dscContent = ''
-    Write-Host "`r`n" -NoNewLine
+    Write-Host "`r`n" -NoNewline
     foreach ($Policy in $Policies)
     {
-        Write-Host "    |---[$i/$($Policies.Count)] $($Policy.DisplayName)" -NoNewLine
+        Write-Host "    |---[$i/$($Policies.Count)] $($Policy.DisplayName)" -NoNewline
         $Params = @{
             GlobalAdminAccount    = $GlobalAdminAccount
             DisplayName           = $Policy.DisplayName
