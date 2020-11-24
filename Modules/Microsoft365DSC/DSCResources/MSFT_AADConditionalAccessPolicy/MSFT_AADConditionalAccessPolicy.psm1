@@ -1030,7 +1030,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Set-Targetresource: Change policy $DisplayName"
-        $NewParameters.Add("PolicyId", $Id)
+        $NewParameters.Add("PolicyId", $currentPolicy.Id)
         try
         {
              Set-AzureADMSConditionalAccessPolicy @NewParameters
