@@ -799,54 +799,58 @@ function Set-TargetResource
             #translate user Group names to GUID
             if ($includegroup)
             {
-                $Groupguid = $null
+                $GroupLookup = $null
                 try
-                { $Groupguid = (Get-AzureADGroup -Filter "DisplayName eq '$includegroup'").ObjectId
+                { $GroupLookup = Get-AzureADGroup -Filter "DisplayName eq '$includegroup'"
                 }
                 catch
-                { New-M365DSCLogEntry -Error $_ -Source $MyInvocation.MyCommand.ModuleName
+                { 
+                    New-M365DSCLogEntry -Error $_ -Source $MyInvocation.MyCommand.ModuleName
+                    Write-Verbose -Message $_
                 }
-                if ($Groupguid.Length -gt 1)
+                if ($GroupLookup.Length -gt 1)
                 {
-                    New-M365DSCLogEntry -Error "Duplicate Object found" -Message "Duplicate group found with displayname $includegroup , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                   New-M365DSCLogEntry -Error "Duplicate Object found" -Message "Duplicate group found with displayname $includegroup , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
                 }
-                elseif ($null -eq $Groupguid)
+                elseif ($null -eq $GroupLookup)
                 {
                     New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find group $includegroup , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
                 }
                 else
                 {
-                    $conditions.Users.IncludeGroups += $Groupguid
+                    Write-Verbose -Message "adding group to includegroups"
+                    $conditions.Users.IncludeGroups+=$GroupLookup.ObjectId
                 }
-
             }
         }
         Write-Verbose -Message "Set-Targetresource: process excludegroups"
-        foreach ($excludegroup in $ExcludeGroups)
+        foreach ($ExcludeGroup in $ExcludeGroups)
         {
             #translate user Group names to GUID
-            if ($excludegroup)
+            if ($ExcludeGroup)
             {
-                $Groupguid = $null
+                $GroupLookup = $null
                 try
-                { $Groupguid = (Get-AzureADGroup -Filter "DisplayName eq '$excludegroup'").ObjectId
+                { $GroupLookup = Get-AzureADGroup -Filter "DisplayName eq '$ExcludeGroup'"
                 }
                 catch
-                { New-M365DSCLogEntry -Error $_ -Source $MyInvocation.MyCommand.ModuleName
+                { 
+                    New-M365DSCLogEntry -Error $_ -Source $MyInvocation.MyCommand.ModuleName
+                    Write-Verbose -Message $_
                 }
-                if ($Groupguid.Length -gt 1)
+                if ($GroupLookup.Length -gt 1)
                 {
-                    New-M365DSCLogEntry -Error "Duplicate Object found" -Message "Duplicate group found with displayname $excludegroup , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                   New-M365DSCLogEntry -Error "Duplicate Object found" -Message "Duplicate group found with displayname $ExcludeGroup , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
                 }
-                elseif ($null -eq $Groupguid)
+                elseif ($null -eq $GroupLookup)
                 {
-                    New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find group $excludegroup , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                    New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find group $ExcludeGroup , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
                 }
                 else
                 {
-                    $conditions.Users.ExcludeGroups += $Groupguid
+                    Write-Verbose -Message "adding group to ExcludeGroups"
+                    $conditions.Users.ExcludeGroups+=$GroupLookup.ObjectId
                 }
-
             }
         }
         Write-Verbose -Message "Set-Targetresource: process includeroles"
@@ -1021,8 +1025,6 @@ function Set-TargetResource
                 $NewParameters.Add("SessionControls", $sessioncontrols)
                 #add SessionControls to the parameter list
             }
-
-
 
         }
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
