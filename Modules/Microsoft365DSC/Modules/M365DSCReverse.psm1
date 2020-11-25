@@ -86,6 +86,9 @@ function Start-M365DSCConfigurationExtract
     $VerbosePreference = "SilentlyContinue"
     $WarningPreference = "SilentlyContinue"
 
+    $ComponentsToExtract = Get-M365DSCResourcesByWorkloads -Workloads $Workloads `
+        -Mode $Mode
+
     if ($null -eq $ComponentsToExtract -or $ComponentsToExtract.Length -eq 0)
     {
         $ComponentsToExtractSpecified = $false
@@ -666,4 +669,38 @@ function Start-M365DSCConfigurationExtract
     {
         Invoke-Item -Path $OutputDSCPath
     }
+}
+
+function Get-M365DSCResourcesByWorkloads
+{
+    [CmdletBinding()]
+    [OutputType([System.String[]])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String[]]
+        $Workloads,
+
+        [Parameter()]
+        [ValidateSet('Lite', 'Default', 'Full')]
+        [System.String]
+        $Mode = 'Default'
+    )
+
+    $modules = Get-ChildItem -Path ($PSScriptRoot + "\..\DSCResources\") -Recurse -Filter '*.psm1'
+    $Components = @()
+    foreach ($resource in $modules)
+    {
+        $ResourceName = $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+        foreach ($Workload in $Workloads)
+        {
+            if ($ResourceName.StartsWith($Workload) -and
+                ($Mode -eq "Full" -or `
+                    ($Mode -eq "Default" -and -not $Global:FullComponents.Contains($ResourceName)) -or `
+                    ($Mode -eq "Lite" -and -not $Global:FullComponents.Contains($ResourceName) -and -not $Global:DefaultComponents.Contains($ResourceName))))
+            {
+                $Components += $ResourceName
+            }
+        }
+    }
+    return $Components
 }
