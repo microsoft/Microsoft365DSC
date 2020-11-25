@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+## 1.20.1202.1
+
+* EXPORT
+  * Fixed an issue where an Export using the -Workloads
+    parameter with a Service Principal did not export
+    any resource;
+
 ## 1.20.1125.1
 
 * AADRoleDefinition
