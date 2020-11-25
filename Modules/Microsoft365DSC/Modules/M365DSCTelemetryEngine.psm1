@@ -38,10 +38,6 @@ function Add-M365DSCTelemetryEvent
         $Metrics
     )
 
-    # Start by checking to see if a new Version of the tool is available in the
-    # PowerShell Gallery
-    Test-M365DSCNewVersionAvailable
-
     $TelemetryEnabled = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryEnabled', `
             [System.EnvironmentVariableTarget]::Machine)
 
