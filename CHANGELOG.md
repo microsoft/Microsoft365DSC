@@ -16,7 +16,7 @@
   * Microsoft.PowerApps.Administration.PowerShell Updated
     to 2.0.99;
 * MISC
-  * Moved the check for new verison of module into the
+  * Moved the check for new version of module into the
     Export-M365DSCConfiguration function for performance
     improvements;
 
