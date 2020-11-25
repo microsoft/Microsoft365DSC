@@ -69,6 +69,18 @@ function Start-M365DSCConfigurationExtract
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+
+    # Start by checking to see if a new Version of the tool is available in the
+    # PowerShell Gallery
+    try
+    {
+        Test-M365DSCNewVersionAvailable
+    }
+    catch
+    {
+        Add-M365DSCEvent -Message $_ -Source "M365DSCReverse::Test-M365DSCNewVersionAvailable"
+    }
+
     $M365DSCExportStartTime = [System.DateTime]::Now
     $InformationPreference = "Continue"
     $VerbosePreference = "SilentlyContinue"
