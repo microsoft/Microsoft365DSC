@@ -1,5 +1,25 @@
 # Change log for Microsoft365DSC
 
+## 1.20.1125.1
+
+* AADRoleDefinition
+  * Initial Release;
+* O365User
+  * Fixes an issue where only the first O365User instance
+    extracted had the PSCredential Password property set
+    correctly;
+* TeamsMeetingPolicy
+  * Added the AllowBreakoutRooms, TeamsCameraFarEndPTZMode
+    & AllowMeetingReactions parameters;
+* DEPENDENCIES
+  * MSCloudLoginAssistant Updated to 1.0.42;
+  * Microsoft.PowerApps.Administration.PowerShell Updated
+    to 2.0.99;
+* MISC
+  * Moved the check for new version of module into the
+    Export-M365DSCConfiguration function for performance
+    improvements;
+
 ## 1.20.1118.1
 
 * EXOMalwareFilterPolicy

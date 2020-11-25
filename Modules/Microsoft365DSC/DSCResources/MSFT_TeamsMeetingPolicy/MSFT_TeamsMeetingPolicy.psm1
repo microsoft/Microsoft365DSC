@@ -172,6 +172,19 @@ function Get-TargetResource
         $StreamingAttendeeMode = "Enabled",
 
         [Parameter()]
+        [System.Boolean]
+        $AllowBreakoutRooms,
+
+        [Parameter()]
+        [ValidateSet("Disabled", "Enabled")]
+        [System.String]
+        $TeamsCameraFarEndPTZMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeetingReactions,
+
+        [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
@@ -246,6 +259,9 @@ function Get-TargetResource
             AllowUserToJoinExternalMeeting             = $policy.AllowUserToJoinExternalMeeting
             EnrollUserOverride                         = $policy.EnrollUserOverride
             StreamingAttendeeMode                      = $policy.StreamingAttendeeMode
+            AllowBreakoutRooms                         = $policy.AllowBreakoutRooms
+            TeamsCameraFarEndPTZMode                   = $policy.TeamsCameraFarEndPTZMode
+            AllowMeetingReactions                      = $policy.AllowMeetingReactions
             Ensure                                     = "Present"
             GlobalAdminAccount                         = $GlobalAdminAccount
         }
@@ -447,6 +463,19 @@ function Set-TargetResource
         [ValidateSet("Disabled", "Enabled")]
         [System.String]
         $StreamingAttendeeMode = "Enabled",
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBreakoutRooms,
+
+        [Parameter()]
+        [ValidateSet("Disabled", "Enabled")]
+        [System.String]
+        $TeamsCameraFarEndPTZMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeetingReactions,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -669,6 +698,19 @@ function Test-TargetResource
         [ValidateSet("Disabled", "Enabled")]
         [System.String]
         $StreamingAttendeeMode = "Enabled",
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBreakoutRooms,
+
+        [Parameter()]
+        [ValidateSet("Disabled", "Enabled")]
+        [System.String]
+        $TeamsCameraFarEndPTZMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeetingReactions,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]

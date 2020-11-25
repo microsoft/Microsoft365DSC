@@ -11,7 +11,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion     = '1.20.1118.1'
+    ModuleVersion     = '1.20.1125.1'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -85,7 +85,7 @@
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
-            RequiredVersion = "2.0.96"
+            RequiredVersion = "2.0.99"
         },
         @{
             ModuleName      = "MicrosoftTeams"
@@ -93,7 +93,23 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.41"
+            RequiredVersion = "1.0.42"
+        },
+        @{
+            ModuleName      = "MicrosoftTeams"
+            RequiredVersion = "1.1.6"
+        },
+        @{
+            ModuleName      = "MSCloudLoginAssistant"
+            RequiredVersion = "1.0.42"
+        },
+        @{
+            ModuleName      = "MicrosoftTeams"
+            RequiredVersion = "1.1.6"
+        },
+        @{
+            ModuleName      = "MSCloudLoginAssistant"
+            RequiredVersion = "1.0.42"
         },
         @{
             ModuleName      = "ReverseDSC"
@@ -176,26 +192,23 @@
             IconUri      = 'https://github.com/microsoft/Microsoft365DSC/blob/Dev/Modules/Microsoft365DSC/Dependencies/Images/Logo.png?raw=true'
 
             # ReleaseNotes of this module
-            ReleaseNotes = "* EXOMalwareFilterPolicy
-            * Fix an issue when the CustomFromAddress is empty;
-              (Issue #901)
-          * EXORemoteDomain
-            * Fixed an issue where only non-null parameters are
-              used in the Set-TargetResource resource;
-              (Issue #898)
-          * SCRetentionEventType
+            ReleaseNotes = "* AADRoleDefinition
             * Initial Release;
-          * SPOSiteScript
-            * BREAKING CHANGE: Title is now the primary key for the
-              resource and Service Principal is now supported for
-              authentication.
-          * MODULES
-            * M365DSCStringEncoding
-              New resource to handle encoding issues in exported content;
-              (Issue #904)
-            * M365DSCLogEngine
-              Added Export-M365DiagnosticData function to export diagnostic
-              information to a Zip file."
+          * O365User
+            * Fixes an issue where only the first O365User instance
+              extracted had the PSCredential Password property set
+              correctly;
+          * TeamsMeetingPolicy
+            * Added the AllowBreakoutRooms, TeamsCameraFarEndPTZMode
+              & AllowMeetingReactions parameters;
+          * DEPENDENCIES
+            * MSCloudLoginAssistant Updated to 1.0.42;
+            * Microsoft.PowerApps.Administration.PowerShell Updated
+              to 2.0.99;
+          * MISC
+            * Moved the check for new version of module into the
+              Export-M365DSCConfiguration function for performance
+              improvements;"
 
             # Flag to indicate whether the module requires explicit user acceptance for install/update
             # RequireLicenseAcceptance = $false
