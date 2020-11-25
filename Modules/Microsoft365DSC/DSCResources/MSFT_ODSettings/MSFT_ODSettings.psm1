@@ -110,7 +110,7 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting OneDrive quota size for tenant"
-        $tenant = Get-PnPTenant -ErrorAction Stop
+        $tenant = Get-Tenant -ErrorAction Stop
 
         if ($null -eq $tenant)
         {
@@ -120,7 +120,7 @@ function Get-TargetResource
 
         Write-Verbose -Message "Getting OneDrive quota size for tenant $($tenant.OneDriveStorageQuota)"
         Write-Verbose -Message "Getting tenant client sync setting"
-        $tenantRestrictions = Get-PnPTenantSyncClientRestriction -ErrorAction Stop
+        $tenantRestrictions = Get-TenantSyncClientRestriction -ErrorAction Stop
 
         if ($null -eq $tenantRestrictions)
         {
@@ -366,7 +366,7 @@ function Set-TargetResource
     $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
 
     Write-Verbose -Message "Configuring OneDrive settings."
-    Set-PnPTenant @CurrentParameters
+    Set-Tenant @CurrentParameters
 
     ## Configure Sync Client restrictions
     ## Set-SPOTenantSyncClientRestriction has different parameter sets and they cannot be combined see article:
@@ -388,11 +388,11 @@ function Set-TargetResource
     if ($Options.ContainsKey("DomainGuids"))
     {
         Write-Verbose -Message "Updating DomainGuids"
-        Set-PnPTenantSyncClientRestriction @Options -Enable:$true
+        Set-TenantSyncClientRestriction @Options -Enable:$true
     }
     else
     {
-        Set-PnPTenantSyncClientRestriction @Options
+        Set-TenantSyncClientRestriction @Options
     }
 }
 

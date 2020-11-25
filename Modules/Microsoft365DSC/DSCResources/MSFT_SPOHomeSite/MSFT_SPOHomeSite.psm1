@@ -63,7 +63,7 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting current home site collection settings"
-        $homeSiteUrl = Get-PnPHomeSite -ErrorAction Stop
+        $homeSiteUrl = Get-HomeSite -ErrorAction Stop
         if ($null -eq $homeSiteUrl)
         {
             Write-Verbose -Message "There is no Home Site Collection set."
@@ -177,7 +177,7 @@ function Set-TargetResource
         try
         {
             Write-Verbose -Message "Setting home site collection $Url"
-            Get-PnPTenantSite -Url $Url
+            Get-TenantSite -Url $Url
         }
         catch
         {
@@ -187,13 +187,13 @@ function Set-TargetResource
         }
 
         Write-Verbose -Message "Configuring site collection as Home Site"
-        Set-PnPHomeSite -Url $Url
+        Set-HomeSite -Url $Url
     }
 
     if ($Ensure -eq "Absent" -and $currentValues.Ensure -eq "Present")
     {
         # Remove home site
-        Remove-PnPHomeSite -Force
+        Remove-HomeSite -Force
     }
 }
 

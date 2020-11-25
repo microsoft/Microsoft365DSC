@@ -82,7 +82,7 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting hub site collection $Url"
-        $site = Get-PnPTenantSite -Url $Url
+        $site = Get-TenantSite -Url $Url
         if ($null -eq $site)
         {
             Write-Verbose -Message "The specified Site Collection doesn't already exist."
@@ -96,7 +96,7 @@ function Get-TargetResource
         }
         else
         {
-            $hubSite = Get-PnPHubSite -Identity $Url
+            $hubSite = Get-HubSite -Identity $Url
             $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
                 -InboundParameters $PSBoundParameters
             $principals = @()
@@ -260,7 +260,7 @@ function Set-TargetResource
     try
     {
         Write-Verbose -Message "Setting hub site collection $Url"
-        $site = Get-PnPTenantSite $Url
+        $site = Get-TenantSite $Url
     }
     catch
     {
@@ -274,7 +274,7 @@ function Set-TargetResource
     if ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Absent")
     {
         Write-Verbose -Message "Configuring site collection as Hub Site"
-        Register-PnPHubSite -Site $site.Url | Out-Null
+        Register-HubSite -Site $site.Url | Out-Null
 
         $params = @{
             Identity = $site.Url
@@ -308,7 +308,7 @@ function Set-TargetResource
         if ($params.Count -ne 1)
         {
             Write-Verbose -Message "Updating Hub Site properties"
-            Set-PnPHubSite @params | Out-Null
+            Set-HubSite @params | Out-Null
         }
 
         if ($PSBoundParameters.ContainsKey("AllowedToJoin") -eq $true)
@@ -332,7 +332,7 @@ function Set-TargetResource
                     }
                 }
             }
-            Grant-PnPHubSiteRights -Identity $site.Url -Principals $AllowedToJoin -Rights Join | Out-Null
+            Grant-HubSiteRights -Identity $site.Url -Principals $AllowedToJoin -Rights Join | Out-Null
         }
     }
     elseif ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Present")
@@ -375,7 +375,7 @@ function Set-TargetResource
         if ($params.Count -ne 1)
         {
             Write-Verbose -Message "Updating Hub Site properties"
-            Set-PnPHubSite @params | Out-Null
+            Set-HubSite @params | Out-Null
         }
 
         if ($PSBoundParameters.ContainsKey("AllowedToJoin") -eq $true)
@@ -415,12 +415,12 @@ function Set-TargetResource
                                 }
                             }
                         }
-                        Grant-PnPHubSiteRights -Identity $site.Url -Principals $item.InputObject -Rights 'Join' | Out-Null
+                        Grant-HubSiteRights -Identity $site.Url -Principals $item.InputObject -Rights 'Join' | Out-Null
                     }
                     else
                     {
                         # Remove item from principals
-                        Grant-PnPHubSiteRights -Identity $site.Url -Principals $item.InputObject -Rights 'None' | Out-Null
+                        Grant-HubSiteRights -Identity $site.Url -Principals $item.InputObject -Rights 'None' | Out-Null
                     }
                 }
             }
@@ -429,7 +429,7 @@ function Set-TargetResource
     else
     {
         # Remove hub site
-        Unregister-PnPHubSite -Site $site.Url
+        Unregister-HubSite -Site $site.Url
     }
 }
 
@@ -575,7 +575,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$hubSites = Get-PnPHubSite -ErrorAction Stop
+        [array]$hubSites = Get-HubSite -ErrorAction Stop
 
         $i = 1
         Write-Host "`r`n" -NoNewline

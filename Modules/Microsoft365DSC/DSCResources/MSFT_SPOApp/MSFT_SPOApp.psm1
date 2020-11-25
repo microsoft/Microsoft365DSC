@@ -69,7 +69,7 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
             -InboundParameters $PSBoundParameters
 
-        $app = Get-PnPApp -Identity $Identity -ErrorAction SilentlyContinue
+        $app = Get-App -Identity $Identity -ErrorAction SilentlyContinue
         if ($null -eq $app)
         {
             Write-Verbose -Message "The specified app wasn't found."
@@ -191,12 +191,12 @@ function Set-TargetResource
     elseif ($Ensure -eq "Present")
     {
         Write-Verbose -Message "Adding app instance $Identity"
-        Add-PnPApp -Path $Path -Overwrite:$true
+        Add-App -Path $Path -Overwrite:$true
     }
     elseif ($Ensure -eq "Absent" -and $currentApp.Ensure -eq "Present")
     {
         Write-Verbose -Message "Removing app instance $Identity"
-        Remove-PnPApp -Identity $Identity
+        Remove-App -Identity $Identity
     }
 }
 
@@ -325,7 +325,7 @@ function Export-TargetResource
 
     try
     {
-        $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl -ErrorAction Stop
+        $tenantAppCatalogUrl = Get-TenantAppCatalogUrl -ErrorAction Stop
 
         $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
             -InboundParameters $PSBoundParameters `
@@ -353,12 +353,12 @@ function Export-TargetResource
                 Write-Host "    |---[$i/$($filesToDownload.Length)] $($file.Name)" -NoNewline
 
                 $identity = $file.Name.ToLower().Replace(".app", "").Replace(".sppkg", "")
-                $app = Get-PnPApp -Identity $identity -ErrorAction SilentlyContinue
+                $app = Get-App -Identity $identity -ErrorAction SilentlyContinue
 
                 if ($null -eq $app)
                 {
                     $identity = $file.Title
-                    $app = Get-PnPApp -Identity $file.Title -ErrorAction SilentlyContinue
+                    $app = Get-App -Identity $file.Title -ErrorAction SilentlyContinue
                 }
                 if ($null -ne $app)
                 {
@@ -394,7 +394,7 @@ function Export-TargetResource
             {
                 $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name
                 $appFileName = $appInstanceUrl.Split('/')[$appInstanceUrl.Split('/').Length - 1]
-                Get-PnPFile -Url $appInstanceUrl -Path $env:Temp -Filename $appFileName -AsFile -Force | Out-Null
+                Get-File -Url $appInstanceUrl -Path $env:Temp -Filename $appFileName -AsFile -Force | Out-Null
             }
         }
         else

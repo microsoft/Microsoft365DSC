@@ -144,7 +144,7 @@ function Get-TargetResource
 
     try
     {
-        $SPOSharingSettings = Get-PnPTenant -ErrorAction Stop
+        $SPOSharingSettings = Get-Tenant -ErrorAction Stop
 
         if ($null -ne $SPOSharingSettings.SharingAllowedDomainList)
         {
@@ -438,7 +438,7 @@ function Set-TargetResource
         }
         $CurrentParameters["SharingBlockedDomainList"] = $blocked.Trim()
     }
-    Set-PnPTenant @CurrentParameters | Out-Null
+    Set-Tenant @CurrentParameters | Out-Null
 }
 function Test-TargetResource
 {

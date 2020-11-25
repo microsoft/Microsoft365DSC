@@ -123,8 +123,8 @@ function Add-M365DSCEvent
             }
         }
 
-        Write-EventLog -LogName $LogName -Source $Source `
-            -EventId $EventID -Message $Message -EntryType $EntryType
+        <#Write-EventLog -LogName $LogName -Source $Source `
+            -EventId $EventID -Message $Message -EntryType $EntryType#>
     }
     catch
     {

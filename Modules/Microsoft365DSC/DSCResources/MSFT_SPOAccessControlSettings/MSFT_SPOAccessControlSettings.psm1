@@ -102,7 +102,7 @@ function Get-TargetResource
 
     try
     {
-        $SPOAccessControlSettings = Get-PnPTenant -ErrorAction Stop
+        $SPOAccessControlSettings = Get-Tenant -ErrorAction Stop
 
         return @{
             IsSingleInstance             = 'Yes'
@@ -270,7 +270,7 @@ function Set-TargetResource
         $CurrentParameters.Remove("IPAddressEnforcement")
         $CurrentParameters.Remove("IPAddressAllowList")
     }
-    $tenant = Set-PnPTenant @CurrentParameters
+    $tenant = Set-Tenant @CurrentParameters
 }
 
 function Test-TargetResource
