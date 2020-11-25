@@ -70,7 +70,7 @@ function Get-TargetResource
         #checking if the site actually exists
         try
         {
-            $site = Get-PnPTenantSite $Url
+            $site = Get-TenantSite $Url
         }
         catch
         {
@@ -84,7 +84,7 @@ function Get-TargetResource
             $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
                 -InboundParameters $PSBoundParameters `
                 -Url $Url
-            $siteGroup = Get-PnPGroup -Identity $Identity `
+            $siteGroup = Get-Group -Identity $Identity `
                 -ErrorAction Stop
         }
         catch
@@ -102,7 +102,7 @@ function Get-TargetResource
 
         try
         {
-            $sitePermissions = Get-PnPGroupPermissions -Identity $Identity `
+            $sitePermissions = Get-GroupPermissions -Identity $Identity `
                 -ErrorAction Stop
         }
         catch
@@ -230,7 +230,7 @@ function Set-TargetResource
             Owner = $Owner
         }
         Write-Verbose -Message "Site group $Identity does not exist, creating it."
-        New-PnPGroup @SiteGroupSettings
+        New-Group @SiteGroupSettings
         $IsNew = $true
     }
     if (($Ensure -eq "Present" -and $currentValues.Ensure -eq "Present") -or $IsNew)
@@ -265,9 +265,9 @@ function Set-TargetResource
                 Identity = $Identity
                 Owner    = $Owner
             }
-            Set-PnPGroup @SiteGroupSettings
+            Set-Group @SiteGroupSettings
 
-            Set-PnPGroupPermissions -Identity $Identity -RemoveRole $PermissionLevelsToRemove
+            Set-GroupPermissions -Identity $Identity -RemoveRole $PermissionLevelsToRemove
         }
         elseif ($PermissionLevelsToRemove.Count -eq 0 -and $PermissionLevelsToAdd.Count -ne 0)
         {
@@ -277,10 +277,10 @@ function Set-TargetResource
                 Owner    = $Owner
             }
             Write-Verbose -Message "Setting PnP Group with Identity {$Identity} and Owner {$Owner}"
-            Set-PnPGroup @SiteGroupSettings
+            Set-Group @SiteGroupSettings
 
             Write-Verbose -Message "Setting PnP Group Permissions Identity {$Identity} AddRole {$PermissionLevelsToAdd}"
-            Set-PnPGroupPermissions -Identity $Identity -AddRole $PermissionLevelsToAdd
+            Set-GroupPermissions -Identity $Identity -AddRole $PermissionLevelsToAdd
         }
         elseif ($PermissionLevelsToAdd.Count -eq 0 -and $PermissionLevelsToRemove.Count -eq 0)
         {
@@ -295,7 +295,7 @@ function Set-TargetResource
                     Identity = $Identity
                     Owner    = $Owner
                 }
-                Set-PnPGroup @SiteGroupSettings
+                Set-Group @SiteGroupSettings
             }
         }
         else
@@ -305,9 +305,9 @@ function Set-TargetResource
                 Identity = $Identity
                 Owner    = $Owner
             }
-            Set-PnPGroup @SiteGroupSettings
+            Set-Group @SiteGroupSettings
 
-            Set-PnPGroupPermissions -Identity $Identity -AddRole $PermissionLevelsToAdd -RemoveRole $PermissionLevelsToRemove
+            Set-GroupPermissions -Identity $Identity -AddRole $PermissionLevelsToAdd -RemoveRole $PermissionLevelsToRemove
         }
 
     }
@@ -318,7 +318,7 @@ function Set-TargetResource
             Identity = $Identity
         }
         Write-Verbose "Removing SPOSiteGroup $Identity"
-        Remove-PnPGroup @SiteGroupSettings
+        Remove-Group @SiteGroupSettings
     }
 }
 
@@ -453,7 +453,7 @@ function Export-TargetResource
     {
         #Loop through all sites
         #for each site loop through all site groups and retrieve parameters
-        $sites = Get-PnPTenantSite -ErrorAction Stop
+        $sites = Get-TenantSite -ErrorAction Stop
 
         $i = 1
         $dscContent = ""
@@ -468,7 +468,7 @@ function Export-TargetResource
                 $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
                     -InboundParameters $PSBoundParameters `
                     -Url $site.Url
-                $siteGroups = Get-PnPGroup
+                $siteGroups = Get-Group
             }
             catch
             {
@@ -488,7 +488,7 @@ function Export-TargetResource
                 Write-Host "        |---[$j/$($siteGroups.Length)] $($siteGroup.Title)" -NoNewline
                 try
                 {
-                    [array]$sitePerm = Get-PnPGroupPermissions -Identity $siteGroup.Title -ErrorAction Stop
+                    [array]$sitePerm = Get-GroupPermissions -Identity $siteGroup.Title -ErrorAction Stop
                 }
                 catch
                 {

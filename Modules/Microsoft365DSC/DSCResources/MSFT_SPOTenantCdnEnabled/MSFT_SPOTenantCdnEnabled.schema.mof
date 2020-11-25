@@ -3,7 +3,7 @@ class MSFT_SPOTenantCdnEnabled : OMI_BaseResource
 {
     [Key, Description("Specifies the CDN type. The valid values are public or private."), ValueMap{"Public","Private"}, Values{"Public","Private"}] String CdnType;
     [Write, Description("Specify to enable or disable tenant CDN.")] Boolean Enable;
-    [Write, Description("Get-PNPTenantCdnEnabled always returns a value, only support value is Present"), ValueMap{"Present"}, Values{"Present"}] String Ensure;
+    [Write, Description("Get-TenantCdnEnabled always returns a value, only support value is Present"), ValueMap{"Present"}, Values{"Present"}] String Ensure;
     [Write, Description("Credentials of the SharePoint Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com")] String TenantId;

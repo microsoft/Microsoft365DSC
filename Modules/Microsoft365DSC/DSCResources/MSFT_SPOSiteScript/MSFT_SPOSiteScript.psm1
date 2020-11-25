@@ -70,13 +70,13 @@ function Get-TargetResource
         #
         if ([System.String]::IsNullOrEmpty($Identity))
         {
-            [Array]$SiteScripts = Get-PnPSiteScript -ErrorAction Stop | Where-Object -FilterScript { $_.Title -eq $Title }
+            [Array]$SiteScripts = Get-SiteScript -ErrorAction Stop | Where-Object -FilterScript { $_.Title -eq $Title }
 
             $SiteScript = $null
             ##### Check to see if more than one site script is returned
             if ($SiteScripts.Length -gt -1)
             {
-                $SiteScript = Get-PnPSiteScript -Identity $SiteScripts[0].Id -ErrorAction Stop
+                $SiteScript = Get-SiteScript -Identity $SiteScripts[0].Id -ErrorAction Stop
             }
 
             # No script was returned
@@ -88,7 +88,7 @@ function Get-TargetResource
         }
         else
         {
-            $SiteScript = Get-PnPSiteScript -Identity $Identity
+            $SiteScript = Get-SiteScript -Identity $Identity
         }
         ##### End of Check
 
@@ -215,7 +215,7 @@ function Set-TargetResource
 
         # Adding the Site Script Again.
         Write-Verbose -Message "Site Script, {$Title}, doesn't exist. Creating it."
-        $newSiteScript = Add-PnPSiteScript @CreationParams
+        $newSiteScript = Add-SiteScript @CreationParams
 
         # let's make sure the Site Script gets added
         $siteScript = $null
@@ -226,7 +226,7 @@ function Set-TargetResource
             Start-Sleep -Seconds 3
             try
             {
-                $siteScript = Get-PnPSiteScript -Identity $newSiteScript.Id  -ErrorAction Stop
+                $siteScript = Get-SiteScript -Identity $newSiteScript.Id  -ErrorAction Stop
             }
             catch
             {
@@ -243,12 +243,12 @@ function Set-TargetResource
         try
         {
             # The Site Script exists and it shouldn't
-            [Array]$SiteScripts = Get-PnPSiteScript | Where-Object -FilterScript { $_.Title -eq $Title } -ErrorAction SilentlyContinue
+            [Array]$SiteScripts = Get-SiteScript | Where-Object -FilterScript { $_.Title -eq $Title } -ErrorAction SilentlyContinue
 
             ##### Check to see if more than one site script is returned
             if ($SiteScripts.Length -gt 0)
             {
-                $SiteScript = Get-PnPSiteScript -Identity $SiteScripts[0].Id
+                $SiteScript = Get-SiteScript -Identity $SiteScripts[0].Id
             }
             ##### End of Check
         }
@@ -269,7 +269,7 @@ function Set-TargetResource
         try
         {
             # The Site Script exists and it shouldn't
-            [Array]$SiteScripts = Get-PnPSiteScript | Where-Object -FilterScript { $_.Title -eq $Title } -ErrorAction SilentlyContinue
+            [Array]$SiteScripts = Get-SiteScript | Where-Object -FilterScript { $_.Title -eq $Title } -ErrorAction SilentlyContinue
 
             ##### Check to see if more than one site script is returned
             if ($SiteScripts.Length -gt 0)
@@ -286,7 +286,7 @@ function Set-TargetResource
 
             ##### End of Check
             $UpdateParams = Remove-NullEntriesFromHashtable -Hash $UpdateParams
-            Set-PnPSiteScript @UpdateParams -ErrorAction Stop
+            Set-SiteScript @UpdateParams -ErrorAction Stop
         }
         catch
         {
@@ -424,7 +424,7 @@ function Export-TargetResource
     $i = 1
     try
     {
-        [array]$siteScripts = Get-PnPSiteScript -ErrorAction Stop
+        [array]$siteScripts = Get-SiteScript -ErrorAction Stop
 
         foreach ($script in $siteScripts)
         {

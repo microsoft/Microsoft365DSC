@@ -60,7 +60,7 @@ function Get-TargetResource
     {
         try
         {
-            $cdnEnabled = Get-PnPTenantCdnEnabled -CdnType $CdnType `
+            $cdnEnabled = Get-TenantCdnEnabled -CdnType $CdnType `
                 -ErrorAction SilentlyContinue
         }
         catch
@@ -192,7 +192,7 @@ function Set-TargetResource
     $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
 
     #No add only a set
-    Set-PnPTenantCdnEnabled @currentParameters
+    Set-TenantCdnEnabled @currentParameters
 }
 
 function Test-TargetResource

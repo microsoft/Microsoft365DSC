@@ -130,7 +130,7 @@ function Get-TargetResource
 
     try
     {
-        $SPOTenantSettings = Get-PnPTenant -ErrorAction Stop
+        $SPOTenantSettings = Get-Tenant -ErrorAction Stop
 
         $CompatibilityRange = $SPOTenantSettings.CompatibilityRange.Split(',')
         $MinCompat = $null
@@ -339,7 +339,7 @@ function Set-TargetResource
         Write-Verbose -Message "The use of the public CDN is not enabled, for that the PublicCdnAllowedFileTypes parameter can not be configured and will be removed"
         $CurrentParameters.Remove("PublicCdnAllowedFileTypes") | Out-Null
     }
-    $tenant = Set-PnPTenant @CurrentParameters
+    $tenant = Set-Tenant @CurrentParameters
 }
 
 function Test-TargetResource

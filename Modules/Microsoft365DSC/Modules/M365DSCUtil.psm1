@@ -1541,8 +1541,8 @@ function Get-AllSPOPackages
 
     if ($null -ne $tenantAppCatalogUrl)
     {
-        $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
-        $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
+        $spfxFiles = Find-File -List "AppCatalog" -Match '*.sppkg'
+        $appFiles = Find-File -List "AppCatalog" -Match '*.app'
 
         $allFiles = $spfxFiles + $appFiles
 

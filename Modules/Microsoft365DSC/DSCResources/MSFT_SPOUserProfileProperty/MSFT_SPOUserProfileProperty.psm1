@@ -52,7 +52,7 @@ function Get-TargetResource
 
     try
     {
-        $currentProperties = Get-PnPUserProfileProperty -Account $UserName -ErrorAction Stop
+        $currentProperties = Get-UserProfileProperty -Account $UserName -ErrorAction Stop
 
         if ($null -eq $currentProperties.AccountName)
         {
@@ -163,7 +163,7 @@ function Set-TargetResource
             Write-Verbose "Setting Profile Property {$($property.Key)} as {$($property.Value)}"
             try
             {
-                Set-PnPUserProfileProperty -Account $UserName -PropertyName $property.Key -Value $property.Value -ErrorAction Stop
+                Set-UserProfileProperty -Account $UserName -PropertyName $property.Key -Value $property.Value -ErrorAction Stop
             }
             catch
             {

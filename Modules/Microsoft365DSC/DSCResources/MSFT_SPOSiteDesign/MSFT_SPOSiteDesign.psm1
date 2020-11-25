@@ -87,7 +87,7 @@ function Get-TargetResource
     {
         Write-Verbose -Message "Getting Site Design for $Title"
 
-        $siteDesign = Get-PnPSiteDesign -Identity $Title -ErrorAction SilentlyContinue
+        $siteDesign = Get-SiteDesign -Identity $Title -ErrorAction SilentlyContinue
         if ($null -eq $siteDesign)
         {
             Write-Verbose -Message "No Site Design found for $Title"
@@ -97,7 +97,7 @@ function Get-TargetResource
         $scriptTitles = @()
         foreach ($scriptId in $siteDesign.SiteScriptIds)
         {
-            $siteScript = Get-PnPSiteScript -Identity $scriptId -ErrorAction SilentlyContinue
+            $siteScript = Get-SiteScript -Identity $scriptId -ErrorAction SilentlyContinue
 
             if ($null -ne $siteScript)
             {
@@ -248,7 +248,7 @@ function Set-TargetResource
     $scriptIds = @()
     foreach ($siteScriptName in $SiteScriptNames)
     {
-        $siteScript = Get-PnPSiteScript | Where-Object -FilterScript { $_.Title -eq $siteScriptName }
+        $siteScript = Get-SiteScript | Where-Object -FilterScript { $_.Title -eq $siteScriptName }
         $scriptIds += $siteScript.Id
     }
 
@@ -267,24 +267,24 @@ function Set-TargetResource
     {
         $CurrentParameters.Remove("Version")
         Write-Verbose -Message "Adding new site design $Title"
-        Add-PnPSiteDesign @CurrentParameters
+        Add-SiteDesign @CurrentParameters
     }
     elseif (($curSiteDesign.Ensure -eq "Present" -and "Present" -eq $Ensure))
     {
-        $siteDesign = Get-PnPSiteDesign -Identity $Title -ErrorAction SilentlyContinue
+        $siteDesign = Get-SiteDesign -Identity $Title -ErrorAction SilentlyContinue
         if ($null -ne $siteDesign)
         {
             Write-Verbose -Message "Updating current site design $Title"
-            Set-PnPSiteDesign -Identity $siteDesign.Id  @CurrentParameters
+            Set-SiteDesign -Identity $siteDesign.Id  @CurrentParameters
         }
     }
     elseif (($Ensure -eq "Absent" -and $curSiteDesign.Ensure -eq "Present"))
     {
-        $siteDesign = Get-PnPSiteDesign -Identity $Title -ErrorAction SilentlyContinue
+        $siteDesign = Get-SiteDesign -Identity $Title -ErrorAction SilentlyContinue
         if ($null -ne $siteDesign)
         {
             Write-Verbose -Message "Removing site design $Title"
-            Remove-PnPSiteDesign -Identity $siteDesign.Id -Force
+            Remove-SiteDesign -Identity $siteDesign.Id -Force
         }
     }
 }
@@ -439,7 +439,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$designs = Get-PnPSiteDesign -ErrrAction Stop
+        [array]$designs = Get-SiteDesign -ErrrAction Stop
         Write-Host "`r`n" -NoNewline
         foreach ($design in $designs)
         {

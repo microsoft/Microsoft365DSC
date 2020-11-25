@@ -70,7 +70,7 @@ function Get-TargetResource
                 -Url $Url
 
             Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
-            [array]$property = Get-PnPPropertyBag -Key $Key -ErrorAction 'Stop'
+            [array]$property = Get-PropertyBag -Key $Key -ErrorAction 'Stop'
 
             Write-Verbose -Message "Properties obtained correctly"
         }
@@ -79,7 +79,7 @@ function Get-TargetResource
             Write-Verbose "GlobalAdminAccount or service principal specified does not have admin access to site {$Url}"
             if ($_.Exception -like "*Unable to cast object of type*")
             {
-                [array]$property = Get-PnPPropertyBag | Where-Object -FilterScript { $_.Key -ceq $Key }
+                [array]$property = Get-PropertyBag | Where-Object -FilterScript { $_.Key -ceq $Key }
             }
             elseif ($_.Exception -like "*The underlying connection was closed*")
             {
@@ -88,7 +88,7 @@ function Get-TargetResource
                     -Url $Url
 
                 Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
-                [array]$property = Get-PnPPropertyBag -Key $Key -ErrorAction 'SilentlyContinue'
+                [array]$property = Get-PropertyBag -Key $Key -ErrorAction 'SilentlyContinue'
             }
             else
             {
@@ -98,7 +98,7 @@ function Get-TargetResource
         }
         if ($property.Length -ne 1)
         {
-            [array]$property = Get-PnPPropertyBag | Where-Object -FilterScript { $_.Key -ceq $Key }
+            [array]$property = Get-PropertyBag | Where-Object -FilterScript { $_.Key -ceq $Key }
         }
         if ($property.Length -eq 0)
         {
@@ -221,11 +221,11 @@ function Set-TargetResource
             Key   = $Key
             Value = $Value
         }
-        Set-PnPPropertyBagValue @CreationParams
+        Set-PropertyBagValue @CreationParams
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
-        Remove-PnPPropertyBagValue -Key $Key
+        Remove-PropertyBagValue -Key $Key
     }
 }
 
@@ -360,7 +360,7 @@ function Export-TargetResource
         $result = ""
 
         # Get all Site Collections in tenant;
-        $instances = Get-PnPTenantSite
+        $instances = Get-TenantSite
         if ($instances.Length -ge $MaxProcesses)
         {
             $instances = Split-ArrayByParts -Array $instances -Parts $MaxProcesses
@@ -442,7 +442,7 @@ function Export-TargetResource
 
                             try
                             {
-                                $properties = Get-PnPPropertyBag
+                                $properties = Get-PropertyBag
                                 foreach ($property in $properties)
                                 {
                                     $Params = @{
@@ -469,7 +469,7 @@ function Export-TargetResource
                             }
                             catch
                             {
-                                throw "M365DSC - Failed to Get-PnPPropertyBag {$siteUrl}: " + $_
+                                throw "M365DSC - Failed to Get-PropertyBag {$siteUrl}: " + $_
                             }
                         }
                     }

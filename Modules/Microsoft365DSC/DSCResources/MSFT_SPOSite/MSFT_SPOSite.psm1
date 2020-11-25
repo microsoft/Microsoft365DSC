@@ -165,7 +165,7 @@ function Get-TargetResource
     {
         Write-Verbose -Message "Getting site collection $Url"
 
-        $site = Get-PnPTenantSite -Url $Url -ErrorAction 'SilentlyContinue'
+        $site = Get-TenantSite -Url $Url -ErrorAction 'SilentlyContinue'
         if ($null -eq $site)
         {
             Write-Verbose -Message "The specified Site Collection {$Url} doesn't exist."
@@ -177,7 +177,7 @@ function Get-TargetResource
         {
             $hubId = $site.HubSiteId
             Write-Verbose -Message "Site {$Url} is associated with HubSite {$hubId}"
-            $hubSite = Get-PnPHubSite | Where-Object -FilterScript { $_.ID -eq $hubId }
+            $hubSite = Get-HubSite | Where-Object -FilterScript { $_.ID -eq $hubId }
 
             if ($null -ne $hubSite)
             {
@@ -213,10 +213,10 @@ function Get-TargetResource
             {
                 try
                 {
-                    New-M365DSCConnection -Platform "AzureAD" `
+                    New-M365DSCConnection -Platform "MicrosoftGraph" `
                         -InboundParameters $PSBoundParameters | Out-Null
-                    $app = Get-AzureADApplication -Filter "AppId eq '$ApplicationID'"
-                    $owner = (Get-AzureADApplicationOwner -ObjectId $app.ObjectId)
+                    $app = Get-MgApplication -Filter "AppId eq '$ApplicationID'"
+                    $owner = (Get-MgOwner -ObjectId $app.ObjectId)
                     $siteOwnerEmail = $owner.UserPrincipalName
                 }
                 catch
@@ -473,7 +473,7 @@ function Set-TargetResource
     $CurrentParameters.Remove("CertificatePassword") | Out-Null
     $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
 
-    $context = Get-PnPContext
+    $context = Get-Context
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
         $CreationParams = @{
@@ -485,7 +485,7 @@ function Set-TargetResource
             TimeZone = $TimeZoneID
         }
         Write-Verbose -Message "Site {$Url} doesn't exist. Creating it."
-        New-PnPTenantSite @CreationParams | Out-Null
+        New-TenantSite @CreationParams | Out-Null
 
         $site = $null
         $circuitBreaker = 0
@@ -495,7 +495,7 @@ function Set-TargetResource
             Start-Sleep -Seconds 15
             try
             {
-                $site = Get-PnPTenantSite -Url $Url -ErrorAction Stop
+                $site = Get-TenantSite -Url $Url -ErrorAction Stop
             }
             catch
             {
@@ -510,7 +510,7 @@ function Set-TargetResource
         Write-Verbose -Message "Removing site {$Url}"
         try
         {
-            Remove-PnPTenantSite -Url $Url -Confirm:$false -SkipRecycleBin -Force
+            Remove-TenantSite -Url $Url -Confirm:$false -SkipRecycleBin -Force
         }
         catch
         {
@@ -550,9 +550,9 @@ function Set-TargetResource
         }
         $UpdateParams = Remove-NullEntriesFromHashtable -Hash $UpdateParams
 
-        Set-PnPTenantSite @UpdateParams -ErrorAction Stop
+        Set-TenantSite @UpdateParams -ErrorAction Stop
 
-        $site = Get-PnPTenantSite $Url
+        $site = Get-TenantSite $Url
         #region Ad-Hoc properties
         if (-not [System.String]::IsNullOrEmpty($DenyAddAndCustomizePages))
         {
@@ -612,12 +612,12 @@ function Set-TargetResource
                 if ($site.HubSiteId -ne "00000000-0000-0000-0000-000000000000")
                 {
                     Write-Verbose -Message "Removing Hub Site Association for {$Url}"
-                    Remove-PnPHubSiteAssociation -Site $Url
+                    Remove-HubSiteAssociation -Site $Url
                 }
             }
             else
             {
-                $hubSite = Get-PnPHubSite -Identity $HubUrl
+                $hubSite = Get-HubSite -Identity $HubUrl
 
                 if ($null -eq $hubSite)
                 {
@@ -628,7 +628,7 @@ function Set-TargetResource
                 if ($site.HubSiteId -ne $hubSite.Id)
                 {
                     Write-Verbose -Message "Adding Hub Association on {$HubUrl} for site {$Url}"
-                    Add-PnPHubSiteAssociation -Site $Url -HubSite $HubUrl
+                    Add-HubSiteAssociation -Site $Url -HubSite $HubUrl
                 }
             }
         }
@@ -860,7 +860,7 @@ function Export-TargetResource
 
     try
     {
-        $sites = Get-PnPTenantSite -ErrorAction Stop | Where-Object -FilterScript { $_.Template -ne 'SRCHCEN#0' -and $_.Template -ne 'SPSMSITEHOST#0' }
+        $sites = Get-TenantSite -ErrorAction Stop | Where-Object -FilterScript { $_.Template -ne 'SRCHCEN#0' -and $_.Template -ne 'SPSMSITEHOST#0' }
         $organization = ""
         $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
         if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
@@ -883,7 +883,7 @@ function Export-TargetResource
         foreach ($site in $sites)
         {
             Write-Host "    [$i/$($sites.Length)] $($site.Url)" -NoNewline
-            $site = Get-PnPTenantSite -Url $site.Url
+            $site = Get-TenantSite -Url $site.Url
             $siteTitle = "Null"
             if (-not [System.String]::IsNullOrEmpty($site.Title))
             {

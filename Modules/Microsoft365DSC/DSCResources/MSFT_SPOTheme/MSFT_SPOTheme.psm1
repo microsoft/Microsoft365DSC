@@ -65,7 +65,7 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting theme $Name"
-        $theme = Get-PnPTenantTheme -ErrorAction Stop | Where-Object -FilterScript { $_.Name -eq $Name }
+        $theme = Get-TenantTheme -ErrorAction Stop | Where-Object -FilterScript { $_.Name -eq $Name }
         if ($null -eq $theme)
         {
             Write-Verbose -Message "The specified theme doesn't exist."
@@ -185,7 +185,7 @@ function Set-TargetResource
 
         try
         {
-            $existingTheme = Get-PnPTenantTheme -Name $Name -ErrorAction SilentlyContinue
+            $existingTheme = Get-TenantTheme -Name $Name -ErrorAction SilentlyContinue
         }
         catch
         {
@@ -195,12 +195,12 @@ function Set-TargetResource
         if ($null -eq $existingTheme)
         {
             Write-Verbose -Message "Theme {$Name} doesn't already exist. Creating it."
-            Add-PnPTenantTheme @AddParameters
+            Add-TenantTheme @AddParameters
         }
         else
         {
             Write-Verbose -Message "Theme {$Name} already exists. Updating it"
-            Add-PnPTenantTheme @AddParameters -Overwrite
+            Add-TenantTheme @AddParameters -Overwrite
         }
     }
     elseif ($Ensure -eq 'Absent' -and $CurrentPalette.Ensure -eq 'Present')
@@ -208,7 +208,7 @@ function Set-TargetResource
         Write-Verbose -Message "Removing theme $($Name)"
         try
         {
-            Remove-PnPTenantTheme -Identity $Name -Confirm:$false
+            Remove-TenantTheme -Identity $Name -Confirm:$false
         }
         catch
         {
@@ -351,7 +351,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$themes = Get-PnPTenantTheme -ErrorAction Stop
+        [array]$themes = Get-TenantTheme -ErrorAction Stop
         $dscContent = ""
         $i = 1
         Write-Host "`r`n" -NoNewline

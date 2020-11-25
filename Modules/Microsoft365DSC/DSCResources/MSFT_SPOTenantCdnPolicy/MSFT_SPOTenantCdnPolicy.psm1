@@ -57,7 +57,7 @@ function Get-TargetResource
 
     try
     {
-        $Policies = Get-PnPTenantCdnPolicies -CdnType $CDNType -ErrorAction Stop
+        $Policies = Get-TenantCdnPolicies -CdnType $CDNType -ErrorAction Stop
 
         return @{
             CDNType                              = $CDNType
@@ -165,7 +165,7 @@ function Set-TargetResource
             $stringValue += $entry + ","
         }
         $stringValue = $stringValue.Remove($stringValue.Length - 1, 1)
-        Set-PnPTenantCdnPolicy -CdnType $CDNType `
+        Set-TenantCdnPolicy -CdnType $CDNType `
             -PolicyType 'IncludeFileExtensions' `
             -PolicyValue $stringValue
     }
@@ -176,7 +176,7 @@ function Set-TargetResource
         Write-Verbose "Found difference in ExcludeRestrictedSiteClassifications"
 
 
-        Set-PnPTenantCdnPolicy -CdnType $CDNType `
+        Set-TenantCdnPolicy -CdnType $CDNType `
             -PolicyType 'ExcludeRestrictedSiteClassifications' `
             -PolicyValue $stringValue
     }

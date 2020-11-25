@@ -134,7 +134,7 @@ function Get-TargetResource
         {
                 if ($null -eq $Script:RecentMPExtract)
                 {
-                        $Script:RecentMPExtract = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
+                        $Script:RecentMPExtract = [Xml] (Get-SearchConfiguration -Scope Subscription)
                 }
                 $property = $Script:RecentMPExtract.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
                 | Where-Object -FilterScript { $_.Value.Name -eq $Name }
@@ -364,7 +364,7 @@ function Set-TargetResource
         # Get the managed property back if it already exists.
         if ($null -eq $Script:RecentMPExtract)
         {
-                $Script:RecentMPExtract = [XML] (Get-PnPSearchConfiguration -Scope Subscription)
+                $Script:RecentMPExtract = [XML] (Get-SearchConfiguration -Scope Subscription)
         }
 
         $property = $Script:RecentMPExtract.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
@@ -599,7 +599,7 @@ function Set-TargetResource
         $SearchConfigXML.OuterXml | Out-File $tempPath
 
         # Create the Managed Property if it doesn't already exist
-        Set-PnPSearchConfiguration -Scope Subscription -Path $tempPath
+        Set-SearchConfiguration -Scope Subscription -Path $tempPath
 
         #region Aliases
         if ($null -ne $Aliases)
@@ -610,7 +610,7 @@ function Set-TargetResource
                 if ($null -eq $currentPID)
                 {
                         # Get the managed property back. This is the only way to ensure we have the right PID
-                        $currentConfigXML = [XML] (Get-PnPSearchConfiguration -Scope Subscription)
+                        $currentConfigXML = [XML] (Get-SearchConfiguration -Scope Subscription)
                         $property = $currentConfigXML.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
                         | Where-Object -FilterScript { $_.Value.Name -eq $Name }
                         $currentPID = $property.Value.Pid
@@ -663,7 +663,7 @@ function Set-TargetResource
                 $SearchConfigXML.OuterXml | Out-File $tempPath
 
                 # Create the aliases on the Managed Property
-                Set-PnPSearchConfiguration -Scope Subscription -Path $tempPath
+                Set-SearchConfiguration -Scope Subscription -Path $tempPath
         }
 }
 
@@ -854,7 +854,7 @@ function Export-TargetResource
                 -InboundParameters $PSBoundParameters
         try
         {
-                $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
+                $SearchConfig = [Xml] (Get-SearchConfiguration -Scope Subscription)
                 [array]$properties = $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
 
                 $dscContent = ""

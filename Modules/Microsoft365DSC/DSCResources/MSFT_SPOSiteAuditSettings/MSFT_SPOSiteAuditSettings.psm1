@@ -56,7 +56,7 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
             -InboundParameters $PSBoundParameters `
             -Url $Url -ErrorAction SilentlyContinue
-        $auditSettings = Get-PnPAuditing -ErrorAction Stop
+        $auditSettings = Get-Auditing -ErrorAction Stop
         $auditFlag = $auditSettings.AuditFlags
         if ($null -eq $auditFlag)
         {
@@ -161,11 +161,11 @@ function Set-TargetResource
 
     if ($AuditFlags -eq 'All')
     {
-        Set-PnPAuditing -EnableAll
+        Set-Auditing -EnableAll
     }
     else
     {
-        Set-PnPAuditing -DisableAll
+        Set-Auditing -DisableAll
     }
 }
 
@@ -277,7 +277,7 @@ function Export-TargetResource
 
     try
     {
-        $sites = Get-PnPTenantSite -ErrorAction Stop
+        $sites = Get-TenantSite -ErrorAction Stop
 
         $i = 1
         Write-Host "`r`n" -NoNewline

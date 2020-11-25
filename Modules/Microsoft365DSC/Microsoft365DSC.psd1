@@ -64,6 +64,10 @@
             RequiredVersion = "2.0.1"
         },
         @{
+            ModuleName      = "Microsoft.Graph.Applications"
+            RequiredVersion = "1.1.0"
+        },
+        @{
             ModuleName      = "Microsoft.Graph.Authentication"
             RequiredVersion = "1.1.0"
         },
@@ -74,6 +78,10 @@
         @{
             ModuleName      = "Microsoft.Graph.Identity.ConditionalAccess"
             RequiredVersion = "0.9.1"
+        },
+        @{
+            ModuleName      = "Microsoft.Graph.Identity.DirectoryManagement"
+            RequiredVersion = "1.1.0"
         },
         @{
             ModuleName      = "Microsoft.Graph.Intune"

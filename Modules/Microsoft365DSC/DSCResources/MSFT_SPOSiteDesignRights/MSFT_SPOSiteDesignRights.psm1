@@ -68,7 +68,7 @@ function Get-TargetResource
     {
         Write-Verbose -Message "Getting Site Design Rights for $SiteDesignTitle"
 
-        $siteDesign = Get-PnPSiteDesign -Identity $SiteDesignTitle -ErrorAction Stop
+        $siteDesign = Get-SiteDesign -Identity $SiteDesignTitle -ErrorAction Stop
         if ($null -eq $siteDesign)
         {
             throw "Site Design with title $SiteDesignTitle doesn't exist in tenant"
@@ -76,7 +76,7 @@ function Get-TargetResource
 
         Write-Verbose -Message "Site Design ID is $($siteDesign.Id)"
 
-        $siteDesignRights = Get-PnPSiteDesignRights -Identity $siteDesign.Id -ErrorAction SilentlyContinue | `
+        $siteDesignRights = Get-SiteDesignRights -Identity $siteDesign.Id -ErrorAction SilentlyContinue | `
             Where-Object -FilterScript { $_.Rights -eq $Rights }
 
         if ($null -eq $siteDesignRights)
@@ -194,7 +194,7 @@ function Set-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
-    $cursiteDesign = Get-PnPSiteDesign -Identity $SiteDesignTitle
+    $cursiteDesign = Get-SiteDesign -Identity $SiteDesignTitle
     if ($null -eq $cursiteDesign)
     {
         throw "Site Design with title $SiteDesignTitle doesn't exist in tenant"
@@ -227,27 +227,27 @@ function Set-TargetResource
             if ($principalsToAdd.Count -gt 0 -and $Ensure -eq "Present")
             {
                 Write-Verbose -Message "Granting SiteDesign rights on site design $SiteDesignTitle"
-                Grant-PnPSiteDesignRights -Identity $cursiteDesign.Id -Principals $principalsToAdd -Rights $Rights
+                Grant-SiteDesignRights -Identity $cursiteDesign.Id -Principals $principalsToAdd -Rights $Rights
             }
 
             if ($principalsToRemove.Count -gt 0)
             {
                 Write-Verbose -Message "Revoking SiteDesign rights on $principalsToRemove for site design $SiteDesignTitle with Id $($cursiteDesign.Id)"
-                Revoke-PnPSiteDesignRights -Identity $cursiteDesign.Id -Principals $principalsToRemove
+                Revoke-SiteDesignRights -Identity $cursiteDesign.Id -Principals $principalsToRemove
             }
         }
     }
     if ($Ensure -eq "Absent")
     {
         Write-Verbose -Message "Revoking SiteDesign rights on  $UserPrincipals for site design $SiteDesignTitle"
-        Revoke-PnPSiteDesignRights -Identity $cursiteDesign.Id -Principals $UserPrincipals
+        Revoke-SiteDesignRights -Identity $cursiteDesign.Id -Principals $UserPrincipals
     }
 
     #No site design rights currently exist so add them
     If ($currentSiteDesignRights.Ensure -eq "Absent")
     {
         Write-Verbose -Message "Granting SiteDesign rights on site design $SiteDesignTitle"
-        Grant-PnPSiteDesignRights -Identity $cursiteDesign.Id -Principals $UserPrincipals -Rights $Rights
+        Grant-SiteDesignRights -Identity $cursiteDesign.Id -Principals $UserPrincipals -Rights $Rights
     }
 }
 
@@ -374,7 +374,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$siteDesigns = Get-PnPSiteDesign -ErrorAction Stop
+        [array]$siteDesigns = Get-SiteDesign -ErrorAction Stop
 
         $dscContent = ""
         $i = 1

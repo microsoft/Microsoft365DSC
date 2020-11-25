@@ -68,7 +68,7 @@ function Get-TargetResource
     {
         try
         {
-            $orgAssets = Get-PnPOrgAssetsLibrary -ErrorAction SilentlyContinue
+            $orgAssets = Get-OrgAssetsLibrary -ErrorAction SilentlyContinue
         }
         catch
         {
@@ -97,7 +97,7 @@ function Get-TargetResource
         $cdn = $null
         if ($CdnType -eq 'Public')
         {
-            if (Get-PnPTenantCdnEnabled -CdnType $CdnType)
+            if (Get-TenantCdnEnabled -CdnType $CdnType)
             {
                 $cdn = "Public"
             }
@@ -105,7 +105,7 @@ function Get-TargetResource
 
         if ($CdnType -eq 'Private')
         {
-            if (Get-PnPTenantCdnEnabled -CdnType $CdnType)
+            if (Get-TenantCdnEnabled -CdnType $CdnType)
             {
                 $cdn = "Private"
             }
@@ -257,7 +257,7 @@ function Set-TargetResource
     $cdn = $null
     if ($CdnType -eq 'Public')
     {
-        if (Get-PnPTenantCdnEnabled -CdnType $CdnType)
+        if (Get-TenantCdnEnabled -CdnType $CdnType)
         {
             $cdn = "Public"
         }
@@ -265,7 +265,7 @@ function Set-TargetResource
 
     if ($CdnType -eq 'Private')
     {
-        if (Get-PnPTenantCdnEnabled -CdnType $CdnType)
+        if (Get-TenantCdnEnabled -CdnType $CdnType)
         {
             $cdn = "Private"
         }
@@ -281,18 +281,18 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentOrgSiteAsset.Ensure -eq 'Present')
     {
         ## No set so remove / add
-        Remove-PnPOrgAssetsLibrary -LibraryUrl $currentOrgSiteAsset.LibraryUrl
+        Remove-OrgAssetsLibrary -LibraryUrl $currentOrgSiteAsset.LibraryUrl
         ### add slight delay fails if you immediately try to add
         Start-Sleep -Seconds 30
-        Add-PnPOrgAssetsLibrary @currentParameters
+        Add-OrgAssetsLibrary @currentParameters
     }
     elseif ($Ensure -eq 'Present' -and $currentOrgSiteAsset.Ensure -eq 'Absent')
     {
-        Add-PnPOrgAssetsLibrary @currentParameters
+        Add-OrgAssetsLibrary @currentParameters
     }
     elseif ($Ensure -eq 'Absent' -and $currentOrgSiteAsset.Ensure -eq 'Present')
     {
-        Remove-PnPOrgAssetsLibrary -LibraryUrl $currentOrgSiteAsset.LibraryUrl
+        Remove-OrgAssetsLibrary -LibraryUrl $currentOrgSiteAsset.LibraryUrl
     }
 }
 
@@ -424,7 +424,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$orgAssets = Get-PnPOrgAssetsLibrary -ErrorAction Stop
+        [array]$orgAssets = Get-OrgAssetsLibrary -ErrorAction Stop
         $i = 1
         $dscContent = ''
 

@@ -87,8 +87,8 @@ function Get-TargetResource
             $entityStorageParms.Add("Scope", $EntityScope)
         }
 
-        $Entity = Get-PnPStorageEntity @entityStorageParms -ErrorAction SilentlyContinue
-        ## Get-PnPStorageEntity seems to not return $null when not found
+        $Entity = Get-StorageEntity @entityStorageParms -ErrorAction SilentlyContinue
+        ## Get-StorageEntity seems to not return $null when not found
         ## so checking key
         if ($null -eq $Entity.Key)
         {
@@ -231,14 +231,14 @@ function Set-TargetResource
     if (($Ensure -eq "Absent" -and $curStorageEntry.Ensure -eq "Present"))
     {
         Write-Verbose -Message "Removing storage entity $Key"
-        Remove-PnPStorageEntity -Key $Key
+        Remove-StorageEntity -Key $Key
     }
     elseif ($Ensure -eq "Present")
     {
         try
         {
             Write-Verbose -Message "Adding new storage entity $Key"
-            Set-PnPStorageEntity @CurrentParameters
+            Set-StorageEntity @CurrentParameters
         }
         catch
         {
@@ -389,7 +389,7 @@ function Export-TargetResource
 
     try
     {
-        $storageEntities = Get-PnPStorageEntity -ErrorAction SilentlyContinue
+        $storageEntities = Get-StorageEntity -ErrorAction SilentlyContinue
 
         $i = 1
         $dscContent = ''

@@ -121,7 +121,7 @@ function Get-TargetResource
     {
         if ($null -eq $Script:RecentExtract)
         {
-            $Script:RecentExtract = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
+            $Script:RecentExtract = [Xml] (Get-SearchConfiguration -Scope Subscription)
         }
         $source = $Script:RecentExtract.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source `
         | Where-Object -FilterScript { $_.Name -eq $Name }
@@ -281,7 +281,7 @@ function Set-TargetResource
     # Get the result source back if it already exists.
     if ($null -eq $Script:RecentExtract)
     {
-        $Script:RecentExtract = [XML] (Get-PnPSearchConfiguration -Scope Subscription)
+        $Script:RecentExtract = [XML] (Get-SearchConfiguration -Scope Subscription)
     }
 
     $source = $Script:RecentExtract.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source `
@@ -406,7 +406,7 @@ function Set-TargetResource
 
     # Create the Result Source if it doesn't already exist
     Write-Verbose -Message "Applying new Search Configuration back to the Office365 Tenant"
-    Set-PnPSearchConfiguration -Scope Subscription -Path $tempPath
+    Set-SearchConfiguration -Scope Subscription -Path $tempPath
 }
 
 function Test-TargetResource
@@ -549,7 +549,7 @@ function Export-TargetResource
 
     try
     {
-        $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
+        $SearchConfig = [Xml] (Get-SearchConfiguration -Scope Subscription)
         [array]$sources = $SearchConfig.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source
 
         $dscContent = ''
