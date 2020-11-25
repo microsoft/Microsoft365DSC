@@ -5,7 +5,7 @@ function Get-ApplicationInsightsTelemetryClient
 
     if ($null -eq $Global:M365DSCTelemetryEngine)
     {
-        $AI = "$PSScriptRoot\..\Dependencies\Microsoft.ApplicationInsights.dll"
+        $AI = "$PSScriptRoot\..\Dependencies\Microsoft.ApplicationInsights.AspNetCore.dll"
         [Reflection.Assembly]::LoadFile($AI) | Out-Null
 
         $InstrumentationKey = "bc5aa204-0b1e-4499-a955-d6a639bdb4fa"
