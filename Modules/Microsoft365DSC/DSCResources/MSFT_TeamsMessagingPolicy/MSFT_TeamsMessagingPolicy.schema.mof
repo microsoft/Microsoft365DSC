@@ -5,6 +5,7 @@ class MSFT_TeamsMessagingPolicy : OMI_BaseResource
     [Write, Description("Determines whether a user is allowed to access and post Giphys. Set this to TRUE to allow. Set this FALSE to prohibit.")] boolean AllowGiphy;
     [Write, Description("Determines whether a user is allowed to access and post memes. Set this to TRUE to allow. Set this FALSE to prohibit.")] boolean AllowMemes;
     [Write, Description("Determines whether owners are allowed to delete all the messages in their team. Set this to TRUE to allow. Set this to FALSE to prohibit.")] boolean AllowOwnerDeleteMessage;
+    [Write, Description("Determines whether a user is allowed to edit their own messages. Set this to TRUE to allow. Set this to FALSE to prohibit.")] boolean AllowUserEditMessage;
     [Write, Description("Determines whether a user is allowed to access and post stickers. Set this to TRUE to allow. Set this FALSE to prohibit.")] boolean AllowStickers;
     [Write, Description("Use this setting to turn automatic URL previewing on or off in messages. Set this to TRUE to turn on. Set this to FALSE to turn off.")] boolean AllowUrlPreviews;
     [Write, Description("Determines whether a user is allowed to chat. Set this to TRUE to allow a user to chat across private chat, group chat and in meetings. Set this to FALSE to prohibit all chat.")] boolean AllowUserChat;
