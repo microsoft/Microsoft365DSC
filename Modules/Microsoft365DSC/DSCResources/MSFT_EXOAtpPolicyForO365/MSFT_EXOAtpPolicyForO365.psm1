@@ -27,6 +27,10 @@ function Get-TargetResource
 
         [Parameter()]
         [Boolean]
+        $EnableSafeDocs  = $false,
+
+        [Parameter()]
+        [Boolean]
         $EnableSafeLinksForO365Clients = $true,
 
         [Parameter()]
@@ -106,6 +110,7 @@ function Get-TargetResource
                 AllowClickThrough               = $AtpPolicyForO365.AllowClickThrough
                 BlockUrls                       = $AtpPolicyForO365.BlockUrls
                 EnableATPForSPOTeamsODB         = $AtpPolicyForO365.EnableATPForSPOTeamsODB
+                EnableSafeDocs                  = $AtpPolicyForO365.EnableSafeDocs
                 EnableSafeLinksForO365Clients   = $AtpPolicyForO365.EnableSafeLinksForO365Clients
                 TrackClicks                     = $AtpPolicyForO365.TrackClicks
                 Ensure                          = 'Present'
@@ -167,6 +172,10 @@ function Set-TargetResource
         [Parameter()]
         [Boolean]
         $EnableATPForSPOTeamsODB = $false,
+
+        [Parameter()]
+        [Boolean]
+        $EnableSafeDocs  = $false,
 
         [Parameter()]
         [Boolean]
@@ -259,6 +268,10 @@ function Test-TargetResource
         [Parameter()]
         [Boolean]
         $EnableATPForSPOTeamsODB = $false,
+
+        [Parameter()]
+        [Boolean]
+        $EnableSafeDocs  = $false,
 
         [Parameter()]
         [Boolean]

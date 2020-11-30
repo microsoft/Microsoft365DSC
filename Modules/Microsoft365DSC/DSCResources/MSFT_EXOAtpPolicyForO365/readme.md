@@ -50,6 +50,13 @@ EnableATPForSPOTeamsODB
   ATP is enabled for SharePoint Online, OneDrive for Business and
   Microsoft Teams. The default value is $false
 
+EnableSafeDocs
+
+- Required: No
+- Description: The EnableSafeDocs parameter specifies whether to enable the
+  Safe Documents feature in the organization.
+  The default value is $false
+
 EnableSafeLinksForO365Clients
 
 - Required: No
@@ -74,6 +81,7 @@ TrackClicks
             AllowClickThrough               = $true
             BlockUrls                       = @('test1.badurl.com','test2.badurl.com')
             EnableATPForSPOTeamsODB         = $true
+            EnableSafeDocs                  = $false
             EnableSafeLinksForO365Clients   = $true
             TrackClicks                     = $true
         }
