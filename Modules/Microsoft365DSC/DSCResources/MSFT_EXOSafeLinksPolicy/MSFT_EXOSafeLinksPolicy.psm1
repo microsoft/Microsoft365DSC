@@ -14,7 +14,7 @@ function Get-TargetResource
 
         [Parameter()]
         [Boolean]
-        $DeliverMessageAfterScan = $true,
+        $DeliverMessageAfterScan = $false,
 
         [Parameter()]
         [Boolean]
@@ -293,7 +293,7 @@ function Test-TargetResource
 
         [Parameter()]
         [Boolean]
-        $DeliverMessageAfterScan = $true,
+        $DeliverMessageAfterScan = $false,
 
         [Parameter()]
         [Boolean]
