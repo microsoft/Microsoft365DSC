@@ -29,6 +29,15 @@ AdminDisplayName
 - Description: The AdminDisplayName parameter specifies a
     description for the policy.
 
+DeliverMessageAfterScan
+
+- Required: No
+- Description: The DeliverMessageAfterScan parameter specifies whether
+  to deliver email messages only after Safe Links scanning is complete.
+  Valid values are:
+      $true: Wait until Safe Links scanning is complete before delivering the message.
+      $false: If Safe Links scanning can't complete, deliver the message anyway. This is the default value.
+
 DoNotAllowClickThrough
 
 - Required: No
@@ -86,6 +95,7 @@ ScanUrls
         AdminDisplayName         = 'Test SafeLinks Policy'
         DoNotAllowClickThrough   = $true
         DoNotRewriteUrls         = @('test.contoso.com', 'test.fabrikam.com')
+        DeliverMessageAfterScan  = $true
         DoNotTrackUserClicks     = $true
         EnableForInternalSenders = $false
         IsEnabled                = $true
