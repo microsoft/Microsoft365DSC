@@ -53,7 +53,7 @@ EnableATPForSPOTeamsODB
 EnableSafeLinksForO365Clients
 
 - Required: No
-- The EnableSafeLinksForO365Clients parameter specifies whether Safe Links
+- Description: The EnableSafeLinksForO365Clients parameter specifies whether Safe Links
   scanning is enabled for supported Office 365 desktop, mobile, and web apps.
    The default value is $true
 

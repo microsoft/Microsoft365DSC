@@ -101,14 +101,14 @@ function Get-TargetResource
         else
         {
             $result = @{
-                IsSingleInstance          = "Yes"
-                Identity                  = $AtpPolicyForO365.Identity
-                AllowClickThrough         = $AtpPolicyForO365.AllowClickThrough
-                BlockUrls                 = $AtpPolicyForO365.BlockUrls
-                EnableATPForSPOTeamsODB   = $AtpPolicyForO365.EnableATPForSPOTeamsODB
-                EnableSafeLinksForO365Clients = $AtpPolicyForO365.EnableSafeLinksForO365Clients
-                TrackClicks               = $AtpPolicyForO365.TrackClicks
-                Ensure                    = 'Present'
+                IsSingleInstance                = "Yes"
+                Identity                        = $AtpPolicyForO365.Identity
+                AllowClickThrough               = $AtpPolicyForO365.AllowClickThrough
+                BlockUrls                       = $AtpPolicyForO365.BlockUrls
+                EnableATPForSPOTeamsODB         = $AtpPolicyForO365.EnableATPForSPOTeamsODB
+                EnableSafeLinksForO365Clients   = $AtpPolicyForO365.EnableSafeLinksForO365Clients
+                TrackClicks                     = $AtpPolicyForO365.TrackClicks
+                Ensure                          = 'Present'
             }
 
             Write-Verbose -Message "Found AtpPolicyForO365 $($Identity)"
@@ -170,7 +170,7 @@ function Set-TargetResource
 
         [Parameter()]
         [Boolean]
-        $EnableSafeLinksForO365Clients = $false,
+        $EnableSafeLinksForO365Clients = $true,
 
         [Parameter()]
         [Boolean]
@@ -262,7 +262,7 @@ function Test-TargetResource
 
         [Parameter()]
         [Boolean]
-        $EnableSafeLinksForO365Clients = $false,
+        $EnableSafeLinksForO365Clients = $true,
 
         [Parameter()]
         [Boolean]
