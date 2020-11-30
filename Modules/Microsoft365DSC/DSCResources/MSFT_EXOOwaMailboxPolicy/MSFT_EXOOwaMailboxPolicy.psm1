@@ -957,7 +957,7 @@ function Set-TargetResource
     elseif ($Ensure -eq "Absent" -and $currentOwaMailboxPolicyConfig.Ensure -eq "Present")
     {
         Write-Verbose -Message "OWA Mailbox Policy '$($Name)' exists but it shouldn't. Remove it."
-        Remove-OwaMailboxPolicyPolicy -Identity $Name -Confirm:$false
+        Remove-OwaMailboxPolicy -Identity $Name -Confirm:$false
     }
     # CASE: OWA Mailbox Policy exists and it should, but has different values than the desired ones
     elseif ($Ensure -eq "Present" -and $currentOwaMailboxPolicyConfig.Ensure -eq "Present")
