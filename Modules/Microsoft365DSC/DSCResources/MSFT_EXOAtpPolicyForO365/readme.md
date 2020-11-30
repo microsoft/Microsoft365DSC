@@ -50,12 +50,12 @@ EnableATPForSPOTeamsODB
   ATP is enabled for SharePoint Online, OneDrive for Business and
   Microsoft Teams. The default value is $false
 
-EnableSafeLinksForClients
+EnableSafeLinksForO365Clients
 
 - Required: No
-- Description: The EnableSafeLinksForClients parameter specifies whether
-   Safe Links is enabled for Office 365 ProPlus clients.
-   The default value is $false
+- Description: The EnableSafeLinksForO365Clients parameter specifies whether Safe Links
+  scanning is enabled for supported Office 365 desktop, mobile, and web apps.
+   The default value is $true
 
 TrackClicks
 
@@ -74,7 +74,7 @@ TrackClicks
             AllowClickThrough               = $true
             BlockUrls                       = @('test1.badurl.com','test2.badurl.com')
             EnableATPForSPOTeamsODB         = $true
-            EnableSafeLinksForClients       = $true
+            EnableSafeLinksForO365Clients   = $true
             TrackClicks                     = $true
         }
 ```
