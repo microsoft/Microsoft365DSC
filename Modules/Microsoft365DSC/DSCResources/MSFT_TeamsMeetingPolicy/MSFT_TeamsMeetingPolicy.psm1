@@ -754,6 +754,10 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    # The AllowAnonymousUsersToDialOut is temporarly disabled. Therefore
+    # we can't create or update a policy with it and it needs to be removed;
+    $ValuesToCheck.Remove("AllowAnonymousUsersToDialOut") | Out-Null
+
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
