@@ -2,6 +2,11 @@
 
 ## 1.20.1202.1
 
+* TeamsMeetingPolicy
+  * Added 'OrganizerOnly' as a support value for property
+    AutoAdmittedUsers.
+  * Temporarly removed the use of AllowAnonymousUsersToDialOut
+    since it is currently disabled on the API side.
 * EXPORT
   * Fixed an issue where an Export using the -Workloads
     parameter with a Service Principal did not export
