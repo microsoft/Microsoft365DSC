@@ -2,6 +2,10 @@
 
 ## 1.20.1202.1
 
+* EXOOwaMailboxPolicy
+  * Fixed an issue trying to remove a policy;
+* TeamsMessagingPolicy
+  * Added AllowUserEditMessage property.
 * TeamsMeetingPolicy
   * Added 'OrganizerOnly' as a support value for property
     AutoAdmittedUsers.
@@ -11,6 +15,8 @@
   * Fixed an issue where an Export using the -Workloads
     parameter with a Service Principal did not export
     any resource;
+* DEPENDENCIES
+  * Upgrade AzureADPreview to version 2.0.2.129;
 
 ## 1.20.1125.1
 
