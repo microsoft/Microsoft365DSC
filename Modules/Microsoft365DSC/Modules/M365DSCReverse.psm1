@@ -86,8 +86,11 @@ function Start-M365DSCConfigurationExtract
     $VerbosePreference = "SilentlyContinue"
     $WarningPreference = "SilentlyContinue"
 
-    $ComponentsToExtract = Get-M365DSCResourcesByWorkloads -Workloads $Workloads `
-        -Mode $Mode
+    if ($null -ne $Workloads)
+    {
+        $ComponentsToExtract = Get-M365DSCResourcesByWorkloads -Workloads $Workloads `
+            -Mode $Mode
+    }
 
     if ($null -eq $ComponentsToExtract -or $ComponentsToExtract.Length -eq 0)
     {
