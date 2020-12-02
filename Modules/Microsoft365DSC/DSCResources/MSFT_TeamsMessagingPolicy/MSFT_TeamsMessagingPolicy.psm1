@@ -38,6 +38,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowUserEditMessage,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowUserTranslation,
 
         [Parameter()]
@@ -132,6 +136,7 @@ function Get-TargetResource
                 AllowUrlPreviews              = $policy.AllowUrlPreviews
                 AllowUserChat                 = $policy.AllowUserChat
                 AllowUserDeleteMessage        = $policy.AllowUserDeleteMessage
+                AllowUserEditMessage          = $policy.AllowUserEditMessage
                 AllowUserTranslation          = $policy.AllowUserTranslation
                 GiphyRatingType               = $policy.GiphyRatingType
                 ReadReceiptsEnabledType       = $policy.ReadReceiptsEnabledType
@@ -209,6 +214,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowUserDeleteMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserEditMessage,
 
         [Parameter()]
         [System.Boolean]
@@ -335,6 +344,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowUserDeleteMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserEditMessage,
 
         [Parameter()]
         [System.Boolean]
