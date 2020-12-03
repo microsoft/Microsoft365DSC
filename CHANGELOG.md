@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# 1.20.1209.1
+
+* IntuneDeviceConfigurationPolicyiOS
+  * Initial Release
+
 ## 1.20.1202.1
 
 * EXOOwaMailboxPolicy
