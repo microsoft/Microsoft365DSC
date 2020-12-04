@@ -533,7 +533,7 @@ function Get-TargetResource
     try
     {
         $policyInfo = Get-IntuneDeviceConfigurationPolicy -Filter "displayName eq '$DisplayName'" `
-            -ErrorAction Stop
+            -ErrorAction Stop | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration' }
 
         if ($null -eq $policyInfo)
         {
@@ -1810,7 +1810,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$policies = Get-IntuneDeviceConfigurationPolicy -ErrorAction Stop
+        [array]$policies = Get-IntuneDeviceConfigurationPolicy -ErrorAction Stop | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration' }
         $i = 1
         $content = ''
         Write-Host "`r`n" -NoNewline
@@ -1922,7 +1922,7 @@ function New-M365DSCIntuneDeviceConfigurationPolicyiOS
         $jsonString += "`r`n}"
         $Url = 'https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations/'
         Write-Verbose -Message "Creating new Device config policy with JSON payload: `r`n$jsonString"
-        Invoke-MsGraphRequest -HttpMethod POST `
+        Invoke-MSGraphRequest -HttpMethod POST `
             -Url $Url `
             -Content $jsonString `
             -Headers @{"Content-Type" = "application/json" } | Out-Null
@@ -1979,7 +1979,7 @@ function Set-M365DSCIntuneDeviceConfigurationPolicyiOS
         $jsonString += "`r`n}"
         $Url = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations/$PolicyId"
         Write-Verbose -Message "Updating Device config policy with JSON payload: `r`n$jsonString"
-        Invoke-MsGraphRequest -HttpMethod PATCH `
+        Invoke-MSGraphRequest -HttpMethod PATCH `
             -Url $Url `
             -Content $jsonString `
             -Headers @{"Content-Type" = "application/json" } | Out-Null
