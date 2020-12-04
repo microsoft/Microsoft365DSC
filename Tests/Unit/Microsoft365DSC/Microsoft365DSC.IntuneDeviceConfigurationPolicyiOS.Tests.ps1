@@ -297,13 +297,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-IntuneDeviceConfigurationPolicy -MockWith {
                     return @{
-                        displayName = "iOS DSC Created"
-                        id          = "12345-12345-12345-12345-12345"
+                        '@odata.type' = "#microsoft.graph.iosGeneralDeviceConfiguration"
+                        displayName   = "iOS DSC Created"
+                        id            = "12345-12345-12345-12345-12345"
                     }
                 }
 
                 Mock -CommandName Get-M365DSCIntuneDeviceConfigurationPolicyiOS -MockWith {
                     return @{
+                        '@odata.type'                                  = "#microsoft.graph.iosGeneralDeviceConfiguration"
                         AccountBlockModification                       = $False;
                         ActivationLockAllowWhenSupervised              = $False;
                         AirDropBlocked                                 = $False;
@@ -444,8 +446,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-IntuneDeviceConfigurationPolicy -MockWith {
                     return @{
-                        displayName = "iOS DSC Created"
-                        id          = "12345-12345-12345-12345-12345"
+                        '@odata.type' = "#microsoft.graph.iosGeneralDeviceConfiguration"
+                        displayName   = "iOS DSC Created"
+                        id            = "12345-12345-12345-12345-12345"
                     }
                 }
                 $testParams = @{
@@ -563,6 +566,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-M365DSCIntuneDeviceConfigurationPolicyiOS -MockWith {
                     return @{
+                        '@odata.type'                                  = "#microsoft.graph.iosGeneralDeviceConfiguration"
                         AccountBlockModification                       = $False;
                         ActivationLockAllowWhenSupervised              = $False;
                         AirDropBlocked                                 = $False;
@@ -692,13 +696,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-IntuneDeviceConfigurationPolicy -MockWith {
                     return @{
-                        displayName = "iOS DSC Created"
-                        id          = "12345-12345-12345-12345-12345"
+                        '@odata.type' = "#microsoft.graph.iosGeneralDeviceConfiguration"
+                        displayName   = "iOS DSC Created"
+                        id            = "12345-12345-12345-12345-12345"
                     }
                 }
 
                 Mock -CommandName Get-M365DSCIntuneDeviceConfigurationPolicyiOS -MockWith {
                     return @{
+                        '@odata.type'                                  = "#microsoft.graph.iosGeneralDeviceConfiguration"
                         AccountBlockModification                       = $False;
                         ActivationLockAllowWhenSupervised              = $False;
                         AirDropBlocked                                 = $False;
