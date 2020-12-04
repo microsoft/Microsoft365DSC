@@ -423,7 +423,9 @@ function Export-TargetResource
 
     try
     {
-        [array]$configDeviceiOsPolicies = Get-DeviceManagement_DeviceCompliancePolicies -ErrorAction Stop
+        [array]$configDeviceiOsPolicies = Get-DeviceManagement_DeviceCompliancePolicies `
+            -ErrorAction Stop | Where-Object `
+            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.iosCompliancePolicy'}
         $i = 1
         $content = ''
         Write-Host "`r`n" -NoNewline
@@ -437,7 +439,7 @@ function Export-TargetResource
             }
             $result = Get-TargetResource @params
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $content += "        IntuneAppConfigurationPolicy " + (New-Guid).ToString() + "`r`n"
+            $content += "        IntuneDeviceCompliancePolicyiOs " + (New-Guid).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
