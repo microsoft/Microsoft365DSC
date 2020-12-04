@@ -2,6 +2,8 @@
 
 # 1.20.1209.1
 
+* IntuneDeviceCompliancePolicyiOs
+  * Initial Release;
 * IntuneDeviceConfigurationPolicyiOS
   * Initial Release
 
