@@ -1,9 +1,11 @@
 # Change log for Microsoft365DSC
 
-## Unreleased
+# 1.20.1209.1
 
 * IntuneDeviceCompliancePolicyiOs
   * Initial Release;
+* IntuneDeviceConfigurationPolicyiOS
+  * Initial Release
 
 ## 1.20.1202.1
 
