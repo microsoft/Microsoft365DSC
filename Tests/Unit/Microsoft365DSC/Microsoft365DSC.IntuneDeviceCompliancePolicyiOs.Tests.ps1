@@ -297,5 +297,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
     }
+}
 
     Invoke-Command -ScriptBlock $Global:DscHelper.CleanupScript -NoNewScope
