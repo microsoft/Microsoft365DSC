@@ -2,14 +2,14 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath "..\..\Unit" `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath "\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
@@ -60,28 +60,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "AtpPolicyForO365 update not required." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance          = 'Yes'
-                    Ensure                    = 'Present'
-                    Identity                  = 'Default'
-                    GlobalAdminAccount        = $GlobalAdminAccount
-                    AllowClickThrough         = $false
-                    BlockUrls                 = @()
-                    EnableATPForSPOTeamsODB   = $true
-                    EnableSafeLinksForClients = $true
-                    TrackClicks               = $true
+                    IsSingleInstance              = 'Yes'
+                    Ensure                        = 'Present'
+                    Identity                      = 'Default'
+                    GlobalAdminAccount            = $GlobalAdminAccount
+                    AllowClickThrough             = $false
+                    BlockUrls                     = @()
+                    EnableATPForSPOTeamsODB       = $true
+                    EnableSafeLinksForO365Clients = $true
+                    TrackClicks                   = $true
                 }
 
                 Mock -CommandName Get-AtpPolicyForO365 -MockWith {
                     return @{
-                        IsSingleInstance          = 'Yes'
-                        Ensure                    = 'Present'
-                        Identity                  = 'Default'
-                        GlobalAdminAccount        = $GlobalAdminAccount
-                        AllowClickThrough         = $false
-                        BlockUrls                 = @()
-                        EnableATPForSPOTeamsODB   = $true
-                        EnableSafeLinksForClients = $true
-                        TrackClicks               = $true
+                        IsSingleInstance              = 'Yes'
+                        Ensure                        = 'Present'
+                        Identity                      = 'Default'
+                        GlobalAdminAccount            = $GlobalAdminAccount
+                        AllowClickThrough             = $false
+                        BlockUrls                     = @()
+                        EnableATPForSPOTeamsODB       = $true
+                        EnableSafeLinksForO365Clients = $true
+                        TrackClicks                   = $true
                     }
                 }
             }
@@ -94,27 +94,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "AtpPolicyForO365 update needed." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance          = 'Yes'
-                    Ensure                    = 'Present'
-                    Identity                  = 'Default'
-                    GlobalAdminAccount        = $GlobalAdminAccount
-                    AllowClickThrough         = $false
-                    BlockUrls                 = @()
-                    EnableATPForSPOTeamsODB   = $true
-                    EnableSafeLinksForClients = $true
-                    TrackClicks               = $true
+                    IsSingleInstance              = 'Yes'
+                    Ensure                        = 'Present'
+                    Identity                      = 'Default'
+                    GlobalAdminAccount            = $GlobalAdminAccount
+                    AllowClickThrough             = $false
+                    BlockUrls                     = @()
+                    EnableATPForSPOTeamsODB       = $true
+                    EnableSafeLinksForO365Clients = $true
+                    TrackClicks                   = $true
                 }
                 Mock -CommandName Get-AtpPolicyForO365 -MockWith {
                     return @{
-                        IsSingleInstance          = 'Yes'
-                        Ensure                    = 'Present'
-                        Identity                  = 'Default'
-                        GlobalAdminAccount        = $GlobalAdminAccount
-                        AllowClickThrough         = $false
-                        BlockUrls                 = @()
-                        EnableATPForSPOTeamsODB   = $false
-                        EnableSafeLinksForClients = $false
-                        TrackClicks               = $false
+                        IsSingleInstance              = 'Yes'
+                        Ensure                        = 'Present'
+                        Identity                      = 'Default'
+                        GlobalAdminAccount            = $GlobalAdminAccount
+                        AllowClickThrough             = $false
+                        BlockUrls                     = @()
+                        EnableATPForSPOTeamsODB       = $false
+                        EnableSafeLinksForO365Clients = $false
+                        TrackClicks                   = $false
                     }
                 }
             }
@@ -131,25 +131,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "AtpPolicyForO365 does not exist" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance          = 'Yes'
-                    Ensure                    = 'Present'
-                    Identity                  = 'Invalid'
-                    GlobalAdminAccount        = $GlobalAdminAccount
-                    AllowClickThrough         = $false
-                    BlockUrls                 = @()
-                    EnableATPForSPOTeamsODB   = $true
-                    EnableSafeLinksForClients = $true
-                    TrackClicks               = $true
+                    IsSingleInstance              = 'Yes'
+                    Ensure                        = 'Present'
+                    Identity                      = 'Invalid'
+                    GlobalAdminAccount            = $GlobalAdminAccount
+                    AllowClickThrough             = $false
+                    BlockUrls                     = @()
+                    EnableATPForSPOTeamsODB       = $true
+                    EnableSafeLinksForO365Clients = $true
+                    TrackClicks                   = $true
                 }
                 Mock -CommandName Get-AtpPolicyForO365 -MockWith {
                     return @{
-                        Ensure                    = 'Present'
-                        Identity                  = 'Default2' # Drift
-                        AllowClickThrough         = $false
-                        BlockUrls                 = @()
-                        EnableATPForSPOTeamsODB   = $false
-                        EnableSafeLinksForClients = $false
-                        TrackClicks               = $false
+                        Ensure                        = 'Present'
+                        Identity                      = 'Default2' # Drift
+                        AllowClickThrough             = $false
+                        BlockUrls                     = @()
+                        EnableATPForSPOTeamsODB       = $false
+                        EnableSafeLinksForO365Clients = $false
+                        TrackClicks                   = $false
                     }
                 }
             }
@@ -163,7 +163,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should throw an Error from the Set method" {
-                {Set-TargetResource @testParams} | Should -Throw "EXOAtpPolicyForO365 configurations MUST specify Identity value of 'Default'"
+                { Set-TargetResource @testParams } | Should -Throw "EXOAtpPolicyForO365 configurations MUST specify Identity value of 'Default'"
             }
         }
 
@@ -175,12 +175,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-AtpPolicyForO365 -MockWith {
                     return @{
-                        Identity                  = 'Default'
-                        AllowClickThrough         = $false
-                        BlockUrls                 = @()
-                        EnableATPForSPOTeamsODB   = $false
-                        EnableSafeLinksForClients = $false
-                        TrackClicks               = $false
+                        Identity                      = 'Default'
+                        AllowClickThrough             = $false
+                        BlockUrls                     = @()
+                        EnableATPForSPOTeamsODB       = $false
+                        EnableSafeLinksForO365Clients = $false
+                        TrackClicks                   = $false
                     }
                 }
             }
