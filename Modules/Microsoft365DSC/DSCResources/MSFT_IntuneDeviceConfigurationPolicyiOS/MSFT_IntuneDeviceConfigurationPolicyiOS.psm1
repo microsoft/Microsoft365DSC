@@ -1219,22 +1219,22 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
         -InboundParameters $PSBoundParameters
 
-    $currentCategory = Get-TargetResource @PSBoundParameters
+    $currentPolicy = Get-TargetResource @PSBoundParameters
     $setParams = $PSBoundParameters
     $setParams.Remove("Ensure") | Out-Null
     $setParams.Remove("GlobalAdminAccount") | Out-Null
-    if ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Absent')
+    if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Device Configuration Policy {$DisplayName}"
         New-M365DSCIntuneDeviceConfigurationPolicyiOS -Parameters $setParams
     }
-    elseif ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing Device Configuration Policy {$DisplayName}"
         $policy = Get-IntuneDeviceConfigurationPolicy -Filter "displayName eq '$DisplayName'"
         Set-M365DSCIntuneDeviceConfigurationPolicyiOS -Parameters $setParams -PolicyId ($policy.id)
     }
-    elseif ($Ensure -eq 'Absent' -and $currentCategory.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Device Configuration Policy {$DisplayName}"
         $policy = Get-IntuneDeviceConfigurationPolicy -Filter "displayName eq '$DisplayName'"
