@@ -70,7 +70,7 @@ function Get-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
-                        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
@@ -98,19 +98,19 @@ function Get-TargetResource
         else
         {
             $result = @{
-                Id                            = $AADRoleDefinition.Id
-                DisplayName                   = $AADRoleDefinition.DisplayName
-                Description                   = $AADRoleDefinition.Description
-                ResourceScopes                = $AADRoleDefinition.ResourceScopes
-                IsEnabled                     = $AADRoleDefinition.IsEnabled
-                RolePermissions               = $AADRoleDefinition.RolePermissions.AllowedResourceActions
-                TemplateId                    = $AADRoleDefinition.TemplateId
-                Version                       = $AADRoleDefinition.Version
-                Ensure                        = "Present"
-                GlobalAdminAccount            = $GlobalAdminAccount
-                ApplicationId                 = $ApplicationId
-                TenantId                      = $TenantId
-                CertificateThumbprint         = $CertificateThumbprint
+                Id                    = $AADRoleDefinition.Id
+                DisplayName           = $AADRoleDefinition.DisplayName
+                Description           = $AADRoleDefinition.Description
+                ResourceScopes        = $AADRoleDefinition.ResourceScopes
+                IsEnabled             = $AADRoleDefinition.IsEnabled
+                RolePermissions       = $AADRoleDefinition.RolePermissions.AllowedResourceActions
+                TemplateId            = $AADRoleDefinition.TemplateId
+                Version               = $AADRoleDefinition.Version
+                Ensure                = "Present"
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
@@ -206,12 +206,12 @@ function Set-TargetResource
     $currentParameters.Remove("Ensure")  | Out-Null
 
     $rolePermissionsObj = @()
-    $rolePermissionsObj += @{'allowedResourceActions' = $rolePermissions}
+    $rolePermissionsObj += @{'allowedResourceActions' = $rolePermissions }
     $resourceScopesObj = @()
     $resourceScopesObj += $ResourceScopes
 
-    $currentParameters.Add("RolePermissions",$rolePermissionsObj) | Out-Null
-    $currentParameters.Add("ResourceScopes",$resourceScopesObj) | Out-Null
+    $currentParameters.Add("RolePermissions", $rolePermissionsObj) | Out-Null
+    $currentParameters.Add("ResourceScopes", $resourceScopesObj) | Out-Null
 
     # Role definition should exist but it doesn't
     if ($Ensure -eq "Present" -and $currentAADRoleDef.Ensure -eq "Absent")
@@ -364,20 +364,22 @@ function Export-TargetResource
     $dscContent = ''
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
     $i = 1
-    Write-Host "`r`n" -NoNewLine
+    Write-Host "`r`n" -NoNewline
     try
     {
         [array]$AADRoleDefinitions = Get-AzureADMSRoleDefinition -ErrorAction Stop
-        foreach($AADRoleDefinition in $AADRoleDefinitions)
+        foreach ($AADRoleDefinition in $AADRoleDefinitions)
         {
-            Write-Host "    |---[$i/$($AADRoleDefinitions.Count)] $($AADRoleDefinition.DisplayName)" -NoNewLine
+            Write-Host "    |---[$i/$($AADRoleDefinitions.Count)] $($AADRoleDefinition.DisplayName)" -NoNewline
             $Params = @{
-                    GlobalAdminAccount            = $GlobalAdminAccount
-                    ApplicationId                 = $ApplicationId
-                    TenantId                      = $TenantId
-                    CertificateThumbprint         = $CertificateThumbprint
-                    DisplayName                   = $AADRoleDefinition.DisplayName
-                    Id                            = $AADRoleDefinition.Id
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                DisplayName           = $AADRoleDefinition.DisplayName
+                Id                    = $AADRoleDefinition.Id
+                IsEnabled             = $true
+                RolePermissions       = @("temp")
             }
             $Results = Get-TargetResource @Params
 
