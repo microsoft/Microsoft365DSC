@@ -6,6 +6,8 @@
   * Initial Release;
 * IntuneDeviceConfigurationPolicyiOS
   * Initial Release
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Initial Release;
 
 ## 1.20.1202.1
 
