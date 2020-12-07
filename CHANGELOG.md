@@ -6,6 +6,8 @@
   * Initial Release;
 * IntuneDeviceConfigurationPolicyiOS
   * Initial Release;
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Initial Release;
 * IntuneDeviceEnrollmentLimitRestriction
   * Initial Release;
 
