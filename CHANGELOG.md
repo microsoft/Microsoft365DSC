@@ -5,8 +5,10 @@
 * IntuneDeviceCompliancePolicyiOs
   * Initial Release;
 * IntuneDeviceConfigurationPolicyiOS
-  * Initial Release
+  * Initial Release;
 * IntuneDeviceEnrollmentPlatformRestriction
+  * Initial Release;
+* IntuneDeviceEnrollmentLimitRestriction
   * Initial Release;
 
 ## 1.20.1202.1
