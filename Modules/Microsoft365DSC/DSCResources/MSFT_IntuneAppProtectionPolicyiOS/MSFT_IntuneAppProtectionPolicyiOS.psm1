@@ -153,7 +153,7 @@ function Get-TargetResource
         {
             foreach ($app in $policy.Apps)
             {
-                $appsArray += $app.id
+                $appsArray += $app.mobileAppIdentifier.bundleId
             }
         }
 
@@ -383,9 +383,15 @@ function Set-TargetResource
         $policyInfo = Get-IntuneAppProtectionPolicy -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.iosManagedAppProtection' }
 
-        $JsonContent = Get-M365DSCIntuneAppProtectionPolicyiOSJSON -Parameters $PSBoundParameters
+        $JsonContent = Get-M365DSCIntuneAppProtectionPolicyiOSJSON -Parameters $PSBoundParameters `
+            -IncludeApps $false
         Set-M365DSCIntuneAppProtectionPolicyiOS -JSONContent $JsonContent `
             -PolicyId ($policyInfo.id)
+
+        $appJSON = Get-M365DSCIntuneAppProtectionPolicyiOSAppsJSON -Parameters $PSBoundParameters
+        Set-M365DSCIntuneAppProtectionPolicyiOSApps -JSONContent $appJSON `
+            -PolicyId $policyInfo.Id
+
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
@@ -649,7 +655,11 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
     param(
         [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]
-        $Parameters
+        $Parameters,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeApps = $true
     )
 
     #region AllowedDataStorageLocations
@@ -690,8 +700,6 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
     }
     $appsValue += "]"
     #endregion
-
-
     $JsonContent = @"
     {
         "@odata.type": "#microsoft.graph.iosManagedAppProtection",
@@ -718,10 +726,55 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
         "fingerprintBlocked": $($Parameters.FingerprintBlocked.ToString().ToLower()),
         "appDataEncryptionType": "$($Parameters.AppDataEncryptionType)",
         "allowedDataStorageLocations": $allowedDataStorageLocations
+"@
+
+    if ($IncludeApps)
+    {
+        $JSOnContent += "`"apps`":$appsValue`r`n"
+    }
+    $JsonContent += "}"
+    return $JsonContent
+}
+
+function Get-M365DSCIntuneAppProtectionPolicyiOSAppsJSON
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $Parameters
+    )
+
+    #region Apps
+    $appsValue = "["
+    $foundOne = $false
+    foreach ($app in $Parameters.Apps)
+    {
+        $foundOne = $true
+
+        $appsValue += @"
+            `r`n{
+                "id":"$($app)",
+                "mobileAppIdentifier": {
+                    "@odata.type": "#microsoft.graph.iosMobileAppIdentifier",
+                    "bundleId": "$app"
+                }
+            },
+"@
+    }
+    if ($foundOne)
+    {
+        $appsValue = $appsValue.TrimEnd(',') + " `r`n"
+    }
+    $appsValue += "]"
+    #endregion
+
+    $JsonContent = @"
+    {
         "apps": $appsValue
     }
 "@
-
     return $JsonContent
 }
 
@@ -743,19 +796,17 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSAssignmentJSON
     $JsonContent += "`"assignments`":[`r`n"
     foreach ($assignment in $Assignments)
     {
-        $JsonContent += "    `"target`":`r`n"
-        $JsonContent += "    {`r`n"
+        $JsonContent += "    {`"target`":{`r`n"
         $JsonContent += "        `"groupId`":`"$assignment`",`r`n"
         $JsonContent += "        `"@odata.type`":`"#microsoft.graph.groupAssignmentTarget`"`r`n"
-        $JsonContent += "    },"
+        $JsonContent += "    }},"
     }
     foreach ($exclusion in $Exclusions)
     {
-        $JsonContent += "    `"target`":`r`n"
-        $JsonContent += "    {`r`n"
-        $JsonContent += "        `"groupId`":`"$assignment`",`r`n"
+        $JsonContent += "    {`"target`":{`r`n"
+        $JsonContent += "        `"groupId`":`"$exclusion`",`r`n"
         $JsonContent += "        `"@odata.type`":`"#microsoft.graph.exclusionGroupAssignmentTarget`"`r`n"
-        $JsonContent += "    },"
+        $JsonContent += "    }},"
     }
     $JsonContent = $JsonContent.TrimEnd(',')
     $JsonContent += "]`r`n"
@@ -805,8 +856,39 @@ function Set-M365DSCIntuneAppProtectionPolicyiOS
     )
     try
     {
-        $Url = 'https://graph.microsoft.com/beta/deviceAppManagement/managedAppPolicies/$PolicyId'
+        $Url = "https://graph.microsoft.com/beta/deviceAppManagement/iosManagedAppProtections('$PolicyId')/"
         Write-Verbose -Message "Creating new iOS App Protection policy with JSON payload: `r`n$JSONContent"
+        Invoke-MSGraphRequest -HttpMethod PATCH `
+            -Url $Url `
+            -Content $JSONContent `
+            -Headers @{"Content-Type" = "application/json" } | Out-Null
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $tenantIdValue
+    }
+}
+
+function Set-M365DSCIntuneAppProtectionPolicyiOSApps
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $JSONContent,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $PolicyId
+    )
+    try
+    {
+        $Url = "https://graph.microsoft.com/beta/deviceAppManagement/managedAppPolicies/$PolicyId/targetApps"
+        Write-Verbose -Message "Updating Apps for iOS App Protection policy with JSON payload: `r`n$JSONContent"
         Invoke-MSGraphRequest -HttpMethod POST `
             -Url $Url `
             -Content $JSONContent `
