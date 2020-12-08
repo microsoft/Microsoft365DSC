@@ -61,11 +61,11 @@
         },
         @{
             ModuleName      = "ExchangeOnlineManagement"
-            RequiredVersion = "2.0.1"
+            RequiredVersion = "2.0.3"
         },
         @{
             ModuleName      = "Microsoft.Graph.Authentication"
-            RequiredVersion = "1.1.0"
+            RequiredVersion = "1.2.0"
         },
         @{
             ModuleName      = "Microsoft.Graph.Groups.Planner"
@@ -81,7 +81,7 @@
         },
         @{
             ModuleName      = "Microsoft.Graph.Planner"
-            RequiredVersion = "1.1.0"
+            RequiredVersion = "1.2.0"
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
@@ -117,7 +117,7 @@
         },
         @{
             ModuleName      = "SharePointPnPPowerShellOnline"
-            RequiredVersion = "3.26.2010.0"
+            RequiredVersion = "3.28.2012.0"
         }
     )
 
