@@ -66,6 +66,9 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraphBeta' `
         -InboundParameters $PSBoundParameters
 
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
+        -InboundParameters $PSBoundParameters
+
     try
     {
         # Get the Team ID
@@ -74,16 +77,12 @@ function Get-TargetResource
             if ([System.String]::IsNullOrEmpty($TeamId))
             {
                 Write-Verbose -Message "Getting team by Name {$TeamName}"
-                Write-Verbose -Message "PROFILE === $(Get-MgProfile -Verbose | Out-String)"
-                $filter = "displayName eq '$TeamName' and resourceProvisioningOptions/Any(x:x eq 'Team')"
-                Write-Verbose -Message "Filter == $filter"
-                Select-MgProfile Beta
-                $teamInstance = Get-MgGroup -Filter $filter -ErrorAction Stop | ForEach-Object { @{ TeamId = $_.Id } } | Get-MgTeam -ErrorAction Stop
+                $teamInstance = Get-Team | Where-Object -FilterScript {$_.DisplayName -eq $TeamName}
             }
             else
             {
                 Write-Verbose -Message "Getting team by Id {$TeamId}"
-                $teamInstance = Get-MgTeam -TeamId $TeamId -ErrorAction Stop
+                $teamInstance = Get-Team -GroupId $TeamId -ErrorAction Stop
             }
         }
         catch
