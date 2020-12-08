@@ -12,6 +12,10 @@
   * Initial Release;
 * IntuneDeviceEnrollmentLimitRestriction
   * Initial Release;
+* TeamsTenantDialPlan
+  * Performance Improvements: retrieve all Voice Normalization
+    Rule at once and then iterated through them instead of
+    retrieving them for every instance.
 
 ## 1.20.1202.1
 
