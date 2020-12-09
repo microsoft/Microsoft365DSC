@@ -24,8 +24,8 @@ function Get-TargetResource
         $TeamId,
 
         [Parameter()]
-        [System.String]
-        $ContentUrl,
+        [System.UInt32]
+        $SortOrderIndex,
 
         [Parameter()]
         [System.String]
@@ -63,9 +63,6 @@ function Get-TargetResource
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraphBeta' `
-        -InboundParameters $PSBoundParameters
-
     $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
@@ -77,7 +74,7 @@ function Get-TargetResource
             if ([System.String]::IsNullOrEmpty($TeamId))
             {
                 Write-Verbose -Message "Getting team by Name {$TeamName}"
-                $teamInstance = Get-Team | Where-Object -FilterScript {$_.DisplayName -eq $TeamName}
+                $teamInstance = Get-Team | Where-Object -FilterScript { $_.DisplayName -eq $TeamName }
             }
             else
             {
@@ -103,8 +100,11 @@ function Get-TargetResource
             throw $Message
         }
 
+        $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
         # Get the Channel ID
-        $channelInstance = Get-MgTeamChannel -TeamId $teamInstance.Id | Where-Object -FilterScript { $_.DisplayName -eq $ChannelName }
+        Write-Verbose -Message "Getting Channels for Team {$TeamName} with ID {$($teamInstance.GroupId)}"
+        $channelInstance = Get-MgTeamChannel -TeamId $teamInstance.GroupId | Where-Object -FilterScript { $_.DisplayName -eq $ChannelName }
 
         if ($null -eq $channelInstance)
         {
@@ -115,7 +115,8 @@ function Get-TargetResource
         }
 
         # Get the Channel Tab
-        $tabInstance = Get-MgTeamChannelTab -TeamId $teamInstance.Id `
+        Write-Verbose -Message "Getting Tabs for Channel {$ChannelName}"
+        $tabInstance = Get-MgTeamChannelTab -TeamId $teamInstance.GroupId `
             -ChannelId $channelInstance.Id | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
 
         if ($null -eq $tabInstance)
@@ -126,12 +127,12 @@ function Get-TargetResource
         }
 
         return @{
-            DisplayName           = $DisplayName
+            DisplayName           = $tabInstance.DisplayName
             TeamName              = $TeamName
-            TeamId                = $TeamId
-            ChannelName           = $ChannelName
-            ContentUrl            = $ContentUrl
-            WebSiteUrl            = $WebSiteUrl
+            TeamId                = $Team.GroupId
+            ChannelName           = $channelInstance.DisplayName
+            SortOrderIndex        = $tabInstance.SortOrderIndex
+            WebSiteUrl            = $tabInstance.WebUrl
             ApplicationId         = $ApplicationId
             TenantId              = $TenantID
             CertificateThumbprint = $CertificateThumbprint
@@ -189,8 +190,8 @@ function Set-TargetResource
         $TeamId,
 
         [Parameter()]
-        [System.String]
-        $ContentUrl,
+        [System.UInt32]
+        $SortOrderIndex,
 
         [Parameter()]
         [System.String]
@@ -226,7 +227,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraphBeta' `
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     $tab = Get-TargetResource @PSBoundParameters
@@ -293,8 +294,8 @@ function Test-TargetResource
         $TeamId,
 
         [Parameter()]
-        [System.String]
-        $ContentUrl,
+        [System.UInt32]
+        $SortOrderIndex,
 
         [Parameter()]
         [System.String]
@@ -383,10 +384,13 @@ function Export-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraphBeta' `
+        $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
 
-        [array]$teams = Get-MgGroup -Filter "resourceProvisioningOptions/Any(x:x eq 'Team')"
+        $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
+            -InboundParameters $PSBoundParameters
+
+        [array]$teams = Get-Team
         $i = 1
         $dscContent = ""
         Write-Host "`r`n" -NoNewline
@@ -397,7 +401,7 @@ function Export-TargetResource
             $channels = $null
             try
             {
-                [array]$channels = Get-MgTeamChannel -TeamId $team.Id -ErrorAction Stop
+                [array]$channels = Get-MgTeamChannel -TeamId $team.GroupId -ErrorAction Stop
             }
             catch
             {
@@ -415,7 +419,7 @@ function Export-TargetResource
                 $tabs = $null
                 try
                 {
-                    [array]$tabs = Get-MgTeamChannelTab -TeamId $team.Id `
+                    [array]$tabs = Get-MgTeamChannelTab -TeamId $team.GroupId `
                         -ChannelId $channel.Id -ErrorAction Stop
                 }
                 catch
@@ -432,7 +436,7 @@ function Export-TargetResource
                     Write-Host "            |---[$k/$($tabs.Length)] $($tab.DisplayName)" -NoNewline
                     $params = @{
                         TeamName              = $team.DisplayName
-                        TeamId                = $team.Id
+                        TeamId                = $team.GroupId
                         ChannelName           = $channel.DisplayName
                         DisplayName           = $tab.DisplayName
                         ApplicationId         = $ApplicationId
