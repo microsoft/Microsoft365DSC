@@ -1,0 +1,29 @@
+[ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceEnrollmentPlatformRestriction")]
+class MSFT_IntuneDeviceEnrollmentPlatformRestriction : OMI_BaseResource
+{
+    [Key, Description("Display name of the device enrollment platform restriction.")] String DisplayName;
+    [Write, Description("Description of the device enrollment platform restriction.")] String Description;
+    [Write, Description("N/A")] Boolean AndroidPlatformBlocked;
+    [Write, Description("N/A")] Boolean AndroidPersonalDeviceEnrollmentBlocked;
+    [Write, Description("N/A")] String AndroidOSMinimumVersion;
+    [Write, Description("N/A")] String AndroidOSMaximumVersion;
+    [Write, Description("N/A")] Boolean iOSPlatformBlocked;
+    [Write, Description("N/A")] Boolean iOSPersonalDeviceEnrollmentBlocked;
+    [Write, Description("N/A")] String iOSOSMinimumVersion;
+    [Write, Description("N/A")] String iOSOSMaximumVersion;
+    [Write, Description("N/A")] Boolean MacPlatformBlocked;
+    [Write, Description("N/A")] Boolean MacPersonalDeviceEnrollmentBlocked;
+    [Write, Description("N/A")] String MacOSMinimumVersion;
+    [Write, Description("N/A")] String MacOSMaximumVersion;
+    [Write, Description("N/A")] Boolean WindowsPlatformBlocked;
+    [Write, Description("N/A")] Boolean WindowsPersonalDeviceEnrollmentBlocked;
+    [Write, Description("N/A")] String WindowsOSMinimumVersion;
+    [Write, Description("N/A")] String WindowsOSMaximumVersion;
+    [Write, Description("N/A")] Boolean WindowsMobilePlatformBlocked;
+    [Write, Description("N/A")] Boolean WindowsMobilePersonalDeviceEnrollmentBlocked;
+    [Write, Description("N/A")] String WindowsMobileOSMinimumVersion;
+    [Write, Description("N/A")] String WindowsMobileOSMaximumVersion;
+    [Write, Description("Present ensures the restriction exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
+    [Required, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+};
+

@@ -14,6 +14,10 @@ function Get-TargetResource
 
         [Parameter()]
         [Boolean]
+        $DeliverMessageAfterScan = $false,
+
+        [Parameter()]
+        [Boolean]
         $DoNotAllowClickThrough = $true,
 
         [Parameter()]
@@ -118,6 +122,7 @@ function Get-TargetResource
             $result = @{
                 Identity                 = $SafeLinksPolicy.Identity
                 AdminDisplayName         = $SafeLinksPolicy.AdminDisplayName
+                DeliverMessageAfterScan  = $SafeLinksPolicy.DeliverMessageAfterScan
                 DoNotAllowClickThrough   = $SafeLinksPolicy.DoNotAllowClickThrough
                 DoNotRewriteUrls         = $SafeLinksPolicy.DoNotRewriteUrls
                 DoNotTrackUserClicks     = $SafeLinksPolicy.DoNotTrackUserClicks
@@ -171,6 +176,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $AdminDisplayName,
+
+        [Parameter()]
+        [Boolean]
+        $DeliverMessageAfterScan = $false,
 
         [Parameter()]
         [Boolean]
@@ -281,6 +290,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $AdminDisplayName,
+
+        [Parameter()]
+        [Boolean]
+        $DeliverMessageAfterScan = $false,
 
         [Parameter()]
         [Boolean]

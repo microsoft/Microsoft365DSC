@@ -408,10 +408,11 @@ function Get-M365DSCNormalizationRules
     }
 
     $result = @()
+    $allRules = Get-CsVoiceNormalizationRule
     foreach ($rule in $Rules)
     {
         $ruleName = $rule.Name.Replace("Tag:", "")
-        $ruleObject = Get-CsVoiceNormalizationRule | Where-Object -FilterScript { $_.Name -eq $ruleName }
+        $ruleObject = $allRules | Where-Object -FilterScript { $_.Name -eq $ruleName }
         $currentRule = @{
             Identity            = $ruleName
             Priority            = $ruleObject.Priority
