@@ -19,7 +19,7 @@ function Remove-AzureADDirectorySetting
 {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id
     )
@@ -29,7 +29,7 @@ function New-AzureADDirectorySetting
 {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [PSCustomObject]
         $DirectorySetting
     )
@@ -39,11 +39,11 @@ function Set-AzureADDirectorySetting
 {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [PSObject]
         $DirectorySetting
     )
@@ -291,37 +291,6 @@ function Get-AtpPolicyForO365
     )
 }
 
-function Set-AtpPolicyForO365
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter()]
-        [System.String]
-        $Identity = 'Default',
-
-        [Parameter()]
-        [Boolean]
-        $AllowClickThrough = $true,
-
-        [Parameter()]
-        [System.String[]]
-        $BlockUrls = @(),
-
-        [Parameter()]
-        [Boolean]
-        $EnableATPForSPOTeamsODB = $false,
-
-        [Parameter()]
-        [Boolean]
-        $EnableSafeLinksForClients = $false,
-
-        [Parameter()]
-        [Boolean]
-        $TrackClicks = $true
-    )
-}
 
 function Set-AddressBookPolicy
 {

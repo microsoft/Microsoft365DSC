@@ -1,5 +1,28 @@
 # Change log for Microsoft365DSC
 
+# 1.20.1209.1
+
+* IntuneAppProtectionPolicyiOS
+  * Initial Release;
+* IntuneDeviceCompliancePolicyiOS
+  * Initial Release;
+* IntuneDeviceConfigurationPolicyiOS
+  * Initial Release;
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Initial Release;
+* IntuneDeviceEnrollmentLimitRestriction
+  * Initial Release;
+* TeamsTenantDialPlan
+  * Performance Improvements: retrieve all Voice Normalization
+    Rule at once and then iterated through them instead of
+    retrieving them for every instance.
+* DEPENDENCIES
+  * Upgraded ExchangeOnlineManagement to version 2.0.3;
+  * Upgraded Microsoft.Graph.Authentication to version 1.2.0;
+  * Upgraded Microsoft.Graph.Planner to version 1.2.0;
+  * Upgraded SharePointPnPPowerShellOnline to version
+    3.28.2012.0;
+
 ## 1.20.1202.1
 
 * EXOOwaMailboxPolicy
