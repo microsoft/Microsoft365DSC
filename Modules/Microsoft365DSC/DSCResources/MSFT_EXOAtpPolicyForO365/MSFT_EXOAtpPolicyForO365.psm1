@@ -27,7 +27,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Boolean]
-        $EnableSafeLinksForClients = $false,
+        $EnableSafeDocs  = $false,
+
+        [Parameter()]
+        [Boolean]
+        $EnableSafeLinksForO365Clients = $true,
 
         [Parameter()]
         [Boolean]
@@ -101,14 +105,15 @@ function Get-TargetResource
         else
         {
             $result = @{
-                IsSingleInstance          = "Yes"
-                Identity                  = $AtpPolicyForO365.Identity
-                AllowClickThrough         = $AtpPolicyForO365.AllowClickThrough
-                BlockUrls                 = $AtpPolicyForO365.BlockUrls
-                EnableATPForSPOTeamsODB   = $AtpPolicyForO365.EnableATPForSPOTeamsODB
-                EnableSafeLinksForClients = $AtpPolicyForO365.EnableSafeLinksForClients
-                TrackClicks               = $AtpPolicyForO365.TrackClicks
-                Ensure                    = 'Present'
+                IsSingleInstance                = "Yes"
+                Identity                        = $AtpPolicyForO365.Identity
+                AllowClickThrough               = $AtpPolicyForO365.AllowClickThrough
+                BlockUrls                       = $AtpPolicyForO365.BlockUrls
+                EnableATPForSPOTeamsODB         = $AtpPolicyForO365.EnableATPForSPOTeamsODB
+                EnableSafeDocs                  = $AtpPolicyForO365.EnableSafeDocs
+                EnableSafeLinksForO365Clients   = $AtpPolicyForO365.EnableSafeLinksForO365Clients
+                TrackClicks                     = $AtpPolicyForO365.TrackClicks
+                Ensure                          = 'Present'
             }
 
             Write-Verbose -Message "Found AtpPolicyForO365 $($Identity)"
@@ -118,9 +123,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -153,7 +175,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Boolean]
-        $EnableSafeLinksForClients = $false,
+        $EnableSafeDocs  = $false,
+
+        [Parameter()]
+        [Boolean]
+        $EnableSafeLinksForO365Clients = $true,
 
         [Parameter()]
         [Boolean]
@@ -245,7 +271,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Boolean]
-        $EnableSafeLinksForClients = $false,
+        $EnableSafeDocs  = $false,
+
+        [Parameter()]
+        [Boolean]
+        $EnableSafeLinksForO365Clients = $true,
 
         [Parameter()]
         [Boolean]
@@ -280,6 +310,15 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of AtpPolicyForO365 for $Identity"
 
@@ -398,9 +437,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }

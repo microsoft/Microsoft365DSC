@@ -826,10 +826,6 @@ function Export-M365DSCConfiguration
         $CertificateThumbprint,
 
         [Parameter()]
-        [System.String]
-        $CertificateFile,
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount,
 
@@ -860,7 +856,8 @@ function Export-M365DSCConfiguration
 
     if (-not $Quiet)
     {
-        Show-M365DSCGUI -Path $Path
+        Show-M365DSCGUI -Path $Path -FileName $FileName `
+            -GenerateInfo $GenerateInfo
     }
     else
     {
@@ -936,9 +933,9 @@ function Get-M365DSCTenantDomain
     if ($null -eq $CertificatePath)
     {
         $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
-                    -InboundParameters $PSBoundParameters
+            -InboundParameters $PSBoundParameters
         $tenantDetails = Get-AzureADTenantDetail
-        $defaultDomain = $tenantDetails.VerifiedDomains | Where-Object -Filterscript { $_.Initial }
+        $defaultDomain = $tenantDetails.VerifiedDomains | Where-Object -FilterScript { $_.Initial }
         return $defaultDomain.Name
     }
     if ($TenantId.Contains("onmicrosoft"))
@@ -975,7 +972,8 @@ function Get-M365DSCOrganization
         {
             $organization = $TenantId
             return $organization
-        }else
+        }
+        else
         {
             Throw "Tenant ID must be name of tenant not a GUID. Ex contoso.onmicrosoft.com"
         }
@@ -1015,28 +1013,77 @@ function New-M365DSCConnection
         $Global:CurrentModeIsExport = $false
     }
 
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Source", "M365DSCUtil")
+    $data.Add("Platform", $Platform)
+
+    if ($InboundParameters.ContainsKey("TenantId"))
+    {
+        $tenantId = $InboundParameters.TenantId
+        $data.Add("TenantId", $tenantId)
+    }
+    if ($InboundParameters.ContainsKey("GlobalAdminAccount") -and
+        $null -ne $InboundParameters.GlobalAdminAccount)
+    {
+        $data.Add("GlobalAdminAccount", "Yes")
+    }
+    if ($InboundParameters.ContainsKey("ApplicationId") -and
+        -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
+    {
+        $data.Add("ApplicationId", "Yes")
+    }
+    if ($InboundParameters.ContainsKey("CertificatePath") -and
+        -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePath))
+    {
+        $data.Add("CertificatePath", "Yes")
+    }
+    if ($InboundParameters.ContainsKey("CertificateThumbprint") -and
+        -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
+    {
+        $data.Add("CertificateThumbprint", "Yes")
+    }
+    if ($InboundParameters.ContainsKey("CertificatePassword") -and
+        -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePassword))
+    {
+        $data.Add("CertificatePassword", "Yes")
+    }
+    #endregion
+
     # Case both authentication methods are attempted
     if ($null -ne $InboundParameters.GlobalAdminAccount -and `
         (-not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -or `
-        -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint)))
+                -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint)))
     {
-        Write-Verbose -Message 'Both Authentication methods are attempted'
-        throw "You can't specify both the GlobalAdminAccount and one of {TenantId, CertificateThumbprint}"
+        $message = 'Both Authentication methods are attempted'
+        Write-Verbose -Message $message
+        $data.Add("Event", "Error")
+        $data.Add("Exception", $message)
+        $errorText = "You can't specify both the GlobalAdminAccount and one of {TenantId, CertificateThumbprint}"
+        $data.Add("CustomMessage", $errorText)
+        Add-M365DSCTelemetryEvent -Type "Error" -Data $data
+        throw $errorText
     }
     # Case no authentication method is specified
     elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
-        [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
-        [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
-        [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
+            [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+            [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+            [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
     {
-        Write-Verbose -Message "No Authentication method was provided"
-        throw "You must specify either the GlobalAdminAccount or ApplicationId, TenantId and CertificateThumbprint parameters."
+        $message = 'No Authentication method was provided'
+        Write-Verbose -Message $message
+        $data.Add("Event", "Error")
+        $data.Add("Exception", $message)
+        $errorText = "You must specify either the GlobalAdminAccount or ApplicationId, TenantId and CertificateThumbprint parameters."
+        $data.Add("CustomMessage", $errorText)
+        Add-M365DSCTelemetryEvent -Type "Error" -Data $data
+        throw $errorText
     }
     # Case only GlobalAdminAccount is specified
     elseif ($null -ne $InboundParameters.GlobalAdminAccount -and `
-        [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
-        [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
-        [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
+            [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+            [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+            [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
     {
         Write-Verbose -Message "GlobalAdminAccount was specified. Connecting via User Principal"
         if ([System.String]::IsNullOrEmpty($Url))
@@ -1052,11 +1099,13 @@ function New-M365DSCConnection
                 -ConnectionUrl $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
+        $data.Add("ConnectionType", "Credential")
+        Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
         return "Credential"
     }
     # Case only the ApplicationID and Credentials parameters are specified
     elseif ($null -ne $InboundParameters.GlobalAdminAccount -and `
-        -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
+            -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
     {
         Write-Verbose -Message "GlobalAdminAccount and ApplicationId were specified. Connecting via Delegated Service Principal"
         if ([System.String]::IsNullOrEmpty($url))
@@ -1074,13 +1123,15 @@ function New-M365DSCConnection
                 -ConnectionUrl $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
+        $data.Add("ConnectionType", "ServicePrincipal")
+        Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
         return 'ServicePrincipal'
     }
     # Case only the ServicePrincipal with Thumbprint parameters are specified
     elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
-        -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
-        -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
-        -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
+            -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
     {
         if ([System.String]::IsNullOrEmpty($url))
         {
@@ -1100,14 +1151,16 @@ function New-M365DSCConnection
                 -ConnectionUrl $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
+        $data.Add("ConnectionType", "ServicePrincipal")
+        Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
         return 'ServicePrincipal'
     }
     # Case only the ServicePrincipal with Thumbprint parameters are specified
     elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
-        -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
-        -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
-        -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePath) -and `
-        $null -ne $InboundParameters.CertificatePassword)
+            -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePath) -and `
+            $null -ne $InboundParameters.CertificatePassword)
     {
         if ([System.String]::IsNullOrEmpty($url))
         {
@@ -1129,11 +1182,17 @@ function New-M365DSCConnection
                 -ConnectionUrl $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
+        $data.Add("ConnectionType", "ServicePrincipal")
+        Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
         return 'ServicePrincipal'
     }
     else
     {
-        throw 'Unexpected error getting the Authentication Method'
+        $data.Add("Event", "Error")
+        $errorText = 'Unexpected error getting the Authentication Method'
+        $data.Add("CustomMessage", $errorText)
+        Add-M365DSCTelemetryEvent -Data $data -Type "Error"
+        throw $errorText
     }
 }
 
@@ -1160,7 +1219,7 @@ function Get-SPOAdministrationUrl
     }
     Write-Verbose -Message "Connection to Azure AD is required to automatically determine SharePoint Online admin URL..."
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
-                -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters
     Write-Verbose -Message "Getting SharePoint Online admin URL..."
     $defaultDomain = Get-AzureADDomain | Where-Object { ($_.Name -like "*.onmicrosoft.com" -or $_.Name -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
 
@@ -1200,7 +1259,7 @@ function Get-M365TenantName
     }
     Write-Verbose -Message "Connection to Azure AD is required to automatically determine SharePoint Online admin URL..."
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
-                -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters
     Write-Verbose -Message "Getting SharePoint Online admin URL..."
     $defaultDomain = Get-AzureADDomain | Where-Object { ($_.Name -like "*.onmicrosoft.com" -or $_.Name -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
 
@@ -1385,9 +1444,11 @@ function Install-M365DSCDevBranch
     [CmdletBinding()]
     param()
     #region Download and Extract Dev branch's ZIP
+    Write-Host "Downloading the Zip package..." -NoNewline
     $url = "https://github.com/microsoft/Microsoft365DSC/archive/Dev.zip"
     $output = "$($env:Temp)\dev.zip"
     $extractPath = $env:Temp + "\O365Dev"
+    Write-Host "Done" -ForegroundColor Green
 
     Invoke-WebRequest -Uri $url -OutFile $output
 
@@ -1399,19 +1460,41 @@ function Install-M365DSCDevBranch
     $dependencies = $manifest.RequiredModules
     foreach ($dependency in $dependencies)
     {
-        Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -AllowClobber
-        Import-Module $dependency.ModuleName -Force
+        Write-Host "Installing {$($dependency.ModuleName)}..." -NoNewline
+        $existingModule = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
+        if ($null -eq $existingModule)
+        {
+            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -AllowClobber | Out-Null
+        }
+        Import-Module $dependency.ModuleName -Force | Out-Null
+        Write-Host "Done" -ForegroundColor Green
     }
     #endregion
 
     #region Install M365DSC
+    Write-Host "Updating the Core Microsoft365DSC module..." -NoNewline
     $defaultPath = 'C:\Program Files\WindowsPowerShell\Modules\Microsoft365DSC\'
     $currentVersionPath = $defaultPath + ([Version]$($manifest.ModuleVersion)).ToString()
+
+    Copy-Item "$extractPath\Microsoft365DSC-Dev\Modules\Microsoft365DSC\*" `
+        -Destination $defaultPath -Recurse -Force
+
+    Import-Module ($defaultPath + "Microsoft365DSC.psd1") -Force | Out-Null
+    $oldModule = Get-Module 'Microsoft365DSC' | Where-Object -FilterScript { $_.ModuleBase -eq $currentVersionPath }
+    Remove-Module $oldModule -Force | Out-Null
     if (Test-Path $currentVersionPath)
     {
-        Remove-Item $currentVersionPath -Recurse -Confirm:$false
+        try
+        {
+            Remove-Item $currentVersionPath -Recurse -Confirm:$false -Force `
+                -ErrorAction Stop
+        }
+        catch
+        {
+            Write-Verbose $_
+        }
     }
-    Copy-Item "$extractPath\Microsoft365DSC-Dev\Modules\Microsoft365DSC" -Destination $currentVersionPath -Recurse -Force
+    Write-Host "Done" -ForegroundColor Green
     #endregion
 }
 
@@ -1446,13 +1529,13 @@ function Get-AllSPOPackages
     )
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters
 
     $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters `
-                -Url $tenantAppCatalogUrl
+        -InboundParameters $PSBoundParameters `
+        -Url $tenantAppCatalogUrl
 
     $filesToDownload = @()
 
@@ -1520,71 +1603,8 @@ function Assert-M365DSCTemplate
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    if (([System.String]::IsNullOrEmpty($TemplatePath) -and [System.String]::IsNullOrEmpty($TemplateName)) -or
-        (-not [System.String]::IsNullOrEmpty($TemplatePath) -and -not [System.String]::IsNullOrEmpty($TemplateName)))
-    {
-        throw "You need to one of either TemplatePath or TemplateName"
-    }
-    if (-not [System.String]::IsNullOrEmpty($TemplateName))
-    {
-        try
-        {
-            $TemplatePath = Join-Path -Path $env:Temp -ChildPath "$TemplateName.M365"
-            $url = "https://office365dsc.blob.core.windows.net/office365dsc/Templates/$TemplateName.M365"
-            Invoke-WebRequest -Uri $url -OutFile $TemplatePath
-        }
-        catch
-        {
-            throw $_
-        }
-    }
-    if ((Test-Path -Path $TemplatePath) -and ($TemplatePath -like '*.m365' -or $TemplatePath -like '*.ps1'))
-    {
-        $tokens = $null
-        $errors = $null
-        $ast = [System.Management.Automation.Language.Parser]::ParseFile($TemplatePath, [ref] $tokens, [ref] $errors)
-        $configObject = $ast.FindAll( { $args[0] -is [System.Management.Automation.Language.ConfigurationDefinitionAST] }, $true)
-
-        $configurationName = $configObject.InstanceName.ToString()
-        $configContent = $configObject.Extent.ToString()
-
-        $configDataString = "`$configData = @{ `
-            AllNodes = @( `
-                @{ `
-                    NodeName                    = 'localhost' `
-                    PSDscAllowPlainTextPassword = `$true; `
-                    PSDscAllowDomainUser        = `$true; `
-                } `
-            ) `
-        }"
-        $configContent += "`r`n" + $configDataString + "`r`n"
-        $configContent += "`$compileResults = " + $ConfigurationName + " -ConfigurationData `$ConfigData`r`n"
-        $configContent += "`$testResults = Test-DSCConfiguration -ReferenceConfiguration `$compileResults.FullName`r`n"
-
-        $configContent += "if (`$testResults.InDesiredState)`r`n"
-        $configContent += "{`r`n"
-        $configContent += "    Write-Host 'The template was validated against the environment. The tenant is in the Desired State.' -ForeGroundColor Green"
-        $configContent += "}`r`n"
-        $configContent += "elseif (-not `$testResults.InDesiredState)`r`n"
-        $configContent += "{`r`n"
-        $configContent += "    Write-Host 'The environment does not match the template. The following component(s) are not in the Desired State:' -Foreground Red`r`n"
-        $configContent += "    foreach (`$component in `$testResults.ResourcesNotInDesiredState){Write-Host `"    -> `$(`$component.ResourceId)`" -Foreground Red}`r`n"
-        $configContent += "}`r`n"
-
-        $randomName = (New-GUID).ToString() + '.ps1'
-        $tempScriptLocation = Join-Path -Path $env:Temp -ChildPath $randomName
-        $configContent | Out-File $tempScriptLocation
-
-        & $tempScriptLocation
-    }
-    elseif (-not (Test-Path $TemplatePath))
-    {
-        Write-Error "M365DSC Template Path {$TemplatePath} does not exist."
-    }
-    else
-    {
-        Write-Error "You need to specify a path to an Microsoft365DSC Template (*.m365 or *.ps1)"
-    }
+    Write-Host $Global:M365DSCEmojiYellowCircle -NoNewline
+    Write-Host " Assert-M365DSCTemplate is deprecated. Please use the new improved Assert-M365DSCBlueprint cmdlet instead." -ForegroundColor Yellow
 }
 
 function Assert-M365DSCBlueprint
@@ -1694,17 +1714,17 @@ function Test-M365DSCDependenciesForNewVersions
         try
         {
             $moduleInGallery = Find-Module $dependency.ModuleName
-            [array]$moduleInstalled = Get-Module $dependency.ModuleName -ListAvailable | select Version
+            [array]$moduleInstalled = Get-Module $dependency.ModuleName -ListAvailable | Select-Object Version
             $modules = $moduleInstalled | Sort-Object Version -Descending
             $moduleInstalled = $modules[0]
             if ([Version]($moduleInGallery.Version) -gt [Version]($moduleInstalled[0].Version))
             {
-                Write-Information -MessageData "New version of {$($dependency.ModuleName)} is available {$($moduleInGallery.Version)}"
+                Write-Host "New version of {$($dependency.ModuleName)} is available {$($moduleInGallery.Version)}"
             }
         }
         catch
         {
-            Write-Information -MessageData "New version of {$($dependency.ModuleName)} is available"
+            Write-Host "New version of {$($dependency.ModuleName)} is available"
         }
         $i++
     }
@@ -1723,11 +1743,11 @@ function Update-M365DSCDependencies
         Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
         try
         {
-            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force
+            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force
         }
         catch
         {
-            Write-Information -MessageData "Could not update {$($dependency.ModuleName)}"
+            Write-Host "Could not update {$($dependency.ModuleName)}"
         }
         $i++
     }
@@ -2070,8 +2090,11 @@ function Get-M365DSCExportContentForResource
         $OrganizationName = $GlobalAdminAccount.UserName.Split('@')[1]
     }
 
-    $principal = $OrganizationName.Split('.')[0]
-    $content = "        $ResourceName " + (New-GUID).ToString() + "`r`n"
+    # Ensure the string properties are properly formatted;
+    $Results = Format-M365DSCString -Properties $Results `
+        -ResourceName $ResourceName
+
+    $content = "        $ResourceName " + (New-Guid).ToString() + "`r`n"
     $content += "        {`r`n"
     $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath
     if ($ConnectionMode -eq 'Credential')
@@ -2110,7 +2133,7 @@ function Get-M365DSCExportContentForResource
 
     if ($partialContent.ToLower().IndexOf($OrganizationName.ToLower()) -gt 0)
     {
-        $partialContent = $partialContent -ireplace [regex]::Escape($OrganizationName+":"), "`$($OrganizationName):"
+        $partialContent = $partialContent -ireplace [regex]::Escape($OrganizationName + ":"), "`$($OrganizationName):"
         $partialContent = $partialContent -ireplace [regex]::Escape($OrganizationName), "`$OrganizationName"
         $partialContent = $partialContent -ireplace [regex]::Escape("@" + $OrganizationName), "@`$OrganizationName"
     }
@@ -2129,11 +2152,25 @@ function Test-M365DSCNewVersionAvailable
         if ($null -eq $Global:M365DSCNewVersionNotification)
         {
             # Get current module used
-            $currentVersion = Get-Module 'Microsoft365DSC'
+            $currentVersion = Get-Module 'Microsoft365DSC' -ErrorAction Stop
 
             # Get module in the Gallery
-            $GalleryVersion = Find-Module 'Microsoft365DSC'
-
+            $JobID = Start-Job { Find-Module 'Microsoft365DSC' -ErrorAction Stop }
+            $Timeout = $true
+            for ($i = 0; $i -lt 10; $i++)
+            {
+                if ((Get-Job $JobID.id).State -notmatch 'Running')
+                {
+                    $Timeout = $false
+                    break;
+                }
+                Start-Sleep -Seconds 1
+            }
+            if ($Timeout)
+            {
+                return
+            }
+            $GalleryVersion = Get-Job $JobID.id | Receive-Job
             if ([Version]($GalleryVersion.Version) -gt [Version]($currentVersion.Version))
             {
                 $message = "A NEWER VERSION OF MICROSOFT365DSC {v$($GalleryVersion.Version)} IS AVAILABLE IN THE POWERSHELL GALLERY. TO UPDATE, RUN:`r`nInstall-Module Microsoft365DSC -Force -AllowClobber"
@@ -2169,17 +2206,17 @@ function Get-M365DSCComponentsForAuthenticationType
     foreach ($resource in $modules)
     {
         Import-Module $resource.FullName -Force
-        $parameters = (Get-command 'Set-TargetResource').Parameters.Keys
+        $parameters = (Get-Command 'Set-TargetResource').Parameters.Keys
 
         # Case - Resource only supports AppID & GlobalAdmin
         if ($AuthenticationMethod.Contains("Application") -and `
-            $AuthenticationMethod.Contains("Credentials") -and `
-           ($parameters.Contains("ApplicationId") -and `
-            $parameters.Contains("GlobalAdminAccount") -and `
-            -not $parameters.Contains('CertificateThumbprint') -and `
-            -not $parameters.Contains('CertificatePath') -and `
-            -not $parameters.Contains('CertificatePassword') -and `
-            -not $parameters.Contains('TenantId')))
+                $AuthenticationMethod.Contains("Credentials") -and `
+            ($parameters.Contains("ApplicationId") -and `
+                    $parameters.Contains("GlobalAdminAccount") -and `
+                    -not $parameters.Contains('CertificateThumbprint') -and `
+                    -not $parameters.Contains('CertificatePath') -and `
+                    -not $parameters.Contains('CertificatePassword') -and `
+                    -not $parameters.Contains('TenantId')))
         {
             $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
         }
@@ -2187,16 +2224,16 @@ function Get-M365DSCComponentsForAuthenticationType
         #Case - Resource certificate info and TenantId
         elseif ($AuthenticationMethod.Contains("Certificate") -and `
             ($parameters.Contains('CertificateThumbprint') -or `
-            $parameters.Contains('CertificatePath') -or `
-            $parameters.Contains('CertificatePassword')) -and `
-            $parameters.Contains('TenantId'))
+                    $parameters.Contains('CertificatePath') -or `
+                    $parameters.Contains('CertificatePassword')) -and `
+                $parameters.Contains('TenantId'))
         {
             $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
         }
 
         # Case - Resource contains GlobalAdminAccount
         elseif ($AuthenticationMethod.Contains("Credentials") -and `
-            $parameters.Contains('GlobalAdminAccount'))
+                $parameters.Contains('GlobalAdminAccount'))
         {
             $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
         }
@@ -2219,4 +2256,29 @@ function Get-M365DSCAllResources
     }
 
     return $result
+}
+
+function Test-M365DSCObjectHasProperty
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true, Position = 1)]
+        [Object]
+        $Object,
+
+        [Parameter(Mandatory = $true, Position = 2)]
+        [String]
+        $PropertyName
+    )
+
+    if (([bool]($Object.PSobject.Properties.name -contains $PropertyName)) -eq $true)
+    {
+        if ($null -ne $Object.$PropertyName)
+        {
+            return $true
+        }
+    }
+    return $false
 }

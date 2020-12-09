@@ -3,9 +3,9 @@ on: [push,pull_request]
 
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  UnitTests:
     # The type of runner that the job will run on
-    runs-on: windows-latest
+    runs-on: self-hosted
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -35,7 +35,7 @@ jobs:
     - name: Run Test Harness
       shell : powershell
       run: |
-        Install-Module Pester -Force
+        Install-Module Pester -Force -SkipPublisherCheck -RequiredVersion 5.0.4
         [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);
         Import-Module './Tests/TestHarness.psm1' -Force;
         $MaximumFunctionCount = 9999

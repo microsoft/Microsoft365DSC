@@ -38,6 +38,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowUserEditMessage,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowUserTranslation,
 
         [Parameter()]
@@ -132,6 +136,7 @@ function Get-TargetResource
                 AllowUrlPreviews              = $policy.AllowUrlPreviews
                 AllowUserChat                 = $policy.AllowUserChat
                 AllowUserDeleteMessage        = $policy.AllowUserDeleteMessage
+                AllowUserEditMessage          = $policy.AllowUserEditMessage
                 AllowUserTranslation          = $policy.AllowUserTranslation
                 GiphyRatingType               = $policy.GiphyRatingType
                 ReadReceiptsEnabledType       = $policy.ReadReceiptsEnabledType
@@ -149,9 +154,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -192,6 +214,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowUserDeleteMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserEditMessage,
 
         [Parameter()]
         [System.Boolean]
@@ -279,7 +305,6 @@ function Set-TargetResource
     {
         Remove-CsTeamsMessagingPolicy -identity $curPolicy.Identity -force:$True
     }
-
 }
 
 function Test-TargetResource
@@ -319,6 +344,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowUserDeleteMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserEditMessage,
 
         [Parameter()]
         [System.Boolean]
@@ -373,6 +402,15 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of Teams messaging policy"
 
@@ -420,10 +458,10 @@ function Export-TargetResource
         $i = 1
         [array]$policies = Get-CsTeamsMessagingPolicy -ErrorAction Stop
         $content = ''
-        Write-Host "`r`n" -NoNewLine
+        Write-Host "`r`n" -NoNewline
         foreach ($policy in $policies)
         {
-            Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewLine
+            Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewline
             if ($policy.Identity.ToString().contains(":"))
             {
                 $currentIdentity = $policy.Identity.split(":")[1]
@@ -440,7 +478,7 @@ function Export-TargetResource
             }
             $result = Get-TargetResource @params
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $content += "        TeamsMessagingPolicy " + (New-GUID).ToString() + "`r`n"
+            $content += "        TeamsMessagingPolicy " + (New-Guid).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
@@ -452,9 +490,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }

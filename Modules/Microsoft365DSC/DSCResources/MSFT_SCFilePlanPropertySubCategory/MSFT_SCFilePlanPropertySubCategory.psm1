@@ -58,7 +58,7 @@ function Get-TargetResource
 
         $parentId = $parent.Guid
         $property = Get-FilePlanPropertySubCategory | Where-Object -FilterScript { $_.DisplayName -eq $Name -and `
-            $_.ParentId -eq $parentId }
+                $_.ParentId -eq $parentId }
 
         if ($null -eq $property)
         {
@@ -82,9 +82,26 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -146,7 +163,7 @@ function Set-TargetResource
         try
         {
             $property = Get-FilePlanPropertySubCategory | Where-Object -FilterScript { $_.DisplayName -eq $Name -and `
-                $_.ParentId -eq $parentId }
+                    $_.ParentId -eq $parentId }
             if ($property.Mode.ToString() -ne 'PendingDeletion')
             {
                 Remove-FilePlanPropertySubCategory -Identity $Name -Confirm:$false
@@ -160,7 +177,6 @@ function Set-TargetResource
         {
             New-M365DSCLogEntry  -Error $_ -Message $_ -Source $MyInvocation.MyCommand.ModuleName
         }
-
     }
 }
 
@@ -187,6 +203,15 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of SCFilePlanPropertySubCategory for $Name"
 
@@ -234,24 +259,24 @@ function Export-TargetResource
 
         $i = 1
         $dscContent = ""
-        Write-Host "`r`n" -NoNewLine
+        Write-Host "`r`n" -NoNewline
         foreach ($Property in $Properties)
         {
             $parent = Get-FilePlanPropertyCategory | Where-Object -FilterScript { $_.Guid -like "*$($property.ParentId)*" }
-            Write-Host "    |---[$i/$($Properties.Length)] $($Property.Name)" -NoNewLine
+            Write-Host "    |---[$i/$($Properties.Length)] $($Property.Name)" -NoNewline
             $Params = @{
-                Name                  = $Property.DisplayName
-                Category              = $parent.DisplayName
-                GlobalAdminAccount    = $GlobalAdminAccount
+                Name               = $Property.DisplayName
+                Category           = $parent.DisplayName
+                GlobalAdminAccount = $GlobalAdminAccount
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
+                -Results $Results
             $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                    -ConnectionMode $ConnectionMode `
-                    -ModulePath $PSScriptRoot `
-                    -Results $Results `
-                    -GlobalAdminAccount $GlobalAdminAccount
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
@@ -259,9 +284,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }

@@ -35,7 +35,7 @@ function Get-TargetResource
         $LiveCaptionsEnabledType = "DisabledUserOverride",
 
         [Parameter()]
-        [ValidateSet("OrganizerOnlyUserOverride","EveryoneInCompanyUserOverride","EveryoneUserOverride")]
+        [ValidateSet("OrganizerOnlyUserOverride", "EveryoneInCompanyUserOverride", "EveryoneUserOverride")]
         [System.String]
         $DesignatedPresenterRoleMode = "EveryoneUserOverride",
 
@@ -76,7 +76,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('EveryoneInCompany', 'Everyone', 'EveryoneInSameAndFederatedCompany')]
+        [ValidateSet('EveryoneInCompany', 'Everyone', 'EveryoneInSameAndFederatedCompany', 'OrganizerOnly')]
         $AutoAdmittedUsers,
 
         [Parameter()]
@@ -141,7 +141,7 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowOrganizersToOverrideLobbySettings,
-        
+
         [Parameter()]
         [System.String]
         [ValidateSet('TeamsAndSfb', 'Teams')]
@@ -155,7 +155,7 @@ function Get-TargetResource
         [System.String]
         [ValidateSet('Enabled', 'FederatedOnly', 'Disabled')]
         $AllowUserToJoinExternalMeeting,
-        
+
         [Parameter()]
         [ValidateSet("Disabled", "Enabled")]
         [System.String]
@@ -170,6 +170,19 @@ function Get-TargetResource
         [ValidateSet("Disabled", "Enabled")]
         [System.String]
         $StreamingAttendeeMode = "Enabled",
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBreakoutRooms,
+
+        [Parameter()]
+        [ValidateSet("Disabled", "Enabled")]
+        [System.String]
+        $TeamsCameraFarEndPTZMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeetingReactions,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -246,15 +259,35 @@ function Get-TargetResource
             AllowUserToJoinExternalMeeting             = $policy.AllowUserToJoinExternalMeeting
             EnrollUserOverride                         = $policy.EnrollUserOverride
             StreamingAttendeeMode                      = $policy.StreamingAttendeeMode
+            AllowBreakoutRooms                         = $policy.AllowBreakoutRooms
+            TeamsCameraFarEndPTZMode                   = $policy.TeamsCameraFarEndPTZMode
+            AllowMeetingReactions                      = $policy.AllowMeetingReactions
             Ensure                                     = "Present"
             GlobalAdminAccount                         = $GlobalAdminAccount
         }
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return $nullReturn
     }
 }
@@ -295,7 +328,7 @@ function Set-TargetResource
         $LiveCaptionsEnabledType = "DisabledUserOverride",
 
         [Parameter()]
-        [ValidateSet("OrganizerOnlyUserOverride","EveryoneInCompanyUserOverride","EveryoneUserOverride")]
+        [ValidateSet("OrganizerOnlyUserOverride", "EveryoneInCompanyUserOverride", "EveryoneUserOverride")]
         [System.String]
         $DesignatedPresenterRoleMode = "EveryoneUserOverride",
 
@@ -336,7 +369,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('EveryoneInCompany', 'Everyone', 'EveryoneInSameAndFederatedCompany')]
+        [ValidateSet('EveryoneInCompany', 'Everyone', 'EveryoneInSameAndFederatedCompany', 'OrganizerOnly')]
         $AutoAdmittedUsers,
 
         [Parameter()]
@@ -401,7 +434,7 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowOrganizersToOverrideLobbySettings,
-        
+
         [Parameter()]
         [System.String]
         [ValidateSet('TeamsAndSfb', 'Teams')]
@@ -415,7 +448,7 @@ function Set-TargetResource
         [System.String]
         [ValidateSet('Enabled', 'FederatedOnly', 'Disabled')]
         $AllowUserToJoinExternalMeeting,
-        
+
         [Parameter()]
         [ValidateSet("Disabled", "Enabled")]
         [System.String]
@@ -430,6 +463,19 @@ function Set-TargetResource
         [ValidateSet("Disabled", "Enabled")]
         [System.String]
         $StreamingAttendeeMode = "Enabled",
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBreakoutRooms,
+
+        [Parameter()]
+        [ValidateSet("Disabled", "Enabled")]
+        [System.String]
+        $TeamsCameraFarEndPTZMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeetingReactions,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -464,6 +510,13 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating a new Teams Meeting Policy {$Identity}"
+
+        # The AllowAnonymousUsersToDialOut is temporarly disabled. Therefore
+        # we can't create or update a policy with it and it needs to be removed;
+        if ($SetParameters.ContainsKey("AllowAnonymousUsersToDialOut"))
+        {
+            $SetParameters.Remove("AllowAnonymousUsersToDialOut") | Out-Null
+        }
         New-CsTeamsMeetingPolicy @SetParameters
     }
     elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
@@ -471,6 +524,13 @@ function Set-TargetResource
         # If we get here, it's because the Test-TargetResource detected a drift, therefore we always call
         # into the Set-CsTeamsMeetingPolicy cmdlet.
         Write-Verbose -Message "Updating settings for Teams Meeting Policy {$Identity}"
+
+        # The AllowAnonymousUsersToDialOut is temporarly disabled. Therefore
+        # we can't create or update a policy with it and it needs to be removed;
+        if ($SetParameters.ContainsKey("AllowAnonymousUsersToDialOut"))
+        {
+            $SetParameters.Remove("AllowAnonymousUsersToDialOut") | Out-Null
+        }
         Set-CsTeamsMeetingPolicy @SetParameters
     }
     elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
@@ -505,7 +565,7 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowPrivateMeetNow,
-        
+
         [Parameter()]
         [ValidateSet("Disabled", "Enabled")]
         [System.String]
@@ -517,7 +577,7 @@ function Test-TargetResource
         $LiveCaptionsEnabledType = "DisabledUserOverride",
 
         [Parameter()]
-        [ValidateSet("OrganizerOnlyUserOverride","EveryoneInCompanyUserOverride","EveryoneUserOverride")]
+        [ValidateSet("OrganizerOnlyUserOverride", "EveryoneInCompanyUserOverride", "EveryoneUserOverride")]
         [System.String]
         $DesignatedPresenterRoleMode = "EveryoneUserOverride",
 
@@ -558,7 +618,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('EveryoneInCompany', 'Everyone', 'EveryoneInSameAndFederatedCompany')]
+        [ValidateSet('EveryoneInCompany', 'Everyone', 'EveryoneInSameAndFederatedCompany', 'OrganizerOnly')]
         $AutoAdmittedUsers,
 
         [Parameter()]
@@ -623,7 +683,7 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowOrganizersToOverrideLobbySettings,
-        
+
         [Parameter()]
         [System.String]
         [ValidateSet('TeamsAndSfb', 'Teams')]
@@ -637,7 +697,7 @@ function Test-TargetResource
         [System.String]
         [ValidateSet('Enabled', 'FederatedOnly', 'Disabled')]
         $AllowUserToJoinExternalMeeting,
-        
+
         [Parameter()]
         [ValidateSet("Disabled", "Enabled")]
         [System.String]
@@ -654,6 +714,19 @@ function Test-TargetResource
         $StreamingAttendeeMode = "Enabled",
 
         [Parameter()]
+        [System.Boolean]
+        $AllowBreakoutRooms,
+
+        [Parameter()]
+        [ValidateSet("Disabled", "Enabled")]
+        [System.String]
+        $TeamsCameraFarEndPTZMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeetingReactions,
+
+        [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
@@ -662,6 +735,15 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Testing configuration of Team Meeting Policy {$Identity}"
 
@@ -672,6 +754,10 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    # The AllowAnonymousUsersToDialOut is temporarly disabled. Therefore
+    # we can't create or update a policy with it and it needs to be removed;
+    $ValuesToCheck.Remove("AllowAnonymousUsersToDialOut") | Out-Null
+
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -710,17 +796,17 @@ function Export-TargetResource
         $i = 1
         [array]$policies = Get-CsTeamsMeetingPolicy -ErrorAction Stop
         $content = ''
-        Write-Host "`r`n" -NoNewLine
+        Write-Host "`r`n" -NoNewline
         foreach ($policy in $policies)
         {
-            Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewLine
+            Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewline
             $params = @{
                 Identity           = $policy.Identity
                 GlobalAdminAccount = $GlobalAdminAccount
             }
             $result = Get-TargetResource @params
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $content += "        TeamsMeetingPolicy " + (New-GUID).ToString() + "`r`n"
+            $content += "        TeamsMeetingPolicy " + (New-Guid).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
@@ -732,9 +818,26 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
         return ""
     }
 }
