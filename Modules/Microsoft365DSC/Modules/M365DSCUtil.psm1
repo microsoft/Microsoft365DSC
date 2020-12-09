@@ -1005,6 +1005,9 @@ function New-M365DSCConnection
         $SkipModuleReload = $false
     )
 
+    Write-Verbose -Message "Attempting connection to {$Platform} with:"
+    Write-Verbose -Message "$($InboundParameters | Out-String)"
+
     if ($SkipModuleReload -eq $true)
     {
         $Global:CurrentModeIsExport = $true

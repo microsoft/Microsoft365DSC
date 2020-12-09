@@ -24,6 +24,10 @@ function Get-TargetResource
         $TeamId,
 
         [Parameter()]
+        [System.String]
+        $TeamsApp,
+
+        [Parameter()]
         [System.UInt32]
         $SortOrderIndex,
 
@@ -133,6 +137,7 @@ function Get-TargetResource
             ChannelName           = $channelInstance.DisplayName
             SortOrderIndex        = $tabInstance.SortOrderIndex
             WebSiteUrl            = $tabInstance.WebUrl
+            TeamsApp              = $tabInstance.teamApp.id
             ApplicationId         = $ApplicationId
             TenantId              = $TenantID
             CertificateThumbprint = $CertificateThumbprint
@@ -190,6 +195,10 @@ function Set-TargetResource
         $TeamId,
 
         [Parameter()]
+        [System.String]
+        $TeamsApp,
+
+        [Parameter()]
         [System.UInt32]
         $SortOrderIndex,
 
@@ -242,21 +251,27 @@ function Set-TargetResource
         -Filter "DisplayName eq '$ChannelName'"
     $tabInstance = Get-MgTeamChannelTab -TeamId $tab.TeamId `
         -ChannelId $ChannelInstance.Id `
-        -Filter "DisplayName eq '$DisplayName"
+        -Filter "DisplayName eq '$DisplayName'"
     if ($Ensure -eq "Present" -and ($tab.Ensure -eq "Present"))
     {
         Write-Verbose -Message "Updating current instance of tab {$($tabInstance.DisplayName)}"
         $CurrentParameters.Add("ChannelId", $ChannelInstance.Id)
         $CurrentParameters.Add("TeamsTabId", $tabInstance.Id)
+        $CurrentParameters.Remove("TeamName") | Out-Null
+        $CurrentParameters.Remove("ChannelName") | Out-Null
         Update-MgTeamChannelTab @CurrentParameters | Out-Null
     }
-    elseif ($Ensure -eq "Present" -and ($team.Ensure -eq "Absent"))
+    elseif ($Ensure -eq "Present" -and ($tab.Ensure -eq "Absent"))
     {
         Write-Verbose -Message "Creating new tab {$DisplayName}"
+        Write-Verbose -Message "Params: $($CurrentParameters | Out-String)"
+        $CurrentParameters.Add("TeamsId", $tab.TeamId)
         $CurrentParameters.Add("ChannelId", $ChannelInstance.Id)
-        New-MgTeamChannelTab @CurrentParameters | Out-Null
+        $CurrentParameters.Remove("TeamName") | Out-Null
+        $CurrentParameters.Remove("ChannelName") | Out-Null
+        New-M365DSCTeamsChannelTab -Parameters $CurrentParameters
     }
-    elseif ($Ensure -eq "Absent" -and ($team.Ensure -eq "Present"))
+    elseif ($Ensure -eq "Absent" -and ($tab.Ensure -eq "Present"))
     {
         Write-Verbose -Message "Removing existing tab {$DisplayName}"
         $RemoveParams = @{
@@ -294,6 +309,10 @@ function Test-TargetResource
         $TeamId,
 
         [Parameter()]
+        [System.String]
+        $TeamsApp,
+
+        [Parameter()]
         [System.UInt32]
         $SortOrderIndex,
 
@@ -329,6 +348,7 @@ function Test-TargetResource
     #endregion
 
     Write-Verbose -Message "Testing configuration of Tab $DisplayName"
+    Write-Verbose -Message "Parameters: $($PSBoundParameters | Out-String)"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -479,6 +499,34 @@ function Export-TargetResource
         }
         return ""
     }
+}
+
+function New-M365DSCTeamsChannelTab
+{
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)]
+        [System.Collections.HashTable]
+        $Parameters
+    )
+
+    $jsonContent = @"
+    {
+        "displayName": "$($Parameters.DisplayName)",
+        "teamsApp@odata.bind": "$($Parameters.TeamsApp)",
+        "configuration": "{
+            "websiteUrl": "$($Parameters.WebSiteUrl)",
+            "contentUrl": "$($Parameters.WebSiteUrl)"
+        }
+    }
+"@
+    $Url = "https://graph.microsoft.com/v1.0/teams/$($Parameters.TeamId)/channel/$($Parameters.ChannelId)/tabs"
+    Write-Verbose -Message "Creating new Teams Tab with JSON payload: `r`n$JSONContent"
+    Write-Verbose -Message "POST to {$Url}"
+    Invoke-MgGraphRequest -Method POST `
+        -Uri $Url `
+        -Body $JSONContent `
+        -Headers @{"Content-Type" = "application/json" } | Out-Null
 }
 
 Export-ModuleMember -Function *-TargetResource
