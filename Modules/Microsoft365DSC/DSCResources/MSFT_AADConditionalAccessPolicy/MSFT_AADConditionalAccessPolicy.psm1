@@ -246,7 +246,26 @@ function Get-TargetResource
                     }
                     catch
                     {
-                        New-M365DSCLogEntry -Error "$_" -Message "Couldn't find user $IncludeUserGUID , that is defined in policy $PolicyDisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                        try
+                        {
+                            Write-Verbose -Message $_
+                            $tenantIdValue = ""
+                            if (-not [System.String]::IsNullOrEmpty($TenantId))
+                            {
+                                $tenantIdValue = $TenantId
+                            }
+                            elseif ($null -ne $GlobalAdminAccount)
+                            {
+                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                            }
+                            Add-M365DSCEvent -Message "Couldn't find user $IncludeUserGUID , that is defined in policy $PolicyDisplayName" -EntryType 'Error' `
+                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $tenantIdValue
+                        }
+                        catch
+                        {
+                            Write-Verbose -Message $_
+                        }
                     }
                     if ($IncludeUser)
                     {
@@ -277,7 +296,27 @@ function Get-TargetResource
                     }
                     catch
                     {
-                        New-M365DSCLogEntry -Error "$_" -Message "Couldn't find user $ExcludeUserGUID , that is defined in policy $PolicyDisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                        $Message = "Couldn't find user $ExcludeUserGUID , that is defined in policy $PolicyDisplayName"
+                        try
+                        {
+                            Write-Verbose -Message $Message
+                            $tenantIdValue = ""
+                            if (-not [System.String]::IsNullOrEmpty($TenantId))
+                            {
+                                $tenantIdValue = $TenantId
+                            }
+                            elseif ($null -ne $GlobalAdminAccount)
+                            {
+                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                            }
+                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $tenantIdValue
+                        }
+                        catch
+                        {
+                            Write-Verbose -Message $_
+                        }
                     }
                     if ($ExcludeUser)
                     {
@@ -306,7 +345,27 @@ function Get-TargetResource
                 }
                 catch
                 {
-                    New-M365DSCLogEntry -Error "$_" -Message "Couldn't find Group $IncludeGroupGUID , that is defined in policy $PolicyDisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                    $Message = "Couldn't find Group $IncludeGroupGUID , that is defined in policy $PolicyDisplayName"
+                    try
+                        {
+                            Write-Verbose -Message $Message
+                            $tenantIdValue = ""
+                            if (-not [System.String]::IsNullOrEmpty($TenantId))
+                            {
+                                $tenantIdValue = $TenantId
+                            }
+                            elseif ($null -ne $GlobalAdminAccount)
+                            {
+                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                            }
+                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $tenantIdValue
+                        }
+                        catch
+                        {
+                            Write-Verbose -Message $_
+                        }
                 }
                 if ($IncludeGroup)
                 {
@@ -330,7 +389,27 @@ function Get-TargetResource
                 }
                 catch
                 {
-                    New-M365DSCLogEntry -Error "$_" -Message "Couldn't find Group $ExcludeGroupGUID , that is defined in policy $PolicyDisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                    $Message = "Couldn't find Group $ExcludeGroupGUID , that is defined in policy $PolicyDisplayName"
+                    try
+                        {
+                            Write-Verbose -Message $Message
+                            $tenantIdValue = ""
+                            if (-not [System.String]::IsNullOrEmpty($TenantId))
+                            {
+                                $tenantIdValue = $TenantId
+                            }
+                            elseif ($null -ne $GlobalAdminAccount)
+                            {
+                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                            }
+                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $tenantIdValue
+                        }
+                        catch
+                        {
+                            Write-Verbose -Message $_
+                        }
                 }
                 if ($ExcludeGroup)
                 {
@@ -361,7 +440,27 @@ function Get-TargetResource
                 {
                     if ($null -eq $rolelookup[$IncludeRoleGUID])
                     {
-                        New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find role $IncludeRoleGUID , couldn't add to policy $PolicyDisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                        $Message = "Couldn't find role $IncludeRoleGUID , couldn't add to policy $PolicyDisplayName"
+                        try
+                            {
+                                Write-Verbose -Message $Message
+                                $tenantIdValue = ""
+                                if (-not [System.String]::IsNullOrEmpty($TenantId))
+                                {
+                                    $tenantIdValue = $TenantId
+                                }
+                                elseif ($null -ne $GlobalAdminAccount)
+                                {
+                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                }
+                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                    -TenantId $tenantIdValue
+                            }
+                            catch
+                            {
+                                Write-Verbose -Message $_
+                            }                            
                     }
                     else
                     {
@@ -378,7 +477,28 @@ function Get-TargetResource
                 {
                     if ($null -eq $rolelookup[$ExcludeRoleGUID])
                     {
-                        New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find role $ExcludeRoleGUID , couldn't add to policy $PolicyDisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                        $Message = "Couldn't find role $ExcludeRoleGUID , couldn't add to policy $PolicyDisplayName"
+                        try
+                            {
+                                Write-Verbose -Message $Message
+                                $tenantIdValue = ""
+                                if (-not [System.String]::IsNullOrEmpty($TenantId))
+                                {
+                                    $tenantIdValue = $TenantId
+                                }
+                                elseif ($null -ne $GlobalAdminAccount)
+                                {
+                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                }
+                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                    -TenantId $tenantIdValue
+                            }
+                            catch
+                            {
+                                Write-Verbose -Message $_
+                            }
+    
                     }
                     else
                     {
@@ -414,7 +534,28 @@ function Get-TargetResource
                     }
                     elseif ($null -eq $Locationlookup[$IncludeLocationGUID])
                     {
-                        New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find Location $IncludeLocationGUID , couldn't add to policy $PolicyDisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                        $Message = "Couldn't find Location $IncludeLocationGUID , couldn't add to policy $PolicyDisplayName"
+                        try
+                            {
+                                Write-Verbose -Message $Message
+                                $tenantIdValue = ""
+                                if (-not [System.String]::IsNullOrEmpty($TenantId))
+                                {
+                                    $tenantIdValue = $TenantId
+                                }
+                                elseif ($null -ne $GlobalAdminAccount)
+                                {
+                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                }
+                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                    -TenantId $tenantIdValue
+                            }
+                            catch
+                            {
+                                Write-Verbose -Message $_
+                            }
+    
                     }
                     else
                     {
@@ -435,7 +576,28 @@ function Get-TargetResource
                     }
                     elseif ($null -eq $Locationlookup[$ExcludeLocationGUID])
                     {
-                        New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find Location $ExcludeLocationGUID , couldn't add to policy $PolicyDisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                        $Message = "Couldn't find Location $ExcludeLocationGUID , couldn't add to policy $PolicyDisplayName"
+                        try
+                            {
+                                Write-Verbose -Message $Message
+                                $tenantIdValue = ""
+                                if (-not [System.String]::IsNullOrEmpty($TenantId))
+                                {
+                                    $tenantIdValue = $TenantId
+                                }
+                                elseif ($null -ne $GlobalAdminAccount)
+                                {
+                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                }
+                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                    -TenantId $tenantIdValue
+                            }
+                            catch
+                            {
+                                Write-Verbose -Message $_
+                            }
+    
                     }
                     else
                     {
@@ -746,11 +908,54 @@ function Set-TargetResource
                     { $userguid = (Get-AzureADUser -ObjectId $includeuser).ObjectId
                     }
                     catch
-                    { New-M365DSCLogEntry -Error $_ -Source $MyInvocation.MyCommand.ModuleName
+                    {
+                        $Message = $_
+                        try
+                            {
+                                Write-Verbose -Message $Message
+                                $tenantIdValue = ""
+                                if (-not [System.String]::IsNullOrEmpty($TenantId))
+                                {
+                                    $tenantIdValue = $TenantId
+                                }
+                                elseif ($null -ne $GlobalAdminAccount)
+                                {
+                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                }
+                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                    -TenantId $tenantIdValue
+                            }
+                            catch
+                            {
+                                Write-Verbose -Message $_
+                            }
+      
                     }
                     if ($null -eq $userguid)
                     {
-                        New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find user $includeuser , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                        $Message = "Couldn't find user $includeuser , couldn't add to policy $DisplayName"
+                        try
+                            {
+                                Write-Verbose -Message $Message
+                                $tenantIdValue = ""
+                                if (-not [System.String]::IsNullOrEmpty($TenantId))
+                                {
+                                    $tenantIdValue = $TenantId
+                                }
+                                elseif ($null -ne $GlobalAdminAccount)
+                                {
+                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                }
+                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                    -TenantId $tenantIdValue
+                            }
+                            catch
+                            {
+                                Write-Verbose -Message $_
+                            }
+    
                     }
                     else
                     {
@@ -776,11 +981,54 @@ function Set-TargetResource
                     { $userguid = (Get-AzureADUser -ObjectId $excludeuser).ObjectId
                     }
                     catch
-                    { New-M365DSCLogEntry -Error $_ -Source $MyInvocation.MyCommand.ModuleName
+                    {
+                        $Message = $_
+                        try
+                            {
+                                Write-Verbose -Message $Message
+                                $tenantIdValue = ""
+                                if (-not [System.String]::IsNullOrEmpty($TenantId))
+                                {
+                                    $tenantIdValue = $TenantId
+                                }
+                                elseif ($null -ne $GlobalAdminAccount)
+                                {
+                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                }
+                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                    -TenantId $tenantIdValue
+                            }
+                            catch
+                            {
+                                Write-Verbose -Message $_
+                            }
+        
                     }
                     if ($null -eq $userguid)
                     {
-                        New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find user $excludeuser , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                        $Message = "Couldn't find user $excludeuser , couldn't add to policy $DisplayName"
+                        try
+                            {
+                                Write-Verbose -Message $Message
+                                $tenantIdValue = ""
+                                if (-not [System.String]::IsNullOrEmpty($TenantId))
+                                {
+                                    $tenantIdValue = $TenantId
+                                }
+                                elseif ($null -ne $GlobalAdminAccount)
+                                {
+                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                }
+                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                    -TenantId $tenantIdValue
+                            }
+                            catch
+                            {
+                                Write-Verbose -Message $_
+                            }
+    
                     }
                     else
                     {
@@ -805,16 +1053,78 @@ function Set-TargetResource
                 }
                 catch
                 { 
-                    New-M365DSCLogEntry -Error $_ -Source $MyInvocation.MyCommand.ModuleName
+                    $Message = $_
+                    try
+                        {
+                            Write-Verbose -Message $Message
+                            $tenantIdValue = ""
+                            if (-not [System.String]::IsNullOrEmpty($TenantId))
+                            {
+                                $tenantIdValue = $TenantId
+                            }
+                            elseif ($null -ne $GlobalAdminAccount)
+                            {
+                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                            }
+                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $tenantIdValue
+                        }
+                        catch
+                        {
+                            Write-Verbose -Message $_
+                        }
+
                     Write-Verbose -Message $_
                 }
                 if ($GroupLookup.Length -gt 1)
                 {
-                   New-M365DSCLogEntry -Error "Duplicate Object found" -Message "Duplicate group found with displayname $includegroup , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                   $Message = "Duplicate group found with displayname $includegroup , couldn't add to policy $DisplayName"
+                   try
+                       {
+                           Write-Verbose -Message $Message
+                           $tenantIdValue = ""
+                           if (-not [System.String]::IsNullOrEmpty($TenantId))
+                           {
+                               $tenantIdValue = $TenantId
+                           }
+                           elseif ($null -ne $GlobalAdminAccount)
+                           {
+                               $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                           }
+                           Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                               -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                               -TenantId $tenantIdValue
+                       }
+                       catch
+                       {
+                           Write-Verbose -Message $_
+                       }
                 }
                 elseif ($null -eq $GroupLookup)
                 {
-                    New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find group $includegroup , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                    $Message = "Couldn't find group $includegroup , couldn't add to policy $DisplayName"
+                    try
+                        {
+                            Write-Verbose -Message $Message
+                            $tenantIdValue = ""
+                            if (-not [System.String]::IsNullOrEmpty($TenantId))
+                            {
+                                $tenantIdValue = $TenantId
+                            }
+                            elseif ($null -ne $GlobalAdminAccount)
+                            {
+                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                            }
+                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $tenantIdValue
+                        }
+                        catch
+                        {
+                            Write-Verbose -Message $_
+                        }
+
                 }
                 else
                 {
@@ -835,16 +1145,78 @@ function Set-TargetResource
                 }
                 catch
                 { 
-                    New-M365DSCLogEntry -Error $_ -Source $MyInvocation.MyCommand.ModuleName
+                    $Message = $_
+                    try
+                        {
+                            Write-Verbose -Message $Message
+                            $tenantIdValue = ""
+                            if (-not [System.String]::IsNullOrEmpty($TenantId))
+                            {
+                                $tenantIdValue = $TenantId
+                            }
+                            elseif ($null -ne $GlobalAdminAccount)
+                            {
+                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                            }
+                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $tenantIdValue
+                        }
+                        catch
+                        {
+                            Write-Verbose -Message $_
+                        }
                     Write-Verbose -Message $_
                 }
                 if ($GroupLookup.Length -gt 1)
                 {
-                   New-M365DSCLogEntry -Error "Duplicate Object found" -Message "Duplicate group found with displayname $ExcludeGroup , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                   $Message = "Duplicate group found with displayname $ExcludeGroup , couldn't add to policy $DisplayName"
+                   try
+                       {
+                           Write-Verbose -Message $Message
+                           $tenantIdValue = ""
+                           if (-not [System.String]::IsNullOrEmpty($TenantId))
+                           {
+                               $tenantIdValue = $TenantId
+                           }
+                           elseif ($null -ne $GlobalAdminAccount)
+                           {
+                               $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                           }
+                           Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                               -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                               -TenantId $tenantIdValue
+                       }
+                       catch
+                       {
+                           Write-Verbose -Message $_
+                       }
+
                 }
                 elseif ($null -eq $GroupLookup)
                 {
-                    New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find group $ExcludeGroup , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                    $Message = "Couldn't find group $ExcludeGroup , couldn't add to policy $DisplayName"
+                    try
+                        {
+                            Write-Verbose -Message $Message
+                            $tenantIdValue = ""
+                            if (-not [System.String]::IsNullOrEmpty($TenantId))
+                            {
+                                $tenantIdValue = $TenantId
+                            }
+                            elseif ($null -ne $GlobalAdminAccount)
+                            {
+                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                            }
+                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $tenantIdValue
+                        }
+                        catch
+                        {
+                            Write-Verbose -Message $_
+                        }
+
                 }
                 else
                 {
@@ -867,7 +1239,28 @@ function Set-TargetResource
                 {
                     if ($null -eq $rolelookup[$IncludeRole])
                     {
-                        New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find role $IncludeRole , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                        $Message = "Couldn't find role $IncludeRole , couldn't add to policy $DisplayName"
+                        try
+                            {
+                                Write-Verbose -Message $Message
+                                $tenantIdValue = ""
+                                if (-not [System.String]::IsNullOrEmpty($TenantId))
+                                {
+                                    $tenantIdValue = $TenantId
+                                }
+                                elseif ($null -ne $GlobalAdminAccount)
+                                {
+                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                }
+                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                    -TenantId $tenantIdValue
+                            }
+                            catch
+                            {
+                                Write-Verbose -Message $_
+                            }
+    
                     }
                     else
                     {
@@ -890,7 +1283,28 @@ function Set-TargetResource
                 {
                     if ($null -eq $rolelookup[$ExcludeRole])
                     {
-                        New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find role $ExcludeRole , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                        $Message = "Couldn't find role $ExcludeRole , couldn't add to policy $DisplayName"
+                        try
+                            {
+                                Write-Verbose -Message $Message
+                                $tenantIdValue = ""
+                                if (-not [System.String]::IsNullOrEmpty($TenantId))
+                                {
+                                    $tenantIdValue = $TenantId
+                                }
+                                elseif ($null -ne $GlobalAdminAccount)
+                                {
+                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                }
+                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                    -TenantId $tenantIdValue
+                            }
+                            catch
+                            {
+                                Write-Verbose -Message $_
+                            }
+    
                     }
                     else
                     {
@@ -931,7 +1345,28 @@ function Set-TargetResource
                     }
                     elseif ($null -eq $LocationLookup[$IncludeLocation])
                     {
-                        New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find Location $IncludeLocation , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                        $Message = "Couldn't find Location $IncludeLocation , couldn't add to policy $DisplayName"
+                        try
+                            {
+                                Write-Verbose -Message $Message
+                                $tenantIdValue = ""
+                                if (-not [System.String]::IsNullOrEmpty($TenantId))
+                                {
+                                    $tenantIdValue = $TenantId
+                                }
+                                elseif ($null -ne $GlobalAdminAccount)
+                                {
+                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                }
+                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                    -TenantId $tenantIdValue
+                            }
+                            catch
+                            {
+                                Write-Verbose -Message $_
+                            }
+    
                     }
                     else
                     {
@@ -949,7 +1384,28 @@ function Set-TargetResource
                     }
                     elseif ($null -eq $LocationLookup[$ExcludeLocation])
                     {
-                        New-M365DSCLogEntry -Error "Object not found" -Message "Couldn't find Location $ExcludeLocation , couldn't add to policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+                        $Message = "Couldn't find Location $ExcludeLocation , couldn't add to policy $DisplayName"
+                        try
+                            {
+                                Write-Verbose -Message $Message
+                                $tenantIdValue = ""
+                                if (-not [System.String]::IsNullOrEmpty($TenantId))
+                                {
+                                    $tenantIdValue = $TenantId
+                                }
+                                elseif ($null -ne $GlobalAdminAccount)
+                                {
+                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                }
+                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                    -TenantId $tenantIdValue
+                            }
+                            catch
+                            {
+                                Write-Verbose -Message $_
+                            }
+    
                     }
                     else
                     {
@@ -1037,7 +1493,28 @@ function Set-TargetResource
         }
         catch
         {
-            New-M365DSCLogEntry -Error $_ -Message "Couldn't set policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+            $Message = $_
+            try
+                {
+                    Write-Verbose -Message $Message
+                    $tenantIdValue = ""
+                    if (-not [System.String]::IsNullOrEmpty($TenantId))
+                    {
+                        $tenantIdValue = $TenantId
+                    }
+                    elseif ($null -ne $GlobalAdminAccount)
+                    {
+                        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                    }
+                    Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $tenantIdValue
+                }
+                catch
+                {
+                    Write-Verbose -Message $_
+                }
+
             Write-Verbose -Message "Set-Targetresource: Failed change policy $DisplayName"
             Write-Verbose -Message $_
         }
@@ -1051,7 +1528,28 @@ function Set-TargetResource
         }
         catch
         {
-            New-M365DSCLogEntry -Error $_ -Message "Couldn't create Policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+            $Message = $_
+            try
+                {
+                    Write-Verbose -Message $Message
+                    $tenantIdValue = ""
+                    if (-not [System.String]::IsNullOrEmpty($TenantId))
+                    {
+                        $tenantIdValue = $TenantId
+                    }
+                    elseif ($null -ne $GlobalAdminAccount)
+                    {
+                        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                    }
+                    Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $tenantIdValue
+                }
+                catch
+                {
+                    Write-Verbose -Message $_
+                }
+
             Write-Verbose -Message "Set-Targetresource: Failed creating policy"
             Write-Verbose -Message $_
         }
@@ -1065,7 +1563,28 @@ function Set-TargetResource
         }
         catch
         {
-            New-M365DSCLogEntry -Error $_ -Message "Couldn't delete Policy $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+            $Message = $_
+            try
+                {
+                    Write-Verbose -Message $Message
+                    $tenantIdValue = ""
+                    if (-not [System.String]::IsNullOrEmpty($TenantId))
+                    {
+                        $tenantIdValue = $TenantId
+                    }
+                    elseif ($null -ne $GlobalAdminAccount)
+                    {
+                        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                    }
+                    Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $tenantIdValue
+                }
+                catch
+                {
+                    Write-Verbose -Message $_
+                }
+
             Write-Verbose -Message "Set-Targetresource: Failed deleting policy $DisplayName"
             Write-Verbose -Message $_
         }
