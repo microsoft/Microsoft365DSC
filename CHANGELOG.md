@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# 1.20.1216.1
+
+* O365User
+  * Added support for removing existing users with
+    Ensure = 'Absent';
+
 # 1.20.1209.1
 
 * IntuneAppProtectionPolicyiOS
