@@ -151,7 +151,7 @@ function Get-TargetResource
         return @{
             DisplayName           = $tabInstance.DisplayName
             TeamName              = $TeamName
-            TeamId                = $Team.GroupId
+            TeamId                = $teamInstance.GroupId
             ChannelName           = $channelInstance.DisplayName
             SortOrderIndex        = $tabInstance.SortOrderIndex
             WebSiteUrl            = $tabInstance.configuration.websiteUrl
@@ -228,6 +228,18 @@ function Set-TargetResource
         $WebSiteUrl,
 
         [Parameter()]
+        [System.String]
+        $EntityId,
+
+        [Parameter()]
+        [System.String]
+        $ContentUrl,
+
+        [Parameter()]
+        [System.String]
+        $RemoveUrl,
+
+        [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
@@ -268,8 +280,11 @@ function Set-TargetResource
     $CurrentParameters.Remove("TenantId") | Out-Null
     $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
 
+    Write-Verbose -Message "Retrieving Team Channel {$ChannelName} from Team {$($tab.TeamId)}"
     $ChannelInstance = Get-MgTeamChannel -TeamId $tab.TeamId `
         -Filter "DisplayName eq '$ChannelName'"
+
+    Write-Verbose -Message "Retrieving Tab {$DisplayName} from Channel {$($ChannelInstance.Id))} from Team {$($tab.TeamId)}"
     $tabInstance = Get-MgTeamChannelTab -TeamId $tab.TeamId `
         -ChannelId $ChannelInstance.Id `
         -Filter "DisplayName eq '$DisplayName'"
@@ -277,10 +292,10 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating current instance of tab {$($tabInstance.DisplayName)}"
         $CurrentParameters.Add("ChannelId", $ChannelInstance.Id)
-        $CurrentParameters.Add("TeamsTabId", $tabInstance.Id)
         $CurrentParameters.Remove("TeamName") | Out-Null
         $CurrentParameters.Remove("ChannelName") | Out-Null
-        Update-MgTeamChannelTab @CurrentParameters | Out-Null
+        Set-M365DSCTeamsChannelTab -Parameters $CurrentParameters `
+            -TabId $tabInstance.Id | Out-Null
     }
     elseif ($Ensure -eq "Present" -and ($tab.Ensure -eq "Absent"))
     {
@@ -340,6 +355,18 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $WebSiteUrl,
+
+        [Parameter()]
+        [System.String]
+        $EntityId,
+
+        [Parameter()]
+        [System.String]
+        $ContentUrl,
+
+        [Parameter()]
+        [System.String]
+        $RemoveUrl,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -535,18 +562,53 @@ function New-M365DSCTeamsChannelTab
     {
         "displayName": "$($Parameters.DisplayName)",
         "teamsApp@odata.bind": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/$($Parameters.TeamsApp)",
+        "sortOrderIndex": "$($Parameters.SortOrderIndex)",
         "configuration": {
             "websiteUrl": "$($Parameters.WebSiteUrl)",
-            "contentUrl": "$($Parameters.WebSiteUrl)",
-            "removeURL": null,
-            "entityId": null
+            "contentUrl": "$($Parameters.ContentUrl)",
+            "removeURL": "$($Parameters.RemoveUrl)",
+            "entityId": "$($Parameters.EntityId)"
         }
     }
 "@
-    $Url = "https://graph.microsoft.com/v1.0/teams/$($Parameters.TeamId)/channels/$($Parameters.ChannelId)/tabs"
+    $Url = "https://graph.microsoft.com/beta/teams/$($Parameters.TeamId)/channels/$($Parameters.ChannelId)/tabs"
     Write-Verbose -Message "Creating new Teams Tab with JSON payload: `r`n$JSONContent"
     Write-Verbose -Message "POST to {$Url}"
     Invoke-MgGraphRequest -Method POST `
+        -Uri $Url `
+        -Body $JSONContent `
+        -Headers @{"Content-Type" = "application/json" } | Out-Null
+}
+
+function Set-M365DSCTeamsChannelTab
+{
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)]
+        [System.Collections.HashTable]
+        $Parameters,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $TabID
+    )
+
+    $jsonContent = @"
+    {
+        "displayName": "$($Parameters.DisplayName)",
+        "sortOrderIndex": "$($Parameters.SortOrderIndex)",
+        "configuration": {
+            "websiteUrl": "$($Parameters.WebSiteUrl)",
+            "contentUrl": "$($Parameters.ContentUrl)",
+            "removeURL": "$($Parameters.RemoveUrl)",
+            "entityId": "$($Parameters.EntityId)"
+        }
+    }
+"@
+    $Url = "https://graph.microsoft.com/beta/teams/$($Parameters.TeamId)/channels/$($Parameters.ChannelId)/tabs/$tabId"
+    Write-Verbose -Message "Updating Teams Tab with JSON payload: `r`n$JSONContent"
+    Write-Verbose -Message "PATCH to {$Url}"
+    Invoke-MgGraphRequest -Method PATCH `
         -Uri $Url `
         -Body $JSONContent `
         -Headers @{"Content-Type" = "application/json" } | Out-Null
@@ -572,7 +634,7 @@ function Get-M365DSCTeamChannelTab
 
     $Url = "https://graph.microsoft.com/beta/teams/$TeamID/channels/$ChannelId/tabs?Expand=teamsApp&Filter=displayName eq '$($DisplayName.Replace("'","''"))'"
     Write-Verbose -Message "Retrieving tab with TeamsID {$TeamID} ChannelID {$ChannelID} DisplayName {$DisplayName}"
-    Write-Verbose -Message "Get to {$Url}"
+    Write-Verbose -Message "GET request to {$Url}"
     $response = Invoke-MgGraphRequest -Method GET `
         -Uri $Url `
         -Headers @{"Content-Type" = "application/json" }
