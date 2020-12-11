@@ -84,24 +84,12 @@
             RequiredVersion = "1.2.0"
         },
         @{
+            ModuleName      = "Microsoft.Graph.Teams"
+            RequiredVersion = "1.2.0"
+        },
+        @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
             RequiredVersion = "2.0.99"
-        },
-        @{
-            ModuleName      = "MicrosoftTeams"
-            RequiredVersion = "1.1.6"
-        },
-        @{
-            ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.42"
-        },
-        @{
-            ModuleName      = "MicrosoftTeams"
-            RequiredVersion = "1.1.6"
-        },
-        @{
-            ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.42"
         },
         @{
             ModuleName      = "MicrosoftTeams"

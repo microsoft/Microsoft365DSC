@@ -2,9 +2,13 @@
 
 # 1.20.1216.1
 
+* AADConditionalAccessPolicy
+  * Initial Release;
 * O365User
   * Added support for removing existing users with
     Ensure = 'Absent';
+* TeamsChannelTab
+  * Initial Release;
 
 # 1.20.1209.1
 
