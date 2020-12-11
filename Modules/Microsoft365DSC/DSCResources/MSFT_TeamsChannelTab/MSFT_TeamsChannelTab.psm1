@@ -36,6 +36,18 @@ function Get-TargetResource
         $WebSiteUrl,
 
         [Parameter()]
+        [System.String]
+        $EntityId,
+
+        [Parameter()]
+        [System.String]
+        $ContentUrl,
+
+        [Parameter()]
+        [System.String]
+        $RemoveUrl,
+
+        [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
@@ -120,9 +132,14 @@ function Get-TargetResource
 
         # Get the Channel Tab
         Write-Verbose -Message "Getting Tabs for Channel {$ChannelName}"
-        $tabInstance = Get-M365DSCTeamChannelTab -TeamId $teamInstance.GroupId `
+        [array]$tabInstance = Get-M365DSCTeamChannelTab -TeamId $teamInstance.GroupId `
             -ChannelId $channelInstance.Id `
             -DisplayName $DisplayName
+
+        if ($tabInstance.Length -gt 1)
+        {
+            throw "More than one instance of a tab with name {$DisplayName} was found."
+        }
 
         if ($null -eq $tabInstance)
         {
@@ -137,8 +154,11 @@ function Get-TargetResource
             TeamId                = $Team.GroupId
             ChannelName           = $channelInstance.DisplayName
             SortOrderIndex        = $tabInstance.SortOrderIndex
-            WebSiteUrl            = $tabInstance.WebUrl
-            TeamsApp              = $tabInstance.teamApp.id
+            WebSiteUrl            = $tabInstance.configuration.websiteUrl
+            ContentUrl            = $tabInstance.configuration.contentUrl
+            RemoveUrl             = $tabInstance.configuration.removeUrl
+            EntityId              = $tabInstance.configuration.entityId
+            TeamsApp              = $tabInstance.teamsApp.id
             ApplicationId         = $ApplicationId
             TenantId              = $TenantID
             CertificateThumbprint = $CertificateThumbprint
@@ -515,13 +535,15 @@ function New-M365DSCTeamsChannelTab
     {
         "displayName": "$($Parameters.DisplayName)",
         "teamsApp@odata.bind": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/$($Parameters.TeamsApp)",
-        "configuration": "{
+        "configuration": {
             "websiteUrl": "$($Parameters.WebSiteUrl)",
-            "contentUrl": "$($Parameters.WebSiteUrl)"
+            "contentUrl": "$($Parameters.WebSiteUrl)",
+            "removeURL": null,
+            "entityId": null
         }
     }
 "@
-    $Url = "https://graph.microsoft.com/v1.0/teams/$($Parameters.TeamId)/channel/$($Parameters.ChannelId)/tabs"
+    $Url = "https://graph.microsoft.com/v1.0/teams/$($Parameters.TeamId)/channels/$($Parameters.ChannelId)/tabs"
     Write-Verbose -Message "Creating new Teams Tab with JSON payload: `r`n$JSONContent"
     Write-Verbose -Message "POST to {$Url}"
     Invoke-MgGraphRequest -Method POST `
@@ -548,7 +570,7 @@ function Get-M365DSCTeamChannelTab
         $DisplayName
     )
 
-    $Url = "https://graph.microsoft.com/v1.0/teams/$TeamID/channels/$ChannelId/tabs?`$expand=teamsApp`&`$filter=displayName eq '$($DisplayName.Replace("'","''"))'"
+    $Url = "https://graph.microsoft.com/beta/teams/$TeamID/channels/$ChannelId/tabs?Expand=teamsApp&Filter=displayName eq '$($DisplayName.Replace("'","''"))'"
     Write-Verbose -Message "Retrieving tab with TeamsID {$TeamID} ChannelID {$ChannelID} DisplayName {$DisplayName}"
     Write-Verbose -Message "Get to {$Url}"
     $response = Invoke-MgGraphRequest -Method GET `
