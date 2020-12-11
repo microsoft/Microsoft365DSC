@@ -90,7 +90,11 @@ function Get-TargetResource
             if ([System.String]::IsNullOrEmpty($TeamId))
             {
                 Write-Verbose -Message "Getting team by Name {$TeamName}"
-                $teamInstance = Get-Team | Where-Object -FilterScript { $_.DisplayName -eq $TeamName }
+                [array]$teamInstance = Get-Team | Where-Object -FilterScript { $_.DisplayName -eq $TeamName }
+                if ($teamInstance.Length -gt 1)
+                {
+                    throw "Multiple Teams with name {$TeamName} were found. Please specify TeamId in your configuration instead."
+                }
             }
             else
             {
