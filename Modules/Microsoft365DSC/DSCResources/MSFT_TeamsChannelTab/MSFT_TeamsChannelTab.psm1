@@ -116,6 +116,8 @@ function Get-TargetResource
             throw $Message
         }
 
+        $nullReturn.TeamId = $teamInstance.GroupId
+
         $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
         # Get the Channel ID
@@ -124,7 +126,7 @@ function Get-TargetResource
 
         if ($null -eq $channelInstance)
         {
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            Add-M365DSCEvent -Message "Could not find Channels for Team {$($teamInstance.GroupId)}" -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
                 -TenantId $TenantID
             throw "Channel {$ChannelName} was not found."
@@ -284,16 +286,13 @@ function Set-TargetResource
     $ChannelInstance = Get-MgTeamChannel -TeamId $tab.TeamId `
         -Filter "DisplayName eq '$ChannelName'"
 
-    Write-Verbose -Message "Retrieving Tab {$DisplayName} from Channel {$($ChannelInstance.Id))} from Team {$($tab.TeamId)}"
-    $tabInstance = Get-MgTeamChannelTab -TeamId $tab.TeamId `
-        -ChannelId $ChannelInstance.Id `
-        -Filter "DisplayName eq '$DisplayName'"
     if ($Ensure -eq "Present" -and ($tab.Ensure -eq "Present"))
     {
-        Write-Verbose -Message "Updating current instance of tab {$($tabInstance.DisplayName)}"
-        $CurrentParameters.Add("ChannelId", $ChannelInstance.Id)
-        $CurrentParameters.Remove("TeamName") | Out-Null
-        $CurrentParameters.Remove("ChannelName") | Out-Null
+        Write-Verbose -Message "Retrieving Tab {$DisplayName} from Channel {$($ChannelInstance.Id))} from Team {$($tab.TeamId)}"
+        $tabInstance = Get-M365DSCTeamChannelTab -TeamId $tab.TeamId `
+            -ChannelId $ChannelInstance.Id `
+            -DisplayName $DisplayName
+
         Set-M365DSCTeamsChannelTab -Parameters $CurrentParameters `
             -TabId $tabInstance.Id | Out-Null
     }
@@ -309,6 +308,10 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq "Absent" -and ($tab.Ensure -eq "Present"))
     {
+        Write-Verbose -Message "Retrieving Tab {$DisplayName} from Channel {$($ChannelInstance.Id))} from Team {$($tab.TeamId)}"
+        $tabInstance = Get-M365DSCTeamChannelTab -TeamId $tab.TeamId `
+            -ChannelId $ChannelInstance.Id `
+            -DisplayName $DisplayName
         Write-Verbose -Message "Removing existing tab {$DisplayName}"
         $RemoveParams = @{
             ChannelId  = $ChannelInstance.Id
