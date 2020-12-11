@@ -28,7 +28,7 @@ Configuration Example
             ExcludeLocations          = @("Blocked Countries");
             ExcludePlatforms          = @("Windows", "WindowsPhone", "MacOS");
             ExcludeRoles              = @("Company Administrator", "Application Administrator", "Application Developer", "Cloud Application Administrator", "Cloud Device Administrator");
-            ExcludeUsers              = @("admin@$OrganizationName", "AAdmin@$OrganizationName", "CAAdmin@$OrganizationName", "AllanD@$OrganizationName", "AlexW@$OrganizationName", "GuestsOrExternalUsers");
+            ExcludeUsers              = @("admin@contoso.com", "AAdmin@contoso.com", "CAAdmin@contoso.com", "AllanD@contoso.com", "AlexW@contoso.com", "GuestsOrExternalUsers");
             GrantControlOperator      = "OR";
             IncludeApplications       = @("All");
             IncludeDeviceStates       = @("All");
