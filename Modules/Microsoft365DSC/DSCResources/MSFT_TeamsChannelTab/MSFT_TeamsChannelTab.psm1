@@ -120,8 +120,9 @@ function Get-TargetResource
 
         # Get the Channel Tab
         Write-Verbose -Message "Getting Tabs for Channel {$ChannelName}"
-        $tabInstance = Get-MgTeamChannelTab -TeamId $teamInstance.GroupId `
-            -ChannelId $channelInstance.Id | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
+        $tabInstance = Get-M365DSCTeamChannelTab -TeamId $teamInstance.GroupId `
+            -ChannelId $channelInstance.Id `
+            -DisplayName $DisplayName
 
         if ($null -eq $tabInstance)
         {
@@ -513,7 +514,7 @@ function New-M365DSCTeamsChannelTab
     $jsonContent = @"
     {
         "displayName": "$($Parameters.DisplayName)",
-        "teamsApp@odata.bind": "$($Parameters.TeamsApp)",
+        "teamsApp@odata.bind": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/$($Parameters.TeamsApp)",
         "configuration": "{
             "websiteUrl": "$($Parameters.WebSiteUrl)",
             "contentUrl": "$($Parameters.WebSiteUrl)"
@@ -527,6 +528,33 @@ function New-M365DSCTeamsChannelTab
         -Uri $Url `
         -Body $JSONContent `
         -Headers @{"Content-Type" = "application/json" } | Out-Null
+}
+
+function Get-M365DSCTeamChannelTab
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $TeamID,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ChannelId,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName
+    )
+
+    $Url = "https://graph.microsoft.com/v1.0/teams/$TeamID/channels/$ChannelId/tabs?`$expand=teamsApp`&`$filter=displayName eq '$($DisplayName.Replace("'","''"))'"
+    Write-Verbose -Message "Retrieving tab with TeamsID {$TeamID} ChannelID {$ChannelID} DisplayName {$DisplayName}"
+    Write-Verbose -Message "Get to {$Url}"
+    $response = Invoke-MgGraphRequest -Method GET `
+        -Uri $Url `
+        -Headers @{"Content-Type" = "application/json" }
+    return $response.value
 }
 
 Export-ModuleMember -Function *-TargetResource
