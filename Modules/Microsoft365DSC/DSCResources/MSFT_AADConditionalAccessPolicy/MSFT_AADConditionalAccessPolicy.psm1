@@ -30,11 +30,6 @@ function Get-TargetResource
         [System.String[]]
         $IncludeUserActions,
 
-        #[Parameter()]
-        #[System.String[]]
-        #$IncludeProtectionLevels,
-        #not exposed yet
-
         #ConditionalAccessUserCondition
         [Parameter()]
         [System.String[]]
@@ -104,56 +99,46 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('AND', 'OR')]
         [System.String]
-        $GrantControl_Operator,
+        $GrantControlOperator,
 
         [Parameter()]
         [System.String[]]
         $BuiltInControls,
 
-        #[Parameter()]
-        #[System.String[]]
-        #$CustomAuthenticationFactors,
-        #not exposed yet
-
-        #[Parameter()]
-        #[System.String[]]
-        #$TermsOfUse,
-        #not exposed yet
-
         #ConditionalAccessSessionControls
         [Parameter()]
         [System.Boolean]
-        $ApplicationEnforcedRestrictions_IsEnabled,
+        $ApplicationEnforcedRestrictionsIsEnabled,
 
         [Parameter()]
         [System.Boolean]
-        $CloudAppSecurity_IsEnabled,
+        $CloudAppSecurityIsEnabled,
 
         [Parameter()]
         [System.String]
-        $CloudAppSecurity_Type,
+        $CloudAppSecurityType,
 
         [Parameter()]
         [System.Int32]
-        $SignInFrequency_Value,
+        $SignInFrequencyValue,
 
         [Parameter()]
         [ValidateSet('Days', 'Hours', '')]
         [System.String]
-        $SignInFrequency_Type,
+        $SignInFrequencyType,
 
         [Parameter()]
         [System.Boolean]
-        $SignInFrequency_IsEnabled,
+        $SignInFrequencyIsEnabled,
 
         [Parameter()]
         [ValidateSet('Always', 'Never', '')]
         [System.String]
-        $PersistentBrowser_Mode,
+        $PersistentBrowserMode,
 
         [Parameter()]
         [System.Boolean]
-        $PersistentBrowser_IsEnabled,
+        $PersistentBrowserIsEnabled,
 
         #generic
         [Parameter()]
@@ -347,25 +332,25 @@ function Get-TargetResource
                 {
                     $Message = "Couldn't find Group $IncludeGroupGUID , that is defined in policy $PolicyDisplayName"
                     try
+                    {
+                        Write-Verbose -Message $Message
+                        $tenantIdValue = ""
+                        if (-not [System.String]::IsNullOrEmpty($TenantId))
                         {
-                            Write-Verbose -Message $Message
-                            $tenantIdValue = ""
-                            if (-not [System.String]::IsNullOrEmpty($TenantId))
-                            {
-                                $tenantIdValue = $TenantId
-                            }
-                            elseif ($null -ne $GlobalAdminAccount)
-                            {
-                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                            }
-                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                                -TenantId $tenantIdValue
+                            $tenantIdValue = $TenantId
                         }
-                        catch
+                        elseif ($null -ne $GlobalAdminAccount)
                         {
-                            Write-Verbose -Message $_
+                            $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
                         }
+                        Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $tenantIdValue
+                    }
+                    catch
+                    {
+                        Write-Verbose -Message $_
+                    }
                 }
                 if ($IncludeGroup)
                 {
@@ -391,25 +376,25 @@ function Get-TargetResource
                 {
                     $Message = "Couldn't find Group $ExcludeGroupGUID , that is defined in policy $PolicyDisplayName"
                     try
+                    {
+                        Write-Verbose -Message $Message
+                        $tenantIdValue = ""
+                        if (-not [System.String]::IsNullOrEmpty($TenantId))
                         {
-                            Write-Verbose -Message $Message
-                            $tenantIdValue = ""
-                            if (-not [System.String]::IsNullOrEmpty($TenantId))
-                            {
-                                $tenantIdValue = $TenantId
-                            }
-                            elseif ($null -ne $GlobalAdminAccount)
-                            {
-                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                            }
-                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                                -TenantId $tenantIdValue
+                            $tenantIdValue = $TenantId
                         }
-                        catch
+                        elseif ($null -ne $GlobalAdminAccount)
                         {
-                            Write-Verbose -Message $_
+                            $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
                         }
+                        Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $tenantIdValue
+                    }
+                    catch
+                    {
+                        Write-Verbose -Message $_
+                    }
                 }
                 if ($ExcludeGroup)
                 {
@@ -442,25 +427,25 @@ function Get-TargetResource
                     {
                         $Message = "Couldn't find role $IncludeRoleGUID , couldn't add to policy $PolicyDisplayName"
                         try
+                        {
+                            Write-Verbose -Message $Message
+                            $tenantIdValue = ""
+                            if (-not [System.String]::IsNullOrEmpty($TenantId))
                             {
-                                Write-Verbose -Message $Message
-                                $tenantIdValue = ""
-                                if (-not [System.String]::IsNullOrEmpty($TenantId))
-                                {
-                                    $tenantIdValue = $TenantId
-                                }
-                                elseif ($null -ne $GlobalAdminAccount)
-                                {
-                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                                }
-                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                                    -TenantId $tenantIdValue
+                                $tenantIdValue = $TenantId
                             }
-                            catch
+                            elseif ($null -ne $GlobalAdminAccount)
                             {
-                                Write-Verbose -Message $_
-                            }                            
+                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                            }
+                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $tenantIdValue
+                        }
+                        catch
+                        {
+                            Write-Verbose -Message $_
+                        }
                     }
                     else
                     {
@@ -479,26 +464,25 @@ function Get-TargetResource
                     {
                         $Message = "Couldn't find role $ExcludeRoleGUID , couldn't add to policy $PolicyDisplayName"
                         try
+                        {
+                            Write-Verbose -Message $Message
+                            $tenantIdValue = ""
+                            if (-not [System.String]::IsNullOrEmpty($TenantId))
                             {
-                                Write-Verbose -Message $Message
-                                $tenantIdValue = ""
-                                if (-not [System.String]::IsNullOrEmpty($TenantId))
-                                {
-                                    $tenantIdValue = $TenantId
-                                }
-                                elseif ($null -ne $GlobalAdminAccount)
-                                {
-                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                                }
-                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                                    -TenantId $tenantIdValue
+                                $tenantIdValue = $TenantId
                             }
-                            catch
+                            elseif ($null -ne $GlobalAdminAccount)
                             {
-                                Write-Verbose -Message $_
+                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
                             }
-    
+                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $tenantIdValue
+                        }
+                        catch
+                        {
+                            Write-Verbose -Message $_
+                        }
                     }
                     else
                     {
@@ -536,26 +520,25 @@ function Get-TargetResource
                     {
                         $Message = "Couldn't find Location $IncludeLocationGUID , couldn't add to policy $PolicyDisplayName"
                         try
+                        {
+                            Write-Verbose -Message $Message
+                            $tenantIdValue = ""
+                            if (-not [System.String]::IsNullOrEmpty($TenantId))
                             {
-                                Write-Verbose -Message $Message
-                                $tenantIdValue = ""
-                                if (-not [System.String]::IsNullOrEmpty($TenantId))
-                                {
-                                    $tenantIdValue = $TenantId
-                                }
-                                elseif ($null -ne $GlobalAdminAccount)
-                                {
-                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                                }
-                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                                    -TenantId $tenantIdValue
+                                $tenantIdValue = $TenantId
                             }
-                            catch
+                            elseif ($null -ne $GlobalAdminAccount)
                             {
-                                Write-Verbose -Message $_
+                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
                             }
-    
+                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $tenantIdValue
+                        }
+                        catch
+                        {
+                            Write-Verbose -Message $_
+                        }
                     }
                     else
                     {
@@ -578,26 +561,25 @@ function Get-TargetResource
                     {
                         $Message = "Couldn't find Location $ExcludeLocationGUID , couldn't add to policy $PolicyDisplayName"
                         try
+                        {
+                            Write-Verbose -Message $Message
+                            $tenantIdValue = ""
+                            if (-not [System.String]::IsNullOrEmpty($TenantId))
                             {
-                                Write-Verbose -Message $Message
-                                $tenantIdValue = ""
-                                if (-not [System.String]::IsNullOrEmpty($TenantId))
-                                {
-                                    $tenantIdValue = $TenantId
-                                }
-                                elseif ($null -ne $GlobalAdminAccount)
-                                {
-                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                                }
-                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                                    -TenantId $tenantIdValue
+                                $tenantIdValue = $TenantId
                             }
-                            catch
+                            elseif ($null -ne $GlobalAdminAccount)
                             {
-                                Write-Verbose -Message $_
+                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
                             }
-    
+                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $tenantIdValue
+                        }
+                        catch
+                        {
+                            Write-Verbose -Message $_
+                        }
                     }
                     else
                     {
@@ -610,70 +592,68 @@ function Get-TargetResource
         }
 
         $result = @{
-            DisplayName                               = $Policy.DisplayName
-            Id                                        = $Policy.Id
-            State                                     = $Policy.State
-            IncludeApplications                       = [System.String[]]$Policy.Conditions.Applications.IncludeApplications
+            DisplayName                              = $Policy.DisplayName
+            Id                                       = $Policy.Id
+            State                                    = $Policy.State
+            IncludeApplications                      = [System.String[]]$Policy.Conditions.Applications.IncludeApplications
             #no translation of Application GUIDs
-            ExcludeApplications                       = [System.String[]]$Policy.Conditions.Applications.ExcludeApplications
+            ExcludeApplications                      = [System.String[]]$Policy.Conditions.Applications.ExcludeApplications
             #no translation of GUIDs
-            IncludeUserActions                        = [System.String[]]$Policy.Conditions.Applications.IncludeUserActions
+            IncludeUserActions                       = [System.String[]]$Policy.Conditions.Applications.IncludeUserActions
             #no translation needed
-            #IncludeProtectionLevels      = [System.String[]]$Policy.Conditions.Applications.IncludeProtectionLevels
-            IncludeUsers                              = $IncludeUsers
-            ExcludeUsers                              = $ExcludeUsers
-            IncludeGroups                             = $IncludeGroups
-            ExcludeGroups                             = $ExcludeGroups
-            IncludeRoles                              = $IncludeRoles
-            ExcludeRoles                              = $ExcludeRoles
+            IncludeUsers                             = $IncludeUsers
+            ExcludeUsers                             = $ExcludeUsers
+            IncludeGroups                            = $IncludeGroups
+            ExcludeGroups                            = $ExcludeGroups
+            IncludeRoles                             = $IncludeRoles
+            ExcludeRoles                             = $ExcludeRoles
 
-            IncludePlatforms                          = [System.String[]]$Policy.Conditions.Platforms.IncludePlatforms
+            IncludePlatforms                         = [System.String[]]$Policy.Conditions.Platforms.IncludePlatforms
             #no translation needed
-            ExcludePlatforms                          = [System.String[]]$Policy.Conditions.Platforms.ExcludePlatforms
+            ExcludePlatforms                         = [System.String[]]$Policy.Conditions.Platforms.ExcludePlatforms
             #no translation needed
-            IncludeLocations                          = $IncludeLocations
-            ExcludeLocations                          = $ExcludeLocations
-            IncludeDeviceStates                       = [System.String[]]$Policy.Conditions.Devices.IncludeDeviceStates
+            IncludeLocations                         = $IncludeLocations
+            ExcludeLocations                         = $ExcludeLocations
+            IncludeDeviceStates                      = [System.String[]]$Policy.Conditions.Devices.IncludeDeviceStates
             #no translation needed
-            ExcludeDeviceStates                       = [System.String[]]$Policy.Conditions.Devices.ExcludeDeviceStates
+            ExcludeDeviceStates                      = [System.String[]]$Policy.Conditions.Devices.ExcludeDeviceStates
             #no translation needed
-            UserRiskLevels                            = [System.String[]]$Policy.Conditions.UserRiskLevels
+            UserRiskLevels                           = [System.String[]]$Policy.Conditions.UserRiskLevels
             #no translation needed
-            SignInRiskLevels                          = [System.String[]]$Policy.Conditions.SignInRiskLevels
+            SignInRiskLevels                         = [System.String[]]$Policy.Conditions.SignInRiskLevels
             #no translation needed
-            ClientAppTypes                            = [System.String[]]$Policy.Conditions.ClientAppTypes
+            ClientAppTypes                           = [System.String[]]$Policy.Conditions.ClientAppTypes
             #no translation needed
-            GrantControl_Operator                     = $Policy.GrantControls._Operator
+            GrantControlOperator                     = $Policy.GrantControls._Operator
             #no translation or conversion needed
-            BuiltInControls                           = [System.String[]]$Policy.GrantControls.BuiltInControls
+            BuiltInControls                          = [System.String[]]$Policy.GrantControls.BuiltInControls
             #no translation needed
-            ApplicationEnforcedRestrictions_IsEnabled = $Policy.SessionControls.ApplicationEnforcedRestrictions.IsEnabled
+            ApplicationEnforcedRestrictionsIsEnabled = $Policy.SessionControls.ApplicationEnforcedRestrictions.IsEnabled
             #no translation or conversion needed
-            CloudAppSecurity_IsEnabled                = $Policy.SessionControls.CloudAppSecurity.IsEnabled
+            CloudAppSecurityIsEnabled                = $Policy.SessionControls.CloudAppSecurity.IsEnabled
             #no translation or conversion needed
-            CloudAppSecurity_Type                     = [System.String]$Policy.SessionControls.CloudAppSecurity.CloudAppSecurityType
+            CloudAppSecurityType                     = [System.String]$Policy.SessionControls.CloudAppSecurity.CloudAppSecurityType
             #no translation needed
-            SignInFrequency_Value                     = $Policy.SessionControls.SignInFrequency.Value
+            SignInFrequencyValue                     = $Policy.SessionControls.SignInFrequency.Value
             #no translation or conversion needed
-            SignInFrequency_Type                      = [System.String]$Policy.SessionControls.SignInFrequency.Type
+            SignInFrequencyType                      = [System.String]$Policy.SessionControls.SignInFrequency.Type
             #no translation needed
-            SignInFrequency_IsEnabled                 = $Policy.SessionControls.SignInFrequency.IsEnabled
+            SignInFrequencyIsEnabled                 = $Policy.SessionControls.SignInFrequency.IsEnabled
             #no translation or conversion needed
-            PersistentBrowser_Mode                    = [System.String]$Policy.SessionControls.PersistentBrowser.Mode
+            PersistentBrowserMode                    = [System.String]$Policy.SessionControls.PersistentBrowser.Mode
             #no translation needed
-            PersistentBrowser_IsEnabled               = $Policy.SessionControls.PersistentBrowser.IsEnabled
+            PersistentBrowserIsEnabled               = $Policy.SessionControls.PersistentBrowser.IsEnabled
             #no translation or conversion needed
             #Standard part
-            Ensure                                    = "Present"
-            GlobalAdminAccount                        = $GlobalAdminAccount
-            ApplicationId                             = $ApplicationId
-            TenantId                                  = $TenantId
-            CertificateThumbprint                     = $CertificateThumbprint
+            Ensure                                   = "Present"
+            GlobalAdminAccount                       = $GlobalAdminAccount
+            ApplicationId                            = $ApplicationId
+            TenantId                                 = $TenantId
+            CertificateThumbprint                    = $CertificateThumbprint
         }
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
     }
-
 }
 
 function Set-TargetResource
@@ -706,11 +686,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $IncludeUserActions,
-
-        #[Parameter()]
-        #[System.String[]]
-        #$IncludeProtectionLevels,
-        #not exposed yet
 
         #ConditionalAccessUserCondition
         [Parameter()]
@@ -781,56 +756,46 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('AND', 'OR')]
         [System.String]
-        $GrantControl_Operator,
+        $GrantControlOperator,
 
         [Parameter()]
         [System.String[]]
         $BuiltInControls,
 
-        #[Parameter()]
-        #[System.String[]]
-        #$CustomAuthenticationFactors,
-        #not exposed yet
-
-        #[Parameter()]
-        #[System.String[]]
-        #$TermsOfUse,
-        #not exposed yet
-
         #ConditionalAccessSessionControls
         [Parameter()]
         [System.Boolean]
-        $ApplicationEnforcedRestrictions_IsEnabled,
+        $ApplicationEnforcedRestrictionsIsEnabled,
 
         [Parameter()]
         [System.Boolean]
-        $CloudAppSecurity_IsEnabled,
+        $CloudAppSecurityIsEnabled,
 
         [Parameter()]
         [System.String]
-        $CloudAppSecurity_Type,
+        $CloudAppSecurityType,
 
         [Parameter()]
         [System.Int32]
-        $SignInFrequency_Value,
+        $SignInFrequencyValue,
 
         [Parameter()]
         [ValidateSet('Days', 'Hours', '')]
         [System.String]
-        $SignInFrequency_Type,
+        $SignInFrequencyType,
 
         [Parameter()]
         [System.Boolean]
-        $SignInFrequency_IsEnabled,
+        $SignInFrequencyIsEnabled,
 
         [Parameter()]
         [ValidateSet('Always', 'Never', '')]
         [System.String]
-        $PersistentBrowser_Mode,
+        $PersistentBrowserMode,
 
         [Parameter()]
         [System.Boolean]
-        $PersistentBrowser_IsEnabled,
+        $PersistentBrowserIsEnabled,
 
         #generic
         [Parameter()]
@@ -911,51 +876,49 @@ function Set-TargetResource
                     {
                         $Message = $_
                         try
+                        {
+                            Write-Verbose -Message $Message
+                            $tenantIdValue = ""
+                            if (-not [System.String]::IsNullOrEmpty($TenantId))
                             {
-                                Write-Verbose -Message $Message
-                                $tenantIdValue = ""
-                                if (-not [System.String]::IsNullOrEmpty($TenantId))
-                                {
-                                    $tenantIdValue = $TenantId
-                                }
-                                elseif ($null -ne $GlobalAdminAccount)
-                                {
-                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                                }
-                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                                    -TenantId $tenantIdValue
+                                $tenantIdValue = $TenantId
                             }
-                            catch
+                            elseif ($null -ne $GlobalAdminAccount)
                             {
-                                Write-Verbose -Message $_
+                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
                             }
-      
+                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $tenantIdValue
+                        }
+                        catch
+                        {
+                            Write-Verbose -Message $_
+                        }
                     }
                     if ($null -eq $userguid)
                     {
                         $Message = "Couldn't find user $includeuser , couldn't add to policy $DisplayName"
                         try
+                        {
+                            Write-Verbose -Message $Message
+                            $tenantIdValue = ""
+                            if (-not [System.String]::IsNullOrEmpty($TenantId))
                             {
-                                Write-Verbose -Message $Message
-                                $tenantIdValue = ""
-                                if (-not [System.String]::IsNullOrEmpty($TenantId))
-                                {
-                                    $tenantIdValue = $TenantId
-                                }
-                                elseif ($null -ne $GlobalAdminAccount)
-                                {
-                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                                }
-                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                                    -TenantId $tenantIdValue
+                                $tenantIdValue = $TenantId
                             }
-                            catch
+                            elseif ($null -ne $GlobalAdminAccount)
                             {
-                                Write-Verbose -Message $_
+                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
                             }
-    
+                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $tenantIdValue
+                        }
+                        catch
+                        {
+                            Write-Verbose -Message $_
+                        }
                     }
                     else
                     {
@@ -984,51 +947,49 @@ function Set-TargetResource
                     {
                         $Message = $_
                         try
+                        {
+                            Write-Verbose -Message $Message
+                            $tenantIdValue = ""
+                            if (-not [System.String]::IsNullOrEmpty($TenantId))
                             {
-                                Write-Verbose -Message $Message
-                                $tenantIdValue = ""
-                                if (-not [System.String]::IsNullOrEmpty($TenantId))
-                                {
-                                    $tenantIdValue = $TenantId
-                                }
-                                elseif ($null -ne $GlobalAdminAccount)
-                                {
-                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                                }
-                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                                    -TenantId $tenantIdValue
+                                $tenantIdValue = $TenantId
                             }
-                            catch
+                            elseif ($null -ne $GlobalAdminAccount)
                             {
-                                Write-Verbose -Message $_
+                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
                             }
-        
+                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $tenantIdValue
+                        }
+                        catch
+                        {
+                            Write-Verbose -Message $_
+                        }
                     }
                     if ($null -eq $userguid)
                     {
                         $Message = "Couldn't find user $excludeuser , couldn't add to policy $DisplayName"
                         try
+                        {
+                            Write-Verbose -Message $Message
+                            $tenantIdValue = ""
+                            if (-not [System.String]::IsNullOrEmpty($TenantId))
                             {
-                                Write-Verbose -Message $Message
-                                $tenantIdValue = ""
-                                if (-not [System.String]::IsNullOrEmpty($TenantId))
-                                {
-                                    $tenantIdValue = $TenantId
-                                }
-                                elseif ($null -ne $GlobalAdminAccount)
-                                {
-                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                                }
-                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                                    -TenantId $tenantIdValue
+                                $tenantIdValue = $TenantId
                             }
-                            catch
+                            elseif ($null -ne $GlobalAdminAccount)
                             {
-                                Write-Verbose -Message $_
+                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
                             }
-    
+                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $tenantIdValue
+                        }
+                        catch
+                        {
+                            Write-Verbose -Message $_
+                        }
                     }
                     else
                     {
@@ -1052,84 +1013,84 @@ function Set-TargetResource
                 { $GroupLookup = Get-AzureADGroup -Filter "DisplayName eq '$includegroup'"
                 }
                 catch
-                { 
+                {
                     $Message = $_
                     try
+                    {
+                        Write-Verbose -Message $Message
+                        $tenantIdValue = ""
+                        if (-not [System.String]::IsNullOrEmpty($TenantId))
                         {
-                            Write-Verbose -Message $Message
-                            $tenantIdValue = ""
-                            if (-not [System.String]::IsNullOrEmpty($TenantId))
-                            {
-                                $tenantIdValue = $TenantId
-                            }
-                            elseif ($null -ne $GlobalAdminAccount)
-                            {
-                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                            }
-                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                                -TenantId $tenantIdValue
+                            $tenantIdValue = $TenantId
                         }
-                        catch
+                        elseif ($null -ne $GlobalAdminAccount)
                         {
-                            Write-Verbose -Message $_
+                            $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
                         }
+                        Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $tenantIdValue
+                    }
+                    catch
+                    {
+                        Write-Verbose -Message $_
+                    }
 
                     Write-Verbose -Message $_
                 }
                 if ($GroupLookup.Length -gt 1)
                 {
-                   $Message = "Duplicate group found with displayname $includegroup , couldn't add to policy $DisplayName"
-                   try
-                       {
-                           Write-Verbose -Message $Message
-                           $tenantIdValue = ""
-                           if (-not [System.String]::IsNullOrEmpty($TenantId))
-                           {
-                               $tenantIdValue = $TenantId
-                           }
-                           elseif ($null -ne $GlobalAdminAccount)
-                           {
-                               $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                           }
-                           Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                               -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                               -TenantId $tenantIdValue
-                       }
-                       catch
-                       {
-                           Write-Verbose -Message $_
-                       }
+                    $Message = "Duplicate group found with displayname $includegroup , couldn't add to policy $DisplayName"
+                    try
+                    {
+                        Write-Verbose -Message $Message
+                        $tenantIdValue = ""
+                        if (-not [System.String]::IsNullOrEmpty($TenantId))
+                        {
+                            $tenantIdValue = $TenantId
+                        }
+                        elseif ($null -ne $GlobalAdminAccount)
+                        {
+                            $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                        }
+                        Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $tenantIdValue
+                    }
+                    catch
+                    {
+                        Write-Verbose -Message $_
+                    }
                 }
                 elseif ($null -eq $GroupLookup)
                 {
                     $Message = "Couldn't find group $includegroup , couldn't add to policy $DisplayName"
                     try
+                    {
+                        Write-Verbose -Message $Message
+                        $tenantIdValue = ""
+                        if (-not [System.String]::IsNullOrEmpty($TenantId))
                         {
-                            Write-Verbose -Message $Message
-                            $tenantIdValue = ""
-                            if (-not [System.String]::IsNullOrEmpty($TenantId))
-                            {
-                                $tenantIdValue = $TenantId
-                            }
-                            elseif ($null -ne $GlobalAdminAccount)
-                            {
-                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                            }
-                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                                -TenantId $tenantIdValue
+                            $tenantIdValue = $TenantId
                         }
-                        catch
+                        elseif ($null -ne $GlobalAdminAccount)
                         {
-                            Write-Verbose -Message $_
+                            $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
                         }
+                        Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $tenantIdValue
+                    }
+                    catch
+                    {
+                        Write-Verbose -Message $_
+                    }
 
                 }
                 else
                 {
                     Write-Verbose -Message "adding group to includegroups"
-                    $conditions.Users.IncludeGroups+=$GroupLookup.ObjectId
+                    $conditions.Users.IncludeGroups += $GroupLookup.ObjectId
                 }
             }
         }
@@ -1144,84 +1105,84 @@ function Set-TargetResource
                 { $GroupLookup = Get-AzureADGroup -Filter "DisplayName eq '$ExcludeGroup'"
                 }
                 catch
-                { 
+                {
                     $Message = $_
                     try
+                    {
+                        Write-Verbose -Message $Message
+                        $tenantIdValue = ""
+                        if (-not [System.String]::IsNullOrEmpty($TenantId))
                         {
-                            Write-Verbose -Message $Message
-                            $tenantIdValue = ""
-                            if (-not [System.String]::IsNullOrEmpty($TenantId))
-                            {
-                                $tenantIdValue = $TenantId
-                            }
-                            elseif ($null -ne $GlobalAdminAccount)
-                            {
-                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                            }
-                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                                -TenantId $tenantIdValue
+                            $tenantIdValue = $TenantId
                         }
-                        catch
+                        elseif ($null -ne $GlobalAdminAccount)
                         {
-                            Write-Verbose -Message $_
+                            $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
                         }
+                        Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $tenantIdValue
+                    }
+                    catch
+                    {
+                        Write-Verbose -Message $_
+                    }
                     Write-Verbose -Message $_
                 }
                 if ($GroupLookup.Length -gt 1)
                 {
-                   $Message = "Duplicate group found with displayname $ExcludeGroup , couldn't add to policy $DisplayName"
-                   try
-                       {
-                           Write-Verbose -Message $Message
-                           $tenantIdValue = ""
-                           if (-not [System.String]::IsNullOrEmpty($TenantId))
-                           {
-                               $tenantIdValue = $TenantId
-                           }
-                           elseif ($null -ne $GlobalAdminAccount)
-                           {
-                               $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                           }
-                           Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                               -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                               -TenantId $tenantIdValue
-                       }
-                       catch
-                       {
-                           Write-Verbose -Message $_
-                       }
+                    $Message = "Duplicate group found with displayname $ExcludeGroup , couldn't add to policy $DisplayName"
+                    try
+                    {
+                        Write-Verbose -Message $Message
+                        $tenantIdValue = ""
+                        if (-not [System.String]::IsNullOrEmpty($TenantId))
+                        {
+                            $tenantIdValue = $TenantId
+                        }
+                        elseif ($null -ne $GlobalAdminAccount)
+                        {
+                            $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                        }
+                        Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $tenantIdValue
+                    }
+                    catch
+                    {
+                        Write-Verbose -Message $_
+                    }
 
                 }
                 elseif ($null -eq $GroupLookup)
                 {
                     $Message = "Couldn't find group $ExcludeGroup , couldn't add to policy $DisplayName"
                     try
+                    {
+                        Write-Verbose -Message $Message
+                        $tenantIdValue = ""
+                        if (-not [System.String]::IsNullOrEmpty($TenantId))
                         {
-                            Write-Verbose -Message $Message
-                            $tenantIdValue = ""
-                            if (-not [System.String]::IsNullOrEmpty($TenantId))
-                            {
-                                $tenantIdValue = $TenantId
-                            }
-                            elseif ($null -ne $GlobalAdminAccount)
-                            {
-                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                            }
-                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                                -TenantId $tenantIdValue
+                            $tenantIdValue = $TenantId
                         }
-                        catch
+                        elseif ($null -ne $GlobalAdminAccount)
                         {
-                            Write-Verbose -Message $_
+                            $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
                         }
+                        Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $tenantIdValue
+                    }
+                    catch
+                    {
+                        Write-Verbose -Message $_
+                    }
 
                 }
                 else
                 {
                     Write-Verbose -Message "adding group to ExcludeGroups"
-                    $conditions.Users.ExcludeGroups+=$GroupLookup.ObjectId
+                    $conditions.Users.ExcludeGroups += $GroupLookup.ObjectId
                 }
             }
         }
@@ -1241,26 +1202,25 @@ function Set-TargetResource
                     {
                         $Message = "Couldn't find role $IncludeRole , couldn't add to policy $DisplayName"
                         try
+                        {
+                            Write-Verbose -Message $Message
+                            $tenantIdValue = ""
+                            if (-not [System.String]::IsNullOrEmpty($TenantId))
                             {
-                                Write-Verbose -Message $Message
-                                $tenantIdValue = ""
-                                if (-not [System.String]::IsNullOrEmpty($TenantId))
-                                {
-                                    $tenantIdValue = $TenantId
-                                }
-                                elseif ($null -ne $GlobalAdminAccount)
-                                {
-                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                                }
-                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                                    -TenantId $tenantIdValue
+                                $tenantIdValue = $TenantId
                             }
-                            catch
+                            elseif ($null -ne $GlobalAdminAccount)
                             {
-                                Write-Verbose -Message $_
+                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
                             }
-    
+                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $tenantIdValue
+                        }
+                        catch
+                        {
+                            Write-Verbose -Message $_
+                        }
                     }
                     else
                     {
@@ -1285,26 +1245,25 @@ function Set-TargetResource
                     {
                         $Message = "Couldn't find role $ExcludeRole , couldn't add to policy $DisplayName"
                         try
+                        {
+                            Write-Verbose -Message $Message
+                            $tenantIdValue = ""
+                            if (-not [System.String]::IsNullOrEmpty($TenantId))
                             {
-                                Write-Verbose -Message $Message
-                                $tenantIdValue = ""
-                                if (-not [System.String]::IsNullOrEmpty($TenantId))
-                                {
-                                    $tenantIdValue = $TenantId
-                                }
-                                elseif ($null -ne $GlobalAdminAccount)
-                                {
-                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                                }
-                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                                    -TenantId $tenantIdValue
+                                $tenantIdValue = $TenantId
                             }
-                            catch
+                            elseif ($null -ne $GlobalAdminAccount)
                             {
-                                Write-Verbose -Message $_
+                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
                             }
-    
+                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $tenantIdValue
+                        }
+                        catch
+                        {
+                            Write-Verbose -Message $_
+                        }
                     }
                     else
                     {
@@ -1347,30 +1306,29 @@ function Set-TargetResource
                     {
                         $Message = "Couldn't find Location $IncludeLocation , couldn't add to policy $DisplayName"
                         try
+                        {
+                            Write-Verbose -Message $Message
+                            $tenantIdValue = ""
+                            if (-not [System.String]::IsNullOrEmpty($TenantId))
                             {
-                                Write-Verbose -Message $Message
-                                $tenantIdValue = ""
-                                if (-not [System.String]::IsNullOrEmpty($TenantId))
-                                {
-                                    $tenantIdValue = $TenantId
-                                }
-                                elseif ($null -ne $GlobalAdminAccount)
-                                {
-                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                                }
-                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                                    -TenantId $tenantIdValue
+                                $tenantIdValue = $TenantId
                             }
-                            catch
+                            elseif ($null -ne $GlobalAdminAccount)
                             {
-                                Write-Verbose -Message $_
+                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
                             }
-    
+                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $tenantIdValue
+                        }
+                        catch
+                        {
+                            Write-Verbose -Message $_
+                        }
                     }
                     else
                     {
-                            $conditions.Locations.IncludeLocations += $LocationLookup[$IncludeLocation]
+                        $conditions.Locations.IncludeLocations += $LocationLookup[$IncludeLocation]
                     }
                 }
             }
@@ -1386,26 +1344,25 @@ function Set-TargetResource
                     {
                         $Message = "Couldn't find Location $ExcludeLocation , couldn't add to policy $DisplayName"
                         try
+                        {
+                            Write-Verbose -Message $Message
+                            $tenantIdValue = ""
+                            if (-not [System.String]::IsNullOrEmpty($TenantId))
                             {
-                                Write-Verbose -Message $Message
-                                $tenantIdValue = ""
-                                if (-not [System.String]::IsNullOrEmpty($TenantId))
-                                {
-                                    $tenantIdValue = $TenantId
-                                }
-                                elseif ($null -ne $GlobalAdminAccount)
-                                {
-                                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                                }
-                                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                                    -TenantId $tenantIdValue
+                                $tenantIdValue = $TenantId
                             }
-                            catch
+                            elseif ($null -ne $GlobalAdminAccount)
                             {
-                                Write-Verbose -Message $_
+                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
                             }
-    
+                            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $tenantIdValue
+                        }
+                        catch
+                        {
+                            Write-Verbose -Message $_
+                        }
                     }
                     else
                     {
@@ -1415,105 +1372,105 @@ function Set-TargetResource
             }
         }
 
-            Write-Verbose -Message "Set-Targetresource: process device states"
-            if ($IncludeDeviceStates -or $ExcludeDeviceStates)
-            {
-                #create and provision Device condition object if used
-                $conditions.Devices = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessDevicesCondition
-                $conditions.Devices.IncludeDeviceStates = $IncludeDeviceStates
-                #no translation or conversion needed
-                $conditions.Devices.ExcludeDeviceStates = $ExcludeDeviceStates
-                #no translation or conversion needed
-            }
-            Write-Verbose -Message "Set-Targetresource: process risk levels and app types"
-            $Conditions.UserRiskLevels = $UserRiskLevels
+        Write-Verbose -Message "Set-Targetresource: process device states"
+        if ($IncludeDeviceStates -or $ExcludeDeviceStates)
+        {
+            #create and provision Device condition object if used
+            $conditions.Devices = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessDevicesCondition
+            $conditions.Devices.IncludeDeviceStates = $IncludeDeviceStates
             #no translation or conversion needed
-            $Conditions.SignInRiskLevels = $SignInRiskLevels
+            $conditions.Devices.ExcludeDeviceStates = $ExcludeDeviceStates
             #no translation or conversion needed
-            $Conditions.ClientAppTypes = $ClientAppTypes
-            #no translation or conversion needed
-            Write-Verbose -Message "Set-Targetresource: Adding processed conditions"
-            #add all conditions to the parameter list
-            $NewParameters.Add("Conditions", $Conditions)
-            #create and provision Grant Control object
-            Write-Verbose -Message "Set-Targetresource: create and provision Grant Control object"
-            $GrantControls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessGrantControls
-            $GrantControls._Operator = $GrantControl_Operator
-            $GrantControls.BuiltInControls = $BuiltInControls
-            #no translation or conversion needed
-            Write-Verbose -Message "Set-Targetresource: Adding processed grant controls"
-            $NewParameters.Add("GrantControls", $GrantControls)
-            #add GrantControls to the parameter list
-            Write-Verbose -Message "Set-Targetresource: process session controls"
-            if ($ApplicationEnforcedRestrictions_IsEnabled -or $CloudAppSecurity_IsEnabled -or $SignInFrequency_IsEnabled -or $PersistentBrowser_IsEnabled)
-            {
-                #create and provision Session Control object if used
-                Write-Verbose -Message "Set-Targetresource: Create and provision Session Control object"
-                $sessioncontrols = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessSessionControls
-                if ($ApplicationEnforcedRestrictions_IsEnabled)
-                {
-                    #create and provision ApplicationEnforcedRestrictions object if used
-                    $sessioncontrols.ApplicationEnforcedRestrictions = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessApplicationEnforcedRestrictions
-                    $sessioncontrols.ApplicationEnforcedRestrictions.IsEnabled = $true
-                }
-                if ($CloudAppSecurity_IsEnabled)
-                {
-                    #create and provision CloudAppSecurity object if used
-                    $sessioncontrols.CloudAppSecurity = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessCloudAppSecurity
-                    $sessioncontrols.CloudAppSecurity.IsEnabled = $true
-                    $sessioncontrols.CloudAppSecurity.CloudAppSecurityType = $CloudAppSecurity_Type
-                }
-                if ($SignInFrequency_IsEnabled)
-                {
-                    #create and provision SignInFrequency object if used
-                    $sessioncontrols.SignInFrequency = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessSignInFrequency
-                    $sessioncontrols.SignInFrequency.IsEnabled = $true
-                    $sessioncontrols.SignInFrequency.Type = $SignInFrequency_Type
-                    $sessioncontrols.SignInFrequency.Value = $SignInFrequency_Value
-                }
-                if ($PersistentBrowser_IsEnabled)
-                {
-                    #create and provision PersistentBrowser object if used
-                    $sessioncontrols.PersistentBrowser = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessPersistentBrowser
-                    $sessioncontrols.PersistentBrowser.IsEnabled = $true
-                    $sessioncontrols.PersistentBrowser.Mode = $PersistentBrowser_Mode
-                }
-                $NewParameters.Add("SessionControls", $sessioncontrols)
-                #add SessionControls to the parameter list
-            }
-
         }
+        Write-Verbose -Message "Set-Targetresource: process risk levels and app types"
+        $Conditions.UserRiskLevels = $UserRiskLevels
+        #no translation or conversion needed
+        $Conditions.SignInRiskLevels = $SignInRiskLevels
+        #no translation or conversion needed
+        $Conditions.ClientAppTypes = $ClientAppTypes
+        #no translation or conversion needed
+        Write-Verbose -Message "Set-Targetresource: Adding processed conditions"
+        #add all conditions to the parameter list
+        $NewParameters.Add("Conditions", $Conditions)
+        #create and provision Grant Control object
+        Write-Verbose -Message "Set-Targetresource: create and provision Grant Control object"
+        $GrantControls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessGrantControls
+        $GrantControls._Operator = $GrantControlOperator
+        $GrantControls.BuiltInControls = $BuiltInControls
+        #no translation or conversion needed
+        Write-Verbose -Message "Set-Targetresource: Adding processed grant controls"
+        $NewParameters.Add("GrantControls", $GrantControls)
+        #add GrantControls to the parameter list
+        Write-Verbose -Message "Set-Targetresource: process session controls"
+        if ($ApplicationEnforcedRestrictionsIsEnabled -or $CloudAppSecurityIsEnabled -or $SignInFrequencyIsEnabled -or $PersistentBrowserIsEnabled)
+        {
+            #create and provision Session Control object if used
+            Write-Verbose -Message "Set-Targetresource: Create and provision Session Control object"
+            $sessioncontrols = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessSessionControls
+            if ($ApplicationEnforcedRestrictionsIsEnabled)
+            {
+                #create and provision ApplicationEnforcedRestrictions object if used
+                $sessioncontrols.ApplicationEnforcedRestrictions = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessApplicationEnforcedRestrictions
+                $sessioncontrols.ApplicationEnforcedRestrictions.IsEnabled = $true
+            }
+            if ($CloudAppSecurityIsEnabled)
+            {
+                #create and provision CloudAppSecurity object if used
+                $sessioncontrols.CloudAppSecurity = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessCloudAppSecurity
+                $sessioncontrols.CloudAppSecurity.IsEnabled = $true
+                $sessioncontrols.CloudAppSecurity.CloudAppSecurityType = $CloudAppSecurityType
+            }
+            if ($SignInFrequencyIsEnabled)
+            {
+                #create and provision SignInFrequency object if used
+                $sessioncontrols.SignInFrequency = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessSignInFrequency
+                $sessioncontrols.SignInFrequency.IsEnabled = $true
+                $sessioncontrols.SignInFrequency.Type = $SignInFrequencyType
+                $sessioncontrols.SignInFrequency.Value = $SignInFrequencyValue
+            }
+            if ($PersistentBrowserIsEnabled)
+            {
+                #create and provision PersistentBrowser object if used
+                $sessioncontrols.PersistentBrowser = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessPersistentBrowser
+                $sessioncontrols.PersistentBrowser.IsEnabled = $true
+                $sessioncontrols.PersistentBrowser.Mode = $PersistentBrowserMode
+            }
+            $NewParameters.Add("SessionControls", $sessioncontrols)
+            #add SessionControls to the parameter list
+        }
+
+    }
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Set-Targetresource: Change policy $DisplayName"
         $NewParameters.Add("PolicyId", $currentPolicy.Id)
         try
         {
-             Set-AzureADMSConditionalAccessPolicy @NewParameters
+            Set-AzureADMSConditionalAccessPolicy @NewParameters
         }
         catch
         {
             $Message = $_
             try
+            {
+                Write-Verbose -Message $Message
+                $tenantIdValue = ""
+                if (-not [System.String]::IsNullOrEmpty($TenantId))
                 {
-                    Write-Verbose -Message $Message
-                    $tenantIdValue = ""
-                    if (-not [System.String]::IsNullOrEmpty($TenantId))
-                    {
-                        $tenantIdValue = $TenantId
-                    }
-                    elseif ($null -ne $GlobalAdminAccount)
-                    {
-                        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                    }
-                    Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                        -TenantId $tenantIdValue
+                    $tenantIdValue = $TenantId
                 }
-                catch
+                elseif ($null -ne $GlobalAdminAccount)
                 {
-                    Write-Verbose -Message $_
+                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
                 }
+                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $tenantIdValue
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+            }
 
             Write-Verbose -Message "Set-Targetresource: Failed change policy $DisplayName"
             Write-Verbose -Message $_
@@ -1530,25 +1487,25 @@ function Set-TargetResource
         {
             $Message = $_
             try
+            {
+                Write-Verbose -Message $Message
+                $tenantIdValue = ""
+                if (-not [System.String]::IsNullOrEmpty($TenantId))
                 {
-                    Write-Verbose -Message $Message
-                    $tenantIdValue = ""
-                    if (-not [System.String]::IsNullOrEmpty($TenantId))
-                    {
-                        $tenantIdValue = $TenantId
-                    }
-                    elseif ($null -ne $GlobalAdminAccount)
-                    {
-                        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                    }
-                    Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                        -TenantId $tenantIdValue
+                    $tenantIdValue = $TenantId
                 }
-                catch
+                elseif ($null -ne $GlobalAdminAccount)
                 {
-                    Write-Verbose -Message $_
+                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
                 }
+                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $tenantIdValue
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+            }
 
             Write-Verbose -Message "Set-Targetresource: Failed creating policy"
             Write-Verbose -Message $_
@@ -1565,25 +1522,25 @@ function Set-TargetResource
         {
             $Message = $_
             try
+            {
+                Write-Verbose -Message $Message
+                $tenantIdValue = ""
+                if (-not [System.String]::IsNullOrEmpty($TenantId))
                 {
-                    Write-Verbose -Message $Message
-                    $tenantIdValue = ""
-                    if (-not [System.String]::IsNullOrEmpty($TenantId))
-                    {
-                        $tenantIdValue = $TenantId
-                    }
-                    elseif ($null -ne $GlobalAdminAccount)
-                    {
-                        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                    }
-                    Add-M365DSCEvent -Message $Message -EntryType 'Error' `
-                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                        -TenantId $tenantIdValue
+                    $tenantIdValue = $TenantId
                 }
-                catch
+                elseif ($null -ne $GlobalAdminAccount)
                 {
-                    Write-Verbose -Message $_
+                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
                 }
+                Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $tenantIdValue
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+            }
 
             Write-Verbose -Message "Set-Targetresource: Failed deleting policy $DisplayName"
             Write-Verbose -Message $_
@@ -1623,11 +1580,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $IncludeUserActions,
-
-        #[Parameter()]
-        #[System.String[]]
-        #$IncludeProtectionLevels,
-        #not exposed yet
 
         #ConditionalAccessUserCondition
         [Parameter()]
@@ -1698,56 +1650,46 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('AND', 'OR')]
         [System.String]
-        $GrantControl_Operator,
+        $GrantControlOperator,
 
         [Parameter()]
         [System.String[]]
         $BuiltInControls,
 
-        #[Parameter()]
-        #[System.String[]]
-        #$CustomAuthenticationFactors,
-        #not exposed yet
-
-        #[Parameter()]
-        #[System.String[]]
-        #$TermsOfUse,
-        #not exposed yet
-
         #ConditionalAccessSessionControls
         [Parameter()]
         [System.Boolean]
-        $ApplicationEnforcedRestrictions_IsEnabled,
+        $ApplicationEnforcedRestrictionsIsEnabled,
 
         [Parameter()]
         [System.Boolean]
-        $CloudAppSecurity_IsEnabled,
+        $CloudAppSecurityIsEnabled,
 
         [Parameter()]
         [System.String]
-        $CloudAppSecurity_Type,
+        $CloudAppSecurityType,
 
         [Parameter()]
         [System.Int32]
-        $SignInFrequency_Value,
+        $SignInFrequencyValue,
 
         [Parameter()]
         [ValidateSet('Days', 'Hours', '')]
         [System.String]
-        $SignInFrequency_Type,
+        $SignInFrequencyType,
 
         [Parameter()]
         [System.Boolean]
-        $SignInFrequency_IsEnabled,
+        $SignInFrequencyIsEnabled,
 
         [Parameter()]
         [ValidateSet('Always', 'Never', '')]
         [System.String]
-        $PersistentBrowser_Mode,
+        $PersistentBrowserMode,
 
         [Parameter()]
         [System.Boolean]
-        $PersistentBrowser_IsEnabled,
+        $PersistentBrowserIsEnabled,
 
         #generic
         [Parameter()]
@@ -1825,34 +1767,60 @@ function Export-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
-
-    [array] $Policies = Get-AzureADMSConditionalAccessPolicy
-    $i = 1
-    $dscContent = ''
-    Write-Host "`r`n" -NoNewline
-    foreach ($Policy in $Policies)
+    try
     {
-        Write-Host "    |---[$i/$($Policies.Count)] $($Policy.DisplayName)" -NoNewline
-        $Params = @{
-            GlobalAdminAccount    = $GlobalAdminAccount
-            DisplayName           = $Policy.DisplayName
-            Id                    = $Policy.Id
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
+        [array] $Policies = Get-AzureADMSConditionalAccessPolicy
+        $i = 1
+        $dscContent = ''
+        Write-Host "`r`n" -NoNewline
+        foreach ($Policy in $Policies)
+        {
+            Write-Host "    |---[$i/$($Policies.Count)] $($Policy.DisplayName)" -NoNewline
+            $Params = @{
+                GlobalAdminAccount    = $GlobalAdminAccount
+                DisplayName           = $Policy.DisplayName
+                Id                    = $Policy.Id
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
         }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-        $i++
+        return $dscContent
     }
-    return $dscContent
+    catch
+    {
+        try
+        {
+            Write-Verbose -Message $_
+            $tenantIdValue = ""
+            if (-not [System.String]::IsNullOrEmpty($TenantId))
+            {
+                $tenantIdValue = $TenantId
+            }
+            elseif ($null -ne $GlobalAdminAccount)
+            {
+                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            }
+            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+        return ""
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

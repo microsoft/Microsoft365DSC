@@ -16,33 +16,33 @@ Configuration Example
     {
         AADConditionalAccessPolicy Allin-example
         {
-            GlobalAdminAccount          = $credsGlobalAdmin;
-            BuiltInControls            = @("Mfa","CompliantDevice","DomainJoinedDevice","ApprovedApplication","CompliantApplication");
-            ClientAppTypes             = @("ExchangeActiveSync","Browser","MobileAppsAndDesktopClients","Other");
-            CloudAppSecurity_IsEnabled = $True;
-            CloudAppSecurity_Type      = "MonitorOnly";
-            DisplayName                = "Allin-example";
-            Ensure                     = "Present";
-            ExcludeApplications        = @("803ee9ca-3f7f-4824-bd6e-0b99d720c35c","00000012-0000-0000-c000-000000000000","00000007-0000-0000-c000-000000000000","Office365");
-            ExcludeDeviceStates        = @("Compliant","DomainJoined");
-            ExcludeLocations           = @("Blocked Countries");
-            ExcludePlatforms           = @("Windows","WindowsPhone","MacOS");
-            ExcludeRoles               = @("Company Administrator","Application Administrator","Application Developer","Cloud Application Administrator","Cloud Device Administrator");
-            ExcludeUsers               = @("admin@$OrganizationName","AAdmin@$OrganizationName","CAAdmin@$OrganizationName","AllanD@$OrganizationName","AlexW@$OrganizationName","GuestsOrExternalUsers");
-            GrantControl_Operator      = "OR";
-            IncludeApplications        = @("All");
-            IncludeDeviceStates        = @("All");
-            IncludeLocations           = @("AllTrusted");
-            IncludePlatforms           = @("Android","IOS");
-            IncludeUserActions         = @();
-            IncludeUsers               = @("All");
-            PersistentBrowser_Mode     = "";
-            SignInFrequency_IsEnabled  = $True;
-            SignInFrequency_Type       = "Hours";
-            SignInFrequency_Value      = 5;
-            SignInRiskLevels           = @("High","Medium");
-            State                      = "disabled";
-            UserRiskLevels             = @("High","Medium");
+            GlobalAdminAccount        = $credsGlobalAdmin;
+            BuiltInControls           = @("Mfa", "CompliantDevice", "DomainJoinedDevice", "ApprovedApplication", "CompliantApplication");
+            ClientAppTypes            = @("ExchangeActiveSync", "Browser", "MobileAppsAndDesktopClients", "Other");
+            CloudAppSecurityIsEnabled = $True;
+            CloudAppSecurityType      = "MonitorOnly";
+            DisplayName               = "Allin-example";
+            Ensure                    = "Present";
+            ExcludeApplications       = @("803ee9ca-3f7f-4824-bd6e-0b99d720c35c", "00000012-0000-0000-c000-000000000000", "00000007-0000-0000-c000-000000000000", "Office365");
+            ExcludeDeviceStates       = @("Compliant", "DomainJoined");
+            ExcludeLocations          = @("Blocked Countries");
+            ExcludePlatforms          = @("Windows", "WindowsPhone", "MacOS");
+            ExcludeRoles              = @("Company Administrator", "Application Administrator", "Application Developer", "Cloud Application Administrator", "Cloud Device Administrator");
+            ExcludeUsers              = @("admin@$OrganizationName", "AAdmin@$OrganizationName", "CAAdmin@$OrganizationName", "AllanD@$OrganizationName", "AlexW@$OrganizationName", "GuestsOrExternalUsers");
+            GrantControlOperator      = "OR";
+            IncludeApplications       = @("All");
+            IncludeDeviceStates       = @("All");
+            IncludeLocations          = @("AllTrusted");
+            IncludePlatforms          = @("Android", "IOS");
+            IncludeUserActions        = @();
+            IncludeUsers              = @("All");
+            PersistentBrowserMode     = "";
+            SignInFrequencyIsEnabled  = $True;
+            SignInFrequencyType       = "Hours";
+            SignInFrequencyValue      = 5;
+            SignInRiskLevels          = @("High", "Medium");
+            State                     = "disabled";
+            UserRiskLevels            = @("High", "Medium");
         }
     }
 }
