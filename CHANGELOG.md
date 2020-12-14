@@ -4,6 +4,8 @@
 
 * AADConditionalAccessPolicy
   * Initial Release;
+* EXOSafeLinksRule
+  * Fixed typo in a try/catch clause;
 * O365User
   * Added support for removing existing users with
     Ensure = 'Absent';
