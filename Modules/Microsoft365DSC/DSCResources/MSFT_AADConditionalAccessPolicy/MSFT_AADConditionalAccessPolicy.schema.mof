@@ -1,0 +1,40 @@
+[ClassVersion("1.0.0.0"), FriendlyName("AADConditionalAccessPolicy")]
+class MSFT_AADConditionalAccessPolicy : OMI_BaseResource
+{
+    [Key, Description("DisplayName of the AAD CA Policy")] String DisplayName;
+    [Write, Description("Specifies the GUID for the Policy.")] String Id;
+    [Write, Description("Specifies the State of the Policy."), ValueMap{"disabled","enabled","enabledForReportingButNotEnforced"}, Values{"disabled","enabled","enabledForReportingButNotEnforced"}] String State;
+    [Write, Description("Cloud Apps in scope of the Policy.")] String IncludeApplications[];
+    [Write, Description("Cloud Apps out of scope of the Policy.")] String ExcludeApplications[];
+    [Write, Description("User Actions in scope of the Policy.")] String IncludeUserActions[];
+    [Write, Description("Users in scope of the Policy.")] String IncludeUsers[];
+    [Write, Description("Users out of scope of the Policy.")] String ExcludeUsers[];
+    [Write, Description("Groups in scope of the Policy.")] String IncludeGroups[];
+    [Write, Description("Groups out of scope of the Policy.")] String ExcludeGroups[];
+    [Write, Description("AAD Admin Roles in scope of the Policy.")] String IncludeRoles[];
+    [Write, Description("AAD Admin Roles out of scope of the Policy.")] String ExcludeRoles[];
+    [Write, Description("Client Device Platforms in scope of the Policy.")] String IncludePlatforms[];
+    [Write, Description("Client Device Platforms out of scope of the Policy.")] String ExcludePlatforms[];
+    [Write, Description("AAD Named Locations in scope of the Policy.")] String IncludeLocations[];
+    [Write, Description("AAD Named Locations out of scope of the Policy.")] String ExcludeLocations[];
+    [Write, Description("Client Device Compliance states in scope of the Policy.")] String IncludeDeviceStates[];
+    [Write, Description("Client Device Compliance states out of scope of the Policy.")] String ExcludeDeviceStates[];
+    [Write, Description("AAD Identity Protection User Risk Levels in scope of the Policy.")] String UserRiskLevels[];
+    [Write, Description("AAD Identity Protection Sign-in Risk Levels in scope of the Policy.")] String SignInRiskLevels[];
+    [Write, Description("Client App types in scope of the Policy.")] String ClientAppTypes[];
+    [Write, Description("Operator to be used for Grant Controls."), ValueMap{"AND","OR"}, Values{"AND","OR"}] String GrantControlOperator;
+    [Write, Description("List of built-in Grant Controls to be applied by the Policy.")] String BuiltInControls[];
+    [Write, Description("Specifies, whether Application Enforced Restrictions are enabled in the Policy.")] Boolean ApplicationEnforcedRestrictionsIsEnabled;
+    [Write, Description("Specifies, whether Cloud App Security is enforced by the Policy.")] Boolean CloudAppSecurityIsEnabled;
+    [Write, Description("Specifies, what Cloud App Security control is enforced by the Policy.")] String CloudAppSecurityType;
+    [Write, Description("Sign in frequency time in the given unit to be enforced by the policy.")] UInt32 SignInFrequencyValue;
+    [Write, Description("Sign in frequency unit (days/hours) to be interpreted by the policy."), ValueMap{"Days","Hours",""}, Values{"Days","Hours",""}] String SignInFrequencyType;
+    [Write, Description("Specifies, whether sign-in frequency is enforced by the Policy.")] Boolean SignInFrequencyIsEnabled;
+    [Write, Description("Specifies, whether Browser Persistence is controlled by the Policy.")] Boolean PersistentBrowserIsEnabled;
+    [Write, Description("Specifies, what Browser Persistence control is enforced by the Policy."), ValueMap{"Always","Never",""}, Values{"Always","Never",""}] String PersistentBrowserMode;
+    [Write, Description("Specify if the Azure AD CA Policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Credentials of the Azure Active Directory Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+};
