@@ -376,7 +376,7 @@ function Export-TargetResource
                     $Results = Get-TargetResource @Params
                     $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                         -Results $Results
-                    $dscContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                         -ConnectionMode $ConnectionMode `
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
