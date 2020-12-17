@@ -307,6 +307,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
+                Mock -CommandName Get-MgTeamChannelTab -MockWith {
+                    return @{
+                        DisplayName = "General"
+                    }
+                }
+
                 Mock -CommandName Get-M365DSCTeamChannelTab -MockWith {
                     return @{
                         id             = "12345-12345-12345-12345-12345"
