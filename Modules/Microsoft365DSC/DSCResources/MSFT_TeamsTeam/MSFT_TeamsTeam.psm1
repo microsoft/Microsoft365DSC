@@ -378,14 +378,14 @@ function Set-TargetResource
     $team = Get-TargetResource @PSBoundParameters
 
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("Ensure")
+    $CurrentParameters.Remove("Ensure") | Out-Null
 
     if ($Ensure -eq "Present" -and ($team.Ensure -eq "Present"))
     {
         ## Can't pass Owner parm into set opertaion
         if ($CurrentParameters.ContainsKey("Owner"))
         {
-            $CurrentParameters.Remove("Owner")
+            $CurrentParameters.Remove("Owner") | Out-Null
         }
         if (-not $CurrentParameters.ContainsKey("GroupID"))
         {
@@ -393,13 +393,13 @@ function Set-TargetResource
         }
         if ($ConnectionMode -eq 'Credential')
         {
-            $CurrentParameters.Remove("GlobalAdminAccount")
+            $CurrentParameters.Remove("GlobalAdminAccount") | Out-Null
         }
         else
         {
-            $CurrentParameters.Remove("ApplicationId")
-            $CurrentParameters.Remove("TenantId")
-            $CurrentParameters.Remove("CertificateThumbprint")
+            $CurrentParameters.Remove("ApplicationId") | Out-Null
+            $CurrentParameters.Remove("TenantId") | Out-Null
+            $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
         }
         Set-Team @CurrentParameters
         Write-Verbose -Message "Updating team $DisplayName"
@@ -409,7 +409,7 @@ function Set-TargetResource
         ## GroupID not used on New-Team cmdlet
         if ($CurrentParameters.ContainsKey("GroupID"))
         {
-            $CurrentParameters.Remove("GroupID")
+            $CurrentParameters.Remove("GroupID") | Out-Null
         }
         Write-Verbose -Message "Creating team $DisplayName"
         if ($null -ne $Owner)
@@ -452,7 +452,7 @@ function Set-TargetResource
         }
         else
         {
-            $CurrentParameters.Remove("GlobalAdminAccount")
+            $CurrentParameters.Remove("GlobalAdminAccount") | Out-Null
             New-Team @CurrentParameters
         }
     }

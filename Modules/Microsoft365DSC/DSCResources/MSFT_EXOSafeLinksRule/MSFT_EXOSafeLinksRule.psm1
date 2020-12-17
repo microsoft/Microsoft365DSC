@@ -499,7 +499,7 @@ function Export-TargetResource
     }
     catch
     {
-        Wtry
+        try
         {
             Write-Verbose -Message $_
             $tenantIdValue = ""

@@ -8,7 +8,7 @@ $Global:DefaultComponents = @("SPOApp", "SPOSiteDesign")
 $Global:FullComponents = @("AADMSGroup", "AADServicePrincipal", "EXOMailboxSettings", "EXOManagementRole", "O365Group", "O365User", `
         "PlannerPlan", "PlannerBucket", "PlannerTask", "PPPowerAppsEnvironment", `
         "SPOSiteAuditSettings", "SPOSiteGroup", "SPOSite", "SPOUserProfileProperty", "SPOPropertyBag", "TeamsTeam", "TeamsChannel", `
-        "TeamsUser")
+        "TeamsUser", "TeamsChannelTab")
 #endregion
 
 function Format-EXOParams
@@ -987,7 +987,8 @@ function New-M365DSCConnection
         [Parameter(Mandatory = $true)]
         [ValidateSet("Azure", "AzureAD", "ExchangeOnline", "Intune", `
                 "SecurityComplianceCenter", "PnP", "PowerPlatforms", `
-                "MicrosoftTeams", "SkypeForBusiness", "MicrosoftGraph")]
+                "MicrosoftTeams", "SkypeForBusiness", "MicrosoftGraph", `
+                "MicrosoftGraphBeta")]
         [System.String]
         $Platform,
 
@@ -1003,6 +1004,9 @@ function New-M365DSCConnection
         [System.Boolean]
         $SkipModuleReload = $false
     )
+
+    Write-Verbose -Message "Attempting connection to {$Platform} with:"
+    Write-Verbose -Message "$($InboundParameters | Out-String)"
 
     if ($SkipModuleReload -eq $true)
     {
