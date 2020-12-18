@@ -1,5 +1,16 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* SPOHubSite
+  * Changed Export logic to make the url parameterized
+* SPOSiteAuditSettings
+  * Changed Export logic to make the url parameterized
+* SPOSiteGroup
+  * Changed Export logic to make the url parameterized
+  * Updated logic to output more explainable troubleshooting
+    messages
+
 # 1.20.1216.1
 
 * AADConditionalAccessPolicy
