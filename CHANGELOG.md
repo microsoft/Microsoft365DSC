@@ -4,6 +4,8 @@
 
 * SPOHubSite
   * Changed Export logic to make the url parameterized
+  * Updated Get method to prevent throwing an exception
+    when the specified site doesn't exist
 * SPOSiteAuditSettings
   * Changed Export logic to make the url parameterized
 * SPOSiteGroup

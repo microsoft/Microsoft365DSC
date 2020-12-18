@@ -82,7 +82,7 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting hub site collection $Url"
-        $site = Get-PnPTenantSite -Url $Url
+        $site = Get-PnPTenantSite -Url $Url -ErrorAction SilentlyContinue
         if ($null -eq $site)
         {
             Write-Verbose -Message "The specified Site Collection doesn't already exist."
