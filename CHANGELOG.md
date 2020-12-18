@@ -6,6 +6,11 @@
   * Changed Export logic to make the url parameterized
   * Updated Get method to prevent throwing an exception
     when the specified site doesn't exist
+* SPOSite
+  * Updated logic to not process the HubUrl parameter
+    when this is equal to the Url parameter.
+  * Updated export logic to not export the HubUrl
+    parameter when this is equal to the Url parameter.
 * SPOSiteAuditSettings
   * Changed Export logic to make the url parameterized
 * SPOSiteGroup

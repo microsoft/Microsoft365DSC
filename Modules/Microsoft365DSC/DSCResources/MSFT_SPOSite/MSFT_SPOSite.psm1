@@ -607,29 +607,37 @@ function Set-TargetResource
         Write-Verbose -Message "Settings Updated"
         if ($PSBoundParameters.ContainsKey("HubUrl"))
         {
-            if ([System.String]::IsNullOrEmpty($HubUrl))
+            if ($PSBoundParameters.HubUrl.TrimEnd("/") -ne $PSBoundParameters.Url.TrimEnd("/"))
             {
-                if ($site.HubSiteId -ne "00000000-0000-0000-0000-000000000000")
+                if ([System.String]::IsNullOrEmpty($HubUrl))
                 {
-                    Write-Verbose -Message "Removing Hub Site Association for {$Url}"
-                    Remove-PnPHubSiteAssociation -Site $Url
+                    if ($site.HubSiteId -ne "00000000-0000-0000-0000-000000000000")
+                    {
+                        Write-Verbose -Message "Removing Hub Site Association for {$Url}"
+                        Remove-PnPHubSiteAssociation -Site $Url
+                    }
+                }
+                else
+                {
+                    $hubSite = Get-PnPHubSite -Identity $HubUrl
+
+                    if ($null -eq $hubSite)
+                    {
+                        throw ("Specified HubUrl ($HubUrl) is not a Hub site. Make sure you " + `
+                                "have promoted that to a Hub site first.")
+                    }
+
+                    if ($site.HubSiteId -ne $hubSite.Id)
+                    {
+                        Write-Verbose -Message "Adding Hub Association on {$HubUrl} for site {$Url}"
+                        Add-PnPHubSiteAssociation -Site $Url -HubSite $HubUrl
+                    }
                 }
             }
             else
             {
-                $hubSite = Get-PnPHubSite -Identity $HubUrl
-
-                if ($null -eq $hubSite)
-                {
-                    throw ("Specified HubUrl ($HubUrl) is not a Hub site. Make sure you " + `
-                            "have promoted that to a Hub site first.")
-                }
-
-                if ($site.HubSiteId -ne $hubSite.Id)
-                {
-                    Write-Verbose -Message "Adding Hub Association on {$HubUrl} for site {$Url}"
-                    Add-PnPHubSiteAssociation -Site $Url -HubSite $HubUrl
-                }
+                Write-Verbose -Message ("Ignoring the HubUrl parameter because it is equal to " + `
+                        "the site collection Url")
             }
         }
     }
@@ -924,6 +932,14 @@ function Export-TargetResource
                 {
                     $Results.Remove("SharingBlockedDomainList") | Out-Null
                 }
+                # Removing the HubUrl parameter if the value is equal to the Url parameter.
+                # This to prevent issues if the site col has just been created and not yet
+                # configured as a hubsite.
+                if ($Results.Url.TrimEnd("/") -eq $Results.HubUrl.TrimEnd("/"))
+                {
+                    $Results.Remove("HubUrl") | Out-Null
+                }
+
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
 
