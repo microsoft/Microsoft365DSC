@@ -1198,6 +1198,15 @@ function Get-AzureADMSGroupLifecyclePolicy
         $Id
     )
 }
+function Get-AzureADMSGroupPermissionGrant
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id
+    )
+}
 function Get-AzureADMSIdentityProvider
 {
     [CmdletBinding()]
@@ -2439,7 +2448,7 @@ function New-AzureADMSApplication
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.AddIn]]
+        [System.Object[]]
         $AddIns,
 
         [Parameter()]
@@ -2451,7 +2460,7 @@ function New-AzureADMSApplication
         $DisplayName,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.RequiredResourceAccess]]
+        [System.Object[]]
         $RequiredResourceAccess,
 
         [Parameter()]
@@ -2471,7 +2480,7 @@ function New-AzureADMSApplication
         $TokenEncryptionKeyId,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.KeyCredential]]
+        [System.Object[]]
         $KeyCredentials,
 
         [Parameter()]
@@ -2495,7 +2504,7 @@ function New-AzureADMSApplication
         $IsDeviceOnlyAuthSupported,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.PreAuthorizedApplication]]
+        [System.Object[]]
         $PreAuthorizedApplications,
 
         [Parameter()]
@@ -2515,11 +2524,11 @@ function New-AzureADMSApplication
         $InformationalUrl,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.PasswordCredential]]
+        [System.Object[]]
         $PasswordCredentials,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.AppRole]]
+        [System.Object[]]
         $AppRoles
     )
 }
@@ -2633,7 +2642,7 @@ function New-AzureADMSFeatureRolloutPolicy
         $DisplayName,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.MsDirectoryObject]]
+        [System.Object[]]
         $AppliesTo,
 
         [Parameter()]
@@ -2794,11 +2803,11 @@ function New-AzureADMSNamedLocationPolicy
         $IsTrusted,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.IpRange]]
+        [System.Object[]]
         $IpRanges,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.CountriesAndRegion]]
+        [System.Object[]]
         $CountriesAndRegions,
 
         [Parameter()]
@@ -2887,6 +2896,10 @@ function New-AzureADMSRoleAssignment
     param(
         [Parameter()]
         [System.String]
+        $DirectoryScopeId,
+
+        [Parameter()]
+        [System.String]
         $RoleDefinitionId,
 
         [Parameter()]
@@ -2915,8 +2928,16 @@ function New-AzureADMSRoleDefinition
         $Version,
 
         [Parameter()]
-        [System.String[]]
+        [System.Object[]]
         $RolePermissions,
+
+        [Parameter()]
+        [System.Object[]]
+        $InheritsPermissionsFrom,
+
+        [Parameter()]
+        [System.String]
+        $Description,
 
         [Parameter()]
         [System.Boolean]
@@ -2924,11 +2945,7 @@ function New-AzureADMSRoleDefinition
 
         [Parameter()]
         [System.String[]]
-        $ResourceScopes,
-
-        [Parameter()]
-        [System.String]
-        $Description
+        $ResourceScopes
     )
 }
 function New-AzureADMSTrustFrameworkPolicy
@@ -2982,7 +2999,7 @@ function New-AzureADPolicy
         $Type,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.KeyCredential]]
+        [System.Object[]]
         $KeyCredentials,
 
         [Parameter()]
@@ -4610,7 +4627,7 @@ function Set-AzureADMSApplication
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.AddIn]]
+        [System.Object[]]
         $AddIns,
 
         [Parameter()]
@@ -4622,7 +4639,7 @@ function Set-AzureADMSApplication
         $DisplayName,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.RequiredResourceAccess]]
+        [System.Object[]]
         $RequiredResourceAccess,
 
         [Parameter()]
@@ -4642,7 +4659,7 @@ function Set-AzureADMSApplication
         $TokenEncryptionKeyId,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.KeyCredential]]
+        [System.Object[]]
         $KeyCredentials,
 
         [Parameter()]
@@ -4662,7 +4679,7 @@ function Set-AzureADMSApplication
         $IsDeviceOnlyAuthSupported,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.PreAuthorizedApplication]]
+        [System.Object[]]
         $PreAuthorizedApplications,
 
         [Parameter()]
@@ -4690,11 +4707,11 @@ function Set-AzureADMSApplication
         $InformationalUrl,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.PasswordCredential]]
+        [System.Object[]]
         $PasswordCredentials,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.AppRole]]
+        [System.Object[]]
         $AppRoles
     )
 }
@@ -4807,7 +4824,7 @@ function Set-AzureADMSFeatureRolloutPolicy
         $DisplayName,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.MsDirectoryObject]]
+        [System.Object[]]
         $AppliesTo,
 
         [Parameter()]
@@ -4947,7 +4964,7 @@ function Set-AzureADMSNamedLocationPolicy
         $IsTrusted,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.CountriesAndRegion]]
+        [System.Object[]]
         $CountriesAndRegions,
 
         [Parameter()]
@@ -4955,7 +4972,7 @@ function Set-AzureADMSNamedLocationPolicy
         $PolicyId,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.IpRange]]
+        [System.Object[]]
         $IpRanges
     )
 }
@@ -5072,11 +5089,11 @@ function Set-AzureADMSPrivilegedRoleSetting
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.AzureADMSPrivilegedRuleSetting]]
+        [System.Object[]]
         $AdminEligibleSettings,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.AzureADMSPrivilegedRuleSetting]]
+        [System.Object[]]
         $AdminMemberSettings,
 
         [Parameter()]
@@ -5084,7 +5101,7 @@ function Set-AzureADMSPrivilegedRoleSetting
         $ResourceId,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.AzureADMSPrivilegedRuleSetting]]
+        [System.Object[]]
         $UserEligibleSettings,
 
         [Parameter()]
@@ -5096,7 +5113,7 @@ function Set-AzureADMSPrivilegedRoleSetting
         $RoleDefinitionId,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.AzureADMSPrivilegedRuleSetting]]
+        [System.Object[]]
         $UserMemberSettings,
 
         [Parameter()]
@@ -5121,8 +5138,16 @@ function Set-AzureADMSRoleDefinition
         $Version,
 
         [Parameter()]
-        [System.String[]]
+        [System.Object[]]
         $RolePermissions,
+
+        [Parameter()]
+        [System.Object[]]
+        $InheritsPermissionsFrom,
+
+        [Parameter()]
+        [System.String]
+        $Description,
 
         [Parameter()]
         [System.Boolean]
@@ -5131,10 +5156,6 @@ function Set-AzureADMSRoleDefinition
         [Parameter()]
         [System.String[]]
         $ResourceScopes,
-
-        [Parameter()]
-        [System.String]
-        $Description,
 
         [Parameter()]
         [System.String]
@@ -5204,7 +5225,7 @@ function Set-AzureADPolicy
         $Type,
 
         [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.KeyCredential]]
+        [System.Object[]]
         $KeyCredentials,
 
         [Parameter()]
@@ -5637,10 +5658,6 @@ function Add-MailboxFolderPermission
         [Parameter()]
         [System.Object]
         $SharingPermissionFlags,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $GroupMailbox,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -7063,6 +7080,10 @@ function Export-TransportRuleCollection
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Object]
+        $Format,
+
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
@@ -9516,6 +9537,71 @@ function Get-EvaluationModeReport
         $AsJob
     )
 }
+function Get-EvaluationModeReportSeries
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $StartDate,
+
+        [Parameter()]
+        [System.Object]
+        $Page,
+
+        [Parameter()]
+        [System.Object]
+        $EventSubType,
+
+        [Parameter()]
+        [System.Object]
+        $IsScanAndDrop,
+
+        [Parameter()]
+        [System.Object]
+        $EndDate,
+
+        [Parameter()]
+        [System.Object]
+        $PageSize,
+
+        [Parameter()]
+        [System.Object]
+        $AggregateBy,
+
+        [Parameter()]
+        [System.Object]
+        $GroupByFields,
+
+        [Parameter()]
+        [System.Object]
+        $Domain,
+
+        [Parameter()]
+        [System.Object]
+        $EventType,
+
+        [Parameter()]
+        [System.Object]
+        $IsComplexRouted,
+
+        [Parameter()]
+        [System.Object]
+        $IsEvaluationMode,
+
+        [Parameter()]
+        [System.Object]
+        $ProbeTag,
+
+        [Parameter()]
+        [System.Object]
+        $ConnectorIds,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Get-EventsFromEmailConfiguration
 {
     [CmdletBinding()]
@@ -10170,6 +10256,36 @@ function Get-LogonStatistics
         [System.Object]
         $Identity,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-M365DataAtRestEncryptionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-M365DataAtRestEncryptionPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $AsJob
@@ -15849,10 +15965,6 @@ function New-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
-        $EnableAntiSpoofEnforcement,
-
-        [Parameter()]
-        [System.Object]
         $TargetedDomainActionRecipients,
 
         [Parameter()]
@@ -16305,6 +16417,10 @@ function New-ClientAccessRule
 
         [Parameter()]
         [System.Object]
+        $AnyOfProtocols,
+
+        [Parameter()]
+        [System.Object]
         $Priority,
 
         [Parameter()]
@@ -16312,16 +16428,12 @@ function New-ClientAccessRule
         $ExceptUsernameMatchesAnyOfPatterns,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.Object]
         $AnyOfAuthenticationTypes,
 
         [Parameter()]
-        [System.Object]
-        $AnyOfProtocols,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Object]
@@ -17828,6 +17940,39 @@ function New-JournalRule
         [Parameter()]
         [System.Object]
         $Recipient,
+
+        [Parameter()]
+        [System.Object]
+        $Enabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-M365DataAtRestEncryptionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $AzureKeyIDs,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Object]
@@ -20479,6 +20624,10 @@ function New-SafeLinksPolicy
     param(
         [Parameter()]
         [System.Object]
+        $EnableOrganizationBranding,
+
+        [Parameter()]
+        [System.Object]
         $ExcludedUrls,
 
         [Parameter()]
@@ -20491,7 +20640,7 @@ function New-SafeLinksPolicy
 
         [Parameter()]
         [System.Object]
-        $WhiteListedUrls,
+        $UseTranslatedNotificationText,
 
         [Parameter()]
         [System.Object]
@@ -20511,7 +20660,7 @@ function New-SafeLinksPolicy
 
         [Parameter()]
         [System.Object]
-        $ScanUrls,
+        $WhiteListedUrls,
 
         [Parameter()]
         [System.Object]
@@ -20531,7 +20680,15 @@ function New-SafeLinksPolicy
 
         [Parameter()]
         [System.Object]
+        $CustomNotificationText,
+
+        [Parameter()]
+        [System.Object]
         $DeliverMessageAfterScan,
+
+        [Parameter()]
+        [System.Object]
+        $ScanUrls,
 
         [Parameter()]
         [System.Object]
@@ -22953,10 +23110,6 @@ function Remove-MailboxFolderPermission
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $GroupMailbox,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
@@ -24599,11 +24752,15 @@ function Set-AcceptedDomain
     param(
         [Parameter()]
         [System.Object]
+        $OutboundOnly,
+
+        [Parameter()]
+        [System.Object]
         $EnableNego2Authentication,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Object]
+        $CanHaveCloudCache,
 
         [Parameter()]
         [System.Object]
@@ -24614,12 +24771,12 @@ function Set-AcceptedDomain
         $DomainType,
 
         [Parameter()]
-        [System.Object]
-        $MatchSubDomains,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Object]
-        $OutboundOnly,
+        $MatchSubDomains,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -24976,8 +25133,8 @@ function Set-AntiPhishPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $MakeDefault,
+        [System.Object]
+        $EnableMailboxIntelligenceProtection,
 
         [Parameter()]
         [System.Object]
@@ -25013,7 +25170,7 @@ function Set-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
-        $EnableOrganizationDomainsProtection,
+        $TargetedUsersToProtect,
 
         [Parameter()]
         [System.Object]
@@ -25029,7 +25186,7 @@ function Set-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
-        $EnableAntiSpoofEnforcement,
+        $PolicyTag,
 
         [Parameter()]
         [System.Object]
@@ -25057,15 +25214,15 @@ function Set-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
-        $TargetedUsersToProtect,
-
-        [Parameter()]
-        [System.Object]
         $TargetedUserProtectionAction,
 
         [Parameter()]
         [System.Object]
         $MailboxIntelligenceProtectionActionRecipients,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $MakeDefault,
 
         [Parameter()]
         [System.Object]
@@ -25081,15 +25238,11 @@ function Set-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
-        $PolicyTag,
+        $EnableOrganizationDomainsProtection,
 
         [Parameter()]
         [System.Object]
         $EnableUnusualCharactersSafetyTips,
-
-        [Parameter()]
-        [System.Object]
-        $EnableMailboxIntelligenceProtection,
 
         [Parameter()]
         [System.Object]
@@ -25462,7 +25615,7 @@ function Set-CalendarProcessing
 
         [Parameter()]
         [System.Object]
-        $AllowDistributionGroup,
+        $BookingType,
 
         [Parameter()]
         [System.Object]
@@ -25471,10 +25624,6 @@ function Set-CalendarProcessing
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $MaximumDurationInMinutes,
 
         [Parameter()]
         [System.Object]
@@ -25487,10 +25636,6 @@ function Set-CalendarProcessing
         [Parameter()]
         [System.Object]
         $DeleteNonCalendarItems,
-
-        [Parameter()]
-        [System.Object]
-        $EnforceAdjacencyAsOverlap,
 
         [Parameter()]
         [System.Object]
@@ -25513,10 +25658,6 @@ function Set-CalendarProcessing
         $EnforceCapacity,
 
         [Parameter()]
-        [System.Object]
-        $AutoRSVPConfiguration,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $IgnoreDefaultScope,
 
@@ -25527,10 +25668,6 @@ function Set-CalendarProcessing
         [Parameter()]
         [System.Object]
         $AllRequestInPolicy,
-
-        [Parameter()]
-        [System.Object]
-        $AllowMultipleResources,
 
         [Parameter()]
         [System.Object]
@@ -25582,7 +25719,7 @@ function Set-CalendarProcessing
 
         [Parameter()]
         [System.Object]
-        $BookingType,
+        $MaximumDurationInMinutes,
 
         [Parameter()]
         [System.Object]
@@ -28308,6 +28445,60 @@ function Set-LinkedUser
         [Parameter()]
         [System.Object]
         $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-M365DataAtRestEncryptionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Refresh,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController,
+
+        [Parameter()]
+        [System.Object]
+        $Enabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-M365DataAtRestEncryptionPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $DataEncryptionPolicy,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -31602,7 +31793,7 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Object]
-        $DefaultPublicFolderMovedItemRetention,
+        $DefaultMinutesToReduceShortEventsBy,
 
         [Parameter()]
         [System.Object]
@@ -31662,6 +31853,10 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Object]
+        $ShortenEventScopeDefault,
+
+        [Parameter()]
+        [System.Object]
         $AuditDisabled,
 
         [Parameter()]
@@ -31670,11 +31865,15 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Object]
+        $FindTimeOnlineMeetingOptionDisabled,
+
+        [Parameter()]
+        [System.Object]
         $EwsEnabled,
 
         [Parameter()]
         [System.Object]
-        $PerTenantSwitchToESTSEnabled,
+        $FindTimeAttendeeAuthenticationEnabled,
 
         [Parameter()]
         [System.Object]
@@ -31758,6 +31957,10 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Object]
+        $DefaultPublicFolderMovedItemRetention,
+
+        [Parameter()]
+        [System.Object]
         $DistributionGroupDefaultOU,
 
         [Parameter()]
@@ -31810,7 +32013,15 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Object]
+        $DefaultMinutesToReduceLongEventsBy,
+
+        [Parameter()]
+        [System.Object]
         $IPListBlocked,
+
+        [Parameter()]
+        [System.Object]
+        $SendFromAliasEnabled,
 
         [Parameter()]
         [System.Object]
@@ -31823,6 +32034,10 @@ function Set-OrganizationConfig
         [Parameter()]
         [System.Object]
         $ConnectorsEnabledForSharepoint,
+
+        [Parameter()]
+        [System.Object]
+        $PerTenantSwitchToESTSEnabled,
 
         [Parameter()]
         [System.Object]
@@ -31851,6 +32066,10 @@ function Set-OrganizationConfig
         [Parameter()]
         [System.Object]
         $ByteEncoderTypeFor7BitCharsets,
+
+        [Parameter()]
+        [System.Object]
+        $FindTimeAutoScheduleDisabled,
 
         [Parameter()]
         [System.Object]
@@ -32139,6 +32358,10 @@ function Set-OwaMailboxPolicy
         [Parameter()]
         [System.Object]
         $ExplicitLogonEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ShowOnlineArchiveEnabled,
 
         [Parameter()]
         [System.Object]
@@ -32663,10 +32886,6 @@ function Set-Place
         [Parameter()]
         [System.Object]
         $GeoCoordinates,
-
-        [Parameter()]
-        [System.Object]
-        $SpaceType,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -33577,6 +33796,10 @@ function Set-SafeLinksPolicy
     param(
         [Parameter()]
         [System.Object]
+        $EnableOrganizationBranding,
+
+        [Parameter()]
+        [System.Object]
         $Identity,
 
         [Parameter()]
@@ -33593,7 +33816,7 @@ function Set-SafeLinksPolicy
 
         [Parameter()]
         [System.Object]
-        $WhiteListedUrls,
+        $UseTranslatedNotificationText,
 
         [Parameter()]
         [System.Object]
@@ -33609,7 +33832,7 @@ function Set-SafeLinksPolicy
 
         [Parameter()]
         [System.Object]
-        $ScanUrls,
+        $WhiteListedUrls,
 
         [Parameter()]
         [System.Object]
@@ -33625,7 +33848,15 @@ function Set-SafeLinksPolicy
 
         [Parameter()]
         [System.Object]
+        $CustomNotificationText,
+
+        [Parameter()]
+        [System.Object]
         $DeliverMessageAfterScan,
+
+        [Parameter()]
+        [System.Object]
+        $ScanUrls,
 
         [Parameter()]
         [System.Object]
@@ -36282,6 +36513,10 @@ function Set-User
         $PostalCode,
 
         [Parameter()]
+        [System.Object]
+        $CanHaveCloudCache,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $AsJob
     )
@@ -36784,6 +37019,27 @@ function Test-ClientAccessRule
         $AsJob
     )
 }
+function Test-DatabaseEvent
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Counter,
+
+        [Parameter()]
+        [System.Object]
+        $AssistantName,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Test-DataClassification
 {
     [CmdletBinding()]
@@ -36858,6 +37114,27 @@ function Test-IRMConfiguration
         [Parameter()]
         [System.Object]
         $Sender,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Test-M365DataAtRestEncryptionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -36973,6 +37250,10 @@ function Test-MigrationServerAvailability
         [Parameter()]
         [System.Object]
         $RemoteServer,
+
+        [Parameter()]
+        [System.Object]
+        $Partition,
 
         [Parameter()]
         [System.Object]
@@ -101424,7 +101705,11 @@ function Add-PnPField
 
         [Parameter()]
         [System.String]
-        $InternalName
+        $InternalName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AddToAllContentTypes
     )
 }
 function Add-PnPFieldFromXml
@@ -102181,16 +102466,16 @@ function Add-PnPSiteScript
         $Description,
 
         [Parameter()]
-        [System.String]
-        $Content,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.String]
         $Title,
+
+        [Parameter()]
+        [System.String]
+        $Content,
 
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PnPConnection]
@@ -103452,10 +103737,6 @@ function Copy-PnPFile
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $SkipSourceFolderName,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
@@ -103469,6 +103750,10 @@ function Copy-PnPFile
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PnPConnection]
         $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipSourceFolderName,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -103492,10 +103777,6 @@ function Copy-PnPItemProxy
         $PassThru,
 
         [Parameter()]
-        [System.String]
-        $Destination,
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -103506,6 +103787,10 @@ function Copy-PnPItemProxy
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Destination,
 
         [Parameter()]
         [System.String]
@@ -105742,14 +106027,6 @@ function Get-PnPSiteScriptFromWeb
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IncludeLinksToExportedItems,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
         $IncludeBranding,
 
         [Parameter()]
@@ -105762,7 +106039,15 @@ function Get-PnPSiteScriptFromWeb
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $IncludeAll,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeLinksToExportedItems,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -105835,6 +106120,10 @@ function Get-PnPSubWebs
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
         $Web,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeRootWeb,
 
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
@@ -106176,6 +106465,10 @@ function Get-PnPTenantTemplate
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
         [System.String]
         $Out,
 
@@ -106197,11 +106490,7 @@ function Get-PnPTenantTemplate
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AsInstance,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $AsInstance
     )
 }
 function Get-PnPTenantTheme
@@ -106755,6 +107044,10 @@ function Import-PnPTaxonomy
         $Confirm,
 
         [Parameter()]
+        [System.String]
+        $TermStoreName,
+
+        [Parameter()]
         [System.String[]]
         $Terms,
 
@@ -106772,11 +107065,7 @@ function Import-PnPTaxonomy
 
         [Parameter()]
         [System.Int32]
-        $Lcid,
-
-        [Parameter()]
-        [System.String]
-        $TermStoreName
+        $Lcid
     )
 }
 function Import-PnPTermGroupFromXml
@@ -107245,10 +107534,6 @@ function Move-PnPFile
         $TargetUrl,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
         $Web,
 
@@ -107263,6 +107548,10 @@ function Move-PnPFile
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $AllowSchemaMismatch,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.String]
@@ -107315,16 +107604,16 @@ function Move-PnPItemProxy
         $PassThru,
 
         [Parameter()]
-        [System.String]
-        $Destination,
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Destination,
 
         [Parameter()]
         [System.String]
@@ -107357,6 +107646,10 @@ function Move-PnPListItemToRecycleBin
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
@@ -107373,11 +107666,7 @@ function Move-PnPListItemToRecycleBin
 
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-        $List,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $List
     )
 }
 function Move-PnPRecycleBinItem
@@ -108520,6 +108809,10 @@ function Remove-PnPApplicationCustomizer
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
         [PnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
         $ClientSideComponentId,
 
@@ -108541,11 +108834,7 @@ function Remove-PnPApplicationCustomizer
 
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PnPConnection]
-        $Connection,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Connection
     )
 }
 function Remove-PnPClientSideComponent
@@ -108663,6 +108952,10 @@ function Remove-PnPCustomAction
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
@@ -108679,11 +108972,7 @@ function Remove-PnPCustomAction
 
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PnPConnection]
-        $Connection,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Connection
     )
 }
 function Remove-PnPDeletedMicrosoft365Group
@@ -108705,6 +108994,10 @@ function Remove-PnPEventReceiver
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
@@ -108721,17 +109014,17 @@ function Remove-PnPEventReceiver
 
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-        $List,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $List
     )
 }
 function Remove-PnPField
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
@@ -108750,11 +109043,7 @@ function Remove-PnPField
 
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-        $List,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $List
     )
 }
 function Remove-PnPFieldFromContentType
@@ -108981,6 +109270,10 @@ function Remove-PnPJavaScriptLink
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
@@ -109001,11 +109294,7 @@ function Remove-PnPJavaScriptLink
 
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PnPConnection]
-        $Connection,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Connection
     )
 }
 function Remove-PnPKnowledgeHubSite
@@ -109021,6 +109310,10 @@ function Remove-PnPList
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
@@ -109039,17 +109332,17 @@ function Remove-PnPList
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Recycle,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Recycle
     )
 }
 function Remove-PnPListItem
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
@@ -109072,11 +109365,7 @@ function Remove-PnPListItem
 
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-        $List,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $List
     )
 }
 function Remove-PnPMicrosoft365Group
@@ -109131,6 +109420,10 @@ function Remove-PnPNavigationNode
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
         [System.String]
         $Header,
 
@@ -109160,11 +109453,7 @@ function Remove-PnPNavigationNode
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $All,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $All
     )
 }
 function Remove-PnPOrgAssetsLibrary
@@ -109342,6 +109631,10 @@ function Remove-PnPSiteDesign
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
@@ -109350,17 +109643,17 @@ function Remove-PnPSiteDesign
 
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PnPConnection]
-        $Connection,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Connection
     )
 }
 function Remove-PnPSiteDesignTask
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
@@ -109371,17 +109664,17 @@ function Remove-PnPSiteDesignTask
 
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PnPConnection]
-        $Connection,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Connection
     )
 }
 function Remove-PnPSiteScript
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
@@ -109392,11 +109685,7 @@ function Remove-PnPSiteScript
 
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PnPConnection]
-        $Connection,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Connection
     )
 }
 function Remove-PnPStorageEntity
@@ -109439,6 +109728,10 @@ function Remove-PnPTaxonomyItem
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
@@ -109447,11 +109740,7 @@ function Remove-PnPTaxonomyItem
 
         [Parameter()]
         [System.String]
-        $TermPath,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $TermPath
     )
 }
 function Remove-PnPTeamsApp
@@ -109691,6 +109980,10 @@ function Remove-PnPView
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
@@ -109707,11 +110000,7 @@ function Remove-PnPView
 
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-        $List,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $List
     )
 }
 function Remove-PnPWeb
@@ -109857,6 +110146,10 @@ function Rename-PnPFile
         $TargetFileName,
 
         [Parameter()]
+        [System.String]
+        $SiteRelativeUrl,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
@@ -109874,11 +110167,7 @@ function Rename-PnPFile
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $OverwriteIfAlreadyExists,
-
-        [Parameter()]
-        [System.String]
-        $SiteRelativeUrl
+        $OverwriteIfAlreadyExists
     )
 }
 function Rename-PnPFolder
@@ -113308,6 +113597,10 @@ function Uninstall-PnPAppInstance
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
@@ -113320,11 +113613,7 @@ function Uninstall-PnPAppInstance
 
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PnPConnection]
-        $Connection,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Connection
     )
 }
 function Uninstall-PnPSolution
@@ -117592,48 +117881,6 @@ function Get-InformationBarrierReportSummary
         $AsJob
     )
 }
-function Get-InsiderRiskEntityList
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IncludeDeleted,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IncludeEntities,
-
-        [Parameter()]
-        [System.Object]
-        $Type,
-
-        [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
-    )
-}
-function Get-InsiderRiskPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $DistributionDetail,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
-    )
-}
 function Get-Label
 {
     [CmdletBinding()]
@@ -118391,31 +118638,6 @@ function Get-User
         [Parameter()]
         [System.Object]
         $ResultSize,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
-    )
-}
-function Import-DlpComplianceRuleCollection
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Object]
-        $ImportErrorAction,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $FileData,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -119965,6 +120187,10 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $ExceptIfSubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
         $ExceptIfRecipientDomainIs,
 
         [Parameter()]
@@ -120005,6 +120231,14 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $WithImportance,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
         $NotifyUser,
 
         [Parameter()]
@@ -120025,6 +120259,10 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $SenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
         $ExceptIfFrom,
 
         [Parameter()]
@@ -120033,7 +120271,11 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $SubjectContainsWords,
+        $NotifyEmailCustomText,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderADAttributeContainsWords,
 
         [Parameter()]
         [System.Object]
@@ -120049,7 +120291,15 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $ThirdPartyAppDlpRestrictions,
+        $HasSenderOverride,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyPolicyTipCustomTextTranslations,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfWithImportance,
 
         [Parameter()]
         [System.Object]
@@ -120065,7 +120315,7 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $AnyOfRecipientAddressContainsWords,
+        $ExceptIfSubjectOrBodyContainsWords,
 
         [Parameter()]
         [System.Object]
@@ -120085,7 +120335,15 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $PrependSubject,
+
+        [Parameter()]
+        [System.Object]
         $ExceptIfHeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressContainsWords,
 
         [Parameter()]
         [System.Object]
@@ -120105,7 +120363,7 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $NotifyPolicyTipCustomTextTranslations,
+        $ExceptIfDocumentIsPasswordProtected,
 
         [Parameter()]
         [System.Object]
@@ -120122,6 +120380,10 @@ function New-DlpComplianceRule
         [Parameter()]
         [System.Object]
         $AccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $FromScope,
 
         [Parameter()]
         [System.Object]
@@ -120145,7 +120407,7 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $ExceptIfDocumentIsPasswordProtected,
+        $ContentCharacterSetContainsWords,
 
         [Parameter()]
         [System.Object]
@@ -120153,7 +120415,7 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $NotifyEmailCustomText,
+        $ExceptIfSenderADAttributeMatchesPatterns,
 
         [Parameter()]
         [System.Object]
@@ -120169,11 +120431,15 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $SubjectContainsWords,
+
+        [Parameter()]
+        [System.Object]
         $ExceptIfHeaderContainsWords,
 
         [Parameter()]
         [System.Object]
-        $SenderIPRanges,
+        $ExceptIfContentCharacterSetContainsWords,
 
         [Parameter()]
         [System.Object]
@@ -120185,11 +120451,23 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $SubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.Object]
         $Moderate,
 
         [Parameter()]
         [System.Object]
         $FromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfHasSenderOverride,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromScope,
 
         [Parameter()]
         [System.Object]
@@ -120237,6 +120515,10 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $ThirdPartyAppDlpRestrictions,
+
+        [Parameter()]
+        [System.Object]
         $DocumentIsUnsupported,
 
         [Parameter()]
@@ -120274,6 +120556,10 @@ function New-DlpComplianceRule
         [Parameter()]
         [System.Object]
         $AlertProperties,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyHtmlDisclaimer,
 
         [Parameter()]
         [System.Object]
@@ -120658,140 +120944,6 @@ function New-InformationBarrierPolicy
         $AsJob
     )
 }
-function New-InsiderRiskEntityList
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Object]
-        $Description,
-
-        [Parameter()]
-        [System.Object]
-        $DisplayName,
-
-        [Parameter()]
-        [System.Object]
-        $Name,
-
-        [Parameter()]
-        [System.Object]
-        $Type,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsSystem,
-
-        [Parameter()]
-        [System.Object]
-        $Entities,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
-    )
-}
-function New-InsiderRiskPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Object]
-        $HistoricTimeSpan,
-
-        [Parameter()]
-        [System.Object]
-        $SensitivityLabels,
-
-        [Parameter()]
-        [System.Object]
-        $Enabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $Name,
-
-        [Parameter()]
-        [System.Object]
-        $ExchangeLocation,
-
-        [Parameter()]
-        [System.Object]
-        $PostTerminationActivity,
-
-        [Parameter()]
-        [System.Object]
-        $Triggers,
-
-        [Parameter()]
-        [System.Object]
-        $Comment,
-
-        [Parameter()]
-        [System.Object]
-        $TeamsSites,
-
-        [Parameter()]
-        [System.Object]
-        $InsiderRiskScenario,
-
-        [Parameter()]
-        [System.Object]
-        $DlpPolicy,
-
-        [Parameter()]
-        [System.Object]
-        $FutureTerminationWindow,
-
-        [Parameter()]
-        [System.Object]
-        $IsCustom,
-
-        [Parameter()]
-        [System.Object]
-        $Indicators,
-
-        [Parameter()]
-        [System.Object]
-        $SharepointSites,
-
-        [Parameter()]
-        [System.Object]
-        $CustomTags,
-
-        [Parameter()]
-        [System.Object]
-        $TenantSetting,
-
-        [Parameter()]
-        [System.Object]
-        $DlpSensitiveTypes,
-
-        [Parameter()]
-        [System.Object]
-        $InScopeTimeSpan,
-
-        [Parameter()]
-        [System.Object]
-        $SchemaVersion,
-
-        [Parameter()]
-        [System.Object]
-        $PastTerminationWindow,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
-    )
-}
 function New-Label
 {
     [CmdletBinding()]
@@ -120826,7 +120978,15 @@ function New-Label
 
         [Parameter()]
         [System.Object]
+        $ApplyContentMarkingFooterEnabled,
+
+        [Parameter()]
+        [System.Object]
         $ApplyContentMarkingFooterFontSize,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyWaterMarkingFontSize,
 
         [Parameter()]
         [System.Object]
@@ -120847,6 +121007,10 @@ function New-Label
         [Parameter()]
         [System.Object]
         $ApplyContentMarkingFooterText,
+
+        [Parameter()]
+        [System.Object]
+        $ColumnAssetCondition,
 
         [Parameter()]
         [System.Object]
@@ -120874,7 +121038,7 @@ function New-Label
 
         [Parameter()]
         [System.Object]
-        $ApplyContentMarkingFooterEnabled,
+        $SqlAssetCondition,
 
         [Parameter()]
         [System.Object]
@@ -120954,7 +121118,7 @@ function New-Label
 
         [Parameter()]
         [System.Object]
-        $ApplyWaterMarkingFontSize,
+        $SiteExternalSharingControlType,
 
         [Parameter()]
         [System.Object]
@@ -122389,52 +122553,6 @@ function Remove-InformationBarrierPolicy
         [Parameter()]
         [System.Object]
         $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
-    )
-}
-function Remove-InsiderRiskEntityList
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsSystem,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ForceDeletion,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
-    )
-}
-function Remove-InsiderRiskPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ForceDeletion,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -124226,7 +124344,15 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $NotifyAllowOverride,
+
+        [Parameter()]
+        [System.Object]
         $DocumentNameMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectOrBodyMatchesPatterns,
 
         [Parameter()]
         [System.Object]
@@ -124262,15 +124388,19 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $NotifyPolicyTipCustomText,
-
-        [Parameter()]
-        [System.Object]
         $DocumentNameMatchesWords,
 
         [Parameter()]
         [System.Object]
-        $NotifyAllowOverride,
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $WithImportance,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectOrBodyMatchesPatterns,
 
         [Parameter()]
         [System.Object]
@@ -124294,6 +124424,10 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $SenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
         $ExceptIfFrom,
 
         [Parameter()]
@@ -124302,7 +124436,11 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $SubjectContainsWords,
+        $NotifyEmailCustomText,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderADAttributeContainsWords,
 
         [Parameter()]
         [System.Object]
@@ -124318,7 +124456,15 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $ThirdPartyAppDlpRestrictions,
+        $HasSenderOverride,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyPolicyTipCustomTextTranslations,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfWithImportance,
 
         [Parameter()]
         [System.Object]
@@ -124330,7 +124476,7 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $AnyOfRecipientAddressContainsWords,
+        $ExceptIfSubjectOrBodyContainsWords,
 
         [Parameter()]
         [System.Object]
@@ -124350,7 +124496,15 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $PrependSubject,
+
+        [Parameter()]
+        [System.Object]
         $ExceptIfHeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressContainsWords,
 
         [Parameter()]
         [System.Object]
@@ -124370,7 +124524,7 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $NotifyPolicyTipCustomTextTranslations,
+        $ExceptIfDocumentIsPasswordProtected,
 
         [Parameter()]
         [System.Object]
@@ -124390,6 +124544,10 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $FromScope,
+
+        [Parameter()]
+        [System.Object]
         $RemoveHeader,
 
         [Parameter()]
@@ -124406,7 +124564,7 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $ExceptIfDocumentIsPasswordProtected,
+        $ContentCharacterSetContainsWords,
 
         [Parameter()]
         [System.Object]
@@ -124414,7 +124572,7 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $NotifyEmailCustomText,
+        $ExceptIfSenderADAttributeMatchesPatterns,
 
         [Parameter()]
         [System.Object]
@@ -124430,11 +124588,15 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $SubjectContainsWords,
+
+        [Parameter()]
+        [System.Object]
         $ExceptIfHeaderContainsWords,
 
         [Parameter()]
         [System.Object]
-        $SenderIPRanges,
+        $ExceptIfContentCharacterSetContainsWords,
 
         [Parameter()]
         [System.Object]
@@ -124446,6 +124608,10 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $SubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.Object]
         $Moderate,
 
         [Parameter()]
@@ -124454,7 +124620,11 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $Identity,
+        $ExceptIfHasSenderOverride,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromScope,
 
         [Parameter()]
         [System.Object]
@@ -124490,11 +124660,19 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $NotifyPolicyTipCustomText,
+
+        [Parameter()]
+        [System.Object]
         $ContentPropertyContainsWords,
 
         [Parameter()]
         [System.Object]
         $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ThirdPartyAppDlpRestrictions,
 
         [Parameter()]
         [System.Object]
@@ -124531,6 +124709,10 @@ function Set-DlpComplianceRule
         [Parameter()]
         [System.Object]
         $AlertProperties,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyHtmlDisclaimer,
 
         [Parameter()]
         [System.Object]
@@ -124947,140 +125129,6 @@ function Set-InformationBarrierPolicy
         $AsJob
     )
 }
-function Set-InsiderRiskEntityList
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Object]
-        $Description,
-
-        [Parameter()]
-        [System.Object]
-        $DisplayName,
-
-        [Parameter()]
-        [System.Object]
-        $AddEntities,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $RemoveEntities,
-
-        [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
-    )
-}
-function Set-InsiderRiskPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Object]
-        $HistoricTimeSpan,
-
-        [Parameter()]
-        [System.Object]
-        $SensitivityLabels,
-
-        [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Object]
-        $Enabled,
-
-        [Parameter()]
-        [System.Object]
-        $AddExchangeLocation,
-
-        [Parameter()]
-        [System.Object]
-        $PostTerminationActivity,
-
-        [Parameter()]
-        [System.Object]
-        $Triggers,
-
-        [Parameter()]
-        [System.Object]
-        $Comment,
-
-        [Parameter()]
-        [System.Object]
-        $TeamsSites,
-
-        [Parameter()]
-        [System.Object]
-        $DlpPolicy,
-
-        [Parameter()]
-        [System.Object]
-        $FutureTerminationWindow,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $IsCustom,
-
-        [Parameter()]
-        [System.Object]
-        $RemoveExchangeLocation,
-
-        [Parameter()]
-        [System.Object]
-        $Indicators,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $RetryDistribution,
-
-        [Parameter()]
-        [System.Object]
-        $SharepointSites,
-
-        [Parameter()]
-        [System.Object]
-        $CustomTags,
-
-        [Parameter()]
-        [System.Object]
-        $TenantSetting,
-
-        [Parameter()]
-        [System.Object]
-        $DlpSensitiveTypes,
-
-        [Parameter()]
-        [System.Object]
-        $InScopeTimeSpan,
-
-        [Parameter()]
-        [System.Object]
-        $SchemaVersion,
-
-        [Parameter()]
-        [System.Object]
-        $PastTerminationWindow,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AsJob
-    )
-}
 function Set-Label
 {
     [CmdletBinding()]
@@ -125115,7 +125163,15 @@ function Set-Label
 
         [Parameter()]
         [System.Object]
+        $ApplyContentMarkingFooterEnabled,
+
+        [Parameter()]
+        [System.Object]
         $ApplyContentMarkingFooterFontSize,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyWaterMarkingFontSize,
 
         [Parameter()]
         [System.Object]
@@ -125143,6 +125199,10 @@ function Set-Label
 
         [Parameter()]
         [System.Object]
+        $ColumnAssetCondition,
+
+        [Parameter()]
+        [System.Object]
         $SiteAndGroupProtectionAllowEmailFromGuestUsers,
 
         [Parameter()]
@@ -125163,7 +125223,7 @@ function Set-Label
 
         [Parameter()]
         [System.Object]
-        $ApplyContentMarkingFooterEnabled,
+        $SqlAssetCondition,
 
         [Parameter()]
         [System.Object]
@@ -125243,7 +125303,7 @@ function Set-Label
 
         [Parameter()]
         [System.Object]
-        $ApplyWaterMarkingFontSize,
+        $SiteExternalSharingControlType,
 
         [Parameter()]
         [System.Object]
@@ -125527,6 +125587,10 @@ function Set-PolicyConfig
         [Parameter()]
         [System.Object]
         $RuleErrorAction,
+
+        [Parameter()]
+        [System.Object]
+        $PurviewLabelConsent,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -127615,6 +127679,31 @@ function Get-CsInboundBlockedNumberPattern
         $AsJob
     )
 }
+function Get-CsInboundExemptNumberPattern
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Get-CsIPPhonePolicy
 {
     [CmdletBinding()]
@@ -129106,6 +129195,10 @@ function Get-CsOnlineUser
     param(
         [Parameter()]
         [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
         $Credential,
 
         [Parameter()]
@@ -129125,8 +129218,8 @@ function Get-CsOnlineUser
         $OnOfficeCommunicationServer,
 
         [Parameter()]
-        [System.Object]
-        $Identity,
+        [System.Management.Automation.SwitchParameter]
+        $UnassignedUser,
 
         [Parameter()]
         [System.Object]
@@ -129135,10 +129228,6 @@ function Get-CsOnlineUser
         [Parameter()]
         [System.Object]
         $DomainController,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $UnassignedUser,
 
         [Parameter()]
         [System.Object]
@@ -130275,6 +130364,81 @@ function Get-CsTeamsShiftsAppPolicy
         $AsJob
     )
 }
+function Get-CsTeamsShiftsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-CsTeamsSurvivableBranchAppliance
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-CsTeamsSurvivableBranchAppliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Get-CsTeamsTargetingPolicy
 {
     [CmdletBinding()]
@@ -130301,6 +130465,31 @@ function Get-CsTeamsTargetingPolicy
     )
 }
 function Get-CsTeamsTranslationRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-CsTeamsUpdateManagementPolicy
 {
     [CmdletBinding()]
     param(
@@ -130717,6 +130906,31 @@ function Get-CsTenantNetworkConfiguration
         $AsJob
     )
 }
+function Get-CsTenantNetworkPostalCode
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Get-CsTenantNetworkRegion
 {
     [CmdletBinding()]
@@ -130749,6 +130963,10 @@ function Get-CsTenantNetworkSite
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $LocalStore,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ExpandPostalCodes,
 
         [Parameter()]
         [System.Object]
@@ -132203,6 +132421,117 @@ function Grant-CsTeamsMessagingPolicy
     )
 }
 function Grant-CsTeamsMobilityPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Grant-CsTeamsShiftsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Grant-CsTeamsSurvivableBranchAppliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Grant-CsTeamsUpdateManagementPolicy
 {
     [CmdletBinding()]
     param(
@@ -134150,6 +134479,51 @@ function New-CsInboundBlockedNumberPattern
         $AsJob
     )
 }
+function New-CsInboundExemptNumberPattern
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $Pattern,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $InMemory,
+
+        [Parameter()]
+        [System.Object]
+        $Enabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function New-CsMobilityPolicy
 {
     [CmdletBinding()]
@@ -134942,6 +135316,10 @@ function New-CsOnlinePSTNGateway
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Object]
+        $Description,
+
         [Parameter()]
         [System.Object]
         $GenerateRingingWhileLocatingUser,
@@ -136325,6 +136703,10 @@ function New-CsTeamsMeetingPolicy
 
         [Parameter()]
         [System.Object]
+        $SpeakerAttributionMode,
+
+        [Parameter()]
+        [System.Object]
         $Identity,
 
         [Parameter()]
@@ -136525,6 +136907,10 @@ function New-CsTeamsMessagingPolicy
         $AllowMemes,
 
         [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Force,
 
@@ -136570,7 +136956,7 @@ function New-CsTeamsMessagingPolicy
 
         [Parameter()]
         [System.Object]
-        $Description,
+        $ChatPermissionRole,
 
         [Parameter()]
         [System.Object]
@@ -136724,6 +137110,137 @@ function New-CsTeamsPinnedApp
         $AsJob
     )
 }
+function New-CsTeamsShiftsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $ShiftNoticeMessageType,
+
+        [Parameter()]
+        [System.Object]
+        $ShiftNoticeFrequency,
+
+        [Parameter()]
+        [System.Object]
+        $EnableScheduleOwnerPermissions,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $AccessGracePeriodMinutes,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $InMemory,
+
+        [Parameter()]
+        [System.Object]
+        $ShiftNoticeMessageCustom,
+
+        [Parameter()]
+        [System.Object]
+        $AccessType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $EnableShiftPresence,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-CsTeamsSurvivableBranchAppliance
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Fqdn,
+
+        [Parameter()]
+        [System.Object]
+        $Site,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $InMemory,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-CsTeamsSurvivableBranchAppliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $BranchApplianceFqdns,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $InMemory,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function New-CsTeamsTranslationRule
 {
     [CmdletBinding()]
@@ -136751,6 +137268,59 @@ function New-CsTeamsTranslationRule
         [Parameter()]
         [System.Object]
         $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $InMemory,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-CsTeamsUpdateManagementPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $UpdateDayOfWeek,
+
+        [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Object]
+        $UpdateTime,
+
+        [Parameter()]
+        [System.Object]
+        $UpdateTimeOfDay,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $AllowManagedUpdates,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $AllowPreview,
 
         [Parameter()]
         [System.Object]
@@ -136931,6 +137501,51 @@ function New-CsTenantDialPlan
         [Parameter()]
         [System.Object]
         $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-CsTenantNetworkPostalCode
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Object]
+        $CountryCode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $PostalCode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $InMemory,
+
+        [Parameter()]
+        [System.Object]
+        $NetworkSiteID,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -137475,10 +138090,6 @@ function Remove-CsCallQueue
 
         [Parameter()]
         [System.Object]
-        $ChannelUserObjectId,
-
-        [Parameter()]
-        [System.Object]
         $Identity,
 
         [Parameter()]
@@ -137732,6 +138343,31 @@ function Remove-CsHybridTelephoneNumber
     )
 }
 function Remove-CsInboundBlockedNumberPattern
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Remove-CsInboundExemptNumberPattern
 {
     [CmdletBinding()]
     param(
@@ -138806,6 +139442,81 @@ function Remove-CsTeamsPinnedApp
         $AsJob
     )
 }
+function Remove-CsTeamsShiftsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Remove-CsTeamsSurvivableBranchAppliance
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Remove-CsTeamsSurvivableBranchAppliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Remove-CsTeamsTargetingPolicy
 {
     [CmdletBinding()]
@@ -138832,6 +139543,31 @@ function Remove-CsTeamsTargetingPolicy
     )
 }
 function Remove-CsTeamsTranslationRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Remove-CsTeamsUpdateManagementPolicy
 {
     [CmdletBinding()]
     param(
@@ -138957,6 +139693,31 @@ function Remove-CsTenantDialPlan
     )
 }
 function Remove-CsTenantNetworkConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Remove-CsTenantNetworkPostalCode
 {
     [CmdletBinding()]
     param(
@@ -140783,6 +141544,47 @@ function Set-CsInboundBlockedNumberPattern
         $AsJob
     )
 }
+function Set-CsInboundExemptNumberPattern
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Pattern,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Enabled,
+
+        [Parameter()]
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Set-CsIPPhonePolicy
 {
     [CmdletBinding()]
@@ -142369,6 +143171,10 @@ function Set-CsOnlinePSTNGateway
     param(
         [Parameter()]
         [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Object]
         $GenerateRingingWhileLocatingUser,
 
         [Parameter()]
@@ -143287,11 +144093,11 @@ function Set-CsTeamsClientConfiguration
 
         [Parameter()]
         [System.Object]
-        $AllowSkypeBusinessInterop,
+        $AllowScopedPeopleSearchandAccess,
 
         [Parameter()]
         [System.Object]
-        $AllowScopedPeopleSearchandAccess,
+        $AllowSkypeBusinessInterop,
 
         [Parameter()]
         [System.Object]
@@ -143312,6 +144118,10 @@ function Set-CsTeamsClientConfiguration
         [Parameter()]
         [System.Object]
         $ResourceAccountContentAccess,
+
+        [Parameter()]
+        [System.Object]
+        $AllowRoleBasedChatPermissions,
 
         [Parameter()]
         [System.Object]
@@ -144086,6 +144896,10 @@ function Set-CsTeamsMeetingPolicy
 
         [Parameter()]
         [System.Object]
+        $SpeakerAttributionMode,
+
+        [Parameter()]
+        [System.Object]
         $Identity,
 
         [Parameter()]
@@ -144290,6 +145104,10 @@ function Set-CsTeamsMessagingPolicy
         $AllowMemes,
 
         [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Force,
 
@@ -144335,7 +145153,7 @@ function Set-CsTeamsMessagingPolicy
 
         [Parameter()]
         [System.Object]
-        $Description,
+        $ChatPermissionRole,
 
         [Parameter()]
         [System.Object]
@@ -144584,6 +145402,133 @@ function Set-CsTeamsShiftsAppPolicy
         $AsJob
     )
 }
+function Set-CsTeamsShiftsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $ShiftNoticeMessageType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $ShiftNoticeFrequency,
+
+        [Parameter()]
+        [System.Object]
+        $EnableScheduleOwnerPermissions,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $EnableShiftPresence,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $ShiftNoticeMessageCustom,
+
+        [Parameter()]
+        [System.Object]
+        $AccessType,
+
+        [Parameter()]
+        [System.Object]
+        $AccessGracePeriodMinutes,
+
+        [Parameter()]
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-CsTeamsSurvivableBranchAppliance
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Site,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-CsTeamsSurvivableBranchAppliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $BranchApplianceFqdns,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Set-CsTeamsTargetingPolicy
 {
     [CmdletBinding()]
@@ -144660,6 +145605,59 @@ function Set-CsTeamsTranslationRule
         [Parameter()]
         [System.Object]
         $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-CsTeamsUpdateManagementPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $UpdateDayOfWeek,
+
+        [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Object]
+        $UpdateTime,
+
+        [Parameter()]
+        [System.Object]
+        $UpdateTimeOfDay,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $AllowManagedUpdates,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $AllowPreview,
 
         [Parameter()]
         [System.Object]
@@ -145089,6 +146087,10 @@ function Set-CsTenantNetworkConfiguration
         $Force,
 
         [Parameter()]
+        [System.Object]
+        $PostalCodes,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
@@ -145111,6 +146113,47 @@ function Set-CsTenantNetworkConfiguration
         [Parameter()]
         [System.Object]
         $NetworkRegions,
+
+        [Parameter()]
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-CsTenantNetworkPostalCode
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Object]
+        $CountryCode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $NetworkSiteID,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
         [Parameter()]
         [System.Object]
