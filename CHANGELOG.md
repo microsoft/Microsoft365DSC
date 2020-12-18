@@ -11,6 +11,7 @@
     when this is equal to the Url parameter.
   * Updated export logic to not export the HubUrl
     parameter when this is equal to the Url parameter.
+  * Fixed issue with incorrectly applying the LocaleId
 * SPOSiteAuditSettings
   * Changed Export logic to make the url parameterized
 * SPOSiteGroup

@@ -958,7 +958,8 @@ function Export-TargetResource
                 # Removing the HubUrl parameter if the value is equal to the Url parameter.
                 # This to prevent issues if the site col has just been created and not yet
                 # configured as a hubsite.
-                if ($Results.Url.TrimEnd("/") -eq $Results.HubUrl.TrimEnd("/"))
+                if ([System.String]::IsNullOrEmpty($Results.HubUrl) -or `
+                    ($Results.Url.TrimEnd("/") -eq $Results.HubUrl.TrimEnd("/")))
                 {
                     $Results.Remove("HubUrl") | Out-Null
                 }
