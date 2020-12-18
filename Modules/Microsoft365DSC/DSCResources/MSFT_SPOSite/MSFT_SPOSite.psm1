@@ -454,28 +454,13 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
         -InboundParameters $PSBoundParameters
 
-    $ConnectionParams = @{
-        GlobalAdminAccount    = $GlobalAdminAccount
-        ApplicationId         = $ApplicationId
-        TenantId              = $TenantId
-        CertificatePath       = $CertificatePath
-        CertificatePassword   = $CertificatePassword
-        CertificateThumbprint = $CertificateThumbprint
-    }
-
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("Ensure") | Out-Null
-    $CurrentParameters.Remove("GlobalAdminAccount") | Out-Null
-    $CurrentParameters.Remove("ApplicationId") | Out-Null
-    $CurrentParameters.Remove("TenantId") | Out-Null
-    $CurrentParameters.Remove("CertificatePath") | Out-Null
-    $CurrentParameters.Remove("CertificatePassword") | Out-Null
-    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
 
     $context = Get-PnPContext
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
+        Write-Verbose -Message "Site {$Url} doesn't exist. Creating it."
+
         $CreationParams = @{
             Title    = $Title
             Url      = $Url
@@ -484,26 +469,46 @@ function Set-TargetResource
             Lcid     = $LocaleID
             TimeZone = $TimeZoneID
         }
-        Write-Verbose -Message "Site {$Url} doesn't exist. Creating it."
-        New-PnPTenantSite @CreationParams | Out-Null
 
-        $site = $null
-        $circuitBreaker = 0
-        do
+        $supportedLanguages = (Get-PnPAvailableLanguage).Lcid
+        if ($supportedLanguages -notcontains $CreationParams.Lcid)
         {
-            Write-Verbose -Message "Waiting for another 15 seconds for site to be ready."
-            Start-Sleep -Seconds 15
-            try
+            Write-Verbose -Message ("Specified LocaleId {$($CreationParams.Lcid)} " + `
+                    "is not supported. Creating the site collection in English {1033}")
+            $CreationParams.Lcid = 1033
+        }
+
+        try
+        {
+            New-PnPTenantSite @CreationParams -ErrorAction Stop | Out-Null
+
+            $site = $null
+            $circuitBreaker = 0
+            do
             {
-                $site = Get-PnPTenantSite -Url $Url -ErrorAction Stop
-            }
-            catch
-            {
-                $site = @{Status = 'Creating' }
-            }
-            $circuitBreaker++
-        } while ($site.Status -eq 'Creating' -and $circuitBreaker -lt 20)
-        Write-Verbose -Message "Site {$url} has been successfully created and is {$($site.Status)}."
+                Write-Verbose -Message "Waiting for another 15 seconds for site to be ready."
+                Start-Sleep -Seconds 15
+                try
+                {
+                    $site = Get-PnPTenantSite -Url $Url -ErrorAction Stop
+                }
+                catch
+                {
+                    $site = @{Status = 'Creating' }
+                }
+                $circuitBreaker++
+            } while ($site.Status -eq 'Creating' -and $circuitBreaker -lt 20)
+
+            Write-Verbose -Message "Site {$url} has been successfully created and is {$($site.Status)}."
+        }
+        catch
+        {
+            $Message = "Creation of the site $($Url) failed: $($_.Exception.Message)"
+            Add-M365DSCEvent -Message $Message -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+            throw $Message
+        }
     }
     elseif ($Ensure -eq "Absent" -and $CurrentValues.Ensure -eq 'Present')
     {
@@ -553,6 +558,24 @@ function Set-TargetResource
         Set-PnPTenantSite @UpdateParams -ErrorAction Stop
 
         $site = Get-PnPTenantSite $Url
+
+        if (-not [System.String]::IsNullOrEmpty($LocaleId) -and `
+                $PSBoundParameters.LocaleId -ne $site.Lcid)
+        {
+            Write-Verbose -Message "Updating LocaleId of RootWeb to $($PSBoundParameters.LocaleId)"
+            $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters `
+                -Url $Url
+
+            $web = Get-PnPWeb
+            $ctx = Get-PnPContext
+            $ctx.Load($web.RegionalSettings)
+            $ctx.ExecuteQuery()
+            $web.RegionalSettings.LocaleId = $PSBoundParameters.LocaleId
+            $web.Update()
+            $ctx.ExecuteQuery()
+        }
+
         #region Ad-Hoc properties
         if (-not [System.String]::IsNullOrEmpty($DenyAddAndCustomizePages))
         {
