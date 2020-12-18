@@ -12,6 +12,9 @@
   * Changed Export logic to make the url parameterized
   * Updated logic to output more explainable troubleshooting
     messages
+* M365DscReverse
+  * Added the GlobalAccount Parameter to the example
+    that is outputted after using the Export GUI
 
 # 1.20.1216.1
 
