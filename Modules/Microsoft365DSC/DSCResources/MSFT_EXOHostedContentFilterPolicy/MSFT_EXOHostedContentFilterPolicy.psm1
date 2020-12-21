@@ -59,15 +59,6 @@ function Get-TargetResource
         $EnableRegionBlockList = $false,
 
         [Parameter()]
-        [ValidatePattern("^$|^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")]
-        [System.String]
-        $EndUserSpamNotificationCustomFromAddress,
-
-        [Parameter()]
-        [System.String]
-        $EndUserSpamNotificationCustomFromName,
-
-        [Parameter()]
         [System.String]
         $EndUserSpamNotificationCustomSubject,
 
@@ -290,56 +281,54 @@ function Get-TargetResource
         else
         {
             $result = @{
-                Ensure                                   = 'Present'
-                Identity                                 = $Identity
-                AddXHeaderValue                          = $HostedContentFilterPolicy.AddXHeaderValue
-                AdminDisplayName                         = $HostedContentFilterPolicy.AdminDisplayName
-                AllowedSenderDomains                     = $HostedContentFilterPolicy.AllowedSenderDomains
-                AllowedSenders                           = $HostedContentFilterPolicy.AllowedSenders
-                BlockedSenderDomains                     = $HostedContentFilterPolicy.BlockedSenderDomains
-                BlockedSenders                           = $HostedContentFilterPolicy.BlockedSenders
-                BulkSpamAction                           = $HostedContentFilterPolicy.BulkSpamAction
-                BulkThreshold                            = $HostedContentFilterPolicy.BulkThreshold
-                DownloadLink                             = $HostedContentFilterPolicy.DownloadLink
-                EnableEndUserSpamNotifications           = $HostedContentFilterPolicy.EnableEndUserSpamNotifications
-                EnableLanguageBlockList                  = $HostedContentFilterPolicy.EnableLanguageBlockList
-                EnableRegionBlockList                    = $HostedContentFilterPolicy.EnableRegionBlockList
-                EndUserSpamNotificationCustomFromAddress = $HostedContentFilterPolicy.EndUserSpamNotificationCustomFromAddress
-                EndUserSpamNotificationCustomFromName    = $HostedContentFilterPolicy.EndUserSpamNotificationCustomFromName
-                EndUserSpamNotificationCustomSubject     = $HostedContentFilterPolicy.EndUserSpamNotificationCustomSubject
-                EndUserSpamNotificationFrequency         = $HostedContentFilterPolicy.EndUserSpamNotificationFrequency
-                EndUserSpamNotificationLanguage          = $HostedContentFilterPolicy.EndUserSpamNotificationLanguage
-                HighConfidenceSpamAction                 = $HostedContentFilterPolicy.HighConfidenceSpamAction
-                InlineSafetyTipsEnabled                  = $HostedContentFilterPolicy.InlineSafetyTipsEnabled
-                IncreaseScoreWithBizOrInfoUrls           = $HostedContentFilterPolicy.IncreaseScoreWithBizOrInfoUrls
-                IncreaseScoreWithImageLinks              = $HostedContentFilterPolicy.IncreaseScoreWithImageLinks
-                IncreaseScoreWithNumericIps              = $HostedContentFilterPolicy.IncreaseScoreWithNumericIps
-                IncreaseScoreWithRedirectToOtherPort     = $HostedContentFilterPolicy.IncreaseScoreWithRedirectToOtherPort
-                LanguageBlockList                        = $HostedContentFilterPolicy.LanguageBlockList
-                MakeDefault                              = $false
-                MarkAsSpamBulkMail                       = $HostedContentFilterPolicy.MarkAsSpamBulkMail
-                MarkAsSpamEmbedTagsInHtml                = $HostedContentFilterPolicy.MarkAsSpamEmbedTagsInHtml
-                MarkAsSpamEmptyMessages                  = $HostedContentFilterPolicy.MarkAsSpamEmptyMessages
-                MarkAsSpamFormTagsInHtml                 = $HostedContentFilterPolicy.MarkAsSpamFormTagsInHtml
-                MarkAsSpamFramesInHtml                   = $HostedContentFilterPolicy.MarkAsSpamFramesInHtml
-                MarkAsSpamFromAddressAuthFail            = $HostedContentFilterPolicy.MarkAsSpamFromAddressAuthFail
-                MarkAsSpamJavaScriptInHtml               = $HostedContentFilterPolicy.MarkAsSpamJavaScriptInHtml
-                MarkAsSpamNdrBackscatter                 = $HostedContentFilterPolicy.MarkAsSpamNdrBackscatter
-                MarkAsSpamObjectTagsInHtml               = $HostedContentFilterPolicy.MarkAsSpamObjectTagsInHtml
-                MarkAsSpamSensitiveWordList              = $HostedContentFilterPolicy.MarkAsSpamSensitiveWordList
-                MarkAsSpamSpfRecordHardFail              = $HostedContentFilterPolicy.MarkAsSpamSpfRecordHardFail
-                MarkAsSpamWebBugsInHtml                  = $HostedContentFilterPolicy.MarkAsSpamWebBugsInHtml
-                ModifySubjectValue                       = $HostedContentFilterPolicy.ModifySubjectValue
-                PhishSpamAction                          = $HostedContentFilterPolicy.PhishSpamAction
-                QuarantineRetentionPeriod                = $HostedContentFilterPolicy.QuarantineRetentionPeriod
-                RedirectToRecipients                     = $HostedContentFilterPolicy.RedirectToRecipients
-                RegionBlockList                          = $HostedContentFilterPolicy.RegionBlockList
-                SpamAction                               = $HostedContentFilterPolicy.SpamAction
-                TestModeAction                           = $HostedContentFilterPolicy.TestModeAction
-                TestModeBccToRecipients                  = $HostedContentFilterPolicy.TestModeBccToRecipients
-                PhishZapEnabled                          = $HostedContentFilterPolicy.PhishZapEnabled
-                SpamZapEnabled                           = $HostedContentFilterPolicy.SpamZapEnabled
-                GlobalAdminAccount                       = $GlobalAdminAccount
+                Ensure                               = 'Present'
+                Identity                             = $Identity
+                AddXHeaderValue                      = $HostedContentFilterPolicy.AddXHeaderValue
+                AdminDisplayName                     = $HostedContentFilterPolicy.AdminDisplayName
+                AllowedSenderDomains                 = $HostedContentFilterPolicy.AllowedSenderDomains
+                AllowedSenders                       = $HostedContentFilterPolicy.AllowedSenders
+                BlockedSenderDomains                 = $HostedContentFilterPolicy.BlockedSenderDomains
+                BlockedSenders                       = $HostedContentFilterPolicy.BlockedSenders
+                BulkSpamAction                       = $HostedContentFilterPolicy.BulkSpamAction
+                BulkThreshold                        = $HostedContentFilterPolicy.BulkThreshold
+                DownloadLink                         = $HostedContentFilterPolicy.DownloadLink
+                EnableEndUserSpamNotifications       = $HostedContentFilterPolicy.EnableEndUserSpamNotifications
+                EnableLanguageBlockList              = $HostedContentFilterPolicy.EnableLanguageBlockList
+                EnableRegionBlockList                = $HostedContentFilterPolicy.EnableRegionBlockList
+                EndUserSpamNotificationCustomSubject = $HostedContentFilterPolicy.EndUserSpamNotificationCustomSubject
+                EndUserSpamNotificationFrequency     = $HostedContentFilterPolicy.EndUserSpamNotificationFrequency
+                EndUserSpamNotificationLanguage      = $HostedContentFilterPolicy.EndUserSpamNotificationLanguage
+                HighConfidenceSpamAction             = $HostedContentFilterPolicy.HighConfidenceSpamAction
+                InlineSafetyTipsEnabled              = $HostedContentFilterPolicy.InlineSafetyTipsEnabled
+                IncreaseScoreWithBizOrInfoUrls       = $HostedContentFilterPolicy.IncreaseScoreWithBizOrInfoUrls
+                IncreaseScoreWithImageLinks          = $HostedContentFilterPolicy.IncreaseScoreWithImageLinks
+                IncreaseScoreWithNumericIps          = $HostedContentFilterPolicy.IncreaseScoreWithNumericIps
+                IncreaseScoreWithRedirectToOtherPort = $HostedContentFilterPolicy.IncreaseScoreWithRedirectToOtherPort
+                LanguageBlockList                    = $HostedContentFilterPolicy.LanguageBlockList
+                MakeDefault                          = $false
+                MarkAsSpamBulkMail                   = $HostedContentFilterPolicy.MarkAsSpamBulkMail
+                MarkAsSpamEmbedTagsInHtml            = $HostedContentFilterPolicy.MarkAsSpamEmbedTagsInHtml
+                MarkAsSpamEmptyMessages              = $HostedContentFilterPolicy.MarkAsSpamEmptyMessages
+                MarkAsSpamFormTagsInHtml             = $HostedContentFilterPolicy.MarkAsSpamFormTagsInHtml
+                MarkAsSpamFramesInHtml               = $HostedContentFilterPolicy.MarkAsSpamFramesInHtml
+                MarkAsSpamFromAddressAuthFail        = $HostedContentFilterPolicy.MarkAsSpamFromAddressAuthFail
+                MarkAsSpamJavaScriptInHtml           = $HostedContentFilterPolicy.MarkAsSpamJavaScriptInHtml
+                MarkAsSpamNdrBackscatter             = $HostedContentFilterPolicy.MarkAsSpamNdrBackscatter
+                MarkAsSpamObjectTagsInHtml           = $HostedContentFilterPolicy.MarkAsSpamObjectTagsInHtml
+                MarkAsSpamSensitiveWordList          = $HostedContentFilterPolicy.MarkAsSpamSensitiveWordList
+                MarkAsSpamSpfRecordHardFail          = $HostedContentFilterPolicy.MarkAsSpamSpfRecordHardFail
+                MarkAsSpamWebBugsInHtml              = $HostedContentFilterPolicy.MarkAsSpamWebBugsInHtml
+                ModifySubjectValue                   = $HostedContentFilterPolicy.ModifySubjectValue
+                PhishSpamAction                      = $HostedContentFilterPolicy.PhishSpamAction
+                QuarantineRetentionPeriod            = $HostedContentFilterPolicy.QuarantineRetentionPeriod
+                RedirectToRecipients                 = $HostedContentFilterPolicy.RedirectToRecipients
+                RegionBlockList                      = $HostedContentFilterPolicy.RegionBlockList
+                SpamAction                           = $HostedContentFilterPolicy.SpamAction
+                TestModeAction                       = $HostedContentFilterPolicy.TestModeAction
+                TestModeBccToRecipients              = $HostedContentFilterPolicy.TestModeBccToRecipients
+                PhishZapEnabled                      = $HostedContentFilterPolicy.PhishZapEnabled
+                SpamZapEnabled                       = $HostedContentFilterPolicy.SpamZapEnabled
+                GlobalAdminAccount                   = $GlobalAdminAccount
             }
 
             if ($HostedContentFilterPolicy.IsDefault)
@@ -436,15 +425,6 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $EnableRegionBlockList = $false,
-
-        [Parameter()]
-        [ValidatePattern("^$|^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")]
-        [System.String]
-        $EndUserSpamNotificationCustomFromAddress,
-
-        [Parameter()]
-        [System.String]
-        $EndUserSpamNotificationCustomFromName,
 
         [Parameter()]
         [System.String]
@@ -740,15 +720,6 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $EnableRegionBlockList = $false,
-
-        [Parameter()]
-        [ValidatePattern("^$|^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")]
-        [System.String]
-        $EndUserSpamNotificationCustomFromAddress,
-
-        [Parameter()]
-        [System.String]
-        $EndUserSpamNotificationCustomFromName,
 
         [Parameter()]
         [System.String]

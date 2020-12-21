@@ -68,8 +68,6 @@ EXOHostedContentFilterPolicy TestHostedContentFilterPolicy {
   DownloadLink                             = $false
   EnableRegionBlockList                    = $true
   EnableLanguageBlockList                  = $true
-  EndUserSpamNotificationCustomFromAddress = 'Spam@contoso.com'
-  EndUserSpamNotificationCustomFromName    = 'Spam Notification'
   EndUserSpamNotificationCustomSubject     = 'This is SPAM'
   EndUserSpamNotificationLanguage          = 'Default'
   BulkThreshold                            = 5
@@ -77,8 +75,9 @@ EXOHostedContentFilterPolicy TestHostedContentFilterPolicy {
   AllowedSenderDomains                     = @('contoso.com', 'fabrikam.com')
   BlockedSenders                           = @('me@privacy.net', 'thedude@contoso.com')
   BlockedSenderDomains                     = @('privacy.net', 'facebook.com')
-  ZapEnabled                               = $true
   InlineSafetyTipsEnabled                  = $true
+  PhishZapEnabled                          = $true
+  SpamZapEnabled                           = $true
   BulkSpamAction                           = 'MoveToJmf'
   PhishSpamAction                          = 'Quarantine'
   MakeDefault                              = $false
