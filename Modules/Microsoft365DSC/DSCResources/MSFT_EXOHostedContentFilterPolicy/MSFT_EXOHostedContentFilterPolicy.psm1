@@ -962,6 +962,8 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('EndUserSpamNotificationCustomFromAddress') | Out-Null
+    $ValuesToCheck.Remove('EndUserSpamNotificationCustomFromName') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
