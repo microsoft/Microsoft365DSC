@@ -651,8 +651,16 @@ function Set-TargetResource
     $HostedContentFilterPolicyParams.Remove('GlobalAdminAccount') | Out-Null
     $HostedContentFilterPolicyParams.Remove('MakeDefault') | Out-Null
 
-    $HostedContentFilterPolicyParams.Remove('EndUserSpamNotificationCustomFromAddress') | Out-Null
-    $HostedContentFilterPolicyParams.Remove('EndUserSpamNotificationCustomFromName') | Out-Null
+    if ($HostedContentFilterPolicyParams.Contains('EndUserSpamNotificationCustomFromAddress'))
+    {
+        $HostedContentFilterPolicyParams.Remove('EndUserSpamNotificationCustomFromAddress') | Out-Null
+        Write-Verbose -Message "The EndUserSpamNotificationCustomFromAddress parameter is no longer available and will be depricated."
+    }
+    if ($HostedContentFilterPolicyParams.Contains('EndUserSpamNotificationCustomFromAddress'))
+    {
+        $HostedContentFilterPolicyParams.Remove('EndUserSpamNotificationCustomFromName') | Out-Null
+        Write-Verbose -Message "The EndUserSpamNotificationCustomFromName parameter is no longer available and will be depricated."
+    }
 
     if (('Present' -eq $Ensure ) -and ($null -eq $HostedContentFilterPolicy))
     {
