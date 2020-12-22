@@ -59,6 +59,15 @@ function Get-TargetResource
         $EnableRegionBlockList = $false,
 
         [Parameter()]
+        [ValidatePattern("^$|^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")]
+        [System.String]
+        $EndUserSpamNotificationCustomFromAddress,
+
+        [Parameter()]
+        [System.String]
+        $EndUserSpamNotificationCustomFromName,
+
+        [Parameter()]
         [System.String]
         $EndUserSpamNotificationCustomSubject,
 
