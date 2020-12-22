@@ -651,6 +651,9 @@ function Set-TargetResource
     $HostedContentFilterPolicyParams.Remove('GlobalAdminAccount') | Out-Null
     $HostedContentFilterPolicyParams.Remove('MakeDefault') | Out-Null
 
+    $HostedContentFilterPolicyParams.Remove('EndUserSpamNotificationCustomFromAddress') | Out-Null
+    $HostedContentFilterPolicyParams.Remove('EndUserSpamNotificationCustomFromName') | Out-Null
+
     if (('Present' -eq $Ensure ) -and ($null -eq $HostedContentFilterPolicy))
     {
         $HostedContentFilterPolicyParams += @{
