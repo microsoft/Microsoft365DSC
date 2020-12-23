@@ -1,5 +1,27 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* SPOHubSite
+  * Changed Export logic to make the url parameterized
+  * Updated Get method to prevent throwing an exception
+    when the specified site doesn't exist
+* SPOSite
+  * Updated logic to not process the HubUrl parameter
+    when this is equal to the Url parameter.
+  * Updated export logic to not export the HubUrl
+    parameter when this is equal to the Url parameter.
+  * Fixed issue with incorrectly applying the LocaleId
+* SPOSiteAuditSettings
+  * Changed Export logic to make the url parameterized
+* SPOSiteGroup
+  * Changed Export logic to make the url parameterized
+  * Updated logic to output more explainable troubleshooting
+    messages
+* M365DscReverse
+  * Added the GlobalAccount Parameter to the example
+    that is outputted after using the Export GUI
+
 # 1.20.1216.1
 
 * AADConditionalAccessPolicy
