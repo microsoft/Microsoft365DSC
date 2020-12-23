@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
+# 1.20.1223.1
 
 * SPOHubSite
   * Changed Export logic to make the url parameterized
