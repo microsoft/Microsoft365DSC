@@ -419,7 +419,7 @@ function Set-TargetResource
         Write-Verbose -Message "Configuring Tenant with: $value"
     }
 
-    if ($null -ne $SharingAllowedDomainList)
+    if ($null -ne $CurrentParameters["SharingAllowedDomainList"])
     {
         foreach ($allowedDomain in $SharingAllowedDomainList)
         {
@@ -429,7 +429,7 @@ function Set-TargetResource
         $CurrentParameters["SharingAllowedDomainList"] = $allowed.trim()
     }
 
-    if ($null -ne $SharingBlockedDomainList)
+    if ($null -ne $CurrentParameters["SharingBlockedDomainList"])
     {
         foreach ($blockedDomain in $SharingBlockedDomainList)
         {
