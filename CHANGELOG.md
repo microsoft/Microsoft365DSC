@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# 1.21.113.1
+
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell
+    to 2.0.102;
+
 # 1.20.1223.1
 
 * SPOHubSite
