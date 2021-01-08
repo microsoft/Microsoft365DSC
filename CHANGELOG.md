@@ -2,6 +2,10 @@
 
 # 1.21.113.1
 
+* AADTenantDetails
+  * Fixes an issue where the Set would fail if Service Principal
+   was used.
+   (Issue [#1002](https://github.com/microsoft/Microsoft365DSC/issues/1002))
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell
     to 2.0.102;
