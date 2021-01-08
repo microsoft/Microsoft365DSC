@@ -79,6 +79,11 @@ function Get-TargetResource
         $ExcludedSenders = @(),
 
         [Parameter()]
+        [ValidateSet('Automatic', 'Manual', 'Off')]
+        [System.String]
+        $ImpersonationProtectionState = 'Automatic',
+
+        [Parameter()]
         [System.Boolean]
         $MakeDefault = $false,
 
@@ -204,6 +209,7 @@ function Get-TargetResource
                 EnableUnusualCharactersSafetyTips   = $AntiPhishPolicy.EnableUnusualCharactersSafetyTips
                 ExcludedDomains                     = $AntiPhishPolicy.ExcludedDomains
                 ExcludedSenders                     = $AntiPhishPolicy.ExcludedSenders
+                ImpersonationProtectionState        = $AntiPhishPolicy.ImpersonationProtectionState
                 MakeDefault                         = $AntiPhishPolicy.MakeDefault
                 PhishThresholdLevel                 = $PhishThresholdLevelValue
                 TargetedDomainActionRecipients      = $AntiPhishPolicy.TargetedDomainActionRecipients
@@ -325,6 +331,11 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $ExcludedSenders = @(),
+
+        [Parameter()]
+        [ValidateSet('Automatic', 'Manual', 'Off')]
+        [System.String]
+        $ImpersonationProtectionState = 'Automatic',
 
         [Parameter()]
         [System.Boolean]
@@ -505,6 +516,11 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $ExcludedSenders = @(),
+
+        [Parameter()]
+        [ValidateSet('Automatic', 'Manual', 'Off')]
+        [System.String]
+        $ImpersonationProtectionState = 'Automatic',
 
         [Parameter()]
         [System.Boolean]
