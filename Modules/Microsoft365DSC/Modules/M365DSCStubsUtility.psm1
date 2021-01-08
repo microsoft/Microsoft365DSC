@@ -167,6 +167,10 @@ function New-M365DSCStubFiles
                         {
                             $ParamType = "System.Boolean"
                         }
+                        elseif ($ParamType.StartsWith("System.Collections.Generic.List``1[Microsoft.Open.MSGraph.Model."))
+                        {
+                            $ParamType = "System.Object[]"
+                        }
                         $StubContent += "        [$ParamType]`r`n"
                         $StubContent += "        `$$($param.Name),`r`n`r`n"
                     }

@@ -19,7 +19,7 @@ function Remove-AzureADDirectorySetting
 {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id
     )
@@ -29,7 +29,7 @@ function New-AzureADDirectorySetting
 {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [PSCustomObject]
         $DirectorySetting
     )
@@ -39,11 +39,11 @@ function Set-AzureADDirectorySetting
 {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [PSObject]
         $DirectorySetting
     )
@@ -196,7 +196,7 @@ function New-M365DSCConnection
         [Parameter(Mandatory = $true)]
         [ValidateSet("Azure", "AzureAD", "SharePointOnline", "ExchangeOnline", 'Intune', `
                 "SecurityComplianceCenter", "MSOnline", "PnP", "PowerPlatforms", `
-                "MicrosoftTeams", "SkypeForBusiness")]
+                "MicrosoftTeams", "SkypeForBusiness", "MicrosoftGraph")]
         [System.String]
         $Platform,
 
@@ -291,37 +291,6 @@ function Get-AtpPolicyForO365
     )
 }
 
-function Set-AtpPolicyForO365
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter()]
-        [System.String]
-        $Identity = 'Default',
-
-        [Parameter()]
-        [Boolean]
-        $AllowClickThrough = $true,
-
-        [Parameter()]
-        [System.String[]]
-        $BlockUrls = @(),
-
-        [Parameter()]
-        [Boolean]
-        $EnableATPForSPOTeamsODB = $false,
-
-        [Parameter()]
-        [Boolean]
-        $EnableSafeLinksForClients = $false,
-
-        [Parameter()]
-        [Boolean]
-        $TrackClicks = $true
-    )
-}
 
 function Set-AddressBookPolicy
 {
@@ -433,62 +402,6 @@ function New-SafeAttachmentPolicy
         [Parameter()]
         [System.String]
         $RedirectAddress
-    )
-}
-
-function Set-MalwareFilterRule
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $Comments,
-
-        [Parameter()]
-        [System.Boolean]
-        $Enabled,
-
-        [Parameter()]
-        [System.String]
-        $ExceptIfRecipientDomainIs,
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentTo = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentToMemberOf = @(),
-
-        [Parameter()]
-        [System.String]
-        $MalwareFilterPolicy,
-
-        [Parameter()]
-        [System.String]
-        $Priority,
-
-        [Parameter()]
-        [System.String]
-        $RecipientDomainIs,
-
-        [Parameter()]
-        [System.String[]]
-        $SentTo = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $SentToMemberOf = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $Confirm = $false
     )
 }
 

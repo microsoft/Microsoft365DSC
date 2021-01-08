@@ -1,5 +1,68 @@
 # Change log for Microsoft365DSC
 
+# 1.21.113.1
+
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell
+    to 2.0.102;
+
+# 1.20.1223.1
+
+* SPOHubSite
+  * Changed Export logic to make the url parameterized
+  * Updated Get method to prevent throwing an exception
+    when the specified site doesn't exist
+* SPOSite
+  * Updated logic to not process the HubUrl parameter
+    when this is equal to the Url parameter.
+  * Updated export logic to not export the HubUrl
+    parameter when this is equal to the Url parameter.
+  * Fixed issue with incorrectly applying the LocaleId
+* SPOSiteAuditSettings
+  * Changed Export logic to make the url parameterized
+* SPOSiteGroup
+  * Changed Export logic to make the url parameterized
+  * Updated logic to output more explainable troubleshooting
+    messages
+* M365DscReverse
+  * Added the GlobalAccount Parameter to the example
+    that is outputted after using the Export GUI
+
+# 1.20.1216.1
+
+* AADConditionalAccessPolicy
+  * Initial Release;
+* EXOSafeLinksRule
+  * Fixed typo in a try/catch clause;
+* O365User
+  * Added support for removing existing users with
+    Ensure = 'Absent';
+* TeamsChannelTab
+  * Initial Release;
+
+# 1.20.1209.1
+
+* IntuneAppProtectionPolicyiOS
+  * Initial Release;
+* IntuneDeviceCompliancePolicyiOS
+  * Initial Release;
+* IntuneDeviceConfigurationPolicyiOS
+  * Initial Release;
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Initial Release;
+* IntuneDeviceEnrollmentLimitRestriction
+  * Initial Release;
+* TeamsTenantDialPlan
+  * Performance Improvements: retrieve all Voice Normalization
+    Rule at once and then iterated through them instead of
+    retrieving them for every instance.
+* DEPENDENCIES
+  * Upgraded ExchangeOnlineManagement to version 2.0.3;
+  * Upgraded Microsoft.Graph.Authentication to version 1.2.0;
+  * Upgraded Microsoft.Graph.Planner to version 1.2.0;
+  * Upgraded SharePointPnPPowerShellOnline to version
+    3.28.2012.0;
+
 ## 1.20.1202.1
 
 * EXOOwaMailboxPolicy

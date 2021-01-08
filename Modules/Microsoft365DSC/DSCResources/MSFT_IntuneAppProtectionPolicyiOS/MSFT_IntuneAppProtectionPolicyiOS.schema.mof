@@ -1,0 +1,32 @@
+[ClassVersion("1.0.0.0"), FriendlyName("IntuneAppProtectionPolicyiOS")]
+class MSFT_IntuneAppProtectionPolicyiOS : OMI_BaseResource
+{
+    [Key, Description("Display name of the iOS App Protection Policy")] String DisplayName;
+    [Write, Description("Description of the iOS App Protection Policy")] String Description;
+    [Write, Description("N/A")] String PeriodOfflineBeforeAccessCheck;
+    [Write, Description("N/A")] String PeriodOnlineBeforeAccessCheck;
+    [Write, Description("N/A")] String AllowedInboundDataTransferSources;
+    [Write, Description("N/A")] String AllowedOutboundDataTransferDestinations;
+    [Write, Description("N/A")] Boolean OrganizationalCredentialsRequired;
+    [Write, Description("N/A")] String AllowedOutboundClipboardSharingLevel;
+    [Write, Description("N/A")] Boolean DataBackupBlocked;
+    [Write, Description("N/A")] Boolean DeviceComplianceRequired;
+    [Write, Description("N/A")] Boolean ManagedBrowserToOpenLinksRequired;
+    [Write, Description("N/A")] Boolean SaveAsBlocked;
+    [Write, Description("N/A")] String PeriodOfflineBeforeWipeIsEnforced;
+    [Write, Description("N/A")] Boolean PinRequired;
+    [Write, Description("N/A")] UInt32 MaximumPinRetries;
+    [Write, Description("N/A")] Boolean SimplePinBlocked;
+    [Write, Description("N/A")] UInt32 MinimumPinLength;
+    [Write, Description("N/A")] String PinCharacterSet;
+    [Write, Description("N/A")] String AllowedDataStorageLocations[];
+    [Write, Description("N/A")] Boolean ContactSyncBlocked;
+    [Write, Description("N/A")] Boolean PrintBlocked;
+    [Write, Description("N/A")] Boolean FingerprintBlocked;
+    [Write, Description("N/A")] String AppDataEncryptionType;
+    [Write, Description("List of Ids representing the iOS apps controlled by this protection policy.")] String Apps[];
+    [Write, Description("List of IDs of the groups assigned to this iOS Protection Policy.")] String Assignments[];
+    [Write, Description("List of IDs of the groups that are excluded from this iOS Protection Policy.")] String ExcludedGroups[];
+    [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
+    [Required, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+};

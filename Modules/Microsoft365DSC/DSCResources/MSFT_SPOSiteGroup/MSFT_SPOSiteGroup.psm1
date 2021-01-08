@@ -456,6 +456,23 @@ function Export-TargetResource
         $sites = Get-PnPTenantSite -ErrorAction Stop
 
         $i = 1
+
+        $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
+        if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
+        {
+            $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+
+            if ($organization.IndexOf(".") -gt 0)
+            {
+                $principal = $organization.Split(".")[0]
+            }
+        }
+        else
+        {
+            $organization = $TenantId
+            $principal = $organization.Split(".")[0]
+        }
+
         $dscContent = ""
         Write-Host "`r`n" -NoNewline
         foreach ($site in $sites)
@@ -468,20 +485,13 @@ function Export-TargetResource
                 $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
                     -InboundParameters $PSBoundParameters `
                     -Url $site.Url
-                $siteGroups = Get-PnPGroup
+                $siteGroups = Get-PnPGroup -ErrorAction Stop
             }
             catch
             {
-                $message = $Error[0].Exception.Message
-                if ($null -ne $message)
-                {
-                    Write-Warning -Message $message
-                }
-                else
-                {
-                    Write-Verbose -Message "Could not retrieve sitegroups for site $($site.Url)"
-                }
+                Write-Warning -Message "Could not retrieve sitegroups for site $($site.Url): $($_.Exception.Message)"
             }
+
             $j = 1
             foreach ($siteGroup in $siteGroups)
             {
@@ -512,11 +522,21 @@ function Export-TargetResource
                     {
                         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                             -Results $Results
-                        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                        $partialContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                             -ConnectionMode $ConnectionMode `
                             -ModulePath $PSScriptRoot `
                             -Results $Results `
                             -GlobalAdminAccount $GlobalAdminAccount
+
+                        # Make the Url parameterized
+                        if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+                                $partialContent.ToLower().Contains($principal.ToLower()))
+                        {
+                            $partialContent = $partialContent -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
+                            $partialContent = $partialContent -ireplace [regex]::Escape('https://' + $principal + '-my.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0])-my.sharepoint.com/"
+                            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+                        }
+                        $dscContent += $partialContent
                     }
                 }
                 catch
@@ -529,12 +549,20 @@ function Export-TargetResource
 
             $i++
         }
+
+        if ($i -eq 1)
+        {
+            Write-Host ""
+        }
+
         return $dscContent
     }
     catch
     {
         try
         {
+            Write-Warning -Message "Cannot access {$($siteGroup.Title)}"
+
             Write-Verbose -Message $_
             $tenantIdValue = ""
             if (-not [System.String]::IsNullOrEmpty($TenantId))
