@@ -84,6 +84,15 @@ function Get-TargetResource
         $ImpersonationProtectionState = 'Automatic',
 
         [Parameter()]
+        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+        [System.String]
+        $MailboxIntelligenceProtectionAction = 'NoAction',
+
+        [Parameter()]
+        [System.String[]]
+        $MailboxIntelligenceProtectionActionRecipients = @(),
+
+        [Parameter()]
         [System.Boolean]
         $MakeDefault = $false,
 
@@ -192,34 +201,36 @@ function Get-TargetResource
             }
 
             $result = @{
-                Identity                            = $Identity
-                AdminDisplayName                    = $AntiPhishPolicy.AdminDisplayName
-                AuthenticationFailAction            = $AntiPhishPolicy.AuthenticationFailAction
-                Enabled                             = $AntiPhishPolicy.Enabled
-                EnableAntispoofEnforcement          = $AntiPhishPolicy.EnableAntispoofEnforcement
-                EnableMailboxIntelligence           = $AntiPhishPolicy.EnableMailboxIntelligence
-                EnableMailboxIntelligenceProtection = $AntiPhishPolicy.EnableMailboxIntelligenceProtection
-                EnableOrganizationDomainsProtection = $AntiPhishPolicy.EnableOrganizationDomainsProtection
-                EnableSimilarDomainsSafetyTips      = $AntiPhishPolicy.EnableSimilarDomainsSafetyTips
-                EnableSimilarUsersSafetyTips        = $AntiPhishPolicy.EnableSimilarUsersSafetyTips
-                EnableSpoofIntelligence             = $AntiPhishPolicy.EnableSpoofIntelligence
-                EnableTargetedDomainsProtection     = $AntiPhishPolicy.EnableTargetedDomainsProtection
-                EnableTargetedUserProtection        = $AntiPhishPolicy.EnableTargetedUserProtection
-                EnableUnauthenticatedSender         = $AntiPhishPolicy.EnableUnauthenticatedSender
-                EnableUnusualCharactersSafetyTips   = $AntiPhishPolicy.EnableUnusualCharactersSafetyTips
-                ExcludedDomains                     = $AntiPhishPolicy.ExcludedDomains
-                ExcludedSenders                     = $AntiPhishPolicy.ExcludedSenders
-                ImpersonationProtectionState        = $AntiPhishPolicy.ImpersonationProtectionState
-                MakeDefault                         = $AntiPhishPolicy.MakeDefault
-                PhishThresholdLevel                 = $PhishThresholdLevelValue
-                TargetedDomainActionRecipients      = $AntiPhishPolicy.TargetedDomainActionRecipients
-                TargetedDomainProtectionAction      = $AntiPhishPolicy.TargetedDomainProtectionAction
-                TargetedDomainsToProtect            = $AntiPhishPolicy.TargetedDomainsToProtect
-                TargetedUserActionRecipients        = $AntiPhishPolicy.TargetedUserActionRecipients
-                TargetedUserProtectionAction        = $TargetedUserProtectionActionValue
-                TargetedUsersToProtect              = $AntiPhishPolicy.TargetedUsersToProtect
-                GlobalAdminAccount                  = $GlobalAdminAccount
-                Ensure                              = 'Present'
+                Identity                                      = $Identity
+                AdminDisplayName                              = $AntiPhishPolicy.AdminDisplayName
+                AuthenticationFailAction                      = $AntiPhishPolicy.AuthenticationFailAction
+                Enabled                                       = $AntiPhishPolicy.Enabled
+                EnableAntispoofEnforcement                    = $AntiPhishPolicy.EnableAntispoofEnforcement
+                EnableMailboxIntelligence                     = $AntiPhishPolicy.EnableMailboxIntelligence
+                EnableMailboxIntelligenceProtection           = $AntiPhishPolicy.EnableMailboxIntelligenceProtection
+                EnableOrganizationDomainsProtection           = $AntiPhishPolicy.EnableOrganizationDomainsProtection
+                EnableSimilarDomainsSafetyTips                = $AntiPhishPolicy.EnableSimilarDomainsSafetyTips
+                EnableSimilarUsersSafetyTips                  = $AntiPhishPolicy.EnableSimilarUsersSafetyTips
+                EnableSpoofIntelligence                       = $AntiPhishPolicy.EnableSpoofIntelligence
+                EnableTargetedDomainsProtection               = $AntiPhishPolicy.EnableTargetedDomainsProtection
+                EnableTargetedUserProtection                  = $AntiPhishPolicy.EnableTargetedUserProtection
+                EnableUnauthenticatedSender                   = $AntiPhishPolicy.EnableUnauthenticatedSender
+                EnableUnusualCharactersSafetyTips             = $AntiPhishPolicy.EnableUnusualCharactersSafetyTips
+                ExcludedDomains                               = $AntiPhishPolicy.ExcludedDomains
+                ExcludedSenders                               = $AntiPhishPolicy.ExcludedSenders
+                ImpersonationProtectionState                  = $AntiPhishPolicy.ImpersonationProtectionState
+                MailboxIntelligenceProtectionAction           = $AntiPhishPolicy.MailboxIntelligenceProtectionAction
+                MailboxIntelligenceProtectionActionRecipients = $AntiPhishPolicy.MailboxIntelligenceProtectionActionRecipients
+                MakeDefault                                   = $AntiPhishPolicy.MakeDefault
+                PhishThresholdLevel                           = $PhishThresholdLevelValue
+                TargetedDomainActionRecipients                = $AntiPhishPolicy.TargetedDomainActionRecipients
+                TargetedDomainProtectionAction                = $AntiPhishPolicy.TargetedDomainProtectionAction
+                TargetedDomainsToProtect                      = $AntiPhishPolicy.TargetedDomainsToProtect
+                TargetedUserActionRecipients                  = $AntiPhishPolicy.TargetedUserActionRecipients
+                TargetedUserProtectionAction                  = $TargetedUserProtectionActionValue
+                TargetedUsersToProtect                        = $AntiPhishPolicy.TargetedUsersToProtect
+                GlobalAdminAccount                            = $GlobalAdminAccount
+                Ensure                                        = 'Present'
             }
 
             Write-Verbose -Message "Found AntiPhishPolicy $($Identity)"
@@ -336,6 +347,15 @@ function Set-TargetResource
         [ValidateSet('Automatic', 'Manual', 'Off')]
         [System.String]
         $ImpersonationProtectionState = 'Automatic',
+
+        [Parameter()]
+        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+        [System.String]
+        $MailboxIntelligenceProtectionAction = 'NoAction',
+
+        [Parameter()]
+        [System.String[]]
+        $MailboxIntelligenceProtectionActionRecipients = @(),
 
         [Parameter()]
         [System.Boolean]
@@ -521,6 +541,15 @@ function Test-TargetResource
         [ValidateSet('Automatic', 'Manual', 'Off')]
         [System.String]
         $ImpersonationProtectionState = 'Automatic',
+
+        [Parameter()]
+        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+        [System.String]
+        $MailboxIntelligenceProtectionAction = 'NoAction',
+
+        [Parameter()]
+        [System.String[]]
+        $MailboxIntelligenceProtectionActionRecipients = @(),
 
         [Parameter()]
         [System.Boolean]
