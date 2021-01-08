@@ -31,7 +31,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $EnableMailboxIntelligenceProtection = $true,
+        $EnableMailboxIntelligenceProtection = $false,
 
         [Parameter()]
         [System.Boolean]
@@ -274,7 +274,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $EnableMailboxIntelligenceProtection = $true,
+        $EnableMailboxIntelligenceProtection = $false,
 
         [Parameter()]
         [System.Boolean]
@@ -450,7 +450,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $EnableMailboxIntelligenceProtection = $true,
+        $EnableMailboxIntelligenceProtection = $false,
 
         [Parameter()]
         [System.Boolean]
