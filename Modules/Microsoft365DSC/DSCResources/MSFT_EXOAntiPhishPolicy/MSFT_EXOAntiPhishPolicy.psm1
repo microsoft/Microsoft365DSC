@@ -31,6 +31,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $EnableMailboxIntelligenceProtection = $true,
+
+        [Parameter()]
+        [System.Boolean]
         $EnableOrganizationDomainsProtection = $false,
 
         [Parameter()]
@@ -181,6 +185,7 @@ function Get-TargetResource
                 Enabled                             = $AntiPhishPolicy.Enabled
                 EnableAntispoofEnforcement          = $AntiPhishPolicy.EnableAntispoofEnforcement
                 EnableMailboxIntelligence           = $AntiPhishPolicy.EnableMailboxIntelligence
+                EnableMailboxIntelligenceProtection = $AntiPhishPolicy.EnableMailboxIntelligenceProtection
                 EnableOrganizationDomainsProtection = $AntiPhishPolicy.EnableOrganizationDomainsProtection
                 EnableSimilarDomainsSafetyTips      = $AntiPhishPolicy.EnableSimilarDomainsSafetyTips
                 EnableSimilarUsersSafetyTips        = $AntiPhishPolicy.EnableSimilarUsersSafetyTips
@@ -261,6 +266,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $EnableMailboxIntelligence = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMailboxIntelligenceProtection = $true,
 
         [Parameter()]
         [System.Boolean]
@@ -429,6 +438,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $EnableMailboxIntelligence = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMailboxIntelligenceProtection = $true,
 
         [Parameter()]
         [System.Boolean]
