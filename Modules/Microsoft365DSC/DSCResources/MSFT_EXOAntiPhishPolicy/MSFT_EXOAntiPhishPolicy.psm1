@@ -59,6 +59,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $EnableUnauthenticatedSender = $true,
+
+        [Parameter()]
+        [System.Boolean]
         $EnableUnusualCharactersSafetyTips = $false,
 
         [Parameter()]
@@ -196,6 +200,7 @@ function Get-TargetResource
                 EnableSpoofIntelligence             = $AntiPhishPolicy.EnableSpoofIntelligence
                 EnableTargetedDomainsProtection     = $AntiPhishPolicy.EnableTargetedDomainsProtection
                 EnableTargetedUserProtection        = $AntiPhishPolicy.EnableTargetedUserProtection
+                EnableUnauthenticatedSender         = $AntiPhishPolicy.EnableUnauthenticatedSender
                 EnableUnusualCharactersSafetyTips   = $AntiPhishPolicy.EnableUnusualCharactersSafetyTips
                 ExcludedDomains                     = $AntiPhishPolicy.ExcludedDomains
                 ExcludedSenders                     = $AntiPhishPolicy.ExcludedSenders
@@ -299,6 +304,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $EnableTargetedUserProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUnauthenticatedSender = $true,
 
         [Parameter()]
         [System.Boolean]
@@ -475,6 +484,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $EnableTargetedUserProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUnauthenticatedSender = $true,
 
         [Parameter()]
         [System.Boolean]
