@@ -6,6 +6,9 @@
   * Fixes an issue where the Set would fail if Service Principal
    was used.
    (Issue [#1002](https://github.com/microsoft/Microsoft365DSC/issues/1002))
+* AADRoleDefinition
+  * Filters out role definitions without any assigned permissions.
+    Fixes Issue #1007;
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell
     to 2.0.102;
