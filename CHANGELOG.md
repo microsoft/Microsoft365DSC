@@ -7,7 +7,7 @@
     Fixes Issue #1007;
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell
-    to 2.0.102;
+    to 2.0.104;
 
 # 1.20.1223.1
 
