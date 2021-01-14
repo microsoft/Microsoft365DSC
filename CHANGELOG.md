@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+# 1.21.113.1
+
+* AADRoleDefinition
+  * Filters out role definitions without any assigned permissions.
+    Fixes Issue #1007;
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell
+    to 2.0.104;
+
 # 1.20.1223.1
 
 * SPOHubSite

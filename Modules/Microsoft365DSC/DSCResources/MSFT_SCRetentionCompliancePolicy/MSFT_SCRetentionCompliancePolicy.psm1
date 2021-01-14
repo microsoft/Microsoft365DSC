@@ -303,6 +303,11 @@ function Set-TargetResource
         throw "You need to specify at least one Location for this Policy."
     }
 
+    if ($null -ne $SkypeLocation -and $SkypeLocation.ToLower() -eq "all")
+    {
+        throw "Skype Location must be a any value that uniquely identifies the user.Ex Name, email address, GUID"
+    }
+
     Write-Verbose -Message "Setting configuration of RetentionCompliancePolicy for $Name"
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")

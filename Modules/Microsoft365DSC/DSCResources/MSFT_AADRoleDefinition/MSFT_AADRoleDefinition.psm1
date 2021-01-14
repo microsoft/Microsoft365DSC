@@ -383,7 +383,7 @@ function Export-TargetResource
             }
             $Results = Get-TargetResource @Params
 
-            if ($Results.Ensure -eq 'Present')
+            if ($Results.Ensure -eq 'Present' -and ([array]$results.RolePermissions).Length -gt 0)
             {
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
