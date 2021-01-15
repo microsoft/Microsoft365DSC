@@ -1,0 +1,17 @@
+[ClassVersion("1.0.0.0"), FriendlyName("AADNamedLocationPolicy")]
+class MSFT_AADNamedLocationPolicy : OMI_BaseResource
+{
+    [Write, Description("Odata Type of the Named Location. Accepted values: #microsoft.graph.countryNamedLocation, #microsoft.graph.ipNamedLocation")] string OdataType;
+    [Write, Description("ObjectID of the Named Location.")] String Id;
+    [Key, Description("DisplayName of the Named Location")] string DisplayName;
+    [Write, Description("IP ranges of the ipNamedLocation type Named Location.")] String IpRanges[];
+    [Write, Description("Defines if the Named Location should be considered as trusted network")] Boolean IsTrusted;
+    [Write, Description("Country codes of the countryNamedLocation type Named Location.")] String CountriesAndRegions[];
+    [Write, Description("Defines if unidentified countries should be considered as part of the countryNamedLocation type Named Location")] Boolean IncludeUnknownCountriesAndRegions;
+    [Write, Description("Specify if the Azure AD Named Location should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Credentials of the Azure AD Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+
+};
