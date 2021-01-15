@@ -363,15 +363,6 @@ function Export-TargetResource
             }
             $Results = Get-TargetResource @Params
 
-            # Fix quotes inside the Definition's JSON;
-            $NewDefinition = @()
-            foreach ($item in $Results.Definition)
-            {
-                $fixedContent = $item.Replace('"', '`"')
-                $NewDefinition += $fixedContent
-            }
-            $results.Definition = $NewDefinition
-
             if ($Results.Ensure -eq 'Present')
             {
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
