@@ -200,7 +200,6 @@ function Set-TargetResource
 
     $currentAADNamedLocation = Get-TargetResource @PSBoundParameters
     $currentParameters = $PSBoundParameters
-    $currentParameters.Remove("OdataType") | Out-Null
     $currentParameters.Remove("ApplicationId")  | Out-Null
     $currentParameters.Remove("TenantId")  | Out-Null
     $currentParameters.Remove("CertificateThumbprint")  | Out-Null
@@ -210,16 +209,18 @@ function Set-TargetResource
     # Named Location should exist but it doesn't
     if ($Ensure -eq 'Present' -and $currentAADNamedLocation.Ensure -eq "Absent")
     {
-        Write-Verbose -Message "Creating New AAD Named Location {$Displayname)}"
         $currentParameters.Remove("Id") | Out-Null
+        $VerboseAttributes = ($currentParameters | Out-String)
+        Write-Verbose -Message "Creating New AAD Named Location {$Displayname)} with attributes: $VerboseAttributes"
         New-AzureADMSNamedLocationPolicy @currentParameters
     }
     # Named Location should exist and will be configured to desired state
     elseif ($Ensure -eq 'Present' -and $CurrentAADNamedLocation.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating exisitng AAD Named Location {$Displayname)}"
         $currentParameters["PolicyId"] = $currentAADNamedLocation.ID
         $currentParameters.Remove("Id") | Out-Null
+        $VerboseAttributes = ($currentParameters | Out-String)
+        Write-Verbose -Message "Updating exisitng AAD Named Location {$Displayname)} with attributes: $VerboseAttributes"
         Set-AzureADMSNamedLocationPolicy @currentParameters
     }
     # Named Location exist but should not
