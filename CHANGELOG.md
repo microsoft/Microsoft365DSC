@@ -1,7 +1,18 @@
 # Change log for Microsoft365DSC
 
+# 1.21.120.1
+
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.45;
+  * Replaced the SharePointPnPPowerShellOnline dependency by the new
+    PnP.PowerShell core module;
+
 # 1.21.113.1
 
+* AADTenantDetails
+  * Fixes an issue where the Set would fail if Service Principal
+   was used.
+   (Issue [#1002](https://github.com/microsoft/Microsoft365DSC/issues/1002))
 * AADRoleDefinition
   * Filters out role definitions without any assigned permissions.
     Fixes Issue #1007;
