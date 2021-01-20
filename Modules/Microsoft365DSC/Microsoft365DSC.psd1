@@ -97,7 +97,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.44"
+            RequiredVersion = "1.0.45"
         },
         @{
             ModuleName      = "PnP.PowerShell"
@@ -181,6 +181,7 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = "* DEPENDENCIES
+            * Updated MSCloudLoginAssistant to version 1.0.45;
             * Replaced the SharePointPnPPowerShellOnline dependency by the new
               PnP.PowerShell core module;"
 
