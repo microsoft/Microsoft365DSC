@@ -16,20 +16,16 @@ Configuration Example
     {
         AADNamedLocationPolicy CompanyNetwork
         {
-            ApplicationId         = $ConfigurationData.NonNodeData.ApplicationId;
-            CertificateThumbprint = $ConfigurationData.NonNodeData.CertificateThumbprint;
-            DisplayName           = "Company Network";
-            Ensure                = "Present";
-            IpRanges              = @("2.1.1.1/32", "1.2.2.2/32");
-            IsTrusted             = $True;
-            OdataType             = "#microsoft.graph.ipNamedLocation";
-            TenantId              = $ConfigurationData.NonNodeData.TenantId;
-            GlobalAdminAccount    = $credsGlobalAdmin;
+            DisplayName        = "Company Network";
+            Ensure             = "Present";
+            IpRanges           = @("2.1.1.1/32", "1.2.2.2/32");
+            IsTrusted          = $True;
+            OdataType          = "#microsoft.graph.ipNamedLocation";
+            TenantId           = $ConfigurationData.NonNodeData.TenantId;
+            GlobalAdminAccount = $credsGlobalAdmin;
         }
         AADNamedLocationPolicy AllowedCountries
         {
-            ApplicationId                     = $ConfigurationData.NonNodeData.ApplicationId;
-            CertificateThumbprint             = $ConfigurationData.NonNodeData.CertificateThumbprint;
             CountriesAndRegions               = @("GH", "AX", "DZ", "AI", "AM");
             DisplayName                       = "Allowed Countries";
             Ensure                            = "Present";

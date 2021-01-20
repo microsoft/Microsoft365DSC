@@ -1,8 +1,8 @@
-# AAD Policy
+# AADNamedLocationPolicy
 
 ## Description
 
-This resource configures the Azure AD Named Locations
+This resource configures the Azure AD Named Location Policies in Azure Active Directory
 
 ## Azure AD Permissions
 

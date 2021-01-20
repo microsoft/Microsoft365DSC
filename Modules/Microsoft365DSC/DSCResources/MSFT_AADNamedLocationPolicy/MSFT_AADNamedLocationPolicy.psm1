@@ -87,7 +87,7 @@ function Get-TargetResource
         {
             try
             {
-                $NamedLocation = Get-AzureADMSNamedLocationPolicy -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -eq $DisplayName }
+                $NamedLocation = Get-AzureADMSNamedLocationPolicy -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
             }
             catch
             {
@@ -220,7 +220,7 @@ function Set-TargetResource
         $currentParameters["PolicyId"] = $currentAADNamedLocation.ID
         $currentParameters.Remove("Id") | Out-Null
         $VerboseAttributes = ($currentParameters | Out-String)
-        Write-Verbose -Message "Updating exisitng AAD Named Location {$Displayname)} with attributes: $VerboseAttributes"
+        Write-Verbose -Message "Updating existing AAD Named Location {$Displayname)} with attributes: $VerboseAttributes"
         Set-AzureADMSNamedLocationPolicy @currentParameters
     }
     # Named Location exist but should not
@@ -286,7 +286,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint
-
     )
 
     Write-Verbose -Message "Testing configuration of AAD Named Location"
