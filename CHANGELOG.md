@@ -1,9 +1,9 @@
 # Change log for Microsoft365DSC
 
-
 # 1.21.120.1
 
 * DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.44;
   * Replaced the SharePointPnPPowerShellOnline dependency by the new
     PnP.PowerShell core module;
 # 1.21.113.1
