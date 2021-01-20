@@ -1,0 +1,16 @@
+[ClassVersion("1.0.0.0"), FriendlyName("EXOPublicFolder")]
+class MSFT_EXOPublicFolder : OMI_BaseResource
+{
+    [Key, Description("The Name parameter specifies the name for the public folder.")] String Name;
+    [Write, Description("The EformsLocaleId parameter specifies the locale-specific version of the e-forms library.")] String EformsLocaleId;
+    [Write, Description("The Mailbox parameter specifies the hierarchy public folder mailbox where you want this public folder created. You can use any value that uniquely identifies the mailbox.")] String Mailbox;
+    [Write, Description("The Path parameter specifies the location of the folder in the folder hierarchy, for example, \Legal\Cases.")] String Path;
+    [Write, Description("The IssueWarningQuota parameter specifies the public folder size that triggers a warning to public folder owners stating that the folder is almost full.")] String IssueWarningQuota;
+    [Write, Description("Specify if the Offline Address Book should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
+};
