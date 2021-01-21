@@ -914,7 +914,31 @@ function Export-M365DSCConfiguration
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.Boolean]
+        $GenerateInfo = $false,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     $InformationPreference = 'SilentlyContinue'
     $WarningPreference = 'SilentlyContinue'
@@ -953,12 +977,23 @@ function Export-M365DSCConfiguration
         }
         elseif ($null -ne $ComponentsToExtract)
         {
-            Start-M365DSCConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
-                -ComponentsToExtract $ComponentsToExtract `
-                -Path $Path -FileName $FileName `
-                -MaxProcesses $MaxProcesses `
-                -ConfigurationName $ConfigurationName `
-                -Quiet -Start $Start -End $End
+            if (-not [System.String]::IsNullOrEmpty($ApplicationId))
+	    {
+		Start-M365DSCConfigurationExtract -ApplicationId $ApplicationId -TenantID $TenantId -CertificateThumbprint $CertificateThumbprint `
+                    -ComponentsToExtract $ComponentsToExtract `
+                    -Path $Path -FileName $FileName `
+                    -MaxProcesses $MaxProcesses `
+                    -ConfigurationName $ConfigurationName `
+	    }
+	    else
+	    {
+                Start-M365DSCConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
+                    -ComponentsToExtract $ComponentsToExtract `
+                    -Path $Path -FileName $FileName `
+                    -MaxProcesses $MaxProcesses `
+                    -ConfigurationName $ConfigurationName `
+                    -Quiet -Start $Start -End $End
+	    }
         }
         elseif ($null -ne $Mode)
         {
@@ -1372,76 +1407,220 @@ function Assert-M365DSCTemplate
 function New-M365DSCConnection
 {
     param(
-        [Parameter(Mandatory=$true)]
-        [ValidateSet("Azure", "AzureAD", "ExchangeOnline", `
-            "SecurityComplianceCenter", "PnP", "PowerPlatforms", `
-            "MicrosoftTeams", "SkypeForBusiness", "MicrosoftGraph")]
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("Azure", "AzureAD", "ExchangeOnline", "Intune", `
+                "SecurityComplianceCenter", "PnP", "PowerPlatforms", `
+                "MicrosoftTeams", "SkypeForBusiness", "MicrosoftGraph", `
+                "MicrosoftGraphBeta")]
         [System.String]
         $Platform,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]
-        $InboundParameters
+        $InboundParameters,
+
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipModuleReload = $false
     )
 
-    switch ($Platform)
+    Write-Verbose -Message "Attempting connection to {$Platform} with:"
+    Write-Verbose -Message "$($InboundParameters | Out-String)"
+
+    if ($SkipModuleReload -eq $true)
     {
-        {$_ -eq 'AzureAD' -or $_ -eq 'MicrosoftTeams' -or $_ -eq 'MicrosoftGraph'}
-        {
-            # Case both authentication methods are attempted
-            if ($null -ne $InboundParameters.GlobalAdminAccount -and `
-                (-not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -or `
-                -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint)))
-            {
-                Write-Verbose -Message 'Both Authentication methods are attempted'
-                throw "You can't specify both the GlobalAdminAccount and one of {TenantId, CertificateThumbprint}"
-            }
-            # Case no authentication method is specified
-            elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
-                [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
-                [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
-                [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
-            {
-                Write-Verbose -Message "No Authentication method was provided"
-                throw "You must specify either the GlobalAdminAccount or ApplicationId, TenantId and CertificateThumbprint parameters."
-            }
-            # Case only GlobalAdminAccount is specified
-            elseif ($null -ne $InboundParameters.GlobalAdminAccount -and `
-                [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
-                [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
-                [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
-            {
-                Write-Verbose -Message "GlobalAdminAccount was specified. Connecting via User Principal"
-                Test-MSCloudLogin -Platform $Platform `
-                    -CloudCredential $InboundParameters.GlobalAdminAccount
-                return 'Credential'
-            }
-            # Case only the ServicePrincipal parameters are specified
-            elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
-                -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
-                -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
-                -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
-            {
-                Write-Verbose -Message "GlobalAdminAccount was specified. Connecting via User Principal"
-                Test-MSCloudLogin -Platform $Platform `
-                    -ApplicationId $InboundParameters.ApplicationId `
-                    -TenantId $InboundParameters.TenantId `
-                    -CertificateThumbprint $InboundParameters.CertificateThumbprint
-                return 'ServicePrincipal'
-            }
-            # Case only the ApplicationID and Credentials parameters are specified
-            elseif ($null -ne $InboundParameters.GlobalAdminAccount -and `
-                -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
-            {
-                Write-Verbose -Message "GlobalAdminAccount and ApplicationId were specified. Connecting via Delegated Service Principal"
-                Test-MSCloudLogin -Platform $Platform `
-                    -ApplicationId $InboundParameters.ApplicationId `
-                    -CloudCredential $InboundParameters.GlobalAdminAccount
-                return 'ServicePrincipal'
-            }
-        }
+        $Global:CurrentModeIsExport = $true
     }
-    throw 'Unexpected error getting the Authentication Method'
+    else
+    {
+        $Global:CurrentModeIsExport = $false
+    }
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Source", "M365DSCUtil")
+    $data.Add("Platform", $Platform)
+
+    if ($InboundParameters.ContainsKey("TenantId"))
+    {
+        $tenantId = $InboundParameters.TenantId
+        $data.Add("TenantId", $tenantId)
+    }
+    if ($InboundParameters.ContainsKey("GlobalAdminAccount") -and
+        $null -ne $InboundParameters.GlobalAdminAccount)
+    {
+        $data.Add("GlobalAdminAccount", "Yes")
+    }
+    if ($InboundParameters.ContainsKey("ApplicationId") -and
+        -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
+    {
+        $data.Add("ApplicationId", "Yes")
+    }
+    if ($InboundParameters.ContainsKey("CertificatePath") -and
+        -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePath))
+    {
+        $data.Add("CertificatePath", "Yes")
+    }
+    if ($InboundParameters.ContainsKey("CertificateThumbprint") -and
+        -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
+    {
+        $data.Add("CertificateThumbprint", "Yes")
+    }
+    if ($InboundParameters.ContainsKey("CertificatePassword") -and
+        -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePassword))
+    {
+        $data.Add("CertificatePassword", "Yes")
+    }
+    #endregion
+
+    # Case both authentication methods are attempted
+    if ($null -ne $InboundParameters.GlobalAdminAccount -and `
+        (-not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -or `
+                -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint)))
+    {
+        $message = 'Both Authentication methods are attempted'
+        Write-Verbose -Message $message
+        $data.Add("Event", "Error")
+        $data.Add("Exception", $message)
+        $errorText = "You can't specify both the GlobalAdminAccount and one of {TenantId, CertificateThumbprint}"
+        $data.Add("CustomMessage", $errorText)
+        Add-M365DSCTelemetryEvent -Type "Error" -Data $data
+        throw $errorText
+    }
+    # Case no authentication method is specified
+    elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
+            [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+            [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+            [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
+    {
+        $message = 'No Authentication method was provided'
+        Write-Verbose -Message $message
+        $data.Add("Event", "Error")
+        $data.Add("Exception", $message)
+        $errorText = "You must specify either the GlobalAdminAccount or ApplicationId, TenantId and CertificateThumbprint parameters."
+        $data.Add("CustomMessage", $errorText)
+        Add-M365DSCTelemetryEvent -Type "Error" -Data $data
+        throw $errorText
+    }
+    # Case only GlobalAdminAccount is specified
+    elseif ($null -ne $InboundParameters.GlobalAdminAccount -and `
+            [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+            [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+            [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
+    {
+        Write-Verbose -Message "GlobalAdminAccount was specified. Connecting via User Principal"
+        if ([System.String]::IsNullOrEmpty($Url))
+        {
+            Test-MSCloudLogin -Platform $Platform `
+                -CloudCredential $InboundParameters.GlobalAdminAccount `
+                -SkipModuleReload $Global:CurrentModeIsExport
+        }
+        else
+        {
+            Test-MSCloudLogin -Platform $Platform `
+                -CloudCredential $InboundParameters.GlobalAdminAccount `
+                -ConnectionUrl $Url `
+                -SkipModuleReload $Global:CurrentModeIsExport
+        }
+        $data.Add("ConnectionType", "Credential")
+        Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
+        return "Credential"
+    }
+    # Case only the ApplicationID and Credentials parameters are specified
+    elseif ($null -ne $InboundParameters.GlobalAdminAccount -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
+    {
+        Write-Verbose -Message "GlobalAdminAccount and ApplicationId were specified. Connecting via Delegated Service Principal"
+        if ([System.String]::IsNullOrEmpty($url))
+        {
+            Test-MSCloudLogin -Platform $Platform `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -CloudCredential $InboundParameters.GlobalAdminAccount `
+                -SkipModuleReload $Global:CurrentModeIsExport
+        }
+        else
+        {
+            Test-MSCloudLogin -Platform $Platform `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -CloudCredential $InboundParameters.GlobalAdminAccount `
+                -ConnectionUrl $Url `
+                -SkipModuleReload $Global:CurrentModeIsExport
+        }
+        $data.Add("ConnectionType", "ServicePrincipal")
+        Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
+        return 'ServicePrincipal'
+    }
+    # Case only the ServicePrincipal with Thumbprint parameters are specified
+    elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
+    {
+        if ([System.String]::IsNullOrEmpty($url))
+        {
+            Write-Verbose -Message "ApplicationId, TenantId and CertificateThumprint were specified. Connecting via Service Principal"
+            Test-MSCloudLogin -Platform $Platform `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -TenantId $InboundParameters.TenantId `
+                -CertificateThumbprint $InboundParameters.CertificateThumbprint `
+                -SkipModuleReload $Global:CurrentModeIsExport
+        }
+        else
+        {
+            Test-MSCloudLogin -Platform $Platform `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -TenantId $InboundParameters.TenantId `
+                -CertificateThumbprint $InboundParameters.CertificateThumbprint `
+                -ConnectionUrl $Url `
+                -SkipModuleReload $Global:CurrentModeIsExport
+        }
+        $data.Add("ConnectionType", "ServicePrincipal")
+        Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
+        return 'ServicePrincipal'
+    }
+    # Case only the ServicePrincipal with Thumbprint parameters are specified
+    elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePath) -and `
+            $null -ne $InboundParameters.CertificatePassword)
+    {
+        if ([System.String]::IsNullOrEmpty($url))
+        {
+            Write-Verbose -Message "ApplicationId, TenantId, CertificatePath & CertificatePassword were specified. Connecting via Service Principal"
+            Test-MSCloudLogin -Platform $Platform `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -TenantId $InboundParameters.TenantId `
+                -CertificatePassword $InboundParameters.CertificatePassword.Password `
+                -CertificatePath $InboundParameters.CertificatePath `
+                -SkipModuleReload $Global:CurrentModeIsExport
+        }
+        else
+        {
+            Test-MSCloudLogin -Platform $Platform `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -TenantId $InboundParameters.TenantId `
+                -CertificatePassword $InboundParameters.CertificatePassword `
+                -CertificatePath $InboundParameters.CertificatePath `
+                -ConnectionUrl $Url `
+                -SkipModuleReload $Global:CurrentModeIsExport
+        }
+        $data.Add("ConnectionType", "ServicePrincipal")
+        Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
+        return 'ServicePrincipal'
+    }
+    else
+    {
+        $data.Add("Event", "Error")
+        $errorText = 'Unexpected error getting the Authentication Method'
+        $data.Add("CustomMessage", $errorText)
+        Add-M365DSCTelemetryEvent -Data $data -Type "Error"
+        throw $errorText
+    }
 }
 
 function Set-M365DSCAgentCertificateConfiguration
@@ -1495,4 +1674,575 @@ function Set-M365DSCAgentCertificateConfiguration
     Remove-Item -Path $configOutputFile -Confirm:$false
     Remove-Item -Path "./M365AgentConfig" -Recurse -Confirm:$false
     return $thumbprint
+}
+
+function Update-M365DSCExportAuthenticationResults
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet("Credential", "ServicePrincipal")]
+        $ConnectionMode,
+
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $Results
+    )
+
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $Results.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        if ($Results.ContainsKey("ApplicationId"))
+        {
+            $Results.Remove("ApplicationId") | Out-Null
+        }
+        if ($Results.ContainsKey("TenantId"))
+        {
+            $Results.Remove("TenantId") | Out-Null
+        }
+        if ($Results.ContainsKey("CertificateThumbprint"))
+        {
+            $Results.Remove("CertificateThumbprint") | Out-Null
+        }
+        if ($Results.ContainsKey("CertificatePath"))
+        {
+            $Results.Remove("CertificatePath") | Out-Null
+        }
+        if ($Results.ContainsKey("CertificatePassword"))
+        {
+            $Results.Remove("CertificatePassword") | Out-Null
+        }
+    }
+    else
+    {
+        if ($Results.ContainsKey("GlobalAdminAccount"))
+        {
+            $Results.Remove("GlobalAdminAccount") | Out-Null
+        }
+        if (-not [System.String]::IsNullOrEmpty($Results.ApplicationId))
+        {
+            $Results.ApplicationId = "`$ConfigurationData.NonNodeData.ApplicationId"
+        }
+        else
+        {
+            try
+            {
+                $Results.Remove("ApplicationId") | Out-Null
+            }
+            catch
+            {
+                Write-Verbose -Message "Error removing ApplicationId from Update-M365DSCExportAuthenticationResults"
+            }
+        }
+        if (-not [System.String]::IsNullOrEmpty($Results.CertificateThumbprint))
+        {
+            $Results.CertificateThumbprint = "`$ConfigurationData.NonNodeData.CertificateThumbprint"
+        }
+        else
+        {
+            try
+            {
+                $Results.Remove("CertificateThumbprint") | Out-Null
+            }
+            catch
+            {
+                Write-Verbose -Message "Error removing CertificateThumbprint from Update-M365DSCExportAuthenticationResults"
+            }
+        }
+        if (-not [System.String]::IsNullOrEmpty($Results.CertificatePath))
+        {
+            $Results.CertificatePath = "`$ConfigurationData.NonNodeData.CertificatePath"
+        }
+        else
+        {
+            try
+            {
+                $Results.Remove("CertificatePath") | Out-Null
+            }
+            catch
+            {
+                Write-Verbose -Message "Error removing CertificatePath from Update-M365DSCExportAuthenticationResults"
+            }
+        }
+        if (-not [System.String]::IsNullOrEmpty($Results.TenantId))
+        {
+            $Results.TenantId = "`$ConfigurationData.NonNodeData.TenantId"
+        }
+        else
+        {
+            try
+            {
+                $Results.Remove("TenantId") | Out-Null
+            }
+            catch
+            {
+                Write-Verbose -Message "Error removing TenantId from Update-M365DSCExportAuthenticationResults"
+            }
+        }
+        if ($null -ne $Results.CertificatePassword)
+        {
+            $Results.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
+        }
+        else
+        {
+            try
+            {
+                $Results.Remove("CertificatePassword") | Out-Null
+            }
+            catch
+            {
+                Write-Verbose -Message "Error removing CertificatePassword from Update-M365DSCExportAuthenticationResults"
+            }
+        }
+    }
+    return $Results
+}
+
+function Get-M365DSCExportContentForResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ResourceName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet("Credential", "ServicePrincipal")]
+        $ConnectionMode,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ModulePath,
+
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $Results,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+    $OrganizationName = ""
+    if ($ConnectionMode -eq 'ServicePrincipal')
+    {
+        $OrganizationName = $TenantId
+    }
+    else
+    {
+        $OrganizationName = $GlobalAdminAccount.UserName.Split('@')[1]
+    }
+
+    # Ensure the string properties are properly formatted;
+    $Results = Format-M365DSCString -Properties $Results `
+        -ResourceName $ResourceName
+
+    $content = "        $ResourceName " + (New-Guid).ToString() + "`r`n"
+    $content += "        {`r`n"
+    $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+            -ParameterName "GlobalAdminAccount"
+    }
+    else
+    {
+        if (![System.String]::IsNullOrEmpty($Results.ApplicationId))
+        {
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+                -ParameterName "ApplicationId"
+        }
+        if (![System.String]::IsNullOrEmpty($Results.TenantId))
+        {
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+                -ParameterName "TenantId"
+        }
+        if (![System.String]::IsNullOrEmpty($Results.CertificatePath))
+        {
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+                -ParameterName "CertificatePath"
+        }
+        if (![System.String]::IsNullOrEmpty($Results.CertificateThumbprint))
+        {
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+                -ParameterName "CertificateThumbprint"
+        }
+        if (![System.String]::IsNullOrEmpty($Results.CertificatePassword))
+        {
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+                -ParameterName "CertificatePassword"
+        }
+    }
+
+    if ($partialContent.ToLower().IndexOf($OrganizationName.ToLower()) -gt 0)
+    {
+        $partialContent = $partialContent -ireplace [regex]::Escape($OrganizationName + ":"), "`$($OrganizationName):"
+        $partialContent = $partialContent -ireplace [regex]::Escape($OrganizationName), "`$OrganizationName"
+        $partialContent = $partialContent -ireplace [regex]::Escape("@" + $OrganizationName), "@`$OrganizationName"
+    }
+    $content += $partialContent
+    $content += "        }`r`n"
+    return $content
+}
+
+function Test-M365DSCParameterState
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true, Position = 1)]
+        [HashTable]
+        $CurrentValues,
+
+        [Parameter(Mandatory = $true, Position = 2)]
+        [Object]
+        $DesiredValues,
+
+        [Parameter(Position = 3)]
+        [Array]
+        $ValuesToCheck,
+
+        [Parameter(Position = 4)]
+        [System.String]
+        $Source = 'Generic'
+    )
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", "$Source")
+    $data.Add("Method", "Test-TargetResource")
+    #endregion
+    $returnValue = $true
+
+    $DriftedParameters = @{ }
+
+    if (($DesiredValues.GetType().Name -ne "HashTable") `
+            -and ($DesiredValues.GetType().Name -ne "CimInstance") `
+            -and ($DesiredValues.GetType().Name -ne "PSBoundParametersDictionary"))
+    {
+        throw ("Property 'DesiredValues' in Test-M365DSCParameterState must be either a " + `
+                "Hashtable or CimInstance. Type detected was $($DesiredValues.GetType().Name)")
+    }
+
+    if (($DesiredValues.GetType().Name -eq "CimInstance") -and ($null -eq $ValuesToCheck))
+    {
+        throw ("If 'DesiredValues' is a CimInstance then property 'ValuesToCheck' must contain " + `
+                "a value")
+    }
+
+    if (($null -eq $ValuesToCheck) -or ($ValuesToCheck.Count -lt 1))
+    {
+        $KeyList = $DesiredValues.Keys
+    }
+    else
+    {
+        $KeyList = $ValuesToCheck
+    }
+
+    $KeyList | ForEach-Object -Process {
+        if (($_ -ne "Verbose") -and ($_ -ne "InstallAccount"))
+        {
+            if (($CurrentValues.ContainsKey($_) -eq $false) `
+                    -or ($CurrentValues.$_ -ne $DesiredValues.$_) `
+                    -or (($DesiredValues.ContainsKey($_) -eq $true) -and ($null -ne $DesiredValues.$_ -and $DesiredValues.$_.GetType().IsArray)))
+            {
+                if ($DesiredValues.GetType().Name -eq "HashTable" -or `
+                        $DesiredValues.GetType().Name -eq "PSBoundParametersDictionary")
+                {
+                    $CheckDesiredValue = $DesiredValues.ContainsKey($_)
+                }
+                else
+                {
+                    $CheckDesiredValue = Test-M365DSCObjectHasProperty -Object $DesiredValues -PropertyName $_
+                }
+
+                if ($CheckDesiredValue)
+                {
+                    $desiredType = $DesiredValues.$_.GetType()
+                    $fieldName = $_
+                    if ($desiredType.IsArray -eq $true)
+                    {
+                        if (($CurrentValues.ContainsKey($fieldName) -eq $false) `
+                                -or ($null -eq $CurrentValues.$fieldName))
+                        {
+                            Write-Verbose -Message ("Expected to find an array value for " + `
+                                    "property $fieldName in the current " + `
+                                    "values, but it was either not present or " + `
+                                    "was null. This has caused the test method " + `
+                                    "to return false.")
+                            $DriftedParameters.Add($fieldName, '')
+                            $returnValue = $false
+                        }
+                        elseif ($desiredType.Name -eq 'ciminstance[]')
+                        {
+                            Write-Verbose "The current property {$_} is a CimInstance[]"
+                            $AllDesiredValuesAsArray = @()
+                            foreach ($item in $DesiredValues.$_)
+                            {
+                                $currentEntry = @{ }
+                                foreach ($prop in $item.CIMInstanceProperties)
+                                {
+                                    $value = $prop.Value
+                                    if ([System.String]::IsNullOrEmpty($value))
+                                    {
+                                        $value = $null
+                                    }
+                                    $currentEntry.Add($prop.Name, $value)
+                                }
+                                $AllDesiredValuesAsArray += [PSCustomObject]$currentEntry
+                            }
+
+                            $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $CurrentValues.$fieldName `
+                                -DesiredValues $AllDesiredValuesAsArray
+                            if ($null -ne $arrayCompare)
+                            {
+                                foreach ($item in $arrayCompare)
+                                {
+                                    $EventValue = "<CurrentValue>[$($item.PropertyName)]$($item.CurrentValue)</CurrentValue>"
+                                    $EventValue += "<DesiredValue>[$($item.PropertyName)]$($item.DesiredValue)</DesiredValue>"
+                                    $DriftedParameters.Add($fieldName, $EventValue)
+                                }
+                                $returnValue = $false
+                            }
+                        }
+                        else
+                        {
+                            $arrayCompare = Compare-Object -ReferenceObject $CurrentValues.$fieldName `
+                                -DifferenceObject $DesiredValues.$fieldName
+                            if ($null -ne $arrayCompare -and
+                                -not [System.String]::IsNullOrEmpty($arrayCompare.InputObject))
+                            {
+                                Write-Verbose -Message ("Found an array for property $fieldName " + `
+                                        "in the current values, but this array " + `
+                                        "does not match the desired state. " + `
+                                        "Details of the changes are below.")
+                                $arrayCompare | ForEach-Object -Process {
+                                    Write-Verbose -Message "$($_.InputObject) - $($_.SideIndicator)"
+                                }
+
+                                $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
+                                $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
+                                $DriftedParameters.Add($fieldName, $EventValue)
+                                $returnValue = $false
+                            }
+                        }
+                    }
+                    else
+                    {
+                        switch ($desiredType.Name)
+                        {
+                            "String"
+                            {
+                                if ([string]::IsNullOrEmpty($CurrentValues.$fieldName) `
+                                        -and [string]::IsNullOrEmpty($DesiredValues.$fieldName))
+                                {
+                                }
+                                else
+                                {
+                                    Write-Verbose -Message ("String value for property " + `
+                                            "$fieldName does not match. " + `
+                                            "Current state is " + `
+                                            "'$($CurrentValues.$fieldName)' " + `
+                                            "and desired state is " + `
+                                            "'$($DesiredValues.$fieldName)'")
+                                    $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
+                                    $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
+                                    $DriftedParameters.Add($fieldName, $EventValue)
+                                    $returnValue = $false
+                                }
+                            }
+                            "Int32"
+                            {
+                                if (($DesiredValues.$fieldName -eq 0) `
+                                        -and ($null -eq $CurrentValues.$fieldName))
+                                {
+                                }
+                                else
+                                {
+                                    Write-Verbose -Message ("Int32 value for property " + `
+                                            "$fieldName does not match. " + `
+                                            "Current state is " + `
+                                            "'$($CurrentValues.$fieldName)' " + `
+                                            "and desired state is " + `
+                                            "'$($DesiredValues.$fieldName)'")
+                                    $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
+                                    $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
+                                    $DriftedParameters.Add($fieldName, $EventValue)
+                                    $returnValue = $false
+                                }
+                            }
+                            "Int16"
+                            {
+                                if (($DesiredValues.$fieldName -eq 0) `
+                                        -and ($null -eq $CurrentValues.$fieldName))
+                                {
+                                }
+                                else
+                                {
+                                    Write-Verbose -Message ("Int16 value for property " + `
+                                            "$fieldName does not match. " + `
+                                            "Current state is " + `
+                                            "'$($CurrentValues.$fieldName)' " + `
+                                            "and desired state is " + `
+                                            "'$($DesiredValues.$fieldName)'")
+                                    $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
+                                    $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
+                                    $DriftedParameters.Add($fieldName, $EventValue)
+                                    $returnValue = $false
+                                }
+                            }
+                            "Boolean"
+                            {
+                                if ($CurrentValues.$fieldName -ne $DesiredValues.$fieldName)
+                                {
+                                    Write-Verbose -Message ("Boolean value for property " + `
+                                            "$fieldName does not match. " + `
+                                            "Current state is " + `
+                                            "'$($CurrentValues.$fieldName)' " + `
+                                            "and desired state is " + `
+                                            "'$($DesiredValues.$fieldName)'")
+                                    $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
+                                    $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
+                                    $DriftedParameters.Add($fieldName, $EventValue)
+                                    $returnValue = $false
+                                }
+                            }
+                            "Single"
+                            {
+                                if (($DesiredValues.$fieldName -eq 0) `
+                                        -and ($null -eq $CurrentValues.$fieldName))
+                                {
+                                }
+                                else
+                                {
+                                    Write-Verbose -Message ("Single value for property " + `
+                                            "$fieldName does not match. " + `
+                                            "Current state is " + `
+                                            "'$($CurrentValues.$fieldName)' " + `
+                                            "and desired state is " + `
+                                            "'$($DesiredValues.$fieldName)'")
+                                    $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
+                                    $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
+                                    $DriftedParameters.Add($fieldName, $EventValue)
+                                    $returnValue = $false
+                                }
+                            }
+                            "Hashtable"
+                            {
+                                Write-Verbose -Message "The current property {$fieldName} is a Hashtable"
+                                $AllDesiredValuesAsArray = @()
+                                foreach ($item in $DesiredValues.$fieldName)
+                                {
+                                    $currentEntry = @{ }
+                                    foreach ($key in $item.Keys)
+                                    {
+                                        $value = $item.$key
+                                        if ([System.String]::IsNullOrEmpty($value))
+                                        {
+                                            $value = $null
+                                        }
+                                        $currentEntry.Add($key, $value)
+                                    }
+                                    $AllDesiredValuesAsArray += [PSCustomObject]$currentEntry
+                                }
+
+                                if ($null -ne $DesiredValues.$fieldName -and $null -eq $CurrentValues.$fieldName)
+                                {
+                                    $returnValue = $false
+                                }
+                                else
+                                {
+                                    $AllCurrentValuesAsArray = @()
+                                    foreach ($item in $CurrentValues.$fieldName)
+                                    {
+                                        $currentEntry = @{ }
+                                        foreach ($key in $item.Keys)
+                                        {
+                                            $value = $item.$key
+                                            if ([System.String]::IsNullOrEmpty($value))
+                                            {
+                                                $value = $null
+                                            }
+                                            $currentEntry.Add($key, $value)
+                                        }
+                                        $AllCurrentValuesAsArray += [PSCustomObject]$currentEntry
+                                    }
+                                    $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $AllCurrentValuesAsArray `
+                                        -DesiredValues $AllDesiredValuesAsArray
+                                    if ($null -ne $arrayCompare)
+                                    {
+                                        foreach ($item in $arrayCompare)
+                                        {
+                                            $EventValue = "<CurrentValue>[$($item.PropertyName)]$($item.CurrentValue)</CurrentValue>"
+                                            $EventValue += "<DesiredValue>[$($item.PropertyName)]$($item.DesiredValue)</DesiredValue>"
+                                            $DriftedParameters.Add($fieldName, $EventValue)
+                                        }
+                                        $returnValue = $false
+                                    }
+                                }
+                            }
+                            default
+                            {
+                                Write-Verbose -Message ("Unable to compare property $fieldName " + `
+                                        "as the type ($($desiredType.Name)) is " + `
+                                        "not handled by the " + `
+                                        "Test-M365DSCParameterState cmdlet")
+                                $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
+                                $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
+                                $DriftedParameters.Add($fieldName, $EventValue)
+                                $returnValue = $false
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if ($returnValue -eq $false)
+    {
+        $EventMessage = "<M365DSCEvent>`r`n"
+        $EventMessage += "    <ConfigurationDrift Source=`"$Source`">`r`n"
+
+        $EventMessage += "        <ParametersNotInDesiredState>`r`n"
+        $driftedValue = ''
+        foreach ($key in $DriftedParameters.Keys)
+        {
+            Write-Verbose -Message "Detected Drifted Parameter [$Source]$key"
+            #region Telemetry
+            $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+            $driftedData.Add("Event", "DriftedParameter")
+            $driftedData.Add("Parameter", "[$Source]$key")
+            Add-M365DSCTelemetryEvent -Type "DriftInfo" -Data $driftedData
+            #endregion
+            $EventMessage += "            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n"
+        }
+        #region Telemetry
+        $data.Add("Event", "ConfigurationDrift")
+        #endregion
+        $EventMessage += "        </ParametersNotInDesiredState>`r`n"
+        $EventMessage += "    </ConfigurationDrift>`r`n"
+        $EventMessage += "    <DesiredValues>`r`n"
+        foreach ($Key in $DesiredValues.Keys)
+        {
+            $Value = $DesiredValues.$Key
+            if ([System.String]::IsNullOrEmpty($Value))
+            {
+                $Value = "`$null"
+            }
+            $EventMessage += "        <Param Name =`"$key`">$Value</Param>`r`n"
+        }
+        $EventMessage += "    </DesiredValues>`r`n"
+        $EventMessage += "</M365DSCEvent>"
+
+        Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+            -EventID 1 -Source $Source
+    }
+    #region Telemetry
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+    return $returnValue
 }

@@ -1,5 +1,4 @@
-function Get-TargetResource
-{
+function Get-TargetResource {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
@@ -47,8 +46,7 @@ function Get-TargetResource
 
     Write-Verbose -Message "Checking for existance of Team User $User"
     $team = Get-Team -GroupId $GroupId -ErrorAction SilentlyContinue
-    if ($null -eq $team)
-    {
+    if ($null -eq $team) {
         return $nullReturn
     }
 
@@ -61,28 +59,24 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    try
-    {
+    try {
         Write-Verbose "Retrieving user without a specific Role specified"
         $allMembers = Get-TeamChannelUser -GroupId $team.GroupId -DisplayName $DisplayName -ErrorAction SilentlyContinue
     }
-    catch
-    {
+    catch {
         Write-Warning "The current user doesn't have the rights to access the list of members for Channel {$($DisplayName)}."
         Write-Verbose $_
         return $nullReturn
     }
 
-    if ($null -eq $allMembers)
-    {
+    if ($null -eq $allMembers) {
         Write-Verbose -Message "Failed to get Team's users for Team"
         return $nullReturn
     }
 
     $myUser = $allMembers | Where-Object -FilterScript { $_.User -eq $User }
 
-    if ($null -eq $myUser)
-    {
+    if ($null -eq $myUser) {
         return $nullReturn
     }
     Write-Verbose -Message "Found team user $($myUser.User) with role:$($myUser.Role)"
@@ -97,8 +91,7 @@ function Get-TargetResource
 
 }
 
-function Set-TargetResource
-{
+function Set-TargetResource {
     [CmdletBinding()]
     param
     (
@@ -149,35 +142,41 @@ function Set-TargetResource
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Ensure")
 
-    if ($Ensure -eq "Present")
-    {
+    if ($Ensure -eq "Present") {
         Write-Verbose -Message "Adding team user $User with role:$Role"
-        if ($CurrentParameters.Role -eq 'Member')
-        {
+        if ($CurrentParameters.Role -eq 'Member') {
             $CurrentParameters.Remove('Role')
-	    Add-TeamChannelUser @CurrentParameters
-        }
-        elseif ($CurrentParameters.Role -eq 'Owner')
-        {
-            try
-            {
-                $CurrentParameters.Remove('Role')
-	        Add-TeamChannelUser @CurrentParameters
+            $member = Get-TeamUser -GroupId $GroupId | Where-Object -FilterScript { $_.User -eq $User }
+            if ($null -eq $member) {
+                Write-Verbose "Adding user {$user} to Team {$GroupId}"
+                Add-TeamUser -GroupId $GroupId -User $User -Role Member
+                Start-Sleep 2
             }
-            catch{}
+            try {
+                Add-TeamChannelUser @CurrentParameters -ErrorAction Stop
+            }
+            catch {
+                Write-Verbose "Waiting 2 minutes before retrying"
+                Start-Sleep 120
+                Add-TeamChannelUser @CurrentParameters -ErrorAction Stop
+            }
+        }
+        elseif ($CurrentParameters.Role -eq 'Owner') {
+            try {
+                $CurrentParameters.Remove('Role')
+                Add-TeamChannelUser @CurrentParameters
+            }
+            catch {}
 
-            try
-            {
+            try {
                 $CurrentParameters.Add("Role", "Owner")
                 Add-TeamChannelUser @CurrentParameters
             }
-            catch{}
+            catch {}
         }
     }
-    else
-    {
-        if ($Role -eq "Member" -and $CurrentParameters.ContainsKey("Role"))
-        {
+    else {
+        if ($Role -eq "Member" -and $CurrentParameters.ContainsKey("Role")) {
             $CurrentParameters.Remove("Role")
             Write-Verbose -Message "Removed role parameter"
         }
@@ -186,8 +185,7 @@ function Set-TargetResource
     }
 }
 
-function Test-TargetResource
-{
+function Test-TargetResource {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
@@ -223,8 +221,7 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    if ($null -eq $Role)
-    {
+    if ($null -eq $Role) {
         $CurrentValues.Remove("Role")
     }
 
@@ -242,8 +239,7 @@ function Test-TargetResource
     return $TestResult
 }
 
-function Export-TargetResource
-{
+function Export-TargetResource {
     [CmdletBinding()]
     [OutputType([System.String])]
     param
@@ -252,7 +248,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference ='Continue'
+    $InformationPreference = 'Continue'
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -266,13 +262,11 @@ function Export-TargetResource
     # Get all Site Collections in tenant;
     Test-MSCloudLogin -Platform MicrosoftTeams -CloudCredential $GlobalAdminAccount
     [array]$instances = Get-Team
-    if ($instances.Length -ge $MaxProcesses)
-    {
+    if ($instances.Length -ge $MaxProcesses) {
         [array]$instances = Split-ArrayByParts -Array $instances -Parts $MaxProcesses
         $batchSize = $instances[0].Length
     }
-    else
-    {
+    else {
         $MaxProcesses = $instances.Length
         $batchSize = 1
     }
@@ -280,8 +274,7 @@ function Export-TargetResource
     # For each batch of items, start and asynchronous background PowerShell job. Each
     # job will be given the name of the current resource followed by its ID;
     $i = 1
-    foreach ($batch in $instances)
-    {
+    foreach ($batch in $instances) {
         Start-Job -Name "TeamsUser$i" -ScriptBlock {
             Param(
                 [Parameter(Mandatory = $true)]
@@ -312,31 +305,24 @@ function Export-TargetResource
                     -Platform MicrosoftTeams
                 $GlobalAdminAccount = $params.GlobalAdminAccount
                 $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-                if ($GlobalAdminAccount.UserName.Contains("@"))
-                {
+                if ($GlobalAdminAccount.UserName.Contains("@")) {
                     $organization = $GlobalAdminAccount.UserName.Split("@")[1]
 
-                    if ($organization.IndexOf(".") -gt 0)
-                    {
+                    if ($organization.IndexOf(".") -gt 0) {
                         $principal = $organization.Split(".")[0]
                     }
                 }
-                foreach ($item in $params.Instances)
-                {
-                    foreach ($team in $item)
-                    {
-                        try
-                        {
+                foreach ($item in $params.Instances) {
+                    foreach ($team in $item) {
+                        try {
                             $users = Get-TeamUser -GroupId $team.GroupId
                             $i = 1
                             $totalCount = $item.Count
-                            if ($null -eq $totalCount)
-                            {
+                            if ($null -eq $totalCount) {
                                 $totalCount = 1
                             }
                             Write-Information "    > [$j/$totalCount] Team {$($team.DisplayName)}"
-                            foreach ($user in $users)
-                            {
+                            foreach ($user in $users) {
                                 Write-Information "        - [$i/$($users.Length)] $($user.User)"
                                 $getParams = @{
                                     TeamName           = $team.DisplayName
@@ -353,16 +339,14 @@ function Export-TargetResource
                                 $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
                                 $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
                                 $partialContent += "        }`r`n"
-                                if ($partialContent.ToLower().Contains($organization.ToLower()))
-                                {
+                                if ($partialContent.ToLower().Contains($organization.ToLower())) {
                                     $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
                                 }
                                 $content += $partialContent
                                 $i++
                             }
                         }
-                        catch
-                        {
+                        catch {
                             Write-Information $_
                             Write-Information "The current User doesn't have the required permissions to extract Users for Team {$($team.DisplayName)}."
                         }
@@ -381,22 +365,18 @@ function Export-TargetResource
     $jobsCompleted = 0
     $status = "Running..."
     $elapsedTime = 0
-    do
-    {
+    do {
         $InformationPreference = 'SilentlyContinue'
         $jobs = Get-Job | Where-Object -FilterScript { $_.Name -like '*TeamsUser*' }
         $count = $jobs.Length
-        foreach ($job in $jobs)
-        {
-            if ($job.JobStateInfo.State -eq "Complete")
-            {
+        foreach ($job in $jobs) {
+            if ($job.JobStateInfo.State -eq "Complete") {
                 $partialResult = Receive-Job -name $job.name
                 $result += $partialResult
                 Remove-Job -name $job.name
                 $jobsCompleted++
             }
-            elseif ($job.JobStateInfo.State -eq 'Failed')
-            {
+            elseif ($job.JobStateInfo.State -eq 'Failed') {
                 Remove-Job -name $job.name
                 Write-Warning "{$($job.name)} failed"
                 break

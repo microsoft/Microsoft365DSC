@@ -7,7 +7,7 @@ function Start-M365DSCConfigurationExtract
         [Switch]
         $Quiet,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount,
 
@@ -51,7 +51,31 @@ function Start-M365DSCConfigurationExtract
         [Parameter()]
         [ValidateSet('Lite', 'Default', 'Full')]
         [System.String]
-        $Mode
+        $Mode,
+
+        [Parameter()]
+        [System.Boolean]
+        $GenerateInfo = $false,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     $InformationPreference = "Continue"
@@ -60,7 +84,7 @@ function Start-M365DSCConfigurationExtract
 
     $organization = ""
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-    if ($GlobalAdminAccount.UserName.Contains("@"))
+    if ($null -eq $TenantId -and $GlobalAdminAccount.UserName.Contains("@"))
     {
         $organization = $GlobalAdminAccount.UserName.Split("@")[1]
 
@@ -201,6 +225,10 @@ function Start-M365DSCConfigurationExtract
                     {
                         $exportString = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount -MaxProcesses $MaxProcesses
                     }
+		    elseif (-not [System.String]::IsNullOrEmpty($ApplicationID))
+		    {
+			$exportString = Export-TargetResource -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
+		    }
                     else
                     {
                         $exportString = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount -Start $Start -End $End

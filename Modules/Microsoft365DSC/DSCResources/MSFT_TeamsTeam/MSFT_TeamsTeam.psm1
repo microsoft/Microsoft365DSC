@@ -1,5 +1,4 @@
-function Get-TargetResource
-{
+function Get-TargetResource {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
@@ -28,7 +27,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Public", "Private")]
+        [ValidateSet("Public", "Private", "HiddenMembership")]
         $Visibility,
 
         [Parameter()]
@@ -163,39 +162,31 @@ function Get-TargetResource
 
     $CurrentParameters = $PSBoundParameters
 
-    try
-    {
+    try {
         ## will only return 1 instance
-        if ($CurrentParameters.ContainsKey("GroupID"))
-        {
+        if ($CurrentParameters.ContainsKey("GroupID")) {
             $team = Get-Team -GroupId $GroupID
-            if ($null -eq $team)
-            {
+            if ($null -eq $team) {
                 Write-Verbose -Message "Teams with GroupId $($GroupID) doesn't exist"
                 return $nullReturn
             }
         }
-        else
-        {
+        else {
             ## Can retreive multiple Teams since displayname is not unique
             $team = Get-Team -DisplayName $DisplayName
-            if ($null -eq $team)
-            {
+            if ($null -eq $team) {
                 Write-Verbose -Message "Teams with displayname $DisplayName doesn't exist"
                 return $nullReturn
             }
-            if ($team.Length -gt 1)
-            {
+            if ($team.Length -gt 1) {
                 throw "Duplicate Teams name $DisplayName exist in tenant"
             }
         }
 
         $Owners = Get-TeamUser -GroupId $team.GroupId | Where-Object { $_.Role -eq "owner" }
 
-        if ($null -ne $Owners)
-        {
-            foreach ($owner in $Owners.User)
-            {
+        if ($null -ne $Owners) {
+            foreach ($owner in $Owners.User) {
                 $OwnersArray = $owner.ToString()
                 break
             }
@@ -232,15 +223,13 @@ function Get-TargetResource
             GlobalAdminAccount                = $GlobalAdminAccount
         }
     }
-    catch
-    {
+    catch {
         Write-Verbose "Returning empty results due to error: $_"
         return $nullReturn
     }
 }
 
-function Set-TargetResource
-{
+function Set-TargetResource {
     [CmdletBinding()]
     param
     (
@@ -268,7 +257,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Public", "Private")]
+        [ValidateSet("Public", "Private", "HiddenMembership")]
         $Visibility,
 
         [Parameter()]
@@ -377,37 +366,32 @@ function Set-TargetResource
     $CurrentParameters.Remove("Ensure")
 
     $needToUpdate = $false
-    if ($Ensure -eq "Present" -and ($team.Ensure -eq "Absent"))
-    {
+    if ($Ensure -eq "Present" -and ($team.Ensure -eq "Absent")) {
         Write-Verbose -Message "Creating team $DisplayName"
         Write-Verbose -Message "Creation Params: $(Convert-M365DscHashtableToString -Hashtable $CurrentParameters)"
         New-Team -GroupId $CurrentParameters.GroupId
         $needToUpdate = $true
     }
-    elseif ($Ensure -eq "Absent" -and ($team.Ensure -eq "Present"))
-    {
+    elseif ($Ensure -eq "Absent" -and ($team.Ensure -eq "Present")) {
         Write-Verbose -Message "Removing team $DisplayName"
         Remove-team -GroupId $team.GroupId
     }
 
-    if ($Ensure -eq "Present" -and $needToUpdate)
-    {
+    if ($Ensure -eq "Present" -and $needToUpdate) {
         ## Can't pass Owner parm into set opertaion
-        if ($CurrentParameters.ContainsKey("Owner"))
-        {
-            $CurrentParameters.Remove("Owner")
+        if ($CurrentParameters.ContainsKey("Owner")) {
+            $CurrentParameters.Remove("Owner") | Out-Null
         }
-        if ($CurrentParameters.ContainsKey("Archived"))
-        {
-            $CurrentParameters.Remove("Archived")
+        if ($CurrentParameters.ContainsKey("Archived")) {
+            $CurrentParameters.Remove("Archived") | Out-Null
         }
+        $CurrentParameters.Remove("Visibility") | Out-Null
         Set-Team @CurrentParameters
         Write-Verbose -Message "Updating team $DisplayName"
     }
 }
 
-function Test-TargetResource
-{
+function Test-TargetResource {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
@@ -436,7 +420,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Public", "Private")]
+        [ValidateSet("Public", "Private", "HiddenMembership")]
         $Visibility,
 
         [Parameter()]
@@ -534,14 +518,13 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     If (!$PSBoundParameters.ContainsKey('Ensure')) {
-        $PSBoundParameters.Add('Ensure',$Ensure)
+        $PSBoundParameters.Add('Ensure', $Ensure)
     }
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('GroupID') | Out-Null
 
-    if ($null -eq $CurrentValues.Owner)
-    {
+    if ($null -eq $CurrentValues.Owner) {
         $ValuesToCheck.Remove("Owner") | Out-Null
     }
 
@@ -555,8 +538,7 @@ function Test-TargetResource
     return $TestResult
 }
 
-function Export-TargetResource
-{
+function Export-TargetResource {
     [CmdletBinding()]
     [OutputType([System.String])]
     param
@@ -581,8 +563,7 @@ function Export-TargetResource
     $i = 1
     $content = ""
     $organization = $GlobalAdminAccount.UserName.Split('@')[1]
-    foreach ($team in $teams)
-    {
+    foreach ($team in $teams) {
         Write-Information "    - [$i/$($teams.Length)] $($team.DisplayName)"
         $params = @{
             DisplayName        = $team.DisplayName
@@ -591,12 +572,10 @@ function Export-TargetResource
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
 
-        if ("" -eq $result.Owner)
-        {
+        if ("" -eq $result.Owner) {
             $result.Remove("Owner")
         }
-        if ($null -eq $result.Classification)
-        {
+        if ($null -eq $result.Classification) {
             $result.Remove("Classification")
         }
         $content += "        TeamsTeam " + (New-GUID).ToString() + "`r`n"
@@ -604,8 +583,7 @@ function Export-TargetResource
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $partialContent += "        }`r`n"
-        if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
-        {
+        if ($partialContent.ToLower().Contains("@" + $organization.ToLower())) {
             $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
         }
         $content += $partialContent

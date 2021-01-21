@@ -56,16 +56,8 @@
             RequiredVersion = "2.0.0.2"
         },
         @{
-            ModuleName      = "SharePointPnPPowerShellOnline"
-            RequiredVersion = "3.20.2004.0"
-        },
-        @{
             ModuleName      = "Microsoft.Online.SharePoint.PowerShell"
             RequiredVersion = "16.0.19515.12000"
-        },
-        @{
-            ModuleName      = "MicrosoftTeams"
-            RequiredVersion = "1.0.21"
         },
         @{
             ModuleName      = "AzureADPreview"
@@ -73,7 +65,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.27"
+            RequiredVersion = "1.0.42"
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
@@ -100,7 +92,8 @@
         'modules\M365DSCReverse.psm1',
         'modules\M365DSCLogEngine.psm1',
         'modules\M365DSCTelemetryEngine.psm1',
-        'modules\M365DSCStubsUtility.psm1'
+        'modules\M365DSCStubsUtility.psm1',        
+        'modules\EncodingHelpers\M365DSCStringEncoding.psm1'
     )
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.

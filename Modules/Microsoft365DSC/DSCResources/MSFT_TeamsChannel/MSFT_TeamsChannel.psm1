@@ -1,5 +1,4 @@
-function Get-TargetResource
-{
+function Get-TargetResource {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
@@ -62,8 +61,7 @@ function Get-TargetResource
     Write-Verbose -Message "Checking for existance of team channels"
     $CurrentParameters = $PSBoundParameters
 
-    try
-    {
+    try {
         $team = Get-TeamByName $TeamName
 
         Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
@@ -75,14 +73,12 @@ function Get-TargetResource
         }
 
         #Current channel doesnt exist and trying to rename throw an error
-        if (($null -eq $channel) -and $CurrentParameters.ContainsKey("NewDisplayName"))
-        {
+        if (($null -eq $channel) -and $CurrentParameters.ContainsKey("NewDisplayName")) {
             Write-Verbose -Message "Cannot rename channel $DisplayName , doesnt exist in current Team"
             throw "Channel named $DisplayName doesn't exist in current Team"
         }
 
-        if ($null -eq $channel)
-        {
+        if ($null -eq $channel) {
             Write-Verbose -Message "Failed to get team channels with ID $($team.GroupId) and display name of $DisplayName"
             return $nullReturn
         }
@@ -97,14 +93,12 @@ function Get-TargetResource
             GlobalAdminAccount = $GlobalAdminAccount
         }
     }
-    catch
-    {
+    catch {
         return $nullReturn
     }
 }
 
-function Set-TargetResource
-{
+function Set-TargetResource {
     [CmdletBinding()]
     param
     (
@@ -160,8 +154,7 @@ function Set-TargetResource
 
     $team = Get-TeamByName $TeamName
 
-    if ($team.Length -gt 1)
-    {
+    if ($team.Length -gt 1) {
         throw "Multiple Teams with name {$($TeamName)} were found"
     }
     Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
@@ -171,40 +164,37 @@ function Set-TargetResource
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Ensure")
 
-    if ($Ensure -eq "Present")
-    {
+    if ($Ensure -eq "Present") {
         # Remap attribute from DisplayName to current display name for Set-TeamChannel cmdlet
-        if ($channel.Ensure -eq "Present")
-        {
-            if ($CurrentParameters.ContainsKey("NewDisplayName"))
-            {
+        if ($channel.Ensure -eq "Present") {
+            if ($CurrentParameters.ContainsKey("NewDisplayName")) {
                 Write-Verbose -Message "Updating team channel to new channel name $NewDisplayName"
                 $CurrentParameters.Remove("DisplayName") | Out-Null
                 Set-TeamChannel @CurrentParameters -CurrentDisplayName $DisplayName
             }
         }
-        else
-        {
-            if ($CurrentParameters.ContainsKey("NewDisplayName"))
-            {
+        else {
+            if ($CurrentParameters.ContainsKey("NewDisplayName")) {
                 $CurrentParameters.Remove("NewDisplayName")
             }
             Write-Verbose -Message "Creating team channel  $DislayName"
             New-TeamChannel @CurrentParameters
+
+            if ($MembershipType -eq 'Private') {
+                Write-Verbose "The newly created channel is a private one. Waiting 2 minutes to ensure everything gets created before moving forward."
+                Start-Sleep 120
+            }
         }
     }
-    else
-    {
-        if ($channel.DisplayName)
-        {
+    else {
+        if ($channel.DisplayName) {
             Write-Verbose -Message "Removing team channel $DislayName"
             Remove-TeamChannel -GroupId $team.GroupId -DisplayName $DisplayName
         }
     }
 }
 
-function Test-TargetResource
-{
+function Test-TargetResource {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
@@ -260,8 +250,7 @@ function Test-TargetResource
     return $TestResult
 }
 
-function Export-TargetResource
-{
+function Export-TargetResource {
     [CmdletBinding()]
     [OutputType([System.String])]
     param
@@ -298,14 +287,12 @@ function Export-TargetResource
     $UserModulePath = Join-Path $PSScriptRoot -ChildPath '..\MSFT_TeamsUser\MSFT_TeamsUser.psm1' #Custom
 
     $organization = $GlobalAdminAccount.UserName.Split('@')[1]
-    for ($j = $start; $j -le $Teams.Length -and $j -le $end; $j++)
-    {
-        $team = $Teams[$j-1]
+    for ($j = $start; $j -le $Teams.Length -and $j -le $end; $j++) {
+        $team = $Teams[$j - 1]
         $channels = Get-TeamChannel -GroupId $team.GroupId
         $i = 1
         $Total = $end
-        if ($end -gt $Teams.Length)
-        {
+        if ($end -gt $Teams.Length) {
             $total = $Teams.Length
         }
         Write-Information "    > [$j/$($total)] Team {$($team.DisplayName)}"
@@ -317,12 +304,10 @@ function Export-TargetResource
         Import-Module $TeamsModulePath -Force #Custom
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        if ("" -eq $result.Owner)
-        {
+        if ("" -eq $result.Owner) {
             $result.Remove("Owner")
         }
-        if ([System.String]::IsNullOrEmpty($result.NewDisplayName))
-        {
+        if ([System.String]::IsNullOrEmpty($result.NewDisplayName)) {
             $result.Remove("NewDisplayName")
         }
         $content += "        TeamsTeam " + (New-GUID).ToString() + "`r`n"
@@ -330,17 +315,14 @@ function Export-TargetResource
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath ($TeamsModulePath.Replace("\MSFT_TeamsTeam.psm1", "")) #Custom
         $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $partialContent += "        }`r`n"
-        if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
-        {
+        if ($partialContent.ToLower().Contains("@" + $organization.ToLower())) {
             $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
         }
         $content += $partialContent
         #endregion
-        foreach ($channel in $channels)
-        {
+        foreach ($channel in $channels) {
             $channelType = '-'
-            if ($channel.MembershipType -eq 'Private')
-            {
+            if ($channel.MembershipType -eq 'Private') {
                 $channelType = '!'
             }
             Write-Information "        $channelType [$i/$($channels.Length)] $($channel.DisplayName)"
@@ -351,8 +333,7 @@ function Export-TargetResource
             }
             Import-Module $ChannelModulePath -Force #Custom
             $result = Get-TargetResource @params
-            if ([System.String]::IsNullOrEmpty($result.NewDisplayName))
-            {
+            if ([System.String]::IsNullOrEmpty($result.NewDisplayName)) {
                 $result.Remove("NewDisplayName")
             }
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
@@ -362,15 +343,12 @@ function Export-TargetResource
             $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
             $content += "        }`r`n"
 
-            if ($channel.MembershipType -eq 'Private')
-            {
+            if ($channel.MembershipType -eq 'Private') {
                 Import-Module $UserModulePath -Force
-		try
-		{
+                try {
                     $users = Get-TeamChannelUser -GroupId $team.GroupId -DisplayName $channel.DisplayName
                     $k = 1
-                    foreach ($user in $users)
-                    {
+                    foreach ($user in $users) {
                         Write-Information "            + [$k/$($users.Length)] $($user.User)"
                         $getParams = @{
                             GroupId            = $team.GroupId
@@ -385,18 +363,16 @@ function Export-TargetResource
                         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath ($UserModulePath.Replace("\MSFT_TeamsUser.psm1", ""))
                         $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
                         $partialContent += "        }`r`n"
-                        if ($partialContent.ToLower().Contains($organization.ToLower()))
-                        {
+                        if ($partialContent.ToLower().Contains($organization.ToLower())) {
                             $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
                         }
                         $content += $partialContent
                         $k++
                     }
-		}
-		catch
-		{
-			Write-Error "Could not retrieve users for private channel {$($channel.DisplayName)} with GroupID {$($team.GroupId)}"
-		}
+                }
+                catch {
+                    Write-Error "Could not retrieve users for private channel {$($channel.DisplayName)} with GroupID {$($team.GroupId)}"
+                }
             }
             $i++
         }
