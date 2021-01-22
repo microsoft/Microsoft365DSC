@@ -2,207 +2,154 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath "..\..\Unit" `
+    -Resolve
+
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+    -ChildPath "\Stubs\Microsoft365.psm1" `
+    -Resolve)
+
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
     -ChildPath "\Stubs\Generic.psm1" `
     -Resolve)
+
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\UnitTestHelper.psm1" `
-        -Resolve)
+    -ChildPath "\UnitTestHelper.psm1" `
+    -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "EXOAcceptedDomain" -GenericStubModule $GenericStubPath
+    -DscResource "EXOPublicFolder" -GenericStubModule $GenericStubPath
+
+$Global:script = @'
+{
+        "$schema": "schema.json",
+            "actions": [
+    {
+    "verb": "setSiteExternalSharingCapability",
+    "capability": "ExternalUserAndGuestSharing"
+    }
+            ],
+            "bindata": { },
+            "version": 1
+    };
+'@
+
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
+
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
             $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
+            Mock -CommandName Set-PublicFolder -MockWith {
                 return @{}
             }
 
-            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
+            Mock -CommandName Get-PublicFolder -MockWith {
 
             }
 
-            Mock -CommandName New-M365DSCConnection -MockWith {
+            Mock -CommandName New-PublicFolder -MockWith {
                 return "Credential"
-            }
-
-            Mock -CommandName Get-PSSession -MockWith {
-
-            }
-
-            Mock -CommandName Remove-PSSession -MockWith {
-
             }
         }
 
         # Test contexts
-        Context -Name "Authoritative Accepted Domain should exist.  Domain is missing. Test should fail." -Fixture {
+        Context -Name "The Public Folder doesn't exist" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DomainType         = 'Authoritative'
-                    Ensure             = 'Present'
-                    GlobalAdminAccount = $GlobalAdminAccount
-                    Identity           = 'contoso.com'
+                    Title               = "Title One"
+                    Content             = $script
+                    Description         = "This is the description for the Site Script: 'Test Title'"
+                    GlobalAdminAccount  = $GlobalAdminAccount
+                    Ensure              = "Present"
                 }
 
-                Mock -CommandName Get-AzureADDomain -MockWith {
+                Mock -CommandName Add-PnPSiteScript -MockWith {
                     return @{
-                        Name       = 'different.contoso.com'
-                        IsVerified = $true
+                        Name = $null
                     }
                 }
 
-                Mock -CommandName Get-AcceptedDomain -MockWith {
-                    return @{
-                        DomainType      = 'Authoritative'
-                        Identity        = 'different.contoso.com'
-                        MatchSubDomains = $false
-                        OutboundOnly    = $false
-                    }
-                }
-                Mock -CommandName Set-AcceptedDomain -MockWith {
-                    return @{
-                        DomainType         = 'Authoritative'
-                        Ensure             = 'Present'
-                        GlobalAdminAccount = $GlobalAdminAccount
-                        Identity           = 'contoso.com'
-                    }
+                Mock -CommandName Get-PnPSiteScript -MockWith {
+                    return $null
                 }
             }
 
-            It 'Should return false from the Test method' {
+            It "Should return absent from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should -Be "Absent"
+            }
+
+            It "Should return false from the Test method" {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Should call the Set method" {
+            It "Creates the site script in the Set method" {
+                Set-TargetResource @testParams
+            }
+        }
+
+        Context -Name "The site script already exist but is not in the desired state" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Identity            = "6c42cc50-7f90-45c2-9094-e8df5f9aa202"
+                    Title               = "Title One"
+                    Content             = $script
+                    Description         = "This is the description for the Site Script: 'Test Title'"
+                    GlobalAdminAccount  = $GlobalAdminAccount
+                    Ensure              = "Present"
+                }
+
+                Mock -CommandName Get-PnPTenantTheme -MockWith {
+                    return @{
+                        Identity    = "6c42cc50-7f90-45c2-9094-e8df5f9aa202"
+                        Title       = "Title Two"
+                        Content     = $script
+                        Description = "This is the description for the Site Script: 'Test Title'"
+                    }
+                }
+            }
+
+            It "Should update the Theme from the Set method" {
                 Set-TargetResource @testParams
             }
 
-            It "Should return Absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Absent"
-            }
-        }
-
-        Context -Name "Verified domain doesn't exist in the tenant." -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    DomainType         = 'Authoritative'
-                    Ensure             = 'Absent'
-                    MatchSubDomain     = $false
-                    OutboundOnly       = $false
-                    GlobalAdminAccount = $GlobalAdminAccount
-                    Identity           = 'contoso.com'
-                }
-
-                Mock -CommandName Get-AcceptedDomain -MockWith {
-                    return @{
-                        DomainType      = 'Authoritative'
-                        Identity        = 'different.tailspin.com'
-                        MatchSubDomains = $false
-                        OutboundOnly    = $false
-                    }
-                }
-
-                Mock -CommandName Get-AzureADDomain -MockWith {
-                    return @{
-                        Name       = 'contoso.com'
-                        IsVerified = $true
-                    }
-                }
-            }
-
-            It "Should return Absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Absent"
-            }
-        }
-
-        Context -Name "Authoritative Accepted Domain should exist.  Domain exists. Test should pass." -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    DomainType         = 'Authoritative'
-                    Ensure             = 'Present'
-                    MatchSubDomain     = $false
-                    OutboundOnly       = $false
-                    GlobalAdminAccount = $GlobalAdminAccount
-                    Identity           = 'contoso.com'
-                }
-
-                Mock -CommandName Get-AzureADDomain -MockWith {
-                    return @{
-                        Name       = 'contoso.com'
-                        IsVerified = $true
-                    }
-
-                }
-
-                Mock -CommandName Get-AcceptedDomain -MockWith {
-                    return @{
-                        DomainType      = 'Authoritative'
-                        Identity        = 'contoso.com'
-                        MatchSubDomains = $false
-                        OutboundOnly    = $false
-                    }
-                }
-            }
-
-            It 'Should return true from the Test method' {
-                Test-TargetResource @testParams | Should -Be $true
-            }
-
-            It 'Should return Present from the Get Method' {
+            It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be "Present"
             }
-        }
 
-        Context -Name "Authoritative Accepted Domain should exist.  Domain exists, DomainType and MatchSubDomains mismatch. Test should fail." -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    DomainType         = 'Authoritative'
-                    Ensure             = 'Present'
-                    GlobalAdminAccount = $GlobalAdminAccount
-                    Identity           = 'contoso.com'
-                }
-
-                Mock -CommandName Get-AzureADDomain -MockWith {
-                    return @{
-                        Name       = 'contoso.com'
-                        IsVerified = $true
-                    }
-
-                }
-
-                Mock -CommandName Get-AcceptedDomain -MockWith {
-                    return @{
-                        DomainType      = 'InternalRelay'
-                        Identity        = 'contoso.com'
-                        MatchSubDomains = $true
-                        OutboundOnly    = $false
-                    }
-                }
-                Mock -CommandName Set-AcceptedDomain -MockWith {
-                    return @{
-                        DomainType         = 'Authoritative'
-                        Ensure             = 'Present'
-                        GlobalAdminAccount = $GlobalAdminAccount
-                        Identity           = 'contoso.com'
-                    }
-                }
-            }
-
-            It 'Should return false from the Test method' {
+            It "Should return false from the Test method" {
                 Test-TargetResource @testParams | Should -Be $false
             }
+        }
 
-            It "Should call the Set method" {
+        Context -Name "Testing theme removal" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Identity            = "6c42cc50-7f90-45c2-9094-e8df5f9aa202"
+                    Title               = "Title One"
+                    Content             = $script
+                    Description         = "This is the description for the Site Script: 'Test Title'"
+                    GlobalAdminAccount  = $GlobalAdminAccount
+                    Ensure              = "Present"
+                }
+
+                Mock -CommandName Get-PnPTenantTheme -MockWith {
+                    return @{
+                        Identity    = "6c42cc50-7f90-45c2-9094-e8df5f9aa202"
+                        Title       = "Title Two"
+                        Content     = $script
+                        Description = "This is the description for the Site Script: 'Test Title'"
+                    }
+                }
+
+                Mock -CommandName Remove-PnPTenantTheme -MockWith {
+                    return "Theme has been successfully removed"
+                }
+            }
+
+            It "Should remove the Theme successfully" {
                 Set-TargetResource @testParams
             }
         }
@@ -213,32 +160,43 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount
                 }
 
-                $acceptedDomain1 = @{
-                    DomainType      = 'Authoritative'
-                    Identity        = 'different1.tailspin.com'
-                    MatchSubDomains = $false
-                    OutboundOnly    = $false
-                }
-
-                $acceptedDomain2 = @{
-                    DomainType      = 'Authoritative'
-                    Identity        = 'different2.tailspin.com'
-                    MatchSubDomains = $false
-                    OutboundOnly    = $false
+                Mock -CommandName Get-PnPTenantTheme -MockWith {
+                    return @{
+                        Name               = "TestTheme"
+                        IsInverted         = $false
+                        Palette            = @{
+                            "themePrimary"         = "#0078d4";
+                            "themeLighterAlt"      = "#eff6fc";
+                            "themeLighter"         = "#deecf9";
+                            "themeLight"           = "#c7e0f4";
+                            "themeTertiary"        = "#71afe5";
+                            "themeSecondary"       = "#2b88d8";
+                            "themeDarkAlt"         = "#106ebe";
+                            "themeDark"            = "#005a9e";
+                            "themeDarker"          = "#004578";
+                            "neutralLighterAlt"    = "#f8f8f8";
+                            "neutralLighter"       = "#f4f4f4";
+                            "neutralLight"         = "#eaeaea";
+                            "neutralQuaternaryAlt" = "#dadada";
+                            "neutralQuaternary"    = "#d0d0d0";
+                            "neutralTertiaryAlt"   = "#c8c8c8";
+                            "neutralTertiary"      = "#c2c2c2";
+                            "neutralSecondary"     = "#858585";
+                            "neutralPrimaryAlt"    = "#4b4b4b";
+                            "neutralPrimary"       = "#333";
+                            "neutralDark"          = "#272727";
+                            "black"                = "#1d1d1d";
+                            "white"                = "#fff";
+                            "bodyBackground"       = "#0078d4";
+                            "bodyText"             = "#fff";
+                        }
+                        GlobalAdminAccount = $GlobalAdminAccount
+                        Ensure             = "Present"
+                    }
                 }
             }
 
-            It "Should Reverse Engineer resource from the Export method when single" {
-                Mock -CommandName Get-AcceptedDomain -MockWith {
-                    return $acceptedDomain1
-                }
-                Export-TargetResource @testParams
-            }
-
-            It "Should Reverse Engineer resource from the Export method when multiple" {
-                Mock -CommandName Get-AcceptedDomain -MockWith {
-                    return @($acceptedDomain1, $acceptedDomain2)
-                }
+            It "Should Reverse Engineer resource from the Export method" {
                 Export-TargetResource @testParams
             }
         }

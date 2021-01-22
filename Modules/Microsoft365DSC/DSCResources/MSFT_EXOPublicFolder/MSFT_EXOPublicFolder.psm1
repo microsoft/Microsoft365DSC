@@ -4,7 +4,7 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [ValidateLength(1, 64)]
         [System.String]
         $Identity,
@@ -32,10 +32,30 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+        
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+        
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
-    Write-Verbose -Message "Getting Public Folder for $Name"
+    Write-Verbose -Message "Getting Public Folder for $Identity"
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -71,14 +91,16 @@ function Get-TargetResource
         # Was a folder name provided?
         if ([System.String]::IsNullOrEmpty($Identity)){
             #query the folders
-            $Folders = Get-PublicFolder -Recurse -ErrorAction SilentlyContinue  | Where-Object {$_.Name -ne "IPM_SUBTREE"}
+            #$Folders = Get-PublicFolder -Recurse -ErrorAction SilentlyContinue  | Where-Object {$_.Name -ne "IPM_SUBTREE"}
+            $Folders = Get-PublicFolder -Recurse -ErrorAction SilentlyContinue  | Where-Object -FilterScript {$_.Name -ne "IPM_SUBTREE"}
             if ($null -eq $Folders)
             {
                 return $nullReturn
             }
 
             # Check to see if more than one folder is returned
-            if ($Folders.Length -gt -1){ 
+            if ($Folders.Length -gt 0)
+            { 
                 $folder = Get-PublicFolder -Identity $Folders[0].Identity
             }
 
@@ -98,11 +120,11 @@ function Get-TargetResource
     catch
     {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-        $Message = "Error calling {Get-SafeAttachmentRule}"
+        $Message = "Error calling {Get-PublicFolder}"
         New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
     }
 
-    #check to see if the folder we just queired exist
+    #check to see if the folder we just queried exist
     if ($null -eq $folder)
     {
         Write-Verbose -Message "Public Folder $($Identity) does not exist."
@@ -112,7 +134,6 @@ function Get-TargetResource
     {
         $result = @{
             Identity             = $folder.Identity
-            Name                 = $folder.Name
             EformsLocaleId       = $folder.EformsLocaleId
             Mailbox              = $folder.Mailbox
             Path                 = $folder.Path
@@ -121,7 +142,7 @@ function Get-TargetResource
             GlobalAdminAccount   = $GlobalAdminAccount
         }
 
-        Write-Verbose -Message "Found Publid Folder $($folder.Name)"
+        Write-Verbose -Message "Found Public Folder $($folder.Name)"
         return $result
     }
 }
@@ -131,7 +152,7 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [ValidateLength(1, 64)]
         [System.String]
         $Identity,
@@ -159,7 +180,27 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+        
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+        
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting Public Folder: $Identity"
@@ -189,7 +230,7 @@ function Set-TargetResource
     # CASE: Public Folder doesn't exist but should;
     if ($Ensure -eq "Present" -and $EXOPublicFolders.Ensure -eq "Absent")
     {
-        Write-Verbose -Message "Public Folder '$($Name)' does not exist but it should. Create and configure it."
+        Write-Verbose -Message "Public Folder '$($Identity)' does not exist but it should. Create and configure it."
         # Create Offline Address Book
         New-PublicFolder @NewEXOPublicFolder
 
@@ -197,14 +238,14 @@ function Set-TargetResource
     # CASE: Public Folder exists but it shouldn't;
     elseif ($Ensure -eq "Absent" -and $EXOPublicFolders.Ensure -eq "Present")
     {
-        Write-Verbose -Message "Public Folder '$($Name)' exists but it shouldn't. Remove it."
-        Remove-PublicFolder -Identity $Name -Confirm:$false -Force
+        Write-Verbose -Message "Public Folder '$($Identity)' exists but it shouldn't. Remove it."
+        Remove-PublicFolder -Identity $Identity -Confirm:$false -Force
     }
     # CASE: Public Folder exists and it should, but has different values than the desired ones
     elseif ($Ensure -eq "Present" -and $EXOPublicFolders.Ensure -eq "Present")
     {
-        Write-Verbose -Message "Public Folder '$($Name)' already exists, but needs updating."
-        Write-Verbose -Message "Public Folder $($Name) with values: $(Convert-M365DscHashtableToString -Hashtable $EXOPublicFolder)"
+        Write-Verbose -Message "Public Folder '$($Identity)' already exists, but needs updating."
+        Write-Verbose -Message "Public Folder $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $EXOPublicFolder)"
         Set-PublicFolder @EXOPublicFolder
     }
 }
@@ -215,7 +256,7 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [ValidateLength(1, 64)]
         [System.String]
         $Identity,
@@ -243,10 +284,30 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+        
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+        
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
-    Write-Verbose -Message "Testing Public Folder configuration for $Name"
+    Write-Verbose -Message "Testing Public Folder configuration for $Identity"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -255,6 +316,11 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null 
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
 
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -273,34 +339,28 @@ function Export-TargetResource
     param
     (
         [Parameter()]
-        [ValidateLength(1, 64)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+        
+        [Parameter()]
         [System.String]
-        $Identity,
-
+        $ApplicationId,
+        
         [Parameter()]
-        [System.String[]]
-        $EformsLocaleId,
-
-        [Parameter()]
-        [System.String[]]
-        $Mailbox,
-
-        [Parameter()]
-        [System.Boolean]
-        $Path,
+        [System.String]
+        $TenantId,
 
         [Parameter()]
         [System.String]
-        $IssueWarningQuota,
+        $CertificateThumbprint,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = 'Present',
+        $CertificatePath,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $CertificatePassword
     )
 
     #region Telemetry
@@ -319,20 +379,29 @@ function Export-TargetResource
     {
         $content = ""
         $i = 1
-        [array]$Folders = Get-PublicFolders -Recursive | Where-Object {$_.Name -ne "IPM_SUBTRE"}
+        [array]$Folders = Get-PublicFolder -Recurse | Where-Object {$_.Name -ne "IPM_SUBTRE"}
 
         foreach ($folder in $Folders)
         {
             Write-Information "    [$i/$($Folders.Length)] $($folder.Name)"
             $params = @{
                 Identity           = $folder.Identity
-                Name              = $folder.Name
                 GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            $Params = @{
+                GlobalAdminAccount    = $GlobalAdminAccount
+                Folder                = $folder
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
             }
 
             $result = Get-TargetResource @params
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $content += "        Public Folder " + (New-GUID).ToString() + "`r`n"
+            $content += "        EXOPublicFolder " + (New-GUID).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
@@ -344,7 +413,7 @@ function Export-TargetResource
     catch
     {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-        $Message = "Error calling {Get-SafeAttachmentRule}"
+        $Message = "Error calling {Get-PublicFolder}"
         New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
     }
 }

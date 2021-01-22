@@ -16,10 +16,10 @@ Configuration Example
     {
         EXOPublicFolder Demo
         {
-            Name                = "New Public Folder";
-            EformsLocaleId      = 
-            Path                = 
-            Mailbox             = 
+            Identity            = "New Public Folder";
+            EformsLocaleId      = "en-US"
+            Path                = "\Legal\Cases"
+            Mailbox             = "My Mailbox"
             GlobalAdminAccount  = $credsGlobalAdmin;
         }
     }
