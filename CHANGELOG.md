@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# 1.21.203.1
+
+* TeamsTenantDialPlan
+  * Fixed an issue with the way Voice Normalization Rules were handled;
+
 # 1.21.127.1
 
 * AADNamedLocation
