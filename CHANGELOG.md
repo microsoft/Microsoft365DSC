@@ -4,6 +4,8 @@
 
 * TeamsTenantDialPlan
   * Fixed an issue with the way Voice Normalization Rules were handled;
+* MISC
+  * Fix to the Delta Report Generator to properly handle TeamsPSTNUsage;
 
 # 1.21.127.1
 

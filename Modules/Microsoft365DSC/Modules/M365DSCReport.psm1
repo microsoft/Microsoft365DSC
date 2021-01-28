@@ -520,6 +520,10 @@ function Get-M365DSCResourceKey
     {
         return @("Key")
     }
+    elseif ($Resource.Contains("Usage"))
+    {
+        return @("Usage")
+    }
 }
 
 function New-M365DSCDeltaReport
