@@ -1,0 +1,17 @@
+[ClassVersion("1.0.0.0"), FriendlyName("AADNamedLocationPolicy")]
+class MSFT_AADNamedLocationPolicy : OMI_BaseResource
+{
+    [Write, Description("Specifies the Odata Type of a Named Location policy object in Azure Active Directory"), ValueMap{"#microsoft.graph.countryNamedLocation","#microsoft.graph.ipNamedLocation"}, Values{"#microsoft.graph.countryNamedLocation","#microsoft.graph.ipNamedLocation"}] string OdataType;
+    [Write, Description("Specifies the ID of a Named Location policy in Azure Active Directory.")] String Id;
+    [Key, Description("Specifies the Display Name of a Named Location policy in Azure Active Directory")] string DisplayName;
+    [Write, Description("Specifies the IP ranges of the Named Location policy in Azure Active Directory")] String IpRanges[];
+    [Write, Description("Specifies the isTrusted value for the Named Location policy in Azure Active Directory")] Boolean IsTrusted;
+    [Write, Description("Specifies the countries and regions for the Named Location policy in Azure Active Directory")] String CountriesAndRegions[];
+    [Write, Description("Specifies the includeUnknownCountriesAndRegions value for the Named Location policy in Azure Active Directory")] Boolean IncludeUnknownCountriesAndRegions;
+    [Write, Description("Specify if the Azure AD Named Location should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Credentials of the Azure AD Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+
+};

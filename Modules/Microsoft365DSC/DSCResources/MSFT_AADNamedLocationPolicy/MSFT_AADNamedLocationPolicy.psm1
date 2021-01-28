@@ -4,6 +4,11 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
+        [Parameter()]
+        [ValidateSet('#microsoft.graph.countryNamedLocation', '#microsoft.graph.ipNamedLocation')]
+        [System.String]
+        $OdataType,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
@@ -13,28 +18,20 @@ function Get-TargetResource
         $Id,
 
         [Parameter()]
-        [System.String]
-        $Description,
+        [System.String[]]
+        $IpRanges,
 
         [Parameter()]
-        [System.String[]]
-        $ResourceScopes,
-
-        [Parameter(Mandatory = $true)]
         [System.Boolean]
-        $IsEnabled,
+        $IsTrusted,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String[]]
-        $RolePermissions,
+        $CountriesAndRegions,
 
         [Parameter()]
-        [System.String]
-        $TemplateId,
-
-        [Parameter()]
-        [System.String]
-        $Version,
+        [System.Boolean]
+        $IncludeUnknownCountriesAndRegions,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -58,7 +55,7 @@ function Get-TargetResource
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Getting configuration of Azure AD role definition"
+    Write-Verbose -Message "Getting configuration of AAD Named Location"
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -69,49 +66,58 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
-        -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
 
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
     try
     {
+        $nullReturn = $PSBoundParameters
+        $nullReturn.Ensure = "Absent"
         try
         {
-            if ($null -ne $Id -or $Id -ne "")
+            if ($null -ne $Id)
             {
-                $AADRoleDefinition = Get-AzureADMSRoleDefinition -Id $Id
+                $NamedLocation = Get-AzureADMSNamedLocationPolicy -PolicyId $Id
             }
         }
         catch
         {
-            Write-Verbose -Message "Could not retrieve AAD roledefinition by Id: {$Id}"
+            Write-Verbose -Message "Could not retrieve AAD Named Location by ID {$Id}"
         }
-        if ($null -eq $AADRoleDefinition)
+        if ($null -eq $NamedLocation)
         {
-            $AADRoleDefinition = Get-AzureADMSRoleDefinition -Filter "DisplayName eq '$($DisplayName)'"
+            try
+            {
+                $NamedLocation = Get-AzureADMSNamedLocationPolicy -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+                Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                    -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+            }
         }
-        if ($null -eq $AADRoleDefinition)
+        if ($null -eq $NamedLocation)
         {
             return $nullReturn
         }
         else
         {
-            $result = @{
-                Id                    = $AADRoleDefinition.Id
-                DisplayName           = $AADRoleDefinition.DisplayName
-                Description           = $AADRoleDefinition.Description
-                ResourceScopes        = $AADRoleDefinition.ResourceScopes
-                IsEnabled             = $AADRoleDefinition.IsEnabled
-                RolePermissions       = $AADRoleDefinition.RolePermissions.AllowedResourceActions
-                TemplateId            = $AADRoleDefinition.TemplateId
-                Version               = $AADRoleDefinition.Version
-                Ensure                = "Present"
-                GlobalAdminAccount    = $GlobalAdminAccount
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
+            Write-Verbose "Found existing AAD Named Location {$($NamedLocation.DisplayName)}"
+            $Result = @{
+                OdataType                         = $NamedLocation.OdataType
+                Id                                = $NamedLocation.Id
+                DisplayName                       = $NamedLocation.DisplayName
+                IpRanges                          = $NamedLocation.IpRanges.CidrAddress
+                IsTrusted                         = $NamedLocation.IsTrusted
+                CountriesAndRegions               = [String[]]$NamedLocation.CountriesAndRegions
+                IncludeUnknownCountriesAndRegions = $NamedLocation.IncludeUnknownCountriesAndRegions
+                Ensure                            = "Present"
+                GlobalAdminAccount                = $GlobalAdminAccount
+                ApplicationId                     = $ApplicationId
+                TenantId                          = $TenantId
+                CertificateThumbprint             = $CertificateThumbprint
             }
+
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
         }
@@ -130,6 +136,11 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
+        [Parameter()]
+        [ValidateSet('#microsoft.graph.countryNamedLocation', '#microsoft.graph.ipNamedLocation')]
+        [System.String]
+        $OdataType,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
@@ -139,28 +150,20 @@ function Set-TargetResource
         $Id,
 
         [Parameter()]
-        [System.String]
-        $Description,
+        [System.String[]]
+        $IpRanges,
 
         [Parameter()]
-        [System.String[]]
-        $ResourceScopes,
-
-        [Parameter(Mandatory = $true)]
         [System.Boolean]
-        $IsEnabled,
+        $IsTrusted,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String[]]
-        $RolePermissions,
+        $CountriesAndRegions,
 
         [Parameter()]
-        [System.String]
-        $TemplateId,
-
-        [Parameter()]
-        [System.String]
-        $Version,
+        [System.Boolean]
+        $IncludeUnknownCountriesAndRegions,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -184,7 +187,7 @@ function Set-TargetResource
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Setting configuration of Azure AD role definition"
+    Write-Verbose -Message "Setting configuration of AAD Named Location"
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -195,43 +198,36 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $currentAADRoleDef = Get-TargetResource @PSBoundParameters
+    $currentAADNamedLocation = Get-TargetResource @PSBoundParameters
     $currentParameters = $PSBoundParameters
     $currentParameters.Remove("ApplicationId")  | Out-Null
-    $currentParameters.Remove("RolePermissions")  | Out-Null
-    $currentParameters.Remove("ResourceScopes")  | Out-Null
     $currentParameters.Remove("TenantId")  | Out-Null
     $currentParameters.Remove("CertificateThumbprint")  | Out-Null
     $currentParameters.Remove("GlobalAdminAccount")  | Out-Null
     $currentParameters.Remove("Ensure")  | Out-Null
 
-    $rolePermissionsObj = @()
-    $rolePermissionsObj += @{'allowedResourceActions' = $rolePermissions }
-    $resourceScopesObj = @()
-    $resourceScopesObj += $ResourceScopes
-
-    $currentParameters.Add("RolePermissions", $rolePermissionsObj) | Out-Null
-    $currentParameters.Add("ResourceScopes", $resourceScopesObj) | Out-Null
-
-    # Role definition should exist but it doesn't
-    if ($Ensure -eq "Present" -and $currentAADRoleDef.Ensure -eq "Absent")
+    # Named Location should exist but it doesn't
+    if ($Ensure -eq 'Present' -and $currentAADNamedLocation.Ensure -eq "Absent")
     {
-        Write-Verbose -Message "Creating New AzureAD role defition {$DisplayName}"
         $currentParameters.Remove("Id") | Out-Null
-        New-AzureADMSRoleDefinition @currentParameters
+        $VerboseAttributes = ($currentParameters | Out-String)
+        Write-Verbose -Message "Creating New AAD Named Location {$Displayname)} with attributes: $VerboseAttributes"
+        New-AzureADMSNamedLocationPolicy @currentParameters
     }
-    # Role definition should exist and will be configured to desired state
-    if ($Ensure -eq 'Present' -and $currentAADRoleDef.Ensure -eq 'Present')
+    # Named Location should exist and will be configured to desired state
+    elseif ($Ensure -eq 'Present' -and $CurrentAADNamedLocation.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating existing AzureAD role definition {$DisplayName}"
-        $currentParameters.Id = $currentAADRoleDef.Id
-        Set-AzureADMSRoleDefinition @currentParameters
+        $currentParameters["PolicyId"] = $currentAADNamedLocation.ID
+        $currentParameters.Remove("Id") | Out-Null
+        $VerboseAttributes = ($currentParameters | Out-String)
+        Write-Verbose -Message "Updating existing AAD Named Location {$Displayname)} with attributes: $VerboseAttributes"
+        Set-AzureADMSNamedLocationPolicy @currentParameters
     }
-    # Role definition exists but should not
-    elseif ($Ensure -eq 'Absent' -and $currentAADRoleDef.Ensure -eq 'Present')
+    # Named Location exist but should not
+    elseif ($Ensure -eq 'Absent' -and $CurrentAADNamedLocation.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing AzureAD role definition {$DisplayName}"
-        Remove-AzureADMSRoleDefinition -Id $currentAADRoleDef.Id
+        Write-Verbose -Message "Removing AAD Named Location {$Displayname)}"
+        Remove-AzureADMSNamedLocationPolicy -PolicyId $currentAADNamedLocation.ID
     }
 }
 
@@ -241,6 +237,11 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
+        [Parameter()]
+        [ValidateSet('#microsoft.graph.countryNamedLocation', '#microsoft.graph.ipNamedLocation')]
+        [System.String]
+        $OdataType,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
@@ -250,28 +251,20 @@ function Test-TargetResource
         $Id,
 
         [Parameter()]
-        [System.String]
-        $Description,
+        [System.String[]]
+        $IpRanges,
 
         [Parameter()]
-        [System.String[]]
-        $ResourceScopes,
-
-        [Parameter(Mandatory = $true)]
         [System.Boolean]
-        $IsEnabled,
+        $IsTrusted,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String[]]
-        $RolePermissions,
+        $CountriesAndRegions,
 
         [Parameter()]
-        [System.String]
-        $TemplateId,
-
-        [Parameter()]
-        [System.String]
-        $Version,
+        [System.Boolean]
+        $IncludeUnknownCountriesAndRegions,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -295,17 +288,7 @@ function Test-TargetResource
         $CertificateThumbprint
     )
 
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    Write-Verbose -Message "Testing configuration of AzureAD role definition"
+    Write-Verbose -Message "Testing configuration of AAD Named Location"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -313,11 +296,10 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove("Id") | Out-Null
     $ValuesToCheck.Remove("ApplicationId") | Out-Null
     $ValuesToCheck.Remove("TenantId") | Out-Null
     $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
-    $ValuesToCheck.Remove("Id") | Out-Null
-    $ValuesToCheck.Remove("TemplateId") | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -367,23 +349,21 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewline
     try
     {
-        [array]$AADRoleDefinitions = Get-AzureADMSRoleDefinition -ErrorAction Stop
-        foreach ($AADRoleDefinition in $AADRoleDefinitions)
+        $AADNamedLocations = Get-AzureADMSNamedLocationPolicy -ErrorAction Stop
+        foreach ($AADNamedLocation in $AADNamedLocations)
         {
-            Write-Host "    |---[$i/$($AADRoleDefinitions.Count)] $($AADRoleDefinition.DisplayName)" -NoNewline
+            Write-Host "    |---[$i/$($AADNamedLocations.Count)] $($AADNamedLocation.DisplayName)" -NoNewline
             $Params = @{
                 GlobalAdminAccount    = $GlobalAdminAccount
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
-                DisplayName           = $AADRoleDefinition.DisplayName
-                Id                    = $AADRoleDefinition.Id
-                IsEnabled             = $true
-                RolePermissions       = @("temp")
+                DisplayName           = $AADNamedLocation.DisplayName
+                ID                    = $AADNamedLocation.ID
             }
             $Results = Get-TargetResource @Params
 
-            if ($Results.Ensure -eq 'Present' -and ([array]$results.RolePermissions).Length -gt 0)
+            if ($Results.Ensure -eq 'Present')
             {
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
