@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+# 1.21.127.1
+
+* AADNamedLocation
+  * Initial Release;
+* DEPENDENCIES
+  * Updated PnP.PowerShell to version 1.2.0;
+  * Updated Microsoft.PowerApps.Administration.PowerShell to
+    1.0.208;
+
 # 1.21.120.1
 
 * DEPENDENCIES
