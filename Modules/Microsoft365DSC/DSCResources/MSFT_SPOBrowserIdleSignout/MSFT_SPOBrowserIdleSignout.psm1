@@ -15,12 +15,12 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('^([0-9]{0-7}\.[0-2][0-9]:[0-5][0-9]:[0-5][0-9])$')]
+        [ValidatePattern('^([0-9]{0,7}\.?[0-2][0-9]:[0-5][0-9]:[0-5][0-9])$')]
         $SignOutAfter,
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('^([0-9]{0-7}\.[0-2][0-9]:[0-5][0-9]:[0-5][0-9])$')]
+        [ValidatePattern('^([0-9]{0,7}\.?[0-2][0-9]:[0-5][0-9]:[0-5][0-9])$')]
         $WarnAfter,
 
         [Parameter()]
@@ -127,12 +127,12 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('^([0-9]{0-7}\.[0-2][0-9]:[0-5][0-9]:[0-5][0-9])$')]
+        [ValidatePattern('^([0-9]{0,7}\.?[0-2][0-9]:[0-5][0-9]:[0-5][0-9])$')]
         $SignOutAfter,
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('^([0-9]{0-7}\.[0-2][0-9]:[0-5][0-9]:[0-5][0-9])$')]
+        [ValidatePattern('^([0-9]{0,7}\.?[0-2][0-9]:[0-5][0-9]:[0-5][0-9])$')]
         $WarnAfter,
 
         [Parameter()]
@@ -205,12 +205,12 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('^([0-9]{0-7}\.[0-2][0-9]:[0-5][0-9]:[0-5][0-9])$')]
+        [ValidatePattern('^([0-9]{0,7}\.?[0-2][0-9]:[0-5][0-9]:[0-5][0-9])$')]
         $SignOutAfter,
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('^([0-9]{0-7}\.[0-2][0-9]:[0-5][0-9]:[0-5][0-9])$')]
+        [ValidatePattern('^([0-9]{0,7}\.?[0-2][0-9]:[0-5][0-9]:[0-5][0-9])$')]
         $WarnAfter,
 
         [Parameter()]
