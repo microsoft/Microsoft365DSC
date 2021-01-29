@@ -2,7 +2,7 @@
 class MSFT_SPOBrowserIdleSignout : OMI_BaseResource
 {
     [Key, Description("Specifies the resource is a single instance, the value must be 'Yes'"),ValueMap{"Yes"},Values{"Yes"}] String IsSingleInstance;
-    [Key, Description("Enables the browser idle sign-out policy")] Boolean Enabled;
+    [Write, Description("Enables the browser idle sign-out policy")] Boolean Enabled;
     [Write, Description("Specifies a time interval of inactivity before the user gets signed out")] String SignOutAfter;
     [Write, Description("Specifies a time interval of inactivity before the user gets a warning about being signed out")] String WarnAfter;
     [Write, Description("Credentials of the SharePoint Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;

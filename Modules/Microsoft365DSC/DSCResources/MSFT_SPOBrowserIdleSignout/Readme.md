@@ -1,4 +1,4 @@
-# SPOOrgAssetsLibrary
+# SPOBrowserIdleSignout
 
 ## Description
 
@@ -13,6 +13,6 @@ To authenticate via Azure Active Directory, this resource required the following
     * Sites.FullControl.All
 * **Export**
   * SharePoint
-    * Sites.FullControl.All
+    * Sites.Read.All
 
 NOTE: All permisions listed above require admin consent.

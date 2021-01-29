@@ -9,7 +9,7 @@ function Get-TargetResource
         [String]
         $IsSingleInstance,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $Enabled,
 
@@ -121,7 +121,7 @@ function Set-TargetResource
         [String]
         $IsSingleInstance,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $Enabled,
 
@@ -199,7 +199,7 @@ function Test-TargetResource
         [String]
         $IsSingleInstance,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $Enabled,
 
@@ -316,6 +316,7 @@ function Export-TargetResource
     {
         $Params = @{
             IsSingleInstance      = "Yes"
+            Enabled               = $false
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificatePassword   = $CertificatePassword
@@ -327,7 +328,7 @@ function Export-TargetResource
         $Results = Get-TargetResource @Params
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
             -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+        $dscContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
             -ConnectionMode $ConnectionMode `
             -ModulePath $PSScriptRoot `
             -Results $Results `

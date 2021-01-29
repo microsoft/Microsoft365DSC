@@ -20,7 +20,7 @@ Configuration Example
             GlobalAdminAccount = $Credsglobaladmin;
             IsSingleInstance   = "Yes";
             SignOutAfter       = "04:00:00";
-            WarnAfter          = "03::00";
+            WarnAfter          = "03:00:00";
         }
     }
 }
