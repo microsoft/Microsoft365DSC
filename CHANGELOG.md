@@ -6,6 +6,10 @@
   * Fixed an issue with the way Voice Normalization Rules were handled;
 * MISC
   * Fix to the Delta Report Generator to properly handle TeamsPSTNUsage;
+* DEPENDENCIES
+  * Updated Microsoft.Graph.Authentication to version 1.3.0;
+  * Updated Microsoft.Graph.Planner to version 1.3.0;
+  * Updated Microsoft.Graph.Teams to version 1.3.0;
 
 # 1.21.127.1
 
