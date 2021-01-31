@@ -1,5 +1,9 @@
 # Change log for Microsoft365DSC
 
+## Unreleased
+SPOBrowserIdleSignout
+  * Initial Release;
+
 # 1.21.203.1
 
 * TeamsTenantDialPlan
