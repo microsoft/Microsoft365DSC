@@ -1,0 +1,14 @@
+[ClassVersion("1.0.0.0"), FriendlyName("SPOBrowserIdleSignout")]
+class MSFT_SPOBrowserIdleSignout : OMI_BaseResource
+{
+    [Key, Description("Specifies the resource is a single instance, the value must be 'Yes'"),ValueMap{"Yes"},Values{"Yes"}] String IsSingleInstance;
+    [Write, Description("Enables the browser idle sign-out policy")] Boolean Enabled;
+    [Write, Description("Specifies a time interval of inactivity before the user gets signed out")] String SignOutAfter;
+    [Write, Description("Specifies a time interval of inactivity before the user gets a warning about being signed out")] String WarnAfter;
+    [Write, Description("Credentials of the SharePoint Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com")] String TenantId;
+    [Write, Description("Username can be made up to anything but password will be used for certificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+};
