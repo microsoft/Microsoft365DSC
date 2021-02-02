@@ -14,7 +14,7 @@ SPOBrowserIdleSignout
   * Updated Microsoft.Graph.Authentication to version 1.3.1;
   * Updated Microsoft.Graph.Planner to version 1.3.1;
   * Updated Microsoft.Graph.Teams to version 1.3.1;
-  * Updated MSCloudLoginAssistant to version 1.0.46;
+  * Updated MSCloudLoginAssistant to version 1.0.47;
 
 # 1.21.127.1
 
