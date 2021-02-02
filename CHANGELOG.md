@@ -1,15 +1,17 @@
 # Change log for Microsoft365DSC
 
-## Unreleased
-SPOBrowserIdleSignout
-  * Initial Release;
-
 # 1.21.203.1
 
+* SPOSiteDesignRights
+  * Fixed an issue that was preventing this resource from
+    being exported;
+* SPOBrowserIdleSignout
+  * Initial Release;
 * TeamsTenantDialPlan
   * Fixed an issue with the way Voice Normalization Rules were handled;
 * MISC
   * Fix to the Delta Report Generator to properly handle TeamsPSTNUsage;
+  * Fixed various Export Verbose format issues;
 * DEPENDENCIES
   * Updated Microsoft.Graph.Authentication to version 1.3.0;
   * Updated Microsoft.Graph.Planner to version 1.3.0;
