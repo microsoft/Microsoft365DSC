@@ -168,49 +168,25 @@ function Set-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    #region VoiceNormalizationRules
-    $AllRules = @()
-    if ($Ensure -eq 'Present')
-    {
-        # Ensure the VoiceNormalizationRules all exist
-        foreach ($rule in $CurrentValues.NormalizationRules)
-        {
-            if ($null -eq $ruleObject)
-            {
-                # Need to create the rule
-                Write-Verbose "Creating VoiceNormalizationRule {$($rule.Identity)}"
-                $ruleObject = New-CSVoiceNormalizationRule -Identity "Global/$($rule.Identity.Replace('Tag:', ''))" `
-                    -Description $rule.Description `
-                    -Pattern $rule.Pattern `
-                    -Translation $rule.Translation `
-                    -InMemory
-            }
-            $AllRules += $ruleObject
-        }
-    }
-    #endregion
-
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
+        Write-Verbose "Tenant Dial Plan {$Identity} doesn't exist but it should. Creating it."
         #region VoiceNormalizationRules
         $AllRules = @()
         # Ensure the VoiceNormalizationRules all exist
-        foreach ($rule in $CurrentValues.NormalizationRules)
+        foreach ($rule in $NormalizationRules)
         {
-            if ($null -eq $ruleObject)
-            {
-                # Need to create the rule
-                Write-Verbose "Creating VoiceNormalizationRule {$($rule.Identity)}"
-                $ruleObject = New-CSVoiceNormalizationRule -Identity "Global/$($rule.Identity.Replace('Tag:', ''))" `
-                    -Description $rule.Description `
-                    -Pattern $rule.Pattern `
-                    -Translation $rule.Translation `
-                    -InMemory
-            }
+            # Need to create the rule
+            Write-Verbose "Creating VoiceNormalizationRule {$($rule.Identity)}"
+            $ruleObject = New-CSVoiceNormalizationRule -Identity "Global/$($rule.Identity.Replace('Tag:', ''))" `
+                -Description $rule.Description `
+                -Pattern $rule.Pattern `
+                -Translation $rule.Translation `
+                -InMemory
+
             $AllRules += $ruleObject
         }
 
-        Write-Verbose -Message "Tenant Dial Plan {$Identity} doesn't exist. Creating it."
         $NewParameters = $PSBoundParameters
         $NewParameters.Remove("GlobalAdminAccount")
         $NewParameters.Remove("Ensure")
