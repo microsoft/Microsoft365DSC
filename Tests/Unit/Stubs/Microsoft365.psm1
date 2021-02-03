@@ -1,4 +1,4 @@
-﻿#region AzureAD
+#region AzureAD
 function Add-AzureADAdministrativeUnitMember
 {
     [CmdletBinding()]
@@ -104499,6 +104499,15 @@ function Get-PnPAzureCertificate
         $CertificatePassword
     )
 }
+function Get-PnPBrowserIdleSignout
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection
+    )
+}
 function Get-PnPClientSideComponent
 {
     [CmdletBinding()]
@@ -110741,6 +110750,27 @@ function Set-PnPAvailablePageLayouts
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $AllowAllPageLayouts
+    )
+}
+function Set-PnPBrowserIdleSignout
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.String]
+        $SignOutAfter,
+
+        [Parameter()]
+        [System.String]
+        $WarnAfter
     )
 }
 function Set-PnPClientSidePage

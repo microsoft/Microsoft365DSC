@@ -439,7 +439,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$designs = Get-PnPSiteDesign -ErrrAction Stop
+        [array]$designs = Get-PnPSiteDesign -ErrorAction Stop
         Write-Host "`r`n" -NoNewline
         foreach ($design in $designs)
         {

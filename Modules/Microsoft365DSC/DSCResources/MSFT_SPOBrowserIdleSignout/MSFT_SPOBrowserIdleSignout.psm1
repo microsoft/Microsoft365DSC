@@ -2,20 +2,26 @@ function Get-TargetResource
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param
-    (
+    param (
+
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Private', 'Public')]
+        [ValidateSet('Yes')]
+        [String]
+        $IsSingleInstance,
+
+        [Parameter(Mandatory = $true)]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
         [System.String]
-        $CDNType,
+        [ValidatePattern('^([0-9]{0,7}\.?[0-2][0-9]:[0-5][0-9]:[0-5][0-9])$')]
+        $SignOutAfter,
 
         [Parameter()]
-        [System.String[]]
-        $ExcludeRestrictedSiteClassifications,
-
-        [Parameter()]
-        [System.String[]]
-        $IncludeFileExtensions,
+        [System.String]
+        [ValidatePattern('^([0-9]{0,7}\.?[0-2][0-9]:[0-5][0-9]:[0-5][0-9])$')]
+        $WarnAfter,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -42,7 +48,7 @@ function Get-TargetResource
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Getting configuration for SPOTenantCdnPolicy {$CDNType}"
+    Write-Verbose -Message "Getting configuration for SPO Browser Idle Signout settings"
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -53,26 +59,34 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+        -InboundParameters $PSBoundParameters
+
+    $nullReturn = $PSBoundParameters
 
     try
     {
-        $Policies = Get-PnPTenantCdnPolicies -CdnType $CDNType -ErrorAction Stop
+        $BrowserIdleSignout = Get-PnPBrowserIdleSignout -ErrorAction Stop
 
         return @{
-            CDNType                              = $CDNType
-            ExcludeRestrictedSiteClassifications = $Policies["ExcludeRestrictedSiteClassifications"].Split(',')
-            IncludeFileExtensions                = $Policies["IncludeFileExtensions"].Split(',')
-            GlobalAdminAccount                   = $GlobalAdminAccount
-            ApplicationId                        = $ApplicationId
-            TenantId                             = $TenantId
-            CertificatePassword                  = $CertificatePassword
-            CertificatePath                      = $CertificatePath
-            CertificateThumbprint                = $CertificateThumbprint
+            IsSingleInstance      = 'Yes'
+            Enabled               = $BrowserIdleSignout.Enabled
+            SignOutAfter          = $BrowserIdleSignout.SignOutAfter
+            WarnAfter             = $BrowserIdleSignout.WarnAfter
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
     catch
     {
+        if ($error[0].Exception.Message -like "No connection available")
+        {
+            Write-Verbose -Message "Make sure that you are connected to your SPOService"
+        }
         try
         {
             Write-Verbose -Message $_
@@ -93,27 +107,33 @@ function Get-TargetResource
         {
             Write-Verbose -Message $_
         }
-        throw $_
+        return $nullReturn
     }
-}
 
+}
 function Set-TargetResource
 {
     [CmdletBinding()]
-    param
-    (
+    param (
+
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Private', 'Public')]
+        [ValidateSet('Yes')]
+        [String]
+        $IsSingleInstance,
+
+        [Parameter(Mandatory = $true)]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
         [System.String]
-        $CDNType,
+        [ValidatePattern('^([0-9]{0,7}\.?[0-2][0-9]:[0-5][0-9]:[0-5][0-9])$')]
+        $SignOutAfter,
 
         [Parameter()]
-        [System.String[]]
-        $ExcludeRestrictedSiteClassifications,
-
-        [Parameter()]
-        [System.String[]]
-        $IncludeFileExtensions,
+        [System.String]
+        [ValidatePattern('^([0-9]{0,7}\.?[0-2][0-9]:[0-5][0-9]:[0-5][0-9])$')]
+        $WarnAfter,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -140,7 +160,7 @@ function Set-TargetResource
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Setting configuration for SPOTenantCDNPolicy {$CDNType}"
+    Write-Verbose -Message "Setting configuration for SPO Browser Idle Signout settings"
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -151,55 +171,47 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+        -InboundParameters $PSBoundParameters
 
-    $curPolicies = Get-TargetResource @PSBoundParameters
-
-    if ($null -ne `
-        (Compare-Object -ReferenceObject $curPolicies.IncludeFileExtensions -DifferenceObject $IncludeFileExtensions))
-    {
-        Write-Verbose "Found difference in IncludeFileExtensions"
-
-        $stringValue = ""
-        foreach ($entry in $IncludeFileExtensions.Split(','))
-        {
-            $stringValue += $entry + ","
-        }
-        $stringValue = $stringValue.Remove($stringValue.Length - 1, 1)
-        Set-PnPTenantCdnPolicy -CdnType $CDNType `
-            -PolicyType 'IncludeFileExtensions' `
-            -PolicyValue $stringValue
-    }
-
-    if ($null -ne (Compare-Object -ReferenceObject $curPolicies.ExcludeRestrictedSiteClassifications `
-                -DifferenceObject $ExcludeRestrictedSiteClassifications))
-    {
-        Write-Verbose "Found difference in ExcludeRestrictedSiteClassifications"
+    $CurrentParameters = $PSBoundParameters
+    $CurrentParameters.Remove("GlobalAdminAccount") | Out-Null
+    $CurrentParameters.Remove("Verbose") | Out-Null
+    $CurrentParameters.Remove("IsSingleInstance") | Out-Null
+    $CurrentParameters.Remove("ApplicationId") | Out-Null
+    $CurrentParameters.Remove("TenantId") | Out-Null
+    $CurrentParameters.Remove("CertificatePath") | Out-Null
+    $CurrentParameters.Remove("CertificatePassword") | Out-Null
+    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
 
 
-        Set-PnPTenantCdnPolicy -CdnType $CDNType `
-            -PolicyType 'ExcludeRestrictedSiteClassifications' `
-            -PolicyValue $stringValue
-    }
+
+    Set-PnPTenant @CurrentParameters | Out-Null
 }
-
 function Test-TargetResource
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-    param
-    (
+    param (
+
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Private', 'Public')]
+        [ValidateSet('Yes')]
+        [String]
+        $IsSingleInstance,
+
+        [Parameter(Mandatory = $true)]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
         [System.String]
-        $CDNType,
+        [ValidatePattern('^([0-9]{0,7}\.?[0-2][0-9]:[0-5][0-9]:[0-5][0-9])$')]
+        $SignOutAfter,
 
         [Parameter()]
-        [System.String[]]
-        $ExcludeRestrictedSiteClassifications,
-
-        [Parameter()]
-        [System.String[]]
-        $IncludeFileExtensions,
+        [System.String]
+        [ValidatePattern('^([0-9]{0,7}\.?[0-2][0-9]:[0-5][0-9]:[0-5][0-9])$')]
+        $WarnAfter,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -225,6 +237,7 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -235,7 +248,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration for SPO Storage Entity for $Key"
+    Write-Verbose -Message "Testing configuration for SPO Browser Idle Signin settings"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -245,9 +258,10 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("CDNType", `
-            "ExcludeRestrictedSiteClassifications", `
-            "IncludeFileExtensions")
+        -ValuesToCheck @("IsSingleInstance", `
+            "Enabled", `
+            "SignOutAfter", `
+            "WarnAfter")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -293,38 +307,16 @@ function Export-TargetResource
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
+
+
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
         -InboundParameters $PSBoundParameters
 
-    $Params = @{
-        CdnType               = 'Public'
-        ApplicationId         = $ApplicationId
-        TenantId              = $TenantId
-        CertificatePassword   = $CertificatePassword
-        CertificatePath       = $CertificatePath
-        CertificateThumbprint = $CertificateThumbprint
-        GlobalAdminAccount    = $GlobalAdminAccount
-    }
-
     try
     {
-        Write-Host "`r`n    |---[1/2] Public" -NoNewline
-        $Results = Get-TargetResource @Params
-        $dscContent = ""
-        if ($null -ne $Results)
-        {
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
-        }
-        Write-Host $Global:M365DSCEmojiGreenCheckmark
-
         $Params = @{
-            CdnType               = 'Private'
+            IsSingleInstance      = "Yes"
+            Enabled               = $false
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificatePassword   = $CertificatePassword
@@ -332,18 +324,15 @@ function Export-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             GlobalAdminAccount    = $GlobalAdminAccount
         }
-        Write-Host "    |---[2/2] Private" -NoNewline
-        $Results = Get-TargetResource @params
-        if ($null -ne $result)
-        {
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
-        }
+
+        $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $dscContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
         Write-Host $Global:M365DSCEmojiGreenCheckmark
         return $dscContent
     }
