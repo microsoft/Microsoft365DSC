@@ -238,8 +238,8 @@ function Get-TargetResource
             DisableFlows                                = $DisableFlowValue
             LogoFilePath                                = $LogoFilePath
             SharingCapability                           = $site.SharingCapabilities
-            StorageMaximumLevel                         = $site.StorageMaximumLevel
-            StorageWarningLevel                         = $site.StorageWarningLevel
+            StorageMaximumLevel                         = $site.StorageQuota
+            StorageWarningLevel                         = $site.StorageQuotaWarningLevel
             AllowSelfServiceUpgrade                     = $site.AllowSelfServiceUpgrade
             Owner                                       = $siteOwnerEmail
             CommentsOnSitePagesDisabled                 = $site.CommentsOnSitePagesDisabled
@@ -536,27 +536,55 @@ function Set-TargetResource
         {
             $DisableFlowsValue = 'Disabled'
         }
+        #region Ad-Hoc properties
+        if (-not [System.String]::IsNullOrEmpty($DenyAddAndCustomizePages))
+        {
+            if ($DenyAddAndCustomizePages)
+            {
+                $deny = 'Enabled'
+            }
+            else
+            {
+                $deny = 'Disabled'
+            }
+        }
         $UpdateParams = @{
-            Url                            = $Url
-            DisableFlows                   = $DisableFlowsValue
-            SharingCapability              = $SharingCapability
-            StorageMaximumLevel            = $StorageMaximumLevel
-            StorageWarningLevel            = $StorageWarningLevel
+            Url                                         = $Url
+            DisableFlows                                = $DisableFlowsValue
+            SharingCapability                           = $SharingCapability
+            StorageMaximumLevel                         = $StorageMaximumLevel
+            StorageWarningLevel                         = $StorageWarningLevel
             # Cannot be set, throws an error about Object not being in a valid state;
             #AllowSelfServiceUpgrade        = $AllowSelfServiceUpgrade
-            Owners                         = $Owner
-            CommentsOnSitePagesDisabled    = $CommentsOnSitePagesDisabled
-            DefaultLinkPermission          = $DefaultLinkPermission
-            DefaultSharingLinkType         = $DefaultSharingLinkType
-            DisableAppViews                = $DisableAppViews
-            DisableCompanyWideSharingLinks = $DisableCompanyWideSharingLinks
+            Owners                                      = $Owner
+            CommentsOnSitePagesDisabled                 = $CommentsOnSitePagesDisabled
+            DefaultLinkPermission                       = $DefaultLinkPermission
+            DefaultSharingLinkType                      = $DefaultSharingLinkType
+            DisableAppViews                             = $DisableAppViews
+            DisableCompanyWideSharingLinks              = $DisableCompanyWideSharingLinks
             #LCID Cannot be set after a Template has been applied;
             #LocaleId                       = $LocaleId
+            RestrictedToRegion                          = $RestrictedToRegion
+            #SocialBarOnSitePagesDisabled                = $SocialBarOnSitePagesDisabled
+            SharingAllowedDomainList                    = $SharingAllowedDomainList
+            SharingBlockedDomainList                    = $SharingBlockedDomainList
+            SharingDomainRestrictionMode                = $SharingDomainRestrictionMode
+            AnonymousLinkExpirationInDays               = $AnonymousLinkExpirationInDays
+            OverrideTenantAnonymousLinkExpirationPolicy = $OverrideTenantAnonymousLinkExpirationPolicy
+            # DenyAddAndCustomizePages                    = $deny
         }
         $UpdateParams = Remove-NullEntriesFromHashtable -Hash $UpdateParams
 
         Set-PnPTenantSite @UpdateParams -ErrorAction Stop
-
+        <#
+        $UpdateParams = @{
+            Url                          = $Url
+            SocialBarOnSitePagesDisabled = $SocialBarOnSitePagesDisabled
+            DenyAddAndCustomizePages     = $deny
+        }
+        $UpdateParams = Remove-NullEntriesFromHashtable -Hash $UpdateParams
+        Set-PnPSite $UpdateParams -ErrorAction Stop
+        #>
         $site = Get-PnPTenantSite $Url
 
         if (-not [System.String]::IsNullOrEmpty($LocaleId) -and `
@@ -576,55 +604,9 @@ function Set-TargetResource
             $ctx.ExecuteQuery()
         }
 
-        #region Ad-Hoc properties
-        if (-not [System.String]::IsNullOrEmpty($DenyAddAndCustomizePages))
-        {
-            if ($DenyAddAndCustomizePages)
-            {
-                $site.DenyAddAndCustomizePages = 'Enabled'
-            }
-            else
-            {
-                $site.DenyAddAndCustomizePages = 'Disabled'
-            }
-        }
 
-        if (-not [System.String]::IsNullOrEmpty($RestrictedToRegion))
-        {
-            $site.RestrictedToRegion = $RestrictedToRegion
-        }
-
-        if (-not [System.String]::IsNullOrEmpty($SocialBarOnSitePagesDisabled))
-        {
-            $site.SocialBarOnSitePagesDisabled = $SocialBarOnSitePagesDisabled
-        }
-
-        if (-not [System.String]::IsNullOrEmpty($SharingAllowedDomainList))
-        {
-            $site.SharingAllowedDomainList = $SharingAllowedDomainList
-        }
-
-        if (-not [System.String]::IsNullOrEmpty($SharingBlockedDomainList))
-        {
-            $site.SharingBlockedDomainList = $SharingBlockedDomainList
-        }
-
-        if (-not [System.String]::IsNullOrEmpty($SharingDomainRestrictionMode))
-        {
-            $site.SharingDomainRestrictionMode = $SharingDomainRestrictionMode
-        }
-
-        if (-not [System.String]::IsNullOrEmpty($AnonymousLinkExpirationInDays))
-        {
-            $site.AnonymousLinkExpirationInDays = $AnonymousLinkExpirationInDays
-        }
-
-        if (-not [System.String]::IsNullOrEmpty($OverrideTenantAnonymousLinkExpirationPolicy))
-        {
-            $site.OverrideTenantAnonymousLinkExpirationPolicy = $OverrideTenantAnonymousLinkExpirationPolicy
-        }
-        $site.Update() | Out-Null
-        $context.ExecuteQuery()
+        # $site.Update() | Out-Null
+        # $context.ExecuteQuery()
         #endregion
 
         Write-Verbose -Message "Settings Updated"
