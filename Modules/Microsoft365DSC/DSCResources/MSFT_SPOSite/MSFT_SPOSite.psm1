@@ -228,6 +228,10 @@ function Get-TargetResource
                 }
             }
         }
+        if ($site.StorageQuotaWarningLevel -gt 0)
+        {
+            $quotaWarning = $site.StorageQuotaWarningLevel / 100
+        }
         return @{
             Url                                         = $Url
             Title                                       = $site.Title
@@ -239,7 +243,7 @@ function Get-TargetResource
             LogoFilePath                                = $LogoFilePath
             SharingCapability                           = $site.SharingCapabilities
             StorageMaximumLevel                         = $site.StorageQuota
-            StorageWarningLevel                         = $site.StorageQuotaWarningLevel
+            StorageWarningLevel                         = $quotaWarning
             AllowSelfServiceUpgrade                     = $site.AllowSelfServiceUpgrade
             Owner                                       = $siteOwnerEmail
             CommentsOnSitePagesDisabled                 = $site.CommentsOnSitePagesDisabled
@@ -541,11 +545,11 @@ function Set-TargetResource
         {
             if ($DenyAddAndCustomizePages)
             {
-                $deny = 'Enabled'
+                $deny = $True
             }
             else
             {
-                $deny = 'Disabled'
+                $deny = $False
             }
         }
         $UpdateParams = @{
@@ -576,15 +580,24 @@ function Set-TargetResource
         $UpdateParams = Remove-NullEntriesFromHashtable -Hash $UpdateParams
 
         Set-PnPTenantSite @UpdateParams -ErrorAction Stop
-        <#
+
+        $UpdateParams = @{}
         $UpdateParams = @{
-            Url                          = $Url
             SocialBarOnSitePagesDisabled = $SocialBarOnSitePagesDisabled
-            DenyAddAndCustomizePages     = $deny
+            DenyAndAddCustomizePages     = $deny
         }
         $UpdateParams = Remove-NullEntriesFromHashtable -Hash $UpdateParams
-        Set-PnPSite $UpdateParams -ErrorAction Stop
-        #>
+
+        if ($UpdateParams)
+        {
+            $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters `
+                -Url $Url
+            Write-Verbose -Message "Updating props via Set-PNPSite on $($Url)"
+            Set-PnPSite @UpdateParams -ErrorAction Stop
+        }
+
+
         $site = Get-PnPTenantSite $Url
 
         if (-not [System.String]::IsNullOrEmpty($LocaleId) -and `
@@ -603,11 +616,6 @@ function Set-TargetResource
             $web.Update()
             $ctx.ExecuteQuery()
         }
-
-
-        # $site.Update() | Out-Null
-        # $context.ExecuteQuery()
-        #endregion
 
         Write-Verbose -Message "Settings Updated"
         if ($PSBoundParameters.ContainsKey("HubUrl"))
@@ -816,6 +824,8 @@ function Test-TargetResource
     $CurrentValues.Remove("CertificatePath") | Out-Null
     $CurrentValues.Remove("CertificatePassword") | Out-Null
     $CurrentValues.Remove("CertificateThumbprint") | Out-Null
+    $CurrentValues.Remove("TimeZoneId") | Out-Null
+
 
     $keysToCheck = $CurrentValues.Keys
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
