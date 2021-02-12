@@ -172,6 +172,8 @@ function Get-TargetResource
             return $nullReturn
         }
 
+        $web = Get-PnPWeb -Includes RegionalSettings.TimeZone
+
         $CurrentHubUrl = $null
         if ($null -ne $site.HubSiteId -and $site.HubSiteId -ne '00000000-0000-0000-0000-000000000000')
         {
@@ -236,12 +238,12 @@ function Get-TargetResource
             Url                                         = $Url
             Title                                       = $site.Title
             Template                                    = $site.Template
-            TimeZoneId                                  = $site.TimeZoneId
+            TimeZoneId                                  = $web.RegionalSettings.TimeZone.Id
             HubUrl                                      = $CurrentHubUrl
             Classification                              = $site.Classification
             DisableFlows                                = $DisableFlowValue
             LogoFilePath                                = $LogoFilePath
-            SharingCapability                           = $site.SharingCapabilities
+            SharingCapability                           = $site.SharingCapability
             StorageMaximumLevel                         = $site.StorageQuota
             StorageWarningLevel                         = $quotaWarning
             AllowSelfServiceUpgrade                     = $site.AllowSelfServiceUpgrade
@@ -252,7 +254,7 @@ function Get-TargetResource
             DisableAppViews                             = $site.DisableAppViews
             DisableCompanyWideSharingLinks              = $site.DisableCompanyWideSharingLinks
             DisableSharingForNonOwners                  = $DisableSharingForNonOwners
-            LocaleId                                    = $site.Lcid
+            LocaleId                                    = $site.LocaleId
             RestrictedToRegion                          = $RestrictedToRegion
             SocialBarOnSitePagesDisabled                = $SocialBarOnSitePagesDisabled
             SiteDesign                                  = $SiteDesign
@@ -815,23 +817,22 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration for site collection $Url"
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove("ApplicationId") | Out-Null
+    $ValuesToCheck.Remove("TenantId") | Out-Null
+    $ValuesToCheck.Remove("CertificatePath") | Out-Null
+    $ValuesToCheck.Remove("CertificatePassword") | Out-Null
+    $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
+    #$ValuesToCheck.Remove("TimeZoneId") | Out-Null
 
-    $CurrentValues.Remove("GlobalAdminAccount") | Out-Null
-    $CurrentValues.Remove("ApplicationId") | Out-Null
-    $CurrentValues.Remove("TenantId") | Out-Null
-    $CurrentValues.Remove("CertificatePath") | Out-Null
-    $CurrentValues.Remove("CertificatePassword") | Out-Null
-    $CurrentValues.Remove("CertificateThumbprint") | Out-Null
-    $CurrentValues.Remove("TimeZoneId") | Out-Null
-
-
-    $keysToCheck = $CurrentValues.Keys
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $keysToCheck
+        -ValuesToCheck $ValuesToCheck.Keys
+
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
