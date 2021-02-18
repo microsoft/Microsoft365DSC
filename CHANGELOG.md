@@ -1,5 +1,13 @@
 # Change log for Microsoft365DSC
 
+# 1.21.217.1
+
+* SPOSite
+  * Fixed an issue related to new cmdlets in PnP.PowerShell;
+* DEPENDENCIES
+  * Updated ExchangeOnlineManagement to 2.0.4;
+  * Updated PNP.PowerShell to 1.3.0;
+
 # 1.21.203.1
 
 * SPOSiteDesignRights
