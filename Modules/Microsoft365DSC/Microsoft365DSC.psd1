@@ -61,7 +61,7 @@
         },
         @{
             ModuleName      = "ExchangeOnlineManagement"
-            RequiredVersion = "2.0.4"
+            RequiredVersion = "2.0.3"
         },
         @{
             ModuleName      = "Microsoft.Graph.Authentication"
