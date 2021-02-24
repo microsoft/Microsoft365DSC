@@ -4,6 +4,7 @@
 
 * DEPENDENCIES
   * Rolled-back ExchangeOnlineManagement to 2.0.3;
+
 # 1.21.217.1
 
 * SPOSite
