@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# 1.21.224.1
+
+* DEPENDENCIES
+  * Rolled-back ExchangeOnlineManagement to 2.0.3;
+
 # 1.21.217.1
 
 * SPOSite
