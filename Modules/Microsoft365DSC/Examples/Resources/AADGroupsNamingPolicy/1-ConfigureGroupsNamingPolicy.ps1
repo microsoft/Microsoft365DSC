@@ -20,6 +20,7 @@ Configuration Example
             GlobalAdminAccount            = $credsGlobalAdmin;
             IsSingleInstance              = "Yes";
             PrefixSuffixNamingRequirement = "[Title]Test[Company][GroupName][Office]Redmond";
+            Ensure                        = "Present";
         }
     }
 }
