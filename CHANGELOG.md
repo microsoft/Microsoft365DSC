@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* MISC
+  * Fixed issue when using CertificatePath and CertificatePassword
+    for SPO resource;
+
 # 1.21.224.1
 
 * DEPENDENCIES
