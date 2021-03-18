@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* SPOSiteScript
+  * Fixed issue where an existin site script could not be updated.
+
 # 1.21.317.1
 
 * DEPENDENCIES
