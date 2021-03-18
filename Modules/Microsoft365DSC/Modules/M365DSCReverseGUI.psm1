@@ -785,7 +785,7 @@ function Show-M365DSCGUI
         $btnExtract.Text = "Start Extraction"
         $btnExtract.Add_Click( {
                 $SelectedComponents = @()
-                foreach ($panel in ($form.Controls[0].Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Panel" }))
+                foreach ($panel in ($form.Controls[1].Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Panel" }))
                 {
                     foreach ($checkbox in ($panel.Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Checkbox" }))
                     {
