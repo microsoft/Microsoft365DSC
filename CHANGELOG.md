@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+# 1.21.317.1
+
+* DEPENDENCIES
+  * Updated Exchange Management to version 2.0.4 (REDO);
+  * Updated MSCloudLoginAssistant to version 1.0.50;
+* MISC
+  * Fixed issue when using CertificatePath and CertificatePassword
+    for SPO resource;
+
 # 1.21.224.1
 
 * DEPENDENCIES

@@ -1181,7 +1181,7 @@ function New-M365DSCConnection
             Test-MSCloudLogin -Platform $Platform `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
-                -CertificatePassword $InboundParameters.CertificatePassword `
+                -CertificatePassword $InboundParameters.CertificatePassword.Password `
                 -CertificatePath $InboundParameters.CertificatePath `
                 -ConnectionUrl $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
