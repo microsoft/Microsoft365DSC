@@ -290,7 +290,7 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Verbose -Message "Unable to update Site Script, {$Title}"
+            Write-Warning -Message "Unable to update Site Script, {$Title}"
         }
     }
 }
