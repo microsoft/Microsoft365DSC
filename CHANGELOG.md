@@ -1,5 +1,9 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* SPOSiteDesign
+  * Added support for GrouplessTeamSite web template.
 # 1.21.317.1
 
 * DEPENDENCIES
