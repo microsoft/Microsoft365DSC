@@ -45,7 +45,7 @@ function Get-TargetResource
         [System.String]
         $CertificateThumbprint,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
