@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+* MISC
+  * Fixed issue with ODSettings and ExcludedFileExtensions
+
+
 # 1.21.317.1
 
 * DEPENDENCIES
