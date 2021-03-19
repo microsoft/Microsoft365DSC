@@ -1,11 +1,5 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
-
-* SPOSiteScript
-  * Removed mandatory parameter GlobalAdminAccount from
-    Get-TargetResource.
-
 # 1.21.317.1
 
 * DEPENDENCIES
