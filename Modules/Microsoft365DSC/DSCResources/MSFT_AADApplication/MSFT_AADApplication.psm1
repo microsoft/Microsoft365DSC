@@ -13,6 +13,10 @@ function Get-TargetResource
         $ObjectId,
 
         [Parameter()]
+        [System.String]
+        $AppId,
+
+        [Parameter()]
         [System.Boolean]
         $AvailableToOtherTenants,
 
@@ -94,7 +98,7 @@ function Get-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
-                        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
@@ -104,7 +108,7 @@ function Get-TargetResource
         {
             if ($null -ne $ObjectID)
             {
-                $AADApp = Get-AzureADApplication -ObjectID $ObjectId
+                $AADApp = Get-AzureADApplication -ObjectId $ObjectId
             }
         }
         catch
@@ -116,36 +120,39 @@ function Get-TargetResource
         {
             $AADApp = Get-AzureADApplication -Filter "DisplayName eq '$($DisplayName)'"
         }
-        if($null -ne $AADApp -and $AADApp.Count -gt 1)
+        if ($null -ne $AADApp -and $AADApp.Count -gt 1)
         {
             Throw "Multiple AAD Apps with the Displayname $($DisplayName) exist in the tenant. Aborting."
         }
-        elseif($null -eq $AADApp)
+        elseif ($null -eq $AADApp)
         {
             return $nullReturn
         }
         else
         {
+            $permissions = Get-M365DSCAzureADAppPermissions -App $AADApp
             $result = @{
-                DisplayName                   = $AADApp.DisplayName
-                AvailableToOtherTenants       = $AADApp.AvailableToOtherTenants
-                GroupMembershipClaims         = $AADApp.GroupMembershipClaims
-                Homepage                      = $AADApp.Homepage
-                IdentifierUris                = $AADApp.IdentifierUris
-                KnownClientApplications       = $AADApp.KnownClientApplications
-                LogoutURL                     = $AADApp.LogoutURL
-                Oauth2AllowImplicitFlow       = $AADApp.Oauth2AllowImplicitFlow
-                Oauth2AllowUrlPathMatching    = $AADApp.Oauth2AllowUrlPathMatching
-                Oauth2RequirePostResponse     = $AADApp.Oauth2RequirePostResponse
-                PublicClient                  = $AADApp.PublicClient
-                ReplyURLs                     = $AADApp.ReplyURLs
-                SamlMetadataUrl               = $AADApp.SamlMetadataUrl
-                ObjectId                      = $AADApp.ObjectID
-                Ensure                        = "Present"
-                GlobalAdminAccount            = $GlobalAdminAccount
-                ApplicationId                 = $ApplicationId
-                TenantId                      = $TenantId
-                CertificateThumbprint         = $CertificateThumbprint
+                DisplayName                = $AADApp.DisplayName
+                AvailableToOtherTenants    = $AADApp.AvailableToOtherTenants
+                GroupMembershipClaims      = $AADApp.GroupMembershipClaims
+                Homepage                   = $AADApp.Homepage
+                IdentifierUris             = $AADApp.IdentifierUris
+                KnownClientApplications    = $AADApp.KnownClientApplications
+                LogoutURL                  = $AADApp.LogoutURL
+                Oauth2AllowImplicitFlow    = $AADApp.Oauth2AllowImplicitFlow
+                Oauth2AllowUrlPathMatching = $AADApp.Oauth2AllowUrlPathMatching
+                Oauth2RequirePostResponse  = $AADApp.Oauth2RequirePostResponse
+                PublicClient               = $AADApp.PublicClient
+                ReplyURLs                  = $AADApp.ReplyURLs
+                SamlMetadataUrl            = $AADApp.SamlMetadataUrl
+                ObjectId                   = $AADApp.ObjectID
+                AppId                      = $AADApp.AppId
+                Permissions                = $permissions
+                Ensure                     = "Present"
+                GlobalAdminAccount         = $GlobalAdminAccount
+                ApplicationId              = $ApplicationId
+                TenantId                   = $TenantId
+                CertificateThumbprint      = $CertificateThumbprint
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
@@ -189,6 +196,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $ObjectId,
+
+        [Parameter()]
+        [System.String]
+        $AppId,
 
         [Parameter()]
         [System.Boolean]
@@ -279,15 +290,15 @@ function Set-TargetResource
     $currentParameters.Remove("GlobalAdminAccount")  | Out-Null
     $currentParameters.Remove("Ensure")  | Out-Null
 
-    if($null -ne $KnownClientApplications)
+    if ($null -ne $KnownClientApplications)
     {
         Write-Verbose -Message "Checking if the known client applications already exist."
         $testedKnownClientApplications = New-Object System.Collections.Generic.List[string]
-        foreach($KnownClientApplication in $KnownClientApplications)
+        foreach ($KnownClientApplication in $KnownClientApplications)
         {
             $knownAADApp = $null
             $knownAADApp = Get-AzureADApplication -Filter "AppID eq '$($KnownClientApplication)'"
-            if($null -ne $knownAADApp)
+            if ($null -ne $knownAADApp)
             {
                 $testedKnownClientApplications.Add($knownAADApp.AppId)
             }
@@ -335,6 +346,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $ObjectId,
+
+        [Parameter()]
+        [System.String]
+        $AppId,
 
         [Parameter()]
         [System.Boolean]
@@ -425,6 +440,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove("ObjectId") | Out-Null
+    $ValuedToCheck.Remove("AppId") | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -471,20 +487,20 @@ function Export-TargetResource
     $dscContent = ''
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
     $i = 1
-    Write-Host "`r`n" -NoNewLine
+    Write-Host "`r`n" -NoNewline
     try
     {
         $AADApplications = Get-AzureADApplication -ErrorAction Stop
-        foreach($AADApp in $AADApplications)
+        foreach ($AADApp in $AADApplications)
         {
-            Write-Host "    |---[$i/$($AADApplications.Count)] $($AADApp.DisplayName)" -NoNewLine
+            Write-Host "    |---[$i/$($AADApplications.Count)] $($AADApp.DisplayName)" -NoNewline
             $Params = @{
-                    GlobalAdminAccount            = $GlobalAdminAccount
-                    ApplicationId                 = $ApplicationId
-                    TenantId                      = $TenantId
-                    CertificateThumbprint         = $CertificateThumbprint
-                    DisplayName                   = $AADApp.DisplayName
-                    ObjectID                      = $AADApp.ObjectID
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                DisplayName           = $AADApp.DisplayName
+                ObjectID              = $AADApp.ObjectID
             }
             $Results = Get-TargetResource @Params
 
@@ -492,11 +508,22 @@ function Export-TargetResource
             {
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
-                $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                if ($Results.Permissions.Count -gt 0)
+                {
+                    $Results.Permissions = Get-M365DSCAzureADAppPermissionsAsString $Results.Permissions
+                }
+                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -GlobalAdminAccount $GlobalAdminAccount
+
+                if ($null -ne $Results.Permissions)
+                {
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Permissions"
+                }
+
+                $dscContent += $currentDSCBlock
                 Write-Host $Global:M365DSCEmojiGreenCheckMark
                 $i++
             }
@@ -527,6 +554,78 @@ function Export-TargetResource
         }
         return ""
     }
+}
+
+function Get-M365DSCAzureADAppPermissions
+{
+    [CmdletBinding()]
+    [OutputType([PSCustomObject])]
+    param(
+        [Parameter(Mandatory = $true)]
+        $App
+    )
+
+    [array]$requiredAccess = $App.RequiredResourceAccess.ResourceAccess
+    $servicePrincipal = Get-AzureADServicePrincipal -Filter "AppId eq '$($App.AppId)'" -All:$true
+    $appPrincipal = Get-AzureADServicePrincipal -Filter "AppId eq '00000003-0000-0000-c000-000000000000'"
+
+    $permissions = @()
+    foreach ($apiPermission in $requiredAccess)
+    {
+        $currentPermission = @{}
+        if ($apiPermission.Type -eq 'Role')
+        {
+            $role = $appPrincipal.AppRoles | Where-Object { $_.Id -eq $apiPermission.Id }
+            $currentPermission.Add("Type", "AppOnly")
+            $currentPermission.Add("Name", $role.Value)
+            $oAuth2Grant = Get-AzureADServiceAppRoleAssignedTo -ObjectId $servicePrincipal.ObjectId
+            $foundPermission = $oAuth2Grant | Where-Object -FilterScript { $_.Id -eq $apiPermission.Id }
+
+            if ($null -ne $foundPermission)
+            {
+                $currentPermission.Add("AdminConsentGranted", $true)
+            }
+            else
+            {
+                $currentPermission.Add("AdminConsentGranted", $false)
+            }
+        }
+        else
+        {
+            $scope = $appPrincipal.Oauth2Permissions | Where-Object { $_.Id -eq $apiPermission.Id }
+            $currentPermission.Add("Type", "Delegated")
+            $currentPermission.Add("Name", $scope.Value)
+            $oAuth2Grant = Get-AzureADServicePrincipalOAuth2PermissionGrant -ObjectId $servicePrincipal.ObjectId -All $true
+            $foundPermission = $oAuth2Grant.Scope.Split(" ") -contains $scope.Value
+            $currentPermission.Add("AdminConsentGranted", $foundPermission)
+        }
+        $permissions += $currentPermission
+    }
+
+    return $permissions
+}
+
+function Get-M365DSCAzureADAppPermissionsAsString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.ArrayList]
+        $Permissions
+    )
+
+    $StringContent = "@("
+    foreach ($permission in $Permissions)
+    {
+        $StringContent += "MSFT_AADApplicationPermission { `r`n"
+        $StringContent += "                Name                = '" + $permission.Name + "'`r`n"
+        $StringContent += "                Type                = '" + $permission.Type + "'`r`n"
+        $StringContent += "                AdminConsentGranted = `$" + $permission.AdminConsentGranted + "`r`n"
+        $StringContent += "            }`r`n"
+    }
+    $StringContent += "            )"
+    return $StringContent
 }
 
 Export-ModuleMember -Function *-TargetResource
