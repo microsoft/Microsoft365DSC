@@ -65,6 +65,10 @@ function Get-TargetResource
         $SamlMetadataUrl,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Permissions,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -118,6 +122,7 @@ function Get-TargetResource
 
         if ($null -eq $AADApp)
         {
+            Write-Verbose -Message "Attempting to retrieve Azure AD Application by DisplayName {$DisplayName}"
             $AADApp = Get-AzureADApplication -Filter "DisplayName eq '$($DisplayName)'"
         }
         if ($null -ne $AADApp -and $AADApp.Count -gt 1)
@@ -126,11 +131,13 @@ function Get-TargetResource
         }
         elseif ($null -eq $AADApp)
         {
+            Write-Verbose -Message "Could not retrieve and instance of the Azure AD App in the Get-TargetResource function."
             return $nullReturn
         }
         else
         {
-            $permissions = Get-M365DSCAzureADAppPermissions -App $AADApp
+            Write-Verbose -Message "An instance of Azure AD App was retrieved."
+            $permissionsObj = Get-M365DSCAzureADAppPermissions -App $AADApp
             $result = @{
                 DisplayName                = $AADApp.DisplayName
                 AvailableToOtherTenants    = $AADApp.AvailableToOtherTenants
@@ -147,7 +154,7 @@ function Get-TargetResource
                 SamlMetadataUrl            = $AADApp.SamlMetadataUrl
                 ObjectId                   = $AADApp.ObjectID
                 AppId                      = $AADApp.AppId
-                Permissions                = $permissions
+                Permissions                = $permissionsObj
                 Ensure                     = "Present"
                 GlobalAdminAccount         = $GlobalAdminAccount
                 ApplicationId              = $ApplicationId
@@ -250,6 +257,10 @@ function Set-TargetResource
         $SamlMetadataUrl,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Permissions,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -312,24 +323,60 @@ function Set-TargetResource
     }
 
     # App should exist but it doesn't
+    $needToUpdatePermissions = $false
+    $currentParameters.Remove("AppId") | Out-Null
+    $currentParameters.Remove("Permissions") | Out-Null
     if ($Ensure -eq "Present" -and $currentAADApp.Ensure -eq "Absent")
     {
-        Write-Verbose -Message "Creating New AzureAD Application {$DisplayName}"
+        Write-Verbose -Message "Creating New AzureAD Application {$DisplayName} with values:`r`n$($currentParameters | Out-String)"
         $currentParameters.Remove("ObjectId") | Out-Null
-        New-AzureADApplication @currentParameters
+        $currentAADApp = New-AzureADApplication @currentParameters
+        $needToUpdatePermissions = $true
     }
     # App should exist and will be configured to desired state
     if ($Ensure -eq 'Present' -and $currentAADApp.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating existing AzureAD Application {$DisplayName}"
+        Write-Verbose -Message "Updating existing AzureAD Application {$DisplayName} with values:`r`n$($currentParameters | Out-String)"
         $currentParameters.ObjectId = $currentAADApp.ObjectId
         Set-AzureADApplication @currentParameters
+        $needToUpdatePermissions = $true
     }
     # App exists but should not
     elseif ($Ensure -eq 'Absent' -and $currentAADApp.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing AzureAD Application {$DisplayName}"
+        Write-Verbose -Message "Removing AzureAD Application {$DisplayName} by ObjectID {$($currentAADApp.ObjectID)}"
         Remove-AzureADApplication -ObjectId $currentAADApp.ObjectID
+    }
+
+    if ($needToUpdatePermissions)
+    {
+        Write-Verbose -Message "Will update permissions for Azure AD Application {$($currentAADApp.DisplayName)}"
+        [array]$requiredAccess = $currentAADApp.RequiredResourceAccess.ResourceAccess
+        $appPrincipal = Get-AzureADServicePrincipal -Filter "AppId eq '00000003-0000-0000-c000-000000000000'"
+
+        $aadApp = New-Object -TypeName "Microsoft.Open.AzureAD.Model.RequiredResourceAccess"
+        $aadApp.ResourceAppId = $currentAADApp.AppId
+
+        foreach ($permission in $Permissions)
+        {
+            $role = $appPrincipal.AppRoles | Where-Object -FilterScript { $_.Value -eq $permission.Name }
+            Write-Verbose -Message "Adding Permission {$($permission.Name)} with Role ID {$($role.Id)} to the list"
+            if ($permission.Type -eq 'Delegated')
+            {
+                $delPermission = New-Object -TypeName "Microsoft.Open.AzureAD.Model.ResourceAccess" `
+                    -ArgumentList $role.Id, "Scope"
+            }
+            else
+            {
+                $delPermission = New-Object -TypeName "Microsoft.Open.AzureAD.Model.ResourceAccess" `
+                    -ArgumentList $role.Id, "Role"
+            }
+
+            $aadApp.ResourceAccess += $delPermission
+        }
+        Write-Verbose -Message "Updating permissions for Azure AD Application {$($currentAADApp.DisplayName)} with RequiredResourceAccess:`r`n$($aadApp.ResourceAccess | Out-String)"
+        Set-AzureADApplication -ObjectId ($currentAADApp.ObjectId) `
+            -RequiredResourceAccess $aadApp | Out-Null
     }
 }
 
@@ -400,6 +447,10 @@ function Test-TargetResource
         $SamlMetadataUrl,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Permissions,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -435,12 +486,40 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
+    if ($CurrentValues.Permissions.Length -gt 0)
+    {
+        $permissionsDiff = Compare-Object -ReferenceObject ($CurrentValues.Permissions.Name) -DifferenceObject ($Permissions.Name)
+        if ($null -ne $permissionsDiff)
+        {
+            Write-Verbose -Message "Permissions differ: $($permissionsDiff | Out-String)"
+            Write-Verbose -Message "Test-TargetResource returned $false"
+            return $false
+        }
+        else
+        {
+            Write-Verbose -Message "Permissions for Azure AD Application are the same"
+        }
+    }
+    else
+    {
+        if ($Permissions.Length -gt 0)
+        {
+            Write-Verbose -Message "No Permissions exist for the current Azure AD App, but permissions were specified for desired state"
+            Write-Verbose -Message "Test-TargetResource returned $false"
+            return $false
+        }
+        else
+        {
+            Write-Verbose -Message "No Permissions exist for the current Azure AD App and no permissions were specified"
+        }
+    }
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove("ObjectId") | Out-Null
-    $ValuedToCheck.Remove("AppId") | Out-Null
+    $ValuesToCheck.Remove("AppId") | Out-Null
+    $ValuesToCheck.Remove("Permissions") | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -556,6 +635,7 @@ function Export-TargetResource
     }
 }
 
+
 function Get-M365DSCAzureADAppPermissions
 {
     [CmdletBinding()]
@@ -565,6 +645,7 @@ function Get-M365DSCAzureADAppPermissions
         $App
     )
 
+    Write-Verbose -Message "Retrieving permissions for Azure AD Application {$($App.DisplayName)}"
     [array]$requiredAccess = $App.RequiredResourceAccess.ResourceAccess
     $servicePrincipal = Get-AzureADServicePrincipal -Filter "AppId eq '$($App.AppId)'" -All:$true
     $appPrincipal = Get-AzureADServicePrincipal -Filter "AppId eq '00000003-0000-0000-c000-000000000000'"
