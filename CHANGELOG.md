@@ -3,7 +3,8 @@
 # Unreleased
 * MISC
   * Fixed issue with ODSettings and ExcludedFileExtensions
-
+* SPOSiteDesign
+  * Added support for GrouplessTeamSite web template.
 
 # 1.21.317.1
 
