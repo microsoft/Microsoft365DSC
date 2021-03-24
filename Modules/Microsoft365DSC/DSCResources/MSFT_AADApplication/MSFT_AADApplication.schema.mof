@@ -2,6 +2,7 @@
 class MSFT_AADApplicationPermission
 {
     [Write, Description("Name of the requested permission.")] String Name;
+    [Write, Description("Name of the API from which the permission comes from.")] String SourceAPI;
     [Write, Description("Type of permission."), ValueMap{"AppOnly", "Delegated"}, Values{"AppOnly", "Delegated"}] String Type;
     [Write, Description("Represented whether or not the Admin consent been granted on the app.")] Boolean AdminConsentGranted;
 };
