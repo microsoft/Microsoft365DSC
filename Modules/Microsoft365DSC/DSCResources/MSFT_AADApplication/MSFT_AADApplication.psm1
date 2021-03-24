@@ -139,7 +139,7 @@ function Get-TargetResource
             Write-Verbose -Message "An instance of Azure AD App was retrieved."
             $permissionsObj = Get-M365DSCAzureADAppPermissions -App $AADApp
             $isPublicClient = $false
-            if (-not [System.String]::IsNullOrEmpty($AADApp.PublicClient))
+            if (-not [System.String]::IsNullOrEmpty($AADApp.PublicClient) -and $AADApp.PublicClient -eq $true)
             {
                 $isPublicClient = $true
             }
@@ -491,7 +491,6 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()

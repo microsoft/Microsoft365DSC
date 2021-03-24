@@ -1,9 +1,11 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
-* MISC
-  * Fixed issue with ODSettings and ExcludedFileExtensions
+# 1.21.324.1
 
+* AADApplication
+  * Added support for API Permissions;
+* ODSettings
+  * Fixed and issue with ExcludedFileExtensions;
 
 # 1.21.317.1
 
