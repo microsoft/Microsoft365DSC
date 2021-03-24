@@ -45,7 +45,7 @@ function Get-TargetResource
         [System.String]
         $CertificateThumbprint,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -277,7 +277,7 @@ function Set-TargetResource
                 #
                 #the only way to get the $content is to query the site again, but this time with the ID and not the Title like above
                 $UpdateParams = @{
-                    Id          = $SiteScript[0].Id
+                    Id          = $SiteScripts[0].Id
                     Title       = $Title
                     Content     = $Content
                     Description = $Description
@@ -290,7 +290,7 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Verbose -Message "Unable to update Site Script, {$Title}"
+            Write-Warning -Message "Unable to update Site Script, {$Title}"
         }
     }
 }

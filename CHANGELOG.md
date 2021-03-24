@@ -3,7 +3,10 @@
 # Unreleased
 * MISC
   * Fixed issue with ODSettings and ExcludedFileExtensions
-
+* SPOSiteScript
+  * Fixed issue where an existin site script could not be updated.
+  * Made parameter GlobalAdminAccount in Get-TargetResource
+    optional.
 
 # 1.21.317.1
 
