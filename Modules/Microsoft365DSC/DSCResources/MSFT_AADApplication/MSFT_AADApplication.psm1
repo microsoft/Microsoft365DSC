@@ -337,10 +337,8 @@ function Set-TargetResource
         $currentParameters.Remove("ObjectId") | Out-Null
         $currentAADApp = New-AzureADApplication @currentParameters
         Write-Verbose -Message "Azure AD Application {$DisplayName} was successfully created"
-        Write-Verbose -Message "Creating a new Service Principal for Azure AD Application {$DisplayName}"
-        New-AzureADServicePrincipal -AppId $currentAADApp.AppId | Out-Null
-        Write-Verbose -Message "New Service Principal created"
         $needToUpdatePermissions = $true
+        Start-Sleep 5
     }
     # App should exist and will be configured to desired state
     if ($Ensure -eq 'Present' -and $currentAADApp.Ensure -eq 'Present')
