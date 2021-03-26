@@ -1,6 +1,9 @@
 # Change log for Microsoft365DSC
 
 # Unreleased
+
+* SCDLPComplianceRule
+  * Fixed issue where only the first SIT Action was exported;
 * MISC
   * Fixed issue with ODSettings and ExcludedFileExtensions
 * SPOSiteDesign
