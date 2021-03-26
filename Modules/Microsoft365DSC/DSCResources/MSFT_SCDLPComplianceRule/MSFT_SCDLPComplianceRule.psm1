@@ -142,19 +142,23 @@ function Get-TargetResource
                 $NotifyAllowOverrideValue = $PolicyRule.NotifyAllowOverride.Replace(' ', '').Split(',')
             }
 
-            [array] $SensitiveInfo = @($PolicyRule.ContentContainsSensitiveInformation[0])
+            [array] $SensitiveInfoTypes = @()
 
-            if ($null -ne $SensitiveInfo.groups)
+            foreach ($SensitiveInfo in $PolicyRule.ContentContainsSensitiveInformation)
             {
-                $groups = $SensitiveInfo.groups
-                $SensitiveInfo = @()
-                foreach ($group in $groups)
+                if ($null -ne $SensitiveInfo.groups)
                 {
-                    foreach ($siEntry in $group.sensitivetypes)
+                    $groups = $SensitiveInfo.groups
+                    $SensitiveInfo = @()
+                    foreach ($group in $groups)
                     {
-                        $SensitiveInfo += [System.Collections.Hashtable]$siEntry
+                        foreach ($siEntry in $group.sensitivetypes)
+                        {
+                            $SensitiveInfo += [System.Collections.Hashtable]$siEntry
+                        }
                     }
                 }
+                $SensitiveInfoTypes += $SensitiveInfo
             }
 
             $result = @{
@@ -165,7 +169,7 @@ function Get-TargetResource
                 BlockAccess                         = $PolicyRule.BlockAccess
                 BlockAccessScope                    = $PolicyRule.BlockAccessScope
                 Comment                             = $PolicyRule.Comment
-                ContentContainsSensitiveInformation = $SensitiveInfo
+                ContentContainsSensitiveInformation = $SensitiveInfoTypes
                 ContentPropertyContainsWords        = $PolicyRule.ContentPropertyContainsWords
                 Disabled                            = $PolicyRule.Disabled
                 GenerateAlert                       = $PolicyRule.GenerateAlert
