@@ -1,8 +1,17 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
-* MISC
-  * Fixed issue with ODSettings and ExcludedFileExtensions
+# UNRELEASED
+
+* EXOSharedMailbox
+  * Improved how we are retrieving all shared mailboxes in the
+    Export-TargetResource function.
+
+# 1.21.324.1
+
+* AADApplication
+  * Added support for API Permissions;
+* ODSettings
+  * Fixed and issue with ExcludedFileExtensions;
 * SPOSiteDesign
   * Added support for GrouplessTeamSite web template.
 * SPOSiteScript
