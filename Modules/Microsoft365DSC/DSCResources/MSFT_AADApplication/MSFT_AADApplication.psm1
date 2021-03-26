@@ -304,7 +304,7 @@ function Set-TargetResource
     {
         $ErrorMessage = "It is not possible set Permissions or IdentifierUris when the PublicClient property is " + `
             "set to `$true. Application will not be created. To fix this, modify the configuration to set the " + `
-            "PublicClient property to `$false, or remove then Permissions and IdentifierUris properties from your configuration."
+            "PublicClient property to `$false, or remove the Permissions and IdentifierUris properties from your configuration."
         Add-M365DSCEvent -Message $ErrorMessage -EntryType 'Error' `
             -EventID 1 -Source $($MyInvocation.MyCommand.Source)
         throw $ErrorMessage
