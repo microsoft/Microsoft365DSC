@@ -498,16 +498,35 @@ function Test-TargetResource
     # For each Desired SIT check to see if there is an existing rule with the same name
     foreach ($sit in $ContentContainsSensitiveInformation)
     {
-        Write-Verbose -Message "Trying to find existing DLP rule matching name {$($sit.name)}"
-        $matchingExistingRule = $CurrentValues.ContentContainsSensitiveInformaton | Where-Object -FilterScript {$_.name -eq $sit.name}
+        Write-Verbose -Message "Trying to find existing Sensitive Information Action matching name {$($sit.name)}"
+        $matchingExistingRule = $CurrentValues.ContentContainsSensitiveInformaton | Where-Object -FilterScript { $_.name -eq $sit.name }
         if ($null -ne $matchingExistingRule)
         {
-            Write-Verbose -Message "Rule {$($sit.name)} was found"
+            Write-Verbose -Message "Sensitive Information Action {$($sit.name)} was found"
+            $propertiesTocheck = @("id", "maxconfidence", "minconfidence", "classifiertype", "mincount", "maxcount")
+
+            foreach ($property in $propertiesToCheck)
+            {
+                Write-Verbose -Message "Checking property {$property} for Sensitive Information Action {$($sit.name)}"
+                if ($sit.$property -ne $matchingExistingRule.$property)
+                {
+                    Write-Verbose -Message "Property {$property} is set to {$($matchingExistingRule.$property)} and is expected to be {$($sit.$property)}."
+                    $EventMessage = "DLP Compliance Rule {$Name} was not in the desired state.`r`n" + `
+                        "Sensitive Information Action {$($sit.name)} has invalid value for property {$property}. " + `
+                        "Current value is {$($matchingExistingRule.$property)} and is expected to be {$($sit.$property)}."
+                    Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+                    return $false
+                }
+            }
         }
         else
         {
-            Write-Verbose -Message "Rule {$($sit.name)} was not found"
-
+            Write-Verbose -Message "Sensitive Information Action {$($sit.name)} was not found"
+            $EventMessage = "DLP Compliance Rule {$Name} was not in the desired state.`r`n" + `
+                "An action on {$($sit.name)} Sensitive Information Type is missing."
+            Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
             return $false
         }
     }
