@@ -494,6 +494,25 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
+    #region Test Sensitive Information Type
+    # For each Desired SIT check to see if there is an existing rule with the same name
+    foreach ($sit in $ContentContainsSensitiveInformation)
+    {
+        Write-Verbose -Message "Trying to find existing DLP rule matching name {$($sit.name)}"
+        $matchingExistingRule = $CurrentValues.ContentContainsSensitiveInformaton | Where-Object -FilterScript {$_.name -eq $sit.name}
+        if ($null -ne $matchingExistingRule)
+        {
+            Write-Verbose -Message "Rule {$($sit.name)} was found"
+        }
+        else
+        {
+            Write-Verbose -Message "Rule {$($sit.name)} was not found"
+
+            return $false
+        }
+    }
+    #endregion
+
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
