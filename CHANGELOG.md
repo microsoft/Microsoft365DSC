@@ -12,6 +12,10 @@
   * Fixed issue where an existin site script could not be updated.
   * Made parameter GlobalAdminAccount in Get-TargetResource
     optional.
+* SPOTheme
+  * Fixed issue where removal of a theme would throw an error.
+  * Corrected variable name to properly show the theme name in verbose message
+    when removing a theme.
 
 # 1.21.317.1
 
