@@ -54,7 +54,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $PublicClient,
+        $PublicClient = $false,
 
         [Parameter()]
         [System.String[]]
@@ -251,7 +251,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $PublicClient,
+        $PublicClient = $false,
 
         [Parameter()]
         [System.String[]]
@@ -298,6 +298,18 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    # Ensure we throw an error if PublicClient is set to $true and we're trying to also configure either Permissions
+    # or IdentifierUris
+    if ($PublicClient -and ($Permissions.Length -gt 0 -or $IdentifierUris.Length -gt 0))
+    {
+        $ErrorMessage = "It is not possible set Permissions or IdentifierUris when the PublicClient property is " + `
+            "set to `$true. Application will not be created. To fix this, modify the configuration to set the " + `
+            "PublicClient property to `$false, or remove then Permissions and IdentifierUris properties from your configuration."
+        Add-M365DSCEvent -Message $ErrorMessage -EntryType 'Error' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        throw $ErrorMessage
+    }
+
     $currentAADApp = Get-TargetResource @PSBoundParameters
     $currentParameters = $PSBoundParameters
     $currentParameters.Remove("ApplicationId")  | Out-Null
@@ -331,6 +343,7 @@ function Set-TargetResource
     $needToUpdatePermissions = $false
     $currentParameters.Remove("AppId") | Out-Null
     $currentParameters.Remove("Permissions") | Out-Null
+
     if ($Ensure -eq "Present" -and $currentAADApp.Ensure -eq "Absent")
     {
         Write-Verbose -Message "Creating New AzureAD Application {$DisplayName} with values:`r`n$($currentParameters | Out-String)"
@@ -456,7 +469,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $PublicClient,
+        $PublicClient = $false,
 
         [Parameter()]
         [System.String[]]
@@ -512,6 +525,10 @@ function Test-TargetResource
         {
             Write-Verbose -Message "Permissions differ: $($permissionsDiff | Out-String)"
             Write-Verbose -Message "Test-TargetResource returned $false"
+            $EventMessage = "Permissions for Azure AD Application {$DisplayName} were not in the desired state.`r`n" + `
+                "The should contain {$($Permissions.Name)} but instead contained {$($CurrentValues.Permissions.Name)}"
+            Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
             return $false
         }
         else
@@ -525,6 +542,10 @@ function Test-TargetResource
         {
             Write-Verbose -Message "No Permissions exist for the current Azure AD App, but permissions were specified for desired state"
             Write-Verbose -Message "Test-TargetResource returned $false"
+            $EventMessage = "Permissions for Azure AD Application {$DisplayName} were not in the desired state.`r`n" + `
+                "The should contain {$($Permissions.Name)} but instead contained {`$null}"
+            Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
             return $false
         }
         else
