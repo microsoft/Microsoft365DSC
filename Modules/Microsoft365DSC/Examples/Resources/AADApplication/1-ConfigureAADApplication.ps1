@@ -16,21 +16,44 @@ Configuration Example
     {
         AADApplication DSCApp1
         {
-            DisplayName                   = "AppDisplayName"
-            AvailableToOtherTenants       = $false
-            GroupMembershipClaims         = "0"
-            Homepage                      = "https://app.contoso.com"
-            IdentifierUris                = "https://app.contoso.com"
-            KnownClientApplications       = ""
-            LogoutURL                     = "https://app.contoso.com/logout"
-            Oauth2AllowImplicitFlow       = $false
-            Oauth2AllowUrlPathMatching    = $false
-            Oauth2RequirePostResponse     = $false
-            PublicClient                  = $false
-            ReplyURLs                     = "https://app.contoso.com"
-            SamlMetadataUrl               = ""
-            Ensure                        = "Present"
-            GlobalAdminAccount            = $credsGlobalAdmin
+            DisplayName                = "AppDisplayName"
+            AvailableToOtherTenants    = $false
+            GroupMembershipClaims      = "0"
+            Homepage                   = "https://app.contoso.com"
+            IdentifierUris             = "https://app.contoso.com"
+            KnownClientApplications    = ""
+            LogoutURL                  = "https://app.contoso.com/logout"
+            Oauth2AllowImplicitFlow    = $false
+            Oauth2AllowUrlPathMatching = $false
+            Oauth2RequirePostResponse  = $false
+            PublicClient               = $false
+            ReplyURLs                  = "https://app.contoso.com"
+            SamlMetadataUrl            = ""
+            Permissions                = @(
+                MSFT_AADApplicationPermission
+                {
+                    Name                = 'User.Read'
+                    Type                = 'Delegated'
+                    SourceAPI           = 'Microsoft Graph'
+                    AdminConsentGranted = $false
+                }
+                MSFT_AADApplicationPermission
+                {
+                    Name                = 'User.ReadWrite.All'
+                    Type                = 'Delegated'
+                    SourceAPI           = 'Microsoft Graph'
+                    AdminConsentGranted = $True
+                }
+                MSFT_AADApplicationPermission
+                {
+                    Name                = 'User.Read.All'
+                    Type                = 'AppOnly'
+                    SourceAPI           = 'Microsoft Graph'
+                    AdminConsentGranted = $True
+                }
+            )
+            Ensure                     = "Present"
+            GlobalAdminAccount         = $credsGlobalAdmin
         }
     }
 }

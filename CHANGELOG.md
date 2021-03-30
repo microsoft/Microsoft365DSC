@@ -1,7 +1,5 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
-
 * EXOSharedMailbox
   * Improved how we are retrieving all shared mailboxes in the
     Export-TargetResource function.
