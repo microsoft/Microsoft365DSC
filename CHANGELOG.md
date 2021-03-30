@@ -1,7 +1,14 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
+# UNRELEASED
 
+* EXOSharedMailbox
+  * Improved how we are retrieving all shared mailboxes in the
+    Export-TargetResource function.
+* AADApplication
+  * Added support for API Permissions;
+* ODSettings
+  * Fixed and issue with ExcludedFileExtensions;
 * SCDLPComplianceRule
   * Fixed issue where only the first SIT Action was exported;
 * MISC

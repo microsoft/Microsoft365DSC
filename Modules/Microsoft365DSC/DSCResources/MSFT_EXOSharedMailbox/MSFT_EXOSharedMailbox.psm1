@@ -404,8 +404,9 @@ function Export-TargetResource
 
     try
     {
-        [array]$mailboxes = Get-Mailbox -ErrorAction Stop
-        $mailboxes = $mailboxes | Where-Object -FilterScript { $_.RecipientTypeDetails -eq "SharedMailbox" }
+        [array]$mailboxes = Get-Mailbox -RecipientTypeDetails "SharedMailbox" `
+            -ResultSize Unlimited `
+            -ErrorAction Stop
         $dscContent = ''
         $i = 1
         if ($mailboxes.Length -eq 0)
