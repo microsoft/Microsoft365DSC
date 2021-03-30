@@ -5,13 +5,14 @@
 * EXOSharedMailbox
   * Improved how we are retrieving all shared mailboxes in the
     Export-TargetResource function.
-
-# 1.21.324.1
-
 * AADApplication
   * Added support for API Permissions;
 * ODSettings
   * Fixed and issue with ExcludedFileExtensions;
+* SCDLPComplianceRule
+  * Fixed issue where only the first SIT Action was exported;
+* MISC
+  * Fixed issue with ODSettings and ExcludedFileExtensions
 * SPOSiteDesign
   * Added support for GrouplessTeamSite web template.
 * SPOSiteScript
