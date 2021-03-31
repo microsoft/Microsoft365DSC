@@ -1,5 +1,29 @@
 # Change log for Microsoft365DSC
 
+1.21.331.1
+
+* AADApplication
+  * Added support for API Permissions;
+* EXOSharedMailbox
+  * Improved how we are retrieving all shared mailboxes in the
+    Export-TargetResource function.
+* ODSettings
+  * Fixed and issue with ExcludedFileExtensions;
+* SCDLPComplianceRule
+  * Fixed issue where only the first SIT Action was exported;
+* SPOSiteDesign
+  * Added support for GrouplessTeamSite web template.
+* SPOSiteScript
+  * Fixed issue where an existin site script could not be updated.
+  * Made parameter GlobalAdminAccount in Get-TargetResource
+    optional.
+* SPOTheme
+  * Fixed issue where removal of a theme would throw an error.
+  * Corrected variable name to properly show the theme name in verbose message
+    when removing a theme.
+* MISC
+  * Fixed issue with ODSettings and ExcludedFileExtensions
+
 # 1.21.317.1
 
 * DEPENDENCIES
