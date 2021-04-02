@@ -99,8 +99,8 @@ function Get-TargetResource
                 OfflineAddressBook    = $AddressBookPolicy.OfflineAddressBook
                 RoomList              = $AddressBookPolicy.RoomList
                 Ensure                = 'Present'
-                GlobalAdminAccount    = $GlobalAdmin
-                AccountApplicationId  = $ApplicationId
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePath       = $CertificatePath
                 CertificatePassword   = $CertificatePassword
