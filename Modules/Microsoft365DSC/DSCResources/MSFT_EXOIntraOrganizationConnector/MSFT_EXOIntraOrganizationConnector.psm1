@@ -87,12 +87,17 @@ function Get-TargetResource
         else
         {
             $result = @{
-                Identity             = $Identity
-                DiscoveryEndpoint    = $IntraOrganizationConnector.DiscoveryEndpoint.ToString()
-                Enabled              = $IntraOrganizationConnector.Enabled
-                TargetAddressDomains = $IntraOrganizationConnector.TargetAddressDomains
-                GlobalAdminAccount   = $GlobalAdminAccount
-                Ensure               = 'Present'
+                Identity              = $Identity
+                DiscoveryEndpoint     = $IntraOrganizationConnector.DiscoveryEndpoint.ToString()
+                Enabled               = $IntraOrganizationConnector.Enabled
+                TargetAddressDomains  = $IntraOrganizationConnector.TargetAddressDomains
+                GlobalAdminAccount    = $GlobalAdminAccount
+                Ensure                = 'Present'
+                ApplicationId         = $ApplicationId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                TenantId              = $TenantId
             }
 
             Write-Verbose -Message "Found IntraOrganizationConnector $($Identity)"

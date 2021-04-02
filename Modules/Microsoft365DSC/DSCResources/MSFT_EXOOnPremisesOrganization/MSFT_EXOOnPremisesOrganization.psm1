@@ -88,18 +88,8 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
-    $nullReturn = @{
-        Identity                 = $Identity
-        Comment                  = $Comment
-        HybridDomains            = $HybridDomains
-        InboundConnector         = $InboundConnector
-        OrganizationName         = $OrganizationName
-        OrganizationGuid         = $OrganizationGuid
-        OrganizationRelationship = $OrganizationRelationship
-        OutboundConnector        = $OutboundConnector
-        Ensure                   = 'Absent'
-        GlobalAdminAccount       = $GlobalAdminAccount
-    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
     try
     {
@@ -125,6 +115,11 @@ function Get-TargetResource
                 OutboundConnector        = $OnPremisesOrganization.OutboundConnector
                 Ensure                   = 'Present'
                 GlobalAdminAccount       = $GlobalAdminAccount
+                ApplicationId            = $ApplicationId
+                CertificateThumbprint    = $CertificateThumbprint
+                CertificatePath          = $CertificatePath
+                CertificatePassword      = $CertificatePassword
+                TenantId                 = $TenantId
             }
 
             Write-Verbose -Message "Found On-premises Organization $($Identity)"

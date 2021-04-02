@@ -106,6 +106,11 @@ function Get-TargetResource
                 LinkedAccount                       = $PartnerApplication.LinkedAccount
                 Ensure                              = 'Present'
                 GlobalAdminAccount                  = $GlobalAdminAccount
+                ApplicationId                       = $ApplicationId
+                CertificateThumbprint               = $CertificateThumbprint
+                CertificatePath                     = $CertificatePath
+                CertificatePassword                 = $CertificatePassword
+                TenantId                            = $TenantId
             }
 
             Write-Verbose -Message "Found Partner Application $($Name)"

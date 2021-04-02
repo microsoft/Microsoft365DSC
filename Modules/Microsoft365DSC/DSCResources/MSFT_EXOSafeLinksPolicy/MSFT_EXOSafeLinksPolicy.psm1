@@ -136,6 +136,11 @@ function Get-TargetResource
                 ScanUrls                 = $SafeLinksPolicy.ScanUrls
                 Ensure                   = 'Present'
                 GlobalAdminAccount       = $GlobalAdminAccount
+                ApplicationId            = $ApplicationId
+                CertificateThumbprint    = $CertificateThumbprint
+                CertificatePath          = $CertificatePath
+                CertificatePassword      = $CertificatePassword
+                TenantId                 = $TenantId
             }
 
             Write-Verbose -Message "Found SafeLinksPolicy $($Identity)"

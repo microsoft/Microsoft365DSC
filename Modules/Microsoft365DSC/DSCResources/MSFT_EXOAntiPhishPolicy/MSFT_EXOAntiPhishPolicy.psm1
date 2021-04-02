@@ -231,6 +231,11 @@ function Get-TargetResource
                 TargetedUsersToProtect                        = $AntiPhishPolicy.TargetedUsersToProtect
                 GlobalAdminAccount                            = $GlobalAdminAccount
                 Ensure                                        = 'Present'
+                ApplicationId                                 = $ApplicationId
+                CertificateThumbprint                         = $CertificateThumbprint
+                CertificatePath                               = $CertificatePath
+                CertificatePassword                           = $CertificatePassword
+                TenantId                                      = $TenantId
             }
 
             Write-Verbose -Message "Found AntiPhishPolicy $($Identity)"

@@ -57,12 +57,8 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = @{
-        DisplayName        = $DisplayName
-        PrimarySMTPAddress = $null
-        GlobalAdminAccount = $null
-        Ensure             = "Absent"
-    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
     if ($Global:CurrentModeIsExport)
     {
@@ -104,11 +100,16 @@ function Get-TargetResource
         #endregion
 
         $result = @{
-            DisplayName        = $DisplayName
-            PrimarySMTPAddress = $mailbox.PrimarySMTPAddress.ToString()
-            Aliases            = $CurrentAliases
-            Ensure             = "Present"
-            GlobalAdminAccount = $GlobalAdminAccount
+            DisplayName           = $DisplayName
+            PrimarySMTPAddress    = $mailbox.PrimarySMTPAddress.ToString()
+            Aliases               = $CurrentAliases
+            Ensure                = "Present"
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            TenantId              = $TenantId
         }
 
         Write-Verbose -Message "Found an existing instance of Shared Mailbox '$($DisplayName)'"

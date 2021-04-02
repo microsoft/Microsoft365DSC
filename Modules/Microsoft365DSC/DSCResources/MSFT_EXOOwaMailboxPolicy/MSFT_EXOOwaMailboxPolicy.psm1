@@ -460,6 +460,11 @@ function Get-TargetResource
                 WebPartsFrameOptionsType                             = $OwaMailboxPolicy.WebPartsFrameOptionsType
                 Ensure                                               = 'Present'
                 GlobalAdminAccount                                   = $GlobalAdminAccount
+                ApplicationId                                        = $ApplicationId
+                CertificateThumbprint                                = $CertificateThumbprint
+                CertificatePath                                      = $CertificatePath
+                CertificatePassword                                  = $CertificatePassword
+                TenantId                                             = $TenantId
             }
 
             Write-Verbose -Message "Found OWA Mailbox Policy $($Name)"
