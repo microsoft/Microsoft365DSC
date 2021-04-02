@@ -10,7 +10,7 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
-        [ValidateSet('Authoritative','InternalRelay')]
+        [ValidateSet('Authoritative', 'InternalRelay')]
         [System.String]
         $DomainType = 'Authoritative',
 
@@ -90,36 +90,7 @@ function Get-TargetResource
         if ($null -eq $AcceptedDomain)
         {
             Write-Verbose -Message "AcceptedDomain configuration for $($Identity) does not exist."
-
-            # Check to see if $Identity matches a verified domain in the O365 Tenant
-            $ConnectionMode = New-M365DSCConnection -Platform 'AzureAd' `
-            -InboundParameters $PSBoundParameters
-
-            $VerifiedDomains = Get-AzureADDomain | Where-Object -FilterScript { $_.IsVerified }
-            $MatchingVerifiedDomain = $VerifiedDomains | Where-Object -FilterScript { $_.Name -eq $Identity }
-
-            if ($null -ne $MatchingVerifiedDomain)
-            {
-                Write-Verbose -Message "A verified domain matching $($Identity) does not exist in this O365 Tenant."
-                $nullReturn = @{
-                    DomainType         = $DomainType
-                    Ensure             = $Ensure
-                    GlobalAdminAccount = $GlobalAdminAccount
-                    Identity           = $Identity
-                    MatchSubDomains    = $MatchSubDomains
-                    OutboundOnly       = $OutboundOnly
-                }
-                <#
-                if AcceptedDomain does not exist and does not match a verified domain, return submitted parameters for ReverseDSC.
-                This also prevents Set-TargetResource from running when current state could not be determined
-                #>
-                return $nullReturn
-            }
-            else
-            {
-                # if AcceptedDomain does not exist for a verfied domain, return 'Absent' with submitted parameters to Test-TargetResource.
-                return $nullReturn
-            }
+            return $nullReturn
         }
         else
         {
@@ -178,7 +149,7 @@ function Set-TargetResource
         $Identity,
 
         [Parameter()]
-        [ValidateSet('Authoritative','InternalRelay')]
+        [ValidateSet('Authoritative', 'InternalRelay')]
         [System.String]
         $DomainType = 'Authoritative',
 
@@ -260,7 +231,7 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
-        [ValidateSet('Authoritative','InternalRelay')]
+        [ValidateSet('Authoritative', 'InternalRelay')]
         [System.String]
         $DomainType = 'Authoritative',
 
@@ -388,11 +359,11 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
         foreach ($domain in $AllAcceptedDomains)
         {
-            Write-Host "    |---[$i/$($AllAcceptedDomains.Count)] $($domain.Identity)" -NoNewLine
+            Write-Host "    |---[$i/$($AllAcceptedDomains.Count)] $($domain.Identity)" -NoNewline
 
             $Params = @{
                 Identity              = $domain.Identity

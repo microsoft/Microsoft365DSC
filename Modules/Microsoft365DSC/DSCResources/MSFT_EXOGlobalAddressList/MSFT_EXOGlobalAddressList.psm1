@@ -134,31 +134,9 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $nullReturn = @{
-        Name                         = $Name
-        ConditionalCompany           = $ConditionalCompany
-        ConditionalCustomAttribute1  = $ConditionalCustomAttribute1
-        ConditionalCustomAttribute10 = $ConditionalCustomAttribute10
-        ConditionalCustomAttribute11 = $ConditionalCustomAttribute11
-        ConditionalCustomAttribute12 = $ConditionalCustomAttribute12
-        ConditionalCustomAttribute13 = $ConditionalCustomAttribute13
-        ConditionalCustomAttribute14 = $ConditionalCustomAttribute14
-        ConditionalCustomAttribute15 = $ConditionalCustomAttribute15
-        ConditionalCustomAttribute2  = $ConditionalCustomAttribute2
-        ConditionalCustomAttribute3  = $ConditionalCustomAttribute3
-        ConditionalCustomAttribute4  = $ConditionalCustomAttribute4
-        ConditionalCustomAttribute5  = $ConditionalCustomAttribute5
-        ConditionalCustomAttribute6  = $ConditionalCustomAttribute6
-        ConditionalCustomAttribute7  = $ConditionalCustomAttribute7
-        ConditionalCustomAttribute8  = $ConditionalCustomAttribute8
-        ConditionalCustomAttribute9  = $ConditionalCustomAttribute9
-        ConditionalDepartment        = $ConditionalDepartment
-        ConditionalStateOrProvince   = $ConditionalStateOrProvince
-        IncludedRecipients           = $IncludedRecipients
-        RecipientFilter              = $RecipientFilter
-        Ensure                       = 'Absent'
-        GlobalAdminAccount           = $GlobalAdminAccount
-    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
+
     if ($null -eq (Get-Command 'Get-GlobalAddressList' -ErrorAction SilentlyContinue))
     {
         return $nullReturn
@@ -210,6 +188,11 @@ function Get-TargetResource
                 RecipientFilter              = $GlobalAddressList.RecipientFilter
                 Ensure                       = 'Present'
                 GlobalAdminAccount           = $GlobalAdminAccount
+                ApplicationId                = $ApplicationId
+                CertificateThumbprint        = $CertificateThumbprint
+                CertificatePath              = $CertificatePath
+                CertificatePassword          = $CertificatePassword
+                TenantId                     = $TenantId
             }
 
             Write-Verbose -Message "Found Global Address List $($Name)"

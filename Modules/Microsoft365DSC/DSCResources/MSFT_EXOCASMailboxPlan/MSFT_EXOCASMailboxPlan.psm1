@@ -99,13 +99,18 @@ function Get-TargetResource
         else
         {
             $result = @{
-                Ensure             = 'Present'
-                Identity           = $Identity
-                ActiveSyncEnabled  = $CASMailboxPlan.ActiveSyncEnabled
-                ImapEnabled        = $CASMailboxPlan.ImapEnabled
-                OwaMailboxPolicy   = $CASMailboxPlan.OwaMailboxPolicy
-                PopEnabled         = $CASMailboxPlan.PopEnabled
-                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure                = 'Present'
+                Identity              = $Identity
+                ActiveSyncEnabled     = $CASMailboxPlan.ActiveSyncEnabled
+                ImapEnabled           = $CASMailboxPlan.ImapEnabled
+                OwaMailboxPolicy      = $CASMailboxPlan.OwaMailboxPolicy
+                PopEnabled            = $CASMailboxPlan.PopEnabled
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                TenantId              = $TenantId
             }
 
             Write-Verbose -Message "Found CASMailboxPlan $($Identity)"

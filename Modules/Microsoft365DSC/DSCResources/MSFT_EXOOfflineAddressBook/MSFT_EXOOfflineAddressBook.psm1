@@ -99,13 +99,18 @@ function Get-TargetResource
         else
         {
             $result = @{
-                Name                 = $OfflineAddressBook.Name
-                AddressLists         = $OfflineAddressBook.AddressLists
-                ConfiguredAttributes = $OfflineAddressBook.ConfiguredAttributes
-                DiffRetentionPeriod  = $OfflineAddressBook.DiffRetentionPeriod
-                IsDefault            = $OfflineAddressBook.IsDefault
-                Ensure               = 'Present'
-                GlobalAdminAccount   = $GlobalAdminAccount
+                Name                  = $OfflineAddressBook.Name
+                AddressLists          = $OfflineAddressBook.AddressLists
+                ConfiguredAttributes  = $OfflineAddressBook.ConfiguredAttributes
+                DiffRetentionPeriod   = $OfflineAddressBook.DiffRetentionPeriod
+                IsDefault             = $OfflineAddressBook.IsDefault
+                Ensure                = 'Present'
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                TenantId              = $TenantId
             }
 
             Write-Verbose -Message "Found Offline Address Book $($Name)"

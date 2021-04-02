@@ -163,6 +163,11 @@ function Get-TargetResource
                 ValidationRecipients          = $OutBoundConnector.ValidationRecipients
                 GlobalAdminAccount            = $GlobalAdminAccount
                 Ensure                        = 'Present'
+                ApplicationId                 = $ApplicationId
+                CertificateThumbprint         = $CertificateThumbprint
+                CertificatePath               = $CertificatePath
+                CertificatePassword           = $CertificatePassword
+                TenantId                      = $TenantId
             }
 
             Write-Verbose -Message "Found OutBoundConnector $($Identity)"

@@ -141,6 +141,11 @@ function Get-TargetResource
                     SentToMemberOf            = $AntiPhishRule.SentToMemberOf
                     Ensure                    = 'Present'
                     GlobalAdminAccount        = $GlobalAdminAccount
+                    ApplicationId             = $ApplicationId
+                    CertificateThumbprint     = $CertificateThumbprint
+                    CertificatePath           = $CertificatePath
+                    CertificatePassword       = $CertificatePassword
+                    TenantId                  = $TenantId
                 }
                 if ('Enabled' -eq $AntiPhishRule.State)
                 {

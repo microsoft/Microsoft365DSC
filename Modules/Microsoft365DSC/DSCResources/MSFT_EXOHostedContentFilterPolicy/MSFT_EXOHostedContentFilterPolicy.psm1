@@ -338,6 +338,11 @@ function Get-TargetResource
                 PhishZapEnabled                      = $HostedContentFilterPolicy.PhishZapEnabled
                 SpamZapEnabled                       = $HostedContentFilterPolicy.SpamZapEnabled
                 GlobalAdminAccount                   = $GlobalAdminAccount
+                ApplicationId                        = $ApplicationId
+                CertificateThumbprint                = $CertificateThumbprint
+                CertificatePath                      = $CertificatePath
+                CertificatePassword                  = $CertificatePassword
+                TenantId                             = $TenantId
             }
 
             if ($HostedContentFilterPolicy.IsDefault)

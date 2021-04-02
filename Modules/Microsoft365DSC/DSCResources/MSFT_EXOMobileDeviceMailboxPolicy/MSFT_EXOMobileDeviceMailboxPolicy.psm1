@@ -357,6 +357,11 @@ function Get-TargetResource
                 WSSAccessEnabled                         = $MobileDeviceMailboxPolicy.WSSAccessEnabled
                 Ensure                                   = 'Present'
                 GlobalAdminAccount                       = $GlobalAdminAccount
+                ApplicationId                            = $ApplicationId
+                CertificateThumbprint                    = $CertificateThumbprint
+                CertificatePath                          = $CertificatePath
+                CertificatePassword                      = $CertificatePassword
+                TenantId                                 = $TenantId
             }
 
             Write-Verbose -Message "Found Mobile Device Mailbox Policy $($Name)"

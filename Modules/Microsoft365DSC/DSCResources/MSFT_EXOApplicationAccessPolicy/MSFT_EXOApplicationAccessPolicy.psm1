@@ -96,7 +96,6 @@ function Get-TargetResource
             }
         }
 
-
         $ApplicationAccessPolicy = $AllApplicationAccessPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
 
         if ($null -eq $ApplicationAccessPolicy)
@@ -107,13 +106,18 @@ function Get-TargetResource
         else
         {
             $result = @{
-                Identity           = $ApplicationAccessPolicy.Identity
-                AccessRight        = $ApplicationAccessPolicy.AccessRight
-                AppID              = $ApplicationAccessPolicy.AppID
-                PolicyScopeGroupId = $ApplicationAccessPolicy.ScopeIdentity
-                Description        = $ApplicationAccessPolicy.Description
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
+                Identity              = $ApplicationAccessPolicy.Identity
+                AccessRight           = $ApplicationAccessPolicy.AccessRight
+                AppID                 = $ApplicationAccessPolicy.AppID
+                PolicyScopeGroupId    = $ApplicationAccessPolicy.ScopeIdentity
+                Description           = $ApplicationAccessPolicy.Description
+                Ensure                = 'Present'
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                TenantId              = $TenantId
             }
 
             Write-Verbose -Message "Found Application Access Policy $($Identity)"
