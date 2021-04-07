@@ -101,15 +101,20 @@ function Get-TargetResource
         else
         {
             $result = @{
-                Ensure             = 'Present'
-                Identity           = $Identity
-                Action             = $SafeAttachmentPolicy.Action
-                ActionOnError      = $SafeAttachmentPolicy.ActionOnError
-                AdminDisplayName   = $SafeAttachmentPolicy.AdminDisplayName
-                Enable             = $SafeAttachmentPolicy.Enable
-                Redirect           = $SafeAttachmentPolicy.Redirect
-                RedirectAddress    = $SafeAttachmentPolicy.RedirectAddress
-                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure                = 'Present'
+                Identity              = $Identity
+                Action                = $SafeAttachmentPolicy.Action
+                ActionOnError         = $SafeAttachmentPolicy.ActionOnError
+                AdminDisplayName      = $SafeAttachmentPolicy.AdminDisplayName
+                Enable                = $SafeAttachmentPolicy.Enable
+                Redirect              = $SafeAttachmentPolicy.Redirect
+                RedirectAddress       = $SafeAttachmentPolicy.RedirectAddress
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                TenantId              = $TenantId
             }
 
             Write-Verbose -Message "Found SafeAttachmentPolicy $($Identity)"

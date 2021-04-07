@@ -189,9 +189,14 @@ function Get-TargetResource
                 TrustedMailOutboundEnabled           = $RemoteDomain.TrustedMailOutboundEnabled
                 UseSimpleDisplayName                 = $RemoteDomain.UseSimpleDisplayName
                 GlobalAdminAccount                   = $GlobalAdminAccount
+                ApplicationId                        = $ApplicationId
+                CertificateThumbprint                = $CertificateThumbprint
+                CertificatePath                      = $CertificatePath
+                CertificatePassword                  = $CertificatePassword
+                TenantId                             = $TenantId
             }
 
-            Write-Verbose -Message "Found RemoteDomain configuration for $($Identity)"
+            Write-Verbose -Message "Found RemoteDomain configuration for $Identity"
             return $result
         }
     }

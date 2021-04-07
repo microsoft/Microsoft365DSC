@@ -60,11 +60,8 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
-    $nullReturn = @{
-        OrgWideAccount     = $OrgWideAccount
-        Ensure             = 'Absent'
-        GlobalAdminAccount = $GlobalAdminAccount
-    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
     try
     {
@@ -84,9 +81,14 @@ function Get-TargetResource
         else
         {
             $result = @{
-                OrgWideAccount     = $AvailabilityConfig.OrgWideAccount
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
+                OrgWideAccount        = $AvailabilityConfig.OrgWideAccount
+                Ensure                = 'Present'
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                TenantId              = $TenantId
             }
 
             Write-Verbose -Message "Found Availability Config for $($OrgWideAccount)"

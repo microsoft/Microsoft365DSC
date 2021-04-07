@@ -91,12 +91,17 @@ function Get-TargetResource
         else
         {
             $result = @{
-                Name               = $RoleAssignmentPolicy.Name
-                Description        = $RoleAssignmentPolicy.Description
-                IsDefault          = $RoleAssignmentPolicy.IsDefault
-                Roles              = $RoleAssignmentPolicy.AssignedRoles
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
+                Name                  = $RoleAssignmentPolicy.Name
+                Description           = $RoleAssignmentPolicy.Description
+                IsDefault             = $RoleAssignmentPolicy.IsDefault
+                Roles                 = $RoleAssignmentPolicy.AssignedRoles
+                Ensure                = 'Present'
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                TenantId              = $TenantId
             }
 
             Write-Verbose -Message "Found Role Assignment Policy $($Name)"

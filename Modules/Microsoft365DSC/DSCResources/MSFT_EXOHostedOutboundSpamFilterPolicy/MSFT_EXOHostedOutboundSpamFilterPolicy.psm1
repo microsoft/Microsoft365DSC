@@ -103,6 +103,11 @@ function Get-TargetResource
                 NotifyOutboundSpamRecipients              = $HostedOutboundSpamFilterPolicy.NotifyOutboundSpamRecipients
                 NotifyOutboundSpam                        = $HostedOutboundSpamFilterPolicy.NotifyOutboundSpam
                 GlobalAdminAccount                        = $GlobalAdminAccount
+                ApplicationId                             = $ApplicationId
+                CertificateThumbprint                     = $CertificateThumbprint
+                CertificatePath                           = $CertificatePath
+                CertificatePassword                       = $CertificatePassword
+                TenantId                                  = $TenantId
             }
 
             Write-Verbose -Message "Found HostedOutboundSpamFilterPolicy $($Identity)"

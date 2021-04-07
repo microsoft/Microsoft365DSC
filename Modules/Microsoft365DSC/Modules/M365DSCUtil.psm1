@@ -465,7 +465,10 @@ function Test-M365DSCParameterState
     }
 
     $KeyList | ForEach-Object -Process {
-        if (($_ -ne "Verbose") -and ($_ -ne "InstallAccount"))
+        if (($_ -ne "Verbose") -and ($_ -ne "GlobalAdminAccount") `
+                -and ($_ -ne "ApplicationId") -and ($_ -ne "CertificateThumbprint") `
+                -and ($_ -ne "CertificatePath") -and ($_ -ne "CertificatePassword") `
+                -and ($_ -ne "TenantId"))
         {
             if (($CurrentValues.ContainsKey($_) -eq $false) `
                     -or ($CurrentValues.$_ -ne $DesiredValues.$_) `
