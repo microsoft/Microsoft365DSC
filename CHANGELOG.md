@@ -1,7 +1,13 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.21.407.1
 
+* AADConditionalAccessPolicy
+  * BREAKING: Renamed the 'includeDeviceStates' and 'excludeDeviceStates'
+    parameters to 'includeDevices' and 'excludeDevices';
+* TeamsMeetingPolicy
+  * The Set-CsTeamsMeetingPolicy would fail if recording settings are
+    changed while the AllowCloudRecording is set to false;
 * MISC
   * Fixed issue in most EXO resources where AzureAD App information
     was not returned by the Get-TargetResource function;
