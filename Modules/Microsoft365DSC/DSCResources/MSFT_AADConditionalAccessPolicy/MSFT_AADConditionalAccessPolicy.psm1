@@ -614,9 +614,9 @@ function Get-TargetResource
             #no translation needed
             IncludeLocations                         = $IncludeLocations
             ExcludeLocations                         = $ExcludeLocations
-            IncludeDevices                           = $Policy.Conditions.Devices.IncludeDevices
+            IncludeDevices                           = [System.String[]]$Policy.Conditions.Devices.IncludeDevices
             #no translation needed
-            ExcludeDevices                           = $Policy.Conditions.Devices.ExcludeDevices
+            ExcludeDevices                           = [System.String[]]$Policy.Conditions.Devices.ExcludeDevices
             #no translation needed
             UserRiskLevels                           = [System.String[]]$Policy.Conditions.UserRiskLevels
             #no translation needed
