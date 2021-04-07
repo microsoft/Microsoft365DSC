@@ -216,10 +216,9 @@ function Get-TargetResource
 
         Write-Verbose -Message "Get-TargetResource: Process IncludeUsers"
         #translate IncludeUser GUIDs to UPN, except id value is GuestsOrExternalUsers or All
-        $IncludeUsers = $null
+        $IncludeUsers = @()
         if ($Policy.Conditions.Users.IncludeUsers)
         {
-            $IncludeUsers = @()
             foreach ($IncludeUserGUID in $Policy.Conditions.Users.IncludeUsers)
             {
                 if ($IncludeUserGUID -notin "GuestsOrExternalUsers", "All")
@@ -266,10 +265,9 @@ function Get-TargetResource
 
         Write-Verbose -Message "Get-TargetResource: Process ExcludeUsers"
         #translate ExcludeUser GUIDs to UPN, except id value is GuestsOrExternalUsers or All
-        $ExcludeUsers = $null
+        $ExcludeUsers = @()
         if ($Policy.Conditions.Users.ExcludeUsers)
         {
-            $ExcludeUsers = @()
             foreach ($ExcludeUserGUID in $Policy.Conditions.Users.ExcludeUsers)
             {
                 if ($ExcludeUserGUID -notin "GuestsOrExternalUsers", "All")
@@ -317,10 +315,9 @@ function Get-TargetResource
 
         Write-Verbose -Message "Get-TargetResource: Process IncludeGroups"
         #translate IncludeGroup GUIDs to DisplayName
-        $IncludeGroups = $null
+        $IncludeGroups = @()
         if ($Policy.Conditions.Users.IncludeGroups)
         {
-            $IncludeGroups = @()
             foreach ($IncludeGroupGUID in $Policy.Conditions.Users.IncludeGroups)
             {
                 $IncludeGroup = $null
@@ -361,10 +358,9 @@ function Get-TargetResource
 
         Write-Verbose -Message "Get-TargetResource: Process ExcludeGroups"
         #translate ExcludeGroup GUIDs to DisplayName
-        $ExcludeGroups = $null
+        $ExcludeGroups = @()
         if ($Policy.Conditions.Users.ExcludeGroups)
         {
-            $ExcludeGroups = @()
             foreach ($ExcludeGroupGUID in $Policy.Conditions.Users.ExcludeGroups)
             {
                 $ExcludeGroup = $null
@@ -404,8 +400,8 @@ function Get-TargetResource
         }
 
 
-        $IncludeRoles = $null
-        $ExcludeRoles = $null
+        $IncludeRoles = @()
+        $ExcludeRoles = @()
         #translate role template guids to role name
         if ($Policy.Conditions.Users.IncludeRoles -or $Policy.Conditions.Users.ExcludeRoles)
         {
@@ -420,7 +416,6 @@ function Get-TargetResource
             Write-Verbose -Message "Get-TargetResource: Processing IncludeRoles"
             if ($Policy.Conditions.Users.IncludeRoles)
             {
-                $IncludeRoles = @()
                 foreach ($IncludeRoleGUID in $Policy.Conditions.Users.IncludeRoles)
                 {
                     if ($null -eq $rolelookup[$IncludeRoleGUID])
@@ -457,7 +452,6 @@ function Get-TargetResource
             Write-Verbose -Message "Get-TargetResource: Processing ExcludeRoles"
             if ($Policy.Conditions.Users.ExcludeRoles)
             {
-                $ExcludeRoles = @()
                 foreach ($ExcludeRoleGUID in $Policy.Conditions.Users.ExcludeRoles)
                 {
                     if ($null -eq $rolelookup[$ExcludeRoleGUID])
@@ -496,9 +490,11 @@ function Get-TargetResource
         $IncludeLocations = $null
         $ExcludeLocations = $null
         #translate Location template guids to Location name
-        if ($Policy.Conditions.Locations.IncludeLocations -or $Policy.Conditions.Locations.ExcludeLocations)
+        if ($Policy.Conditions.Locations)
         {
             Write-Verbose -Message "Get-TargetResource: Location condition defined, processing"
+            $IncludeLocations = @()
+            $ExcludeLocations = @()
             #build Location translation table
             $Locationlookup = @{}
             foreach ($Location in Get-AzureADMSNamedLocationPolicy)
@@ -509,7 +505,6 @@ function Get-TargetResource
             Write-Verbose -Message "Get-TargetResource: Processing IncludeLocations"
             if ($Policy.Conditions.Locations.IncludeLocations)
             {
-                $IncludeLocations = @()
                 foreach ($IncludeLocationGUID in $Policy.Conditions.Locations.IncludeLocations)
                 {
                     if ($IncludeLocationGUID -in "All", "AllTrusted")
@@ -550,7 +545,6 @@ function Get-TargetResource
             Write-Verbose -Message "Get-TargetResource: Processing ExcludeLocations"
             if ($Policy.Conditions.Locations.ExcludeLocations)
             {
-                $ExcludeLocations = @()
                 foreach ($ExcludeLocationGUID in $Policy.Conditions.Locations.ExcludeLocations)
                 {
                     if ($ExcludeLocationGUID -in "All", "AllTrusted")
@@ -590,7 +584,30 @@ function Get-TargetResource
 
 
         }
-
+        if ($Policy.SessionControls.CloudAppSecurity.IsEnabled)
+        {
+            $CloudAppSecurityType = [System.String]$Policy.SessionControls.CloudAppSecurity.CloudAppSecurityType
+        }
+        else
+        {
+            $CloudAppSecurityType = $null
+        }
+        if ($Policy.SessionControls.SignInFrequency.IsEnabled)
+        {
+            $SignInFrequencyType = [System.String]$Policy.SessionControls.SignInFrequency.Type
+        }
+        else
+        {
+            $SignInFrequencyType = $null
+        }
+        if ($Policy.SessionControls.PersistentBrowser.IsEnabled)
+        {
+            $PersistentBrowserMode = [System.String]$Policy.SessionControls.PersistentBrowser.Mode
+        }
+        else
+        {
+            $PersistentBrowserMode = $null
+        }
         $result = @{
             DisplayName                              = $Policy.DisplayName
             Id                                       = $Policy.Id
@@ -630,26 +647,31 @@ function Get-TargetResource
             #no translation needed
             ApplicationEnforcedRestrictionsIsEnabled = $Policy.SessionControls.ApplicationEnforcedRestrictions.IsEnabled
             #no translation or conversion needed
-            CloudAppSecurityIsEnabled                = $Policy.SessionControls.CloudAppSecurity.IsEnabled
-            #no translation or conversion needed
-            CloudAppSecurityType                     = [System.String]$Policy.SessionControls.CloudAppSecurity.CloudAppSecurityType
-            #no translation needed
-            SignInFrequencyValue                     = $Policy.SessionControls.SignInFrequency.Value
-            #no translation or conversion needed
-            SignInFrequencyType                      = [System.String]$Policy.SessionControls.SignInFrequency.Type
-            #no translation needed
-            SignInFrequencyIsEnabled                 = $Policy.SessionControls.SignInFrequency.IsEnabled
-            #no translation or conversion needed
-            PersistentBrowserMode                    = [System.String]$Policy.SessionControls.PersistentBrowser.Mode
-            #no translation needed
-            PersistentBrowserIsEnabled               = $Policy.SessionControls.PersistentBrowser.IsEnabled
-            #no translation or conversion needed
             #Standard part
             Ensure                                   = "Present"
             GlobalAdminAccount                       = $GlobalAdminAccount
             ApplicationId                            = $ApplicationId
             TenantId                                 = $TenantId
             CertificateThumbprint                    = $CertificateThumbprint
+        }
+        #adding CloudAppSecurity values if enabled
+        if ($Policy.SessionControls.CloudAppSecurity.IsEnabled)
+        {
+            $result += @{CloudAppSecurityIsEnabled = $Policy.SessionControls.CloudAppSecurity.IsEnabled }
+            $result += @{CloudAppSecurityType = [System.String]$Policy.SessionControls.CloudAppSecurity.CloudAppSecurityType }
+        }
+        #adding SignInFrequency values if enabled
+        if ($Policy.SessionControls.SignInFrequency.IsEnabled)
+        {
+            $result += @{SignInFrequencyIsEnabled = $Policy.SessionControls.SignInFrequency.IsEnabled }
+            $result += @{SignInFrequencyValue = $Policy.SessionControls.SignInFrequency.Value }
+            $result += @{SignInFrequencyType = [System.String]$Policy.SessionControls.SignInFrequency.Type }
+        }
+        #adding PersistentBrowser values if enabled
+        if ($Policy.SessionControls.PersistentBrowser.IsEnabled)
+        {
+            $result += @{PersistentBrowserIsEnabled = $Policy.SessionControls.PersistentBrowser.IsEnabled }
+            $result += @{PersistentBrowserMode = [System.String]$Policy.SessionControls.PersistentBrowser.Mode }
         }
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
