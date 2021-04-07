@@ -2,14 +2,14 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath "..\..\Unit" `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath "\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
@@ -22,14 +22,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.onmicrosoft.com", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
-                return @{}
+                return $Results
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
+                return @"
+    SPOSite Test
+    {
+        Url = https://contoso.sharepoint.com
+    }
+"@
             }
 
             Mock -CommandName Set-PnPTenantSite -MockWith {
@@ -48,9 +53,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-PnPContext -MockWith {
                 $context = @{} | Add-Member -MemberType ScriptMethod -Name ExecuteQuery -Value {
+                } -PassThru | Add-Member -MemberType ScriptMethod -Name Load -Value {
                 } -PassThru
 
                 return $context
+            }
+
+            Mock -CommandName Get-PnPWeb -MockWith {
+                $returnval = @{
+                    RegionalSettings = @{
+                        LocaleId = 1033
+                    }
+                } | Add-Member -MemberType ScriptMethod -Name Update -Value {
+                } -PassThru
+
+                return $returnval
             }
         }
 
@@ -91,7 +108,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     {
                         $site = @{
                             Url = "https://contoso.sharepoint.com/sites/TestSite"
-                        }| Add-Member -MemberType ScriptMethod -Name Update -Value {
+                        } | Add-Member -MemberType ScriptMethod -Name Update -Value {
                         } -PassThru
 
                         return $site
@@ -197,7 +214,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Title                          = "CommNik";
                         Template                       = "STS#3";
                         HubSiteId                      = "fcc3c848-6d2f-4821-a56c-980eea7990c5"
-                    }| Add-Member -MemberType ScriptMethod -Name Update -Value {
+                    } | Add-Member -MemberType ScriptMethod -Name Update -Value {
                     } -PassThru
 
                     return $site
@@ -289,7 +306,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Title                          = "CommNik";
                         Template                       = "SITEPAGEPUBLISHING#0";
                         HubUrl                         = "https://contoso.sharepoint.com/sites/hub"
-                    }| Add-Member -MemberType ScriptMethod -Name Update -Value {
+                    } | Add-Member -MemberType ScriptMethod -Name Update -Value {
                     } -PassThru
 
                     return $site
@@ -384,8 +401,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         StorageWarningLevel            = 25574400;
                         Title                          = "CommNik";
                         Template                       = "SITEPAGEPUBLISHING#0";
-                        HubSiteId                          = "fcc3c848-6d2f-4821-a56c-980eea7990c5"
-                    }| Add-Member -MemberType ScriptMethod -Name Update -Value {
+                        HubSiteId                      = "fcc3c848-6d2f-4821-a56c-980eea7990c5"
+                    } | Add-Member -MemberType ScriptMethod -Name Update -Value {
                     } -PassThru
 
                     return $site
@@ -480,7 +497,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         StorageWarningLevel            = 25574400;
                         Title                          = "CommNik";
                         Template                       = "SITEPAGEPUBLISHING#0";
-                        HubSiteId                          = "fcc3c848-6d2f-4821-a56c-980eea7990c5"
+                        HubSiteId                      = "fcc3c848-6d2f-4821-a56c-980eea7990c5"
                     } | Add-Member -MemberType ScriptMethod -Name Update -Value {
                     } -PassThru
 
@@ -569,7 +586,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             StorageWarningLevel            = 25574400;
                             Title                          = "CommNik";
                             Template                       = "SITEPAGEPUBLISHING#0";
-                            HubSiteId                          = "fcc3c848-6d2f-4821-a56c-980eea7990c5"
+                            HubSiteId                      = "fcc3c848-6d2f-4821-a56c-980eea7990c5"
                         }
                     }
                 }

@@ -54,9 +54,25 @@ function Show-M365DSCGUI
         $form.BackColor = [System.Drawing.Color]::White
         $form.WindowState = [System.Windows.Forms.FormWindowState]::Maximized
 
+        $pnlWarning = New-Object System.Windows.Forms.Panel
+        $pnlWarning.Width = $form.Width
+        $pnlWarning.Height = 50
+        $pnlWarning.BackColor = [System.Drawing.Color]::Yellow
+
+        $lblWarning = New-Object System.Windows.Forms.Label
+        $lblWarning.BackColor = [System.Drawing.Color]::Yellow
+        $lblWarning.Text = "We are aware of issues trying to export Exchange Online, Security & Compliance, SharePoint Online and OneDrive for Business components using the Graphical User Interface (freezes the export). We are actively working on a solution. As a work around, use the unattended commands using the -Quiet switch to perform the export."
+        $lblWarning.Font = [System.Drawing.Font]::new($lblWarning.Font.Name, 14, [System.Drawing.FontStyle]::Regular)
+        $lblWarning.Width = $form.Width
+        $lblWarning.Height = 50
+        $lblWarning.AutoSize = $false
+        $pnlWarning.Controls.Add($lblWarning)
+        $form.Controls.Add($pnlWarning)
+
         $pnlMain = New-Object System.Windows.Forms.Panel
         $pnlMain.Width = $form.Width
-        $pnlMain.Height = $form.Height
+        $pnlMain.Height = $form.Height - 50
+        $pnlMain.Top = 50
         $pnlMain.AutoScroll = $true
 
         #region EXO
@@ -769,7 +785,7 @@ function Show-M365DSCGUI
         $btnExtract.Text = "Start Extraction"
         $btnExtract.Add_Click( {
                 $SelectedComponents = @()
-                foreach ($panel in ($form.Controls[0].Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Panel" }))
+                foreach ($panel in ($form.Controls[1].Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Panel" }))
                 {
                     foreach ($checkbox in ($panel.Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Checkbox" }))
                     {
@@ -982,7 +998,7 @@ function Set-M365DSCGUIResourcesAvailability
 
     $allSelectedControls = Get-M365DSCComponentsForAuthenticationType -AuthenticationMethod $AuthMethods
 
-    $allControls = Get-M365DSCExportGuiAllControls -Control $Global:M365DSCExportGUI
+    $allControls = Get-M365DSCExportGUIAllControls -Control $Global:M365DSCExportGUI
 
     foreach ($control in $allControls)
     {

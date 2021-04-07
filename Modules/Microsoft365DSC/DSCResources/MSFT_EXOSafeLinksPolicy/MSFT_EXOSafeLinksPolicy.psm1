@@ -34,6 +34,10 @@ function Get-TargetResource
 
         [Parameter()]
         [Boolean]
+        $EnableSafeLinksForTeams = $false,
+
+        [Parameter()]
+        [Boolean]
         $IsEnabled,
 
         [Parameter()]
@@ -127,10 +131,16 @@ function Get-TargetResource
                 DoNotRewriteUrls         = $SafeLinksPolicy.DoNotRewriteUrls
                 DoNotTrackUserClicks     = $SafeLinksPolicy.DoNotTrackUserClicks
                 EnableForInternalSenders = $SafeLinksPolicy.EnableForInternalSenders
+                EnableSafeLinksForTeams  = $SafeLinksPolicy.EnableSafeLinksForTeams
                 IsEnabled                = $SafeLinksPolicy.IsEnabled
                 ScanUrls                 = $SafeLinksPolicy.ScanUrls
                 Ensure                   = 'Present'
                 GlobalAdminAccount       = $GlobalAdminAccount
+                ApplicationId            = $ApplicationId
+                CertificateThumbprint    = $CertificateThumbprint
+                CertificatePath          = $CertificatePath
+                CertificatePassword      = $CertificatePassword
+                TenantId                 = $TenantId
             }
 
             Write-Verbose -Message "Found SafeLinksPolicy $($Identity)"
@@ -196,6 +206,10 @@ function Set-TargetResource
         [Parameter()]
         [Boolean]
         $EnableForInternalSenders,
+
+        [Parameter()]
+        [Boolean]
+        $EnableSafeLinksForTeams = $false,
 
         [Parameter()]
         [Boolean]
@@ -310,6 +324,10 @@ function Test-TargetResource
         [Parameter()]
         [Boolean]
         $EnableForInternalSenders,
+
+        [Parameter()]
+        [Boolean]
+        $EnableSafeLinksForTeams = $false,
 
         [Parameter()]
         [Boolean]

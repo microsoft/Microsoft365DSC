@@ -27,7 +27,7 @@ function Get-TargetResource
 
         [Parameter()]
         [Boolean]
-        $EnableSafeDocs  = $false,
+        $EnableSafeDocs = $false,
 
         [Parameter()]
         [Boolean]
@@ -105,15 +105,20 @@ function Get-TargetResource
         else
         {
             $result = @{
-                IsSingleInstance                = "Yes"
-                Identity                        = $AtpPolicyForO365.Identity
-                AllowClickThrough               = $AtpPolicyForO365.AllowClickThrough
-                BlockUrls                       = $AtpPolicyForO365.BlockUrls
-                EnableATPForSPOTeamsODB         = $AtpPolicyForO365.EnableATPForSPOTeamsODB
-                EnableSafeDocs                  = $AtpPolicyForO365.EnableSafeDocs
-                EnableSafeLinksForO365Clients   = $AtpPolicyForO365.EnableSafeLinksForO365Clients
-                TrackClicks                     = $AtpPolicyForO365.TrackClicks
-                Ensure                          = 'Present'
+                IsSingleInstance              = "Yes"
+                Identity                      = $AtpPolicyForO365.Identity
+                AllowClickThrough             = $AtpPolicyForO365.AllowClickThrough
+                BlockUrls                     = $AtpPolicyForO365.BlockUrls
+                EnableATPForSPOTeamsODB       = $AtpPolicyForO365.EnableATPForSPOTeamsODB
+                EnableSafeDocs                = $AtpPolicyForO365.EnableSafeDocs
+                EnableSafeLinksForO365Clients = $AtpPolicyForO365.EnableSafeLinksForO365Clients
+                TrackClicks                   = $AtpPolicyForO365.TrackClicks
+                Ensure                        = 'Present'
+                ApplicationId                 = $ApplicationId
+                CertificateThumbprint         = $CertificateThumbprint
+                CertificatePath               = $CertificatePath
+                CertificatePassword           = $CertificatePassword
+                TenantId                      = $TenantId
             }
 
             Write-Verbose -Message "Found AtpPolicyForO365 $($Identity)"
@@ -175,7 +180,7 @@ function Set-TargetResource
 
         [Parameter()]
         [Boolean]
-        $EnableSafeDocs  = $false,
+        $EnableSafeDocs = $false,
 
         [Parameter()]
         [Boolean]
@@ -271,7 +276,7 @@ function Test-TargetResource
 
         [Parameter()]
         [Boolean]
-        $EnableSafeDocs  = $false,
+        $EnableSafeDocs = $false,
 
         [Parameter()]
         [Boolean]
@@ -398,7 +403,7 @@ function Export-TargetResource
             }
             else
             {
-                Write-Host "`r`n" -NoNewLine
+                Write-Host "`r`n" -NoNewline
             }
             $i = 1
             foreach ($atpPolicy in $ATPPolicies)
@@ -413,7 +418,7 @@ function Export-TargetResource
                     CertificatePassword   = $CertificatePassword
                     CertificatePath       = $CertificatePath
                 }
-                Write-Host "    |---[$i/$($ATPPolicies.Length)] $($atpPolicy.Identiy)" -NoNewLine
+                Write-Host "    |---[$i/$($ATPPolicies.Length)] $($atpPolicy.Identiy)" -NoNewline
                 $Results = Get-TargetResource @Params
                 if ($Results.Ensure -eq "Present")
                 {

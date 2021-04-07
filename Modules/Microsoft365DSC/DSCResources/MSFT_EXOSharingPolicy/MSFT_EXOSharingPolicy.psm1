@@ -90,12 +90,17 @@ function Get-TargetResource
         else
         {
             $result = @{
-                Name               = $SharingPolicy.Name
-                Default            = $SharingPolicy.Default
-                Domains            = $SharingPolicy.Domains
-                Enabled            = $SharingPolicy.Enabled
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
+                Name                  = $SharingPolicy.Name
+                Default               = $SharingPolicy.Default
+                Domains               = $SharingPolicy.Domains
+                Enabled               = $SharingPolicy.Enabled
+                Ensure                = 'Present'
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                TenantId              = $TenantId
             }
 
             Write-Verbose -Message "Found Sharing Policy $($Name)"

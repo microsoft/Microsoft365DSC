@@ -393,7 +393,7 @@ function Export-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
                 GlobalAdminAccount    = $GlobalAdminAccount
             }
-            $Results = Get-TargetResource @Paarams
+            $Results = Get-TargetResource @Params
             if ($Results.Ensure -eq "Present")
             {
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -454,6 +454,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
+        Write-Host $Global:M365DSCEmojiRedX
         return ""
     }
 }

@@ -128,6 +128,11 @@ function Get-TargetResource
                 SentToMemberOf            = $SafeLinksRule.SentToMemberOf
                 GlobalAdminAccount        = $GlobalAdminAccount
                 Ensure                    = 'Present'
+                ApplicationId             = $ApplicationId
+                CertificateThumbprint     = $CertificateThumbprint
+                CertificatePath           = $CertificatePath
+                CertificatePassword       = $CertificatePassword
+                TenantId                  = $TenantId
             }
 
             if ('Enabled' -eq $SafeLinksRule.State)
@@ -499,7 +504,7 @@ function Export-TargetResource
     }
     catch
     {
-        Wtry
+        try
         {
             Write-Verbose -Message $_
             $tenantIdValue = ""

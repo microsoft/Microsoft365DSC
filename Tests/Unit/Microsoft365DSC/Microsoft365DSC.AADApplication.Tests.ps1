@@ -2,14 +2,14 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath "..\..\Unit" `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath "\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
@@ -51,6 +51,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
+            Mock -CommandName Get-AzureADServicePrincipal -MockWith {
+                $servicePrincipal = New-Object PSCustomObject
+                $servicePrincipal | Add-Member -MemberType NoteProperty -Name DisplayName -Value "Microsoft Graph"
+                $servicePrincipal | Add-Member -MemberType NoteProperty -Name ObjectID -Value "12345-12345-12345-12345-12345"
+                return $servicePrincipal
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credential"
             }
@@ -60,21 +67,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The application should exist but it does not" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName                   = "App1"
-                    AvailableToOtherTenants       = $false
-                    GroupMembershipClaims         = "0"
-                    Homepage                      = "https://app.contoso.com"
-                    IdentifierUris                = "https://app.contoso.com"
-                    KnownClientApplications       = ""
-                    LogoutURL                     = "https://app.contoso.com/logout"
-                    Oauth2AllowImplicitFlow       = $false
-                    Oauth2AllowUrlPathMatching    = $false
-                    Oauth2RequirePostResponse     = $false
-                    PublicClient                  = $false
-                    ReplyURLs                     = @("https://app.contoso.com")
-                    SamlMetadataUrl               = ""
-                    Ensure                        = "Present"
-                    GlobalAdminAccount            = $GlobalAdminAccount
+                    DisplayName                = "App1"
+                    AvailableToOtherTenants    = $false
+                    GroupMembershipClaims      = "0"
+                    Homepage                   = "https://app.contoso.com"
+                    IdentifierUris             = "https://app.contoso.com"
+                    KnownClientApplications    = ""
+                    LogoutURL                  = "https://app.contoso.com/logout"
+                    Oauth2AllowImplicitFlow    = $false
+                    Oauth2AllowUrlPathMatching = $false
+                    Oauth2RequirePostResponse  = $false
+                    PublicClient               = $false
+                    ReplyURLs                  = @("https://app.contoso.com")
+                    SamlMetadataUrl            = ""
+                    Ensure                     = "Present"
+                    GlobalAdminAccount         = $GlobalAdminAccount
                 }
 
                 Mock -CommandName Get-AzureADApplication -MockWith {
@@ -98,21 +105,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The application exists but it should not" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName                   = "App1"
-                    AvailableToOtherTenants       = $false
-                    GroupMembershipClaims         = "0"
-                    Homepage                      = "https://app.contoso.com"
-                    IdentifierUris                = "https://app.contoso.com"
-                    KnownClientApplications       = ""
-                    LogoutURL                     = "https://app.contoso.com/logout"
-                    Oauth2AllowImplicitFlow       = $false
-                    Oauth2AllowUrlPathMatching    = $false
-                    Oauth2RequirePostResponse     = $false
-                    PublicClient                  = $false
-                    ReplyURLs                     = "https://app.contoso.com"
-                    SamlMetadataUrl               = ""
-                    Ensure                        = "Absent"
-                    GlobalAdminAccount            = $GlobalAdminAccount
+                    DisplayName                = "App1"
+                    AvailableToOtherTenants    = $false
+                    GroupMembershipClaims      = "0"
+                    Homepage                   = "https://app.contoso.com"
+                    IdentifierUris             = "https://app.contoso.com"
+                    KnownClientApplications    = ""
+                    LogoutURL                  = "https://app.contoso.com/logout"
+                    Oauth2AllowImplicitFlow    = $false
+                    Oauth2AllowUrlPathMatching = $false
+                    Oauth2RequirePostResponse  = $false
+                    PublicClient               = $false
+                    ReplyURLs                  = "https://app.contoso.com"
+                    SamlMetadataUrl            = ""
+                    Ensure                     = "Absent"
+                    GlobalAdminAccount         = $GlobalAdminAccount
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -156,21 +163,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The app exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName                   = "App1"
-                    AvailableToOtherTenants       = $false
-                    GroupMembershipClaims         = "0"
-                    Homepage                      = "https://app.contoso.com"
-                    IdentifierUris                = "https://app.contoso.com"
-                    KnownClientApplications       = ""
-                    LogoutURL                     = "https://app.contoso.com/logout"
-                    Oauth2AllowImplicitFlow       = $false
-                    Oauth2AllowUrlPathMatching    = $false
-                    Oauth2RequirePostResponse     = $false
-                    PublicClient                  = $false
-                    ReplyURLs                     = "https://app.contoso.com"
-                    SamlMetadataUrl               = ""
-                    Ensure                        = "Present"
-                    GlobalAdminAccount            = $GlobalAdminAccount
+                    DisplayName                = "App1"
+                    AvailableToOtherTenants    = $false
+                    GroupMembershipClaims      = "0"
+                    Homepage                   = "https://app.contoso.com"
+                    IdentifierUris             = "https://app.contoso.com"
+                    KnownClientApplications    = ""
+                    LogoutURL                  = "https://app.contoso.com/logout"
+                    Oauth2AllowImplicitFlow    = $false
+                    Oauth2AllowUrlPathMatching = $false
+                    Oauth2RequirePostResponse  = $false
+                    PublicClient               = $false
+                    ReplyURLs                  = "https://app.contoso.com"
+                    SamlMetadataUrl            = ""
+                    Ensure                     = "Present"
+                    GlobalAdminAccount         = $GlobalAdminAccount
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -210,21 +217,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Values are not in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName                   = "App1"
-                    AvailableToOtherTenants       = $false
-                    GroupMembershipClaims         = "0"
-                    Homepage                      = "https://app1.contoso.com" #drift
-                    IdentifierUris                = "https://app.contoso.com"
-                    KnownClientApplications       = ""
-                    LogoutURL                     = "https://app.contoso.com/logout"
-                    Oauth2AllowImplicitFlow       = $false
-                    Oauth2AllowUrlPathMatching    = $false
-                    Oauth2RequirePostResponse     = $false
-                    PublicClient                  = $false
-                    ReplyURLs                     = "https://app.contoso.com"
-                    SamlMetadataUrl               = ""
-                    Ensure                        = "Present"
-                    GlobalAdminAccount            = $GlobalAdminAccount
+                    DisplayName                = "App1"
+                    AvailableToOtherTenants    = $false
+                    GroupMembershipClaims      = "0"
+                    Homepage                   = "https://app1.contoso.com" #drift
+                    IdentifierUris             = "https://app.contoso.com"
+                    KnownClientApplications    = ""
+                    LogoutURL                  = "https://app.contoso.com/logout"
+                    Oauth2AllowImplicitFlow    = $false
+                    Oauth2AllowUrlPathMatching = $false
+                    Oauth2RequirePostResponse  = $false
+                    PublicClient               = $false
+                    ReplyURLs                  = "https://app.contoso.com"
+                    SamlMetadataUrl            = ""
+                    Ensure                     = "Present"
+                    GlobalAdminAccount         = $GlobalAdminAccount
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -263,6 +270,68 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It "Should call the set method" {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName 'Set-AzureADApplication' -Exactly 1
+            }
+        }
+
+        Context -Name "Assigning Permissions to a new Application" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName                = "App1"
+                    AvailableToOtherTenants    = $false
+                    GroupMembershipClaims      = "0"
+                    IdentifierUris             = "https://app.contoso.com"
+                    KnownClientApplications    = ""
+                    LogoutURL                  = "https://app.contoso.com/logout"
+                    Oauth2AllowImplicitFlow    = $false
+                    Oauth2AllowUrlPathMatching = $false
+                    Oauth2RequirePostResponse  = $false
+                    PublicClient               = $false
+                    ReplyURLs                  = "https://app.contoso.com"
+                    SamlMetadataUrl            = ""
+                    Permissions                = @(New-CimInstance -ClassName MSFT_AADApplicationPermission -Property @{
+                            Name                = 'User.Read'
+                            Type                = 'Delegated'
+                            SourceAPI           = 'Microsoft Graph'
+                            AdminConsentGranted = $false
+                        } -ClientOnly;
+                        New-CimInstance -ClassName MSFT_AADApplicationPermission -Property @{
+                            Name                = 'User.ReadWrite.All'
+                            type                = 'Delegated'
+                            SourceAPI           = 'Microsoft Graph'
+                            AdminConsentGranted = $True
+                        } -ClientOnly;
+                        New-CimInstance -ClassName MSFT_AADApplicationPermission -Property @{
+                            Name                = 'User.Read.All'
+                            type                = 'AppOnly'
+                            SourceAPI           = 'Microsoft Graph'
+                            AdminConsentGranted = $True
+                        } -ClientOnly;
+                    )
+                    Ensure                     = "Present"
+                    GlobalAdminAccount         = $GlobalAdminAccount
+                }
+
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return "Credential"
+                }
+
+                Mock -CommandName Get-AzureADApplication -MockWith {
+                    return $null
+                }
+            }
+
+            It "Should return values from the get method" {
+                Get-TargetResource @testParams
+                Should -Invoke -CommandName "Get-AzureADApplication" -Exactly 2
+            }
+
+            It 'Should return false from the test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It "Should call the new method" {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName 'New-AzureADApplication' -Exactly 1
             }
         }
 

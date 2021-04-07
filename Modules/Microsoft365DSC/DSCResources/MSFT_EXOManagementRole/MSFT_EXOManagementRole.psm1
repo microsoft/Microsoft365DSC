@@ -69,13 +69,9 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
-    $nullReturn = @{
-        Name               = $Name
-        Parent             = $Parent
-        Description        = $Description
-        Ensure             = 'Absent'
-        GlobalAdminAccount = $GlobalAdminAccount
-    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
+
     try
     {
         $AllManagementRoles = Get-ManagementRole -ErrorAction Stop
@@ -85,19 +81,21 @@ function Get-TargetResource
         if ($null -eq $ManagementRole)
         {
             Write-Verbose -Message "Management Role $($Name) does not exist."
-
-
-
             return $nullReturn
         }
         else
         {
             $result = @{
-                Name               = $ManagementRole.Name
-                Parent             = $ManagementRole.Parent
-                Description        = $ManagementRole.Description
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
+                Name                  = $ManagementRole.Name
+                Parent                = $ManagementRole.Parent
+                Description           = $ManagementRole.Description
+                Ensure                = 'Present'
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                TenantId              = $TenantId
             }
 
             Write-Verbose -Message "Found Management Role $($Name)"

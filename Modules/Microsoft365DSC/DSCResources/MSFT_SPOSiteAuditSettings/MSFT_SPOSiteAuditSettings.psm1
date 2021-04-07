@@ -92,7 +92,7 @@ function Get-TargetResource
             {
                 $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
             }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+            Add-M365DSCEvent -Message ($_ + " {Site Collection: $Url}") -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
                 -TenantId $tenantIdValue
         }
@@ -281,6 +281,23 @@ function Export-TargetResource
 
         $i = 1
         Write-Host "`r`n" -NoNewline
+
+        $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
+        if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
+        {
+            $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+
+            if ($organization.IndexOf(".") -gt 0)
+            {
+                $principal = $organization.Split(".")[0]
+            }
+        }
+        else
+        {
+            $organization = $TenantId
+            $principal = $organization.Split(".")[0]
+        }
+
         $dscContent = ""
         foreach ($site in $sites)
         {
@@ -307,11 +324,20 @@ function Export-TargetResource
                 }
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
-                $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                $partialContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -GlobalAdminAccount $GlobalAdminAccount
+
+                # Make the Url parameterized
+                if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+                        $partialContent.ToLower().Contains($principal.ToLower()))
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
+                }
+                $dscContent += $partialContent
+
                 Write-Host $Global:M365DSCEmojiGreenCheckMark
             }
             catch
@@ -320,6 +346,12 @@ function Export-TargetResource
             }
             $i++
         }
+
+        if ($i -eq 1)
+        {
+            Write-Host ""
+        }
+
         return $dscContent
     }
     catch

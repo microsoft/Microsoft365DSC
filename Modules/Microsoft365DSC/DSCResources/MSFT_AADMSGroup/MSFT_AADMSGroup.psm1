@@ -97,6 +97,7 @@ function Get-TargetResource
             }
             catch
             {
+                Write-Verbose -Message "Couldn't get group by ID, trying by name"
                 $Group = Get-AzureADMSGroup -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
                 if ($Group.Length -gt 1)
                 {
@@ -117,6 +118,7 @@ function Get-TargetResource
 
         if ($null -eq $Group)
         {
+            Write-Verbose -Message "Group was null, returning null"
             return $nullReturn
         }
         else
@@ -294,13 +296,15 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Present' -and $currentGroup.Ensure -eq 'Absent')
     {
-        $currentParameters.Remove("Id")
+        Write-Verbose -Message "Creating new group {$DisplayName}"
+        $currentParameters.Remove("Id") | Out-Null
         try
         {
             New-AzureADMSGroup @currentParameters
         }
         catch
         {
+            Write-Verbose -Message $_
             New-M365DSCLogEntry -Error $_ -Message "Couldn't create group $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
         }
     }

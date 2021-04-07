@@ -308,7 +308,7 @@ function Export-TargetResource
 
     try
     {
-        Write-Host "`r`n    [1/2] Public" -NoNewline
+        Write-Host "`r`n    |---[1/2] Public" -NoNewline
         $Results = Get-TargetResource @Params
         $dscContent = ""
         if ($null -ne $Results)
@@ -321,6 +321,7 @@ function Export-TargetResource
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
         }
+        Write-Host $Global:M365DSCEmojiGreenCheckmark
 
         $Params = @{
             CdnType               = 'Private'

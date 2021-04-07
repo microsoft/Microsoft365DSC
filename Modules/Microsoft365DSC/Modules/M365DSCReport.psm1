@@ -8,7 +8,11 @@ function New-M365DSCConfigurationToHTML
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $OutputPath
+        $OutputPath,
+
+        [Parameter()]
+        [Switch]
+        $SortProperties
     )
 
     $TemplateFile = Get-Item $ConfigurationPath
@@ -29,7 +33,16 @@ function New-M365DSCConfigurationToHTML
         $partHTML += "<strong>" + $resource.ResourceName + "</strong>"
         $partHTML += "</th></tr>"
 
-        foreach ($property in $resource.Keys)
+        if ($SortProperties) 
+        {
+            $properties = $resource.Keys | Sort-Object
+        }
+        else 
+        {
+            $properties = $resource.Keys
+        }
+
+        foreach ($property in $properties)
         {
             if ($property -ne "ResourceName" -and $property -ne "GlobalAdminAccount")
             {
@@ -506,6 +519,10 @@ function Get-M365DSCResourceKey
     elseif ($Resource.Contains("Key") -and $Resource.ResourceName -eq 'SPOStorageEntity')
     {
         return @("Key")
+    }
+    elseif ($Resource.Contains("Usage"))
+    {
+        return @("Usage")
     }
 }
 

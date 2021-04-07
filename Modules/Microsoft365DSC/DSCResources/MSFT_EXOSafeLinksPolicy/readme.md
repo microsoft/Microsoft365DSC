@@ -69,6 +69,15 @@ EnableForInternalSenders
 - Description: This parameter specifies whether the policy is enabled
   for internal senders. $true or $false
 
+EnableSafeLinksForTeams
+
+- Required: No
+- Description: The EnableSafeLinksForTeams parameter specifies whether Safe Links
+  is enabled for Microsoft Teams. Valid values are:
+  $true: Safe Links is enabled for Teams. If a protected user clicks a malicious link in
+  a Teams conversation, group chat, or from channels, a warning page will appear in the default web browser.
+  $false: Safe Links isn't enabled for Teams. This is the default value.
+
 IsEnabled
 
 - Required: No

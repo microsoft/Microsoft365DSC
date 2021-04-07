@@ -69,16 +69,8 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = @{
-        Organization                          = $Organization
-        MailTipsAllTipsEnabled                = $null
-        MailTipsGroupMetricsEnabled           = $null
-        MailTipsLargeAudienceThreshold        = $null
-        MailTipsMailboxSourcedTipsEnabled     = $null
-        MailTipsExternalRecipientsTipsEnabled = $null
-        Ensure                                = "Absent"
-        GlobalAdminAccount                    = $null
-    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
     if ($Global:CurrentModeIsExport)
     {
@@ -111,6 +103,11 @@ function Get-TargetResource
             MailTipsExternalRecipientsTipsEnabled = $OrgConfig.MailTipsExternalRecipientsTipsEnabled
             Ensure                                = "Present"
             GlobalAdminAccount                    = $GlobalAdminAccount
+            ApplicationId                         = $ApplicationId
+            CertificateThumbprint                 = $CertificateThumbprint
+            CertificatePath                       = $CertificatePath
+            CertificatePassword                   = $CertificatePassword
+            TenantId                              = $TenantId
         }
 
         Write-Verbose -Message "Found configuration of the Mailtips for $($Organization)"

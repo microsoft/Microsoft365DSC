@@ -194,7 +194,7 @@ function Start-M365DSCConfigurationExtract
         {
             $Components = $Components.Substring(0, $Components.Length - 1)
         }
-        $unattendedCommand += $Components + ")"
+        $unattendedCommand += $Components + ") -GlobalAdminAccount (Get-Credential)"
         Write-Host "[INFO]" -NoNewline -ForegroundColor Cyan
         Write-Host " You can perform an equivalent unattended Export operation by running the following command:" -ForegroundColor Gray
         Write-Host $unattendedCommand -ForegroundColor Blue

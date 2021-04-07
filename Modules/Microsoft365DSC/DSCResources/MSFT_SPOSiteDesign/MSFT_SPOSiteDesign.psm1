@@ -13,7 +13,7 @@ function Get-TargetResource
         $SiteScriptNames,
 
         [Parameter()]
-        [ValidateSet("CommunicationSite", "TeamSite")]
+        [ValidateSet("CommunicationSite", "TeamSite", "GrouplessTeamSite")]
         [System.String]
         $WebTemplate,
 
@@ -111,6 +111,10 @@ function Get-TargetResource
         {
             $webtemp = "TeamSite"
         }
+        elseif ($siteDesign.WebTemplate -eq "1")
+        {
+            $webtemp = "GrouplessTeamSite"
+        }
         else
         {
             $webtemp = "CommunicationSite"
@@ -170,7 +174,7 @@ function Set-TargetResource
         $Title,
 
         [Parameter()]
-        [ValidateSet("CommunicationSite", "TeamSite")]
+        [ValidateSet("CommunicationSite", "TeamSite", "GrouplessTeamSite")]
         [System.String]
         $WebTemplate,
 
@@ -300,7 +304,7 @@ function Test-TargetResource
         $Title,
 
         [Parameter()]
-        [ValidateSet("CommunicationSite", "TeamSite")]
+        [ValidateSet("CommunicationSite", "TeamSite", "GrouplessTeamSite")]
         [System.String]
         $WebTemplate,
 
@@ -439,7 +443,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$designs = Get-PnPSiteDesign -ErrrAction Stop
+        [array]$designs = Get-PnPSiteDesign -ErrorAction Stop
         Write-Host "`r`n" -NoNewline
         foreach ($design in $designs)
         {

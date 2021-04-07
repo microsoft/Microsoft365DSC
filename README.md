@@ -53,9 +53,9 @@ and be released to [PowerShell Gallery](https://www.powershellgallery.com/).
 
 ## How to Install
 
-In order to acquire the latest
+To acquire the latest
 bits of the module from a machine that has internet connectivity,
-simply run the following PowerShell line:
+run the following PowerShell line:
 
 ```powershell
 Install-Module -Name Microsoft365DSC -Force -AllowClobber
@@ -66,10 +66,10 @@ Install-Module -Name Microsoft365DSC -Force -AllowClobber
 Microsoft365DSC captures Telemetry data about the names of the resources
 in which a configuration drift has been detected, along with the type
 of exceptions being thrown by errors in the various modules. While no
-sensitive data is ever being captured, App Insights which is used for
-the analytics of the Telemetry, does capture information about the city
-where the telemetry entries where captured from by default. Users can
-opt out to prevent telemetry to be sent back to the Microsoft365DSC team
+sensitive data is ever captured, App Insights, which performs 
+telemetry analytics, captures information about the city
+where the telemetry entries were captured by default. Users can
+opt-out to prevent telemetry from being sent back to the Microsoft365DSC team
 by running the following command:
 
 ```powershell

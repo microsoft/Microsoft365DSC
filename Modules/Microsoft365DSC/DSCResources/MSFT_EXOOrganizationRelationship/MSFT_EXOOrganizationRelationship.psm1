@@ -131,28 +131,9 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
-    $nullReturn = @{
-        ArchiveAccessEnabled  = $ArchiveAccessEnabled
-        DeliveryReportEnabled = $DeliveryReportEnabled
-        DomainNames           = $DomainNames
-        Enabled               = $Enabled
-        FreeBusyAccessEnabled = $FreeBusyAccessEnabled
-        FreeBusyAccessLevel   = $FreeBusyAccessLevel
-        FreeBusyAccessScope   = $FreeBusyAccessScope
-        MailboxMoveEnabled    = $MailboxMoveEnabled
-        MailTipsAccessEnabled = $MailTipsAccessEnabled
-        MailTipsAccessLevel   = $MailTipsAccessLevel
-        MailTipsAccessScope   = $MailTipsAccessScope
-        Name                  = $Name
-        OrganizationContact   = $OrganizationContact
-        PhotosEnabled         = $PhotosEnabled
-        TargetApplicationUri  = $TargetApplicationUri
-        TargetAutodiscoverEpr = $TargetAutodiscoverEpr
-        TargetOwaURL          = $TargetOwaURL
-        TargetSharingEpr      = $TargetSharingEpr
-        Ensure                = 'Absent'
-        GlobalAdminAccount    = $GlobalAdminAccount
-    }
+    $nullReturn = $nullReturn
+    $nullReturn.Ensure = "Absent"
+
     try
     {
         $AllOrganizationRelationships = Get-OrganizationRelationship -ErrorAction Stop
@@ -183,6 +164,11 @@ function Get-TargetResource
                 PhotosEnabled         = $OrganizationRelationship.PhotosEnabled
                 Ensure                = 'Present'
                 GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                TenantId              = $TenantId
             }
 
             if ($OrganizationRelationship.TargetApplicationUri)

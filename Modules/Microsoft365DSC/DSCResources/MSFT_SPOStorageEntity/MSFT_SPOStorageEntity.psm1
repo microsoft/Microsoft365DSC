@@ -427,14 +427,30 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            $partialContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+
+            # Make the Url parameterized
+            if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+                    $partialContent.ToLower().Contains($principal.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com"
+                $partialContent = $partialContent -ireplace [regex]::Escape('https://' + $principal + '-admin.sharepoint.com'), "https://`$(`$OrganizationName.Split('.')[0])-admin.sharepoint.com"
+            }
+            $dscContent += $partialContent
+
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckmark
         }
+
+        if ($i -eq 1)
+        {
+            Write-Host ""
+        }
+
         return $dscContent
     }
     catch

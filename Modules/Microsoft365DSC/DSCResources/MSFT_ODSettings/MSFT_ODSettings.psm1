@@ -374,17 +374,6 @@ function Set-TargetResource
     Write-Verbose -Message "Setting other configuration parameters"
     Write-Verbose -Message ($Options | Out-String)
 
-    if ($Options.ContainsKey("ExcludedFileExtensions"))
-    {
-        Write-Verbose -Message "Updating ExcludedFileExtensions"
-        $BlockedFileTypes = ""
-        foreach ($fileTypes in $Options.ExcludedFileExtensions)
-        {
-            $BlockedFileTypes += $fileTypes + ';'
-        }
-        $Options["ExcludedFileExtensions"] = $BlockedFileTypes
-    }
-
     if ($Options.ContainsKey("DomainGuids"))
     {
         Write-Verbose -Message "Updating DomainGuids"

@@ -94,9 +94,9 @@ function Get-TargetResource
         }
         catch
         {
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
             $Message = "Error calling {Get-HostedConnectionFilterPolicy}"
             New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+            return $nullReturn
         }
 
         $HostedConnectionFilterPolicy = $HostedConnectionFilterPolicys | Where-Object -FilterScript { $_. Identity -eq $Identity }
@@ -108,14 +108,19 @@ function Get-TargetResource
         else
         {
             $result = @{
-                Ensure             = 'Present'
-                Identity           = $Identity
-                AdminDisplayName   = $HostedConnectionFilterPolicy.AdminDisplayName
-                EnableSafeList     = $HostedConnectionFilterPolicy.EnableSafeList
-                IPAllowList        = $HostedConnectionFilterPolicy.IPAllowList
-                IPBlockList        = $HostedConnectionFilterPolicy.IPBlockList
-                MakeDefault        = $false
-                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure                = 'Present'
+                Identity              = $Identity
+                AdminDisplayName      = $HostedConnectionFilterPolicy.AdminDisplayName
+                EnableSafeList        = $HostedConnectionFilterPolicy.EnableSafeList
+                IPAllowList           = $HostedConnectionFilterPolicy.IPAllowList
+                IPBlockList           = $HostedConnectionFilterPolicy.IPBlockList
+                MakeDefault           = $false
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                TenantId              = $TenantId
             }
 
             if ($AntiPhishRule.IsDefault)

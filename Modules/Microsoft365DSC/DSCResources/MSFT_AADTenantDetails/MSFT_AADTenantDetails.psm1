@@ -168,9 +168,24 @@ function Set-TargetResource
 
 
     $currentParameters = $PSBoundParameters
-    $currentParameters
-    $currentParameters.Remove("GlobalAdminAccount") | Out-Null
-    $currentParameters.Remove("isSingleInstance") | Out-Null
+    $currentParameters.Remove("IsSingleInstance") | Out-Null
+
+    if ($currentParameters.ContainsKey("GlobalAdminAccount"))
+    {
+        $currentParameters.Remove("GlobalAdminAccount") | Out-Null
+    }
+    if ($currentParameters.ContainsKey("ApplicationId"))
+    {
+        $currentParameters.Remove("ApplicationId") | Out-Null
+    }
+    if ($currentParameters.ContainsKey("TenantId"))
+    {
+        $currentParameters.Remove("TenantId") | Out-Null
+    }
+    if ($currentParameters.ContainsKey("CertificateThumbprint"))
+    {
+        $currentParameters.Remove("CertificateThumbprint") | Out-Null
+    }
     try
     {
         Set-AzureADTenantDetail @currentParameters

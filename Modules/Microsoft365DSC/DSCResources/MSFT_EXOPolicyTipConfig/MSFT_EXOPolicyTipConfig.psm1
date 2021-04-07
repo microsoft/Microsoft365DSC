@@ -89,10 +89,15 @@ function Get-TargetResource
         else
         {
             $result = @{
-                Name               = $PolicyTipConfig.Name
-                Value              = $PolicyTipConfig.Value
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
+                Name                  = $PolicyTipConfig.Name
+                Value                 = $PolicyTipConfig.Value
+                Ensure                = 'Present'
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                TenantId              = $TenantId
             }
 
             Write-Verbose -Message "Found Policy Tip Config $($Name)"

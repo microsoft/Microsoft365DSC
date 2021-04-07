@@ -208,11 +208,11 @@ function Set-TargetResource
         Write-Verbose -Message "Removing theme $($Name)"
         try
         {
-            Remove-PnPTenantTheme -Identity $Name -Confirm:$false
+            Remove-PnPTenantTheme -Identity $Name
         }
         catch
         {
-            $Message = "The SPOTheme $($theme) does not exist and for that cannot be removed."
+            $Message = "The SPOTheme $($Name) does not exist and for that cannot be removed."
             New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
             Write-Error $Message
         }
