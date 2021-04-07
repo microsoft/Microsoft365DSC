@@ -76,11 +76,11 @@ function Get-TargetResource
         #ConditionalAccessDevicesCondition
         [Parameter()]
         [System.String[]]
-        $IncludeDeviceStates,
+        $includeDevices,
 
         [Parameter()]
         [System.String[]]
-        $ExcludeDeviceStates,
+        $excludeDevices,
 
         #Further conditions
         [Parameter()]
@@ -614,9 +614,9 @@ function Get-TargetResource
             #no translation needed
             IncludeLocations                         = $IncludeLocations
             ExcludeLocations                         = $ExcludeLocations
-            IncludeDeviceStates                      = [System.String[]]$Policy.Conditions.Devices.IncludeDeviceStates
+            includeDevices                           = [System.String[]]$Policy.Conditions.Devices.includeDevices
             #no translation needed
-            ExcludeDeviceStates                      = [System.String[]]$Policy.Conditions.Devices.ExcludeDeviceStates
+            excludeDevices                           = [System.String[]]$Policy.Conditions.Devices.excludeDevices
             #no translation needed
             UserRiskLevels                           = [System.String[]]$Policy.Conditions.UserRiskLevels
             #no translation needed
@@ -733,11 +733,11 @@ function Set-TargetResource
         #ConditionalAccessDevicesCondition
         [Parameter()]
         [System.String[]]
-        $IncludeDeviceStates,
+        $includeDevices,
 
         [Parameter()]
         [System.String[]]
-        $ExcludeDeviceStates,
+        $excludeDevices,
 
         #Further conditions
         [Parameter()]
@@ -1373,13 +1373,13 @@ function Set-TargetResource
         }
 
         Write-Verbose -Message "Set-Targetresource: process device states"
-        if ($IncludeDeviceStates -or $ExcludeDeviceStates)
+        if ($includeDevices -or $excludeDevices)
         {
             #create and provision Device condition object if used
             $conditions.Devices = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessDevicesCondition
-            $conditions.Devices.IncludeDeviceStates = $IncludeDeviceStates
+            $conditions.Devices.includeDevices = $includeDevices
             #no translation or conversion needed
-            $conditions.Devices.ExcludeDeviceStates = $ExcludeDeviceStates
+            $conditions.Devices.excludeDevices = $excludeDevices
             #no translation or conversion needed
         }
         Write-Verbose -Message "Set-Targetresource: process risk levels and app types"
@@ -1627,11 +1627,11 @@ function Test-TargetResource
         #ConditionalAccessDevicesCondition
         [Parameter()]
         [System.String[]]
-        $IncludeDeviceStates,
+        $includeDevices,
 
         [Parameter()]
         [System.String[]]
-        $ExcludeDeviceStates,
+        $excludeDevices,
 
         #Further conditions
         [Parameter()]

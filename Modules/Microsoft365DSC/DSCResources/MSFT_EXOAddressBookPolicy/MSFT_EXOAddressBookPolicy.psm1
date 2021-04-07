@@ -93,13 +93,18 @@ function Get-TargetResource
         else
         {
             $result = @{
-                Name               = $AddressBookPolicy.Name
-                AddressLists       = $AddressBookPolicy.AddressLists
-                GlobalAddressList  = $AddressBookPolicy.GlobalAddressList
-                OfflineAddressBook = $AddressBookPolicy.OfflineAddressBook
-                RoomList           = $AddressBookPolicy.RoomList
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
+                Name                  = $AddressBookPolicy.Name
+                AddressLists          = $AddressBookPolicy.AddressLists
+                GlobalAddressList     = $AddressBookPolicy.GlobalAddressList
+                OfflineAddressBook    = $AddressBookPolicy.OfflineAddressBook
+                RoomList              = $AddressBookPolicy.RoomList
+                Ensure                = 'Present'
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                TenantId              = $TenantId
             }
 
             Write-Verbose -Message "Found Address Book Policy $($Name)"

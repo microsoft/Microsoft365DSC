@@ -119,6 +119,11 @@ function Get-TargetResource
                 TargetAutodiscoverEpr = $TargetAutodiscoverEpr
                 GlobalAdminAccount    = $GlobalAdminAccount
                 Ensure                = 'Present'
+                ApplicationId         = $ApplicationId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                TenantId              = $TenantId
             }
 
             Write-Verbose -Message "Found AvailabilityAddressSpace $($Identity)"

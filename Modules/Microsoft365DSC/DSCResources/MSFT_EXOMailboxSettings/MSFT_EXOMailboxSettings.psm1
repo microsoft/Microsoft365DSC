@@ -57,12 +57,8 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = @{
-        DisplayName = $DisplayName
-        TimeZone    = $null
-        Locale      = $null
-        Ensure      = "Absent"
-    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
     if ($Global:CurrentModeIsExport)
     {
@@ -92,11 +88,16 @@ function Get-TargetResource
     }
 
     $result = @{
-        DisplayName        = $DisplayName
-        TimeZone           = $mailboxSettings.TimeZone
-        Locale             = $mailboxSettings.Language.Name
-        Ensure             = "Present"
-        GlobalAdminAccount = $GlobalAdminAccount
+        DisplayName           = $DisplayName
+        TimeZone              = $mailboxSettings.TimeZone
+        Locale                = $mailboxSettings.Language.Name
+        Ensure                = "Present"
+        GlobalAdminAccount    = $GlobalAdminAccount
+        ApplicationId         = $ApplicationId
+        CertificateThumbprint = $CertificateThumbprint
+        CertificatePath       = $CertificatePath
+        CertificatePassword   = $CertificatePassword
+        TenantId              = $TenantId
     }
     Write-Verbose -Message "Found an existing instance of Mailbox '$($DisplayName)'"
     return $result

@@ -78,15 +78,8 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
     }
 
-    $nullReturn = @{
-        Name                              = $Name
-        Priority                          = $Priority
-        EnabledEmailAddressTemplates      = $EnabledEmailAddressTemplates
-        EnabledPrimarySMTPAddressTemplate = $EnabledPrimarySMTPAddressTemplate
-        ManagedByFilter                   = $ManagedByFilter
-        Ensure                            = 'Absent'
-        GlobalAdminAccount                = $GlobalAdminAccount
-    }
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
     try
     {
@@ -109,6 +102,11 @@ function Get-TargetResource
                 ManagedByFilter                   = $EmailAddressPolicy.ManagedByFilter
                 Ensure                            = 'Present'
                 GlobalAdminAccount                = $GlobalAdminAccount
+                ApplicationId                     = $ApplicationId
+                CertificateThumbprint             = $CertificateThumbprint
+                CertificatePath                   = $CertificatePath
+                CertificatePassword               = $CertificatePassword
+                TenantId                          = $TenantId
             }
 
             Write-Verbose -Message "Found Email Address Policy $($Name)"

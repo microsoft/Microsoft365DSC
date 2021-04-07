@@ -140,6 +140,11 @@ function Get-TargetResource
                 UsernameMatchesAnyOfPatterns         = $ClientAccessRule.UsernameMatchesAnyOfPatterns
                 Ensure                               = 'Present'
                 GlobalAdminAccount                   = $GlobalAdminAccount
+                ApplicationId                        = $ApplicationId
+                CertificateThumbprint                = $CertificateThumbprint
+                CertificatePath                      = $CertificatePath
+                CertificatePassword                  = $CertificatePassword
+                TenantId                             = $TenantId
             }
 
             if (-not [System.String]::IsNullOrEmpty($ClientAccessRule.RuleScope))

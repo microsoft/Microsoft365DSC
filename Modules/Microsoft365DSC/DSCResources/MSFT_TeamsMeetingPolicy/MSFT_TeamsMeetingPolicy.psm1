@@ -531,6 +531,11 @@ function Set-TargetResource
         {
             $SetParameters.Remove("AllowAnonymousUsersToDialOut") | Out-Null
         }
+        if ($SetParameters.AllowCloudRecording -eq $false )
+        {
+            $SetParameters.Remove("RecordingStorageMode")
+            $SetParameters.Remove("AllowRecordingStorageOutsideRegion")
+        }
         Set-CsTeamsMeetingPolicy @SetParameters
     }
     elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')

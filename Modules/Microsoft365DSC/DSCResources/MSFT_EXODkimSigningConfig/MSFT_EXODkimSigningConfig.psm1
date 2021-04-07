@@ -87,23 +87,23 @@ function Get-TargetResource
     Write-Verbose -Message "Global ExchangeOnlineSession status:"
     Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
 
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
     try
     {
         $DkimSigningConfigs = Get-DkimSigningConfig
     }
     catch
     {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         $Message = "Error calling {Get-DkimSigningConfig}"
         New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+        return $nullReturn
     }
     $DkimSigningConfig = $DkimSigningConfigs | Where-Object -FilterScript { $_.Identity -eq $Identity }
     if (-not $DkimSigningConfig)
     {
         Write-Verbose -Message "DkimSigningConfig $($Identity) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
+        return $nullReturn
     }
     else
     {
@@ -116,6 +116,11 @@ function Get-TargetResource
             HeaderCanonicalization = $DkimSigningConfig.HeaderCanonicalization
             KeySize                = 1024
             GlobalAdminAccount     = $GlobalAdminAccount
+            ApplicationId          = $ApplicationId
+            CertificateThumbprint  = $CertificateThumbprint
+            CertificatePath        = $CertificatePath
+            CertificatePassword    = $CertificatePassword
+            TenantId               = $TenantId
         }
 
         Write-Verbose -Message "Found DkimSigningConfig $($Identity)"
@@ -380,12 +385,12 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
         $dscContent = ""
         foreach ($DkimSigningConfig in $DkimSigningConfigs)
         {
-            Write-Host "    |---[$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)" -NoNewLine
+            Write-Host "    |---[$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)" -NoNewline
             $Params = @{
                 Identity              = $DkimSigningConfig.Identity
                 GlobalAdminAccount    = $GlobalAdminAccount

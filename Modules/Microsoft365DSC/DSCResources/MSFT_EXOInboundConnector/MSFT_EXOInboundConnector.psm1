@@ -151,6 +151,11 @@ function Get-TargetResource
                 TreatMessagesAsInternal      = $InboundConnector.TreatMessagesAsInternal
                 GlobalAdminAccount           = $GlobalAdminAccount
                 Ensure                       = 'Present'
+                ApplicationId                = $ApplicationId
+                CertificateThumbprint        = $CertificateThumbprint
+                CertificatePath              = $CertificatePath
+                CertificatePassword          = $CertificatePassword
+                TenantId                     = $TenantId
             }
 
             Write-Verbose -Message "Found InboundConnector $($Identity)"

@@ -137,6 +137,11 @@ function Get-TargetResource
                 SentTo                    = $HostedContentFilterRule.SentTo
                 SentToMemberOf            = $HostedContentFilterRule.SentToMemberOf
                 GlobalAdminAccount        = $GlobalAdminAccount
+                ApplicationId             = $ApplicationId
+                CertificateThumbprint     = $CertificateThumbprint
+                CertificatePath           = $CertificatePath
+                CertificatePassword       = $CertificatePassword
+                TenantId                  = $TenantId
             }
 
             if ('Enabled' -eq $HostedContentFilterRule.State)

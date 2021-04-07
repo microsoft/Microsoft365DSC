@@ -392,6 +392,11 @@ function Get-TargetResource
             WebPushNotificationsDisabled                              = $ConfigSettings.WebPushNotificationsDisabled
             WebSuggestedRepliesDisabled                               = $ConfigSettings.WebSuggestedRepliesDisabled
             GlobalAdminAccount                                        = $GlobalAdminAccount
+            ApplicationId                                             = $ApplicationId
+            CertificateThumbprint                                     = $CertificateThumbprint
+            CertificatePath                                           = $CertificatePath
+            CertificatePassword                                       = $CertificatePassword
+            TenantId                                                  = $TenantId
         }
 
         if ($null -eq $ConfigSettings.AutoExpandingArchive)

@@ -190,6 +190,11 @@ function Get-TargetResource
                 RecipientFilter              = $AddressList.RecipientFilter
                 Ensure                       = 'Present'
                 GlobalAdminAccount           = $GlobalAdminAccount
+                ApplicationId                = $ApplicationId
+                CertificateThumbprint        = $CertificateThumbprint
+                CertificatePath              = $CertificatePath
+                CertificatePassword          = $CertificatePassword
+                TenantId                     = $TenantId
             }
 
             Write-Verbose -Message "Found AddressList $($Name)"
