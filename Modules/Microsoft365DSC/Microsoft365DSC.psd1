@@ -53,7 +53,7 @@
     RequiredModules   = @(
         @{
             ModuleName      = "AzureADPreview"
-            RequiredVersion = "2.0.2.129"
+            RequiredVersion = "2.0.2.134"
         },
         @{
             ModuleName      = "DSCParser"
