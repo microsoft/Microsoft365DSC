@@ -661,7 +661,7 @@ function Set-TargetResource
         $HostedContentFilterPolicyParams.Remove('EndUserSpamNotificationCustomFromAddress') | Out-Null
         Write-Verbose -Message "The EndUserSpamNotificationCustomFromAddress parameter is no longer available and will be depricated."
     }
-    if ($HostedContentFilterPolicyParams.Contains('EndUserSpamNotificationCustomFromAddress'))
+    if ($HostedContentFilterPolicyParams.Contains('EndUserSpamNotificationCustomFromName'))
     {
         $HostedContentFilterPolicyParams.Remove('EndUserSpamNotificationCustomFromName') | Out-Null
         Write-Verbose -Message "The EndUserSpamNotificationCustomFromName parameter is no longer available and will be depricated."
