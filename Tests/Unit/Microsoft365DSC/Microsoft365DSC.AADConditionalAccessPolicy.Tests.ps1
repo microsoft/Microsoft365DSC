@@ -58,7 +58,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                = "Allin"
                     Ensure                     = "Present"
                     ExcludeApplications        = @("00000012-0000-0000-c000-000000000000", "Office365")
-                    excludeDevices             = @("Compliant", "DomainJoined")
+                    ExcludeDevices             = @("Compliant", "DomainJoined")
                     ExcludeGroups              = @("Group 01")
                     ExcludeLocations           = "Contoso LAN"
                     ExcludePlatforms           = @("Windows", "WindowsPhone", "MacOS")
@@ -68,7 +68,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GrantControlOperator       = "AND"
                     Id                         = "bcc0cf19-ee89-46f0-8e12-4b89123ee6f9"
                     IncludeApplications        = @("All")
-                    includeDevices             = @("All")
+                    IncludeDevices             = @("All")
                     IncludeGroups              = @("Group 01")
                     IncludeLocations           = "AllTrusted"
                     IncludePlatforms           = @("Android", "IOS")
@@ -139,7 +139,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                              = "Allin"
                     Ensure                                   = "Present"
                     ExcludeApplications                      = @("00000012-0000-0000-c000-000000000000", "Office365")
-                    excludeDevices                           = @("Compliant", "DomainJoined")
+                    ExcludeDevices                           = @("Compliant", "DomainJoined")
                     ExcludeGroups                            = @("Group 01")
                     ExcludeLocations                         = "Contoso LAN"
                     ExcludePlatforms                         = @("Windows", "WindowsPhone", "MacOS")
@@ -149,7 +149,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GrantControlOperator                     = "AND"
                     Id                                       = "bcc0cf19-ee89-46f0-8e12-4b89123ee6f9"
                     IncludeApplications                      = @("All")
-                    includeDevices                           = @("All")
+                    IncludeDevices                           = @("All")
                     IncludeGroups                            = @("Group 01")
                     IncludeLocations                         = "AllTrusted"
                     IncludePlatforms                         = @("Android", "IOS")
@@ -194,8 +194,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 ExcludeLocations = "9e4ca5f3-0ba9-4257-b906-74d3038ac970"
                             }
                             Devices          = @{
-                                includeDevices = @("All")
-                                excludeDevices = @("Compliant", "DomainJoined")
+                                IncludeDevices = @("All")
+                                ExcludeDevices = @("Compliant", "DomainJoined")
                             }
                             ClientAppTypes   = @("Browser", "MobileAppsAndDesktopClients")
                             SignInRiskLevels = @("High")
@@ -276,7 +276,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                              = "Allin"
                     Ensure                                   = "Present"
                     ExcludeApplications                      = @("00000012-0000-0000-c000-000000000000", "Office365")
-                    excludeDevices                           = @("Compliant", "DomainJoined")
+                    ExcludeDevices                           = @("Compliant", "DomainJoined")
                     ExcludeGroups                            = @("Group 01")
                     ExcludeLocations                         = "Contoso LAN"
                     ExcludePlatforms                         = @("Windows", "WindowsPhone", "MacOS")
@@ -286,7 +286,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GrantControlOperator                     = "AND"
                     Id                                       = "bcc0cf19-ee89-46f0-8e12-4b89123ee6f9"
                     IncludeApplications                      = @("All")
-                    includeDevices                           = @("All")
+                    IncludeDevices                           = @("All")
                     IncludeGroups                            = @("Group 01")
                     IncludeLocations                         = "AllTrusted"
                     IncludePlatforms                         = @("Android", "IOS")
@@ -331,8 +331,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 ExcludeLocations = "9e4ca5f3-0ba9-4257-b906-74d3038ac970"
                             }
                             Devices          = @{
-                                includeDevices = @("All")
-                                excludeDevices = @("Compliant", "DomainJoined")
+                                IncludeDevices = @("All")
+                                ExcludeDevices = @("Compliant", "DomainJoined")
                             }
                             ClientAppTypes   = @("Browser", "MobileAppsAndDesktopClients")
                             SignInRiskLevels = @("High")
@@ -409,7 +409,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                              = "Allin"
                     Ensure                                   = "Absent"
                     ExcludeApplications                      = @("00000012-0000-0000-c000-000000000000", "Office365")
-                    excludeDevices                           = @("Compliant", "DomainJoined")
+                    ExcludeDevices                           = @("Compliant", "DomainJoined")
                     ExcludeGroups                            = @("Group 01")
                     ExcludeLocations                         = "Contoso LAN"
                     ExcludePlatforms                         = @("Windows", "WindowsPhone", "MacOS")
@@ -419,7 +419,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GrantControlOperator                     = "AND"
                     Id                                       = "bcc0cf19-ee89-46f0-8e12-4b89123ee6f9"
                     IncludeApplications                      = @("All")
-                    includeDevices                           = @("All")
+                    IncludeDevices                           = @("All")
                     IncludeGroups                            = @("Group 01")
                     IncludeLocations                         = "AllTrusted"
                     IncludePlatforms                         = @("Android", "IOS")
@@ -464,8 +464,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 ExcludeLocations = "9e4ca5f3-0ba9-4257-b906-74d3038ac970"
                             }
                             Devices          = @{
-                                includeDevices = @("All")
-                                excludeDevices = @("Compliant", "DomainJoined")
+                                IncludeDevices = @("All")
+                                ExcludeDevices = @("Compliant", "DomainJoined")
                             }
                             ClientAppTypes   = @("Browser", "MobileAppsAndDesktopClients")
                             SignInRiskLevels = @("High")
@@ -569,8 +569,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 ExcludeLocations = "9e4ca5f3-0ba9-4257-b906-74d3038ac970"
                             }
                             Devices          = @{
-                                includeDevices = @("All")
-                                excludeDevices = @("Compliant", "DomainJoined")
+                                IncludeDevices = @("All")
+                                ExcludeDevices = @("Compliant", "DomainJoined")
                             }
                             ClientAppTypes   = @("Browser", "MobileAppsAndDesktopClients")
                             SignInRiskLevels = @("High")
