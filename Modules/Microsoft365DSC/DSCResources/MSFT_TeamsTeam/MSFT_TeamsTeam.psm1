@@ -414,7 +414,7 @@ function Set-TargetResource
         Write-Verbose -Message "Creating team $DisplayName"
         if ($null -ne $Owner)
         {
-            $CurrentParameters.Owner = ([array]$Owner[0]).ToString()
+            $CurrentParameters.Owner = [array](($Owner[0]).ToString())
         }
 
         if ($ConnectionMode -eq "ServicePrincipal")

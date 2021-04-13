@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* TeamsTeam
+  * Fix format issue with owner issue # 1143
+
+
 # 1.21.407.1
 
 * AADConditionalAccessPolicy
