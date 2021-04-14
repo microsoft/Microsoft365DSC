@@ -1,7 +1,17 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.21.414.1
 
+* AADConditionalAccessPolicy
+  * Fixed an issue with the default values for device states;
+* EXOHostedContentFilterPolicy
+  * Fixed issue where EndUserSpamNotificationCustomFromName was
+    not properly returned from the Get-TargetResource function;
+* EXOTransportRule
+  * New resource;
+* O365AdminAuditLogConfig
+  * Fixed issue where the Set-TargetResource stopped being
+    executed if an error was encountered;
 * TeamsTeam
   * Fix format issue with owner issue # 1143
 * DEPENDENCIES
