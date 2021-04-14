@@ -65,7 +65,7 @@
         },
         @{
             ModuleName      = "Microsoft.Graph.Authentication"
-            RequiredVersion = "1.3.1"
+            RequiredVersion = "1.4.2"
         },
         @{
             ModuleName      = "Microsoft.Graph.Groups.Planner"
@@ -192,6 +192,7 @@
               * Fix format issue with owner issue # 1143
             * DEPENDENCIES
               * Updated AzureADPreview to version 2.0.2.134;
+              * Updated Microsoft.Graph.Authentication to version 1.4.2;
               * Updated Microsoft.Graph.Planner to version 1.4.2;
               * Updated Microsoft.Graph.Teams to version 1.4.2;
               * Updated Microsoft.PowerApps.Administration.PowerShell to version

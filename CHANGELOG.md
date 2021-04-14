@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# 1.21.414.1
+# 1.21.414.2
 
 * AADConditionalAccessPolicy
   * Fixed an issue with the default values for device states;
@@ -16,6 +16,7 @@
   * Fix format issue with owner issue # 1143
 * DEPENDENCIES
   * Updated AzureADPreview to version 2.0.2.134;
+  * Updated Microsoft.Graph.Authentication to version 1.4.2;
   * Updated Microsoft.Graph.Planner to version 1.4.2;
   * Updated Microsoft.Graph.Teams to version 1.4.2;
   * Updated Microsoft.PowerApps.Administration.PowerShell to version
