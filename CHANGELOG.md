@@ -1,5 +1,28 @@
 # Change log for Microsoft365DSC
 
+# 1.21.414.1
+
+* AADConditionalAccessPolicy
+  * Fixed an issue with the default values for device states;
+* EXOHostedContentFilterPolicy
+  * Fixed issue where EndUserSpamNotificationCustomFromName was
+    not properly returned from the Get-TargetResource function;
+* EXOTransportRule
+  * New resource;
+* O365AdminAuditLogConfig
+  * Fixed issue where the Set-TargetResource stopped being
+    executed if an error was encountered;
+* TeamsTeam
+  * Fix format issue with owner issue # 1143
+* DEPENDENCIES
+  * Updated AzureADPreview to version 2.0.2.134;
+  * Updated Microsoft.Graph.Planner to version 1.4.2;
+  * Updated Microsoft.Graph.Teams to version 1.4.2;
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version
+    2.0.112;
+  * Updated MSCloudLoginAssistant to version 1.0.51;
+  * Updated PnP.PowerShell to version 1.5.0;
+
 # 1.21.407.1
 
 * AADConditionalAccessPolicy
