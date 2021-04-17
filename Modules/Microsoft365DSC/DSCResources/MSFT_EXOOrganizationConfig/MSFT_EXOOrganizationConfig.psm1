@@ -762,9 +762,14 @@ function Set-TargetResource
 
 
     Write-Verbose -Message "Setting EXOOrganizationConfig with values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-    $SetValues = $PSBoundParameters
-    $SetValues.Remove('IsSingleInstance')
-    $SetValues.Remove('GlobalAdminAccount')
+    $SetValues = [System.Collections.Hashtable]($PSBoundParameters)
+    $SetValues.Remove('IsSingleInstance') | Out-Null
+    $SetValues.Remove('GlobalAdminAccount') | Out-Null
+    $SetValues.Remove('ApplicationId') | Out-Null
+    $SetValues.Remove('TenantId') | Out-Null
+    $SetValues.Remove('CertificateThumbprint') | Out-Null
+    $SetValues.Remove('CertificatePath') | Out-Null
+    $SetValues.Remove('CertificatePassword') | Out-Null
     Set-OrganizationConfig @SetValues
 }
 
@@ -1081,6 +1086,11 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

@@ -239,10 +239,15 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $AtpPolicyParams = $PSBoundParameters
+    $AtpPolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
     $AtpPolicyParams.Remove('Ensure') | Out-Null
     $AtpPolicyParams.Remove('GlobalAdminAccount') | Out-Null
     $AtpPolicyParams.Remove('IsSingleInstance') | Out-Null
+    $AtpPolicyParams.Remove('ApplicationId') | Out-Null
+    $AtpPolicyParams.Remove('TenantId') | Out-Null
+    $AtpPolicyParams.Remove('CertificateThumbprint') | Out-Null
+    $AtpPolicyParams.Remove('CertificatePath') | Out-Null
+    $AtpPolicyParams.Remove('CertificatePassword') | Out-Null
     Write-Verbose -Message "Setting AtpPolicyForO365 $Identity with values: $(Convert-M365DscHashtableToString -Hashtable $AtpPolicyParams)"
     Set-AtpPolicyForO365 @AtpPolicyParams
 }
@@ -336,6 +341,11 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
     $ValuesToCheck.Remove('Verbose') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

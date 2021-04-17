@@ -295,11 +295,16 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
-        $CreationParams = $PSBoundParameters
+        $CreationParams = [System.Collections.Hashtable]($PSBoundParameters)
         $CreationParams.Remove("Ensure") | Out-Null
         $CreationParams.Remove("GlobalAdminAccount") | Out-Null
         $CreationParams.Add("Name", $Identity) | Out-Null
         $CreationParams.Remove("Identity") | Out-Null
+        $CreationParams.Remove('ApplicationId') | Out-Null
+        $CreationParams.Remove('TenantId') | Out-Null
+        $CreationParams.Remove('CertificateThumbprint') | Out-Null
+        $CreationParams.Remove('CertificatePath') | Out-Null
+        $CreationParams.Remove('CertificatePassword') | Out-Null
 
         # New-AntiPhishRule has the Enabled parameter, Set-AntiPhishRule does not.
         # There doesn't appear to be any way to change the Enabled state of a rule once created.
@@ -318,6 +323,11 @@ function Set-TargetResource
         $UpdateParams.Remove("Ensure") | Out-Null
         $UpdateParams.Remove("GlobalAdminAccount") | Out-Null
         $UpdateParams.Remove("Enabled") | Out-Null
+        $UpdateParams.Remove('ApplicationId') | Out-Null
+        $UpdateParams.Remove('TenantId') | Out-Null
+        $UpdateParams.Remove('CertificateThumbprint') | Out-Null
+        $UpdateParams.Remove('CertificatePath') | Out-Null
+        $UpdateParams.Remove('CertificatePassword') | Out-Null
 
         # Check to see if the specified policy already has the rule assigned;
         $existingRule = Get-AntiPhishRule | Where-Object -FilterScript { $_.AntiPhishPolicy -eq $AntiPhishPolicy }
@@ -436,6 +446,11 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
 
     if ($null -eq $PSBoundParameters.Enabled)
     {

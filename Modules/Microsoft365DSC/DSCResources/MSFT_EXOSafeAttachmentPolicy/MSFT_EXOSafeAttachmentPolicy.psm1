@@ -226,9 +226,15 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $SafeAttachmentPolicyParams = $PSBoundParameters
+    $SafeAttachmentPolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
     $SafeAttachmentPolicyParams.Remove('Ensure') | Out-Null
     $SafeAttachmentPolicyParams.Remove('GlobalAdminAccount') | Out-Null
+    $SafeAttachmentPolicyParams.Remove('ApplicationId') | Out-Null
+    $SafeAttachmentPolicyParams.Remove('TenantId') | Out-Null
+    $SafeAttachmentPolicyParams.Remove('CertificateThumbprint') | Out-Null
+    $SafeAttachmentPolicyParams.Remove('CertificatePath') | Out-Null
+    $SafeAttachmentPolicyParams.Remove('CertificatePassword') | Out-Null
+
     $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
 
     $SafeAttachmentPolicy = $SafeAttachmentPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
@@ -340,6 +346,11 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
