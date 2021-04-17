@@ -646,7 +646,7 @@ function Set-TargetResource
     $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
 
     $HostedContentFilterPolicy = $HostedContentFilterPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    $HostedContentFilterPolicyParams = $PSBoundParameters
+    $HostedContentFilterPolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
     $HostedContentFilterPolicyParams.Remove('Ensure') | Out-Null
     $HostedContentFilterPolicyParams.Remove('GlobalAdminAccount') | Out-Null
     $HostedContentFilterPolicyParams.Remove('MakeDefault') | Out-Null
