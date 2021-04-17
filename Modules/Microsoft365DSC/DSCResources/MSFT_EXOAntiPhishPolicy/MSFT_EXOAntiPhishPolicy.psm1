@@ -439,10 +439,19 @@ function Set-TargetResource
     $AntiPhishPolicies = Get-AntiPhishPolicy
 
     $AntiPhishPolicy = $AntiPhishPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    $AntiPhishPolicyparams = $PSBoundParameters
+    $AntiPhishPolicyparams.Remove('Ensure') | Out-Null
+    $AntiPhishPolicyparams.Remove('GlobalAdminAccount') | Out-Null
+    $AntiPhishPolicyparams.Remove('MakeDefault') | Out-Null
+    $AntiPhishPolicyparams.Remove('ApplicationId') | Out-Null
+    $AntiPhishPolicyparams.Remove('TenantId') | Out-Null
+    $AntiPhishPolicyparams.Remove('CertificateThumbprint') | Out-Null
+    $AntiPhishPolicyparams.Remove('CertificatePath') | Out-Null
+    $AntiPhishPolicyparams.Remove('CertificatePassword') | Out-Null
 
     if (('Present' -eq $Ensure ) -and (-not $AntiPhishPolicy))
     {
-        New-EXOAntiPhishPolicy -AntiPhishPolicyParams $PSBoundParameters
+        New-EXOAntiPhishPolicy -AntiPhishPolicyParams $AntiPhishPolicyparams
     }
 
     if (('Present' -eq $Ensure ) -and ($AntiPhishPolicy))
@@ -452,7 +461,7 @@ function Set-TargetResource
         # policy and recreate it in order to make sure the parameters all match the desired
         # state specified;
         Remove-AntiPhishPolicy -Identity $Identity -Confirm:$false -Force
-        New-EXOAntiPhishPolicy -AntiPhishPolicyParams $PSBoundParameters
+        New-EXOAntiPhishPolicy -AntiPhishPolicyParams $AntiPhishPolicyparams
     }
 
     if (('Absent' -eq $Ensure ) -and ($AntiPhishPolicy))

@@ -198,9 +198,14 @@ function Set-TargetResource
 
     $IntraOrganizationConnectors = Get-IntraOrganizationConnector
     $IntraOrganizationConnector = $IntraOrganizationConnectors | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    $IntraOrganizationConnectorParams = $PSBoundParameters
+    $IntraOrganizationConnectorParams = [System.Collections.Hashtable]($PSBoundParameters)
     $IntraOrganizationConnectorParams.Remove('Ensure') | Out-Null
     $IntraOrganizationConnectorParams.Remove('GlobalAdminAccount') | Out-Null
+    $IntraOrganizationConnectorParams.Remove('ApplicationId') | Out-Null
+    $IntraOrganizationConnectorParams.Remove('TenantId') | Out-Null
+    $IntraOrganizationConnectorParams.Remove('CertificateThumbprint') | Out-Null
+    $IntraOrganizationConnectorParams.Remove('CertificatePath') | Out-Null
+    $IntraOrganizationConnectorParams.Remove('CertificatePassword') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($null -eq $IntraOrganizationConnector))
     {
@@ -291,6 +296,11 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
