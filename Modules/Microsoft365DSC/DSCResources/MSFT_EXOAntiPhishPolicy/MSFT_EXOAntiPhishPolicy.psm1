@@ -753,14 +753,4 @@ function Export-TargetResource
         return ""
     }
 }
-
-Export-ModuleMember -Function *-TargetResource
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
-    }
-}
-
 Export-ModuleMember -Function *-TargetResource

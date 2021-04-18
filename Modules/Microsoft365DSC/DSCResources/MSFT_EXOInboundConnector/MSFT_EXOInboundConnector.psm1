@@ -298,7 +298,7 @@ function Set-TargetResource
 
     $InboundConnectors = Get-InboundConnector
     $InboundConnector = $InboundConnectors | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    $InboundConnectorParams = $PSBoundParameters
+    $InboundConnectorParams = [System.Collections.Hashtable]($PSBoundParameters)
     $InboundConnectorParams.Remove('Ensure') | Out-Null
     $InboundConnectorParams.Remove('GlobalAdminAccount') | Out-Null
     $InboundConnectorParams.Remove('ApplicationId') | Out-Null

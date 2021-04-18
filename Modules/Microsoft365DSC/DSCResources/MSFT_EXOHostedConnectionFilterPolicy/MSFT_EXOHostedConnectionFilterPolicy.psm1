@@ -363,7 +363,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck = [System.Collections.Hashtable]($PSBoundParameters)
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
     $ValuesToCheck.Remove('Verbose') | Out-Null
