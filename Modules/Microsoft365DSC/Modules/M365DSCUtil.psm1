@@ -28,6 +28,11 @@ function Format-EXOParams
     $EXOParams.Remove("GlobalAdminAccount") | Out-Null
     $EXOParams.Remove("Ensure") | Out-Null
     $EXOParams.Remove("Verbose") | Out-Null
+    $EXOParams.Remove('ApplicationId') | Out-Null
+    $EXOParams.Remove('TenantId') | Out-Null
+    $EXOParams.Remove('CertificateThumbprint') | Out-Null
+    $EXOParams.Remove('CertificatePath') | Out-Null
+    $EXOParams.Remove('CertificatePassword') | Out-Null
     if ('New' -eq $Operation)
     {
         $EXOParams += @{

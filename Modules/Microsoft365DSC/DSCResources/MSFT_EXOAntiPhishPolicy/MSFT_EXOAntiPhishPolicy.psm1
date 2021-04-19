@@ -753,5 +753,4 @@ function Export-TargetResource
         return ""
     }
 }
-
 Export-ModuleMember -Function *-TargetResource

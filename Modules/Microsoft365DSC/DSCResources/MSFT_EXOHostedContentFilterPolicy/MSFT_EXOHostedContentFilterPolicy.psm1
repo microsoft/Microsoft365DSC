@@ -651,10 +651,15 @@ function Set-TargetResource
     $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
 
     $HostedContentFilterPolicy = $HostedContentFilterPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    $HostedContentFilterPolicyParams = $PSBoundParameters
+    $HostedContentFilterPolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
     $HostedContentFilterPolicyParams.Remove('Ensure') | Out-Null
     $HostedContentFilterPolicyParams.Remove('GlobalAdminAccount') | Out-Null
     $HostedContentFilterPolicyParams.Remove('MakeDefault') | Out-Null
+    $HostedContentFilterPolicyParams.Remove('ApplicationId') | Out-Null
+    $HostedContentFilterPolicyParams.Remove('TenantId') | Out-Null
+    $HostedContentFilterPolicyParams.Remove('CertificateThumbprint') | Out-Null
+    $HostedContentFilterPolicyParams.Remove('CertificatePath') | Out-Null
+    $HostedContentFilterPolicyParams.Remove('CertificatePassword') | Out-Null
 
     if ($HostedContentFilterPolicyParams.Contains('EndUserSpamNotificationCustomFromAddress'))
     {
@@ -969,6 +974,11 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('EndUserSpamNotificationCustomFromAddress') | Out-Null
     $ValuesToCheck.Remove('EndUserSpamNotificationCustomFromName') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

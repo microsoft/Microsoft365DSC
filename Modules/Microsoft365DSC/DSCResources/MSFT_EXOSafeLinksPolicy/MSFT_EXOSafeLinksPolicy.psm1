@@ -266,9 +266,14 @@ function Set-TargetResource
     $SafeLinksPolicies = Get-SafeLinksPolicy
 
     $SafeLinksPolicy = $SafeLinksPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    $SafeLinksPolicyParams = $PSBoundParameters
+    $SafeLinksPolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
     $SafeLinksPolicyParams.Remove('Ensure') | Out-Null
     $SafeLinksPolicyParams.Remove('GlobalAdminAccount') | Out-Null
+    $SafeLinksPolicyParams.Remove('ApplicationId') | Out-Null
+    $SafeLinksPolicyParams.Remove('TenantId') | Out-Null
+    $SafeLinksPolicyParams.Remove('CertificateThumbprint') | Out-Null
+    $SafeLinksPolicyParams.Remove('CertificatePath') | Out-Null
+    $SafeLinksPolicyParams.Remove('CertificatePassword') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($null -eq $SafeLinksPolicy))
     {
@@ -387,6 +392,11 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
     $ValuesToCheck.Remove('Verbose') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
