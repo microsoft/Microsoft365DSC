@@ -250,7 +250,7 @@ function Set-TargetResource
     $currentDeviceiOsPolicy = Get-TargetResource @PSBoundParameters
 
     $PSBoundParameters.Remove('Ensure')
-    $PSBoundParameters.Remove('$GlobalAdminAccount')
+    $PSBoundParameters.Remove('GlobalAdminAccount')
 
     $jsonParams = @"
 {
@@ -274,7 +274,7 @@ function Set-TargetResource
         $configDeviceiOsPolicy = Get-DeviceManagement_DeviceCompliancePolicies `
             -ErrorAction Stop | Where-Object `
             -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.iosCompliancePolicy' -and `
-            $_.displayName -eq $($DisplayName) }
+                $_.displayName -eq $($DisplayName) }
         Update-DeviceManagement_DeviceCompliancePolicies -iosCompliancePolicy `
             -deviceCompliancePolicyId $configDeviceiOsPolicy.deviceCompliancePolicyId @PSBoundParameters
     }
@@ -284,7 +284,7 @@ function Set-TargetResource
         $configDeviceiOsPolicy = Get-DeviceManagement_DeviceCompliancePolicies `
             -ErrorAction Stop | Where-Object `
             -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.iosCompliancePolicy' -and `
-            $_.displayName -eq $($DisplayName) }
+                $_.displayName -eq $($DisplayName) }
 
         Remove-DeviceManagement_DeviceCompliancePolicies -deviceCompliancePolicyId $configDeviceiOsPolicy.deviceCompliancePolicyId
     }
@@ -425,7 +425,7 @@ function Export-TargetResource
     {
         [array]$configDeviceiOsPolicies = Get-DeviceManagement_DeviceCompliancePolicies `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.iosCompliancePolicy'}
+            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.iosCompliancePolicy' }
         $i = 1
         $content = ''
         Write-Host "`r`n" -NoNewline
