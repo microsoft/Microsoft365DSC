@@ -1,5 +1,19 @@
 # Change log for Microsoft365DSC
 
+# 1.21.421.1
+
+* AADConditionalAccessPolicy
+  * Fix to allow 'undefined' as a value for multiple parameters;
+* EXOTransportRule
+  * Fixed schema to support Service Principal Auth;
+* TeamsChannelTab
+  * Fixed typo in parameter 'TeamId';
+* MISC
+  * Refactor of all EXO resources to fixes for Set-TargetResource
+    functions where Service Principal was used to authenticate;
+  * Refactored connections across all resources to help with
+    Telemetry regarding what auth method users are leveraging.
+
 # 1.21.414.2
 
 * AADConditionalAccessPolicy
