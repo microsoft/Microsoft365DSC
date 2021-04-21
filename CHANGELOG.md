@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# 1.21.421.2
+
+* MISC
+  * Updated the SkipModuleReload logic for a dozen of EXO modules
+    which were failing authentication;
+
 # 1.21.421.1
 
 * AADConditionalAccessPolicy
@@ -50,7 +56,7 @@
   * Fixed issue in most EXO resources where AzureAD App information
     was not returned by the Get-TargetResource function;
 
-1.21.331.1
+# 1.21.331.1
 
 * AADApplication
   * Added support for API Permissions;

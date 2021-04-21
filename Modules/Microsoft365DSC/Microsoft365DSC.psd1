@@ -11,7 +11,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion     = '1.21.421.1'
+    ModuleVersion     = '1.21.421.2'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -176,29 +176,25 @@
             IconUri      = 'https://github.com/microsoft/Microsoft365DSC/blob/Dev/Modules/Microsoft365DSC/Dependencies/Images/Logo.png?raw=true'
 
             # ReleaseNotes of this module
-            ReleaseNotes = "# 1.21.414.1
+            ReleaseNotes = "# 1.21.421.2
+
+            * MISC
+              * Updated the SkipModuleReload logic for a dozen of EXO modules
+                which were failing authentication;
+
+            # 1.21.421.1
 
             * AADConditionalAccessPolicy
-              * Fixed an issue with the default values for device states;
-            * EXOHostedContentFilterPolicy
-              * Fixed issue where EndUserSpamNotificationCustomFromName was
-                not properly returned from the Get-TargetResource function;
+              * Fix to allow 'undefined' as a value for multiple parameters;
             * EXOTransportRule
-              * New resource;
-            * O365AdminAuditLogConfig
-              * Fixed issue where the Set-TargetResource stopped being
-                executed if an error was encountered;
-            * TeamsTeam
-              * Fix format issue with owner issue # 1143
-            * DEPENDENCIES
-              * Updated AzureADPreview to version 2.0.2.134;
-              * Updated Microsoft.Graph.Authentication to version 1.4.2;
-              * Updated Microsoft.Graph.Planner to version 1.4.2;
-              * Updated Microsoft.Graph.Teams to version 1.4.2;
-              * Updated Microsoft.PowerApps.Administration.PowerShell to version
-                2.0.112;
-              * Updated MSCloudLoginAssistant to version 1.0.51;
-              * Updated PnP.PowerShell to version 1.5.0;"
+              * Fixed schema to support Service Principal Auth;
+            * TeamsChannelTab
+              * Fixed typo in parameter 'TeamId';
+            * MISC
+              * Refactor of all EXO resources to fixes for Set-TargetResource
+                functions where Service Principal was used to authenticate;
+              * Refactored connections across all resources to help with
+                Telemetry regarding what auth method users are leveraging."
 
             # Flag to indicate whether the module requires explicit user acceptance for install/update
             # RequireLicenseAcceptance = $false
