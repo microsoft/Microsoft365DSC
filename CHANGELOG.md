@@ -50,7 +50,7 @@
   * Fixed issue in most EXO resources where AzureAD App information
     was not returned by the Get-TargetResource function;
 
-1.21.331.1
+# 1.21.331.1
 
 * AADApplication
   * Added support for API Permissions;
