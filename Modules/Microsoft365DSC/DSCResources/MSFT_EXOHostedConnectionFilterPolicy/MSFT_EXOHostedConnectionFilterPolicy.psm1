@@ -59,16 +59,6 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of HostedConnectionFilterPolicy for $Identity"
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
     if ($Global:CurrentModeIsExport)
     {
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
@@ -80,6 +70,17 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
@@ -236,10 +237,15 @@ function Set-TargetResource
 
     $HostedConnectionFilterPolicy = $HostedConnectionFilterPolicys | Where-Object -FilterScript { $_.Identity -eq $Identity }
 
-    $HostedConnectionFilterPolicyParams = $PSBoundParameters
+    $HostedConnectionFilterPolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
     $HostedConnectionFilterPolicyParams.Remove('Ensure') | Out-Null
     $HostedConnectionFilterPolicyParams.Remove('GlobalAdminAccount') | Out-Null
     $HostedConnectionFilterPolicyParams.Remove('MakeDefault') | Out-Null
+    $HostedConnectionFilterPolicyParams.Remove('ApplicationId') | Out-Null
+    $HostedConnectionFilterPolicyParams.Remove('TenantId') | Out-Null
+    $HostedConnectionFilterPolicyParams.Remove('CertificateThumbprint') | Out-Null
+    $HostedConnectionFilterPolicyParams.Remove('CertificatePath') | Out-Null
+    $HostedConnectionFilterPolicyParams.Remove('CertificatePassword') | Out-Null
 
     if ($HostedConnectionFilterPolicyParams.RuleScope)
     {
@@ -358,10 +364,16 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck = [System.Collections.Hashtable]($PSBoundParameters)
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
     $ValuesToCheck.Remove('Verbose') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -403,17 +415,20 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
 
     try
     {

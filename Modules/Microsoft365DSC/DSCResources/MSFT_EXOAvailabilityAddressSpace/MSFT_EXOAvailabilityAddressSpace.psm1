@@ -55,18 +55,6 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    Write-Verbose -Message "Getting configuration of AvailabilityAddressSpace for $($Identity)"
-
     if ($Global:CurrentModeIsExport)
     {
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
@@ -78,6 +66,19 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    Write-Verbose -Message "Getting configuration of AvailabilityAddressSpace for $($Identity)"
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = 'Absent'
 
@@ -238,9 +239,14 @@ function Set-TargetResource
     }
 
     $AvailabilityAddressSpace = $AvailabilityAddressSpaces | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    $AvailabilityAddressSpaceParams = $PSBoundParameters
+    $AvailabilityAddressSpaceParams = [System.Collections.Hashtable]($PSBoundParameters)
     $AvailabilityAddressSpaceParams.Remove('Ensure') | Out-Null
     $AvailabilityAddressSpaceParams.Remove('GlobalAdminAccount') | Out-Null
+    $AvailabilityAddressSpaceParams.Remove('ApplicationId') | Out-Null
+    $AvailabilityAddressSpaceParams.Remove('TenantId') | Out-Null
+    $AvailabilityAddressSpaceParams.Remove('CertificateThumbprint') | Out-Null
+    $AvailabilityAddressSpaceParams.Remove('CertificatePath') | Out-Null
+    $AvailabilityAddressSpaceParams.Remove('CertificatePassword') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($null -eq $AvailabilityAddressSpace))
     {
@@ -366,6 +372,11 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -407,6 +418,9 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -415,11 +429,9 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
 
     try
     {

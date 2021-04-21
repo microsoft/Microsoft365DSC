@@ -75,6 +75,10 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of SafeLinksPolicy for $Identity"
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $Global:CurrentModelIsExport
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -82,20 +86,9 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    if ($Global:CurrentModeIsExport)
-    {
-        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
@@ -266,9 +259,14 @@ function Set-TargetResource
     $SafeLinksPolicies = Get-SafeLinksPolicy
 
     $SafeLinksPolicy = $SafeLinksPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    $SafeLinksPolicyParams = $PSBoundParameters
+    $SafeLinksPolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
     $SafeLinksPolicyParams.Remove('Ensure') | Out-Null
     $SafeLinksPolicyParams.Remove('GlobalAdminAccount') | Out-Null
+    $SafeLinksPolicyParams.Remove('ApplicationId') | Out-Null
+    $SafeLinksPolicyParams.Remove('TenantId') | Out-Null
+    $SafeLinksPolicyParams.Remove('CertificateThumbprint') | Out-Null
+    $SafeLinksPolicyParams.Remove('CertificatePath') | Out-Null
+    $SafeLinksPolicyParams.Remove('CertificatePassword') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($null -eq $SafeLinksPolicy))
     {
@@ -387,6 +385,11 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
     $ValuesToCheck.Remove('Verbose') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -428,6 +431,10 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -435,12 +442,9 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
 
     $dscContent = ''
 

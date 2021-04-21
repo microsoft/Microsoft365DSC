@@ -55,15 +55,6 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of CASMailboxPlan for $Identity"
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
 
     if ($Global:CurrentModeIsExport)
     {
@@ -76,6 +67,18 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
     $nullResult = $PSBoundParameters
     $nullResult.Ensure = 'Absent'
 
@@ -213,9 +216,14 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $CASMailboxPlanParams = $PSBoundParameters
+    $CASMailboxPlanParams = [System.Collections.Hashtable]($PSBoundParameters)
     $CASMailboxPlanParams.Remove('Ensure') | Out-Null
     $CASMailboxPlanParams.Remove('GlobalAdminAccount') | Out-Null
+    $CASMailboxPlanParams.Remove('ApplicationId') | Out-Null
+    $CASMailboxPlanParams.Remove('TenantId') | Out-Null
+    $CASMailboxPlanParams.Remove('CertificateThumbprint') | Out-Null
+    $CASMailboxPlanParams.Remove('CertificatePath') | Out-Null
+    $CASMailboxPlanParams.Remove('CertificatePassword') | Out-Null
 
     $CASMailboxPlans = Get-CASMailboxPlan
     $CASMailboxPlan = $CASMailboxPlans | Where-Object -FilterScript { $_.Identity -eq $Identity }
@@ -305,6 +313,11 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -346,6 +359,10 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -353,11 +370,9 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
 
     try
     {
