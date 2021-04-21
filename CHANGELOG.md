@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# 1.21.421.2
+
+* MISC
+  * Updated the SkipModuleReload logic for a dozen of EXO modules
+    which were failing authentication;
+
 # 1.21.421.1
 
 * AADConditionalAccessPolicy
