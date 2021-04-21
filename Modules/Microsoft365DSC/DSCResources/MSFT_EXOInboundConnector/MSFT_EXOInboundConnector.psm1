@@ -300,9 +300,14 @@ function Set-TargetResource
 
     $InboundConnectors = Get-InboundConnector
     $InboundConnector = $InboundConnectors | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    $InboundConnectorParams = $PSBoundParameters
+    $InboundConnectorParams = [System.Collections.Hashtable]($PSBoundParameters)
     $InboundConnectorParams.Remove('Ensure') | Out-Null
     $InboundConnectorParams.Remove('GlobalAdminAccount') | Out-Null
+    $InboundConnectorParams.Remove('ApplicationId') | Out-Null
+    $InboundConnectorParams.Remove('TenantId') | Out-Null
+    $InboundConnectorParams.Remove('CertificateThumbprint') | Out-Null
+    $InboundConnectorParams.Remove('CertificatePath') | Out-Null
+    $InboundConnectorParams.Remove('CertificatePassword') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($null -eq $InboundConnector))
     {
@@ -435,6 +440,11 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

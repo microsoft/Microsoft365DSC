@@ -174,12 +174,14 @@ function Set-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
-
+        
+    $OldErrorActionPreference = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
     if ($UnifiedAuditLogIngestionEnabled -eq 'Enabled')
     {
         try
         {
-            Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $true -EA SilentlyContinue
+            Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $true
         }
         catch
         {
@@ -192,7 +194,7 @@ function Set-TargetResource
     {
         try
         {
-            Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $false -EA SilentlyContinue
+            Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $false
         }
         catch
         {
@@ -201,6 +203,7 @@ function Set-TargetResource
             New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
         }
     }
+    $ErrorActionPreference = $OldErrorActionPreference
 }
 
 function Test-TargetResource

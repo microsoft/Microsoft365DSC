@@ -203,9 +203,14 @@ function Set-TargetResource
 
     if (('Present' -eq $Ensure ) -and ($null -eq $DkimSigningConfig))
     {
-        $DkimSigningConfigParams = $PSBoundParameters
+        $DkimSigningConfigParams = [System.Collections.Hashtable]($PSBoundParameters)
         $DkimSigningConfigParams.Remove('Ensure') | Out-Null
         $DkimSigningConfigParams.Remove('GlobalAdminAccount') | Out-Null
+        $DkimSigningConfigParams.Remove('ApplicationId') | Out-Null
+        $DkimSigningConfigParams.Remove('TenantId') | Out-Null
+        $DkimSigningConfigParams.Remove('CertificateThumbprint') | Out-Null
+        $DkimSigningConfigParams.Remove('CertificatePath') | Out-Null
+        $DkimSigningConfigParams.Remove('CertificatePassword') | Out-Null
         $DkimSigningConfigParams += @{
             DomainName = $PSBoundParameters.Identity
         }
@@ -311,6 +316,12 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

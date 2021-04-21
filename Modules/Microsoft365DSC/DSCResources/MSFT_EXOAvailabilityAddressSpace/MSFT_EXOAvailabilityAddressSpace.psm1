@@ -239,9 +239,14 @@ function Set-TargetResource
     }
 
     $AvailabilityAddressSpace = $AvailabilityAddressSpaces | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    $AvailabilityAddressSpaceParams = $PSBoundParameters
+    $AvailabilityAddressSpaceParams = [System.Collections.Hashtable]($PSBoundParameters)
     $AvailabilityAddressSpaceParams.Remove('Ensure') | Out-Null
     $AvailabilityAddressSpaceParams.Remove('GlobalAdminAccount') | Out-Null
+    $AvailabilityAddressSpaceParams.Remove('ApplicationId') | Out-Null
+    $AvailabilityAddressSpaceParams.Remove('TenantId') | Out-Null
+    $AvailabilityAddressSpaceParams.Remove('CertificateThumbprint') | Out-Null
+    $AvailabilityAddressSpaceParams.Remove('CertificatePath') | Out-Null
+    $AvailabilityAddressSpaceParams.Remove('CertificatePassword') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($null -eq $AvailabilityAddressSpace))
     {
@@ -367,6 +372,11 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

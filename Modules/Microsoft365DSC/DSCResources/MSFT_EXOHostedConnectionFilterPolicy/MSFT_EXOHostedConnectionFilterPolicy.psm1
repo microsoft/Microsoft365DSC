@@ -237,10 +237,15 @@ function Set-TargetResource
 
     $HostedConnectionFilterPolicy = $HostedConnectionFilterPolicys | Where-Object -FilterScript { $_.Identity -eq $Identity }
 
-    $HostedConnectionFilterPolicyParams = $PSBoundParameters
+    $HostedConnectionFilterPolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
     $HostedConnectionFilterPolicyParams.Remove('Ensure') | Out-Null
     $HostedConnectionFilterPolicyParams.Remove('GlobalAdminAccount') | Out-Null
     $HostedConnectionFilterPolicyParams.Remove('MakeDefault') | Out-Null
+    $HostedConnectionFilterPolicyParams.Remove('ApplicationId') | Out-Null
+    $HostedConnectionFilterPolicyParams.Remove('TenantId') | Out-Null
+    $HostedConnectionFilterPolicyParams.Remove('CertificateThumbprint') | Out-Null
+    $HostedConnectionFilterPolicyParams.Remove('CertificatePath') | Out-Null
+    $HostedConnectionFilterPolicyParams.Remove('CertificatePassword') | Out-Null
 
     if ($HostedConnectionFilterPolicyParams.RuleScope)
     {
@@ -359,10 +364,16 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck = [System.Collections.Hashtable]($PSBoundParameters)
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
     $ValuesToCheck.Remove('Verbose') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

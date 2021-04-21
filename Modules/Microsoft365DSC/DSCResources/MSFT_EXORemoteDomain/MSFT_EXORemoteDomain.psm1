@@ -372,12 +372,14 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $RemoteDomainParams = $PSBoundParameters
+    $RemoteDomainParams = [System.Collections.Hashtable]($PSBoundParameters)
     $RemoteDomainParams.Remove("GlobalAdminAccount") | Out-Null
     $RemoteDomainParams.Remove("Ensure") | Out-Null
     $RemoteDomainParams.Remove("ApplicationId") | Out-Null
     $RemoteDomainParams.Remove("TenantId") | Out-Null
     $RemoteDomainParams.Remove("CertificateThumbprint") | Out-Null
+    $RemoteDomainParams.Remove('CertificatePath') | Out-Null
+    $RemoteDomainParams.Remove('CertificatePassword') | Out-Null
 
     # CASE: Remote Domain doesn't exist but should;
     if ($Ensure -eq "Present" -and $currentRemoteDomainConfig.Ensure -eq "Absent")
@@ -558,6 +560,11 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

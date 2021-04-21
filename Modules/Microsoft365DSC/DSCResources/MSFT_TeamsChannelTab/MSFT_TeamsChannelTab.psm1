@@ -306,7 +306,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating new tab {$DisplayName}"
         Write-Verbose -Message "Params: $($CurrentParameters | Out-String)"
-        $CurrentParameters.Add("TeamsId", $tab.TeamId)
+        $CurrentParameters.Add("TeamId", $tab.TeamId)
         $CurrentParameters.Add("ChannelId", $ChannelInstance.Id)
         $CurrentParameters.Remove("TeamName") | Out-Null
         $CurrentParameters.Remove("ChannelName") | Out-Null
