@@ -68,14 +68,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SecurityBlockDeviceAdministratorManagedDevices     = $True
                         OsMinimumVersion                                   = 7
                         OsMaximumVersion                                   = 11
-                        MinAndroidSecurityPatchLevel                       = $Null
+                        MinAndroidSecurityPatchLevel                       = Null
                         StorageRequireEncryption                           = $True
                         SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
                         SecurityRequireSafetyNetAttestationCertifiedDevice = $True
                         SecurityRequireGooglePlayServices                  = $True
                         SecurityRequireUpToDateSecurityProviders           = $True
                         SecurityRequireCompanyPortalAppIntegrity           = $True
-                        ConditionStatementId                               = $Null
+                        ConditionStatementId                               = Null
                         RestrictedApps                                     = "[]"
                         RoleScopeTagIds                                    = 0
                         Ensure                                             = 'Present'
@@ -83,7 +83,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
 
                     Mock -CommandName Get-IntuneDeviceCompliancePolicy -MockWith {
-                        return $null
+                        return IntuneDeviceCNuNull
                     }
                 }
 
@@ -124,14 +124,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SecurityBlockDeviceAdministratorManagedDevices     = $True
                         OsMinimumVersion                                   = 7
                         OsMaximumVersion                                   = 11
-                        MinAndroidSecurityPatchLevel                       = $Null
+                        MinAndroidSecurityPatchLevel                       = Null
                         StorageRequireEncryption                           = $True
                         SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
                         SecurityRequireSafetyNetAttestationCertifiedDevice = $True
                         SecurityRequireGooglePlayServices                  = $True
                         SecurityRequireUpToDateSecurityProviders           = $True
                         SecurityRequireCompanyPortalAppIntegrity           = $True
-                        ConditionStatementId                               = $Null
+                        ConditionStatementId                               = Null
                         RestrictedApps                                     = "[]"
                         RoleScopeTagIds                                    = 0
                         Ensure                                             = 'Present'
@@ -162,14 +162,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SecurityBlockDeviceAdministratorManagedDevices     = $True
                             OsMinimumVersion                                   = 7
                             OsMaximumVersion                                   = 11
-                            MinAndroidSecurityPatchLevel                       = $Null
+                            MinAndroidSecurityPatchLevel                       = Null
                             StorageRequireEncryption                           = $True
                             SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
                             SecurityRequireSafetyNetAttestationCertifiedDevice = $True
                             SecurityRequireGooglePlayServices                  = $True
                             SecurityRequireUpToDateSecurityProviders           = $True
                             SecurityRequireCompanyPortalAppIntegrity           = $True
-                            ConditionStatementId                               = $Null
+                            ConditionStatementId                               = Null
                             RestrictedApps                                     = "[]"
                             RoleScopeTagIds                                    = 0
                         }
@@ -213,14 +213,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SecurityBlockDeviceAdministratorManagedDevices     = $True
                         OsMinimumVersion                                   = 7
                         OsMaximumVersion                                   = 11
-                        MinAndroidSecurityPatchLevel                       = $Null
+                        MinAndroidSecurityPatchLevel                       = Null
                         StorageRequireEncryption                           = $True
                         SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
                         SecurityRequireSafetyNetAttestationCertifiedDevice = $True
                         SecurityRequireGooglePlayServices                  = $True
                         SecurityRequireUpToDateSecurityProviders           = $True
                         SecurityRequireCompanyPortalAppIntegrity           = $True
-                        ConditionStatementId                               = $Null
+                        ConditionStatementId                               = Null
                         RestrictedApps                                     = "[]"
                         RoleScopeTagIds                                    = 0
                         Ensure                                             = 'Present'
@@ -251,14 +251,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SecurityBlockDeviceAdministratorManagedDevices     = $True
                             OsMinimumVersion                                   = 7
                             OsMaximumVersion                                   = 11
-                            MinAndroidSecurityPatchLevel                       = $Null
+                            MinAndroidSecurityPatchLevel                       = Null
                             StorageRequireEncryption                           = $True
                             SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
                             SecurityRequireSafetyNetAttestationCertifiedDevice = $True
                             SecurityRequireGooglePlayServices                  = $True
                             SecurityRequireUpToDateSecurityProviders           = $True
                             SecurityRequireCompanyPortalAppIntegrity           = $True
-                            ConditionStatementId                               = $Null
+                            ConditionStatementId                               = Null
                             RestrictedApps                                     = "[]"
                             RoleScopeTagIds                                    = 0
                         }
@@ -293,14 +293,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SecurityBlockDeviceAdministratorManagedDevices     = $True
                         OsMinimumVersion                                   = 7
                         OsMaximumVersion                                   = 11
-                        MinAndroidSecurityPatchLevel                       = $Null
+                        MinAndroidSecurityPatchLevel                       = Null
                         StorageRequireEncryption                           = $True
                         SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
                         SecurityRequireSafetyNetAttestationCertifiedDevice = $True
                         SecurityRequireGooglePlayServices                  = $True
                         SecurityRequireUpToDateSecurityProviders           = $True
                         SecurityRequireCompanyPortalAppIntegrity           = $True
-                        ConditionStatementId                               = $Null
+                        ConditionStatementId                               = Null
                         RestrictedApps                                     = "[]"
                         RoleScopeTagIds                                    = 0
                         Ensure                                             = 'Present'
@@ -331,14 +331,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SecurityBlockDeviceAdministratorManagedDevices     = $True
                             OsMinimumVersion                                   = 7
                             OsMaximumVersion                                   = 11
-                            MinAndroidSecurityPatchLevel                       = $Null
+                            MinAndroidSecurityPatchLevel                       = Null
                             StorageRequireEncryption                           = $True
                             SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
                             SecurityRequireSafetyNetAttestationCertifiedDevice = $True
                             SecurityRequireGooglePlayServices                  = $True
                             SecurityRequireUpToDateSecurityProviders           = $True
                             SecurityRequireCompanyPortalAppIntegrity           = $True
-                            ConditionStatementId                               = $Null
+                            ConditionStatementId                               = Null
                             RestrictedApps                                     = "[]"
                             RoleScopeTagIds                                    = 0
                         }
@@ -389,14 +389,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             SecurityBlockDeviceAdministratorManagedDevices     = $True
                             OsMinimumVersion                                   = 7
                             OsMaximumVersion                                   = 11
-                            MinAndroidSecurityPatchLevel                       = $Null
+                            MinAndroidSecurityPatchLevel                       = Null
                             StorageRequireEncryption                           = $True
                             SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
                             SecurityRequireSafetyNetAttestationCertifiedDevice = $True
                             SecurityRequireGooglePlayServices                  = $True
                             SecurityRequireUpToDateSecurityProviders           = $True
                             SecurityRequireCompanyPortalAppIntegrity           = $True
-                            ConditionStatementId                               = $Null
+                            ConditionStatementId                               = Null
                             RestrictedApps                                     = "[]"
                             RoleScopeTagIds                                    = 0
                         }
