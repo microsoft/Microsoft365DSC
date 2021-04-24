@@ -30,8 +30,7 @@ function Get-TargetResource
         $passwordRequiredType,
 
         [Parameter()]
-        [System.String]
-        [ValidateSet('none', 'low', 'medium', 'high')]
+        [System.Boolean]
         $requiredPasswordComplexity,
 
         [Parameter()]
@@ -121,12 +120,12 @@ function Get-TargetResource
         $securityRequireCompanyPortalAppIntegrity,
 
         [Parameter()]
-        [System.AppListItem[]]
-        $restrictedApps,
-
-        [Parameter()]
         [System.String]
         $conditionStatementId,
+
+        [Parameter()]
+        [System.String[]]
+        $restrictedApps,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -147,7 +146,7 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Checking for the Intune Device Compliance Android Policy {$DisplayName}"
+    Write-Verbose -Message "Checking for the Intune Android Device Compliance Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
         -InboundParameters $PSBoundParameters
 
@@ -155,7 +154,7 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $devicePolicy = Get-DeviceManagement_DeviceCompliancePolicies `
+        $devicePolicy = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
             -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
@@ -188,6 +187,7 @@ function Get-TargetResource
             SecurityBlockDeviceAdministratorManagedDevices     = $devicePolicy.securityBlockDeviceAdministratorManagedDevices
             osMinimumVersion                                   = $devicePolicy.osMinimumVersion
             osMaximumVersion                                   = $devicePolicy.osMaximumVersion
+            minAndroidSecurityPatchLevel                       = $devicePolicy.minAndroidSecurityPatchLevel
             StorageRequireEncryption                           = $devicePolicy.storageRequireEncryption
             SecurityRequireSafetyNetAttestationBasicIntegrity  = $devicePolicy.securityRequireSafetyNetAttestationBasicIntegrity
             SecurityRequireSafetyNetAttestationCertifiedDevice = $devicePolicy.securityRequireSafetyNetAttestationCertifiedDevice
@@ -259,8 +259,7 @@ function Set-TargetResource
         $passwordRequiredType,
 
         [Parameter()]
-        [System.String]
-        [ValidateSet('none', 'low', 'medium', 'high')]
+        [System.Boolean]
         $requiredPasswordComplexity,
 
         [Parameter()]
@@ -350,12 +349,12 @@ function Set-TargetResource
         $securityRequireCompanyPortalAppIntegrity,
 
         [Parameter()]
-        [System.AppListItem[]]
-        $restrictedApps,
-
-        [Parameter()]
         [System.String]
         $conditionStatementId,
+
+        [Parameter()]
+        [System.String[]]
+        $restrictedApps,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -375,8 +374,7 @@ function Set-TargetResource
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Write-Verbose -Message "Intune Device Compliance Android Policy {$DisplayName}"
-
+    Write-Verbose -Message "Intune Device Owner Device Compliance Android Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
         -InboundParameters $PSBoundParameters
 
@@ -398,28 +396,28 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentDeviceAndroidPolicy.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating new Intune Device Compliance Android Policy {$DisplayName}"
-        New-DeviceManagement_DeviceCompliancePolicies -androidCompliancePolicy @PSBoundParameters -scheduledActionsForRule $jsonObject
+        Write-Verbose -Message "Creating new Intune Android Device Compliance Policy {$DisplayName}"
+        New-IntuneDeviceCompliancePolicy -ODataType 'microsoft.graph.androidCompliancePolicy' @PSBoundParameters -scheduledActionsForRule $jsonObject
     }
     elseif ($Ensure -eq 'Present' -and $currentDeviceAndroidPolicy.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating Intune Device Compliance Android Policy {$DisplayName}"
-        $configDeviceAndroidPolicy = Get-DeviceManagement_DeviceCompliancePolicies `
+        Write-Verbose -Message "Updating Intune Android Device Compliance Policy {$DisplayName}"
+        $configDeviceAndroidPolicy = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.AndroidCompliancePolicy' -and `
+            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
-        Update-DeviceManagement_DeviceCompliancePolicies -androidCompliancePolicy `
+        Update-IntuneDeviceCompliancePolicy -ODataType 'microsoft.graph.androidCompliancePolicy' `
             -deviceCompliancePolicyId $configDeviceAndroidPolicy.deviceCompliancePolicyId @PSBoundParameters
     }
     elseif ($Ensure -eq 'Absent' -and $currentDeviceAndroidPolicy.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing Intune Device Compliance Android Policy {$DisplayName}"
-        $configDeviceAndroidPolicy = Get-DeviceManagement_DeviceCompliancePolicies `
+        Write-Verbose -Message "Removing Intune Android Device Compliance Policy {$DisplayName}"
+        $configDeviceAndroidPolicy = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.AndroidCompliancePolicy' -and `
+            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
 
-        Remove-DeviceManagement_DeviceCompliancePolicies -deviceCompliancePolicyId $configDeviceAndroidPolicy.deviceCompliancePolicyId
+        Remove-IntuneDeviceCompliancePolicy -deviceCompliancePolicyId $configDeviceAndroidPolicy.deviceCompliancePolicyId
     }
 }
 
@@ -455,8 +453,7 @@ function Test-TargetResource
         $passwordRequiredType,
 
         [Parameter()]
-        [System.String]
-        [ValidateSet('none', 'low', 'medium', 'high')]
+        [System.Boolean]
         $requiredPasswordComplexity,
 
         [Parameter()]
@@ -546,12 +543,12 @@ function Test-TargetResource
         $securityRequireCompanyPortalAppIntegrity,
 
         [Parameter()]
-        [System.AppListItem[]]
-        $restrictedApps,
-
-        [Parameter()]
         [System.String]
         $conditionStatementId,
+
+        [Parameter()]
+        [System.String[]]
+        $restrictedApps,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -572,7 +569,7 @@ function Test-TargetResource
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Write-Verbose -Message "Testing configuration of Intune Device Compliance Android Policy {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of Intune Android Device Compliance Policy {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -610,15 +607,14 @@ function Export-TargetResource
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
     $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
         -InboundParameters $PSBoundParameters
 
     try
     {
-        [array]$configDeviceAndroidPolicies = Get-DeviceManagement_DeviceCompliancePolicies `
+        [array]$configDeviceAndroidPolicies = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.AndroidCompliancePolicy' }
+            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidCompliancePolicy' }
         $i = 1
         $content = ''
         Write-Host "`r`n" -NoNewline

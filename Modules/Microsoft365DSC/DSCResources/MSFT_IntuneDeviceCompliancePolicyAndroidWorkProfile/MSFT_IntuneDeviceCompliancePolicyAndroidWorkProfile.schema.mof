@@ -1,11 +1,11 @@
-[ClassVersion("1.0.0.0"), FriendlyName("IntuneAndroidWorkProfileDeviceCompliancePolicy")]
-class MSFT_IntuneAndroidWorkProfileDeviceCompliancePolicy : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceCompliancePolicyAndroidWorkProfile")]
+class MSFT_IntuneDeviceCompliancePolicyAndroidWorkProfile : OMI_BaseResource
 {
     [Key, Description("Display name of the AndroidWorkProfile device compliance policy.")] String DisplayName;
     [Write, Description("Description of the AndroidWorkProfile device compliance policy.")] String Description;
     [Write, Description("PasswordRequired of the AndroidWorkProfile device compliance policy.")] Boolean PasswordRequired;
     [Write, Description("PasswordMinimumLength of the AndroidWorkProfile device compliance policy.")] Uint32 PasswordMinimumLength;
-    [Write, Description("PasswordRequiredType of the AndroidWorkProfile device compliance policy."), ValueMap{"deviceDefault", "alphabetic", "alphanumeric", "alphanumericWithSymbols", "lowSecurityBiometric", "numeric", "numericComplex", "any"}] String PasswordRequiredType;
+    [Write, Description("PasswordRequiredType of the AndroidWorkProfile device compliance policy."), ValueMap{"deviceDefault", "alphabetic", "alphanumeric", "alphanumericWithSymbols", "lowSecurityBiometric", "numeric", "numericComplex", "any"}, Values{"deviceDefault", "alphabetic", "alphanumeric", "alphanumericWithSymbols", "lowSecurityBiometric", "numeric", "numericComplex", "any"}] String PasswordRequiredType;
     [Write, Description("PasswordMinutesOfInactivityBeforeLock of the AndroidWorkProfile device compliance policy.")] Uint32 PasswordMinutesOfInactivityBeforeLock;
     [Write, Description("PasswordExpirationDays of the AndroidWorkProfile device compliance policy.")] Uint32 passwordExpirationDays;
     [Write, Description("PasswordPreviousPasswordBlockCount of the AndroidWorkProfile device compliance policy.")] Uint32 passwordPreviousPasswordBlockCount;
@@ -14,8 +14,8 @@ class MSFT_IntuneAndroidWorkProfileDeviceCompliancePolicy : OMI_BaseResource
     [Write, Description("SecurityDisableUsbDebugging of the AndroidWorkProfile device compliance policy.")] Boolean securityDisableUsbDebugging;
     [Write, Description("SecurityRequireVerifyApps of the AndroidWorkProfile device compliance policy.")] Boolean securityRequireVerifyApps;
     [Write, Description("DeviceThreatProtectionEnabled of the AndroidWorkProfile device compliance policy.")] Boolean deviceThreatProtectionEnabled;
-    [Write, Description("DeviceThreatProtectionRequiredSecurityLevel of the AndroidWorkProfile device compliance policy."), ValueMap{"unavailable", "secured", "low", "medium", "high", "notSet"}] String DeviceThreatProtectionRequiredSecurityLevel;
-    [Write, Description("advancedThreatProtectionRequiredSecurityLevel of the AndroidWorkProfile device compliance policy."), ValueMap{"unavailable", "secured", "low", "medium", "high", "notSet"}] String advancedThreatProtectionRequiredSecurityLevel;
+    [Write, Description("DeviceThreatProtectionRequiredSecurityLevel of the AndroidWorkProfile device compliance policy."), ValueMap{"unavailable", "secured", "low", "medium", "high", "notSet"}, Values{"unavailable", "secured", "low", "medium", "high", "notSet"}] String DeviceThreatProtectionRequiredSecurityLevel;
+    [Write, Description("advancedThreatProtectionRequiredSecurityLevel of the AndroidWorkProfile device compliance policy."), ValueMap{"unavailable", "secured", "low", "medium", "high", "notSet"}, Values{"unavailable", "secured", "low", "medium", "high", "notSet"}] String advancedThreatProtectionRequiredSecurityLevel;
     [Write, Description("SecurityBlockJailbrokenDevices of the AndroidWorkProfile device compliance policy.")] Boolean securityBlockJailbrokenDevices;
     [Write, Description("OSMinimumVersion of the AndroidWorkProfile device compliance policy.")] String osMinimumVersion;
     [Write, Description("OSMaximumVersion of the AndroidWorkProfile device compliance policy.")] String osMaximumVersion;

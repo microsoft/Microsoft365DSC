@@ -17,6 +17,10 @@ function Get-TargetResource
         $passwordRequired,
 
         [Parameter()]
+        [System.Int32]
+        $passwordMinimumLength,
+
+        [Parameter()]
         [System.String[]]
         $roleScopeTagIds,
 
@@ -31,43 +35,27 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Int32]
-        $passwordMinimumLength,
-
-        [Parameter()]
-        [System.Int32]
-        $passwordMinimumLetterCharacters,
-
-        [Parameter()]
-        [System.Int32]
-        $passwordMinimumLowerCaseCharacters,
-
-        [Parameter()]
-        [System.Int32]
-        $passwordMinimumNonLetterCharacters,
-
-        [Parameter()]
-        [System.Int32]
-        $passwordMinimumNumericCharacters,
-
-        [Parameter()]
-        [System.Int32]
-        $passwordMinimumSymbolCharacters,
-
-        [Parameter()]
-        [System.Int32]
-        $passwordMinimumUpperCaseCharacters,
-
-        [Parameter()]
-        [System.Boolean]
-        $storageRequireEncryption,
-
-        [Parameter()]
-        [System.Int32]
         $passwordExpirationDays,
 
         [Parameter()]
         [System.Int32]
         $passwordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordSignInFailureCountBeforeFactoryReset,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityPreventInstallAppsFromUnknownSources,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityDisableUsbDebugging,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireVerifyApps,
 
         [Parameter()]
         [System.Boolean]
@@ -84,6 +72,10 @@ function Get-TargetResource
         $advancedThreatProtectionRequiredSecurityLevel,
 
         [Parameter()]
+        [System.Boolean]
+        $securityBlockJailbrokenDevices,
+
+        [Parameter()]
         [System.String]
         $osMinimumVersion,
 
@@ -97,11 +89,27 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $storageRequireEncryption,
+
+        [Parameter()]
+        [System.Boolean]
         $securityRequireSafetyNetAttestationBasicIntegrity,
 
         [Parameter()]
         [System.Boolean]
         $securityRequireSafetyNetAttestationCertifiedDevice,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireGooglePlayServices,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireUpToDateSecurityProviders,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireCompanyPortalAppIntegrity,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -122,7 +130,7 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Checking for the Intune Device Owner Device Compliance Android Policy {$DisplayName}"
+    Write-Verbose -Message "Checking for the Intune Android Work Profile Device Compliance Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
         -InboundParameters $PSBoundParameters
 
@@ -130,18 +138,18 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $devicePolicy = Get-DeviceManagement_DeviceCompliancePolicies `
+        $devicePolicy = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidDeviceOwnerCompliancePolicy' -and `
+            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidWorkProfileCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
 
         if ($null -eq $devicePolicy)
         {
-            Write-Verbose -Message "No Android Device Owner Device Compliance Policy with displayName {$DisplayName} was found"
+            Write-Verbose -Message "No Intune Android Work Profile Device Compliance Policy with displayName {$DisplayName} was found"
             return $nullResult
         }
 
-        Write-Verbose -Message "Found Android Device Owner Device Compliance Policy with displayName {$DisplayName}"
+        Write-Verbose -Message "Found Intune Android Work Profile Device Compliance Policy with displayName {$DisplayName}"
         $results = @{
             DisplayName                                         = $devicePolicy.displayName
             Description                                         = $devicePolicy.description
@@ -158,9 +166,8 @@ function Get-TargetResource
             SecurityRequireVerifyApps                           = $devicePolicy.securityRequireVerifyApps
             DeviceThreatProtectionEnabled                       = $devicePolicy.deviceThreatProtectionEnabled
             DeviceThreatProtectionRequiredSecurityLevel         = $devicePolicy.deviceThreatProtectionRequiredSecurityLevel
-            AdvancedThreatProtectionRequiredSecurityLevel       = $devicePolicy.advancedThreatProtectionRequiredSecurityLevel
+            advancedThreatProtectionRequiredSecurityLevel       = $devicePolicy.advancedThreatProtectionRequiredSecurityLevel
             SecurityBlockJailbrokenDevices                      = $devicePolicy.securityBlockJailbrokenDevices
-            SecurityBlockDeviceAdministratorManagedDevices      = $devicePolicy.securityBlockDeviceAdministratorManagedDevices
             osMinimumVersion                                    = $devicePolicy.osMinimumVersion
             osMaximumVersion                                    = $devicePolicy.osMaximumVersion
             StorageRequireEncryption                            = $devicePolicy.storageRequireEncryption
@@ -169,8 +176,6 @@ function Get-TargetResource
             SecurityRequireGooglePlayServices                   = $devicePolicy.securityRequireGooglePlayServices
             SecurityRequireUpToDateSecurityProviders            = $devicePolicy.securityRequireUpToDateSecurityProviders
             SecurityRequireCompanyPortalAppIntegrity            = $devicePolicy.securityRequireCompanyPortalAppIntegrity
-            ConditionStatementId                                = $devicePolicy.conditionStatementId
-            RestrictedApps                                      = $devicePolicy.restrictedApps
             RoleScopeTagIds                                     = $devicePolicy.roleScopeTagIds
             Ensure                                              = 'Present'
             GlobalAdminAccount                                  = $GlobalAdminAccount
@@ -221,6 +226,10 @@ function Set-TargetResource
         $passwordRequired,
 
         [Parameter()]
+        [System.Int32]
+        $passwordMinimumLength,
+
+        [Parameter()]
         [System.String[]]
         $roleScopeTagIds,
 
@@ -235,43 +244,27 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Int32]
-        $passwordMinimumLength,
-
-        [Parameter()]
-        [System.Int32]
-        $passwordMinimumLetterCharacters,
-
-        [Parameter()]
-        [System.Int32]
-        $passwordMinimumLowerCaseCharacters,
-
-        [Parameter()]
-        [System.Int32]
-        $passwordMinimumNonLetterCharacters,
-
-        [Parameter()]
-        [System.Int32]
-        $passwordMinimumNumericCharacters,
-
-        [Parameter()]
-        [System.Int32]
-        $passwordMinimumSymbolCharacters,
-
-        [Parameter()]
-        [System.Int32]
-        $passwordMinimumUpperCaseCharacters,
-
-        [Parameter()]
-        [System.Boolean]
-        $storageRequireEncryption,
-
-        [Parameter()]
-        [System.Int32]
         $passwordExpirationDays,
 
         [Parameter()]
         [System.Int32]
         $passwordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordSignInFailureCountBeforeFactoryReset,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityPreventInstallAppsFromUnknownSources,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityDisableUsbDebugging,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireVerifyApps,
 
         [Parameter()]
         [System.Boolean]
@@ -288,6 +281,10 @@ function Set-TargetResource
         $advancedThreatProtectionRequiredSecurityLevel,
 
         [Parameter()]
+        [System.Boolean]
+        $securityBlockJailbrokenDevices,
+
+        [Parameter()]
         [System.String]
         $osMinimumVersion,
 
@@ -301,11 +298,27 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $storageRequireEncryption,
+
+        [Parameter()]
+        [System.Boolean]
         $securityRequireSafetyNetAttestationBasicIntegrity,
 
         [Parameter()]
         [System.Boolean]
         $securityRequireSafetyNetAttestationCertifiedDevice,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireGooglePlayServices,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireUpToDateSecurityProviders,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireCompanyPortalAppIntegrity,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -325,7 +338,7 @@ function Set-TargetResource
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Write-Verbose -Message "Intune Device Owner Device Compliance Android Policy {$DisplayName}"
+    Write-Verbose -Message "Intune Android Work Profile Device Compliance Policy {$DisplayName}"
 
     $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
         -InboundParameters $PSBoundParameters
@@ -348,28 +361,28 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentDeviceAndroidPolicy.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating new Intune Android Device Owner Device Compliance Policy {$DisplayName}"
-        New-DeviceManagement_DeviceCompliancePolicies -OdataType 'microsoft.graph.androidDeviceOwnerCompliancePolicy' @PSBoundParameters -scheduledActionsForRule $jsonObject
+        Write-Verbose -Message "Creating new Intune Android Work Profile Device Compliance Policy {$DisplayName}"
+        New-IntuneDeviceCompliancePolicy -ODataType 'microsoft.graph.androidWorkProfileCompliancePolicy' @PSBoundParameters -scheduledActionsForRule $jsonObject
     }
     elseif ($Ensure -eq 'Present' -and $currentDeviceAndroidPolicy.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating Intune Android Device Owner Device Compliance Policy {$DisplayName}"
-        $configDeviceAndroidPolicy = Get-DeviceManagement_DeviceCompliancePolicies `
+        Write-Verbose -Message "Updating Intune Android Work Profile Device Compliance Policy {$DisplayName}"
+        $configDeviceAndroidPolicy = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidDeviceOwnerCompliancePolicy' -and `
+            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidWorkProfileCompliancePolicy' -and `
             $_.displayName -eq $($DisplayName) }
-        Update-DeviceManagement_DeviceCompliancePolicies -AndroidCompliancePolicy `
+        Update-IntuneDeviceCompliancePolicy -ODataType 'microsoft.graph.androidWorkProfileCompliancePolicy' `
             -deviceCompliancePolicyId $configDeviceAndroidPolicy.deviceCompliancePolicyId @PSBoundParameters
     }
     elseif ($Ensure -eq 'Absent' -and $currentDeviceAndroidPolicy.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing Intune Android Device Owner Device Compliance Policy {$DisplayName}"
-        $configDeviceAndroidPolicy = Get-DeviceManagement_DeviceCompliancePolicies `
+        Write-Verbose -Message "Removing Intune Android Work Profile Device Compliance Policy {$DisplayName}"
+        $configDeviceAndroidPolicy = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidDeviceOwnerCompliancePolicy' -and `
+            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidWorkProfileCompliancePolicy' -and `
             $_.displayName -eq $($DisplayName) }
 
-        Remove-DeviceManagement_DeviceCompliancePolicies -deviceCompliancePolicyId $configDeviceAndroidPolicy.deviceCompliancePolicyId
+        Remove-IntuneDeviceCompliancePolicy -deviceCompliancePolicyId $configDeviceAndroidPolicy.deviceCompliancePolicyId
     }
 }
 
@@ -392,6 +405,10 @@ function Test-TargetResource
         $passwordRequired,
 
         [Parameter()]
+        [System.Int32]
+        $passwordMinimumLength,
+
+        [Parameter()]
         [System.String[]]
         $roleScopeTagIds,
 
@@ -406,43 +423,27 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Int32]
-        $passwordMinimumLength,
-
-        [Parameter()]
-        [System.Int32]
-        $passwordMinimumLetterCharacters,
-
-        [Parameter()]
-        [System.Int32]
-        $passwordMinimumLowerCaseCharacters,
-
-        [Parameter()]
-        [System.Int32]
-        $passwordMinimumNonLetterCharacters,
-
-        [Parameter()]
-        [System.Int32]
-        $passwordMinimumNumericCharacters,
-
-        [Parameter()]
-        [System.Int32]
-        $passwordMinimumSymbolCharacters,
-
-        [Parameter()]
-        [System.Int32]
-        $passwordMinimumUpperCaseCharacters,
-
-        [Parameter()]
-        [System.Boolean]
-        $storageRequireEncryption,
-
-        [Parameter()]
-        [System.Int32]
         $passwordExpirationDays,
 
         [Parameter()]
         [System.Int32]
         $passwordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordSignInFailureCountBeforeFactoryReset,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityPreventInstallAppsFromUnknownSources,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityDisableUsbDebugging,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireVerifyApps,
 
         [Parameter()]
         [System.Boolean]
@@ -459,6 +460,10 @@ function Test-TargetResource
         $advancedThreatProtectionRequiredSecurityLevel,
 
         [Parameter()]
+        [System.Boolean]
+        $securityBlockJailbrokenDevices,
+
+        [Parameter()]
         [System.String]
         $osMinimumVersion,
 
@@ -472,11 +477,27 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $storageRequireEncryption,
+
+        [Parameter()]
+        [System.Boolean]
         $securityRequireSafetyNetAttestationBasicIntegrity,
 
         [Parameter()]
         [System.Boolean]
         $securityRequireSafetyNetAttestationCertifiedDevice,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireGooglePlayServices,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireUpToDateSecurityProviders,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireCompanyPortalAppIntegrity,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -497,7 +518,7 @@ function Test-TargetResource
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Write-Verbose -Message "Testing configuration of Intune Android Device Owner Device Compliance Policy {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of Intune Android Work Profile Device Compliance Policy {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -541,9 +562,9 @@ function Export-TargetResource
 
     try
     {
-        [array]$configDeviceAndroidPolicies = Get-DeviceManagement_DeviceCompliancePolicies `
+        [array]$configDeviceAndroidPolicies = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidDeviceOwnerCompliancePolicy'}
+            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidWorkProfileCompliancePolicy'}
         $i = 1
         $content = ''
         Write-Host "`r`n" -NoNewline
@@ -557,7 +578,7 @@ function Export-TargetResource
             }
             $result = Get-TargetResource @params
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $content += "        IntuneAndroidDeviceOwnerDeviceCompliancePolicy " + (New-Guid).ToString() + "`r`n"
+            $content += "        IntuneDeviceCompliancePolicyAndroidWorkProfile " + (New-Guid).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
