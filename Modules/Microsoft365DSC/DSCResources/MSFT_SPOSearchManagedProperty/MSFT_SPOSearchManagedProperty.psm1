@@ -1,6 +1,6 @@
 function Get-TargetResource
 {
-        [CmdletBinding()]
+[CmdletBinding()]
         [OutputType([System.Collections.Hashtable])]
         param
         (
@@ -114,6 +114,9 @@ function Get-TargetResource
         )
 
         Write-Verbose -Message "Getting configuration for Managed Property instance $Name"
+        $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters
+
         #region Telemetry
         $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
         $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -121,11 +124,9 @@ function Get-TargetResource
         $data.Add("Method", $MyInvocation.MyCommand)
         $data.Add("Principal", $GlobalAdminAccount.UserName)
         $data.Add("TenantId", $TenantId)
+        $data.Add("ConnectionMode", $ConnectionMode)
         Add-M365DSCTelemetryEvent -Data $data
         #endregion
-
-        $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters
 
         $nullReturn = $PSBoundParameters
         $nullReturn.Ensure = "Absent"
@@ -840,6 +841,9 @@ function Export-TargetResource
                 [System.Management.Automation.PSCredential]
                 $CertificatePassword
         )
+        $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters
+
         #region Telemetry
         $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
         $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -847,11 +851,10 @@ function Export-TargetResource
         $data.Add("Method", $MyInvocation.MyCommand)
         $data.Add("Principal", $GlobalAdminAccount.UserName)
         $data.Add("TenantId", $TenantId)
+        $data.Add("ConnectionMode", $ConnectionMode)
         Add-M365DSCTelemetryEvent -Data $data
         #endregion
 
-        $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters
         try
         {
                 $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)

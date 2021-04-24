@@ -1,5 +1,25 @@
 # Change log for Microsoft365DSC
 
+# 1.21.421.2
+
+* MISC
+  * Updated the SkipModuleReload logic for a dozen of EXO modules
+    which were failing authentication;
+
+# 1.21.421.1
+
+* AADConditionalAccessPolicy
+  * Fix to allow 'undefined' as a value for multiple parameters;
+* EXOTransportRule
+  * Fixed schema to support Service Principal Auth;
+* TeamsChannelTab
+  * Fixed typo in parameter 'TeamId';
+* MISC
+  * Refactor of all EXO resources to fixes for Set-TargetResource
+    functions where Service Principal was used to authenticate;
+  * Refactored connections across all resources to help with
+    Telemetry regarding what auth method users are leveraging.
+
 # 1.21.414.2
 
 * AADConditionalAccessPolicy
@@ -36,7 +56,7 @@
   * Fixed issue in most EXO resources where AzureAD App information
     was not returned by the Get-TargetResource function;
 
-1.21.331.1
+# 1.21.331.1
 
 * AADApplication
   * Added support for API Permissions;

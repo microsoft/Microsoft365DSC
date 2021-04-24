@@ -43,6 +43,17 @@ function Get-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' -InboundParameters $PSBoundParameters
 
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
 
@@ -56,16 +67,6 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
-
-        #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-        $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-        $data.Add("Resource", $ResourceName)
-        $data.Add("Method", $MyInvocation.MyCommand)
-        $data.Add("Principal", $GlobalAdminAccount.UserName)
-        $data.Add("TenantId", $TenantId)
-        Add-M365DSCTelemetryEvent -Data $data
-        #endregion
 
         try
         {

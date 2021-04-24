@@ -715,12 +715,6 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting Transport Rule configuration for $Name"
-    #region Telemetry
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
 
     if ($Global:CurrentModeIsExport)
     {
@@ -733,6 +727,18 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
 
     $AllTransportRules = Get-TransportRule
 
@@ -2619,15 +2625,20 @@ function Export-TargetResource
         $CertificatePassword
     )
     $InformationPreference = 'Continue'
-    #region Telemetry
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     try
     {
@@ -2636,7 +2647,7 @@ function Export-TargetResource
         $i = 1
         foreach ($TransportRule in $AllTransportRules)
         {
-            Write-Information "    [$i/$($AllTransportRules.Count)] $($TransportRule.Name)"
+            Write-Host "    |---[$i/$($AllTransportRules.Count)] $($TransportRule.Name)" -NoNewline
             $Params = @{
                 Name                  = $TransportRule.Name
                 GlobalAdminAccount    = $GlobalAdminAccount
@@ -2654,6 +2665,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
         return $dscContent
