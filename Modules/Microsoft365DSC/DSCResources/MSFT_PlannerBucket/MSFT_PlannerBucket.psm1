@@ -42,6 +42,7 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", "ServicePrincipal")
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -271,6 +272,7 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", "ServicePrincipal")
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 

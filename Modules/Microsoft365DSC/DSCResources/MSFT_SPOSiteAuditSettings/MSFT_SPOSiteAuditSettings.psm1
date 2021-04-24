@@ -38,6 +38,10 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting SPOSiteAuditSettings for {$Url}"
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+        -InboundParameters $PSBoundParameters `
+        -Url $Url -ErrorAction SilentlyContinue
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -45,6 +49,7 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -53,9 +58,6 @@ function Get-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
-            -InboundParameters $PSBoundParameters `
-            -Url $Url -ErrorAction SilentlyContinue
         $auditSettings = Get-PnPAuditing -ErrorAction Stop
         $auditFlag = $auditSettings.AuditFlags
         if ($null -eq $auditFlag)
@@ -263,6 +265,9 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -270,10 +275,9 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
-        -InboundParameters $PSBoundParameters
 
     try
     {
