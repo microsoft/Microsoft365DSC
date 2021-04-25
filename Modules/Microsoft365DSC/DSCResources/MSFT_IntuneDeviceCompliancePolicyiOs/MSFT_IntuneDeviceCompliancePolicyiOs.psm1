@@ -93,12 +93,11 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-
     $nullResult = $PSBoundParameters
     $nullResult.Ensure = 'Absent'
     try
     {
-        $devicePolicy = Get-DeviceManagement_DeviceCompliancePolicies `
+        $devicePolicy = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
             -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.iosCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
@@ -111,8 +110,8 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found iOS Device Compliance Policy with displayName {$DisplayName}"
         $results = @{
-            DisplayName                                 = $devicePolicy.displayName
-            Description                                 = $devicePolicy.description
+            DisplayName                                 = $devicePolicy.DisplayName
+            Description                                 = $devicePolicy.Description
             PasscodeBlockSimple                         = $devicePolicy.PasscodeBlockSimple
             PasscodeExpirationDays                      = $devicePolicy.PasscodeExpirationDays
             PasscodeMinimumLength                       = $devicePolicy.PasscodeMinimumLength
@@ -237,23 +236,27 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
+
+    Write-Verbose -Message "Intune Device Compliance iOS Policy {$DisplayName}"
+
+    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Write-Verbose -Message "Intune Device Compliance iOS Policy {$DisplayName}"
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
-        -InboundParameters $PSBoundParameters
 
     $currentDeviceiOsPolicy = Get-TargetResource @PSBoundParameters
 
-    $PSBoundParameters.Remove('Ensure')
-    $PSBoundParameters.Remove('$GlobalAdminAccount')
+    $PSBoundParameters.Remove('Ensure') | Out-Null
+    $PSBoundParameters.Remove('GlobalAdminAccount') | Out-Null
 
     $jsonParams = @"
 {
@@ -269,27 +272,27 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentDeviceiOsPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Intune Device Compliance iOS Policy {$DisplayName}"
-        New-DeviceManagement_DeviceCompliancePolicies -iosCompliancePolicy @PSBoundParameters -scheduledActionsForRule $jsonObject
+        New-IntuneDeviceCompliancePolicy -ODataType 'microsoft.graph.iosCompliancePolicy' @PSBoundParameters -scheduledActionsForRule $jsonObject
     }
     elseif ($Ensure -eq 'Present' -and $currentDeviceiOsPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Intune Device Compliance iOS Policy {$DisplayName}"
-        $configDeviceiOsPolicy = Get-DeviceManagement_DeviceCompliancePolicies `
+        $configDeviceiOsPolicy = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
             -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.iosCompliancePolicy' -and `
-            $_.displayName -eq $($DisplayName) }
-        Update-DeviceManagement_DeviceCompliancePolicies -iosCompliancePolicy `
+                $_.displayName -eq $($DisplayName) }
+        Update-IntuneDeviceCompliancePolicy -ODataType 'microsoft.graph.iosCompliancePolicy' `
             -deviceCompliancePolicyId $configDeviceiOsPolicy.deviceCompliancePolicyId @PSBoundParameters
     }
     elseif ($Ensure -eq 'Absent' -and $currentDeviceiOsPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Intune Device Compliance iOS Policy {$DisplayName}"
-        $configDeviceiOsPolicy = Get-DeviceManagement_DeviceCompliancePolicies `
+        $configDeviceiOsPolicy = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
             -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.iosCompliancePolicy' -and `
-            $_.displayName -eq $($DisplayName) }
+                $_.displayName -eq $($DisplayName) }
 
-        Remove-DeviceManagement_DeviceCompliancePolicies -deviceCompliancePolicyId $configDeviceiOsPolicy.deviceCompliancePolicyId
+        Remove-IntuneDeviceCompliancePolicy -deviceCompliancePolicyId $configDeviceiOsPolicy.deviceCompliancePolicyId
     }
 }
 
@@ -382,6 +385,7 @@ function Test-TargetResource
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
+
     Write-Verbose -Message "Testing configuration of Intune Device Compliance iOS Policy {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -412,6 +416,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
     $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
         -InboundParameters $PSBoundParameters
 
@@ -428,9 +433,9 @@ function Export-TargetResource
 
     try
     {
-        [array]$configDeviceiOsPolicies = Get-DeviceManagement_DeviceCompliancePolicies `
+        [array]$configDeviceiOsPolicies = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.iosCompliancePolicy'}
+            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.iosCompliancePolicy' }
         $i = 1
         $content = ''
         Write-Host "`r`n" -NoNewline

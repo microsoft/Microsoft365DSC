@@ -2,14 +2,14 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath "..\..\Unit" `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath "\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
@@ -37,11 +37,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credential"
             }
 
-            Mock -CommandName Update-DeviceAppManagement_TargetedManagedAppConfigurations -MockWith {
+            Mock -CommandName Update-IntuneAppConfigurationPolicyTargeted -MockWith {
             }
-            Mock -CommandName New-DeviceAppManagement_TargetedManagedAppConfigurations -MockWith {
+            Mock -CommandName New-IntuneAppConfigurationPolicyTargeted -MockWith {
             }
-            Mock -CommandName Remove-DeviceAppManagement_TargetedManagedAppConfigurations -MockWith {
+            Mock -CommandName Remove-IntuneAppConfigurationPolicyTargeted -MockWith {
             }
         }
 
@@ -55,7 +55,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount;
                 }
 
-                Mock -CommandName Get-DeviceAppManagement_TargetedManagedAppConfigurations -MockWith {
+                Mock -CommandName Get-IntuneAppConfigurationPolicyTargeted -MockWith {
                     return $null
                 }
             }
@@ -70,7 +70,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should create the App Configuration Policy from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-DeviceAppManagement_TargetedManagedAppConfigurations" -Exactly 1
+                Should -Invoke -CommandName "New-IntuneAppConfigurationPolicyTargeted" -Exactly 1
             }
         }
 
@@ -83,7 +83,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount;
                 }
 
-                Mock -CommandName Get-DeviceAppManagement_TargetedManagedAppConfigurations -MockWith {
+                Mock -CommandName Get-IntuneAppConfigurationPolicyTargeted -MockWith {
                     return @{
                         DisplayName = 'Test App Configuration Policy'
                         Description = 'Different Value'
@@ -102,7 +102,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should update the App Configuration Policy from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-DeviceAppManagement_TargetedManagedAppConfigurations -Exactly 1
+                Should -Invoke -CommandName Update-IntuneAppConfigurationPolicyTargeted -Exactly 1
             }
         }
 
@@ -115,7 +115,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount;
                 }
 
-                Mock -CommandName Get-DeviceAppManagement_TargetedManagedAppConfigurations -MockWith {
+                Mock -CommandName Get-IntuneAppConfigurationPolicyTargeted -MockWith {
                     return @{
                         DisplayName = 'Test App Configuration Policy'
                         Description = 'Test Definition'
@@ -137,7 +137,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount;
                 }
 
-                Mock -CommandName Get-DeviceAppManagement_TargetedManagedAppConfigurations -MockWith {
+                Mock -CommandName Get-IntuneAppConfigurationPolicyTargeted -MockWith {
                     return @{
                         DisplayName = 'Test App Configuration Policy'
                         Description = 'Test Definition'
@@ -156,17 +156,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should remove the App Configuration Policy from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-DeviceAppManagement_TargetedManagedAppConfigurations -Exactly 1
+                Should -Invoke -CommandName Remove-IntuneAppConfigurationPolicyTargeted -Exactly 1
             }
         }
 
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount     = $GlobalAdminAccount;
+                    GlobalAdminAccount = $GlobalAdminAccount;
                 }
 
-                Mock -CommandName Get-DeviceAppManagement_TargetedManagedAppConfigurations -MockWith {
+                Mock -CommandName Get-IntuneAppConfigurationPolicyTargeted -MockWith {
                     return @{
                         DisplayName = 'Test App Configuration Policy'
                         Description = 'Test Definition'
