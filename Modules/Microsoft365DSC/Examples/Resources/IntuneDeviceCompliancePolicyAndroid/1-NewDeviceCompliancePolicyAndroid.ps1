@@ -13,40 +13,31 @@ Configuration Example
 
     node localhost
     {
-        IntuneDeviceCompliancePolicyAndroid AddDeviceCompliancePolicyAndroid
+        IntuneDeviceCompliancePolicyAndroid a58cdba9-c410-4ba4-b7d2-3a09593b5d84
         {
-            DisplayName                                        = 'Test Android Device Compliance Policy'
-            Description                                        = 'Test Android Device Compliance Policy Description'
-            PasswordRequired                                   = $True
-            PasswordMinimumLength                              = 6
-            PasswordRequiredType                               = "DeviceDefault"
-            RequiredPasswordComplexity                         = None
-            PasswordMinutesOfInactivityBeforeLock              = 5
-            PasswordExpirationDays                             = 365
-            PasswordPreviousPasswordBlockCount                 = 3
-            PasswordSignInFailureCountBeforeFactoryReset       = 11
-            SecurityPreventInstallAppsFromUnknownSources       = $True
-            SecurityDisableUsbDebugging                        = $True
-            SecurityRequireVerifyApps                          = $True
-            DeviceThreatProtectionEnabled                      = $True
-            DeviceThreatProtectionRequiredSecurityLevel        = "Unavailable"
-            AdvancedThreatProtectionRequiredSecurityLevel      = "Unavailable"
-            SecurityBlockJailbrokenDevices                     = $True
-            SecurityBlockDeviceAdministratorManagedDevices     = $True
-            OsMinimumVersion                                   = 7
-            OsMaximumVersion                                   = 11
-            MinAndroidSecurityPatchLevel                       = Null
-            StorageRequireEncryption                           = $True
-            SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
-            SecurityRequireSafetyNetAttestationCertifiedDevice = $True
-            SecurityRequireGooglePlayServices                  = $True
-            SecurityRequireUpToDateSecurityProviders           = $True
-            SecurityRequireCompanyPortalAppIntegrity           = $True
-            ConditionStatementId                               = Null
-            RestrictedApps                                     = "[]"
-            RoleScopeTagIds                                    = 0
-            Ensure                                             = 'Present'
-            GlobalAdminAccount                                 = $GlobalAdminAccount
+            Description                                        = "";
+            DeviceThreatProtectionEnabled                      = $False;
+            DeviceThreatProtectionRequiredSecurityLevel        = "unavailable";
+            DisplayName                                        = "Test Policy";
+            Ensure                                             = "Present";
+            GlobalAdminAccount                                 = $Credsglobaladmin;
+            osMinimumVersion                                   = "7";
+            PasswordExpirationDays                             = 90;
+            PasswordMinimumLength                              = 6;
+            PasswordMinutesOfInactivityBeforeLock              = 5;
+            PasswordPreviousPasswordBlockCount                 = 10;
+            PasswordRequired                                   = $True;
+            PasswordRequiredType                               = "deviceDefault";
+            SecurityBlockJailbrokenDevices                     = $False;
+            SecurityDisableUsbDebugging                        = $False;
+            SecurityPreventInstallAppsFromUnknownSources       = $False;
+            SecurityRequireCompanyPortalAppIntegrity           = $False;
+            SecurityRequireGooglePlayServices                  = $False;
+            SecurityRequireSafetyNetAttestationBasicIntegrity  = $False;
+            SecurityRequireSafetyNetAttestationCertifiedDevice = $False;
+            SecurityRequireUpToDateSecurityProviders           = $False;
+            SecurityRequireVerifyApps                          = $False;
+            StorageRequireEncryption                           = $True;
         }
     }
 }

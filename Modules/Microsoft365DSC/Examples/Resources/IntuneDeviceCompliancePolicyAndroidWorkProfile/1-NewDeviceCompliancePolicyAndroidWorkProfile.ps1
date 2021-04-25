@@ -13,36 +13,29 @@ Configuration Example
 
     node localhost
     {
-        IntuneDeviceCompliancePolicyAndroidWorkProfile AddDeviceCompliancePolicyAndroidWorkProfile
+        IntuneDeviceCompliancePolicyAndroidWorkProfile f7d82525-b7c0-475c-9d5e-16fafdfa487a
         {
-            DisplayName                                        = 'Test Android Work Profile Device Compliance Policy'
-            Description                                        = 'Test Android Work Profile Device Compliance Policy Description'
-            PasswordRequired                                   = $True
-            PasswordMinimumLength                              = 6
-            PasswordRequiredType                               = "DeviceDefault"
-            RequiredPasswordComplexity                         = None
-            PasswordMinutesOfInactivityBeforeLock              = 5
-            PasswordExpirationDays                             = 365
-            PasswordPreviousPasswordBlockCount                 = 10
-            PasswordSignInFailureCountBeforeFactoryReset       = 11
-            SecurityPreventInstallAppsFromUnknownSources       = $True
-            SecurityDisableUsbDebugging                        = $True
-            SecurityRequireVerifyApps                          = $True
-            DeviceThreatProtectionEnabled                      = $True
-            DeviceThreatProtectionRequiredSecurityLevel        = "Unavailable"
-            AdvancedThreatProtectionRequiredSecurityLevel      = "Unavailable"
-            SecurityBlockJailbrokenDevices                     = $True
-            OsMinimumVersion                                   = 7
-            OsMaximumVersion                                   = 11
-            StorageRequireEncryption                           = $True
-            SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
-            SecurityRequireSafetyNetAttestationCertifiedDevice = $True
-            SecurityRequireGooglePlayServices                  = $True
-            SecurityRequireUpToDateSecurityProviders           = $True
-            SecurityRequireCompanyPortalAppIntegrity           = $True
-            RoleScopeTagIds                                    = "0"
-            Ensure                                             = 'Present'
-            GlobalAdminAccount                                 = $GlobalAdminAccount
+            Description                                        = "";
+            DeviceThreatProtectionEnabled                      = $False;
+            DeviceThreatProtectionRequiredSecurityLevel        = "unavailable";
+            DisplayName                                        = "Test Policy";
+            Ensure                                             = "Present";
+            GlobalAdminAccount                                 = $Credsglobaladmin;
+            PasswordExpirationDays                             = 90;
+            PasswordMinimumLength                              = 6;
+            PasswordMinutesOfInactivityBeforeLock              = 5;
+            PasswordRequired                                   = $True;
+            PasswordRequiredType                               = "numericComplex";
+            SecurityBlockJailbrokenDevices                     = $True;
+            SecurityDisableUsbDebugging                        = $False;
+            SecurityPreventInstallAppsFromUnknownSources       = $False;
+            SecurityRequireCompanyPortalAppIntegrity           = $False;
+            SecurityRequireGooglePlayServices                  = $False;
+            SecurityRequireSafetyNetAttestationBasicIntegrity  = $False;
+            SecurityRequireSafetyNetAttestationCertifiedDevice = $False;
+            SecurityRequireUpToDateSecurityProviders           = $False;
+            SecurityRequireVerifyApps                          = $False;
+            StorageRequireEncryption                           = $True;
         }
     }
 }
