@@ -73,7 +73,7 @@ function Get-TargetResource
         $ApplyHtmlDisclaimerFallbackAction,
 
         [Parameter()]
-        [ValidateSet('Append', 'Prepand')]
+        [ValidateSet('Append', 'Prepend')]
         [System.String]
         $ApplyHtmlDisclaimerLocation,
 
@@ -1006,7 +1006,7 @@ function Set-TargetResource
         $ApplyHtmlDisclaimerFallbackAction,
 
         [Parameter()]
-        [ValidateSet('Append', 'Prepand')]
+        [ValidateSet('Append', 'Prepend')]
         [System.String]
         $ApplyHtmlDisclaimerLocation,
 
@@ -1929,7 +1929,7 @@ function Test-TargetResource
         $ApplyHtmlDisclaimerFallbackAction,
 
         [Parameter()]
-        [ValidateSet('Append', 'Prepand')]
+        [ValidateSet('Append', 'Prepend')]
         [System.String]
         $ApplyHtmlDisclaimerLocation,
 
