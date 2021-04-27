@@ -62,16 +62,6 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of DkimSigningConfig for $Identity"
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
     if ($Global:CurrentModeIsExport)
     {
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
@@ -84,26 +74,37 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
     }
 
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
     Write-Verbose -Message "Global ExchangeOnlineSession status:"
     Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
 
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
     try
     {
         $DkimSigningConfigs = Get-DkimSigningConfig
     }
     catch
     {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         $Message = "Error calling {Get-DkimSigningConfig}"
         New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+        return $nullReturn
     }
     $DkimSigningConfig = $DkimSigningConfigs | Where-Object -FilterScript { $_.Identity -eq $Identity }
     if (-not $DkimSigningConfig)
     {
         Write-Verbose -Message "DkimSigningConfig $($Identity) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
+        return $nullReturn
     }
     else
     {
@@ -116,6 +117,11 @@ function Get-TargetResource
             HeaderCanonicalization = $DkimSigningConfig.HeaderCanonicalization
             KeySize                = 1024
             GlobalAdminAccount     = $GlobalAdminAccount
+            ApplicationId          = $ApplicationId
+            CertificateThumbprint  = $CertificateThumbprint
+            CertificatePath        = $CertificatePath
+            CertificatePassword    = $CertificatePassword
+            TenantId               = $TenantId
         }
 
         Write-Verbose -Message "Found DkimSigningConfig $($Identity)"
@@ -206,9 +212,14 @@ function Set-TargetResource
 
     if (('Present' -eq $Ensure ) -and ($null -eq $DkimSigningConfig))
     {
-        $DkimSigningConfigParams = $PSBoundParameters
+        $DkimSigningConfigParams = [System.Collections.Hashtable]($PSBoundParameters)
         $DkimSigningConfigParams.Remove('Ensure') | Out-Null
         $DkimSigningConfigParams.Remove('GlobalAdminAccount') | Out-Null
+        $DkimSigningConfigParams.Remove('ApplicationId') | Out-Null
+        $DkimSigningConfigParams.Remove('TenantId') | Out-Null
+        $DkimSigningConfigParams.Remove('CertificateThumbprint') | Out-Null
+        $DkimSigningConfigParams.Remove('CertificatePath') | Out-Null
+        $DkimSigningConfigParams.Remove('CertificatePassword') | Out-Null
         $DkimSigningConfigParams += @{
             DomainName = $PSBoundParameters.Identity
         }
@@ -314,6 +325,12 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -355,6 +372,10 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -362,12 +383,9 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
 
     if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-DkimSigningConfig)
     {
@@ -380,12 +398,12 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
         $dscContent = ""
         foreach ($DkimSigningConfig in $DkimSigningConfigs)
         {
-            Write-Host "    |---[$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)" -NoNewLine
+            Write-Host "    |---[$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)" -NoNewline
             $Params = @{
                 Identity              = $DkimSigningConfig.Identity
                 GlobalAdminAccount    = $GlobalAdminAccount

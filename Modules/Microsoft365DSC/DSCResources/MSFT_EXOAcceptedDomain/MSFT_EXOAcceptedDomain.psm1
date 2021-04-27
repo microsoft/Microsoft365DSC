@@ -10,7 +10,7 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
-        [ValidateSet('Authoritative','InternalRelay')]
+        [ValidateSet('Authoritative', 'InternalRelay')]
         [System.String]
         $DomainType = 'Authoritative',
 
@@ -55,15 +55,6 @@ function Get-TargetResource
 
     )
     Write-Verbose -Message "Getting configuration of Accepted Domain for $Identity"
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
 
     if ($Global:CurrentModeIsExport)
     {
@@ -76,6 +67,17 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
@@ -90,36 +92,7 @@ function Get-TargetResource
         if ($null -eq $AcceptedDomain)
         {
             Write-Verbose -Message "AcceptedDomain configuration for $($Identity) does not exist."
-
-            # Check to see if $Identity matches a verified domain in the O365 Tenant
-            $ConnectionMode = New-M365DSCConnection -Platform 'AzureAd' `
-            -InboundParameters $PSBoundParameters
-
-            $VerifiedDomains = Get-AzureADDomain | Where-Object -FilterScript { $_.IsVerified }
-            $MatchingVerifiedDomain = $VerifiedDomains | Where-Object -FilterScript { $_.Name -eq $Identity }
-
-            if ($null -ne $MatchingVerifiedDomain)
-            {
-                Write-Verbose -Message "A verified domain matching $($Identity) does not exist in this O365 Tenant."
-                $nullReturn = @{
-                    DomainType         = $DomainType
-                    Ensure             = $Ensure
-                    GlobalAdminAccount = $GlobalAdminAccount
-                    Identity           = $Identity
-                    MatchSubDomains    = $MatchSubDomains
-                    OutboundOnly       = $OutboundOnly
-                }
-                <#
-                if AcceptedDomain does not exist and does not match a verified domain, return submitted parameters for ReverseDSC.
-                This also prevents Set-TargetResource from running when current state could not be determined
-                #>
-                return $nullReturn
-            }
-            else
-            {
-                # if AcceptedDomain does not exist for a verfied domain, return 'Absent' with submitted parameters to Test-TargetResource.
-                return $nullReturn
-            }
+            return $nullReturn
         }
         else
         {
@@ -178,7 +151,7 @@ function Set-TargetResource
         $Identity,
 
         [Parameter()]
-        [ValidateSet('Authoritative','InternalRelay')]
+        [ValidateSet('Authoritative', 'InternalRelay')]
         [System.String]
         $DomainType = 'Authoritative',
 
@@ -260,7 +233,7 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
-        [ValidateSet('Authoritative','InternalRelay')]
+        [ValidateSet('Authoritative', 'InternalRelay')]
         [System.String]
         $DomainType = 'Authoritative',
 
@@ -363,6 +336,9 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -370,11 +346,9 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
 
     try
     {
@@ -388,11 +362,11 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
         foreach ($domain in $AllAcceptedDomains)
         {
-            Write-Host "    |---[$i/$($AllAcceptedDomains.Count)] $($domain.Identity)" -NoNewLine
+            Write-Host "    |---[$i/$($AllAcceptedDomains.Count)] $($domain.Identity)" -NoNewline
 
             $Params = @{
                 Identity              = $domain.Identity

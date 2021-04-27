@@ -76,11 +76,11 @@ function Get-TargetResource
         #ConditionalAccessDevicesCondition
         [Parameter()]
         [System.String[]]
-        $IncludeDeviceStates,
+        $IncludeDevices,
 
         [Parameter()]
         [System.String[]]
-        $ExcludeDeviceStates,
+        $ExcludeDevices,
 
         #Further conditions
         [Parameter()]
@@ -164,6 +164,8 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of AzureAD Conditional Access Policy"
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -171,10 +173,9 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
 
     if ($PSBoundParameters.ContainsKey("Id"))
     {
@@ -216,10 +217,9 @@ function Get-TargetResource
 
         Write-Verbose -Message "Get-TargetResource: Process IncludeUsers"
         #translate IncludeUser GUIDs to UPN, except id value is GuestsOrExternalUsers or All
-        $IncludeUsers = $null
+        $IncludeUsers = @()
         if ($Policy.Conditions.Users.IncludeUsers)
         {
-            $IncludeUsers = @()
             foreach ($IncludeUserGUID in $Policy.Conditions.Users.IncludeUsers)
             {
                 if ($IncludeUserGUID -notin "GuestsOrExternalUsers", "All")
@@ -266,10 +266,9 @@ function Get-TargetResource
 
         Write-Verbose -Message "Get-TargetResource: Process ExcludeUsers"
         #translate ExcludeUser GUIDs to UPN, except id value is GuestsOrExternalUsers or All
-        $ExcludeUsers = $null
+        $ExcludeUsers = @()
         if ($Policy.Conditions.Users.ExcludeUsers)
         {
-            $ExcludeUsers = @()
             foreach ($ExcludeUserGUID in $Policy.Conditions.Users.ExcludeUsers)
             {
                 if ($ExcludeUserGUID -notin "GuestsOrExternalUsers", "All")
@@ -317,10 +316,9 @@ function Get-TargetResource
 
         Write-Verbose -Message "Get-TargetResource: Process IncludeGroups"
         #translate IncludeGroup GUIDs to DisplayName
-        $IncludeGroups = $null
+        $IncludeGroups = @()
         if ($Policy.Conditions.Users.IncludeGroups)
         {
-            $IncludeGroups = @()
             foreach ($IncludeGroupGUID in $Policy.Conditions.Users.IncludeGroups)
             {
                 $IncludeGroup = $null
@@ -361,10 +359,9 @@ function Get-TargetResource
 
         Write-Verbose -Message "Get-TargetResource: Process ExcludeGroups"
         #translate ExcludeGroup GUIDs to DisplayName
-        $ExcludeGroups = $null
+        $ExcludeGroups = @()
         if ($Policy.Conditions.Users.ExcludeGroups)
         {
-            $ExcludeGroups = @()
             foreach ($ExcludeGroupGUID in $Policy.Conditions.Users.ExcludeGroups)
             {
                 $ExcludeGroup = $null
@@ -404,8 +401,8 @@ function Get-TargetResource
         }
 
 
-        $IncludeRoles = $null
-        $ExcludeRoles = $null
+        $IncludeRoles = @()
+        $ExcludeRoles = @()
         #translate role template guids to role name
         if ($Policy.Conditions.Users.IncludeRoles -or $Policy.Conditions.Users.ExcludeRoles)
         {
@@ -420,7 +417,6 @@ function Get-TargetResource
             Write-Verbose -Message "Get-TargetResource: Processing IncludeRoles"
             if ($Policy.Conditions.Users.IncludeRoles)
             {
-                $IncludeRoles = @()
                 foreach ($IncludeRoleGUID in $Policy.Conditions.Users.IncludeRoles)
                 {
                     if ($null -eq $rolelookup[$IncludeRoleGUID])
@@ -457,7 +453,6 @@ function Get-TargetResource
             Write-Verbose -Message "Get-TargetResource: Processing ExcludeRoles"
             if ($Policy.Conditions.Users.ExcludeRoles)
             {
-                $ExcludeRoles = @()
                 foreach ($ExcludeRoleGUID in $Policy.Conditions.Users.ExcludeRoles)
                 {
                     if ($null -eq $rolelookup[$ExcludeRoleGUID])
@@ -493,10 +488,10 @@ function Get-TargetResource
 
         }
 
-        $IncludeLocations = $null
-        $ExcludeLocations = $null
+        $IncludeLocations = @()
+        $ExcludeLocations = @()
         #translate Location template guids to Location name
-        if ($Policy.Conditions.Locations.IncludeLocations -or $Policy.Conditions.Locations.ExcludeLocations)
+        if ($Policy.Conditions.Locations)
         {
             Write-Verbose -Message "Get-TargetResource: Location condition defined, processing"
             #build Location translation table
@@ -509,7 +504,6 @@ function Get-TargetResource
             Write-Verbose -Message "Get-TargetResource: Processing IncludeLocations"
             if ($Policy.Conditions.Locations.IncludeLocations)
             {
-                $IncludeLocations = @()
                 foreach ($IncludeLocationGUID in $Policy.Conditions.Locations.IncludeLocations)
                 {
                     if ($IncludeLocationGUID -in "All", "AllTrusted")
@@ -550,7 +544,6 @@ function Get-TargetResource
             Write-Verbose -Message "Get-TargetResource: Processing ExcludeLocations"
             if ($Policy.Conditions.Locations.ExcludeLocations)
             {
-                $ExcludeLocations = @()
                 foreach ($ExcludeLocationGUID in $Policy.Conditions.Locations.ExcludeLocations)
                 {
                     if ($ExcludeLocationGUID -in "All", "AllTrusted")
@@ -590,17 +583,40 @@ function Get-TargetResource
 
 
         }
-
+        if ($Policy.SessionControls.CloudAppSecurity.IsEnabled)
+        {
+            $CloudAppSecurityType = [System.String]$Policy.SessionControls.CloudAppSecurity.CloudAppSecurityType
+        }
+        else
+        {
+            $CloudAppSecurityType = $null
+        }
+        if ($Policy.SessionControls.SignInFrequency.IsEnabled)
+        {
+            $SignInFrequencyType = [System.String]$Policy.SessionControls.SignInFrequency.Type
+        }
+        else
+        {
+            $SignInFrequencyType = $null
+        }
+        if ($Policy.SessionControls.PersistentBrowser.IsEnabled)
+        {
+            $PersistentBrowserMode = [System.String]$Policy.SessionControls.PersistentBrowser.Mode
+        }
+        else
+        {
+            $PersistentBrowserMode = $null
+        }
         $result = @{
             DisplayName                              = $Policy.DisplayName
             Id                                       = $Policy.Id
             State                                    = $Policy.State
-            IncludeApplications                      = [System.String[]]$Policy.Conditions.Applications.IncludeApplications
-            #no translation of Application GUIDs
-            ExcludeApplications                      = [System.String[]]$Policy.Conditions.Applications.ExcludeApplications
-            #no translation of GUIDs
-            IncludeUserActions                       = [System.String[]]$Policy.Conditions.Applications.IncludeUserActions
-            #no translation needed
+            IncludeApplications                      = [System.String[]](@() + $Policy.Conditions.Applications.IncludeApplications)
+            #no translation of Application GUIDs, return empty string array if undefined
+            ExcludeApplications                      = [System.String[]](@() + $Policy.Conditions.Applications.ExcludeApplications)
+            #no translation of GUIDs, return empty string array if undefined
+            IncludeUserActions                       = [System.String[]](@() + $Policy.Conditions.Applications.IncludeUserActions)
+            #no translation needed, return empty string array if undefined
             IncludeUsers                             = $IncludeUsers
             ExcludeUsers                             = $ExcludeUsers
             IncludeGroups                            = $IncludeGroups
@@ -608,42 +624,42 @@ function Get-TargetResource
             IncludeRoles                             = $IncludeRoles
             ExcludeRoles                             = $ExcludeRoles
 
-            IncludePlatforms                         = [System.String[]]$Policy.Conditions.Platforms.IncludePlatforms
-            #no translation needed
-            ExcludePlatforms                         = [System.String[]]$Policy.Conditions.Platforms.ExcludePlatforms
-            #no translation needed
+            IncludePlatforms                         = [System.String[]](@() + $Policy.Conditions.Platforms.IncludePlatforms)
+            #no translation needed, return empty string array if undefined
+            ExcludePlatforms                         = [System.String[]](@() + $Policy.Conditions.Platforms.ExcludePlatforms)
+            #no translation needed, return empty string array if undefined
             IncludeLocations                         = $IncludeLocations
             ExcludeLocations                         = $ExcludeLocations
-            IncludeDeviceStates                      = [System.String[]]$Policy.Conditions.Devices.IncludeDeviceStates
-            #no translation needed
-            ExcludeDeviceStates                      = [System.String[]]$Policy.Conditions.Devices.ExcludeDeviceStates
-            #no translation needed
-            UserRiskLevels                           = [System.String[]]$Policy.Conditions.UserRiskLevels
-            #no translation needed
-            SignInRiskLevels                         = [System.String[]]$Policy.Conditions.SignInRiskLevels
-            #no translation needed
-            ClientAppTypes                           = [System.String[]]$Policy.Conditions.ClientAppTypes
-            #no translation needed
+            IncludeDevices                           = [System.String[]](@() + $Policy.Conditions.Devices.IncludeDevices)
+            #no translation needed, return empty string array if undefined
+            ExcludeDevices                           = [System.String[]](@() + $Policy.Conditions.Devices.ExcludeDevices)
+            #no translation needed, return empty string array if undefined
+            UserRiskLevels                           = [System.String[]](@() + $Policy.Conditions.UserRiskLevels)
+            #no translation needed, return empty string array if undefined
+            SignInRiskLevels                         = [System.String[]](@() + $Policy.Conditions.SignInRiskLevels)
+            #no translation needed, return empty string array if undefined
+            ClientAppTypes                           = [System.String[]](@() + $Policy.Conditions.ClientAppTypes)
+            #no translation needed, return empty string array if undefined
             GrantControlOperator                     = $Policy.GrantControls._Operator
             #no translation or conversion needed
-            BuiltInControls                          = [System.String[]]$Policy.GrantControls.BuiltInControls
-            #no translation needed
-            ApplicationEnforcedRestrictionsIsEnabled = $Policy.SessionControls.ApplicationEnforcedRestrictions.IsEnabled
-            #no translation or conversion needed
-            CloudAppSecurityIsEnabled                = $Policy.SessionControls.CloudAppSecurity.IsEnabled
-            #no translation or conversion needed
+            BuiltInControls                          = [System.String[]](@() + $Policy.GrantControls.BuiltInControls)
+            #no translation needed, return empty string array if undefined
+            ApplicationEnforcedRestrictionsIsEnabled = $false -or $Policy.SessionControls.ApplicationEnforcedRestrictions.IsEnabled
+            #make false if undefined, true if true
+            CloudAppSecurityIsEnabled                = $false -or $Policy.SessionControls.CloudAppSecurity.IsEnabled
+            #make false if undefined, true if true
             CloudAppSecurityType                     = [System.String]$Policy.SessionControls.CloudAppSecurity.CloudAppSecurityType
-            #no translation needed
+            #no translation needed, return empty string array if undefined
+            SignInFrequencyIsEnabled                 = $false -or $Policy.SessionControls.SignInFrequency.IsEnabled
+            #make false if undefined, true if true
             SignInFrequencyValue                     = $Policy.SessionControls.SignInFrequency.Value
-            #no translation or conversion needed
+            #no translation or conversion needed, $null returned if undefined
             SignInFrequencyType                      = [System.String]$Policy.SessionControls.SignInFrequency.Type
             #no translation needed
-            SignInFrequencyIsEnabled                 = $Policy.SessionControls.SignInFrequency.IsEnabled
-            #no translation or conversion needed
+            PersistentBrowserIsEnabled               = $false -or $Policy.SessionControls.PersistentBrowser.IsEnabled
+            #make false if undefined, true if true
             PersistentBrowserMode                    = [System.String]$Policy.SessionControls.PersistentBrowser.Mode
             #no translation needed
-            PersistentBrowserIsEnabled               = $Policy.SessionControls.PersistentBrowser.IsEnabled
-            #no translation or conversion needed
             #Standard part
             Ensure                                   = "Present"
             GlobalAdminAccount                       = $GlobalAdminAccount
@@ -733,11 +749,11 @@ function Set-TargetResource
         #ConditionalAccessDevicesCondition
         [Parameter()]
         [System.String[]]
-        $IncludeDeviceStates,
+        $IncludeDevices,
 
         [Parameter()]
         [System.String[]]
-        $ExcludeDeviceStates,
+        $ExcludeDevices,
 
         #Further conditions
         [Parameter()]
@@ -861,6 +877,7 @@ function Set-TargetResource
         Write-Verbose -Message "Set-Targetresource: create and provision User Condition object"
         $conditions.Users = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessUserCondition
         Write-Verbose -Message "Set-Targetresource: process includeusers"
+        $conditions.Users.IncludeUsers = @()
         foreach ($includeuser in $IncludeUsers)
         {
             #translate user UPNs to GUID, except id value is GuestsOrExternalUsers or All
@@ -932,6 +949,7 @@ function Set-TargetResource
             }
         }
         Write-Verbose -Message "Set-Targetresource: process excludeusers"
+        $conditions.Users.ExcludeUsers = @()
         foreach ($excludeuser in $ExcludeUsers)
         {
             #translate user UPNs to GUID, except id value is GuestsOrExternalUsers or All
@@ -1003,6 +1021,7 @@ function Set-TargetResource
             }
         }
         Write-Verbose -Message "Set-Targetresource: process includegroups"
+        $conditions.Users.IncludeGroups = @()
         foreach ($includegroup in $IncludeGroups)
         {
             #translate user Group names to GUID
@@ -1094,6 +1113,7 @@ function Set-TargetResource
                 }
             }
         }
+        $conditions.Users.ExcludeGroups = @()
         Write-Verbose -Message "Set-Targetresource: process excludegroups"
         foreach ($ExcludeGroup in $ExcludeGroups)
         {
@@ -1187,6 +1207,7 @@ function Set-TargetResource
             }
         }
         Write-Verbose -Message "Set-Targetresource: process includeroles"
+        $conditions.Users.IncludeRoles = @()
         if ($IncludeRoles)
         {
             #translate role names to template guid if defined
@@ -1230,6 +1251,7 @@ function Set-TargetResource
             }
         }
         Write-Verbose -Message "Set-Targetresource: process excluderoles"
+        $conditions.Users.ExcludeRoles = @()
         if ($ExcludeRoles)
         {
             #translate role names to template guid if defined
@@ -1273,22 +1295,31 @@ function Set-TargetResource
                 }
             }
         }
-        Write-Verbose -Message "Set-Targetresource: process includeplatforms"
+        Write-Verbose -Message "Set-Targetresource: process platform condition"
         if ($IncludePlatforms -or $ExcludePlatforms)
         {
             #create and provision Platform condition object if used
             $conditions.Platforms = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessPlatformCondition
-            $conditions.Platforms.IncludePlatforms = $IncludePlatforms
+            Write-Verbose -Message "Set-Targetresource: IncludePlatforms: $IncludePlatforms"
+            $conditions.Platforms.IncludePlatforms = @() + $IncludePlatforms
             #no translation or conversion needed
-            $conditions.Platforms.ExcludePlatforms = $ExcludePlatforms
+            Write-Verbose -Message "Set-Targetresource: ExcludePlatforms: $ExcludePlatforms"
+            $conditions.Platforms.ExcludePlatforms = @() + $ExcludePlatforms
             #no translation or conversion needed
+        }
+        else
+        {
+            Write-Verbose -Message "Set-Targetresource: setting platform condition to null"
+            $conditions.Platforms = $null
         }
         Write-Verbose -Message "Set-Targetresource: process include and exclude locations"
         if ($IncludeLocations -or $ExcludeLocations)
         {
+            $conditions.Locations = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessLocationCondition
+            $conditions.Locations.IncludeLocations = @()
+            $conditions.Locations.ExcludeLocations = @()
             Write-Verbose -Message "Set-Targetresource: locations specified"
             #create and provision Location condition object if used, translate Location names to guid
-            $conditions.Locations = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessLocationCondition
             $LocationLookup = @{}
             foreach ($Location in Get-AzureADMSNamedLocationPolicy)
             {
@@ -1373,20 +1404,23 @@ function Set-TargetResource
         }
 
         Write-Verbose -Message "Set-Targetresource: process device states"
-        if ($IncludeDeviceStates -or $ExcludeDeviceStates)
+        if ($IncludeDevices -or $ExcludeDevices)
         {
             #create and provision Device condition object if used
             $conditions.Devices = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessDevicesCondition
-            $conditions.Devices.IncludeDeviceStates = $IncludeDeviceStates
+            $conditions.Devices.IncludeDevices = $IncludeDevices
             #no translation or conversion needed
-            $conditions.Devices.ExcludeDeviceStates = $ExcludeDeviceStates
+            $conditions.Devices.ExcludeDevices = $ExcludeDevices
             #no translation or conversion needed
         }
         Write-Verbose -Message "Set-Targetresource: process risk levels and app types"
+        Write-Verbose -Message "Set-Targetresource: UserRiskLevels: $UserRiskLevels"
         $Conditions.UserRiskLevels = $UserRiskLevels
         #no translation or conversion needed
+        Write-Verbose -Message "Set-Targetresource: SignInRiskLevels: $SignInRiskLevels"
         $Conditions.SignInRiskLevels = $SignInRiskLevels
         #no translation or conversion needed
+        Write-Verbose -Message "Set-Targetresource: ClientAppTypes: $ClientAppTypes"
         $Conditions.ClientAppTypes = $ClientAppTypes
         #no translation or conversion needed
         Write-Verbose -Message "Set-Targetresource: Adding processed conditions"
@@ -1402,11 +1436,13 @@ function Set-TargetResource
         $NewParameters.Add("GrantControls", $GrantControls)
         #add GrantControls to the parameter list
         Write-Verbose -Message "Set-Targetresource: process session controls"
+
+        $sessioncontrols = $null
         if ($ApplicationEnforcedRestrictionsIsEnabled -or $CloudAppSecurityIsEnabled -or $SignInFrequencyIsEnabled -or $PersistentBrowserIsEnabled)
         {
-            #create and provision Session Control object if used
-            Write-Verbose -Message "Set-Targetresource: Create and provision Session Control object"
+            Write-Verbose -Message "Set-Targetresource: create provision Session Control object"
             $sessioncontrols = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessSessionControls
+
             if ($ApplicationEnforcedRestrictionsIsEnabled)
             {
                 #create and provision ApplicationEnforcedRestrictions object if used
@@ -1430,15 +1466,15 @@ function Set-TargetResource
             }
             if ($PersistentBrowserIsEnabled)
             {
+                Write-Verbose -Message "Set-Targetresource: Persistent Browser settings defined: PersistentBrowserIsEnabled:$PersistentBrowserIsEnabled, PersistentBrowserMode:$PersistentBrowserMode"
                 #create and provision PersistentBrowser object if used
                 $sessioncontrols.PersistentBrowser = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessPersistentBrowser
                 $sessioncontrols.PersistentBrowser.IsEnabled = $true
                 $sessioncontrols.PersistentBrowser.Mode = $PersistentBrowserMode
             }
-            $NewParameters.Add("SessionControls", $sessioncontrols)
-            #add SessionControls to the parameter list
         }
-
+        $NewParameters.Add("SessionControls", $sessioncontrols)
+        #add SessionControls to the parameter list
     }
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
@@ -1627,11 +1663,11 @@ function Test-TargetResource
         #ConditionalAccessDevicesCondition
         [Parameter()]
         [System.String[]]
-        $IncludeDeviceStates,
+        $IncludeDevices,
 
         [Parameter()]
         [System.String[]]
-        $ExcludeDeviceStates,
+        $ExcludeDevices,
 
         #Further conditions
         [Parameter()]
@@ -1757,16 +1793,18 @@ function Export-TargetResource
         $CertificateThumbprint
     )
     #region Telemetry
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
     try
     {
         [array] $Policies = Get-AzureADMSConditionalAccessPolicy

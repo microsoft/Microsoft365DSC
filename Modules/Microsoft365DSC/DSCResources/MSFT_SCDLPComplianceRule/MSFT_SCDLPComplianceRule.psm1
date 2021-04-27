@@ -93,15 +93,6 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of DLPCompliancePolicy for $Name"
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
     if ($Global:CurrentModeIsExport)
     {
         $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
@@ -113,6 +104,18 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
             -InboundParameters $PSBoundParameters
     }
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = 'Absent'
     try
@@ -142,19 +145,23 @@ function Get-TargetResource
                 $NotifyAllowOverrideValue = $PolicyRule.NotifyAllowOverride.Replace(' ', '').Split(',')
             }
 
-            [array] $SensitiveInfo = @($PolicyRule.ContentContainsSensitiveInformation[0])
+            [array] $SensitiveInfoTypes = @()
 
-            if ($null -ne $SensitiveInfo.groups)
+            foreach ($SensitiveInfo in $PolicyRule.ContentContainsSensitiveInformation)
             {
-                $groups = $SensitiveInfo.groups
-                $SensitiveInfo = @()
-                foreach ($group in $groups)
+                if ($null -ne $SensitiveInfo.groups)
                 {
-                    foreach ($siEntry in $group.sensitivetypes)
+                    $groups = $SensitiveInfo.groups
+                    $SensitiveInfo = @()
+                    foreach ($group in $groups)
                     {
-                        $SensitiveInfo += [System.Collections.Hashtable]$siEntry
+                        foreach ($siEntry in $group.sensitivetypes)
+                        {
+                            $SensitiveInfo += [System.Collections.Hashtable]$siEntry
+                        }
                     }
                 }
+                $SensitiveInfoTypes += $SensitiveInfo
             }
 
             $result = @{
@@ -165,7 +172,7 @@ function Get-TargetResource
                 BlockAccess                         = $PolicyRule.BlockAccess
                 BlockAccessScope                    = $PolicyRule.BlockAccessScope
                 Comment                             = $PolicyRule.Comment
-                ContentContainsSensitiveInformation = $SensitiveInfo
+                ContentContainsSensitiveInformation = $SensitiveInfoTypes
                 ContentPropertyContainsWords        = $PolicyRule.ContentPropertyContainsWords
                 Disabled                            = $PolicyRule.Disabled
                 GenerateAlert                       = $PolicyRule.GenerateAlert
@@ -490,6 +497,44 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
+    #region Test Sensitive Information Type
+    # For each Desired SIT check to see if there is an existing rule with the same name
+    foreach ($sit in $ContentContainsSensitiveInformation)
+    {
+        Write-Verbose -Message "Trying to find existing Sensitive Information Action matching name {$($sit.name)}"
+        $matchingExistingRule = $CurrentValues.ContentContainsSensitiveInformaton | Where-Object -FilterScript { $_.name -eq $sit.name }
+        if ($null -ne $matchingExistingRule)
+        {
+            Write-Verbose -Message "Sensitive Information Action {$($sit.name)} was found"
+            $propertiesTocheck = @("id", "maxconfidence", "minconfidence", "classifiertype", "mincount", "maxcount")
+
+            foreach ($property in $propertiesToCheck)
+            {
+                Write-Verbose -Message "Checking property {$property} for Sensitive Information Action {$($sit.name)}"
+                if ($sit.$property -ne $matchingExistingRule.$property)
+                {
+                    Write-Verbose -Message "Property {$property} is set to {$($matchingExistingRule.$property)} and is expected to be {$($sit.$property)}."
+                    $EventMessage = "DLP Compliance Rule {$Name} was not in the desired state.`r`n" + `
+                        "Sensitive Information Action {$($sit.name)} has invalid value for property {$property}. " + `
+                        "Current value is {$($matchingExistingRule.$property)} and is expected to be {$($sit.$property)}."
+                    Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+                    return $false
+                }
+            }
+        }
+        else
+        {
+            Write-Verbose -Message "Sensitive Information Action {$($sit.name)} was not found"
+            $EventMessage = "DLP Compliance Rule {$Name} was not in the desired state.`r`n" + `
+                "An action on {$($sit.name)} Sensitive Information Type is missing."
+            Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+            return $false
+        }
+    }
+    #endregion
+
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
@@ -538,6 +583,8 @@ function Export-TargetResource
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 

@@ -28,6 +28,11 @@ function Format-EXOParams
     $EXOParams.Remove("GlobalAdminAccount") | Out-Null
     $EXOParams.Remove("Ensure") | Out-Null
     $EXOParams.Remove("Verbose") | Out-Null
+    $EXOParams.Remove('ApplicationId') | Out-Null
+    $EXOParams.Remove('TenantId') | Out-Null
+    $EXOParams.Remove('CertificateThumbprint') | Out-Null
+    $EXOParams.Remove('CertificatePath') | Out-Null
+    $EXOParams.Remove('CertificatePassword') | Out-Null
     if ('New' -eq $Operation)
     {
         $EXOParams += @{
@@ -465,7 +470,10 @@ function Test-M365DSCParameterState
     }
 
     $KeyList | ForEach-Object -Process {
-        if (($_ -ne "Verbose") -and ($_ -ne "InstallAccount"))
+        if (($_ -ne "Verbose") -and ($_ -ne "GlobalAdminAccount") `
+                -and ($_ -ne "ApplicationId") -and ($_ -ne "CertificateThumbprint") `
+                -and ($_ -ne "CertificatePath") -and ($_ -ne "CertificatePassword") `
+                -and ($_ -ne "TenantId"))
         {
             if (($CurrentValues.ContainsKey($_) -eq $false) `
                     -or ($CurrentValues.$_ -ne $DesiredValues.$_) `
@@ -1181,7 +1189,7 @@ function New-M365DSCConnection
             Test-MSCloudLogin -Platform $Platform `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
-                -CertificatePassword $InboundParameters.CertificatePassword `
+                -CertificatePassword $InboundParameters.CertificatePassword.Password `
                 -CertificatePath $InboundParameters.CertificatePath `
                 -ConnectionUrl $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport

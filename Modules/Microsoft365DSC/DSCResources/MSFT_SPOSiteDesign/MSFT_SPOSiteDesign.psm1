@@ -13,7 +13,7 @@ function Get-TargetResource
         $SiteScriptNames,
 
         [Parameter()]
-        [ValidateSet("CommunicationSite", "TeamSite")]
+        [ValidateSet("CommunicationSite", "TeamSite", "GrouplessTeamSite")]
         [System.String]
         $WebTemplate,
 
@@ -68,6 +68,9 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for SPO SiteDesign for $Title"
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -75,11 +78,9 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
-        -InboundParameters $PSBoundParameters
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
@@ -110,6 +111,10 @@ function Get-TargetResource
         if ($siteDesign.WebTemplate -eq "64")
         {
             $webtemp = "TeamSite"
+        }
+        elseif ($siteDesign.WebTemplate -eq "1")
+        {
+            $webtemp = "GrouplessTeamSite"
         }
         else
         {
@@ -170,7 +175,7 @@ function Set-TargetResource
         $Title,
 
         [Parameter()]
-        [ValidateSet("CommunicationSite", "TeamSite")]
+        [ValidateSet("CommunicationSite", "TeamSite", "GrouplessTeamSite")]
         [System.String]
         $WebTemplate,
 
@@ -300,7 +305,7 @@ function Test-TargetResource
         $Title,
 
         [Parameter()]
-        [ValidateSet("CommunicationSite", "TeamSite")]
+        [ValidateSet("CommunicationSite", "TeamSite", "GrouplessTeamSite")]
         [System.String]
         $WebTemplate,
 
@@ -421,6 +426,9 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -428,18 +436,16 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
-        -InboundParameters $PSBoundParameters
 
     $dscContent = ''
     $i = 1
 
     try
     {
-        [array]$designs = Get-PnPSiteDesign -ErrrAction Stop
+        [array]$designs = Get-PnPSiteDesign -ErrorAction Stop
         Write-Host "`r`n" -NoNewline
         foreach ($design in $designs)
         {

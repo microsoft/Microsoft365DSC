@@ -47,6 +47,8 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for SPO Theme $Name"
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -54,10 +56,9 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
@@ -208,11 +209,11 @@ function Set-TargetResource
         Write-Verbose -Message "Removing theme $($Name)"
         try
         {
-            Remove-PnPTenantTheme -Identity $Name -Confirm:$false
+            Remove-PnPTenantTheme -Identity $Name
         }
         catch
         {
-            $Message = "The SPOTheme $($theme) does not exist and for that cannot be removed."
+            $Message = "The SPOTheme $($Name) does not exist and for that cannot be removed."
             New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
             Write-Error $Message
         }
@@ -336,6 +337,9 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -343,11 +347,9 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
-        -InboundParameters $PSBoundParameters
 
     try
     {

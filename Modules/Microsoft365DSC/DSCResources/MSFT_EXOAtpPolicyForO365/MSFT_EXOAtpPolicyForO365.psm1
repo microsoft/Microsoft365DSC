@@ -27,7 +27,7 @@ function Get-TargetResource
 
         [Parameter()]
         [Boolean]
-        $EnableSafeDocs  = $false,
+        $EnableSafeDocs = $false,
 
         [Parameter()]
         [Boolean]
@@ -69,15 +69,6 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of AtpPolicyForO365 for $Identity"
 
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
     if ($Global:CurrentModeIsExport)
     {
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
@@ -89,6 +80,17 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = 'Absent'
@@ -105,15 +107,20 @@ function Get-TargetResource
         else
         {
             $result = @{
-                IsSingleInstance                = "Yes"
-                Identity                        = $AtpPolicyForO365.Identity
-                AllowClickThrough               = $AtpPolicyForO365.AllowClickThrough
-                BlockUrls                       = $AtpPolicyForO365.BlockUrls
-                EnableATPForSPOTeamsODB         = $AtpPolicyForO365.EnableATPForSPOTeamsODB
-                EnableSafeDocs                  = $AtpPolicyForO365.EnableSafeDocs
-                EnableSafeLinksForO365Clients   = $AtpPolicyForO365.EnableSafeLinksForO365Clients
-                TrackClicks                     = $AtpPolicyForO365.TrackClicks
-                Ensure                          = 'Present'
+                IsSingleInstance              = "Yes"
+                Identity                      = $AtpPolicyForO365.Identity
+                AllowClickThrough             = $AtpPolicyForO365.AllowClickThrough
+                BlockUrls                     = $AtpPolicyForO365.BlockUrls
+                EnableATPForSPOTeamsODB       = $AtpPolicyForO365.EnableATPForSPOTeamsODB
+                EnableSafeDocs                = $AtpPolicyForO365.EnableSafeDocs
+                EnableSafeLinksForO365Clients = $AtpPolicyForO365.EnableSafeLinksForO365Clients
+                TrackClicks                   = $AtpPolicyForO365.TrackClicks
+                Ensure                        = 'Present'
+                ApplicationId                 = $ApplicationId
+                CertificateThumbprint         = $CertificateThumbprint
+                CertificatePath               = $CertificatePath
+                CertificatePassword           = $CertificatePassword
+                TenantId                      = $TenantId
             }
 
             Write-Verbose -Message "Found AtpPolicyForO365 $($Identity)"
@@ -175,7 +182,7 @@ function Set-TargetResource
 
         [Parameter()]
         [Boolean]
-        $EnableSafeDocs  = $false,
+        $EnableSafeDocs = $false,
 
         [Parameter()]
         [Boolean]
@@ -234,10 +241,15 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $AtpPolicyParams = $PSBoundParameters
+    $AtpPolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
     $AtpPolicyParams.Remove('Ensure') | Out-Null
     $AtpPolicyParams.Remove('GlobalAdminAccount') | Out-Null
     $AtpPolicyParams.Remove('IsSingleInstance') | Out-Null
+    $AtpPolicyParams.Remove('ApplicationId') | Out-Null
+    $AtpPolicyParams.Remove('TenantId') | Out-Null
+    $AtpPolicyParams.Remove('CertificateThumbprint') | Out-Null
+    $AtpPolicyParams.Remove('CertificatePath') | Out-Null
+    $AtpPolicyParams.Remove('CertificatePassword') | Out-Null
     Write-Verbose -Message "Setting AtpPolicyForO365 $Identity with values: $(Convert-M365DscHashtableToString -Hashtable $AtpPolicyParams)"
     Set-AtpPolicyForO365 @AtpPolicyParams
 }
@@ -271,7 +283,7 @@ function Test-TargetResource
 
         [Parameter()]
         [Boolean]
-        $EnableSafeDocs  = $false,
+        $EnableSafeDocs = $false,
 
         [Parameter()]
         [Boolean]
@@ -331,6 +343,11 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
     $ValuesToCheck.Remove('Verbose') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -372,6 +389,10 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -379,11 +400,9 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
 
     try
     {
@@ -398,7 +417,7 @@ function Export-TargetResource
             }
             else
             {
-                Write-Host "`r`n" -NoNewLine
+                Write-Host "`r`n" -NoNewline
             }
             $i = 1
             foreach ($atpPolicy in $ATPPolicies)
@@ -413,7 +432,7 @@ function Export-TargetResource
                     CertificatePassword   = $CertificatePassword
                     CertificatePath       = $CertificatePath
                 }
-                Write-Host "    |---[$i/$($ATPPolicies.Length)] $($atpPolicy.Identiy)" -NoNewLine
+                Write-Host "    |---[$i/$($ATPPolicies.Length)] $($atpPolicy.Identiy)" -NoNewline
                 $Results = Get-TargetResource @Params
                 if ($Results.Ensure -eq "Present")
                 {

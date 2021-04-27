@@ -1,13 +1,124 @@
 # Change log for Microsoft365DSC
 
-## Unreleased
-SPOBrowserIdleSignout
-  * Initial Release;
+# 1.21.421.2
+
+* MISC
+  * Updated the SkipModuleReload logic for a dozen of EXO modules
+    which were failing authentication;
+
+# 1.21.421.1
+
+* AADConditionalAccessPolicy
+  * Fix to allow 'undefined' as a value for multiple parameters;
+* EXOTransportRule
+  * Fixed schema to support Service Principal Auth;
+* TeamsChannelTab
+  * Fixed typo in parameter 'TeamId';
+* MISC
+  * Refactor of all EXO resources to fixes for Set-TargetResource
+    functions where Service Principal was used to authenticate;
+  * Refactored connections across all resources to help with
+    Telemetry regarding what auth method users are leveraging.
+
+# 1.21.414.2
+
+* AADConditionalAccessPolicy
+  * Fixed an issue with the default values for device states;
+* EXOHostedContentFilterPolicy
+  * Fixed issue where EndUserSpamNotificationCustomFromName was
+    not properly returned from the Get-TargetResource function;
+* EXOTransportRule
+  * New resource;
+* O365AdminAuditLogConfig
+  * Fixed issue where the Set-TargetResource stopped being
+    executed if an error was encountered;
+* TeamsTeam
+  * Fix format issue with owner issue # 1143
+* DEPENDENCIES
+  * Updated AzureADPreview to version 2.0.2.134;
+  * Updated Microsoft.Graph.Authentication to version 1.4.2;
+  * Updated Microsoft.Graph.Planner to version 1.4.2;
+  * Updated Microsoft.Graph.Teams to version 1.4.2;
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version
+    2.0.112;
+  * Updated MSCloudLoginAssistant to version 1.0.51;
+  * Updated PnP.PowerShell to version 1.5.0;
+
+# 1.21.407.1
+
+* AADConditionalAccessPolicy
+  * BREAKING: Renamed the 'includeDeviceStates' and 'excludeDeviceStates'
+    parameters to 'includeDevices' and 'excludeDevices';
+* TeamsMeetingPolicy
+  * The Set-CsTeamsMeetingPolicy would fail if recording settings are
+    changed while the AllowCloudRecording is set to false;
+* MISC
+  * Fixed issue in most EXO resources where AzureAD App information
+    was not returned by the Get-TargetResource function;
+
+# 1.21.331.1
+
+* AADApplication
+  * Added support for API Permissions;
+* EXOSharedMailbox
+  * Improved how we are retrieving all shared mailboxes in the
+    Export-TargetResource function.
+* ODSettings
+  * Fixed and issue with ExcludedFileExtensions;
+* SCDLPComplianceRule
+  * Fixed issue where only the first SIT Action was exported;
+* SPOSiteDesign
+  * Added support for GrouplessTeamSite web template.
+* SPOSiteScript
+  * Fixed issue where an existin site script could not be updated.
+  * Made parameter GlobalAdminAccount in Get-TargetResource
+    optional.
+* SPOTheme
+  * Fixed issue where removal of a theme would throw an error.
+  * Corrected variable name to properly show the theme name in verbose message
+    when removing a theme.
+* MISC
+  * Fixed issue with ODSettings and ExcludedFileExtensions
+
+# 1.21.317.1
+
+* DEPENDENCIES
+  * Updated Exchange Management to version 2.0.4 (REDO);
+  * Updated MSCloudLoginAssistant to version 1.0.50;
+* MISC
+  * Fixed issue when using CertificatePath and CertificatePassword
+    for SPO resource;
+
+# 1.21.224.1
+
+* DEPENDENCIES
+  * Rolled-back ExchangeOnlineManagement to 2.0.3;
+
+# 1.21.217.1
+
+* SPOSite
+  * Fixed an issue related to new cmdlets in PnP.PowerShell;
+* DEPENDENCIES
+  * Updated ExchangeOnlineManagement to 2.0.4;
+  * Updated PNP.PowerShell to 1.3.0;
 
 # 1.21.203.1
 
+* SPOSiteDesignRights
+  * Fixed an issue that was preventing this resource from
+    being exported;
+* SPOBrowserIdleSignout
+  * Initial Release;
 * TeamsTenantDialPlan
   * Fixed an issue with the way Voice Normalization Rules were handled;
+* MISC
+  * Fix to the Delta Report Generator to properly handle TeamsPSTNUsage;
+  * Fixed various Export Verbose format issues;
+* DEPENDENCIES
+  * Updated Microsoft.Graph.Authentication to version 1.3.1;
+  * Updated Microsoft.Graph.Planner to version 1.3.1;
+  * Updated Microsoft.Graph.Teams to version 1.3.1;
+  * Updated MSCloudLoginAssistant to version 1.0.48;
 
 # 1.21.127.1
 

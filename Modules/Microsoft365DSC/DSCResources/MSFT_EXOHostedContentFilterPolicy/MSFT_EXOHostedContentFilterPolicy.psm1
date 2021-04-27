@@ -253,15 +253,6 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of HostedContentFilterPolicy for $Identity"
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
 
     if ($Global:CurrentModeIsExport)
     {
@@ -274,6 +265,17 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = 'Absent'
@@ -338,6 +340,11 @@ function Get-TargetResource
                 PhishZapEnabled                      = $HostedContentFilterPolicy.PhishZapEnabled
                 SpamZapEnabled                       = $HostedContentFilterPolicy.SpamZapEnabled
                 GlobalAdminAccount                   = $GlobalAdminAccount
+                ApplicationId                        = $ApplicationId
+                CertificateThumbprint                = $CertificateThumbprint
+                CertificatePath                      = $CertificatePath
+                CertificatePassword                  = $CertificatePassword
+                TenantId                             = $TenantId
             }
 
             if ($HostedContentFilterPolicy.IsDefault)
@@ -650,13 +657,18 @@ function Set-TargetResource
     $HostedContentFilterPolicyParams.Remove('Ensure') | Out-Null
     $HostedContentFilterPolicyParams.Remove('GlobalAdminAccount') | Out-Null
     $HostedContentFilterPolicyParams.Remove('MakeDefault') | Out-Null
+    $HostedContentFilterPolicyParams.Remove('ApplicationId') | Out-Null
+    $HostedContentFilterPolicyParams.Remove('TenantId') | Out-Null
+    $HostedContentFilterPolicyParams.Remove('CertificateThumbprint') | Out-Null
+    $HostedContentFilterPolicyParams.Remove('CertificatePath') | Out-Null
+    $HostedContentFilterPolicyParams.Remove('CertificatePassword') | Out-Null
 
     if ($HostedContentFilterPolicyParams.Contains('EndUserSpamNotificationCustomFromAddress'))
     {
         $HostedContentFilterPolicyParams.Remove('EndUserSpamNotificationCustomFromAddress') | Out-Null
         Write-Verbose -Message "The EndUserSpamNotificationCustomFromAddress parameter is no longer available and will be depricated."
     }
-    if ($HostedContentFilterPolicyParams.Contains('EndUserSpamNotificationCustomFromAddress'))
+    if ($HostedContentFilterPolicyParams.Contains('EndUserSpamNotificationCustomFromName'))
     {
         $HostedContentFilterPolicyParams.Remove('EndUserSpamNotificationCustomFromName') | Out-Null
         Write-Verbose -Message "The EndUserSpamNotificationCustomFromName parameter is no longer available and will be depricated."
@@ -964,6 +976,11 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('EndUserSpamNotificationCustomFromAddress') | Out-Null
     $ValuesToCheck.Remove('EndUserSpamNotificationCustomFromName') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -1006,6 +1023,10 @@ function Export-TargetResource
         $CertificatePassword
     )
 
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -1013,12 +1034,9 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
 
     try
     {

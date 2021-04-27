@@ -47,6 +47,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of SPOPropertyBag for $Key"
+    Write-Verbose -Message "Connecting to PnP from the Get method"
+
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+        -InboundParameters $PSBoundParameters `
+        -Url $Url
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -54,6 +60,7 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -63,12 +70,6 @@ function Get-TargetResource
     {
         try
         {
-            Write-Verbose -Message "Connecting to PnP from the Get method"
-
-            $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters `
-                -Url $Url
-
             Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
             [array]$property = Get-PnPPropertyBag -Key $Key -ErrorAction 'Stop'
 
@@ -343,6 +344,9 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -350,10 +354,9 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-        -InboundParameters $PSBoundParameters
 
     try
     {

@@ -110,16 +110,6 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting Organization Relationship configuration for $Name"
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
     if ($Global:CurrentModeIsExport)
     {
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
@@ -131,28 +121,21 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
-    $nullReturn = @{
-        ArchiveAccessEnabled  = $ArchiveAccessEnabled
-        DeliveryReportEnabled = $DeliveryReportEnabled
-        DomainNames           = $DomainNames
-        Enabled               = $Enabled
-        FreeBusyAccessEnabled = $FreeBusyAccessEnabled
-        FreeBusyAccessLevel   = $FreeBusyAccessLevel
-        FreeBusyAccessScope   = $FreeBusyAccessScope
-        MailboxMoveEnabled    = $MailboxMoveEnabled
-        MailTipsAccessEnabled = $MailTipsAccessEnabled
-        MailTipsAccessLevel   = $MailTipsAccessLevel
-        MailTipsAccessScope   = $MailTipsAccessScope
-        Name                  = $Name
-        OrganizationContact   = $OrganizationContact
-        PhotosEnabled         = $PhotosEnabled
-        TargetApplicationUri  = $TargetApplicationUri
-        TargetAutodiscoverEpr = $TargetAutodiscoverEpr
-        TargetOwaURL          = $TargetOwaURL
-        TargetSharingEpr      = $TargetSharingEpr
-        Ensure                = 'Absent'
-        GlobalAdminAccount    = $GlobalAdminAccount
-    }
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $nullReturn = $nullReturn
+    $nullReturn.Ensure = "Absent"
+
     try
     {
         $AllOrganizationRelationships = Get-OrganizationRelationship -ErrorAction Stop
@@ -183,6 +166,11 @@ function Get-TargetResource
                 PhotosEnabled         = $OrganizationRelationship.PhotosEnabled
                 Ensure                = 'Present'
                 GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                TenantId              = $TenantId
             }
 
             if ($OrganizationRelationship.TargetApplicationUri)
@@ -577,6 +565,11 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -618,6 +611,10 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -625,11 +622,9 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
 
     try
     {

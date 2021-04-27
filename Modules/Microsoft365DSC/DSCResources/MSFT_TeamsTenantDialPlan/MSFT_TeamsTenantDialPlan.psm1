@@ -43,17 +43,19 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Teams Tenant Dial Plan"
 
+    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
-        -InboundParameters $PSBoundParameters
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
@@ -168,49 +170,25 @@ function Set-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    #region VoiceNormalizationRules
-    $AllRules = @()
-    if ($Ensure -eq 'Present')
-    {
-        # Ensure the VoiceNormalizationRules all exist
-        foreach ($rule in $CurrentValues.NormalizationRules)
-        {
-            if ($null -eq $ruleObject)
-            {
-                # Need to create the rule
-                Write-Verbose "Creating VoiceNormalizationRule {$($rule.Identity)}"
-                $ruleObject = New-CSVoiceNormalizationRule -Identity "Global/$($rule.Identity.Replace('Tag:', ''))" `
-                    -Description $rule.Description `
-                    -Pattern $rule.Pattern `
-                    -Translation $rule.Translation `
-                    -InMemory
-            }
-            $AllRules += $ruleObject
-        }
-    }
-    #endregion
-
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
+        Write-Verbose "Tenant Dial Plan {$Identity} doesn't exist but it should. Creating it."
         #region VoiceNormalizationRules
         $AllRules = @()
         # Ensure the VoiceNormalizationRules all exist
-        foreach ($rule in $CurrentValues.NormalizationRules)
+        foreach ($rule in $NormalizationRules)
         {
-            if ($null -eq $ruleObject)
-            {
-                # Need to create the rule
-                Write-Verbose "Creating VoiceNormalizationRule {$($rule.Identity)}"
-                $ruleObject = New-CSVoiceNormalizationRule -Identity "Global/$($rule.Identity.Replace('Tag:', ''))" `
-                    -Description $rule.Description `
-                    -Pattern $rule.Pattern `
-                    -Translation $rule.Translation `
-                    -InMemory
-            }
+            # Need to create the rule
+            Write-Verbose "Creating VoiceNormalizationRule {$($rule.Identity)}"
+            $ruleObject = New-CSVoiceNormalizationRule -Identity "Global/$($rule.Identity.Replace('Tag:', ''))" `
+                -Description $rule.Description `
+                -Pattern $rule.Pattern `
+                -Translation $rule.Translation `
+                -InMemory
+
             $AllRules += $ruleObject
         }
 
-        Write-Verbose -Message "Tenant Dial Plan {$Identity} doesn't exist. Creating it."
         $NewParameters = $PSBoundParameters
         $NewParameters.Remove("GlobalAdminAccount")
         $NewParameters.Remove("Ensure")
@@ -414,19 +392,21 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+        -InboundParameters $PSBoundParameters
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
-            -InboundParameters $PSBoundParameters
         [array]$tenantDialPlans = Get-CsTenantDialPlan -ErrorAction Stop
 
         $content = ''

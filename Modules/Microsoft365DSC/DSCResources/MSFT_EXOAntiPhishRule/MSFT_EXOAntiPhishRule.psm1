@@ -79,15 +79,6 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of AntiPhishRule for $Identity"
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
 
     if ($Global:CurrentModeIsExport)
     {
@@ -100,6 +91,17 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
@@ -141,6 +143,11 @@ function Get-TargetResource
                     SentToMemberOf            = $AntiPhishRule.SentToMemberOf
                     Ensure                    = 'Present'
                     GlobalAdminAccount        = $GlobalAdminAccount
+                    ApplicationId             = $ApplicationId
+                    CertificateThumbprint     = $CertificateThumbprint
+                    CertificatePath           = $CertificatePath
+                    CertificatePassword       = $CertificatePassword
+                    TenantId                  = $TenantId
                 }
                 if ('Enabled' -eq $AntiPhishRule.State)
                 {
@@ -290,11 +297,16 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
-        $CreationParams = $PSBoundParameters
+        $CreationParams = [System.Collections.Hashtable]($PSBoundParameters)
         $CreationParams.Remove("Ensure") | Out-Null
         $CreationParams.Remove("GlobalAdminAccount") | Out-Null
         $CreationParams.Add("Name", $Identity) | Out-Null
         $CreationParams.Remove("Identity") | Out-Null
+        $CreationParams.Remove('ApplicationId') | Out-Null
+        $CreationParams.Remove('TenantId') | Out-Null
+        $CreationParams.Remove('CertificateThumbprint') | Out-Null
+        $CreationParams.Remove('CertificatePath') | Out-Null
+        $CreationParams.Remove('CertificatePassword') | Out-Null
 
         # New-AntiPhishRule has the Enabled parameter, Set-AntiPhishRule does not.
         # There doesn't appear to be any way to change the Enabled state of a rule once created.
@@ -313,6 +325,11 @@ function Set-TargetResource
         $UpdateParams.Remove("Ensure") | Out-Null
         $UpdateParams.Remove("GlobalAdminAccount") | Out-Null
         $UpdateParams.Remove("Enabled") | Out-Null
+        $UpdateParams.Remove('ApplicationId') | Out-Null
+        $UpdateParams.Remove('TenantId') | Out-Null
+        $UpdateParams.Remove('CertificateThumbprint') | Out-Null
+        $UpdateParams.Remove('CertificatePath') | Out-Null
+        $UpdateParams.Remove('CertificatePassword') | Out-Null
 
         # Check to see if the specified policy already has the rule assigned;
         $existingRule = Get-AntiPhishRule | Where-Object -FilterScript { $_.AntiPhishPolicy -eq $AntiPhishPolicy }
@@ -431,6 +448,11 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
 
     if ($null -eq $PSBoundParameters.Enabled)
     {
@@ -478,6 +500,10 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -485,11 +511,9 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
 
     try
     {

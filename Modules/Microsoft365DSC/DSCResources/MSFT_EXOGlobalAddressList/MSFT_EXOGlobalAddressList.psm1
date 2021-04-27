@@ -121,6 +121,18 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting Global Address List configuration for $Name"
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters
+    }
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -128,37 +140,13 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
-    $nullReturn = @{
-        Name                         = $Name
-        ConditionalCompany           = $ConditionalCompany
-        ConditionalCustomAttribute1  = $ConditionalCustomAttribute1
-        ConditionalCustomAttribute10 = $ConditionalCustomAttribute10
-        ConditionalCustomAttribute11 = $ConditionalCustomAttribute11
-        ConditionalCustomAttribute12 = $ConditionalCustomAttribute12
-        ConditionalCustomAttribute13 = $ConditionalCustomAttribute13
-        ConditionalCustomAttribute14 = $ConditionalCustomAttribute14
-        ConditionalCustomAttribute15 = $ConditionalCustomAttribute15
-        ConditionalCustomAttribute2  = $ConditionalCustomAttribute2
-        ConditionalCustomAttribute3  = $ConditionalCustomAttribute3
-        ConditionalCustomAttribute4  = $ConditionalCustomAttribute4
-        ConditionalCustomAttribute5  = $ConditionalCustomAttribute5
-        ConditionalCustomAttribute6  = $ConditionalCustomAttribute6
-        ConditionalCustomAttribute7  = $ConditionalCustomAttribute7
-        ConditionalCustomAttribute8  = $ConditionalCustomAttribute8
-        ConditionalCustomAttribute9  = $ConditionalCustomAttribute9
-        ConditionalDepartment        = $ConditionalDepartment
-        ConditionalStateOrProvince   = $ConditionalStateOrProvince
-        IncludedRecipients           = $IncludedRecipients
-        RecipientFilter              = $RecipientFilter
-        Ensure                       = 'Absent'
-        GlobalAdminAccount           = $GlobalAdminAccount
-    }
     if ($null -eq (Get-Command 'Get-GlobalAddressList' -ErrorAction SilentlyContinue))
     {
         return $nullReturn
@@ -210,6 +198,11 @@ function Get-TargetResource
                 RecipientFilter              = $GlobalAddressList.RecipientFilter
                 Ensure                       = 'Present'
                 GlobalAdminAccount           = $GlobalAdminAccount
+                ApplicationId                = $ApplicationId
+                CertificateThumbprint        = $CertificateThumbprint
+                CertificatePath              = $CertificatePath
+                CertificatePassword          = $CertificatePassword
+                TenantId                     = $TenantId
             }
 
             Write-Verbose -Message "Found Global Address List $($Name)"
@@ -614,6 +607,12 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -655,6 +654,10 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -662,11 +665,9 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
 
     if ($null -eq (Get-Command 'Get-GlobalAddressList' -ErrorAction SilentlyContinue))
     {

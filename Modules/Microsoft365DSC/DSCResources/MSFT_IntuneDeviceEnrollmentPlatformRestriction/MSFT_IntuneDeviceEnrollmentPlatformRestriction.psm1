@@ -101,6 +101,9 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    Write-Verbose -Message "Checking for the Intune Device Enrollment Restriction {$DisplayName}"
+    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
+        -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -108,12 +111,10 @@ function Get-TargetResource
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    Write-Verbose -Message "Checking for the Intune Device Enrollment Restriction {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
-        -InboundParameters $PSBoundParameters
 
     $nullResult = $PSBoundParameters
     $nullResult.Ensure = 'Absent'
@@ -132,26 +133,26 @@ function Get-TargetResource
         return @{
             DisplayName                                  = $config.DisplayName
             Description                                  = $config.Description
-            AndroidPlatformBlocked                       = $config.androidRestriction.PlatformBlocked
-            AndroidPersonalDeviceEnrollmentBlocked       = $config.androidRestriction.PersonalDeviceEnrollmentBlocked
-            AndroidOSMinimumVersion                      = $config.androidRestriction.OSMinimumVersion
-            AndroidOSMaximumVersion                      = $config.androidRestriction.OSMaximumVersion
+            AndroidPlatformBlocked                       = $config.AndroidRestriction.PlatformBlocked
+            AndroidPersonalDeviceEnrollmentBlocked       = $config.AndroidRestriction.PersonalDeviceEnrollmentBlocked
+            AndroidOSMinimumVersion                      = $config.AndroidRestriction.OSMinimumVersion
+            AndroidOSMaximumVersion                      = $config.AndroidRestriction.OSMaximumVersion
             iOSPlatformBlocked                           = $config.iOSRestriction.PlatformBlocked
             iOSPersonalDeviceEnrollmentBlocked           = $config.iOSRestriction.PersonalDeviceEnrollmentBlocked
             iOSOSMinimumVersion                          = $config.iOSRestriction.OSMinimumVersion
             iOSOSMaximumVersion                          = $config.iOSRestriction.OSMaximumVersion
-            MacPlatformBlocked                           = $config.macOSRestriction.PlatformBlocked
-            MacPersonalDeviceEnrollmentBlocked           = $config.macOSRestriction.PersonalDeviceEnrollmentBlocked
-            MacOSMinimumVersion                          = $config.macOSRestriction.OSMinimumVersion
-            MacOSMaximumVersion                          = $config.macOSRestriction.OSMaximumVersion
-            WindowsPlatformBlocked                       = $config.windowsRestriction.PlatformBlocked
-            WindowsPersonalDeviceEnrollmentBlocked       = $config.windowsRestriction.PersonalDeviceEnrollmentBlocked
-            WindowsOSMinimumVersion                      = $config.windowsRestriction.OSMinimumVersion
-            WindowsOSMaximumVersion                      = $config.windowsRestriction.OSMaximumVersion
-            WindowsMobilePlatformBlocked                 = $config.windowsMobileRestriction.PlatformBlocked
-            WindowsMobilePersonalDeviceEnrollmentBlocked = $config.windowsMobileRestriction.PersonalDeviceEnrollmentBlocked
-            WindowsMobileOSMinimumVersion                = $config.windowsMobileRestriction.OSMinimumVersion
-            WindowsMobileOSMaximumVersion                = $config.windowsMobileRestriction.OSMaximumVersion
+            MacPlatformBlocked                           = $config.MacOSRestriction.PlatformBlocked
+            MacPersonalDeviceEnrollmentBlocked           = $config.MacOSRestriction.PersonalDeviceEnrollmentBlocked
+            MacOSMinimumVersion                          = $config.MacOSRestriction.OSMinimumVersion
+            MacOSMaximumVersion                          = $config.MacOSRestriction.OSMaximumVersion
+            WindowsPlatformBlocked                       = $config.WindowsRestriction.PlatformBlocked
+            WindowsPersonalDeviceEnrollmentBlocked       = $config.WindowsRestriction.PersonalDeviceEnrollmentBlocked
+            WindowsOSMinimumVersion                      = $config.WindowsRestriction.OSMinimumVersion
+            WindowsOSMaximumVersion                      = $config.WindowsRestriction.OSMaximumVersion
+            WindowsMobilePlatformBlocked                 = $config.WindowsMobileRestriction.PlatformBlocked
+            WindowsMobilePersonalDeviceEnrollmentBlocked = $config.WindowsMobileRestriction.PersonalDeviceEnrollmentBlocked
+            WindowsMobileOSMinimumVersion                = $config.WindowsMobileRestriction.OSMinimumVersion
+            WindowsMobileOSMaximumVersion                = $config.WindowsMobileRestriction.OSMaximumVersion
             Ensure                                       = "Present"
             GlobalAdminAccount                           = $GlobalAdminAccount
         }
@@ -277,17 +278,19 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
+    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
-        -InboundParameters $PSBoundParameters
 
     $currentCategory = Get-TargetResource @PSBoundParameters
 
@@ -456,17 +459,19 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
-        -InboundParameters $PSBoundParameters
 
     try
     {

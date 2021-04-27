@@ -137,6 +137,11 @@ function Get-TargetResource
                 SentTo                    = $HostedContentFilterRule.SentTo
                 SentToMemberOf            = $HostedContentFilterRule.SentToMemberOf
                 GlobalAdminAccount        = $GlobalAdminAccount
+                ApplicationId             = $ApplicationId
+                CertificateThumbprint     = $CertificateThumbprint
+                CertificatePath           = $CertificatePath
+                CertificatePassword       = $CertificatePassword
+                TenantId                  = $TenantId
             }
 
             if ('Enabled' -eq $HostedContentFilterRule.State)
@@ -288,6 +293,11 @@ function Set-TargetResource
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove("Ensure") | Out-Null
         $CreationParams.Remove("GlobalAdminAccount") | Out-Null
+        $CreationParams.Remove('ApplicationId') | Out-Null
+        $CreationParams.Remove('TenantId') | Out-Null
+        $CreationParams.Remove('CertificateThumbprint') | Out-Null
+        $CreationParams.Remove('CertificatePath') | Out-Null
+        $CreationParams.Remove('CertificatePassword') | Out-Null
         if ($Enabled -and ('Disabled' -eq $CurrentValues.State))
         {
             # New-HostedContentFilterRule has the Enabled parameter, Set-HostedContentFilterRule does not.
@@ -302,9 +312,14 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Present' -and $CurrentValues -eq 'Present')
     {
-        $UpdateParams = $PSBoundParameters
+        $UpdateParams = [System.Collections.Hashtable]($PSBoundParameters)
         $UpdateParams.Remove("Ensure") | Out-Null
         $UpdateParams.Remove("GlobalAdminAccount") | Out-Null
+        $UpdateParams.Remove('ApplicationId') | Out-Null
+        $UpdateParams.Remove('TenantId') | Out-Null
+        $UpdateParams.Remove('CertificateThumbprint') | Out-Null
+        $UpdateParams.Remove('CertificatePath') | Out-Null
+        $UpdateParams.Remove('CertificatePassword') | Out-Null
         Write-Verbose -Message "Updating HostedContentFilterRule {$Identity}"
         Set-HostedContentFilterRule @UpdateParams
     }
@@ -413,6 +428,11 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

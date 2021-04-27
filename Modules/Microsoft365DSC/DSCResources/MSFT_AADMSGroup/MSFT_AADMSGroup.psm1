@@ -73,6 +73,8 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of AzureAD Group"
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -80,10 +82,10 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
     try
@@ -97,6 +99,7 @@ function Get-TargetResource
             }
             catch
             {
+                Write-Verbose -Message "Couldn't get group by ID, trying by name"
                 $Group = Get-AzureADMSGroup -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
                 if ($Group.Length -gt 1)
                 {
@@ -117,6 +120,7 @@ function Get-TargetResource
 
         if ($null -eq $Group)
         {
+            Write-Verbose -Message "Group was null, returning null"
             return $nullReturn
         }
         else
@@ -294,13 +298,15 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Present' -and $currentGroup.Ensure -eq 'Absent')
     {
-        $currentParameters.Remove("Id")
+        Write-Verbose -Message "Creating new group {$DisplayName}"
+        $currentParameters.Remove("Id") | Out-Null
         try
         {
             New-AzureADMSGroup @currentParameters
         }
         catch
         {
+            Write-Verbose -Message $_
             New-M365DSCLogEntry -Error $_ -Message "Couldn't create group $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
         }
     }
@@ -442,6 +448,8 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -449,10 +457,10 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
     try
     {
         [array] $groups = Get-AzureADMSGroup -All:$true -ErrorAction Stop

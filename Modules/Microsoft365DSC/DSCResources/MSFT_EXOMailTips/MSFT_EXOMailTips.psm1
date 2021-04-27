@@ -59,27 +59,6 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of Mailtips for $Organization"
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = @{
-        Organization                          = $Organization
-        MailTipsAllTipsEnabled                = $null
-        MailTipsGroupMetricsEnabled           = $null
-        MailTipsLargeAudienceThreshold        = $null
-        MailTipsMailboxSourcedTipsEnabled     = $null
-        MailTipsExternalRecipientsTipsEnabled = $null
-        Ensure                                = "Absent"
-        GlobalAdminAccount                    = $null
-    }
-
     if ($Global:CurrentModeIsExport)
     {
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
@@ -91,6 +70,20 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
     try
     {
@@ -111,6 +104,11 @@ function Get-TargetResource
             MailTipsExternalRecipientsTipsEnabled = $OrgConfig.MailTipsExternalRecipientsTipsEnabled
             Ensure                                = "Present"
             GlobalAdminAccount                    = $GlobalAdminAccount
+            ApplicationId                         = $ApplicationId
+            CertificateThumbprint                 = $CertificateThumbprint
+            CertificatePath                       = $CertificatePath
+            CertificatePassword                   = $CertificatePassword
+            TenantId                              = $TenantId
         }
 
         Write-Verbose -Message "Found configuration of the Mailtips for $($Organization)"
@@ -372,6 +370,9 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -380,12 +381,10 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
     try
     {
         $OrganizationName = ""
