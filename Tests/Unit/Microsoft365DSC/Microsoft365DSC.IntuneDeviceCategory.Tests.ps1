@@ -37,11 +37,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credential"
             }
 
-            Mock -CommandName Update-DeviceManagement_DeviceCategories -MockWith {
+            Mock -CommandName Update-IntuneDeviceCategory -MockWith {
             }
-            Mock -CommandName New-DeviceManagement_DeviceCategories -MockWith {
+            Mock -CommandName New-IntuneDeviceCategory -MockWith {
             }
-            Mock -CommandName Remove-DeviceManagement_DeviceCategories -MockWith {
+            Mock -CommandName Remove-IntuneDeviceCategory -MockWith {
             }
         }
 
@@ -55,7 +55,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount;
                 }
 
-                Mock -CommandName Get-DeviceManagement_DeviceCategories -MockWith {
+                Mock -CommandName Get-IntuneDeviceCategory -MockWith {
                     return $null
                 }
             }
@@ -70,7 +70,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should create the category from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-DeviceManagement_DeviceCategories" -Exactly 1
+                Should -Invoke -CommandName "New-IntuneDeviceCategory" -Exactly 1
             }
         }
 
@@ -83,7 +83,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount;
                 }
 
-                Mock -CommandName Get-DeviceManagement_DeviceCategories -MockWith {
+                Mock -CommandName Get-IntuneDeviceCategory -MockWith {
                     return @{
                         DisplayName = 'Test Category'
                         Description = "Different Value"
@@ -101,7 +101,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should update the category from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-DeviceManagement_DeviceCategories -Exactly 1
+                Should -Invoke -CommandName Update-IntuneDeviceCategory -Exactly 1
             }
         }
 
@@ -114,7 +114,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount;
                 }
 
-                Mock -CommandName Get-DeviceManagement_DeviceCategories -MockWith {
+                Mock -CommandName Get-IntuneDeviceCategory -MockWith {
                     return @{
                         DisplayName = 'Test Category'
                         Description = "Test Definition"
@@ -136,7 +136,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount;
                 }
 
-                Mock -CommandName Get-DeviceManagement_DeviceCategories -MockWith {
+                Mock -CommandName Get-IntuneDeviceCategory -MockWith {
                     return @{
                         DisplayName = 'Test Category'
                         Description = "Test Definition"
@@ -154,7 +154,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should remove the category from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-DeviceManagement_DeviceCategories -Exactly 1
+                Should -Invoke -CommandName Remove-IntuneDeviceCategory -Exactly 1
             }
         }
 
@@ -164,7 +164,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount     = $GlobalAdminAccount;
                 }
 
-                Mock -CommandName Get-DeviceManagement_DeviceCategories -MockWith {
+                Mock -CommandName Get-IntuneDeviceCategory -MockWith {
                     return @{
                         DisplayName = 'Test Category'
                         Description = "Test Definition"

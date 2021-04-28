@@ -1,0 +1,32 @@
+[ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceCompliancePolicyAndroidWorkProfile")]
+class MSFT_IntuneDeviceCompliancePolicyAndroidWorkProfile : OMI_BaseResource
+{
+    [Key, Description("Display name of the AndroidWorkProfile device compliance policy.")] String DisplayName;
+    [Write, Description("Description of the AndroidWorkProfile device compliance policy.")] String Description;
+    [Write, Description("PasswordRequired of the AndroidWorkProfile device compliance policy.")] Boolean PasswordRequired;
+    [Write, Description("PasswordMinimumLength of the AndroidWorkProfile device compliance policy.")] Uint32 PasswordMinimumLength;
+    [Write, Description("PasswordRequiredType of the AndroidWorkProfile device compliance policy."), ValueMap{"deviceDefault", "alphabetic", "alphanumeric", "alphanumericWithSymbols", "lowSecurityBiometric", "numeric", "numericComplex", "any"}, Values{"deviceDefault", "alphabetic", "alphanumeric", "alphanumericWithSymbols", "lowSecurityBiometric", "numeric", "numericComplex", "any"}] String PasswordRequiredType;
+    [Write, Description("PasswordMinutesOfInactivityBeforeLock of the AndroidWorkProfile device compliance policy.")] Uint32 PasswordMinutesOfInactivityBeforeLock;
+    [Write, Description("PasswordExpirationDays of the AndroidWorkProfile device compliance policy.")] Uint32 PasswordExpirationDays;
+    [Write, Description("PasswordPreviousPasswordBlockCount of the AndroidWorkProfile device compliance policy.")] Uint32 PasswordPreviousPasswordBlockCount;
+    [Write, Description("PasswordSignInFailureCountBeforeFactoryReset of the AndroidWorkProfile device compliance policy.")] Uint32 PasswordSignInFailureCountBeforeFactoryReset;
+    [Write, Description("SecurityPreventInstallAppsFromUnknownSources of the AndroidWorkProfile device compliance policy.")] Boolean SecurityPreventInstallAppsFromUnknownSources;
+    [Write, Description("SecurityDisableUsbDebugging of the AndroidWorkProfile device compliance policy.")] Boolean SecurityDisableUsbDebugging;
+    [Write, Description("SecurityRequireVerifyApps of the AndroidWorkProfile device compliance policy.")] Boolean SecurityRequireVerifyApps;
+    [Write, Description("DeviceThreatProtectionEnabled of the AndroidWorkProfile device compliance policy.")] Boolean DeviceThreatProtectionEnabled;
+    [Write, Description("DeviceThreatProtectionRequiredSecurityLevel of the AndroidWorkProfile device compliance policy."), ValueMap{"unavailable", "secured", "low", "medium", "high", "notSet"}, Values{"unavailable", "secured", "low", "medium", "high", "notSet"}] String DeviceThreatProtectionRequiredSecurityLevel;
+    [Write, Description("AdvancedThreatProtectionRequiredSecurityLevel of the AndroidWorkProfile device compliance policy."), ValueMap{"unavailable", "secured", "low", "medium", "high", "notSet"}, Values{"unavailable", "secured", "low", "medium", "high", "notSet"}] String AdvancedThreatProtectionRequiredSecurityLevel;
+    [Write, Description("SecurityBlockJailbrokenDevices of the AndroidWorkProfile device compliance policy.")] Boolean SecurityBlockJailbrokenDevices;
+    [Write, Description("OsMinimumVersion of the AndroidWorkProfile device compliance policy.")] String OsMinimumVersion;
+    [Write, Description("OsMaximumVersion of the AndroidWorkProfile device compliance policy.")] String OsMaximumVersion;
+    [Write, Description("MinAndroidSecurityPatchLevel of the AndroidWorkProfile device compliance policy.")] String MinAndroidSecurityPatchLevel;
+    [Write, Description("StorageRequireEncryption of the AndroidWorkProfile device compliance policy.")] Boolean StorageRequireEncryption;
+    [Write, Description("SecurityRequireSafetyNetAttestationBasicIntegrity of the AndroidWorkProfile device compliance policy.")] Boolean SecurityRequireSafetyNetAttestationBasicIntegrity;
+    [Write, Description("SecurityRequireSafetyNetAttestationCertifiedDevice of the AndroidWorkProfile device compliance policy.")] Boolean SecurityRequireSafetyNetAttestationCertifiedDevice;
+    [Write, Description("SecurityRequireGooglePlayServices of the AndroidWorkProfile device compliance policy.")] Boolean SecurityRequireGooglePlayServices;
+    [Write, Description("SecurityRequireUpToDateSecurityProviders of the AndroidWorkProfile device compliance policy.")] Boolean SecurityRequireUpToDateSecurityProviders;
+    [Write, Description("SecurityRequireCompanyPortalAppIntegrity of the AndroidWorkProfile device compliance policy.")] Boolean SecurityRequireCompanyPortalAppIntegrity;
+    [Write, Description("RoleScopeTagIds of the AndroidWorkProfile device compliance policy.")] String RoleScopeTagIds;
+    [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
+    [Required, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+};

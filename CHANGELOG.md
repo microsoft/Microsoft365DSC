@@ -1,5 +1,24 @@
 # Change log for Microsoft365DSC
 
+# 1.21.428.2
+
+* EXOTransportRule
+  * Fixed typo in accepted value for ApplyHtmlDisclaimerLocation;
+* IntuneAppConfigurationPolicy
+  * Revamp of Telemetry;
+  * Using shorter cmdlets names;
+* IntuneDeviceCompliancePolicyAndroid
+  * Initial Release;
+* IntuneDeviceCompliancePolicyAndroidWorkProfile
+  * InitialRelease
+* IntuneDeviceCompliancePolicyiOs
+  * Using shorter cmdlet names;
+* IntuneDeviceConfigurationPolicyiOS
+  * Using shorter cmdlet names;
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Revamp of Telemetry;
+  * Using Shorter cmdlet names;
+
 # 1.21.421.2
 
 * MISC
