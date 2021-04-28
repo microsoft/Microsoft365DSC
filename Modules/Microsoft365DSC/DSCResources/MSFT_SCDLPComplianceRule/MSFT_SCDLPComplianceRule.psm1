@@ -142,25 +142,6 @@ function Get-TargetResource
                 $NotifyAllowOverrideValue = $PolicyRule.NotifyAllowOverride.Replace(' ', '').Split(',')
             }
 
-            [array] $SensitiveInfoTypes = @()
-
-            foreach ($SensitiveInfo in $PolicyRule.ContentContainsSensitiveInformation)
-            {
-                if ($null -ne $SensitiveInfo.groups)
-                {
-                    $groups = $SensitiveInfo.groups
-                    $SensitiveInfo = @()
-                    foreach ($group in $groups)
-                    {
-                        foreach ($siEntry in $group.sensitivetypes)
-                        {
-                            $SensitiveInfo += [System.Collections.Hashtable]$siEntry
-                        }
-                    }
-                }
-                $SensitiveInfoTypes += $SensitiveInfo
-            }
-
             $result = @{
                 Ensure                              = 'Present'
                 Name                                = $PolicyRule.Name
@@ -169,7 +150,7 @@ function Get-TargetResource
                 BlockAccess                         = $PolicyRule.BlockAccess
                 BlockAccessScope                    = $PolicyRule.BlockAccessScope
                 Comment                             = $PolicyRule.Comment
-                ContentContainsSensitiveInformation = $SensitiveInfoTypes
+                ContentContainsSensitiveInformation = $PolicyRule.ContentContainsSensitiveInformation
                 ContentPropertyContainsWords        = $PolicyRule.ContentPropertyContainsWords
                 Disabled                            = $PolicyRule.Disabled
                 GenerateAlert                       = $PolicyRule.GenerateAlert
