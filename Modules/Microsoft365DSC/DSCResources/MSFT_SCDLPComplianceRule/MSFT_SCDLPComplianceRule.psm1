@@ -83,6 +83,62 @@ function Get-TargetResource
         $RuleErrorAction,
 
         [Parameter()]
+        [System.String[]]
+        $AnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveRMSTemplate,
+
+        [Parameter()]
+        [System.Boolean]
+        $StopPolicyProcessing,
+
+        [Parameter()]
+        [System.Boolean]
+        $DocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfDocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Boolean]
+        $HasSenderOverride,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfHasSenderOverride,
+
+        [Parameter()]
+        [System.Boolean]
+        $ProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Boolean]
+        $DocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfDocumentIsPasswordProtected,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -142,26 +198,61 @@ function Get-TargetResource
                 $NotifyAllowOverrideValue = $PolicyRule.NotifyAllowOverride.Replace(' ', '').Split(',')
             }
 
+            if ($null -ne $PolicyRule.AnyOfRecipientAddressContainsWords)
+            {
+                $AnyOfRecipientAddressContainsWords = $PolicyRule.AnyOfRecipientAddressContainsWords.Replace(' ', '').Split(',')
+            }
+
+            if ($null -ne $PolicyRule.AnyOfRecipientAddressMatchesPatterns)
+            {
+                $AnyOfRecipientAddressMatchesPatterns = $PolicyRule.AnyOfRecipientAddressMatchesPatterns.Replace(' ', '').Split(',')
+            }
+
+            if ($null -ne $PolicyRule.ContentExtensionMatchesWords)
+            {
+                $ContentExtensionMatchesWords = $PolicyRule.ContentExtensionMatchesWords.Replace(' ', '').Split(',')
+            }
+
+            if ($null -ne $PolicyRule.ExceptIfContentExtensionMatchesWords)
+            {
+                $ExceptIfContentExtensionMatchesWords = $PolicyRule.ExceptIfContentExtensionMatchesWords.Replace(' ', '').Split(',')
+            }
+
+
             $result = @{
-                Ensure                              = 'Present'
-                Name                                = $PolicyRule.Name
-                Policy                              = $PolicyRule.ParentPolicyName
-                AccessScope                         = $PolicyRule.AccessScope
-                BlockAccess                         = $PolicyRule.BlockAccess
-                BlockAccessScope                    = $PolicyRule.BlockAccessScope
-                Comment                             = $PolicyRule.Comment
-                ContentContainsSensitiveInformation = $PolicyRule.ContentContainsSensitiveInformation
-                ContentPropertyContainsWords        = $PolicyRule.ContentPropertyContainsWords
-                Disabled                            = $PolicyRule.Disabled
-                GenerateAlert                       = $PolicyRule.GenerateAlert
-                GenerateIncidentReport              = $PolicyRule.GenerateIncidentReport
-                IncidentReportContent               = $ArrayIncidentReportContent
-                NotifyAllowOverride                 = $NotifyAllowOverrideValue
-                NotifyEmailCustomText               = $PolicyRule.NotifyEmailCustomText
-                NotifyPolicyTipCustomText           = $PolicyRule.NotifyPolicyTipCustomText
-                NotifyUser                          = $PolicyRule.NotifyUser
-                ReportSeverityLevel                 = $PolicyRule.ReportSeverityLevel
-                RuleErrorAction                     = $PolicyRule.RuleErrorAction
+                Ensure                               = 'Present'
+                Name                                 = $PolicyRule.Name
+                Policy                               = $PolicyRule.ParentPolicyName
+                AccessScope                          = $PolicyRule.AccessScope
+                BlockAccess                          = $PolicyRule.BlockAccess
+                BlockAccessScope                     = $PolicyRule.BlockAccessScope
+                Comment                              = $PolicyRule.Comment
+                ContentContainsSensitiveInformation  = $PolicyRule.ContentContainsSensitiveInformation
+                ContentPropertyContainsWords         = $PolicyRule.ContentPropertyContainsWords
+                Disabled                             = $PolicyRule.Disabled
+                GenerateAlert                        = $PolicyRule.GenerateAlert
+                GenerateIncidentReport               = $PolicyRule.GenerateIncidentReport
+                IncidentReportContent                = $ArrayIncidentReportContent
+                NotifyAllowOverride                  = $NotifyAllowOverrideValue
+                NotifyEmailCustomText                = $PolicyRule.NotifyEmailCustomText
+                NotifyPolicyTipCustomText            = $PolicyRule.NotifyPolicyTipCustomText
+                NotifyUser                           = $PolicyRule.NotifyUser
+                ReportSeverityLevel                  = $PolicyRule.ReportSeverityLevel
+                RuleErrorAction                      = $PolicyRule.RuleErrorAction
+                RemoveRMSTemplate                    = $PolicyRule.RemoveRMSTemplate
+                StopPolicyProcessing                 = $PolicyRule.StopPolicyProcessing
+                DocumentIsUnsupported                = $PolicyRule.DocumentIsUnsupported
+                ExceptIfDocumentIsUnsupported        = $PolicyRule.ExceptIfDocumentIsUnsupported
+                HasSenderOverride                    = $PolicyRule.HasSenderOverride
+                ExceptIfHasSenderOverride            = $PolicyRule.ExceptIfHasSenderOverride
+                ProcessingLimitExceeded              = $PolicyRule.ProcessingLimitExceeded
+                ExceptIfProcessingLimitExceeded      = $PolicyRule.ExceptIfProcessingLimitExceeded
+                DocumentIsPasswordProtected          = $PolicyRule.DocumentIsPasswordProtected
+                ExceptIfDocumentIsPasswordProtected  = $PolicyRule.ExceptIfDocumentIsPasswordProtected
+                AnyOfRecipientAddressContainsWords   = $AnyOfRecipientAddressContainsWords
+                AnyOfRecipientAddressMatchesPatterns = $AnyOfRecipientAddressMatchesPatterns
+                ContentExtensionMatchesWords         = $ContentExtensionMatchesWords
+                ExceptIfContentExtensionMatchesWords = $ExceptIfContentExtensionMatchesWords
             }
 
             $paramsToRemove = @()
@@ -290,6 +381,63 @@ function Set-TargetResource
         [ValidateSet("Ignore", "RetryThenBlock")]
         [System.String]
         $RuleErrorAction,
+
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveRMSTemplate,
+
+        [Parameter()]
+        [System.Boolean]
+        $StopPolicyProcessing,
+
+        [Parameter()]
+        [System.Boolean]
+        $DocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfDocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Boolean]
+        $HasSenderOverride,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfHasSenderOverride,
+
+        [Parameter()]
+        [System.Boolean]
+        $ProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Boolean]
+        $DocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfDocumentIsPasswordProtected,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -448,6 +596,62 @@ function Test-TargetResource
         $RuleErrorAction,
 
         [Parameter()]
+        [System.String[]]
+        $AnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveRMSTemplate,
+
+        [Parameter()]
+        [System.Boolean]
+        $StopPolicyProcessing,
+
+        [Parameter()]
+        [System.Boolean]
+        $DocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfDocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Boolean]
+        $HasSenderOverride,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfHasSenderOverride,
+
+        [Parameter()]
+        [System.Boolean]
+        $ProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Boolean]
+        $DocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfDocumentIsPasswordProtected,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -512,28 +716,13 @@ function Test-TargetResource
         }
     }
     #endregion
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Name",
-        "Policy",
-        "AccessScope",
-        "BlockAccess",
-        "BlockAccessScope",
-        "Comment",
-        "ContentPropertyContainsWords",
-        "Disabled",
-        "GenerateAlert",
-        "GenerateIncidentReport",
-        "IncidentReportContent",
-        "NotifyAllowOverride",
-        "NotifyEmailCustomText",
-        "NotifyPolicyTipCustomText",
-        "NotifyUser",
-        "ReportSeverityLevel",
-        "RuleErrorAction",
-        "Ensure")
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -586,7 +775,10 @@ function Export-TargetResource
             {
                 $IsCIMArray = $true
             }
-            $Results.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $Results.ContentContainsSensitiveInformation
+            if ($null -ne $Results.ContentContainsSensitiveInformation )
+            {
+                $Results.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $Results.ContentContainsSensitiveInformation
+            }
 
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
@@ -595,8 +787,10 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation" -IsCIMArray $IsCIMArray
-
+            if ($null -ne $Results.ContentContainsSensitiveInformation )
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation" -IsCIMArray $IsCIMArray
+            }
             $dscContent += $currentDSCBlock
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++

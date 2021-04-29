@@ -40,7 +40,6 @@ class MSFT_SCDLPComplianceRule : OMI_BaseResource
     [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
     [Write, Description("The AnyOfRecipientAddressContainsWords parameter specifies a condition for the DLP rule that looks for words or phrases in recipient email addresses.")] String AnyOfRecipientAddressContainsWords[];
     [Write, Description("The AnyOfRecipientAddressMatchesPatterns parameter specifies a condition for the DLP rule that looks for text patterns in recipient email addresses by using regular expressions..")] String AnyOfRecipientAddressMatchesPatterns[];
-    [Write, Description("The GenerateAlert parameter specifies an action for the DLP rule that notifies the specified users when the conditions of the rule are met")] String GenerateAlert[];
     [Write, Description("The RemoveRMSTemplate parameter specifies an action for the DLP rule that removes Office 365 Message Encryption from messages and their attachments.")] Boolean RemoveRMSTemplate;
     [Write, Description("The StopPolicyProcessing parameter specifies an action that stops processing more DLP policy rules.")] Boolean StopPolicyProcessing;
     [Write, Description("The DocumentIsUnsupported parameter specifies a condition for the DLP rule that looks for files that can't be scanned.")] Boolean DocumentIsUnsupported;
@@ -53,5 +52,4 @@ class MSFT_SCDLPComplianceRule : OMI_BaseResource
     [Write, Description("The ExceptIfDocumentIsPasswordProtected parameter specifies an exception for the DLP rule that looks for password protected files (because the contents of the file can't be inspected). Password detection only works for Office documents and .zip files. ")] Boolean ExceptIfDocumentIsPasswordProtected;
     [Write, Description("The ContentExtensionMatchesWords parameter specifies a condition for the DLP rule that looks for words in file name extensions. You can specify multiple words separated by commas.")] String ContentExtensionMatchesWords[];
     [Write, Description("The ExceptIfContentExtensionMatchesWords parameter specifies an exception for the DLP rule that looks for words in file name extensions. You can specify multiple words separated by commas.")] String ExceptIfContentExtensionMatchesWords[];
-    [Write, Description("The NotifyUser parameter specifies an action for the DLP rule that notifies the specified users when the conditions of the rule are met. Valid values are:An email address,LastModifier,Owner,SiteAdmin")] String NotifyUser[];
 };
