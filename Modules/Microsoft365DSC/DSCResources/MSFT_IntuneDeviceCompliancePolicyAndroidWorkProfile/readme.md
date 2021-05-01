@@ -134,3 +134,32 @@ _You don't have to configure this setting because USB debugging is already disab
 Select the oldest security patch level a device can have. Devices that aren't at least at this patch level are noncompliant. The date must be entered in the YYYY-MM-DD format.
 
 _By default, no date is configured._
+
+## Example
+
+```PowerShell
+IntuneDeviceCompliancePolicyAndroidWorkProfile f7d82525-b7c0-475c-9d5e-16fafdfa487a
+        {
+            Description                                        = "";
+            DeviceThreatProtectionEnabled                      = $False;
+            DeviceThreatProtectionRequiredSecurityLevel        = "unavailable";
+            DisplayName                                        = "WorkProfile";
+            Ensure                                             = "Present";
+            GlobalAdminAccount                                 = $Credsglobaladmin;
+            PasswordExpirationDays                             = 90;
+            PasswordMinimumLength                              = 6;
+            PasswordMinutesOfInactivityBeforeLock              = 5;
+            PasswordRequired                                   = $True;
+            PasswordRequiredType                               = "numericComplex";
+            SecurityBlockJailbrokenDevices                     = $True;
+            SecurityDisableUsbDebugging                        = $False;
+            SecurityPreventInstallAppsFromUnknownSources       = $False;
+            SecurityRequireCompanyPortalAppIntegrity           = $False;
+            SecurityRequireGooglePlayServices                  = $False;
+            SecurityRequireSafetyNetAttestationBasicIntegrity  = $False;
+            SecurityRequireSafetyNetAttestationCertifiedDevice = $False;
+            SecurityRequireUpToDateSecurityProviders           = $False;
+            SecurityRequireVerifyApps                          = $False;
+            StorageRequireEncryption                           = $True;
+        }
+```

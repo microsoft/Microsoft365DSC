@@ -21,7 +21,7 @@ NOTE: All permisions listed above require admin consent.
 
 * **Require the device to be at or under the machine risk score**
   Select the maximum allowed machine risk score for devices evaluated by Microsoft Defender for Endpoint. Devices that exceed this score get marked as noncompliant.
-  * Not configured (default)
+  * Not configured (_default_)
   * Clear
   * Low
   * Medium
@@ -32,17 +32,17 @@ NOTE: All permisions listed above require admin consent.
 
 * **Devices managed with device administrator**
   Device administrator capabilities are superseded by Android Enterprise.
-  * Not configured (default)
+  * Not configured (_default_)
   * Block - Blocking device administrator will guide users to move to Android Enterprise Personally-Owned and Corporate-Owned Work Profile management to regain access.
 
 ### Rooted devices
 * **Prevent rooted devices from having corporate access. (This compliance check is supported for Android 4.0 and above.)**
-  * Not configured (default) - This setting isn't evaluated for compliance or non-compliance.
+  * Not configured (_default_) - This setting isn't evaluated for compliance or non-compliance.
   * Block - Mark rooted (jailbroken) devices as not compliant.
 
 * **Require the device to be at or under the Device Threat Level**
   Use this setting to take the risk assessment from a connected Mobile Threat Defense service as a condition for compliance.
-  * Not configured (default) - This setting isn't evaluated for compliance or non-compliance.
+  * Not configured (_default_) - This setting isn't evaluated for compliance or non-compliance.
   * Secured - This option is the most secure, as the device can't have any threats. If the device is detected with any level of threats, it's evaluated as noncompliant.
   * Low - The device is evaluated as compliant if only low-level threats are present. Anything higher puts the device in a noncompliant status.
   * Medium - The device is evaluated as compliant if existing threats on the device are low or medium level. If the device is detected to have high-level threats, it's determined to be noncompliant.
@@ -51,20 +51,20 @@ NOTE: All permisions listed above require admin consent.
 ### Google Play Protect
 * **Google Play Services is configured**
   Google Play services allows security updates, and is a base-level dependency for many security features on certified-Google devices.
-  * Not configured (default) - This setting isn't evaluated for compliance or non-compliance.
+  * Not configured (_default_) - This setting isn't evaluated for compliance or non-compliance.
   * Require - Require that the Google Play services app is installed and enabled.
 
 * **Up-to-date security provider**
-  * Not configured (default) - This setting isn't evaluated for compliance or non-compliance.
+  * Not configured (_default_) - This setting isn't evaluated for compliance or non-compliance.
   * Require - Require that an up-to-date security provider can protect a device from known vulnerabilities.
 
 * **Threat scan on apps**
-  * Not configured (default) - This setting isn't evaluated for compliance or non-compliance.
+  * Not configured (_default_) - This setting isn't evaluated for compliance or non-compliance.
   * Require - Require that the Android Verify Apps feature is enabled.
 
 * **SafetyNet device attestation**
   Enter the level of SafetyNet attestation that must be met. Your options:
-  * Not configured (default) - This setting isn't evaluated for compliance or non-compliance.
+  * Not configured (_default_) - This setting isn't evaluated for compliance or non-compliance.
   * Check basic integrity
   * Check basic integrity & certified devices
 
@@ -171,8 +171,39 @@ _The following settings are supported on Android 9.0 and earlier, and any versio
     * Minimum password length
     Enter the minimum number of digits or characters that the user's password must have.
     * Maximum minutes of inactivity before password is required
-    Enter the idle time before the user must reenter their password. When you choose Not configured (default), this setting isn't evaluated for compliance or non-compliance.
+    Enter the idle time before the user must reenter their password. When you choose Not configured (_default_), this setting isn't evaluated for compliance or non-compliance.
     * Number of days until password expires
     Select the number of days before the password expires and the user must create a new password.
     * Number of previous passwords to prevent reuse
     Enter the number of recent passwords that can't be reused. Use this setting to restrict the user from creating previously used passwords.
+
+## Example
+
+```PowerShell
+IntuneDeviceCompliancePolicyAndroid a58cdba9-c410-4ba4-b7d2-3a09593b5d84
+        {
+            Description                                        = "";
+            DeviceThreatProtectionEnabled                      = $False;
+            DeviceThreatProtectionRequiredSecurityLevel        = "unavailable";
+            DisplayName                                        = "Compliance Android";
+            Ensure                                             = "Present";
+            GlobalAdminAccount                                 = $Credsglobaladmin;
+            osMinimumVersion                                   = "7";
+            PasswordExpirationDays                             = 90;
+            PasswordMinimumLength                              = 6;
+            PasswordMinutesOfInactivityBeforeLock              = 5;
+            PasswordPreviousPasswordBlockCount                 = 10;
+            PasswordRequired                                   = $True;
+            PasswordRequiredType                               = "deviceDefault";
+            SecurityBlockJailbrokenDevices                     = $False;
+            SecurityDisableUsbDebugging                        = $False;
+            SecurityPreventInstallAppsFromUnknownSources       = $False;
+            SecurityRequireCompanyPortalAppIntegrity           = $False;
+            SecurityRequireGooglePlayServices                  = $False;
+            SecurityRequireSafetyNetAttestationBasicIntegrity  = $False;
+            SecurityRequireSafetyNetAttestationCertifiedDevice = $False;
+            SecurityRequireUpToDateSecurityProviders           = $False;
+            SecurityRequireVerifyApps                          = $False;
+            StorageRequireEncryption                           = $True;
+        }
+```
