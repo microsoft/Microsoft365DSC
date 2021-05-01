@@ -53,7 +53,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PasswordRequired                                   = $True
                         PasswordMinimumLength                              = 6
                         PasswordRequiredType                               = "DeviceDefault"
-                        RequiredPasswordComplexity                         = None
+                        RequiredPasswordComplexity                         = "None"
                         PasswordMinutesOfInactivityBeforeLock              = 5
                         PasswordExpirationDays                             = 365
                         PasswordPreviousPasswordBlockCount                 = 10
@@ -105,7 +105,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PasswordRequired                                   = $True
                         PasswordMinimumLength                              = 6
                         PasswordRequiredType                               = "DeviceDefault"
-                        RequiredPasswordComplexity                         = None
+                        RequiredPasswordComplexity                         = "None"
                         PasswordMinutesOfInactivityBeforeLock              = 5
                         PasswordExpirationDays                             = 365
                         PasswordPreviousPasswordBlockCount                 = 10
@@ -139,7 +139,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             PasswordRequired                                   = $True
                             PasswordMinimumLength                              = 6
                             PasswordRequiredType                               = "DeviceDefault"
-                            RequiredPasswordComplexity                         = None
+                            RequiredPasswordComplexity                         = "None"
                             PasswordMinutesOfInactivityBeforeLock              = 5
                             PasswordExpirationDays                             = 365
                             PasswordPreviousPasswordBlockCount                 = 10
@@ -186,7 +186,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PasswordRequired                                   = $True
                         PasswordMinimumLength                              = 6
                         PasswordRequiredType                               = "DeviceDefault"
-                        RequiredPasswordComplexity                         = None
+                        RequiredPasswordComplexity                         = "None"
                         PasswordMinutesOfInactivityBeforeLock              = 5
                         PasswordExpirationDays                             = 365
                         PasswordPreviousPasswordBlockCount                 = 10
@@ -220,7 +220,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             PasswordRequired                                   = $True
                             PasswordMinimumLength                              = 6
                             PasswordRequiredType                               = "DeviceDefault"
-                            RequiredPasswordComplexity                         = None
+                            RequiredPasswordComplexity                         = "None"
                             PasswordMinutesOfInactivityBeforeLock              = 5
                             PasswordExpirationDays                             = 365
                             PasswordPreviousPasswordBlockCount                 = 10
@@ -258,7 +258,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PasswordRequired                                   = $True
                         PasswordMinimumLength                              = 6
                         PasswordRequiredType                               = "DeviceDefault"
-                        RequiredPasswordComplexity                         = None
+                        RequiredPasswordComplexity                         = "None"
                         PasswordMinutesOfInactivityBeforeLock              = 5
                         PasswordExpirationDays                             = 365
                         PasswordPreviousPasswordBlockCount                 = 10
@@ -292,7 +292,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             PasswordRequired                                   = $True
                             PasswordMinimumLength                              = 6
                             PasswordRequiredType                               = "DeviceDefault"
-                            RequiredPasswordComplexity                         = None
+                            RequiredPasswordComplexity                         = "None"
                             PasswordMinutesOfInactivityBeforeLock              = 5
                             PasswordExpirationDays                             = 365
                             PasswordPreviousPasswordBlockCount                 = 10
@@ -346,7 +346,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             PasswordRequired                                   = $True
                             PasswordMinimumLength                              = 6
                             PasswordRequiredType                               = "DeviceDefault"
-                            RequiredPasswordComplexity                         = None
+                            RequiredPasswordComplexity                         = "None"
                             PasswordMinutesOfInactivityBeforeLock              = 5
                             PasswordExpirationDays                             = 365
                             PasswordPreviousPasswordBlockCount                 = 3
