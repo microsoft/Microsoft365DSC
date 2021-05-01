@@ -17,7 +17,7 @@ class MSFT_EXOTransportRule : OMI_BaseResource
     [Write, Description("The AnyOfToHeaderMemberOf parameter specifies a condition that looks for group members in the To field of messages.")] String AnyOfToHeaderMemberOf[];
     [Write, Description("The ApplyClassification parameter specifies an action that applies a message classification to messages. ")] String ApplyClassification;
     [Write, Description("The ApplyHtmlDisclaimerFallbackAction parameter specifies what to do if the HTML disclaimer can't be added to a message."), ValueMap{"Wrap","Ignore","Reject"}, Values{"Wrap","Ignore","Reject"}] String ApplyHtmlDisclaimerFallbackAction;
-    [Write, Description("The ApplyHtmlDisclaimerLocation parameter specifies where to insert the HTML disclaimer text in the body of messages."), ValueMap{"Append","Prepand"}, Values{"Append","Prepand"}] String ApplyHtmlDisclaimerLocation;
+    [Write, Description("The ApplyHtmlDisclaimerLocation parameter specifies where to insert the HTML disclaimer text in the body of messages."), ValueMap{"Append","Prepend"}, Values{"Append","Prepend"}] String ApplyHtmlDisclaimerLocation;
     [Write, Description("The ApplyHtmlDisclaimerText parameter specifies an action that adds the disclaimer text to messages.")] String ApplyHtmlDisclaimerText;
     [Write, Description("The ApplyOME parameter specifies an action that encrypts messages and their attachments by using Office 365 Message Encryption.")] Boolean ApplyOME;
     [Write, Description("The ApplyRightsProtectionTemplate parameter specifies an action that applies rights management service (RMS) templates to messages. ")] String ApplyRightsProtectionTemplate;
