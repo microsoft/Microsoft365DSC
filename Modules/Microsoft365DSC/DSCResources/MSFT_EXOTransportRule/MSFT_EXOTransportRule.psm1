@@ -672,7 +672,7 @@ function Get-TargetResource
         $SubjectMatchesPatterns,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SubjectOrBodyContainsWords,
 
         [Parameter()]
@@ -1605,7 +1605,7 @@ function Set-TargetResource
         $SubjectMatchesPatterns,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SubjectOrBodyContainsWords,
 
         [Parameter()]
@@ -2370,7 +2370,7 @@ function Test-TargetResource
         $SubjectMatchesPatterns,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SubjectOrBodyContainsWords,
 
         [Parameter()]
