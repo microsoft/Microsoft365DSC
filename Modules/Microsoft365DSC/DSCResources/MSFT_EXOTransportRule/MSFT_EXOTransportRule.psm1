@@ -937,6 +937,16 @@ function Get-TargetResource
             TenantId                                      = $TenantId
         }
 
+        # Formats DateTime as String
+        if ($null -ne $result.ActivationDate)
+        {
+            $result.ActivationDate = $TransportRule.ActivationDate.ToUniversalTime().ToString()
+        }
+        if ($null -ne $result.ExpiryDate)
+        {
+            $result.ExpiryDate = $TransportRule.ExpiryDate.ToUniversalTime().ToString()
+        }
+
         Write-Verbose -Message "Found Transport Rule $($Name)"
         return $result
     }
