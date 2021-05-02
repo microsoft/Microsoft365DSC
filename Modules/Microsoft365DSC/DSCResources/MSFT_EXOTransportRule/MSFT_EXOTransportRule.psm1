@@ -354,6 +354,10 @@ function Get-TargetResource
         $ExceptIfRecipientInSenderList,
 
         [Parameter()]
+        [System.String]
+        $ExceptIfSCLOver,
+
+        [Parameter()]
         [System.String[]]
         $ExceptIfSenderADAttributeContainsWords,
 
@@ -600,6 +604,10 @@ function Get-TargetResource
         $RuleSubType,
 
         [Parameter()]
+        [System.String]
+        $SCLOver,
+
+        [Parameter()]
         [System.String[]]
         $SenderADAttributeContainsWords,
 
@@ -839,6 +847,7 @@ function Get-TargetResource
             ExceptIfRecipientAddressMatchesPatterns       = $TransportRule.ExceptIfRecipientAddressMatchesPatterns
             ExceptIfRecipientDomainIs                     = $TransportRule.ExceptIfRecipientDomainIs
             ExceptIfRecipientInSenderList                 = $TransportRule.ExceptIfRecipientInSenderList
+            ExceptIfSCLOver                               = $TransportRule.ExceptIfSCLOver
             ExceptIfSenderADAttributeContainsWords        = $TransportRule.ExceptIfSenderADAttributeContainsWords
             ExceptIfSenderADAttributeMatchesPatterns      = $TransportRule.ExceptIfSenderADAttributeMatchesPatterns
             ExceptIfSenderDomainIs                        = $TransportRule.ExceptIfSenderDomainIs
@@ -898,6 +907,7 @@ function Get-TargetResource
             RouteMessageOutboundRequireTls                = $TransportRule.RouteMessageOutboundRequireTls
             RuleErrorAction                               = $TransportRule.RuleErrorAction
             RuleSubType                                   = $TransportRule.RuleSubType
+            SCLOver                                       = $TransportRule.SCLOver
             SenderADAttributeContainsWords                = $TransportRule.SenderADAttributeContainsWords
             SenderADAttributeMatchesPatterns              = $TransportRule.SenderADAttributeMatchesPatterns
             SenderAddressLocation                         = $TransportRule.SenderAddressLocation
@@ -1287,6 +1297,10 @@ function Set-TargetResource
         $ExceptIfRecipientInSenderList,
 
         [Parameter()]
+        [System.String]
+        $ExceptIfSCLOver,
+
+        [Parameter()]
         [System.String[]]
         $ExceptIfSenderADAttributeContainsWords,
 
@@ -1531,6 +1545,10 @@ function Set-TargetResource
         [ValidateSet('Dlp', 'None')]
         [System.String]
         $RuleSubType,
+
+        [Parameter()]
+        [System.String]
+        $SCLOver,
 
         [Parameter()]
         [System.String[]]
@@ -2052,6 +2070,10 @@ function Test-TargetResource
         $ExceptIfRecipientInSenderList,
 
         [Parameter()]
+        [System.String]
+        $ExceptIfSCLOver,
+
+        [Parameter()]
         [System.String[]]
         $ExceptIfSenderADAttributeContainsWords,
 
@@ -2296,6 +2318,10 @@ function Test-TargetResource
         [ValidateSet('Dlp', 'None')]
         [System.String]
         $RuleSubType,
+
+        [Parameter()]
+        [System.String]
+        $SCLOver,
 
         [Parameter()]
         [System.String[]]
