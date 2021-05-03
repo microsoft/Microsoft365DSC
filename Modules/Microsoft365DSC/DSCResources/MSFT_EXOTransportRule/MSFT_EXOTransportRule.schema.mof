@@ -86,6 +86,7 @@ class MSFT_EXOTransportRule : OMI_BaseResource
     [Write, Description("The ExceptIfRecipientAddressMatchesPatterns parameter specifies an exception that looks for text patterns in recipient email addresses by using regular expressions.")] String ExceptIfRecipientAddressMatchesPatterns[];
     [Write, Description("The ExceptIfRecipientDomainIs parameter specifies an exception that looks for recipients with email address in the specified domains.")] String ExceptIfRecipientDomainIs[];
     [Write, Description("This parameter is reserved for internal Microsoft use.")] String ExceptIfRecipientInSenderList[];
+    [Write, Description("The ExceptIfSCLOver parameter specifies an exception that looks for the SCL value of messages")] String ExceptIfSCLOver;
     [Write, Description("The ExceptIfSenderADAttributeContainsWords parameter specifies an exception that looks for words in Active Directory attributes of message senders.")] String ExceptIfSenderADAttributeContainsWords[];
     [Write, Description("The ExceptIfSenderADAttributeMatchesPatterns parameter specifies an exception that looks for text patterns in Active Directory attributes of message senders by using regular expressions.")] String ExceptIfSenderADAttributeMatchesPatterns[];
     [Write, Description("The ExceptIfSenderDomainIs parameter specifies an exception that looks for senders with email address in the specified domains.")] String ExceptIfSenderDomainIs[];
@@ -145,6 +146,7 @@ class MSFT_EXOTransportRule : OMI_BaseResource
     [Write, Description("The RouteMessageOutboundRequireTls parameter specifies an action that uses Transport Layer Security (TLS) encryption to deliver messages outside your organization.")] Boolean RouteMessageOutboundRequireTls;
     [Write, Description("The RuleErrorAction parameter specifies what to do if rule processing can't be completed on messages."), ValueMap{"Ignore","Defer"}, Values{"Ignore","Defer"}] String RuleErrorAction;
     [Write, Description("The RuleSubType parameter specifies the rule type."), ValueMap{"Dlp","None"}, Values{"Dlp","None"}] String RuleSubType;
+    [Write, Description("The SCLOver parameter specifies a condition that looks for the SCL value of messages")] String SCLOver;
     [Write, Description("The SenderADAttributeContainsWords parameter specifies a condition that looks for words in Active Directory attributes of message senders.")] String SenderADAttributeContainsWords[];
     [Write, Description("The SenderADAttributeMatchesPatterns parameter specifies a condition that looks for text patterns in Active Directory attributes of message senders by using regular expressions.")] String SenderADAttributeMatchesPatterns[];
     [Write, Description("The SenderAddressLocation parameter specifies where to look for sender addresses in conditions and exceptions that examine sender email addresses."), ValueMap{"Header","Envelope","HeaderOrEnvelope"}, Values{"Header","Envelope","HeaderOrEnvelope"}] String SenderAddressLocation;
