@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# 1.21.505.1
+
+* EXOTransportRule
+  * Adding ExceptIfSCLOver and SCLOver.
+  * Fixes SubjectOrBodyContainsWords parameter not being an array.
+  * Fixes DateTime formating on ExpiryDate and ActivationDate
+
 # 1.21.428.2
 
 * EXOTransportRule
