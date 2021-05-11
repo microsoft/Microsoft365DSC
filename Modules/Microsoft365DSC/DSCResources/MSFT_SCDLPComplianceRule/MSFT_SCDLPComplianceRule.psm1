@@ -51,7 +51,7 @@ function Get-TargetResource
         $GenerateIncidentReport,
 
         [Parameter()]
-        [ValidateSet("All", "Default", "DetectionDetails", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title")]
+        [ValidateSet("All", "Default", "DetectionDetails", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title", "RetentionLabel", "SensitivityLabel")]
         [System.String[]]
         $IncidentReportContent,
 
@@ -218,6 +218,13 @@ function Get-TargetResource
                 $ExceptIfContentExtensionMatchesWords = $PolicyRule.ExceptIfContentExtensionMatchesWords.Replace(' ', '').Split(',')
             }
 
+            [array] $SensitiveInfo = @()
+
+            foreach ($si in $PolicyRule.ContentContainsSensitiveInformation)
+            {
+
+                $SensitiveInfo += [System.Collections.Hashtable]$si
+            }
 
             $result = @{
                 Ensure                               = 'Present'
@@ -227,7 +234,7 @@ function Get-TargetResource
                 BlockAccess                          = $PolicyRule.BlockAccess
                 BlockAccessScope                     = $PolicyRule.BlockAccessScope
                 Comment                              = $PolicyRule.Comment
-                ContentContainsSensitiveInformation  = $PolicyRule.ContentContainsSensitiveInformation
+                ContentContainsSensitiveInformation  = $SensitiveInfo
                 ContentPropertyContainsWords         = $PolicyRule.ContentPropertyContainsWords
                 Disabled                             = $PolicyRule.Disabled
                 GenerateAlert                        = $PolicyRule.GenerateAlert
@@ -351,7 +358,7 @@ function Set-TargetResource
         $GenerateIncidentReport,
 
         [Parameter()]
-        [ValidateSet("All", "Default", "DetectionDetails", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title")]
+        [ValidateSet("All", "Default", "DetectionDetails", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title", "RetentionLabel", "SensitivityLabel")]
         [System.String[]]
         $IncidentReportContent,
 
@@ -564,7 +571,7 @@ function Test-TargetResource
         $GenerateIncidentReport,
 
         [Parameter()]
-        [ValidateSet("All", "Default", "DetectionDetails", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title")]
+        [ValidateSet("All", "Default", "DetectionDetails", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title", "RetentionLabel", "SensitivityLabel")]
         [System.String[]]
         $IncidentReportContent,
 
@@ -681,10 +688,16 @@ function Test-TargetResource
 
     #region Test Sensitive Information Type
     # For each Desired SIT check to see if there is an existing rule with the same name
-    foreach ($sit in $ContentContainsSensitiveInformation)
+    if ($null -ne $ValuesToCheck['ContentContainsSensitiveInformation'])
+    {
+        $contentSITS = Get-SCDLPSensitiveInformation -SensitiveInformation $ValuesToCheck['ContentContainsSensitiveInformation']
+    }
+
+    foreach ($sit in $contentSITS)
     {
         Write-Verbose -Message "Trying to find existing Sensitive Information Action matching name {$($sit.name)}"
-        $matchingExistingRule = $CurrentValues.ContentContainsSensitiveInformaton | Where-Object -FilterScript { $_.name -eq $sit.name }
+        $matchingExistingRule = $CurrentValues.ContentContainsSensitiveInformation | Where-Object -FilterScript { $_.name -eq $sit.name }
+
         if ($null -ne $matchingExistingRule)
         {
             Write-Verbose -Message "Sensitive Information Action {$($sit.name)} was found"
