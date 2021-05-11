@@ -729,8 +729,9 @@ function Test-TargetResource
         }
     }
     #endregion
-    $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ContentContainsSensitiveInformation') | Out-Null
+
+    Write-Verbose "Completed SIT check"
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
