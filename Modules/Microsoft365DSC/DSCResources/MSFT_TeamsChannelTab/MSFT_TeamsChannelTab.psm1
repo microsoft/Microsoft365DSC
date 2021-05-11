@@ -66,6 +66,9 @@ function Get-TargetResource
     )
     Write-Verbose -Message "Getting configuration of Tab $DisplayName"
 
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -73,14 +76,13 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
-        -InboundParameters $PSBoundParameters
 
     try
     {
@@ -304,7 +306,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating new tab {$DisplayName}"
         Write-Verbose -Message "Params: $($CurrentParameters | Out-String)"
-        $CurrentParameters.Add("TeamsId", $tab.TeamId)
+        $CurrentParameters.Add("TeamId", $tab.TeamId)
         $CurrentParameters.Add("ChannelId", $ChannelInstance.Id)
         $CurrentParameters.Remove("TeamName") | Out-Null
         $CurrentParameters.Remove("ChannelName") | Out-Null
@@ -447,6 +449,13 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
+
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
+            -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -454,17 +463,12 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
-
-        $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
-            -InboundParameters $PSBoundParameters
-
         [array]$teams = Get-Team
         $i = 1
         $dscContent = ""

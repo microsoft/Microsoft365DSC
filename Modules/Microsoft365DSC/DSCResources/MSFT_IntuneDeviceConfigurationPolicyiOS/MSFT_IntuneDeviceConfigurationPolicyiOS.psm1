@@ -382,7 +382,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $messagesBlocked,
+        $MessagesBlocked,
 
         [Parameter()]
         [System.Boolean]
@@ -514,18 +514,19 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Checking for the Intune Device Configuration Policy {$DisplayName}"
+    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
+        -InboundParameters $PSBoundParameters
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    Write-Verbose -Message "Checking for the Intune Device Configuration Policy {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
-        -InboundParameters $PSBoundParameters
 
     $nullResult = $PSBoundParameters
     $nullResult.Ensure = 'Absent'
@@ -638,7 +639,7 @@ function Get-TargetResource
             MediaContentRatingUnitedKingdom                = $policy.MediaContentRatingUnitedKingdom
             MediaContentRatingUnitedStates                 = $policy.MediaContentRatingUnitedStates
             MediaContentRatingApps                         = $policy.MediaContentRatingApps
-            messagesBlocked                                = $policy.messagesBlocked
+            MessagesBlocked                                = $policy.MessagesBlocked
             NotificationsBlockSettingsModification         = $policy.NotificationsBlockSettingsModification
             PasscodeBlockFingerprintUnlock                 = $policy.PasscodeBlockFingerprintUnlock
             PasscodeBlockModification                      = $policy.PasscodeBlockModification
@@ -1075,7 +1076,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $messagesBlocked,
+        $MessagesBlocked,
 
         [Parameter()]
         [System.Boolean]
@@ -1207,17 +1208,19 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
+    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
-        -InboundParameters $PSBoundParameters
 
     $currentPolicy = Get-TargetResource @PSBoundParameters
     $setParams = $PSBoundParameters
@@ -1626,7 +1629,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $messagesBlocked,
+        $MessagesBlocked,
 
         [Parameter()]
         [System.Boolean]
@@ -1796,17 +1799,19 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
-        -InboundParameters $PSBoundParameters
 
     try
     {

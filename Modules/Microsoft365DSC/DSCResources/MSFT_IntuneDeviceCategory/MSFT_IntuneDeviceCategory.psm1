@@ -22,25 +22,27 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Checking for the Intune Device Category {$DisplayName}"
+    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    Write-Verbose -Message "Checking for the Intune Device Category {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
-        -InboundParameters $PSBoundParameters
 
     $nullResult = $PSBoundParameters
     $nullResult.Ensure = 'Absent'
 
     try
     {
-        $category = Get-DeviceManagement_DeviceCategories -Filter "displayName eq '$DisplayName'"
+        $category = Get-IntuneDeviceCategory -Filter "displayName eq '$DisplayName'"
 
         if ($null -eq $category)
         {
@@ -50,8 +52,8 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found Device Category with Identity {$Identity}"
         return @{
-            DisplayName        = $category.displayName
-            Description        = $category.description
+            DisplayName        = $category.DisplayName
+            Description        = $category.Description
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdminAccount
         }
@@ -105,39 +107,42 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Updating Teams Upgrade Policy {$Identity}"
+
+    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Write-Verbose -Message "Updating Teams Upgrade Policy {$Identity}"
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
-        -InboundParameters $PSBoundParameters
 
     $currentCategory = Get-TargetResource @PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Device Category {$DisplayName}"
-        New-DeviceManagement_DeviceCategories -DisplayName $DisplayName `
+        New-IntuneDeviceCategory -DisplayName $DisplayName `
             -Description $Description
     }
     elseif ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Device Category {$DisplayName}"
-        $category = Get-DeviceManagement_DeviceCategories -Filter "displayName eq '$DisplayName'"
-        Update-DeviceManagement_DeviceCategories -deviceCategoryId $category.id `
+        $category = Get-IntuneDeviceCategory -Filter "displayName eq '$DisplayName'"
+        Update-IntuneDeviceCategory -deviceCategoryId $category.id `
             -displayName $DisplayName -Description $Description
     }
     elseif ($Ensure -eq 'Absent' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Device Category {$DisplayName}"
-        $category = Get-DeviceManagement_DeviceCategories -Filter "displayName eq '$DisplayName'"
-        Remove-DeviceManagement_DeviceCategories -deviceCategoryId $category.id
+        $category = Get-IntuneDeviceCategory -Filter "displayName eq '$DisplayName'"
+        Remove-IntuneDeviceCategory -deviceCategoryId $category.id
     }
 }
 
@@ -203,21 +208,23 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
-        -InboundParameters $PSBoundParameters
-
     try
     {
-        [array]$categories = Get-DeviceManagement_DeviceCategories -ErrorAction Stop
+        [array]$categories = Get-IntuneDeviceCategory -ErrorAction Stop
         $i = 1
         $content = ''
         Write-Host "`r`n" -NoNewLine

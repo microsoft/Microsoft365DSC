@@ -37,11 +37,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credential"
             }
 
-            Mock -CommandName Update-DeviceManagement_DeviceCompliancePolicies -MockWith {
+            Mock -CommandName Update-IntuneDeviceCompliancePolicy -MockWith {
             }
-            Mock -CommandName New-DeviceManagement_DeviceCompliancePolicies -MockWith {
+            Mock -CommandName New-IntuneDeviceCompliancePolicy -MockWith {
             }
-            Mock -CommandName Remove-DeviceManagement_DeviceCompliancePolicies -MockWith {
+            Mock -CommandName Remove-IntuneDeviceCompliancePolicy -MockWith {
             }
 
             # Test contexts
@@ -68,7 +68,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GlobalAdminAccount                          = $GlobalAdminAccount
                     }
 
-                    Mock -CommandName Get-DeviceManagement_DeviceCompliancePolicies -MockWith {
+                    Mock -CommandName Get-IntuneDeviceCompliancePolicy -MockWith {
                         return $null
                     }
                 }
@@ -83,7 +83,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 It "Should create the iOS Device Compliance Policy from the Set method" {
                     Set-TargetResource @testParams
-                    Should -Invoke -CommandName "New-DeviceManagement_DeviceCompliancePolicies" -Exactly 1
+                    Should -Invoke -CommandName "New-IntuneDeviceCompliancePolicy" -Exactly 1
                 }
             }
 
@@ -110,7 +110,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GlobalAdminAccount                          = $GlobalAdminAccount
                     }
 
-                    Mock -CommandName Get-DeviceManagement_DeviceCompliancePolicies -MockWith {
+                    Mock -CommandName Get-IntuneDeviceCompliancePolicy -MockWith {
                         return @{
                             DisplayName                                 = 'Test iOS Device Compliance Policy'
                             Description                                 = 'Different Value'
@@ -144,7 +144,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 It "Should update the iOS Device Compliance Policy from the Set method" {
                     Set-TargetResource @testParams
-                    Should -Invoke -CommandName Update-DeviceManagement_DeviceCompliancePolicies -Exactly 1
+                    Should -Invoke -CommandName Update-IntuneDeviceCompliancePolicy -Exactly 1
                 }
             }
 
@@ -171,7 +171,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GlobalAdminAccount                          = $GlobalAdminAccount
                     }
 
-                    Mock -CommandName Get-DeviceManagement_DeviceCompliancePolicies -MockWith {
+                    Mock -CommandName Get-IntuneDeviceCompliancePolicy -MockWith {
                         return @{
                             DisplayName                                 = 'Test iOS Device Compliance Policy'
                             Description                                 = 'Test iOS Device Compliance Policy Description'
@@ -223,7 +223,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GlobalAdminAccount                          = $GlobalAdminAccount
                     }
 
-                    Mock -CommandName Get-DeviceManagement_DeviceCompliancePolicies -MockWith {
+                    Mock -CommandName Get-IntuneDeviceCompliancePolicy -MockWith {
                         return @{
                             DisplayName                                 = 'Test iOS Device Compliance Policy'
                             Description                                 = 'Test iOS Device Compliance Policy Description'
@@ -257,7 +257,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 It "Should remove the iOS Device Compliance Policy from the Set method" {
                     Set-TargetResource @testParams
-                    Should -Invoke -CommandName Remove-DeviceManagement_DeviceCompliancePolicies -Exactly 1
+                    Should -Invoke -CommandName Remove-IntuneDeviceCompliancePolicy -Exactly 1
                 }
             }
 
@@ -267,7 +267,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GlobalAdminAccount = $GlobalAdminAccount;
                     }
 
-                    Mock -CommandName Get-DeviceManagement_DeviceCompliancePolicies -MockWith {
+                    Mock -CommandName Get-IntuneDeviceCompliancePolicy -MockWith {
                         return @{
                             DisplayName                                 = 'Test iOS Device Compliance Policy'
                             Description                                 = 'Test iOS Device Compliance Policy Description'

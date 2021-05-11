@@ -1,5 +1,75 @@
 # Change log for Microsoft365DSC
 
+# 1.21.505.1
+
+* EXOTransportRule
+  * Adding ExceptIfSCLOver and SCLOver.
+  * Fixes SubjectOrBodyContainsWords parameter not being an array.
+  * Fixes DateTime formating on ExpiryDate and ActivationDate
+
+# 1.21.428.2
+
+* EXOTransportRule
+  * Fixed typo in accepted value for ApplyHtmlDisclaimerLocation;
+* IntuneAppConfigurationPolicy
+  * Revamp of Telemetry;
+  * Using shorter cmdlets names;
+* IntuneDeviceCompliancePolicyAndroid
+  * Initial Release;
+* IntuneDeviceCompliancePolicyAndroidWorkProfile
+  * InitialRelease
+* IntuneDeviceCompliancePolicyiOs
+  * Using shorter cmdlet names;
+* IntuneDeviceConfigurationPolicyiOS
+  * Using shorter cmdlet names;
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Revamp of Telemetry;
+  * Using Shorter cmdlet names;
+
+# 1.21.421.2
+
+* MISC
+  * Updated the SkipModuleReload logic for a dozen of EXO modules
+    which were failing authentication;
+
+# 1.21.421.1
+
+* AADConditionalAccessPolicy
+  * Fix to allow 'undefined' as a value for multiple parameters;
+* EXOTransportRule
+  * Fixed schema to support Service Principal Auth;
+* TeamsChannelTab
+  * Fixed typo in parameter 'TeamId';
+* MISC
+  * Refactor of all EXO resources to fixes for Set-TargetResource
+    functions where Service Principal was used to authenticate;
+  * Refactored connections across all resources to help with
+    Telemetry regarding what auth method users are leveraging.
+
+# 1.21.414.2
+
+* AADConditionalAccessPolicy
+  * Fixed an issue with the default values for device states;
+* EXOHostedContentFilterPolicy
+  * Fixed issue where EndUserSpamNotificationCustomFromName was
+    not properly returned from the Get-TargetResource function;
+* EXOTransportRule
+  * New resource;
+* O365AdminAuditLogConfig
+  * Fixed issue where the Set-TargetResource stopped being
+    executed if an error was encountered;
+* TeamsTeam
+  * Fix format issue with owner issue # 1143
+* DEPENDENCIES
+  * Updated AzureADPreview to version 2.0.2.134;
+  * Updated Microsoft.Graph.Authentication to version 1.4.2;
+  * Updated Microsoft.Graph.Planner to version 1.4.2;
+  * Updated Microsoft.Graph.Teams to version 1.4.2;
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version
+    2.0.112;
+  * Updated MSCloudLoginAssistant to version 1.0.51;
+  * Updated PnP.PowerShell to version 1.5.0;
+
 # 1.21.407.1
 
 * AADConditionalAccessPolicy
@@ -12,7 +82,7 @@
   * Fixed issue in most EXO resources where AzureAD App information
     was not returned by the Get-TargetResource function;
 
-1.21.331.1
+# 1.21.331.1
 
 * AADApplication
   * Added support for API Permissions;
