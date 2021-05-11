@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# 1.21.513.1
+
+* SCDLPComplianceRule
+  * Added several new parameters
+  * Fixed several bugs on extract
+
 # 1.21.505.1
 
 * EXOTransportRule
