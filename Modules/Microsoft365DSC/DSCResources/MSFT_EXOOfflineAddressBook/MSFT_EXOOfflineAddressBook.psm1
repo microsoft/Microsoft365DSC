@@ -221,7 +221,6 @@ function Set-TargetResource
     $NewOfflineAddressBookParams = @{
         Name                 = $Name
         AddressLists         = $AddressLists
-        ConfiguredAttributes = $ConfiguredAttributes
         DiffRetentionPeriod  = $DiffRetentionPeriod
         IsDefault            = $IsDefault
         Confirm              = $false
