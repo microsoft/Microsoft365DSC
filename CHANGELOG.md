@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+# 1.21.512.1
+
+* EXOOfflineAddresBook
+  * Fixed issue in Set-TargetResource where ConfiguredAttributes
+    was passed and resulted in an error.
+* SCDLPComplianceRule
+  * Added several new parameters
+  * Fixed several bugs on extract
+
 # 1.21.505.1
 
 * EXOTransportRule
