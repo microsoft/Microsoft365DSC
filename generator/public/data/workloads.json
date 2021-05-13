@@ -2,12 +2,9 @@
   {
     "title": "Azure AD",
     "description": "Nunc gravida maximus arcu, ut varius nisi elementum et. Sed faucibus porttitor sagittis. Fusce ut eros placerat, rhoncus velit ac, tincidunt nisl. Proin metus dolor, rutrum at diam ac, consequat dictum leo. Sed tristique massa eget dui blandit, in molestie leo viverra. Nunc rhoncus libero metus, at mattis risus aliquam vel.",
-    "acronym": "AAD",
+    "key": "AAD",
     "extractionModes": {
-      "full": [
-        "AADMSGroup",
-        "AADServicePrincipal"
-      ]
+      "full": ["AADMSGroup", "AADServicePrincipal"]
     },
     "resources": [
       {
@@ -48,12 +45,9 @@
   {
     "title": "Exchange",
     "description": "Nunc gravida maximus arcu, ut varius nisi elementum et. Sed faucibus porttitor sagittis. Fusce ut eros placerat, rhoncus velit ac, tincidunt nisl. Proin metus dolor, rutrum at diam ac, consequat dictum leo. Sed tristique massa eget dui blandit, in molestie leo viverra. Nunc rhoncus libero metus, at mattis risus aliquam vel.",
-    "acronym": "EXO",
+    "key": "EXO",
     "extractionModes": {
-      "full": [
-        "EXOMailboxSettings",
-        "EXOManagementRole"
-      ]
+      "full": ["EXOMailboxSettings", "EXOManagementRole"]
     },
     "resources": [
       {
@@ -193,7 +187,7 @@
   {
     "title": "Intune",
     "description": "Donec condimentum massa eget augue hendrerit, dignissim interdum lorem laoreet. Ut et mi quis dui venenatis lobortis. Nunc non lobortis libero.",
-    "acronym": "Intune",
+    "key": "Intune",
     "resources": [
       {
         "name": "IntuneAppConfigurationPolicy"
@@ -221,12 +215,9 @@
   {
     "title": "Office 365",
     "description": "Donec condimentum massa eget augue hendrerit, dignissim interdum lorem laoreet. Ut et mi quis dui venenatis lobortis. Nunc non lobortis libero.",
-    "acronym": "O365",
+    "key": "O365",
     "extractionModes": {
-      "full": [
-        "O365Group",
-        "O365User"
-      ]
+      "full": ["O365Group", "O365User"]
     },
     "resources": [
       {
@@ -246,7 +237,7 @@
   {
     "title": "OneDrive",
     "description": "Donec condimentum massa eget augue hendrerit, dignissim interdum lorem laoreet. Ut et mi quis dui venenatis lobortis. Nunc non lobortis libero.",
-    "acronym": "OD",
+    "key": "OD",
     "resources": [
       {
         "name": "ODSettings"
@@ -256,13 +247,9 @@
   {
     "title": "Planner",
     "description": "Donec condimentum massa eget augue hendrerit, dignissim interdum lorem laoreet. Ut et mi quis dui venenatis lobortis. Nunc non lobortis libero.",
-    "acronym": "Planner",
+    "key": "Planner",
     "extractionModes": {
-      "full": [
-        "PlannerPlan",
-        "PlannerBucket",
-        "PlannerTask"
-      ]
+      "full": ["PlannerPlan", "PlannerBucket", "PlannerTask"]
     },
     "resources": [
       {
@@ -279,11 +266,9 @@
   {
     "title": "Power Platform",
     "description": "Donec condimentum massa eget augue hendrerit, dignissim interdum lorem laoreet. Ut et mi quis dui venenatis lobortis. Nunc non lobortis libero.",
-    "acronym": "PP",
+    "key": "PP",
     "extractionModes": {
-      "full": [
-        "PPPowerAppsEnvironment"
-      ]
+      "full": ["PPPowerAppsEnvironment"]
     },
     "resources": [
       {
@@ -294,7 +279,7 @@
   {
     "title": "Security & Compliance",
     "description": "Donec condimentum massa eget augue hendrerit, dignissim interdum lorem laoreet. Ut et mi quis dui venenatis lobortis. Nunc non lobortis libero.",
-    "acronym": "SC",
+    "key": "SC",
     "resources": [
       {
         "name": "SCAuditConfigurationPolicy"
@@ -373,19 +358,10 @@
   {
     "title": "SharePoint",
     "description": "Aliquam pretium egestas elit vitae scelerisque. Quisque a diam eu nulla suscipit rhoncus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris porta lorem ex, dapibus euismod arcu imperdiet eget. Maecenas lacinia feugiat nibh, id vulputate sem molestie vitae. Sed at ante non nibh venenatis dictum vel vitae purus. Pellentesque eget ipsum nec felis bibendum luctus. Curabitur vestibulum feugiat augue, quis vehicula enim aliquet sit amet.",
-    "acronym": "SPO",
+    "key": "SPO",
     "extractionModes": {
-      "default": [
-        "SPOApp",
-        "SPOSiteDesign"
-      ],
-      "full": [
-        "SPOSiteAuditSettings",
-        "SPOSiteGroup",
-        "SPOSite",
-        "SPOUserProfileProperty",
-        "SPOPropertyBag"
-      ]
+      "default": ["SPOApp", "SPOSiteDesign"],
+      "full": ["SPOSiteAuditSettings", "SPOSiteGroup", "SPOSite", "SPOUserProfileProperty", "SPOPropertyBag"]
     },
     "resources": [
       {
@@ -459,13 +435,9 @@
   {
     "title": "Teams",
     "description": "Mauris euismod consequat orci nec pretium. Nam viverra sed lectus in mattis.",
-    "acronym": "Teams",
+    "key": "Teams",
     "extractionModes": {
-      "full": [
-        "TeamsTeam",
-        "TeamsUser",
-        "TeamsChannelTab"
-      ]
+      "full": ["TeamsTeam", "TeamsUser", "TeamsChannelTab"]
     },
     "resources": [
       {

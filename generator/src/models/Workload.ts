@@ -4,6 +4,7 @@ import { Resource } from './Resource';
 export interface Workload {
   title: string;
   description: string;
-  resources: Resource[];
+  key: string;
+  //resources: Resource[];
   extractionModes: ExtractionModes;
 }

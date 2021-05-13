@@ -1,5 +1,6 @@
 import { DefaultEffects, Icon, IStyle, mergeStyles } from '@fluentui/react';
 import * as React from 'react';
+import './ContentCard.css';
 
 export interface IContentCardProps {
   title?: string;
@@ -24,7 +25,7 @@ export const ContentCard: React.FunctionComponent<IContentCardProps> = (props) =
   });
 
   return (
-    <div className={mergeStyles(contentCardStyles)}>
+    <div className={`${mergeStyles(contentCardStyles)} section-title`}>
       <div>
         {props.title && (
           <h2 className={mergeStyles(titleStyles)} id={props.title}>
