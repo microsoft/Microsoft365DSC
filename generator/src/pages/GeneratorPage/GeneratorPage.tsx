@@ -73,7 +73,8 @@ export const GeneratorPage: React.FunctionComponent = () => {
         return true;
       }
     },
-    [extractionType, workloads]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [extractionType]
   );
 
   const _updateExtractionSelections = React.useCallback(
@@ -99,12 +100,10 @@ export const GeneratorPage: React.FunctionComponent = () => {
     }
 
     fetchData();
-  }, [setWorkloads, setResources, _updateExtractionSelections]);
+  }, [setResources, _updateExtractionSelections]);
 
   React.useEffect(() => {
-    //if (extractionType !== previousExtractionType) {
     setResources((resources) => _updateExtractionSelections([...resources]));
-    //}
   }, [extractionType, _updateExtractionSelections]);
 
   const Content = (props: IStackProps) => (
