@@ -354,6 +354,10 @@ function Get-TargetResource
         $ExceptIfRecipientInSenderList,
 
         [Parameter()]
+        [System.String]
+        $ExceptIfSCLOver,
+
+        [Parameter()]
         [System.String[]]
         $ExceptIfSenderADAttributeContainsWords,
 
@@ -600,6 +604,10 @@ function Get-TargetResource
         $RuleSubType,
 
         [Parameter()]
+        [System.String]
+        $SCLOver,
+
+        [Parameter()]
         [System.String[]]
         $SenderADAttributeContainsWords,
 
@@ -672,7 +680,7 @@ function Get-TargetResource
         $SubjectMatchesPatterns,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SubjectOrBodyContainsWords,
 
         [Parameter()]
@@ -839,6 +847,7 @@ function Get-TargetResource
             ExceptIfRecipientAddressMatchesPatterns       = $TransportRule.ExceptIfRecipientAddressMatchesPatterns
             ExceptIfRecipientDomainIs                     = $TransportRule.ExceptIfRecipientDomainIs
             ExceptIfRecipientInSenderList                 = $TransportRule.ExceptIfRecipientInSenderList
+            ExceptIfSCLOver                               = $TransportRule.ExceptIfSCLOver
             ExceptIfSenderADAttributeContainsWords        = $TransportRule.ExceptIfSenderADAttributeContainsWords
             ExceptIfSenderADAttributeMatchesPatterns      = $TransportRule.ExceptIfSenderADAttributeMatchesPatterns
             ExceptIfSenderDomainIs                        = $TransportRule.ExceptIfSenderDomainIs
@@ -898,6 +907,7 @@ function Get-TargetResource
             RouteMessageOutboundRequireTls                = $TransportRule.RouteMessageOutboundRequireTls
             RuleErrorAction                               = $TransportRule.RuleErrorAction
             RuleSubType                                   = $TransportRule.RuleSubType
+            SCLOver                                       = $TransportRule.SCLOver
             SenderADAttributeContainsWords                = $TransportRule.SenderADAttributeContainsWords
             SenderADAttributeMatchesPatterns              = $TransportRule.SenderADAttributeMatchesPatterns
             SenderAddressLocation                         = $TransportRule.SenderAddressLocation
@@ -925,6 +935,16 @@ function Get-TargetResource
             CertificatePath                               = $CertificatePath
             CertificatePassword                           = $CertificatePassword
             TenantId                                      = $TenantId
+        }
+
+        # Formats DateTime as String
+        if ($null -ne $result.ActivationDate)
+        {
+            $result.ActivationDate = $TransportRule.ActivationDate.ToUniversalTime().ToString()
+        }
+        if ($null -ne $result.ExpiryDate)
+        {
+            $result.ExpiryDate = $TransportRule.ExpiryDate.ToUniversalTime().ToString()
         }
 
         Write-Verbose -Message "Found Transport Rule $($Name)"
@@ -1287,6 +1307,10 @@ function Set-TargetResource
         $ExceptIfRecipientInSenderList,
 
         [Parameter()]
+        [System.String]
+        $ExceptIfSCLOver,
+
+        [Parameter()]
         [System.String[]]
         $ExceptIfSenderADAttributeContainsWords,
 
@@ -1533,6 +1557,10 @@ function Set-TargetResource
         $RuleSubType,
 
         [Parameter()]
+        [System.String]
+        $SCLOver,
+
+        [Parameter()]
         [System.String[]]
         $SenderADAttributeContainsWords,
 
@@ -1605,7 +1633,7 @@ function Set-TargetResource
         $SubjectMatchesPatterns,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SubjectOrBodyContainsWords,
 
         [Parameter()]
@@ -2052,6 +2080,10 @@ function Test-TargetResource
         $ExceptIfRecipientInSenderList,
 
         [Parameter()]
+        [System.String]
+        $ExceptIfSCLOver,
+
+        [Parameter()]
         [System.String[]]
         $ExceptIfSenderADAttributeContainsWords,
 
@@ -2298,6 +2330,10 @@ function Test-TargetResource
         $RuleSubType,
 
         [Parameter()]
+        [System.String]
+        $SCLOver,
+
+        [Parameter()]
         [System.String[]]
         $SenderADAttributeContainsWords,
 
@@ -2370,7 +2406,7 @@ function Test-TargetResource
         $SubjectMatchesPatterns,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SubjectOrBodyContainsWords,
 
         [Parameter()]
