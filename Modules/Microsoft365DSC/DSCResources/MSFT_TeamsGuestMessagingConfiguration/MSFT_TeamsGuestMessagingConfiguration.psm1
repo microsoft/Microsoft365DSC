@@ -49,7 +49,7 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Teams Guest Messaging settings"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -155,7 +155,7 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Teams Guest Messaging settings"
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
     # Check that at least one optional parameter is specified
     $inputValues = $PSBoundParameters

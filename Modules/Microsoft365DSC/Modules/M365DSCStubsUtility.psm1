@@ -62,11 +62,6 @@ function New-M365DSCStubFiles
             Platform     = 'SecurityComplianceCenter'
             ModuleName   = $null
             RandomCmdlet = 'Add-ComplianceCaseMember'
-        },
-        @{
-            Platform     = 'SkypeForBusiness'
-            ModuleName   = $null
-            RandomCmdlet = 'Clear-CsOnlineTelephoneNumberReservation'
         }
     )
     $Content = ''
