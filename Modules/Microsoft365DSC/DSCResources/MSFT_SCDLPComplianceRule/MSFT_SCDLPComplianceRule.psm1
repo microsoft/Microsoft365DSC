@@ -35,6 +35,10 @@ function Get-TargetResource
         $ContentContainsSensitiveInformation,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $ExceptIfContentContainsSensitiveInformation,
+
+        [Parameter()]
         [System.String[]]
         $ContentPropertyContainsWords,
 
@@ -221,48 +225,86 @@ function Get-TargetResource
                 $ExceptIfContentExtensionMatchesWords = $PolicyRule.ExceptIfContentExtensionMatchesWords.Replace(' ', '').Split(',')
             }
 
-            [array] $SensitiveInfo = @()
 
-            foreach ($si in $PolicyRule.ContentContainsSensitiveInformation)
+            [array] $SensitiveInfoTypes = @()
+            foreach ($SensitiveInfo in $PolicyRule.ContentContainsSensitiveInformation)
             {
+                if ($null -ne $SensitiveInfo.groups)
+                {
+                    $groups = $SensitiveInfo.groups
+                    $SensitiveInfo = @()
+                    foreach ($group in $groups)
+                    {
+                        foreach ($siEntry in $group.sensitivetypes)
+                        {
+                            $SensitiveInfo += [System.Collections.Hashtable]$siEntry
+                        }
+                        $SensitiveInfoTypes += $SensitiveInfo
+                    }
+                }
+                else
+                {
+                    $SensitiveInfoTypes += [System.Collections.Hashtable]$SensitiveInfo
+                }
+            }
 
-                $SensitiveInfo += [System.Collections.Hashtable]$si
+            [array] $ExceptSensitiveInfoTypes = @()
+            foreach ($SensitiveInfo in $PolicyRule.ExceptIfContentContainsSensitiveInformation)
+            {
+                if ($null -ne $SensitiveInfo.groups)
+                {
+                    $groups = $SensitiveInfo.groups
+                    $SensitiveInfo = @()
+                    foreach ($group in $groups)
+                    {
+                        foreach ($siEntry in $group.sensitivetypes)
+                        {
+                            $SensitiveInfo += [System.Collections.Hashtable]$siEntry
+                        }
+                        $ExceptSensitiveInfoTypes += $SensitiveInfo
+                    }
+                }
+                else
+                {
+                    $ExceptSensitiveInfoTypes += [System.Collections.Hashtable]$SensitiveInfo
+                }
             }
 
             $result = @{
-                Ensure                               = 'Present'
-                Name                                 = $PolicyRule.Name
-                Policy                               = $PolicyRule.ParentPolicyName
-                AccessScope                          = $PolicyRule.AccessScope
-                BlockAccess                          = $PolicyRule.BlockAccess
-                BlockAccessScope                     = $PolicyRule.BlockAccessScope
-                Comment                              = $PolicyRule.Comment
-                ContentContainsSensitiveInformation  = $SensitiveInfo
-                ContentPropertyContainsWords         = $PolicyRule.ContentPropertyContainsWords
-                Disabled                             = $PolicyRule.Disabled
-                GenerateAlert                        = $PolicyRule.GenerateAlert
-                GenerateIncidentReport               = $PolicyRule.GenerateIncidentReport
-                IncidentReportContent                = $ArrayIncidentReportContent
-                NotifyAllowOverride                  = $NotifyAllowOverrideValue
-                NotifyEmailCustomText                = $PolicyRule.NotifyEmailCustomText
-                NotifyPolicyTipCustomText            = $PolicyRule.NotifyPolicyTipCustomText
-                NotifyUser                           = $PolicyRule.NotifyUser
-                ReportSeverityLevel                  = $PolicyRule.ReportSeverityLevel
-                RuleErrorAction                      = $PolicyRule.RuleErrorAction
-                RemoveRMSTemplate                    = $PolicyRule.RemoveRMSTemplate
-                StopPolicyProcessing                 = $PolicyRule.StopPolicyProcessing
-                DocumentIsUnsupported                = $PolicyRule.DocumentIsUnsupported
-                ExceptIfDocumentIsUnsupported        = $PolicyRule.ExceptIfDocumentIsUnsupported
-                HasSenderOverride                    = $PolicyRule.HasSenderOverride
-                ExceptIfHasSenderOverride            = $PolicyRule.ExceptIfHasSenderOverride
-                ProcessingLimitExceeded              = $PolicyRule.ProcessingLimitExceeded
-                ExceptIfProcessingLimitExceeded      = $PolicyRule.ExceptIfProcessingLimitExceeded
-                DocumentIsPasswordProtected          = $PolicyRule.DocumentIsPasswordProtected
-                ExceptIfDocumentIsPasswordProtected  = $PolicyRule.ExceptIfDocumentIsPasswordProtected
-                AnyOfRecipientAddressContainsWords   = $AnyOfRecipientAddressContainsWords
-                AnyOfRecipientAddressMatchesPatterns = $AnyOfRecipientAddressMatchesPatterns
-                ContentExtensionMatchesWords         = $ContentExtensionMatchesWords
-                ExceptIfContentExtensionMatchesWords = $ExceptIfContentExtensionMatchesWords
+                Ensure                                      = 'Present'
+                Name                                        = $PolicyRule.Name
+                Policy                                      = $PolicyRule.ParentPolicyName
+                AccessScope                                 = $PolicyRule.AccessScope
+                BlockAccess                                 = $PolicyRule.BlockAccess
+                BlockAccessScope                            = $PolicyRule.BlockAccessScope
+                Comment                                     = $PolicyRule.Comment
+                ContentContainsSensitiveInformation         = $SensitiveInfoTypes
+                ExceptIfContentContainsSensitiveInformation = $ExceptSensitiveInfoTypes
+                ContentPropertyContainsWords                = $PolicyRule.ContentPropertyContainsWords
+                Disabled                                    = $PolicyRule.Disabled
+                GenerateAlert                               = $PolicyRule.GenerateAlert
+                GenerateIncidentReport                      = $PolicyRule.GenerateIncidentReport
+                IncidentReportContent                       = $ArrayIncidentReportContent
+                NotifyAllowOverride                         = $NotifyAllowOverrideValue
+                NotifyEmailCustomText                       = $PolicyRule.NotifyEmailCustomText
+                NotifyPolicyTipCustomText                   = $PolicyRule.NotifyPolicyTipCustomText
+                NotifyUser                                  = $PolicyRule.NotifyUser
+                ReportSeverityLevel                         = $PolicyRule.ReportSeverityLevel
+                RuleErrorAction                             = $PolicyRule.RuleErrorAction
+                RemoveRMSTemplate                           = $PolicyRule.RemoveRMSTemplate
+                StopPolicyProcessing                        = $PolicyRule.StopPolicyProcessing
+                DocumentIsUnsupported                       = $PolicyRule.DocumentIsUnsupported
+                ExceptIfDocumentIsUnsupported               = $PolicyRule.ExceptIfDocumentIsUnsupported
+                HasSenderOverride                           = $PolicyRule.HasSenderOverride
+                ExceptIfHasSenderOverride                   = $PolicyRule.ExceptIfHasSenderOverride
+                ProcessingLimitExceeded                     = $PolicyRule.ProcessingLimitExceeded
+                ExceptIfProcessingLimitExceeded             = $PolicyRule.ExceptIfProcessingLimitExceeded
+                DocumentIsPasswordProtected                 = $PolicyRule.DocumentIsPasswordProtected
+                ExceptIfDocumentIsPasswordProtected         = $PolicyRule.ExceptIfDocumentIsPasswordProtected
+                AnyOfRecipientAddressContainsWords          = $AnyOfRecipientAddressContainsWords
+                AnyOfRecipientAddressMatchesPatterns        = $AnyOfRecipientAddressMatchesPatterns
+                ContentExtensionMatchesWords                = $ContentExtensionMatchesWords
+                ExceptIfContentExtensionMatchesWords        = $ExceptIfContentExtensionMatchesWords
             }
 
             $paramsToRemove = @()
@@ -343,6 +385,10 @@ function Set-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $ExceptIfContentContainsSensitiveInformation,
 
         [Parameter()]
         [System.String[]]
@@ -558,6 +604,10 @@ function Test-TargetResource
         $ContentContainsSensitiveInformation,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $ExceptIfContentContainsSensitiveInformation,
+
+        [Parameter()]
         [System.String[]]
         $ContentPropertyContainsWords,
 
@@ -733,6 +783,7 @@ function Test-TargetResource
     }
     #endregion
     $ValuesToCheck.Remove('ContentContainsSensitiveInformation') | Out-Null
+    $ValuesToCheck.Remove('ExceptIfContentContainsSensitiveInformation') | Out-Null
 
     Write-Verbose "Completed SIT check"
 
@@ -789,14 +840,24 @@ function Export-TargetResource
             }
             $Results = Get-TargetResource @Params
 
-            $IsCIMArray = $false
+            $IsSitCIMArray = $false
             if ($Results.ContentContainsSensitiveInformation.Length -gt 1)
+            {
+                $IsSitCIMArray = $true
+            }
+            if ($null -ne $Results.ContentContainsSensitiveInformation)
+            {
+                $Results.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $Results.ContentContainsSensitiveInformation
+            }
+
+            $IsCIMArray = $false
+            if ($Results.ExceptIfContentContainsSensitiveInformation.Length -gt 1)
             {
                 $IsCIMArray = $true
             }
-            if ($null -ne $Results.ContentContainsSensitiveInformation )
+            if ($null -ne $Results.ExceptIfContentContainsSensitiveInformation)
             {
-                $Results.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $Results.ContentContainsSensitiveInformation
+                $Results.ExceptIfContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $Results.ExceptIfContentContainsSensitiveInformation
             }
 
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -806,9 +867,14 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+
             if ($null -ne $Results.ContentContainsSensitiveInformation )
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation" -IsCIMArray $IsCIMArray
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation" -IsCIMArray $IsSitCIMArray
+            }
+            if ($null -ne $Results.ExceptIfContentContainsSensitiveInformation )
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ExceptIfContentContainsSensitiveInformation" -IsCIMArray $IsCIMArray
             }
             $dscContent += $currentDSCBlock
             Write-Host $Global:M365DSCEmojiGreenCheckMark
@@ -824,8 +890,7 @@ function Export-TargetResource
             Write-Verbose -Message $_
             $tenantIdValue = ""
             if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
+            { $tenantIdValue = $TenantId
             }
             elseif ($null -ne $GlobalAdminAccount)
             {
