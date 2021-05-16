@@ -1,18 +1,19 @@
 [CmdletBinding()]
 param(
-    [Parameter()]
-    [string]
-    $CmdletModule = (Join-Path -Path $PSScriptRoot `
-            -ChildPath "..\Stubs\Microsoft365.psm1" `
-            -Resolve)
 )
+$M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\..\Unit" `
+    -Resolve
+$CmdletModule = (Join-Path -Path $M365DSCTestFolder `
+        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -Resolve)
+$GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
+        -ChildPath "\Stubs\Generic.psm1" `
+        -Resolve)
+Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
+        -ChildPath "\UnitTestHelper.psm1" `
+        -Resolve)
 
-$GenericStubPath = (Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\Stubs\Generic.psm1" `
-        -Resolve)
-Import-Module -Name (Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\UnitTestHelper.psm1" `
-        -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
     -DscResource "EXOTransportRule" -GenericStubModule $GenericStubPath
