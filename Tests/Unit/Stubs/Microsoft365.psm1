@@ -40759,6 +40759,90 @@ function Get-DeviceManagement_DeviceCompliancePolicies
         $Select
     )
 }
+
+function Get-IntuneDeviceCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String[]]
+        $OrderBy,
+
+        [Parameter()]
+        [System.String[]]
+        $Expand,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String[]]
+        $Select
+    )
+}
+
+function Get-IntuneDeviceCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaxPageSize,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.String[]]
+        $OrderBy,
+
+        [Parameter()]
+        [System.String[]]
+        $Expand,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Skip,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String[]]
+        $Select
+    )
+}
 function Get-DeviceManagement_DeviceCompliancePolicies_Assignments
 {
     [CmdletBinding()]
@@ -54016,6 +54100,276 @@ function New-DeviceManagement_DeviceCategories
     )
 }
 function New-DeviceManagement_DeviceCompliancePolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockSimple,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallEnabled,
+
+        [Parameter()]
+        [System.String]
+        $mobileOsMinimumVersion,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeExpirationDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $bitLockerEnabled,
+
+        [Parameter()]
+        [System.String]
+        $minAndroidSecurityPatchLevel,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceSettingStateSummaries,
+
+        [Parameter()]
+        [System.String]
+        $ODataType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosCompliancePolicy,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallEnableStealthMode,
+
+        [Parameter()]
+        [System.String]
+        $passwordRequiredType,
+
+        [Parameter()]
+        [System.String]
+        $osMinimumVersion,
+
+        [Parameter()]
+        [System.String]
+        $deviceThreatProtectionRequiredSecurityLevel,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsPhone81CompliancePolicy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows81CompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireGooglePlayServices,
+
+        [Parameter()]
+        [System.String]
+        $mobileOsMaximumVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityDisableUsbDebugging,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireEncryption,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumLength,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10CompliancePolicy,
+
+        [Parameter()]
+        [System.Object]
+        $userStatusOverview,
+
+        [Parameter()]
+        [System.Boolean]
+        $codeIntegrityEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireUpToDateSecurityProviders,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityBlockJailbrokenDevices,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireSafetyNetAttestationBasicIntegrity,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodePreviousPasscodeBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordExpirationDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireCompanyPortalAppIntegrity,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityPreventInstallAppsFromUnknownSources,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallBlockAllIncoming,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequiredToUnlockFromIdle,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireSafetyNetAttestationCertifiedDevice,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $earlyLaunchAntiMalwareDriverEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockSimple,
+
+        [Parameter()]
+        [System.Boolean]
+        $requireHealthyDeviceReport,
+
+        [Parameter()]
+        [System.String]
+        $passcodeRequiredType,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequireToUnlockFromIdle,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumLength,
+
+        [Parameter()]
+        [System.Boolean]
+        $systemIntegrityProtectionEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidCompliancePolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStatuses,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceThreatProtectionEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedEmailProfileRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $secureBootEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireVerifyApps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidWorkProfileCompliancePolicy,
+
+        [Parameter()]
+        [System.Object]
+        $deviceStatusOverview,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.Object[]]
+        $scheduledActionsForRule,
+
+        [Parameter()]
+        [System.String]
+        $osMaximumVersion,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10MobileCompliancePolicy
+    )
+}
+
+function New-IntuneDeviceCompliancePolicy
 {
     [CmdletBinding()]
     param(
@@ -69551,6 +69905,15 @@ function Remove-DeviceManagement_DeviceCompliancePolicies
         $deviceCompliancePolicyId
     )
 }
+function Remove-IntuneDeviceCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId
+    )
+}
 function Remove-DeviceManagement_DeviceCompliancePolicies_Assignments
 {
     [CmdletBinding()]
@@ -74775,6 +75138,279 @@ function Update-DeviceManagement_DeviceCategories
     )
 }
 function Update-DeviceManagement_DeviceCompliancePolicies
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $passcodeBlockSimple,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallEnabled,
+
+        [Parameter()]
+        [System.String]
+        $mobileOsMinimumVersion,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeExpirationDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $bitLockerEnabled,
+
+        [Parameter()]
+        [System.String]
+        $minAndroidSecurityPatchLevel,
+
+        [Parameter()]
+        [System.Object[]]
+        $userStatuses,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceSettingStateSummaries,
+
+        [Parameter()]
+        [System.String]
+        $ODataType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $iosCompliancePolicy,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallEnableStealthMode,
+
+        [Parameter()]
+        [System.String]
+        $passwordRequiredType,
+
+        [Parameter()]
+        [System.String]
+        $osMinimumVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windowsPhone81CompliancePolicy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows81CompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireGooglePlayServices,
+
+        [Parameter()]
+        [System.String]
+        $mobileOsMaximumVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityDisableUsbDebugging,
+
+        [Parameter()]
+        [System.Boolean]
+        $storageRequireEncryption,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumLength,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10CompliancePolicy,
+
+        [Parameter()]
+        [System.Object]
+        $userStatusOverview,
+
+        [Parameter()]
+        [System.Boolean]
+        $codeIntegrityEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireUpToDateSecurityProviders,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityBlockJailbrokenDevices,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireSafetyNetAttestationBasicIntegrity,
+
+        [Parameter()]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.DateTimeOffset]
+        $lastModifiedDateTime,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodePreviousPasscodeBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $passcodeMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordExpirationDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireCompanyPortalAppIntegrity,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityPreventInstallAppsFromUnknownSources,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $firewallBlockAllIncoming,
+
+        [Parameter()]
+        [System.Object]
+        $deviceStatusOverview,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireSafetyNetAttestationCertifiedDevice,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $earlyLaunchAntiMalwareDriverEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordBlockSimple,
+
+        [Parameter()]
+        [System.Boolean]
+        $requireHealthyDeviceReport,
+
+        [Parameter()]
+        [System.String]
+        $passcodeRequiredType,
+
+        [Parameter()]
+        [System.Int32]
+        $version,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequireToUnlockFromIdle,
+
+        [Parameter()]
+        [System.Object[]]
+        $assignments,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinimumLength,
+
+        [Parameter()]
+        [System.Boolean]
+        $systemIntegrityProtectionEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidCompliancePolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $deviceStatuses,
+
+        [Parameter()]
+        [System.String]
+        $deviceCompliancePolicyId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $macOSCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $passcodeRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $deviceThreatProtectionEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $secureBootEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $securityRequireVerifyApps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $androidWorkProfileCompliancePolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $managedEmailProfileRequired,
+
+        [Parameter()]
+        [System.String]
+        $deviceThreatProtectionRequiredSecurityLevel,
+
+        [Parameter()]
+        [System.Object[]]
+        $scheduledActionsForRule,
+
+        [Parameter()]
+        [System.String]
+        $osMaximumVersion,
+
+        [Parameter()]
+        [System.Int32]
+        $passwordMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Boolean]
+        $passwordRequiredToUnlockFromIdle,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $windows10MobileCompliancePolicy
+    )
+}
+function Update-IntuneDeviceCompliancePolicy
 {
     [CmdletBinding()]
     param(
