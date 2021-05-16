@@ -279,7 +279,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeFoMicrosoftTeamsrBusiness' `
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
