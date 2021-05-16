@@ -23,5 +23,6 @@
         "**/.DS_Store": true,
         "node_modules": true,
         "markdownissues.txt": true
-    }
+    },
+    "editor.formatOnSave": true
 }

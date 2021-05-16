@@ -46,7 +46,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('DeviceDefault','Alphanumeric','Numeric')]
+        [ValidateSet('DeviceDefault', 'Alphanumeric', 'Numeric')]
         $PasswordRequiredType,
 
         [Parameter()]
@@ -119,7 +119,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Unavailable','Secured','Low', 'Medium','High','NotSet')]
+        [ValidateSet('Unavailable', 'Secured', 'Low', 'Medium', 'High', 'NotSet')]
         $DeviceThreatProtectionRequiredSecurityLevel,
 
         [Parameter()]
@@ -135,7 +135,7 @@ function Get-TargetResource
         $DeviceCompliancePolicyScript,
 
         [Parameter()]
-        [System.Collection]
+        [System.Array]
         $ValidOperatingSystemBuildRanges,
 
         [Parameter(Mandatory = $true)]
@@ -183,7 +183,7 @@ function Get-TargetResource
             DisplayName                                 = $devicePolicy.DisplayName
             Description                                 = $devicePolicy.Description
             PasswordRequired                            = $devicePolicy.PasswordRequired
-            PasswordBlockSimple                         = $devicePolicy.PasswordBlockSimple`
+            PasswordBlockSimple                         = $devicePolicy.PasswordBlockSimple
             PasswordRequiredToUnlockFromIdle            = $devicePolicy.PasswordRequiredToUnlockFromIdle
             PasswordMinutesOfInactivityBeforeLock       = $devicePolicy.PasswordMinutesOfInactivityBeforeLock
             PasswordExpirationDays                      = $devicePolicy.PasswordExpirationDays
@@ -291,7 +291,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('DeviceDefault','Alphanumeric','Numeric')]
+        [ValidateSet('DeviceDefault', 'Alphanumeric', 'Numeric')]
         $PasswordRequiredType,
 
         [Parameter()]
@@ -364,7 +364,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Unavailable','Secured','Low', 'Medium','High','NotSet')]
+        [ValidateSet('Unavailable', 'Secured', 'Low', 'Medium', 'High', 'NotSet')]
         $DeviceThreatProtectionRequiredSecurityLevel,
 
         [Parameter()]
@@ -380,7 +380,7 @@ function Set-TargetResource
         $DeviceCompliancePolicyScript,
 
         [Parameter()]
-        [System.Collection]
+        [System.Array]
         $ValidOperatingSystemBuildRanges,
 
         [Parameter(Mandatory = $true)]
@@ -501,7 +501,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('DeviceDefault','Alphanumeric','Numeric')]
+        [ValidateSet('DeviceDefault', 'Alphanumeric', 'Numeric')]
         $PasswordRequiredType,
 
         [Parameter()]
@@ -574,7 +574,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Unavailable','Secured','Low', 'Medium','High','NotSet')]
+        [ValidateSet('Unavailable', 'Secured', 'Low', 'Medium', 'High', 'NotSet')]
         $DeviceThreatProtectionRequiredSecurityLevel,
 
         [Parameter()]
@@ -590,7 +590,7 @@ function Test-TargetResource
         $DeviceCompliancePolicyScript,
 
         [Parameter()]
-        [System.Collection]
+        [System.Array]
         $ValidOperatingSystemBuildRanges,
 
         [Parameter(Mandatory = $true)]
@@ -613,7 +613,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Intune Device Compliance MacOS Policy {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of Intune Device Compliance Windows 10 Policy {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -660,17 +660,18 @@ function Export-TargetResource
 
     try
     {
-        [array]$configDeviceWindows10Policies = Get-IntuneDeviceCompliancePolicy `
+        [array]$configDeviceWindowsPolicies = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
             -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.windows10CompliancePolicy' }
         $i = 1
         $content = ''
         Write-Host "`r`n" -NoNewline
-        foreach ($windows10CompliancePolicy in $configDeviceWindows10Policies)
+
+        foreach ($configDeviceWindowsPolicy in $configDeviceWindowsPolicies)
         {
-            Write-Host "    |---[$i/$($configDeviceWindows10Policies.Count)] $($windows10CompliancePolicy.displayName)" -NoNewline
+            Write-Host "    |---[$i/$($configDeviceWindowsPolicies.Count)] $($configDeviceWindowsPolicy.displayName)" -NoNewline
             $params = @{
-                DisplayName        = $windows10CompliancePolicy.displayName
+                DisplayName        = $configDeviceWindowsPolicy.displayName
                 Ensure             = 'Present'
                 GlobalAdminAccount = $GlobalAdminAccount
             }
