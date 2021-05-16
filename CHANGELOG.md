@@ -1,5 +1,18 @@
 # Change log for Microsoft365DSC
 
+# 1.21.519.1
+
+* IntuneDeviceCompliancePolicyMacOS
+  * Initial Release
+* IntuneDeviceCompliancePolicyWindows10
+  * Initial Release
+* IntuneDeviceCompliancePolicyAndroid
+  * Extended Readme information
+* IntuneDeviceCompliancePolicyAndroidWorkProfile
+  * Extended Readme information
+* IntuneDeviceConfigurationPolicyiOS
+  * Extended Readme information
+
 # 1.21.512.1
 
 * EXOOfflineAddresBook
