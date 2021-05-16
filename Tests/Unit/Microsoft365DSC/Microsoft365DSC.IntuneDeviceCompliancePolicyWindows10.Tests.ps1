@@ -56,7 +56,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PasswordMinutesOfInactivityBeforeLock       = 15;
                         PasswordExpirationDays                      = 365;
                         PasswordMinimumLength                       = 6;
-                        PasswordMinutesOfInactivityBeforeLock       = 5;
                         PasswordPreviousPasswordBlockCount          = 13;
                         PasswordMinimumCharacterSetCount            = 1;
                         PasswordRequiredType                        = "Devicedefault";
@@ -82,7 +81,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ConfigurationManagerComplianceRequired      = $False;
                         TPMRequired                                 = $False;
                         DeviceCompliancePolicyScript                = $null;
-                        ValidOperatingSystemBuildRanges             = [];
+                        ValidOperatingSystemBuildRanges             = @();
                         RoleScopeTagIds                             = "0"
                         Ensure                                      = 'Present';
                         GlobalAdminAccount                          = $GlobalAdminAccount;
@@ -118,7 +117,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PasswordMinutesOfInactivityBeforeLock       = 15;
                         PasswordExpirationDays                      = 365;
                         PasswordMinimumLength                       = 6;
-                        PasswordMinutesOfInactivityBeforeLock       = 5;
                         PasswordPreviousPasswordBlockCount          = 13;
                         PasswordMinimumCharacterSetCount            = 1;
                         PasswordRequiredType                        = "Devicedefault";
@@ -144,7 +142,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ConfigurationManagerComplianceRequired      = $False;
                         TPMRequired                                 = $False;
                         DeviceCompliancePolicyScript                = $null;
-                        ValidOperatingSystemBuildRanges             = [];
+                        ValidOperatingSystemBuildRanges             = @();
                         RoleScopeTagIds                             = "0"
                         Ensure                                      = 'Present';
                         GlobalAdminAccount                          = $GlobalAdminAccount;
@@ -161,7 +159,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             PasswordMinutesOfInactivityBeforeLock       = 15;
                             PasswordExpirationDays                      = 365;
                             PasswordMinimumLength                       = 6;
-                            PasswordMinutesOfInactivityBeforeLock       = 5;
                             PasswordPreviousPasswordBlockCount          = 13;
                             PasswordMinimumCharacterSetCount            = 1;
                             PasswordRequiredType                        = "Devicedefault";
@@ -187,7 +184,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             ConfigurationManagerComplianceRequired      = $False;
                             TPMRequired                                 = $False;
                             DeviceCompliancePolicyScript                = $null;
-                            ValidOperatingSystemBuildRanges             = [];
+                            ValidOperatingSystemBuildRanges             = @();
                             RoleScopeTagIds                             = "0"
                         }
                     }
@@ -218,7 +215,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PasswordMinutesOfInactivityBeforeLock       = 15;
                         PasswordExpirationDays                      = 365;
                         PasswordMinimumLength                       = 6;
-                        PasswordMinutesOfInactivityBeforeLock       = 5;
                         PasswordPreviousPasswordBlockCount          = 13;
                         PasswordMinimumCharacterSetCount            = 1;
                         PasswordRequiredType                        = "Devicedefault";
@@ -244,7 +240,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ConfigurationManagerComplianceRequired      = $False;
                         TPMRequired                                 = $False;
                         DeviceCompliancePolicyScript                = $null;
-                        ValidOperatingSystemBuildRanges             = [];
+                        ValidOperatingSystemBuildRanges             = @();
                         RoleScopeTagIds                             = "0"
                         Ensure                                      = 'Present';
                         GlobalAdminAccount                          = $GlobalAdminAccount;
@@ -261,7 +257,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             PasswordMinutesOfInactivityBeforeLock       = 15;
                             PasswordExpirationDays                      = 365;
                             PasswordMinimumLength                       = 6;
-                            PasswordMinutesOfInactivityBeforeLock       = 5;
                             PasswordPreviousPasswordBlockCount          = 13;
                             PasswordMinimumCharacterSetCount            = 1;
                             PasswordRequiredType                        = "Devicedefault";
@@ -287,7 +282,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             ConfigurationManagerComplianceRequired      = $False;
                             TPMRequired                                 = $False;
                             DeviceCompliancePolicyScript                = $null;
-                            ValidOperatingSystemBuildRanges             = [];
+                            ValidOperatingSystemBuildRanges             = @();
                             RoleScopeTagIds                             = "0"
                         }
                     }
@@ -309,7 +304,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PasswordMinutesOfInactivityBeforeLock       = 15;
                         PasswordExpirationDays                      = 365;
                         PasswordMinimumLength                       = 6;
-                        PasswordMinutesOfInactivityBeforeLock       = 5;
                         PasswordPreviousPasswordBlockCount          = 13;
                         PasswordMinimumCharacterSetCount            = 1;
                         PasswordRequiredType                        = "Devicedefault";
@@ -335,7 +329,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ConfigurationManagerComplianceRequired      = $False;
                         TPMRequired                                 = $False;
                         DeviceCompliancePolicyScript                = $null;
-                        ValidOperatingSystemBuildRanges             = [];
+                        ValidOperatingSystemBuildRanges             = @();
                         RoleScopeTagIds                             = "0"
                         Ensure                                      = 'Present';
                         GlobalAdminAccount                          = $GlobalAdminAccount;
@@ -352,7 +346,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             PasswordMinutesOfInactivityBeforeLock       = 15;
                             PasswordExpirationDays                      = 365;
                             PasswordMinimumLength                       = 6;
-                            PasswordMinutesOfInactivityBeforeLock       = 5;
                             PasswordPreviousPasswordBlockCount          = 13;
                             PasswordMinimumCharacterSetCount            = 1;
                             PasswordRequiredType                        = "Devicedefault";
@@ -378,7 +371,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             ConfigurationManagerComplianceRequired      = $False;
                             TPMRequired                                 = $False;
                             DeviceCompliancePolicyScript                = $null;
-                            ValidOperatingSystemBuildRanges             = [];
+                            ValidOperatingSystemBuildRanges             = @();
                             RoleScopeTagIds                             = "0"
                         }
                     }
@@ -415,7 +408,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             PasswordMinutesOfInactivityBeforeLock       = 15;
                             PasswordExpirationDays                      = 365;
                             PasswordMinimumLength                       = 6;
-                            PasswordMinutesOfInactivityBeforeLock       = 5;
                             PasswordPreviousPasswordBlockCount          = 13;
                             PasswordMinimumCharacterSetCount            = 1;
                             PasswordRequiredType                        = "Devicedefault";
@@ -441,7 +433,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             ConfigurationManagerComplianceRequired      = $False;
                             TPMRequired                                 = $False;
                             DeviceCompliancePolicyScript                = $null;
-                            ValidOperatingSystemBuildRanges             = [];
+                            ValidOperatingSystemBuildRanges             = @();
                             RoleScopeTagIds                             = "0"
                         }
                     }
