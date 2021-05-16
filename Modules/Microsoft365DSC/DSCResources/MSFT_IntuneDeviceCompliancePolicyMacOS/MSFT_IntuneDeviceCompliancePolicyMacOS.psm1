@@ -284,7 +284,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $currentDeviceiOsPolicy = Get-TargetResource @PSBoundParameters
+    $currentDeviceMacOsPolicy = Get-TargetResource @PSBoundParameters
 
     $PSBoundParameters.Remove('Ensure') | Out-Null
     $PSBoundParameters.Remove('GlobalAdminAccount') | Out-Null
@@ -300,30 +300,30 @@ function Set-TargetResource
 "@
     $jsonObject = $jsonParams | ConvertFrom-Json
 
-    if ($Ensure -eq 'Present' -and $currentDeviceiOsPolicy.Ensure -eq 'Absent')
+    if ($Ensure -eq 'Present' -and $currentDeviceMacOsPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Intune Device Compliance MacOS Policy {$DisplayName}"
         New-IntuneDeviceCompliancePolicy -ODataType 'microsoft.graph.macOSCompliancePolicy' @PSBoundParameters -scheduledActionsForRule $jsonObject
     }
-    elseif ($Ensure -eq 'Present' -and $currentDeviceiOsPolicy.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Present' -and $currentDeviceMacOsPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Intune Device Compliance MacOS Policy {$DisplayName}"
-        $configDeviceiOsPolicy = Get-IntuneDeviceCompliancePolicy `
+        $configDeviceMacOsPolicy = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
             -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.macOSCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
         Update-IntuneDeviceCompliancePolicy -ODataType 'microsoft.graph.macOSCompliancePolicy' `
-            -deviceCompliancePolicyId $configDeviceiOsPolicy.deviceCompliancePolicyId @PSBoundParameters
+            -deviceCompliancePolicyId $configDeviceMacOsPolicy.Id @PSBoundParameters
     }
-    elseif ($Ensure -eq 'Absent' -and $currentDeviceiOsPolicy.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Absent' -and $currentDeviceMacOsPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Intune Device Compliance MacOS Policy {$DisplayName}"
-        $configDeviceiOsPolicy = Get-IntuneDeviceCompliancePolicy `
+        $configDeviceMacOsPolicy = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
             -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.macOSCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
 
-        Remove-IntuneDeviceCompliancePolicy -deviceCompliancePolicyId $configDeviceiOsPolicy.deviceCompliancePolicyId
+        Remove-IntuneDeviceCompliancePolicy -deviceCompliancePolicyId $configDeviceMacOsPolicy.Id
     }
 }
 
@@ -478,17 +478,18 @@ function Export-TargetResource
 
     try
     {
-        [array]$configDeviceiOsPolicies = Get-IntuneDeviceCompliancePolicy `
+        [array]$configDeviceMacOsPolicies = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
             -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.macOSCompliancePolicy' }
         $i = 1
         $content = ''
         Write-Host "`r`n" -NoNewline
-        foreach ($configDeviceiOsPolicy in $configDeviceiOsPolicies)
+
+        foreach ($configDeviceMacOsPolicy in $configDeviceMacOsPolicies)
         {
-            Write-Host "    |---[$i/$($configDeviceiOsPolicies.Count)] $($configDeviceiOsPolicy.displayName)" -NoNewline
+            Write-Host "    |---[$i/$($configDeviceMacOsPolicies.Count)] $($configDeviceMacOsPolicy.displayName)" -NoNewline
             $params = @{
-                DisplayName        = $configDeviceiOsPolicy.displayName
+                DisplayName        = $configDeviceMacOsPolicy.displayName
                 Ensure             = 'Present'
                 GlobalAdminAccount = $GlobalAdminAccount
             }

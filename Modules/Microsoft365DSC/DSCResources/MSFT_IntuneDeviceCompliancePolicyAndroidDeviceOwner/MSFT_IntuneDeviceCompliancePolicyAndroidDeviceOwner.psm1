@@ -14,55 +14,6 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $PasswordRequired,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordMinimumLength,
-
-        [Parameter()]
-        [System.String[]]
-        $RoleScopeTagIds,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('deviceDefault', 'alphabetic', 'alphanumeric', 'alphanumericWithSymbols', 'lowSecurityBiometric', 'numeric', 'numericComplex', 'any')]
-        $PasswordRequiredType,
-
-        [Parameter()]
-        [System.Boolean]
-        $RequiredPasswordComplexity,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordMinutesOfInactivityBeforeLock,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordExpirationDays,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordPreviousPasswordBlockCount,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordSignInFailureCountBeforeFactoryReset,
-
-        [Parameter()]
-        [System.Boolean]
-        $SecurityPreventInstallAppsFromUnknownSources,
-
-        [Parameter()]
-        [System.Boolean]
-        $SecurityDisableUsbDebugging,
-
-        [Parameter()]
-        [System.Boolean]
-        $SecurityRequireVerifyApps,
-
-        [Parameter()]
-        [System.Boolean]
         $DeviceThreatProtectionEnabled,
 
         [Parameter()]
@@ -77,11 +28,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $SecurityBlockJailbrokenDevices,
+        $SecurityRequireSafetyNetAttestationBasicIntegrity,
 
         [Parameter()]
         [System.Boolean]
-        $SecurityBlockDeviceAdministratorManagedDevices,
+        $SecurityRequireSafetyNetAttestationCertifiedDevice,
 
         [Parameter()]
         [System.String]
@@ -97,35 +48,60 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $StorageRequireEncryption,
+        $PasswordRequired,
 
         [Parameter()]
-        [System.Boolean]
-        $SecurityRequireSafetyNetAttestationBasicIntegrity,
+        [System.Int32]
+        $PasswordMinimumLength,
 
         [Parameter()]
-        [System.Boolean]
-        $SecurityRequireSafetyNetAttestationCertifiedDevice,
+        [System.Int32]
+        $PasswordMinimumLetterCharacters,
 
         [Parameter()]
-        [System.Boolean]
-        $SecurityRequireGooglePlayServices,
+        [System.Int32]
+        $PasswordMinimumLowerCaseCharacters,
 
         [Parameter()]
-        [System.Boolean]
-        $SecurityRequireUpToDateSecurityProviders,
+        [System.Int32]
+        $PasswordMinimumNonLetterCharacters,
 
         [Parameter()]
-        [System.Boolean]
-        $SecurityRequireCompanyPortalAppIntegrity,
+        [System.Int32]
+        $PasswordMinimumNumericCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumSymbolCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumUpperCaseCharacters,
 
         [Parameter()]
         [System.String]
-        $ConditionStatementId,
+        [ValidateSet('deviceDefault', 'alphabetic', 'alphanumeric', 'alphanumericWithSymbols', 'lowSecurityBiometric', 'numeric', 'numericComplex', 'any')]
+        $PasswordRequiredType,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $StorageRequireEncryption,
 
         [Parameter()]
         [System.String[]]
-        $RestrictedApps,
+        $RoleScopeTagIds,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -137,7 +113,8 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Checking for the Intune Android Device Compliance Policy {$DisplayName}"
+
+    Write-Verbose -Message "Checking for the Intune Device Owner Device Compliance Android Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
         -InboundParameters $PSBoundParameters
 
@@ -158,46 +135,40 @@ function Get-TargetResource
     {
         $devicePolicy = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidCompliancePolicy' -and `
+            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidDeviceOwnerCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
 
         if ($null -eq $devicePolicy)
         {
-            Write-Verbose -Message "No Android Device Compliance Policy with displayName {$DisplayName} was found"
+            Write-Verbose -Message "No Android Device Owner Device Compliance Policy with displayName {$DisplayName} was found"
             return $nullResult
         }
 
-        Write-Verbose -Message "Found Android Device Compliance Policy with displayName {$DisplayName}"
+        Write-Verbose -Message "Found Android Device Owner Device Compliance Policy with displayName {$DisplayName}"
         $results = @{
             DisplayName                                        = $devicePolicy.DisplayName
             Description                                        = $devicePolicy.Description
-            PasswordRequired                                   = $devicePolicy.PasswordRequired
-            PasswordMinimumLength                              = $devicePolicy.PasswordMinimumLength
-            PasswordRequiredType                               = $devicePolicy.PasswordRequiredType
-            RequiredPasswordComplexity                         = $devicePolicy.RequiredPasswordComplexity
-            PasswordMinutesOfInactivityBeforeLock              = $devicePolicy.PasswordMinutesOfInactivityBeforeLock
-            PasswordExpirationDays                             = $devicePolicy.PasswordExpirationDays
-            PasswordPreviousPasswordBlockCount                 = $devicePolicy.PasswordPreviousPasswordBlockCount
-            PasswordSignInFailureCountBeforeFactoryReset       = $devicePolicy.PasswordSignInFailureCountBeforeFactoryReset
-            SecurityPreventInstallAppsFromUnknownSources       = $devicePolicy.SecurityPreventInstallAppsFromUnknownSources
-            SecurityDisableUsbDebugging                        = $devicePolicy.SecurityDisableUsbDebugging
-            SecurityRequireVerifyApps                          = $devicePolicy.SecurityRequireVerifyApps
             DeviceThreatProtectionEnabled                      = $devicePolicy.DeviceThreatProtectionEnabled
             DeviceThreatProtectionRequiredSecurityLevel        = $devicePolicy.DeviceThreatProtectionRequiredSecurityLevel
             AdvancedThreatProtectionRequiredSecurityLevel      = $devicePolicy.AdvancedThreatProtectionRequiredSecurityLevel
-            SecurityBlockJailbrokenDevices                     = $devicePolicy.SecurityBlockJailbrokenDevices
-            SecurityBlockDeviceAdministratorManagedDevices     = $devicePolicy.SecurityBlockDeviceAdministratorManagedDevices
+            SecurityRequireSafetyNetAttestationBasicIntegrity  = $devicePolicy.SecurityRequireSafetyNetAttestationBasicIntegrity
+            SecurityRequireSafetyNetAttestationCertifiedDevice = $devicePolicy.SecurityRequireSafetyNetAttestationCertifiedDevice
             OsMinimumVersion                                   = $devicePolicy.OsMinimumVersion
             OsMaximumVersion                                   = $devicePolicy.OsMaximumVersion
             MinAndroidSecurityPatchLevel                       = $devicePolicy.MinAndroidSecurityPatchLevel
+            PasswordRequired                                   = $devicePolicy.PasswordRequired
+            PasswordMinimumLength                              = $devicePolicy.PasswordMinimumLength
+            PasswordMinimumLetterCharacters                    = $devicePolicy.PasswordMinimumLetterCharacters
+            PasswordMinimumLowerCaseCharacters                 = $devicePolicy.PasswordMinimumLowerCaseCharacters
+            PasswordMinimumNonLetterCharacters                 = $devicePolicy.PasswordMinimumNonLetterCharacters
+            PasswordMinimumNumericCharacters                   = $devicePolicy.PasswordMinimumNumericCharacters
+            PasswordMinimumSymbolCharacters                    = $devicePolicy.PasswordMinimumSymbolCharacters
+            PasswordMinimumUpperCaseCharacters                 = $devicePolicy.PasswordMinimumUpperCaseCharacters
+            PasswordRequiredType                               = $devicePolicy.PasswordRequiredType
+            PasswordMinutesOfInactivityBeforeLock              = $devicePolicy.PasswordMinutesOfInactivityBeforeLock
+            PasswordExpirationDays                             = $devicePolicy.PasswordExpirationDays
+            PasswordPreviousPasswordBlockCount                 = $devicePolicy.PasswordPreviousPasswordBlockCount
             StorageRequireEncryption                           = $devicePolicy.StorageRequireEncryption
-            SecurityRequireSafetyNetAttestationBasicIntegrity  = $devicePolicy.SecurityRequireSafetyNetAttestationBasicIntegrity
-            SecurityRequireSafetyNetAttestationCertifiedDevice = $devicePolicy.SecurityRequireSafetyNetAttestationCertifiedDevice
-            SecurityRequireGooglePlayServices                  = $devicePolicy.SecurityRequireGooglePlayServices
-            SecurityRequireUpToDateSecurityProviders           = $devicePolicy.SecurityRequireUpToDateSecurityProviders
-            SecurityRequireCompanyPortalAppIntegrity           = $devicePolicy.SecurityRequireCompanyPortalAppIntegrity
-            ConditionStatementId                               = $devicePolicy.ConditionStatementId
-            RestrictedApps                                     = $devicePolicy.RestrictedApps
             RoleScopeTagIds                                    = $devicePolicy.RoleScopeTagIds
             Ensure                                             = 'Present'
             GlobalAdminAccount                                 = $GlobalAdminAccount
@@ -245,55 +216,6 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $PasswordRequired,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordMinimumLength,
-
-        [Parameter()]
-        [System.String[]]
-        $RoleScopeTagIds,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('deviceDefault', 'alphabetic', 'alphanumeric', 'alphanumericWithSymbols', 'lowSecurityBiometric', 'numeric', 'numericComplex', 'any')]
-        $PasswordRequiredType,
-
-        [Parameter()]
-        [System.Boolean]
-        $RequiredPasswordComplexity,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordMinutesOfInactivityBeforeLock,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordExpirationDays,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordPreviousPasswordBlockCount,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordSignInFailureCountBeforeFactoryReset,
-
-        [Parameter()]
-        [System.Boolean]
-        $SecurityPreventInstallAppsFromUnknownSources,
-
-        [Parameter()]
-        [System.Boolean]
-        $SecurityDisableUsbDebugging,
-
-        [Parameter()]
-        [System.Boolean]
-        $SecurityRequireVerifyApps,
-
-        [Parameter()]
-        [System.Boolean]
         $DeviceThreatProtectionEnabled,
 
         [Parameter()]
@@ -308,11 +230,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $SecurityBlockJailbrokenDevices,
+        $SecurityRequireSafetyNetAttestationBasicIntegrity,
 
         [Parameter()]
         [System.Boolean]
-        $SecurityBlockDeviceAdministratorManagedDevices,
+        $SecurityRequireSafetyNetAttestationCertifiedDevice,
 
         [Parameter()]
         [System.String]
@@ -328,35 +250,60 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $StorageRequireEncryption,
+        $PasswordRequired,
 
         [Parameter()]
-        [System.Boolean]
-        $SecurityRequireSafetyNetAttestationBasicIntegrity,
+        [System.Int32]
+        $PasswordMinimumLength,
 
         [Parameter()]
-        [System.Boolean]
-        $SecurityRequireSafetyNetAttestationCertifiedDevice,
+        [System.Int32]
+        $PasswordMinimumLetterCharacters,
 
         [Parameter()]
-        [System.Boolean]
-        $SecurityRequireGooglePlayServices,
+        [System.Int32]
+        $PasswordMinimumLowerCaseCharacters,
 
         [Parameter()]
-        [System.Boolean]
-        $SecurityRequireUpToDateSecurityProviders,
+        [System.Int32]
+        $PasswordMinimumNonLetterCharacters,
 
         [Parameter()]
-        [System.Boolean]
-        $SecurityRequireCompanyPortalAppIntegrity,
+        [System.Int32]
+        $PasswordMinimumNumericCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumSymbolCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumUpperCaseCharacters,
 
         [Parameter()]
         [System.String]
-        $ConditionStatementId,
+        [ValidateSet('deviceDefault', 'alphabetic', 'alphanumeric', 'alphanumericWithSymbols', 'lowSecurityBiometric', 'numeric', 'numericComplex', 'any')]
+        $PasswordRequiredType,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $StorageRequireEncryption,
 
         [Parameter()]
         [System.String[]]
-        $RestrictedApps,
+        $RoleScopeTagIds,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -385,8 +332,8 @@ function Set-TargetResource
 
     $currentDeviceAndroidPolicy = Get-TargetResource @PSBoundParameters
 
-    $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('GlobalAdminAccount') | Out-Nul
+    $PSBoundParameters.Remove('Ensure')
+    $PSBoundParameters.Remove('GlobalAdminAccount')
 
     $jsonParams = @"
 {
@@ -401,25 +348,25 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentDeviceAndroidPolicy.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating new Intune Android Device Compliance Policy {$DisplayName}"
-        New-IntuneDeviceCompliancePolicy -ODataType 'microsoft.graph.androidCompliancePolicy' @PSBoundParameters -scheduledActionsForRule $jsonObject
+        Write-Verbose -Message "Creating new Intune Android Device Owner Device Compliance Policy {$DisplayName}"
+        New-IntuneDeviceCompliancePolicy -ODataType 'microsoft.graph.androidDeviceOwnerCompliancePolicy' @PSBoundParameters -scheduledActionsForRule $jsonObject
     }
     elseif ($Ensure -eq 'Present' -and $currentDeviceAndroidPolicy.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating Intune Android Device Compliance Policy {$DisplayName}"
+        Write-Verbose -Message "Updating Intune Android Device Owner Device Compliance Policy {$DisplayName}"
         $configDeviceAndroidPolicy = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidCompliancePolicy' -and `
+            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidDeviceOwnerCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
-        Update-IntuneDeviceCompliancePolicy -ODataType 'microsoft.graph.androidCompliancePolicy' `
+        Update-IntuneDeviceCompliancePolicy -ODataType 'microsoft.graph.androidDeviceOwnerCompliancePolicy' `
             -deviceCompliancePolicyId $configDeviceAndroidPolicy.Id @PSBoundParameters
     }
     elseif ($Ensure -eq 'Absent' -and $currentDeviceAndroidPolicy.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing Intune Android Device Compliance Policy {$DisplayName}"
+        Write-Verbose -Message "Removing Intune Android Device Owner Device Compliance Policy {$DisplayName}"
         $configDeviceAndroidPolicy = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidCompliancePolicy' -and `
+            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidDeviceOwnerCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
 
         Remove-IntuneDeviceCompliancePolicy -deviceCompliancePolicyId $configDeviceAndroidPolicy.Id
@@ -442,55 +389,6 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $PasswordRequired,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordMinimumLength,
-
-        [Parameter()]
-        [System.String[]]
-        $RoleScopeTagIds,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('deviceDefault', 'alphabetic', 'alphanumeric', 'alphanumericWithSymbols', 'lowSecurityBiometric', 'numeric', 'numericComplex', 'any')]
-        $PasswordRequiredType,
-
-        [Parameter()]
-        [System.Boolean]
-        $RequiredPasswordComplexity,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordMinutesOfInactivityBeforeLock,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordExpirationDays,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordPreviousPasswordBlockCount,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordSignInFailureCountBeforeFactoryReset,
-
-        [Parameter()]
-        [System.Boolean]
-        $SecurityPreventInstallAppsFromUnknownSources,
-
-        [Parameter()]
-        [System.Boolean]
-        $SecurityDisableUsbDebugging,
-
-        [Parameter()]
-        [System.Boolean]
-        $SecurityRequireVerifyApps,
-
-        [Parameter()]
-        [System.Boolean]
         $DeviceThreatProtectionEnabled,
 
         [Parameter()]
@@ -505,11 +403,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $SecurityBlockJailbrokenDevices,
+        $SecurityRequireSafetyNetAttestationBasicIntegrity,
 
         [Parameter()]
         [System.Boolean]
-        $SecurityBlockDeviceAdministratorManagedDevices,
+        $SecurityRequireSafetyNetAttestationCertifiedDevice,
 
         [Parameter()]
         [System.String]
@@ -525,35 +423,60 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $StorageRequireEncryption,
+        $PasswordRequired,
 
         [Parameter()]
-        [System.Boolean]
-        $SecurityRequireSafetyNetAttestationBasicIntegrity,
+        [System.Int32]
+        $PasswordMinimumLength,
 
         [Parameter()]
-        [System.Boolean]
-        $SecurityRequireSafetyNetAttestationCertifiedDevice,
+        [System.Int32]
+        $PasswordMinimumLetterCharacters,
 
         [Parameter()]
-        [System.Boolean]
-        $SecurityRequireGooglePlayServices,
+        [System.Int32]
+        $PasswordMinimumLowerCaseCharacters,
 
         [Parameter()]
-        [System.Boolean]
-        $SecurityRequireUpToDateSecurityProviders,
+        [System.Int32]
+        $PasswordMinimumNonLetterCharacters,
 
         [Parameter()]
-        [System.Boolean]
-        $SecurityRequireCompanyPortalAppIntegrity,
+        [System.Int32]
+        $PasswordMinimumNumericCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumSymbolCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumUpperCaseCharacters,
 
         [Parameter()]
         [System.String]
-        $ConditionStatementId,
+        [ValidateSet('deviceDefault', 'alphabetic', 'alphanumeric', 'alphanumericWithSymbols', 'lowSecurityBiometric', 'numeric', 'numericComplex', 'any')]
+        $PasswordRequiredType,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $StorageRequireEncryption,
 
         [Parameter()]
         [System.String[]]
-        $RestrictedApps,
+        $RoleScopeTagIds,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -574,8 +497,7 @@ function Test-TargetResource
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    Write-Verbose -Message "Testing configuration of Intune Android Device Compliance Policy {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of Intune Android Device Owner Device Compliance Policy {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -624,7 +546,7 @@ function Export-TargetResource
     {
         [array]$configDeviceAndroidPolicies = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidCompliancePolicy' }
+            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidDeviceOwnerCompliancePolicy' }
         $i = 1
         $content = ''
         Write-Host "`r`n" -NoNewline
@@ -638,7 +560,7 @@ function Export-TargetResource
             }
             $result = Get-TargetResource @params
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $content += "        IntuneDeviceCompliancePolicyAndroid " + (New-Guid).ToString() + "`r`n"
+            $content += "        IntuneDeviceCompliancePolicyAndroidDeviceOwner " + (New-Guid).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"

@@ -67,9 +67,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         FirewallEnabled                             = $False
                         FirewallBlockAllIncoming                    = $False
                         FirewallEnableStealthMode                   = $False
+                        RoleScopeTagIds                             = "0"
                         Ensure                                      = 'Present'
                         GlobalAdminAccount                          = $GlobalAdminAccount
-
                     }
 
                     Mock -CommandName Get-IntuneDeviceCompliancePolicy -MockWith {
@@ -113,6 +113,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         FirewallEnabled                             = $False
                         FirewallBlockAllIncoming                    = $False
                         FirewallEnableStealthMode                   = $False
+                        RoleScopeTagIds                             = "0"
                         Ensure                                      = 'Present'
                         GlobalAdminAccount                          = $GlobalAdminAccount
                     }
@@ -121,6 +122,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         return @{
                             DisplayName                                 = "MacOS DSC Policy"
                             Description                                 = "Test policy with different value"
+                            Id                                          = "d95e706d-c92c-410d-a132-09e0b1032dbd"
                             PasswordRequired                            = $False
                             PasswordBlockSimple                         = $False
                             PasswordExpirationDays                      = 365
@@ -138,8 +140,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             FirewallEnabled                             = $False
                             FirewallBlockAllIncoming                    = $False
                             FirewallEnableStealthMode                   = $False
-                            Ensure                                      = 'Present'
-                            GlobalAdminAccount                          = $GlobalAdminAccount
+                            RoleScopeTagIds                             = "0"
                         }
                     }
                 }
@@ -180,6 +181,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         FirewallEnabled                             = $False
                         FirewallBlockAllIncoming                    = $False
                         FirewallEnableStealthMode                   = $False
+                        RoleScopeTagIds                             = "0"
                         Ensure                                      = 'Present'
                         GlobalAdminAccount                          = $GlobalAdminAccount
                     }
@@ -188,6 +190,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         return @{
                             DisplayName                                 = "MacOS DSC Policy"
                             Description                                 = "Test policy"
+                            Id                                          = "d95e706d-c92c-410d-a132-09e0b1032dbd"
                             PasswordRequired                            = $False
                             PasswordBlockSimple                         = $False
                             PasswordExpirationDays                      = 365
@@ -205,8 +208,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             FirewallEnabled                             = $False
                             FirewallBlockAllIncoming                    = $False
                             FirewallEnableStealthMode                   = $False
-                            Ensure                                      = 'Present'
-                            GlobalAdminAccount                          = $GlobalAdminAccount
+                            RoleScopeTagIds                             = "0"
                         }
                     }
                 }
@@ -238,6 +240,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         FirewallEnabled                             = $False
                         FirewallBlockAllIncoming                    = $False
                         FirewallEnableStealthMode                   = $False
+                        RoleScopeTagIds                             = "0"
                         Ensure                                      = 'Present'
                         GlobalAdminAccount                          = $GlobalAdminAccount
                     }
@@ -246,6 +249,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         return @{
                             DisplayName                                 = "MacOS DSC Policy"
                             Description                                 = "Test policy"
+                            Id                                          = "d95e706d-c92c-410d-a132-09e0b1032dbd"
                             PasswordRequired                            = $False
                             PasswordBlockSimple                         = $False
                             PasswordExpirationDays                      = 365
@@ -263,8 +267,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             FirewallEnabled                             = $False
                             FirewallBlockAllIncoming                    = $False
                             FirewallEnableStealthMode                   = $False
-                            Ensure                                      = 'Present'
-                            GlobalAdminAccount                          = $GlobalAdminAccount
+                            RoleScopeTagIds                             = "0"
                         }
                     }
                 }
@@ -293,6 +296,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         return @{
                             DisplayName                                 = "MacOS DSC Policy"
                             Description                                 = "Test policy"
+                            Id                                          = "d95e706d-c92c-410d-a132-09e0b1032dbd"
                             PasswordRequired                            = $False
                             PasswordBlockSimple                         = $False
                             PasswordExpirationDays                      = 365
@@ -310,8 +314,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             FirewallEnabled                             = $False
                             FirewallBlockAllIncoming                    = $False
                             FirewallEnableStealthMode                   = $False
-                            Ensure                                      = 'Present'
-                            GlobalAdminAccount                          = $GlobalAdminAccount
+                            RoleScopeTagIds                             = "0"
                         }
                     }
                 }
@@ -324,4 +327,4 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     }
 }
 
-    Invoke-Command -ScriptBlock $Global:DscHelper.CleanupScript -NoNewScope
+Invoke-Command -ScriptBlock $Global:DscHelper.CleanupScript -NoNewScope

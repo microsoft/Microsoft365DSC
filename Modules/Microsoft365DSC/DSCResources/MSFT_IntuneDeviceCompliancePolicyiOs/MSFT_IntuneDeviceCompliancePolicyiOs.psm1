@@ -282,7 +282,7 @@ function Set-TargetResource
             -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.iosCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
         Update-IntuneDeviceCompliancePolicy -ODataType 'microsoft.graph.iosCompliancePolicy' `
-            -deviceCompliancePolicyId $configDeviceiOsPolicy.deviceCompliancePolicyId @PSBoundParameters
+            -deviceCompliancePolicyId $configDeviceiOsPolicy.Id @PSBoundParameters
     }
     elseif ($Ensure -eq 'Absent' -and $currentDeviceiOsPolicy.Ensure -eq 'Present')
     {
@@ -292,7 +292,7 @@ function Set-TargetResource
             -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.iosCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
 
-        Remove-IntuneDeviceCompliancePolicy -deviceCompliancePolicyId $configDeviceiOsPolicy.deviceCompliancePolicyId
+        Remove-IntuneDeviceCompliancePolicy -deviceCompliancePolicyId $configDeviceiOsPolicy.Id
     }
 }
 

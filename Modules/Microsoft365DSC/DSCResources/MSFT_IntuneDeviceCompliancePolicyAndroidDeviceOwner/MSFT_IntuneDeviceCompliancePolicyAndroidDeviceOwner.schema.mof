@@ -1,0 +1,30 @@
+[ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceCompliancePolicyAndroidDeviceOwner")]
+class MSFT_IntuneDeviceCompliancePolicyAndroidDeviceOwner : OMI_BaseResource
+{
+    [Key, Description("Display name of the Android Device Owner device compliance policy.")] String DisplayName;
+    [Write, Description("Description of the Android Device Owner device compliance policy.")] String Description;
+    [Write, Description("DeviceThreatProtectionEnabled of the Android Device Owner device compliance policy.")] Boolean DeviceThreatProtectionEnabled;
+    [Write, Description("DeviceThreatProtectionRequiredSecurityLevel of the Android Device Owner device compliance policy."), ValueMap{"unavailable", "secured", "low", "medium", "high", "notSet"}, Values{"unavailable", "secured", "low", "medium", "high", "notSet"}] String DeviceThreatProtectionRequiredSecurityLevel;
+    [Write, Description("AdvancedThreatProtectionRequiredSecurityLevel of the Android Device Owner device compliance policy."), ValueMap{"unavailable", "secured", "low", "medium", "high", "notSet"}, Values{"unavailable", "secured", "low", "medium", "high", "notSet"}] String AdvancedThreatProtectionRequiredSecurityLevel;
+    [Write, Description("SecurityRequireSafetyNetAttestationBasicIntegrity of the Android Device Owner device compliance policy.")] Boolean SecurityRequireSafetyNetAttestationBasicIntegrity;
+    [Write, Description("SecurityRequireSafetyNetAttestationCertifiedDevice of the Android Device Owner device compliance policy.")] Boolean SecurityRequireSafetyNetAttestationCertifiedDevice;
+    [Write, Description("OSMinimumVersion of the Android Device Owner device compliance policy.")] String OsMinimumVersion;
+    [Write, Description("OSMaximumVersion of the Android Device Owner device compliance policy.")] String OsMaximumVersion;
+    [Write, Description("MinAndroidSecurityPatchLevel of the Android Device Owner device compliance policy.")] String MinAndroidSecurityPatchLevel;
+    [Write, Description("PasswordRequired of the Android Device Owner device compliance policy.")] Boolean PasswordRequired;
+    [Write, Description("PasswordMinimumLength of the Android Device Owner device compliance policy.")] Uint32 PasswordMinimumLength;
+    [Write, Description("passwordMinimumLetterCharacters of the Android Device Owner device compliance policy.")] Uint32 PasswordMinimumLetterCharacters;
+    [Write, Description("passwordMinimumLowerCaseCharacters of the Android Device Owner device compliance policy.")] Uint32 PasswordMinimumLowerCaseCharacters;
+    [Write, Description("passwordMinimumNonLetterCharacters of the Android Device Owner device compliance policy.")] Uint32 PasswordMinimumNonLetterCharacters;
+    [Write, Description("passwordMinimumNumericCharacters of the Android Device Owner device compliance policy.")] Uint32 passwordMinimumNumericCharacters;
+    [Write, Description("passwordMinimumSymbolCharacters of the Android Device Owner device compliance policy.")] Uint32 PasswordMinimumSymbolCharacters;
+    [Write, Description("passwordMinimumUpperCaseCharacters of the Android Device Owner device compliance policy.")] Uint32 PasswordMinimumUpperCaseCharacters;
+    [Write, Description("PasswordRequiredType of the Android Device Owner device compliance policy."), ValueMap{"deviceDefault", "alphabetic", "alphanumeric", "alphanumericWithSymbols", "lowSecurityBiometric", "numeric", "numericComplex", "any"}, Values{"deviceDefault", "alphabetic", "alphanumeric", "alphanumericWithSymbols", "lowSecurityBiometric", "numeric", "numericComplex", "any"}] String PasswordRequiredType;
+    [Write, Description("PasswordMinutesOfInactivityBeforeLock of the Android Device Owner device compliance policy.")] Uint32 PasswordMinutesOfInactivityBeforeLock;
+    [Write, Description("PasswordExpirationDays of the Android Device Owner device compliance policy.")] Uint32 PasswordExpirationDays;
+    [Write, Description("PasswordPreviousPasswordBlockCount of the Android Device Owner device compliance policy.")] Uint32 PasswordPreviousPasswordBlockCount;
+    [Write, Description("StorageRequireEncryption of the Android Device Owner device compliance policy.")] Boolean StorageRequireEncryption;
+    [Write, Description("RoleScopeTagIds of the Android Device Owner device compliance policy.")] String RoleScopeTagIds;
+    [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
+    [Required, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+};

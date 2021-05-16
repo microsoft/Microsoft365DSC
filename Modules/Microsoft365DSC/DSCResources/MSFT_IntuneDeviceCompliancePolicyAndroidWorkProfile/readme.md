@@ -138,12 +138,12 @@ _By default, no date is configured._
 ## Example
 
 ```PowerShell
-IntuneDeviceCompliancePolicyAndroidWorkProfile f7d82525-b7c0-475c-9d5e-16fafdfa487a
+IntuneDeviceCompliancePolicyAndroidDeviceOwner f7d82525-b7c0-475c-9d5e-16fafdfa487a
         {
             Description                                        = "";
             DeviceThreatProtectionEnabled                      = $False;
             DeviceThreatProtectionRequiredSecurityLevel        = "unavailable";
-            DisplayName                                        = "WorkProfile";
+            DisplayName                                        = "DeviceOwner";
             Ensure                                             = "Present";
             GlobalAdminAccount                                 = $Credsglobaladmin;
             PasswordExpirationDays                             = 90;

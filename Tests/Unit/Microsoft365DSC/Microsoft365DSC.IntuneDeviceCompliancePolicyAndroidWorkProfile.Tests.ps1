@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "IntuneDeviceCompliancePolicyAndroid" -GenericStubModule $GenericStubPath
+    -DscResource "IntuneDeviceCompliancePolicyAndroidWorkProfile" -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -134,8 +134,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         return @{
                             DisplayName                                        = 'Test Android Work Profile Device Compliance Policy'
                             Description                                        = 'Test Android Work Profile Device Compliance Policy Description'
-                            id                                                 = '9c4e2ed7-706e-4874-a826-0c2778352d47'
-                            deviceCompliancePolicyId                           = '9c4e2ed7-706e-4874-a826-0c2778352d47'
+                            Id                                                 = '9c4e2ed7-706e-4874-a826-0c2778352d47'
                             PasswordRequired                                   = $True
                             PasswordMinimumLength                              = 6
                             PasswordRequiredType                               = "DeviceDefault"
@@ -215,8 +214,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         return @{
                             DisplayName                                        = 'Test Android Device Compliance Policy'
                             Description                                        = 'Test Android Device Compliance Policy Description'
-                            id                                                 = '9c4e2ed7-706e-4874-a826-0c2778352d46'
-                            deviceCompliancePolicyId                           = '9c4e2ed7-706e-4874-a826-0c2778352d46'
+                            Id                                                 = '9c4e2ed7-706e-4874-a826-0c2778352d46'
                             PasswordRequired                                   = $True
                             PasswordMinimumLength                              = 6
                             PasswordRequiredType                               = "DeviceDefault"
@@ -287,8 +285,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         return @{
                             DisplayName                                        = 'Test Android Device Compliance Policy'
                             Description                                        = 'Test Android Device Compliance Policy Description'
-                            id                                                 = '9c4e2ed7-706e-4874-a826-0c2778352d46'
-                            deviceCompliancePolicyId                           = '9c4e2ed7-706e-4874-a826-0c2778352d46'
+                            Id                                                 = '9c4e2ed7-706e-4874-a826-0c2778352d46'
                             PasswordRequired                                   = $True
                             PasswordMinimumLength                              = 6
                             PasswordRequiredType                               = "DeviceDefault"
@@ -341,8 +338,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         return @{
                             DisplayName                                        = 'Test Android Device Compliance Policy'
                             Description                                        = 'Test Android Device Compliance Policy Description'
-                            id                                                 = '9c4e2ed7-706e-4874-a826-0c2778352d46'
-                            deviceCompliancePolicyId                           = '9c4e2ed7-706e-4874-a826-0c2778352d46'
+                            Id                                                 = '9c4e2ed7-706e-4874-a826-0c2778352d46'
                             PasswordRequired                                   = $True
                             PasswordMinimumLength                              = 6
                             PasswordRequiredType                               = "DeviceDefault"
