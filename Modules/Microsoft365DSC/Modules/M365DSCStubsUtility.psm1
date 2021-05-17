@@ -47,12 +47,13 @@ function New-M365DSCStubFiles
             ModuleName = "Microsoft.Graph.Intune"
         },
         @{
-            Platform   = 'MicrosoftTeams'
-            ModuleName = 'MicrosoftTeams'
+            Platform     = 'MicrosoftTeams'
+            ModuleName   = 'MicrosoftTeams'
+            RandomCmdlet = 'Get-CsOnlineVoiceRoute'
         },
         @{
             Platform   = 'PnP'
-            ModuleName = 'SharePointPnPPowerShellOnline'
+            ModuleName = 'PnP.PowerShell'
         },
         @{
             Platform   = 'PowerPlatforms'
@@ -75,18 +76,19 @@ function New-M365DSCStubFiles
                 -InboundParameters $PSBoundParameters
             $foundModule = Get-Module | Where-Object -FilterScript { $_.ExportedCommands.Values.Name -ccontains $Module.RandomCmdlet }
             $CurrentModuleName = $foundModule.Name
+            Import-Module $CurrentModuleName -Force -Global -ErrorAction SilentlyContinue
         }
         else
         {
-            Import-Module $CurrentModuleName -Force -ErrorAction SilentlyContinue
+            Import-Module $CurrentModuleName -Force -Global -ErrorAction SilentlyContinue
             $ConnectionMode = New-M365DSCConnection -Platform $Module.Platform `
                 -InboundParameters $PSBoundParameters
         }
 
         $cmdlets = Get-Command -CommandType 'Cmdlet' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
-        if ($null -eq $cmdlets)
+        if ($null -eq $cmdlets -or $Module.ModuleName -eq 'MicrosoftTeams')
         {
-            $cmdlets = Get-Command -CommandType 'Function' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
+            $cmdlets += Get-Command -CommandType 'Function' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
         }
 
         try
@@ -133,8 +135,9 @@ function New-M365DSCStubFiles
 
             foreach ($additionalParam in $additionalParameters.Keys)
             {
-                if (-not $parameters.ContainsKey($additionalParam) -and `
-                        -not $invalidParameters.Contains($additionalParameter))
+                if ($null -eq $parameters -or
+                    (-not $parameters.ContainsKey($additionalParam) -and `
+                            -not $invalidParameters.Contains($additionalParameter)))
                 {
                     $parameters += @{$additionalParam = $additionalParameters.$additionalParam }
                 }
