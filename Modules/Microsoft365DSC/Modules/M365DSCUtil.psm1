@@ -995,7 +995,7 @@ function New-M365DSCConnection
         [Parameter(Mandatory = $true)]
         [ValidateSet("Azure", "AzureAD", "ExchangeOnline", "Intune", `
                 "SecurityComplianceCenter", "PnP", "PowerPlatforms", `
-                "MicrosoftTeams", "SkypeForBusiness", "MicrosoftGraph", `
+                "MicrosoftTeams", "MicrosoftGraph", `
                 "MicrosoftGraphBeta")]
         [System.String]
         $Platform,

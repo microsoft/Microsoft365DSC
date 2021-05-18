@@ -6,6 +6,8 @@
   * Fixed an issue where the RestrictedSenderList was not properly
     being converted to a comma separated string.
     Issue #1191
+* DEPENDENCIES
+  * Updated AzureADPreview to version 2.0.2.136;
 
 # 1.21.512.1
 
