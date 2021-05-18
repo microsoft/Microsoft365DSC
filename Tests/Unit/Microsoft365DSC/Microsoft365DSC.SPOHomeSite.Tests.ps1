@@ -125,7 +125,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should throw an error" {
-                { Set-TargetResource @testParams } | Should -Throw "The specified Site Collection $($testParams.Url) for SPOHomeSite doesn't exist."
+                { Set-TargetResource @testParams } | Should -Throw "The specified Site Collection $($testParams.Url) for SPOHomeSite doesn't exist." 
                 Should -Invoke -CommandName Get-PnPTenantSite -Exactly 1
                 Should -Invoke -CommandName New-M365DSCLogEntry -Exactly 1
             }
