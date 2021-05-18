@@ -17363,6 +17363,7 @@ function Unregister-PnPHubSite
     )
 }
 #endregion
+
 #region PowerPlatforms
 function Get-AdminPowerApp
 {

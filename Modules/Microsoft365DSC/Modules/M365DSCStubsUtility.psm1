@@ -32,7 +32,7 @@ function New-M365DSCStubFiles
     }
 
     $Modules = @(
-        @{
+        <#@{
             Platform     = 'AzureAD'
             ModuleName   = 'AzureADPreview'
             RandomCmdlet = 'Get-AzureADDirectorySetting'
@@ -50,11 +50,11 @@ function New-M365DSCStubFiles
             Platform     = 'MicrosoftTeams'
             ModuleName   = 'MicrosoftTeams'
             RandomCmdlet = 'Get-CsOnlineVoiceRoute'
-        },
+        },#>
         @{
             Platform   = 'PnP'
             ModuleName = 'PnP.PowerShell'
-        },
+        }<#,
         @{
             Platform   = 'PowerPlatforms'
             ModuleName = 'Microsoft.PowerApps.Administration.PowerShell'
@@ -63,7 +63,7 @@ function New-M365DSCStubFiles
             Platform     = 'SecurityComplianceCenter'
             ModuleName   = $null
             RandomCmdlet = 'Add-ComplianceCaseMember'
-        }
+        }#>
     )
     $Content = ''
     $folderPath = Join-Path $PSScriptRoot -ChildPath "../DSCResources"
@@ -159,6 +159,7 @@ function New-M365DSCStubFiles
                 $foundParamNames = @()
                 foreach ($param in $parameters.Values)
                 {
+                    Write-Host "    --> $($param.Name)"
                     if ($foundParamNames -notcontains $param.Name)
                     {
                         $foundParamNames += $param.Name
