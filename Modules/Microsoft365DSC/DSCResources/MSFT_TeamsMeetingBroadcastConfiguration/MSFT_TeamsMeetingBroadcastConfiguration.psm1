@@ -40,7 +40,7 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Teams Meeting Broadcast"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -146,7 +146,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
     $SetParams = $PSBoundParameters

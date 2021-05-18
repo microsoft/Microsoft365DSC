@@ -238,6 +238,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Active Sync Device Access Rule '$($Identity)' already exists, but needs updating."
         Write-Verbose -Message "Setting Active Sync Device Access Rule $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $SetActiveSyncDeviceAccessRuleParams)"
+        $SetActiveSyncDeviceAccessRuleParams.Identity = Get-ActiveSyncDeviceAccessRule | Where {$_.AccessLevel -eq $NewActiveSyncDeviceAccessRuleParams.AccessLevel -and $_.Characteristic -eq $NewActiveSyncDeviceAccessRuleParams.Characteristic -and $_.QueryString -eq $NewActiveSyncDeviceAccessRuleParams.QueryString} | SELECT -ExpandProperty "Identity"
         Set-ActiveSyncDeviceAccessRule @SetActiveSyncDeviceAccessRuleParams
     }
 }

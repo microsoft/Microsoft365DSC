@@ -206,11 +206,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisableCompanyWideSharingLinks = "NotDisabled";
                         DisableFlows                   = "NotDisabled";
                         DisableSharingForNonOwners     = $False;
-                        LCID                           = 1033;
+                        LocaleId                       = 1033;
                         RestrictedToRegion             = "Unknown";
                         SocialBarOnSitePagesDisabled   = $False;
-                        StorageMaximumLevel            = 26214400;
-                        StorageWarningLevel            = 25574400;
+                        StorageQuota                   = 26214400;
+                        StorageQuotaWarningLevel       = 2557440000;
                         Title                          = "CommNik";
                         Template                       = "STS#3";
                         HubSiteId                      = "fcc3c848-6d2f-4821-a56c-980eea7990c5"
@@ -248,6 +248,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             )
                             SiteDesignId         = "00000000-0000-0000-0000-000000000000"
                             RequiresJoinApproval = $false
+                        }
+                    )
+                }
+
+                Mock -CommandName Get-PnPWeb -MockWith {
+                    return @(
+                        @{
+                            RegionalSettings = @{
+                                TimeZone = @{
+                                    Id = 10
+                                }
+                            }
                         }
                     )
                 }

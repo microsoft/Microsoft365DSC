@@ -53,7 +53,7 @@
     RequiredModules   = @(
         @{
             ModuleName      = "AzureADPreview"
-            RequiredVersion = "2.0.2.134"
+            RequiredVersion = "2.0.2.136"
         },
         @{
             ModuleName      = "DSCParser"
@@ -89,11 +89,11 @@
         },
         @{
             ModuleName      = "MicrosoftTeams"
-            RequiredVersion = "1.1.6"
+            RequiredVersion = "2.3.1"
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.51"
+            RequiredVersion = "1.0.52"
         },
         @{
             ModuleName      = "PnP.PowerShell"

@@ -165,7 +165,7 @@ function Get-TargetResource
     {
         Write-Verbose -Message "Getting site collection $Url"
 
-        $site = Get-PnPTenantSite -Url $Url -ErrorAction 'SilentlyContinue'
+        $site = Get-PnPTenantSite -Identity $Url -ErrorAction 'SilentlyContinue'
         if ($null -eq $site)
         {
             Write-Verbose -Message "The specified Site Collection {$Url} doesn't exist."
@@ -496,7 +496,7 @@ function Set-TargetResource
                 Start-Sleep -Seconds 15
                 try
                 {
-                    $site = Get-PnPTenantSite -Url $Url -ErrorAction Stop
+                    $site = Get-PnPTenantSite -Identity $Url -ErrorAction Stop
                 }
                 catch
                 {
@@ -577,16 +577,22 @@ function Set-TargetResource
             SharingDomainRestrictionMode                = $SharingDomainRestrictionMode
             AnonymousLinkExpirationInDays               = $AnonymousLinkExpirationInDays
             OverrideTenantAnonymousLinkExpirationPolicy = $OverrideTenantAnonymousLinkExpirationPolicy
-            # DenyAddAndCustomizePages                    = $deny
+            DenyAddAndCustomizePages                    = $deny
         }
         $UpdateParams = Remove-NullEntriesFromHashtable -Hash $UpdateParams
+
+        $UpdateParams.Add("StorageQuota", $StorageMaximumLevel)
+        $UpdateParams.Remove("StorageMaximumLevel") | Out-Null
+        $UpdateParams.Add("StorageQuotaWarningLevel", $StorageWarningLevel)
+        $UpdateParams.Remove("StorageWarningLevel") | Out-Null
+        $UpdateParams.Add("Identity", $Url)
+        $UpdateParams.Remove("Url") | Out-Null
 
         Set-PnPTenantSite @UpdateParams -ErrorAction Stop
 
         $UpdateParams = @{}
         $UpdateParams = @{
             SocialBarOnSitePagesDisabled = $SocialBarOnSitePagesDisabled
-            DenyAndAddCustomizePages     = $deny
         }
         $UpdateParams = Remove-NullEntriesFromHashtable -Hash $UpdateParams
 
@@ -907,7 +913,7 @@ function Export-TargetResource
         foreach ($site in $sites)
         {
             Write-Host "    [$i/$($sites.Length)] $($site.Url)" -NoNewline
-            $site = Get-PnPTenantSite -Url $site.Url
+            $site = Get-PnPTenantSite -Identity $site.Url
             $siteTitle = "Null"
             if (-not [System.String]::IsNullOrEmpty($site.Title))
             {
