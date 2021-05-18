@@ -196,7 +196,7 @@ function New-M365DSCConnection
         [Parameter(Mandatory = $true)]
         [ValidateSet("Azure", "AzureAD", "SharePointOnline", "ExchangeOnline", 'Intune', `
                 "SecurityComplianceCenter", "MSOnline", "PnP", "PowerPlatforms", `
-                "MicrosoftTeams", "SkypeForBusiness", "MicrosoftGraph")]
+                "MicrosoftTeams", "MicrosoftGraph")]
         [System.String]
         $Platform,
 
@@ -221,7 +221,7 @@ function Test-MSCloudLogin
         [Parameter(Mandatory = $true)]
         [ValidateSet("Azure", "AzureAD", "SharePointOnline", "ExchangeOnline", `
                 "SecurityComplianceCenter", "MSOnline", "PnP", "PowerPlatforms", `
-                "MicrosoftTeams", "SkypeForBusiness")]
+                "MicrosoftTeams")]
         [System.String]
         $Platform,
 
