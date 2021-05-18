@@ -1,15 +1,13 @@
 import { INavLink, INavLinkGroup, INavStyles, Nav } from '@fluentui/react';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Workload } from '../../models/Workload';
 
 export interface ISideNavigationProps {
-  workloads: Workload[];
+  items: INavLinkGroup[];
 }
 
 const SideNavigationComponent: React.FunctionComponent<ISideNavigationProps> = (props) => {
-  const [workloads] = React.useState<Workload[]>(props.workloads);
-  const [navigationItems, setNavigationItems] = React.useState<INavLinkGroup[]>([]);
+  const { items } = props;
   const history = useHistory();
 
   const navStyles: Partial<INavStyles> = {
@@ -22,32 +20,11 @@ const SideNavigationComponent: React.FunctionComponent<ISideNavigationProps> = (
     },
   };
 
-  React.useEffect(() => {
-    let navigation: INavLinkGroup[] = [
-      {
-        links: [
-          {
-            name: 'Home',
-            url: '#Home',
-          },
-        ],
-      },
-    ];
-    workloads.forEach((workload: Workload) => {
-      navigation[0].links.push({
-        name: workload.title,
-        url: `#${workload.title}`,
-      });
-    });
-
-    setNavigationItems(navigation);
-  }, [workloads]);
-
   return (
     <Nav
       ariaLabel="Navigation"
       styles={navStyles}
-      groups={navigationItems}
+      groups={items}
       onLinkClick={(ev?: React.MouseEvent<HTMLElement>, item?: INavLink) => {
         history.push(item!.url);
       }}

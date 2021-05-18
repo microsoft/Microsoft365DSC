@@ -1,19 +1,19 @@
 import { Checkbox, IStackItemStyles, IStackStyles, IStackTokens, mergeStyles, Stack, StackItem } from '@fluentui/react';
 import * as React from 'react';
-import { ExtractionType } from '../../models/ExtractionType';
+import { useRecoilValue } from 'recoil';
 import { Resource } from '../../models/Resource';
 import { Workload } from '../../models/Workload';
+import { selectedResourcesState } from '../../state/resourcesState';
+import { workloadsState } from '../../state/workloadState';
 import { ContentCard } from '../ContentCard/ContentCard';
 
 export interface IWorkloadOptionsProps {
-  workloads: Workload[];
-  resources: Resource[];
   onSelectedResourcesChange: (changedResource: Resource, checked?: boolean) => void;
-  extractionType: ExtractionType;
 }
 
 export const WorkloadOptions: React.FunctionComponent<IWorkloadOptionsProps> = (props) => {
-  const { workloads, resources } = props;
+  const workloads = useRecoilValue(workloadsState);
+  const resources = useRecoilValue(selectedResourcesState);
 
   const wrapStackTokens: IStackTokens = { childrenGap: 30 };
 
@@ -31,30 +31,26 @@ export const WorkloadOptions: React.FunctionComponent<IWorkloadOptionsProps> = (
 
   return (
     <>
-      {workloads &&
-        workloads.length > 0 &&
-        workloads.map((workload: Workload) => (
-          <ContentCard title={workload.title}>
-            {workload.description && (
-              <div className={mergeStyles({ paddingBottom: '30px' })}>{workload.description}</div>
-            )}
-            <Stack horizontal wrap styles={stackStyles} tokens={wrapStackTokens}>
-              {resources
-                .filter((resource) => resource.workload === workload.key)
-                .map((resource: Resource) => (
-                  <StackItem styles={stackItemStyles}>
-                    <Checkbox
-                      label={resource.name}
-                      checked={resource.checked}
-                      onChange={(ev, checked) => props.onSelectedResourcesChange(resource, checked)}
-                      value={resource.name}
-                      key={resource.name}
-                    />
-                  </StackItem>
-                ))}
-            </Stack>
-          </ContentCard>
-        ))}
+      {workloads?.map((workload: Workload) => (
+        <ContentCard title={workload.title}>
+          {workload.description && <div className={mergeStyles({ paddingBottom: '30px' })}>{workload.description}</div>}
+          <Stack horizontal wrap styles={stackStyles} tokens={wrapStackTokens}>
+            {resources
+              ?.filter((resource) => resource.workload === workload.key)
+              .map((resource: Resource) => (
+                <StackItem styles={stackItemStyles}>
+                  <Checkbox
+                    label={resource.name}
+                    checked={resource.checked}
+                    onChange={(ev, checked) => props.onSelectedResourcesChange(resource, checked)}
+                    value={resource.name}
+                    key={resource.name}
+                  />
+                </StackItem>
+              ))}
+          </Stack>
+        </ContentCard>
+      ))}
     </>
   );
 };

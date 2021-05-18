@@ -1,18 +1,19 @@
 import { Panel, PanelType } from '@fluentui/react';
 import Editor from '@monaco-editor/react';
 import * as React from 'react';
-import { AuthenticationType } from '../../models/AuthenticationType';
-import { Resource } from '../../models/Resource';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { authenticationTypeState } from '../../state/authenticationTypeState';
+import { selectedResourcesState } from '../../state/resourcesState';
 
 export interface IGeneratorPanelProps {
-  resources: Resource[];
-  authenticationType: AuthenticationType;
   onDismiss: (ev?: React.SyntheticEvent<HTMLElement, Event> | undefined) => void;
 }
 
 export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (props) => {
   const [isOpen, setIsOpen] = React.useState<boolean>(true);
-  const { authenticationType, resources } = props;
+  const authenticationType = useRecoilValue(authenticationTypeState);
+
+  const [selectedResources] = useRecoilState(selectedResourcesState);
 
   const _dismissPanel = (ev?: React.SyntheticEvent<HTMLElement, Event> | undefined) => {
     setIsOpen(false);
@@ -20,7 +21,7 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
   };
 
   const _getExportScript = () => {
-    let resourcesToExport: string[] = resources.filter((r) => r.checked === true).map((r) => r.name);
+    let resourcesToExport: string[] = selectedResources.filter((r) => r.checked === true).map((r) => r.name);
 
     return `# Exporting all components using ${authenticationType} authentication \nExport-M365DSCConfiguration -Quiet -ComponentsToExtract @("${resourcesToExport.join(
       '", "'
@@ -37,10 +38,10 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
     >
       <p>Use the following script to export the selected resources.</p>
       <Editor
-        height="100vh"
+        height="80vh"
         defaultLanguage="powershell"
-        value={_getExportScript()}
-        options={{ wordWrap: 'wordWrapColumn', wordWrapColumn: '120' }}
+        defaultValue={_getExportScript()}
+        options={{ wordWrap: 'wordWrapColumn', wordWrapColumn: 120, readOnly: true, minimap: { enabled: false } }}
       />
     </Panel>
   );

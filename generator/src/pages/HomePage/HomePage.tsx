@@ -18,7 +18,7 @@ export const HomePage: React.FunctionComponent = () => {
       acting on detected configuration drifts. It also allows you to extract a full-fidelity configuration out of any
       existing Microsoft 365 tenant. The tool covers all major Microsoft 365 workloads such as Exchange Online, Teams,
       Power Platforms, SharePoint and Security and Compliance.
-      <Stack gap={30} className={mergeStyles({ paddingTop: '30px' })}>
+      <Stack tokens={{ childrenGap: 30 }} className={mergeStyles({ paddingTop: '30px' })}>
         <ContentCard title="Automate" iconName="AutomateFlow">
           <div className={mergeStyles(sectionStyles)}>
             365 tenant to be configured. The Microsoft365DSC module allows Microsoft 365 administrators to define how

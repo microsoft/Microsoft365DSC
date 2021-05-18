@@ -1,21 +1,20 @@
 import { Dropdown, IDropdownOption, IDropdownStyles, StackItem } from '@fluentui/react';
 import * as React from 'react';
+import { useRecoilState } from 'recoil';
 import { AuthenticationType } from '../../models/AuthenticationType';
 import { ExtractionType } from '../../models/ExtractionType';
+import { authenticationTypeState } from '../../state/authenticationTypeState';
+import { extractionTypeState } from '../../state/extractionTypeState';
 
-export interface IGenerationOptionsProps {
-  extractionType: ExtractionType;
-  authenticationType: AuthenticationType;
-  onExtractionTypeChange: (extractionType: ExtractionType) => void;
-  onAuthenticationTypeChange: (authentication: AuthenticationType) => void;
-}
+export interface IGenerationOptionsProps {}
 
 export const GenerationOptions: React.FunctionComponent<IGenerationOptionsProps> = (props) => {
-  const [extractionType, setExtractionType] = React.useState<ExtractionType>(props.extractionType);
-  const [authenticationType, setAuthenticationType] = React.useState<AuthenticationType>(props.authenticationType);
+  const [extractionType, setExtractionType] = useRecoilState(extractionTypeState);
+  const [authenticationType, setAuthenticationType] = useRecoilState(authenticationTypeState);
 
   const dropdownStyles: Partial<IDropdownStyles> = { dropdown: { width: 300 } };
   const extractionModesOptions: IDropdownOption[] = [
+    { key: ExtractionType.None, text: 'None' },
     { key: ExtractionType.Lite, text: 'Lite' },
     { key: ExtractionType.Default, text: 'Default' },
     { key: ExtractionType.Full, text: 'Full' },
@@ -30,7 +29,6 @@ export const GenerationOptions: React.FunctionComponent<IGenerationOptionsProps>
   const _onExtractionTypeChange = (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption | undefined): void => {
     const type: ExtractionType = item!.key.toString() as ExtractionType;
     setExtractionType(type);
-    props.onExtractionTypeChange(type);
   };
 
   const _onAuthenticationTypeChange = (
@@ -39,14 +37,13 @@ export const GenerationOptions: React.FunctionComponent<IGenerationOptionsProps>
   ): void => {
     const type: AuthenticationType = item!.key.toString() as AuthenticationType;
     setAuthenticationType(type);
-    props.onAuthenticationTypeChange(type);
   };
 
   return (
     <>
       <StackItem>
         <Dropdown
-          label="Extraction mode"
+          label="Selection mode"
           selectedKey={extractionType}
           onChange={_onExtractionTypeChange}
           placeholder="Select an option"

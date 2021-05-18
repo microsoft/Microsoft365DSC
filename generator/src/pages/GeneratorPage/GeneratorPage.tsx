@@ -1,42 +1,23 @@
-import { IStackProps, mergeStyles, Stack } from '@fluentui/react';
+import { INavLinkGroup, IStackProps, mergeStyles, Stack } from '@fluentui/react';
 import * as React from 'react';
 import { Workload } from '../../models/Workload';
 import { Resource } from '../../models/Resource';
 import { Header } from '../../components/Header';
 import { SideNavigation } from '../../components/SideNavigation/SideNavigation';
-import { GenerationOptions } from '../../components/GeneratorOptions/GeneratorOptions';
-import { WorkloadOptions } from '../../components/WorkloadOptions/WorkloadOptions';
 import { GeneratorPanel } from '../../components/GeneratorPanel/GeneratorPanel';
 import { ExtractionType } from '../../models/ExtractionType';
-import { AuthenticationType } from '../../models/AuthenticationType';
+import { Generator } from '../../components/Generator/Generator';
+import { selectedResourcesState } from '../../state/resourcesState';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { extractionTypeState } from '../../state/extractionTypeState';
+import { workloadsState } from '../../state/workloadState';
 
 export const GeneratorPage: React.FunctionComponent = () => {
-  const [extractionType, setExtractionType] = React.useState<ExtractionType>(ExtractionType.Default);
-  const [authenticationType, setAuthenticationType] = React.useState<AuthenticationType>(
-    AuthenticationType.Credentials
-  );
+  const extractionType = useRecoilValue(extractionTypeState);
   const [generatorPanelOpen, setGeneratorPanelOpen] = React.useState<boolean>(false);
-  const [resources, setResources] = React.useState<Resource[]>([]);
-  const [workloads, setWorkloads] = React.useState<Workload[]>([]);
-
-  const _onExtractionTypeChange = (extractionType: ExtractionType): void => {
-    setExtractionType(extractionType);
-  };
-
-  const _onAuthenticationTypeChange = (authenticationType: AuthenticationType): void => {
-    setAuthenticationType(authenticationType);
-  };
-
-  const _onGenerateToggle = React.useCallback(() => {
-    setGeneratorPanelOpen(!generatorPanelOpen);
-  }, [generatorPanelOpen, setGeneratorPanelOpen]);
-
-  const _onSelectedResourcesChange = (changedResource: Resource, checked?: boolean) => {
-    changedResource.checked = checked;
-    const resourceIndex = resources.findIndex((resource) => resource.name === changedResource.name);
-    resources[resourceIndex] = changedResource;
-    setResources([...resources]);
-  };
+  const [navigationItems, setNavigationItems] = React.useState<INavLinkGroup[]>([]);
+  const [selectedResources, setSelectedResources] = useRecoilState(selectedResourcesState);
+  const [workloads, setWorkloads] = useRecoilState(workloadsState);
 
   const _isResourceChecked = React.useCallback(
     (resource: Resource) => {
@@ -46,12 +27,8 @@ export const GeneratorPage: React.FunctionComponent = () => {
         switch (extractionType) {
           case ExtractionType.Lite:
             if (
-              (workload.extractionModes &&
-                workload.extractionModes.default &&
-                workload.extractionModes.default.includes(resource.name)) ||
-              (workload.extractionModes &&
-                workload.extractionModes.full &&
-                workload.extractionModes.full.includes(resource.name))
+              workload.extractionModes?.default?.includes(resource.name) ||
+              workload.extractionModes?.full?.includes(resource.name)
             ) {
               return false;
             }
@@ -59,61 +36,109 @@ export const GeneratorPage: React.FunctionComponent = () => {
             return true;
 
           case ExtractionType.Default:
-            if (
-              workload.extractionModes &&
-              workload.extractionModes.full &&
-              workload.extractionModes.full.includes(resource.name)
-            ) {
+            if (workload.extractionModes?.full?.includes(resource.name)) {
               return false;
             }
 
             return true;
+
+          case ExtractionType.None:
+            return false;
         }
 
         return true;
+      } else {
+        return false;
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [extractionType]
+    [extractionType, workloads]
   );
 
-  const _updateExtractionSelections = React.useCallback(
-    (resources: Resource[]): Resource[] => {
-      resources.forEach((resource: Resource) => {
-        resource.checked = _isResourceChecked(resource);
+  const _buildNavigationItems = React.useCallback(() => {
+    let navigation: INavLinkGroup[] = [
+      {
+        links: [
+          {
+            name: 'Home',
+            url: '#Home',
+          },
+        ],
+      },
+    ];
+    workloads.forEach((workload: Workload) => {
+      navigation[0].links.push({
+        name: workload.title,
+        url: `#${workload.title}`,
       });
+    });
 
-      return resources;
+    return navigation;
+  }, [workloads]);
+
+  const _buildResourcesForExtractionType = React.useCallback(
+    (resources: Resource[]): Resource[] => {
+      return resources.map((resource) => {
+        const isResourceChecked = _isResourceChecked(resource);
+        const updatedResource =
+          resource.checked !== isResourceChecked ? { ...resource, checked: isResourceChecked } : resource;
+        return updatedResource;
+      });
     },
     [_isResourceChecked]
   );
 
+  const _onGenerateToggle = React.useCallback(() => {
+    setGeneratorPanelOpen(!generatorPanelOpen);
+  }, [generatorPanelOpen, setGeneratorPanelOpen]);
+
   React.useEffect(() => {
     async function fetchData() {
       const workloadResponse = await fetch(`/data/workloads.json`);
-      const workloadsData = (await workloadResponse.json()) as Workload[];
-      setWorkloads(workloadsData);
-
-      const resourceResponse = await fetch(`/data/resources.json`);
-      const resourcesData = (await resourceResponse.json()) as Resource[];
-      setResources(_updateExtractionSelections([...resourcesData]));
+      if (workloads?.length === 0) {
+        const workloadsData = (await workloadResponse.json()) as Workload[];
+        setWorkloads(workloadsData);
+      }
     }
 
     fetchData();
-  }, [setResources, _updateExtractionSelections]);
+  }, [workloads, setWorkloads]);
 
   React.useEffect(() => {
-    setResources((resources) => _updateExtractionSelections([...resources]));
-  }, [extractionType, _updateExtractionSelections]);
+    async function fetchData() {
+      setNavigationItems(_buildNavigationItems());
+
+      const resourceResponse = await fetch(`/data/resources.json`);
+      let resourcesData = (await resourceResponse.json()) as Resource[];
+
+      resourcesData = resourcesData.map((resource) => {
+        resource.checked = false;
+        return resource;
+      });
+
+      resourcesData = _buildResourcesForExtractionType(resourcesData);
+
+      setSelectedResources(resourcesData);
+    }
+
+    fetchData();
+  }, [workloads, _buildResourcesForExtractionType, setSelectedResources, setNavigationItems, _buildNavigationItems]);
+
+  React.useEffect(() => {
+    if (workloads && workloads.length > 0 && selectedResources && selectedResources.length > 0) {
+      setSelectedResources(_buildResourcesForExtractionType(selectedResources));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [extractionType, setSelectedResources, _buildResourcesForExtractionType]);
 
   const Content = (props: IStackProps) => (
-    <Stack horizontal gap={10} className={mergeStyles({ overflow: 'hidden' })} {...props} />
+    <Stack horizontal tokens={{ childrenGap: 10 }} className={mergeStyles({ overflow: 'hidden' })} {...props} />
   );
 
   const Sidebar = (props: IStackProps) => (
     <Stack
       disableShrink
-      gap={20}
+      tokens={{ childrenGap: 20 }}
       grow={20}
       className={mergeStyles({
         position: 'fixed',
@@ -137,7 +162,7 @@ export const GeneratorPage: React.FunctionComponent = () => {
 
   const Page = (props: IStackProps) => (
     <Stack
-      gap={10}
+      tokens={{ childrenGap: 10 }}
       className={mergeStyles({
         selectors: {
           ':global(body)': {
@@ -153,41 +178,19 @@ export const GeneratorPage: React.FunctionComponent = () => {
   return (
     <Page>
       <Header onGenerate={_onGenerateToggle}></Header>
-      {workloads && workloads.length > 0 && (
-        <Content>
-          <Sidebar>
-            <SideNavigation workloads={workloads}></SideNavigation>
-          </Sidebar>
-          <Main>
-            <header>
-              <h1 id="Home">Generator</h1>
-            </header>
-            <Stack horizontal gap={30} className={mergeStyles({ paddingTop: '30px' })}>
-              <GenerationOptions
-                extractionType={extractionType}
-                authenticationType={authenticationType}
-                onExtractionTypeChange={_onExtractionTypeChange}
-                onAuthenticationTypeChange={_onAuthenticationTypeChange}
-              ></GenerationOptions>
-            </Stack>
-            <Stack gap={30} className={mergeStyles({ paddingTop: '30px' })}>
-              <WorkloadOptions
-                workloads={workloads}
-                resources={resources}
-                extractionType={extractionType}
-                onSelectedResourcesChange={_onSelectedResourcesChange}
-              ></WorkloadOptions>
-            </Stack>
-            {generatorPanelOpen && (
-              <GeneratorPanel
-                resources={resources}
-                authenticationType={authenticationType}
-                onDismiss={_onGenerateToggle}
-              ></GeneratorPanel>
-            )}
-          </Main>
-        </Content>
-      )}
+      <Content>
+        <Sidebar>
+          <SideNavigation items={navigationItems}></SideNavigation>
+        </Sidebar>
+        <Main>
+          <header>
+            <h1 id="Home">Generator</h1>
+          </header>
+          <Generator></Generator>
+
+          {generatorPanelOpen && <GeneratorPanel onDismiss={_onGenerateToggle}></GeneratorPanel>}
+        </Main>
+      </Content>
     </Page>
   );
 };
