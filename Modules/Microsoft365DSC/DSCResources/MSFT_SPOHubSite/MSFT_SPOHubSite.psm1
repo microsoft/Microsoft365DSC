@@ -83,7 +83,7 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting hub site collection $Url"
-        $site = Get-PnPTenantSite -Url $Url -ErrorAction SilentlyContinue
+        $site = Get-PnPTenantSite -Identity $Url -ErrorAction SilentlyContinue
         if ($null -eq $site)
         {
             Write-Verbose -Message "The specified Site Collection doesn't already exist."
@@ -333,7 +333,8 @@ function Set-TargetResource
                     }
                 }
             }
-            Grant-PnPHubSiteRights -Identity $site.Url -Principals $AllowedToJoin -Rights Join | Out-Null
+            Grant-PnPHubSiteRights -Identity $site.Url `
+                -Principals $AllowedToJoin | Out-Null
         }
     }
     elseif ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Present")
@@ -416,12 +417,14 @@ function Set-TargetResource
                                 }
                             }
                         }
-                        Grant-PnPHubSiteRights -Identity $site.Url -Principals $item.InputObject -Rights 'Join' | Out-Null
+                        Grant-PnPHubSiteRights -Identity $site.Url `
+                            -Principals $item.InputObject | Out-Null
                     }
                     else
                     {
                         # Remove item from principals
-                        Grant-PnPHubSiteRights -Identity $site.Url -Principals $item.InputObject -Rights 'None' | Out-Null
+                        Grant-PnPHubSiteRights -Identity $site.Url `
+                            -Principals $item.InputObject | Out-Null
                     }
                 }
             }
