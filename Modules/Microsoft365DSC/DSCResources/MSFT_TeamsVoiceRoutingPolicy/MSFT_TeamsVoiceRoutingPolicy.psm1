@@ -260,7 +260,7 @@ function Export-TargetResource
     {
         $i = 1
         [array]$policies = Get-CsOnlineVoiceRoutingPolicy -ErrorAction Stop
-        $content = ''
+        $dscContent = ''
         Write-Host "`r`n" -NoNewline
         foreach ($policy in $policies)
         {
@@ -280,7 +280,7 @@ function Export-TargetResource
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        return $content
+        return $dscContent
     }
     catch
     {

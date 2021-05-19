@@ -409,7 +409,7 @@ function Export-TargetResource
     {
         [array]$tenantDialPlans = Get-CsTenantDialPlan -ErrorAction Stop
 
-        $content = ''
+        $dscContent = ''
         $i = 1
         Write-Host "`r`n" -NoNewline
         foreach ($plan in $tenantDialPlans)
@@ -426,16 +426,19 @@ function Export-TargetResource
             {
                 $result.NormalizationRules = Get-M365DSCNormalizationRulesAsString $result.NormalizationRules
             }
-            $content += "        TeamsTenantDialPlan " + (New-Guid).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "NormalizationRules"
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            $content += "        }`r`n"
+            $currentDSCBlock = "        TeamsTenantDialPlan " + (New-Guid).ToString() + "`r`n"
+            $currentDSCBlock += "        {`r`n"
+            $content = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $content = Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "NormalizationRules"
+            $currentDSCBlock += Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "GlobalAdminAccount"
+            $currentDSCBlock += "        }`r`n"
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        return $content
+        return $dscContent
     }
     catch
     {

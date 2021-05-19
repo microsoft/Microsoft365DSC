@@ -219,11 +219,11 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     $NewOfflineAddressBookParams = @{
-        Name                 = $Name
-        AddressLists         = $AddressLists
-        DiffRetentionPeriod  = $DiffRetentionPeriod
-        IsDefault            = $IsDefault
-        Confirm              = $false
+        Name                = $Name
+        AddressLists        = $AddressLists
+        DiffRetentionPeriod = $DiffRetentionPeriod
+        IsDefault           = $IsDefault
+        Confirm             = $false
     }
 
     $SetOfflineAddressBookParams = @{
@@ -432,11 +432,14 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }

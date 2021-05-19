@@ -319,7 +319,7 @@ function Export-TargetResource
     {
         $i = 1
         [array]$routes = Get-CsOnlineVoiceRoute -ErrorAction Stop
-        $content = ''
+        $dscContent = ''
         Write-Host "`r`n" -NoNewline
         foreach ($route in $routes)
         {
@@ -339,7 +339,7 @@ function Export-TargetResource
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        return $content
+        return $dscContent
     }
     catch
     {
