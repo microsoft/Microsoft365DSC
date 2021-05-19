@@ -32,7 +32,7 @@ function New-M365DSCStubFiles
     }
 
     $Modules = @(
-        @{
+        <#@{
             Platform     = 'AzureAD'
             ModuleName   = 'AzureADPreview'
             RandomCmdlet = 'Get-AzureADDirectorySetting'
@@ -47,13 +47,14 @@ function New-M365DSCStubFiles
             ModuleName = "Microsoft.Graph.Intune"
         },
         @{
-            Platform   = 'MicrosoftTeams'
-            ModuleName = 'MicrosoftTeams'
-        },
+            Platform     = 'MicrosoftTeams'
+            ModuleName   = 'MicrosoftTeams'
+            RandomCmdlet = 'Get-CsOnlineVoiceRoute'
+        },#>
         @{
             Platform   = 'PnP'
-            ModuleName = 'SharePointPnPPowerShellOnline'
-        },
+            ModuleName = 'PnP.PowerShell'
+        }<#,
         @{
             Platform   = 'PowerPlatforms'
             ModuleName = 'Microsoft.PowerApps.Administration.PowerShell'
@@ -62,14 +63,11 @@ function New-M365DSCStubFiles
             Platform     = 'SecurityComplianceCenter'
             ModuleName   = $null
             RandomCmdlet = 'Add-ComplianceCaseMember'
-        },
-        @{
-            Platform     = 'SkypeForBusiness'
-            ModuleName   = $null
-            RandomCmdlet = 'Clear-CsOnlineTelephoneNumberReservation'
-        }
+        }#>
     )
     $Content = ''
+    $folderPath = Join-Path $PSScriptRoot -ChildPath "../DSCResources"
+    Write-Host $FolderPath
     foreach ($Module in $Modules)
     {
         Write-Host "Generating Stubs for {$($Module.Platform)}..."
@@ -80,18 +78,19 @@ function New-M365DSCStubFiles
                 -InboundParameters $PSBoundParameters
             $foundModule = Get-Module | Where-Object -FilterScript { $_.ExportedCommands.Values.Name -ccontains $Module.RandomCmdlet }
             $CurrentModuleName = $foundModule.Name
+            Import-Module $CurrentModuleName -Force -Global -ErrorAction SilentlyContinue
         }
         else
         {
-            Import-Module $CurrentModuleName -Force -ErrorAction SilentlyContinue
+            Import-Module $CurrentModuleName -Force -Global -ErrorAction SilentlyContinue
             $ConnectionMode = New-M365DSCConnection -Platform $Module.Platform `
                 -InboundParameters $PSBoundParameters
         }
 
         $cmdlets = Get-Command -CommandType 'Cmdlet' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
-        if ($null -eq $cmdlets)
+        if ($null -eq $cmdlets -or $Module.ModuleName -eq 'MicrosoftTeams')
         {
-            $cmdlets = Get-Command -CommandType 'Function' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
+            $cmdlets += Get-Command -CommandType 'Function' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
         }
 
         try
@@ -108,84 +107,96 @@ function New-M365DSCStubFiles
         $i = 1
         foreach ($cmdlet in $cmdlets)
         {
-            Write-Host $cmdlet
-            Write-Progress -Activity "Generating Stubs" -Status $cmdlet.Name -PercentComplete (($i / $cmdlets.Length) * 100)
+            $foundInFiles = Get-ChildItem -Path $folderPath `
+                -Recurse | Select-String -Pattern $cmdlet.Name
 
-            try
+            if ($null -eq $foundInFiles)
             {
-                $metadata = New-Object -TypeName System.Management.Automation.CommandMetaData -ArgumentList $cmdlet
-                $parameters = $metadata.Parameters
+                Write-Host "No references found for $($cmdlet.Name)"
             }
-            catch
+            else
             {
-                Write-Verbose -Message $_
-            }
+                Write-Host $cmdlet
+                Write-Progress -Activity "Generating Stubs" -Status $cmdlet.Name -PercentComplete (($i / $cmdlets.Length) * 100)
 
-            $invalidParameters = @("ErrorVariable", `
-                    "ErrorAction", `
-                    "InformationVariable", `
-                    "InformationAction", `
-                    "WarningVariable", `
-                    "WarningAction", `
-                    "OutVariable", `
-                    "OutBuffer", `
-                    "PipelineVariable", `
-                    "Verbose", `
-                    "WhatIf", `
-                    "Debug")
-
-            $additionalParameters = (Get-Command $cmdlet.Name).Parameters
-
-            foreach ($additionalParam in $additionalParameters.Keys)
-            {
-                if (-not $parameters.ContainsKey($additionalParam) -and `
-                        -not $invalidParameters.Contains($additionalParameter))
+                try
                 {
-                    $parameters += @{$additionalParam = $additionalParameters.$additionalParam }
+                    $metadata = New-Object -TypeName System.Management.Automation.CommandMetaData -ArgumentList $cmdlet
+                    $parameters = $metadata.Parameters
                 }
-            }
-            $StubContent += "function $($cmdlet.Name)`n{`r`n    [CmdletBinding()]`r`n    param(`r`n"
-            $invalidTypes = @("ActionPreference")
-
-            $foundParamNames = @()
-            foreach ($param in $parameters.Values)
-            {
-                if ($foundParamNames -notcontains $param.Name)
+                catch
                 {
-                    $foundParamNames += $param.Name
-                    if ($param.ParameterType.Name -notin $invalidTypes -and `
-                            $param.Name -notin $invalidParameters -and `
-                            -not [System.String]::IsNullOrEmpty($param.Name))
+                    Write-Verbose -Message $_
+                }
+
+                $invalidParameters = @("ErrorVariable", `
+                        "ErrorAction", `
+                        "InformationVariable", `
+                        "InformationAction", `
+                        "WarningVariable", `
+                        "WarningAction", `
+                        "OutVariable", `
+                        "OutBuffer", `
+                        "PipelineVariable", `
+                        "Verbose", `
+                        "WhatIf", `
+                        "Debug")
+
+                $additionalParameters = (Get-Command $cmdlet.Name).Parameters
+
+                foreach ($additionalParam in $additionalParameters.Keys)
+                {
+                    if ($null -eq $parameters -or
+                        (-not $parameters.ContainsKey($additionalParam) -and `
+                                -not $invalidParameters.Contains($additionalParameter)))
                     {
-                        $StubContent += "        [Parameter()]`r`n"
-                        $ParamType = $param.ParameterType.ToString()
-                        if ($ParamType -eq 'System.Collections.Generic.List`1[System.String]')
-                        {
-                            $ParamType = "System.String[]"
-                        }
-                        elseif ($ParamType -eq 'System.Nullable`1[System.Boolean]')
-                        {
-                            $ParamType = "System.Boolean"
-                        }
-                        elseif ($ParamType.StartsWith("System.Collections.Generic.List``1[Microsoft.Open.MSGraph.Model."))
-                        {
-                            $ParamType = "System.Object[]"
-                        }
-                        $StubContent += "        [$ParamType]`r`n"
-                        $StubContent += "        `$$($param.Name),`r`n`r`n"
+                        $parameters += @{$additionalParam = $additionalParameters.$additionalParam }
                     }
                 }
-            }
-            if ($parameters.Values.Count -gt 0)
-            {
-                $endOfString = $StubContent.SubString($StubContent.Length - 5, 5)
-                if ($endOfString -eq ",`r`n`r`n")
+                $StubContent += "function $($cmdlet.Name)`n{`r`n    [CmdletBinding()]`r`n    param(`r`n"
+                $invalidTypes = @("ActionPreference")
+
+                $foundParamNames = @()
+                foreach ($param in $parameters.Values)
                 {
-                    $StubContent = $StubContent.Remove($StubContent.Length - 5, 5)
+                    Write-Host "    --> $($param.Name)"
+                    if ($foundParamNames -notcontains $param.Name)
+                    {
+                        $foundParamNames += $param.Name
+                        if ($param.ParameterType.Name -notin $invalidTypes -and `
+                                $param.Name -notin $invalidParameters -and `
+                                -not [System.String]::IsNullOrEmpty($param.Name))
+                        {
+                            $StubContent += "        [Parameter()]`r`n"
+                            $ParamType = $param.ParameterType.ToString()
+                            if ($ParamType -eq 'System.Collections.Generic.List`1[System.String]')
+                            {
+                                $ParamType = "System.String[]"
+                            }
+                            elseif ($ParamType -eq 'System.Nullable`1[System.Boolean]')
+                            {
+                                $ParamType = "System.Boolean"
+                            }
+                            elseif ($ParamType.StartsWith("System.Collections.Generic.List``1[Microsoft.Open.MSGraph.Model."))
+                            {
+                                $ParamType = "System.Object[]"
+                            }
+                            $StubContent += "        [$ParamType]`r`n"
+                            $StubContent += "        `$$($param.Name),`r`n`r`n"
+                        }
+                    }
                 }
+                if ($parameters.Values.Count -gt 0)
+                {
+                    $endOfString = $StubContent.SubString($StubContent.Length - 5, 5)
+                    if ($endOfString -eq ",`r`n`r`n")
+                    {
+                        $StubContent = $StubContent.Remove($StubContent.Length - 5, 5)
+                    }
+                }
+                $StubContent += "`r`n    )`r`n}`n"
+                $i ++
             }
-            $StubContent += "`r`n    )`r`n}`n"
-            $i ++
         }
         Write-Progress -Activity "Generating Stubs" -Completed
 
