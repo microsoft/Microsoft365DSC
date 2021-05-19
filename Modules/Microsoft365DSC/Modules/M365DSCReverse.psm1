@@ -43,7 +43,7 @@ function Start-M365DSCConfigurationExtract
         [Parameter()]
         [ValidateSet('Lite', 'Default', 'Full')]
         [System.String]
-        $Mode,
+        $Mode = 'Default',
 
         [Parameter()]
         [System.Boolean]
@@ -431,7 +431,7 @@ function Start-M365DSCConfigurationExtract
             }
             if (($null -ne $ComponentsToExtract -and
                     ($ComponentsToExtract -contains $resourceName -or $ComponentsToExtract -contains ("chck" + $resourceName))) -or
-                $AllComponents -or ($null -ne $Workloads -and $Workloads -contains $currentWorkload) -or `
+                $AllComponents -or `
                 ($null -eq $ComponentsToExtract -and $null -eq $Workloads) -and `
                 ($ComponentsToExtractSpecified -or -not $ComponentsToSkip.Contains($resourceName)))
             {

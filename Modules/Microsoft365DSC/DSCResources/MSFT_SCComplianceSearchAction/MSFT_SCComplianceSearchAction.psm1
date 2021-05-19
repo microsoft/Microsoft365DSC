@@ -53,9 +53,17 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
     Write-Verbose -Message "Getting configuration of SCComplianceSearchAction for $SearchName - $Action"
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-    -InboundParameters $PSBoundParameters `
-    -SkipModuleReload $Global:CurrentModelIsExport
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters
+    }
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")

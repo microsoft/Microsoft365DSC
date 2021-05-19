@@ -1,7 +1,19 @@
 # Change log for Microsoft365DSC
 
-# 1.21.513.1
+1.21.519.1
 
+* TeamsClientConfiguration
+  * Fixed an issue where the RestrictedSenderList was not properly
+    being converted to a comma separated string.
+    Issue #1191
+* DEPENDENCIES
+  * Updated AzureADPreview to version 2.0.2.136;
+
+# 1.21.512.1
+
+* EXOOfflineAddresBook
+  * Fixed issue in Set-TargetResource where ConfiguredAttributes
+    was passed and resulted in an error.
 * SCDLPComplianceRule
   * Added several new parameters
   * Fixed several bugs on extract
