@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+1.21.526.1
+
+* TeamsTenantDialPlan
+  * Fixed issue around normalization rules export;
+
 1.21.519.1
 
 * TeamsClientConfiguration
