@@ -4,6 +4,8 @@
 
 * TeamsTenantDialPlan
   * Fixed issue around normalization rules export;
+* SPOTenantSettings
+  * Fix issue with typo and dup property issue #1219
 
 1.21.519.1
 
