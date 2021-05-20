@@ -2,6 +2,12 @@
 
 1.21.526.1
 
+* AzureADRoleDefinition
+  * Fix an issue where deprecated roles were not increasing
+    the index which resulted in an incorrect count being
+    displayed during the extraction.
+* EXORoleAssignmentPolicy
+  * Added missing ErrorAction value in the Export;
 * TeamsTenantDialPlan
   * Fixed issue around normalization rules export;
 
