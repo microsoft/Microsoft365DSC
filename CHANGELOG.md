@@ -10,6 +10,8 @@
   * Added missing ErrorAction value in the Export;
 * TeamsTenantDialPlan
   * Fixed issue around normalization rules export;
+* SPOTenantSettings
+  * Fix issue with typo and dup property issue #1219
 * MISC
   * Forces a Global load of the new MicrosoftTeams module for
     Teams resources;
