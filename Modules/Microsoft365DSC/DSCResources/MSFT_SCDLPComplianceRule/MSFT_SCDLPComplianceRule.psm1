@@ -534,6 +534,16 @@ function Set-TargetResource
             $CreationParams.ContentContainsSensitiveInformation = $value
         }
 
+        if ($null -ne $CreationParams.ExceptIfContentContainsSensitiveInformation)
+        {
+            $value = @()
+            foreach ($item in $CreationParams.ExceptIfContentContainsSensitiveInformation)
+            {
+                $value += Get-SCDLPSensitiveInformation $item
+            }
+            $CreationParams.ExceptIfContentContainsSensitiveInformation = $value
+        }
+
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
 
@@ -545,12 +555,25 @@ function Set-TargetResource
         Write-Verbose "Rule {$($CurrentRule.Name)} already exists and needs to. Updating Rule."
         $UpdateParams = $PSBoundParameters
 
-        $value = @()
-        foreach ($item in $UpdateParams.ContentContainsSensitiveInformation)
+        if ($null -ne $UpdateParams.ContentContainsSensitiveInformation)
         {
-            $value += Get-SCDLPSensitiveInformation $item
+            $value = @()
+            foreach ($item in $UpdateParams.ContentContainsSensitiveInformation)
+            {
+                $value += Get-SCDLPSensitiveInformation $item
+            }
+            $UpdateParams.ContentContainsSensitiveInformation = $value
         }
-        $UpdateParams.ContentContainsSensitiveInformation = Get-SCDLPSensitiveInformation -SensitiveInformation $value
+
+        if ($null -ne $UpdateParams.ExceptIfContentContainsSensitiveInformation)
+        {
+            $value = @()
+            foreach ($item in $UpdateParams.ExceptIfContentContainsSensitiveInformation)
+            {
+                $value += Get-SCDLPSensitiveInformation $item
+            }
+            $UpdateParams.ExceptIfContentContainsSensitiveInformation = $value
+        }
         $UpdateParams.Remove("GlobalAdminAccount") | Out-Null
         $UpdateParams.Remove("Ensure") | Out-Null
         $UpdateParams.Remove("Name") | Out-Null
