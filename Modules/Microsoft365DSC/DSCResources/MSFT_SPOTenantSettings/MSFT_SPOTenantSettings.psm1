@@ -475,9 +475,7 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("IsSingleInsta", `
-            "RequireAcceptingAccountMatchInvitedAccount", `
-            "RequireAcceptingAccountMatchInvitedAccountnce", `
+        -ValuesToCheck @("IsSingleInstance", `
             "GlobalAdminAccount", `
             "MaxCompatibilityLevel", `
             "SearchResolveExactEmailOrUPN", `
