@@ -495,7 +495,6 @@ function Test-TargetResource
             "HideDefaultThemes")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
-
     return $TestResult
 }
 
