@@ -187,7 +187,7 @@ function Set-TargetResource
 
 
 
-    Set-PnPTenant @CurrentParameters | Out-Null
+    Set-PnPBrowserIdleSignout @CurrentParameters | Out-Null
 }
 function Test-TargetResource
 {

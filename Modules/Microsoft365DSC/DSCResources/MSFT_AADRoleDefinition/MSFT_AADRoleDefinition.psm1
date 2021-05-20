@@ -395,7 +395,6 @@ function Export-TargetResource
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -GlobalAdminAccount $GlobalAdminAccount
-
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
@@ -403,11 +402,15 @@ function Export-TargetResource
                 Write-Host $Global:M365DSCEmojiGreenCheckMark
                 $i++
             }
+
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
         }
         return $dscContent
     }
     catch
     {
+        Write-Host $_
         Write-Verbose -Message $_
         Add-M365DSCEvent -Message $_ -EntryType 'Error' `
             -EventID 1 -Source $($MyInvocation.MyCommand.Source)
