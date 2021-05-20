@@ -1013,6 +1013,18 @@ function New-M365DSCConnection
         $SkipModuleReload = $false
     )
 
+    if ($Platform -eq "MicrosoftTeams")
+    {
+        try
+        {
+            $cmdlet = Get-Command "Connect-MicrosoftTeams" -ErrorAction Stop
+        }
+        catch
+        {
+            Import-Module 'MicrosoftTeams' -Global -Force | Out-Null
+        }
+    }
+
     Write-Verbose -Message "Attempting connection to {$Platform} with:"
     Write-Verbose -Message "$($InboundParameters | Out-String)"
 
