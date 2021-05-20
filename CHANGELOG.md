@@ -1,11 +1,20 @@
 # Change log for Microsoft365DSC
 
-1.21.526.1
+1.21.519.2
 
+* AzureADRoleDefinition
+  * Fix an issue where deprecated roles were not increasing
+    the index which resulted in an incorrect count being
+    displayed during the extraction.
+* EXORoleAssignmentPolicy
+  * Added missing ErrorAction value in the Export;
 * TeamsTenantDialPlan
   * Fixed issue around normalization rules export;
 * SPOTenantSettings
   * Fix issue with typo and dup property issue #1219
+* MISC
+  * Forces a Global load of the new MicrosoftTeams module for
+    Teams resources;
 
 1.21.519.1
 
