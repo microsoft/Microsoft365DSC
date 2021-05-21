@@ -1810,33 +1810,42 @@ function Export-TargetResource
         [array] $Policies = Get-AzureADMSConditionalAccessPolicy
         $i = 1
         $dscContent = ''
-        Write-Host "`r`n" -NoNewline
-        foreach ($Policy in $Policies)
-        {
-            Write-Host "    |---[$i/$($Policies.Count)] $($Policy.DisplayName)" -NoNewline
-            $Params = @{
-                GlobalAdminAccount    = $GlobalAdminAccount
-                DisplayName           = $Policy.DisplayName
-                Id                    = $Policy.Id
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-            }
-            $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
 
-            $dscContent += $currentDSCBlock
-            Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
+        if ($Policies.Length -eq 0)
+        {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
-            $i++
         }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+            foreach ($Policy in $Policies)
+            {
+                Write-Host "    |---[$i/$($Policies.Count)] $($Policy.DisplayName)" -NoNewline
+                $Params = @{
+                    GlobalAdminAccount    = $GlobalAdminAccount
+                    DisplayName           = $Policy.DisplayName
+                    Id                    = $Policy.Id
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                }
+                $Results = Get-TargetResource @Params
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+
+                $dscContent += $currentDSCBlock
+                Save-M365DSCPartialExport -Content $currentDSCBlock `
+                    -FileName $Global:PartialExportFileName
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                $i++
+            }
+        }
+
         return $dscContent
     }
     catch
