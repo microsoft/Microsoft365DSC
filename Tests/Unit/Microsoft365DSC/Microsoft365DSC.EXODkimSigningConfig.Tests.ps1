@@ -2,14 +2,14 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath "..\..\Unit" `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath "\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
@@ -54,10 +54,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-DkimSigningConfig -MockWith {
 
             }
-
-            Mock -CommandName Confirm-ImportedCmdletIsAvailable -MockWith {
-                return $true
-            }
         }
 
         # Test contexts
@@ -92,7 +88,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "DkimSigningConfig update not required." -Fixture {
             BeforeAll {
-                    $testParams = @{
+                $testParams = @{
                     Ensure                 = 'Present'
                     Identity               = 'contoso.com'
                     GlobalAdminAccount     = $GlobalAdminAccount

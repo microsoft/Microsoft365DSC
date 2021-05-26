@@ -967,6 +967,8 @@ function Export-TargetResource
 
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
             $i++
         }
     }

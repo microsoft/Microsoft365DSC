@@ -746,13 +746,16 @@ function Export-TargetResource
                     $Results.Password = Resolve-Credentials -UserName "globaladmin"
                     $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                         -Results $Results
-                    $currentContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                         -ConnectionMode $ConnectionMode `
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
                         -GlobalAdminAccount $GlobalAdminAccount
-                    $currentContent = Convert-DSCStringParamToVariable -DSCBlock $currentContent -ParameterName "Password"
-                    $dscContent += $currentContent
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentContent -ParameterName "Password"
+                    $dscContent += $currentDSCBlock
+
+                    Save-M365DSCPartialExport -Content $currentDSCBlock `
+                        -FileName $Global:PartialExportFileName
                 }
             }
             Write-Host $Global:M365DSCEmojiGreenCheckMark

@@ -463,11 +463,14 @@ function Export-TargetResource
                                     $Results = Get-TargetResource @Params
                                     $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                                         -Results $Results
-                                    $dscContent += Get-M365DSCExportContentForResource -ResourceName "SPOPropertyBag" `
+                                    $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName "SPOPropertyBag" `
                                         -ConnectionMode $ConnectionMode `
                                         -ModulePath $PSScriptRoot `
                                         -Results $Results `
                                         -GlobalAdminAccount $GlobalAdminAccount
+                                    $dscContent += $currentDSCBlock
+                                    Save-M365DSCPartialExport -Content $currentDSCBlock `
+                                        -FileName $Global:PartialExportFileName
                                 }
                             }
                             catch

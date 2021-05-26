@@ -400,7 +400,7 @@ function Export-TargetResource
                 $returnValue += Invoke-M365DSCCommand -Arguments $PSBoundParameters -InvokationPath $ScriptRoot -ScriptBlock {
                     $WarningPreference = 'SilentlyContinue'
                     $params = $args[0]
-                    $content = ""
+                    $dscContent = ""
                     $j = 1
                     $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' -InboundParameters $PSBoundParameters
 
@@ -460,23 +460,26 @@ function Export-TargetResource
                                     {
                                         $result.Remove("GlobalAdminAccount")
                                     }
-                                    $content += "        TeamsUser " + (New-Guid).ToString() + "`r`n"
-                                    $content += "        {`r`n"
-                                    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
+                                    $currentDSCBlock = "        TeamsUser " + (New-Guid).ToString() + "`r`n"
+                                    $currentDSCBlock += "        {`r`n"
+                                    $content = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
                                     if ($ConnectionMode -eq 'Credential')
                                     {
-                                        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                                        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "GlobalAdminAccount"
                                     }
                                     else
                                     {
-                                        $partialContent = $currentDSCBlock
+                                        $partialContent = $content
                                     }
                                     $partialContent += "        }`r`n"
                                     if ($partialContent.ToLower().Contains($params.OrganizationName.ToLower()))
                                     {
                                         $partialContent = $partialContent -ireplace [regex]::Escape($params.OrganizationName), "`$OrganizationName"
                                     }
-                                    $content += $partialContent
+                                    $currentDSCBlock += $partialContent
+                                    $dscContent += $currentDSCBlock
+                                    Save-M365DSCPartialExport -Content $currentDSCBlock `
+                                        -FileName $Global:PartialExportFileName
                                     $i++
                                 }
                             }
@@ -488,7 +491,7 @@ function Export-TargetResource
                             $j++
                         }
                     }
-                    return $content
+                    return $dscContent
                 }
                 return $returnValue
             } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount, $ApplicationId, $TenantId, $CertificateThumbprint, $organization) | Out-Null

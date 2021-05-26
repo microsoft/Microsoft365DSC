@@ -342,7 +342,7 @@ function Export-TargetResource
 
         $ConnectionMode = Connect-Graph -Scopes "Group.ReadWrite.All"
         $i = 1
-        $content = ''
+        $dscContent = ''
         foreach ($group in $groups)
         {
             Write-Host "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.ObjectID)}"
@@ -361,12 +361,18 @@ function Export-TargetResource
                         CertificateThumbprint = $CertificateThumbprint
                     }
                     Write-Host "        [$j/$($plans.Length)] $($plan.Title)"
-                    $result = Get-TargetResource @params
-                    $content += "        PlannerPlan " + (New-Guid).ToString() + "`r`n"
-                    $content += "        {`r`n"
-                    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-                    $content += $currentDSCBlock
-                    $content += "        }`r`n"
+                    $results = Get-TargetResource @params
+                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                        -Results $Results
+                    $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                        -ConnectionMode $ConnectionMode `
+                        -ModulePath $PSScriptRoot `
+                        -Results $Results `
+                        -GlobalAdminAccount $GlobalAdminAccount
+                    $dscContent += $currentDSCBlock
+
+                    Save-M365DSCPartialExport -Content $currentDSCBlock `
+                        -FileName $Global:PartialExportFileName
                     $j++
                 }
                 $i++
@@ -395,7 +401,7 @@ function Export-TargetResource
                 }
             }
         }
-        return $content
+        return $dscContent
     }
     catch
     {

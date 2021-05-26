@@ -350,7 +350,7 @@ function Export-TargetResource
     {
         $teams = Get-Team -ErrorAction Stop
         $j = 1
-        $content = ''
+        $dscContent = ''
         Write-Host "`r`n" -NoNewline
         foreach ($team in $Teams)
         {
@@ -391,20 +391,23 @@ function Export-TargetResource
                 {
                     $result.Remove("GlobalAdminAccount")
                 }
-                $content += "        TeamsChannel " + (New-Guid).ToString() + "`r`n"
-                $content += "        {`r`n"
-                $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+                $currentDSCBlock += "        TeamsChannel " + (New-Guid).ToString() + "`r`n"
+                $currentDSCBlock += "        {`r`n"
+                $content = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
                 if ($ConnectionMode -eq 'Credential')
                 {
-                    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                    $currentDSCBlock += Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "GlobalAdminAccount"
                 }
-                $content += "        }`r`n"
+                $currentDSCBlock += "        }`r`n"
+                $dscContent += $currentDSCBlock
+                Save-M365DSCPartialExport -Content $currentDSCBlock `
+                    -FileName $Global:PartialExportFileName
                 $i++
                 Write-Host $Global:M365DSCEmojiGreenCheckMark
             }
             $j++
         }
-        return $content
+        return $dscContent
     }
     catch
     {

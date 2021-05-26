@@ -373,17 +373,19 @@ function Export-TargetResource
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $Results.Palette = ConvertTo-SPOThemePalettePropertyString $Results.Palette
-            $partialDSC = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
             if ($null -ne $Results.Palette)
             {
-                $partialDSC = Convert-DSCStringParamToVariable -DSCBlock $partialDSC `
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
                     -ParameterName "Palette"
             }
-            $dscContent += $partialDSC
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }

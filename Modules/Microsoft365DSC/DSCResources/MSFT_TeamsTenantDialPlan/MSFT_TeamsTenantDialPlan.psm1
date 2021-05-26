@@ -436,6 +436,7 @@ function Export-TargetResource
             $currentDSCBlock = "        TeamsTenantDialPlan " + (New-Guid).ToString() + "`r`n"
             $currentDSCBlock += "        {`r`n"
             $content = Get-DSCBlock -Params $results -ModulePath $PSScriptRoot
+
             $content = Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "NormalizationRules"
             $currentDSCBlock += Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "GlobalAdminAccount"
             $currentDSCBlock += "        }`r`n"
