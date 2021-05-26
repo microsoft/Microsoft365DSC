@@ -14,35 +14,36 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $PasscodeBlockSimple,
-
-        [Parameter()]
-        [System.Int64]
-        $PasscodeExpirationDays,
-
-        [Parameter()]
-        [System.Int64]
-        $PasscodeMinimumLength,
-
-        [Parameter()]
-        [System.Int64]
-        $PasscodeMinutesOfInactivityBeforeLock,
-
-        [Parameter()]
-        [System.Int64]
-        $PasscodePreviousPasscodeBlockCount,
-
-        [Parameter()]
-        [System.Int64]
-        $PasscodeMinimumCharacterSetCount,
-
-        [Parameter()]
-        [System.String]
-        $PasscodeRequiredType,
+        $PasswordRequired,
 
         [Parameter()]
         [System.Boolean]
-        $PasscodeRequired,
+        $PasswordBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('DeviceDefault','Alphanumeric','Numeric')]
+        $PasswordRequiredType,
 
         [Parameter()]
         [System.String]
@@ -54,7 +55,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $SecurityBlockJailbrokenDevices,
+        $SystemIntegrityProtectionEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -62,11 +63,24 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        [ValidateSet('Unavailable','Secured','Low', 'Medium','High','NotSet')]
         $DeviceThreatProtectionRequiredSecurityLevel,
 
         [Parameter()]
         [System.Boolean]
-        $ManagedEmailProfileRequired,
+        $StorageRequireEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $FirewallEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FirewallBlockAllIncoming,
+
+        [Parameter()]
+        [System.Boolean]
+        $FirewallEnableStealthMode,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -78,7 +92,7 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Checking for the Intune Device Compliance iOS Policy {$DisplayName}"
+    Write-Verbose -Message "Checking for the Intune Device Compliance MacOS Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
         -InboundParameters $PSBoundParameters
 
@@ -99,33 +113,36 @@ function Get-TargetResource
     {
         $devicePolicy = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.iosCompliancePolicy' -and `
+            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.macOSCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
 
         if ($null -eq $devicePolicy)
         {
-            Write-Verbose -Message "No iOS Device Compliance Policy with displayName {$DisplayName} was found"
+            Write-Verbose -Message "No MacOS Device Compliance Policy with displayName {$DisplayName} was found"
             return $nullResult
         }
 
-        Write-Verbose -Message "Found iOS Device Compliance Policy with displayName {$DisplayName}"
+        Write-Verbose -Message "Found MacOS Device Compliance Policy with displayName {$DisplayName}"
         $results = @{
             DisplayName                                 = $devicePolicy.DisplayName
             Description                                 = $devicePolicy.Description
-            PasscodeBlockSimple                         = $devicePolicy.PasscodeBlockSimple
-            PasscodeExpirationDays                      = $devicePolicy.PasscodeExpirationDays
-            PasscodeMinimumLength                       = $devicePolicy.PasscodeMinimumLength
-            PasscodeMinutesOfInactivityBeforeLock       = $devicePolicy.PasscodeMinutesOfInactivityBeforeLock
-            PasscodePreviousPasscodeBlockCount          = $devicePolicy.PasscodePreviousPasscodeBlockCount
-            PasscodeMinimumCharacterSetCount            = $devicePolicy.PasscodeMinimumCharacterSetCount
-            PasscodeRequiredType                        = $devicePolicy.PasscodeRequiredType
-            PasscodeRequired                            = $devicePolicy.PasscodeRequired
+            PasswordRequired                            = $devicePolicy.PasswordRequired
+            PasswordBlockSimple                         = $devicePolicy.PasswordBlockSimple
+            PasswordExpirationDays                      = $devicePolicy.PasswordExpirationDays
+            PasswordMinimumLength                       = $devicePolicy.PasswordMinimumLength
+            PasswordMinutesOfInactivityBeforeLock       = $devicePolicy.PasswordMinutesOfInactivityBeforeLock
+            PasswordPreviousPasswordBlockCount          = $devicePolicy.PasswordPreviousPasswordBlockCount
+            PasswordMinimumCharacterSetCount            = $devicePolicy.PasswordMinimumCharacterSetCount
+            PasswordRequiredType                        = $devicePolicy.PasswordRequiredType
             OsMinimumVersion                            = $devicePolicy.OsMinimumVersion
             OsMaximumVersion                            = $devicePolicy.OsMaximumVersion
-            SecurityBlockJailbrokenDevices              = $devicePolicy.SecurityBlockJailbrokenDevices
+            SystemIntegrityProtectionEnabled            = $devicePolicy.SystemIntegrityProtectionEnabled
             DeviceThreatProtectionEnabled               = $devicePolicy.DeviceThreatProtectionEnabled
             DeviceThreatProtectionRequiredSecurityLevel = $devicePolicy.DeviceThreatProtectionRequiredSecurityLevel
-            ManagedEmailProfileRequired                 = $devicePolicy.ManagedEmailProfileRequired
+            StorageRequireEncryption                    = $devicePolicy.StorageRequireEncryption
+            FirewallEnabled                             = $devicePolicy.FirewallEnabled
+            FirewallBlockAllIncoming                    = $devicePolicy.FirewallBlockAllIncoming
+            FirewallEnableStealthMode                   = $devicePolicy.FanagedEmailProfileRequired
             Ensure                                      = 'Present'
             GlobalAdminAccount                          = $GlobalAdminAccount
         }
@@ -172,35 +189,36 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $PasscodeBlockSimple,
-
-        [Parameter()]
-        [System.Int64]
-        $PasscodeExpirationDays,
-
-        [Parameter()]
-        [System.Int64]
-        $PasscodeMinimumLength,
-
-        [Parameter()]
-        [System.Int64]
-        $PasscodeMinutesOfInactivityBeforeLock,
-
-        [Parameter()]
-        [System.Int64]
-        $PasscodePreviousPasscodeBlockCount,
-
-        [Parameter()]
-        [System.Int64]
-        $PasscodeMinimumCharacterSetCount,
-
-        [Parameter()]
-        [System.String]
-        $PasscodeRequiredType,
+        $PasswordRequired,
 
         [Parameter()]
         [System.Boolean]
-        $PasscodeRequired,
+        $PasswordBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('DeviceDefault','Alphanumeric','Numeric')]
+        $PasswordRequiredType,
 
         [Parameter()]
         [System.String]
@@ -212,7 +230,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $SecurityBlockJailbrokenDevices,
+        $SystemIntegrityProtectionEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -220,11 +238,24 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        [ValidateSet('Unavailable','Secured','Low', 'Medium','High','NotSet')]
         $DeviceThreatProtectionRequiredSecurityLevel,
 
         [Parameter()]
         [System.Boolean]
-        $ManagedEmailProfileRequired,
+        $StorageRequireEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $FirewallEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FirewallBlockAllIncoming,
+
+        [Parameter()]
+        [System.Boolean]
+        $FirewallEnableStealthMode,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -237,7 +268,7 @@ function Set-TargetResource
     )
 
 
-    Write-Verbose -Message "Intune Device Compliance iOS Policy {$DisplayName}"
+    Write-Verbose -Message "Intune Device Compliance MacOS Policy {$DisplayName}"
 
     $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
         -InboundParameters $PSBoundParameters
@@ -253,7 +284,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $currentDeviceiOsPolicy = Get-TargetResource @PSBoundParameters
+    $currentDeviceMacOsPolicy = Get-TargetResource @PSBoundParameters
 
     $PSBoundParameters.Remove('Ensure') | Out-Null
     $PSBoundParameters.Remove('GlobalAdminAccount') | Out-Null
@@ -269,30 +300,30 @@ function Set-TargetResource
 "@
     $jsonObject = $jsonParams | ConvertFrom-Json
 
-    if ($Ensure -eq 'Present' -and $currentDeviceiOsPolicy.Ensure -eq 'Absent')
+    if ($Ensure -eq 'Present' -and $currentDeviceMacOsPolicy.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating new Intune Device Compliance iOS Policy {$DisplayName}"
-        New-IntuneDeviceCompliancePolicy -ODataType 'microsoft.graph.iosCompliancePolicy' @PSBoundParameters -scheduledActionsForRule $jsonObject
+        Write-Verbose -Message "Creating new Intune Device Compliance MacOS Policy {$DisplayName}"
+        New-IntuneDeviceCompliancePolicy -ODataType 'microsoft.graph.macOSCompliancePolicy' @PSBoundParameters -scheduledActionsForRule $jsonObject
     }
-    elseif ($Ensure -eq 'Present' -and $currentDeviceiOsPolicy.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Present' -and $currentDeviceMacOsPolicy.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating Intune Device Compliance iOS Policy {$DisplayName}"
-        $configDeviceiOsPolicy = Get-IntuneDeviceCompliancePolicy `
+        Write-Verbose -Message "Updating Intune Device Compliance MacOS Policy {$DisplayName}"
+        $configDeviceMacOsPolicy = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.iosCompliancePolicy' -and `
+            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.macOSCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
-        Update-IntuneDeviceCompliancePolicy -ODataType 'microsoft.graph.iosCompliancePolicy' `
-            -deviceCompliancePolicyId $configDeviceiOsPolicy.Id @PSBoundParameters
+        Update-IntuneDeviceCompliancePolicy -ODataType 'microsoft.graph.macOSCompliancePolicy' `
+            -deviceCompliancePolicyId $configDeviceMacOsPolicy.Id @PSBoundParameters
     }
-    elseif ($Ensure -eq 'Absent' -and $currentDeviceiOsPolicy.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Absent' -and $currentDeviceMacOsPolicy.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing Intune Device Compliance iOS Policy {$DisplayName}"
-        $configDeviceiOsPolicy = Get-IntuneDeviceCompliancePolicy `
+        Write-Verbose -Message "Removing Intune Device Compliance MacOS Policy {$DisplayName}"
+        $configDeviceMacOsPolicy = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.iosCompliancePolicy' -and `
+            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.macOSCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
 
-        Remove-IntuneDeviceCompliancePolicy -deviceCompliancePolicyId $configDeviceiOsPolicy.Id
+        Remove-IntuneDeviceCompliancePolicy -deviceCompliancePolicyId $configDeviceMacOsPolicy.Id
     }
 }
 
@@ -312,35 +343,36 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $PasscodeBlockSimple,
-
-        [Parameter()]
-        [System.Int64]
-        $PasscodeExpirationDays,
-
-        [Parameter()]
-        [System.Int64]
-        $PasscodeMinimumLength,
-
-        [Parameter()]
-        [System.Int64]
-        $PasscodeMinutesOfInactivityBeforeLock,
-
-        [Parameter()]
-        [System.Int64]
-        $PasscodePreviousPasscodeBlockCount,
-
-        [Parameter()]
-        [System.Int64]
-        $PasscodeMinimumCharacterSetCount,
-
-        [Parameter()]
-        [System.String]
-        $PasscodeRequiredType,
+        $PasswordRequired,
 
         [Parameter()]
         [System.Boolean]
-        $PasscodeRequired,
+        $PasswordBlockSimple,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinutesOfInactivityBeforeLock,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('DeviceDefault','Alphanumeric','Numeric')]
+        $PasswordRequiredType,
 
         [Parameter()]
         [System.String]
@@ -352,7 +384,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $SecurityBlockJailbrokenDevices,
+        $SystemIntegrityProtectionEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -360,11 +392,24 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        [ValidateSet('Unavailable','Secured','Low', 'Medium','High','NotSet')]
         $DeviceThreatProtectionRequiredSecurityLevel,
 
         [Parameter()]
         [System.Boolean]
-        $ManagedEmailProfileRequired,
+        $StorageRequireEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $FirewallEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FirewallBlockAllIncoming,
+
+        [Parameter()]
+        [System.Boolean]
+        $FirewallEnableStealthMode,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -386,7 +431,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Intune Device Compliance iOS Policy {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of Intune Device Compliance MacOS Policy {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -433,23 +478,24 @@ function Export-TargetResource
 
     try
     {
-        [array]$configDeviceiOsPolicies = Get-IntuneDeviceCompliancePolicy `
+        [array]$configDeviceMacOsPolicies = Get-IntuneDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.iosCompliancePolicy' }
+            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.macOSCompliancePolicy' }
         $i = 1
         $content = ''
         Write-Host "`r`n" -NoNewline
-        foreach ($configDeviceiOsPolicy in $configDeviceiOsPolicies)
+
+        foreach ($configDeviceMacOsPolicy in $configDeviceMacOsPolicies)
         {
-            Write-Host "    |---[$i/$($configDeviceiOsPolicies.Count)] $($configDeviceiOsPolicy.displayName)" -NoNewline
+            Write-Host "    |---[$i/$($configDeviceMacOsPolicies.Count)] $($configDeviceMacOsPolicy.displayName)" -NoNewline
             $params = @{
-                DisplayName        = $configDeviceiOsPolicy.displayName
+                DisplayName        = $configDeviceMacOsPolicy.displayName
                 Ensure             = 'Present'
                 GlobalAdminAccount = $GlobalAdminAccount
             }
             $result = Get-TargetResource @params
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $content += "        IntuneDeviceCompliancePolicyiOs " + (New-Guid).ToString() + "`r`n"
+            $content += "        IntuneDeviceCompliancePolicyMacOS " + (New-Guid).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"

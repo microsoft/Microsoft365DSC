@@ -1,4 +1,18 @@
 # Change log for Microsoft365DSC
+1.21.526.1
+*  EXOSafeAttachmentRule
+  * Fixed issue #1213 Policy X already has rule Y associated with it
+    if rule exists already
+* MSFT_IntuneDeviceCompliancePolicyAndroid
+  * New resource
+* MSFT_IntuneDeviceCompliancePolicyAndroidWorkProfile
+  * New resource
+* MSFT_IntuneDeviceCompliancePolicyMacOS
+  * New resource
+* MSFT_IntuneDeviceCompliancePolicyiOs
+  * New resource
+* EXOTransportRule
+  * Fix #1230 Changed ExceptIfSenderInRecipientList to array
 
 1.21.519.2
 

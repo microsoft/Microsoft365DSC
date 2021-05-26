@@ -11,7 +11,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion     = '1.21.519.2'
+    ModuleVersion     = '1.21.526.1'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -176,23 +176,20 @@
             IconUri      = 'https://github.com/microsoft/Microsoft365DSC/blob/Dev/Modules/Microsoft365DSC/Dependencies/Images/Logo.png?raw=true'
 
             # ReleaseNotes of this module
-            ReleaseNotes = "* AzureADRoleDefinition
-  * Fix an issue where deprecated roles were not increasing
-    the index which resulted in an incorrect count being
-    displayed during the extraction.
-* EXORoleAssignmentPolicy
-  * Added missing ErrorAction value in the Export;
-* TeamsTenantDialPlan
-  * Fixed issue around normalization rules export;
-* MISC
-  * Forces a Global load of the new MicrosoftTeams module for
-    Teams resources;
-            * TeamsClientConfiguration
-            * Fixed an issue where the RestrictedSenderList was not properly
-              being converted to a comma separated string.
-              Issue #1191
-          * DEPENDENCIES
-            * Updated AzureADPreview to version 2.0.2.136"
+            ReleaseNotes = "
+            *  EXOSafeAttachmentRule
+              * Fixed issue #1213 Policy X already has rule Y associated with it
+                if rule exists already
+            * MSFT_IntuneDeviceCompliancePolicyAndroid
+              * New resource
+            * MSFT_IntuneDeviceCompliancePolicyAndroidWorkProfile
+              * New resource
+            * MSFT_IntuneDeviceCompliancePolicyMacOS
+              * New resource
+            * MSFT_IntuneDeviceCompliancePolicyiOs
+              * New resource
+            * EXOTransportRule
+              * Fix #1230 Changed ExceptIfSenderInRecipientList to array"
 
             # Flag to indicate whether the module requires explicit user acceptance for install/update
             # RequireLicenseAcceptance = $false
