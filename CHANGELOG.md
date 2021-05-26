@@ -1,5 +1,5 @@
 # Change log for Microsoft365DSC
-1.21.526.1
+1.21.526.2
 *  EXOSafeAttachmentRule
   * Fixed issue #1213 Policy X already has rule Y associated with it
     if rule exists already
