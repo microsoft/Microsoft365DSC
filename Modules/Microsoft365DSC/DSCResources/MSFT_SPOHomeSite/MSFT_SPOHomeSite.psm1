@@ -178,7 +178,7 @@ function Set-TargetResource
         try
         {
             Write-Verbose -Message "Setting home site collection $Url"
-            Get-PnPTenantSite -Url $Url
+            Get-PnPTenantSite -Identity $Url
         }
         catch
         {

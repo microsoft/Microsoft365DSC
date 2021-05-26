@@ -453,8 +453,15 @@ function Set-TargetResource
         }
         else
         {
+            $OwnerValue = $Owner[0].ToString()
+            $CurrentParameters.Owner = [System.String]$OwnerValue
             $CurrentParameters.Remove("GlobalAdminAccount") | Out-Null
-            New-Team @CurrentParameters
+            $newTeam = New-Team @CurrentParameters
+
+            for ($i = 1; $i -le $Owner.Length; $i++)
+            {
+                Add-TeamUser -GroupId $newTeam.GroupId -User $Owner[$i] -Role 'Owner'
+            }
         }
     }
     elseif ($Ensure -eq "Absent" -and ($team.Ensure -eq "Present"))

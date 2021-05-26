@@ -196,7 +196,7 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting the Teams Meeting Policy $($Identity)"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -501,7 +501,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -787,7 +787,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry

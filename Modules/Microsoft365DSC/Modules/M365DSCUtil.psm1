@@ -995,7 +995,7 @@ function New-M365DSCConnection
         [Parameter(Mandatory = $true)]
         [ValidateSet("Azure", "AzureAD", "ExchangeOnline", "Intune", `
                 "SecurityComplianceCenter", "PnP", "PowerPlatforms", `
-                "MicrosoftTeams", "SkypeForBusiness", "MicrosoftGraph", `
+                "MicrosoftTeams", "MicrosoftGraph", `
                 "MicrosoftGraphBeta")]
         [System.String]
         $Platform,
@@ -1012,6 +1012,18 @@ function New-M365DSCConnection
         [System.Boolean]
         $SkipModuleReload = $false
     )
+
+    if ($Platform -eq "MicrosoftTeams")
+    {
+        try
+        {
+            $cmdlet = Get-Command "Connect-MicrosoftTeams" -ErrorAction Stop
+        }
+        catch
+        {
+            Import-Module 'MicrosoftTeams' -Global -Force | Out-Null
+        }
+    }
 
     Write-Verbose -Message "Attempting connection to {$Platform} with:"
     Write-Verbose -Message "$($InboundParameters | Out-String)"

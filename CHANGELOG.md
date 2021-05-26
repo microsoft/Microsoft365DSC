@@ -1,5 +1,30 @@
 # Change log for Microsoft365DSC
 
+1.21.519.2
+
+* AzureADRoleDefinition
+  * Fix an issue where deprecated roles were not increasing
+    the index which resulted in an incorrect count being
+    displayed during the extraction.
+* EXORoleAssignmentPolicy
+  * Added missing ErrorAction value in the Export;
+* TeamsTenantDialPlan
+  * Fixed issue around normalization rules export;
+* SPOTenantSettings
+  * Fix issue with typo and dup property issue #1219
+* MISC
+  * Forces a Global load of the new MicrosoftTeams module for
+    Teams resources;
+
+1.21.519.1
+
+* TeamsClientConfiguration
+  * Fixed an issue where the RestrictedSenderList was not properly
+    being converted to a comma separated string.
+    Issue #1191
+* DEPENDENCIES
+  * Updated AzureADPreview to version 2.0.2.136;
+
 # 1.21.512.1
 
 * EXOOfflineAddresBook

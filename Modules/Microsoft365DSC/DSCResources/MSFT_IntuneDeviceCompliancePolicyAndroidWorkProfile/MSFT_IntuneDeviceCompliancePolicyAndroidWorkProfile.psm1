@@ -377,7 +377,7 @@ function Set-TargetResource
             -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidWorkProfileCompliancePolicy' -and `
             $_.displayName -eq $($DisplayName) }
         Update-IntuneDeviceCompliancePolicy -ODataType 'microsoft.graph.androidWorkProfileCompliancePolicy' `
-            -deviceCompliancePolicyId $configDeviceAndroidPolicy.deviceCompliancePolicyId @PSBoundParameters
+            -deviceCompliancePolicyId $configDeviceAndroidPolicy.Id @PSBoundParameters
     }
     elseif ($Ensure -eq 'Absent' -and $currentDeviceAndroidPolicy.Ensure -eq 'Present')
     {
@@ -387,7 +387,7 @@ function Set-TargetResource
             -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidWorkProfileCompliancePolicy' -and `
             $_.displayName -eq $($DisplayName) }
 
-        Remove-IntuneDeviceCompliancePolicy -deviceCompliancePolicyId $configDeviceAndroidPolicy.deviceCompliancePolicyId
+        Remove-IntuneDeviceCompliancePolicy -deviceCompliancePolicyId $configDeviceAndroidPolicy.Id
     }
 }
 

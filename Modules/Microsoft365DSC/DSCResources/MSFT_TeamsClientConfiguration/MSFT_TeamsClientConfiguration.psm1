@@ -74,7 +74,7 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Teams Client"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -226,7 +226,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
     $SetParams = $PSBoundParameters
@@ -235,6 +235,16 @@ function Set-TargetResource
     if ([System.String]::IsNullOrEmpty($RestrictedSenderList))
     {
         $SetParams.Remove("RestrictedSenderList") | Out-Null
+    }
+    else
+    {
+        $tempValue = $null
+        foreach ($sender in $SetParams.RestrictedSenderList)
+        {
+            $tempValue += $sender + ","
+        }
+        $tempValue = $tempValue.Substring(0, $tempValue.Length - 1)
+        $SetParams.RestrictedSenderList = $tempValue
     }
     Set-CsTeamsClientConfiguration @SetParams
 }
