@@ -226,8 +226,9 @@ function Export-TargetResource
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
             $currentDSCBlock = "        TeamsUpgradePolicy " + (New-Guid).ToString() + "`r`n"
             $currentDSCBlock += "        {`r`n"
-            $currentDSCBlock2 = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock2 -ParameterName "GlobalAdminAccount"
+            $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+                -ParameterName "GlobalAdminAccount"
             if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
             {
                 $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
