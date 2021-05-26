@@ -525,21 +525,24 @@ function Export-TargetResource
                     {
                         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                             -Results $Results
-                        $partialContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                             -ConnectionMode $ConnectionMode `
                             -ModulePath $PSScriptRoot `
                             -Results $Results `
                             -GlobalAdminAccount $GlobalAdminAccount
 
                         # Make the Url parameterized
-                        if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
-                                $partialContent.ToLower().Contains($principal.ToLower()))
+                        if ($currentDSCBlock.ToLower().Contains($organization.ToLower()) -or `
+                                $currentDSCBlock.ToLower().Contains($principal.ToLower()))
                         {
-                            $partialContent = $partialContent -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
-                            $partialContent = $partialContent -ireplace [regex]::Escape('https://' + $principal + '-my.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0])-my.sharepoint.com/"
-                            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+                            $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
+                            $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape('https://' + $principal + '-my.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0])-my.sharepoint.com/"
+                            $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
                         }
-                        $dscContent += $partialContent
+                        $dscContent += $currentDSCBlock
+
+                        Save-M365DSCPartialExport -Content $currentDSCBlock `
+                            -FileName $Global:PartialExportFileName
                     }
                 }
                 catch

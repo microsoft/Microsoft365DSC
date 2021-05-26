@@ -174,7 +174,7 @@ function Set-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
-        
+
     $OldErrorActionPreference = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
     if ($UnifiedAuditLogIngestionEnabled -eq 'Enabled')
@@ -345,11 +345,15 @@ function Export-TargetResource
         {
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+            $dscContent += $currentDSCBlock
+
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
         }
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         return $dscContent

@@ -249,24 +249,29 @@ function Export-TargetResource
 
     try
     {
+        $dscContent = ''
         $params = @{
             Identity           = "Global"
             GlobalAdminAccount = $GlobalAdminAccount
         }
         Add-ConfigurationDataEntry -Node "NonNodeData" -Key "SdnApiToken" -Value "**********"`
             -Description "API Token for the Teams SDN Provider for Meeting Broadcast"
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $result.SdnAPIToken = '$ConfigurationData.Settings.SdnApiToken'
-        $content = "        TeamsMeetingBroadcastConfiguration " + (New-Guid).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $partial = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $partial = Convert-DSCStringParamToVariable -DSCBlock $partial -ParameterName "SdnApiToken"
-        $content += $partial
-        $content += "        }`r`n"
+        $results = Get-TargetResource @params
+        $results.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $results.SdnAPIToken = '$ConfigurationData.Settings.SdnApiToken'
+
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
+        $dscContent += $currentDSCBlock
+        Save-M365DSCPartialExport -Content $currentDSCBlock `
+            -FileName $Global:PartialExportFileName
         Write-Host $Global:M365DSCEmojiGreenCheckMark
-        return $content
+        return $dscContent
     }
     catch
     {
