@@ -563,6 +563,21 @@ function Start-M365DSCConfigurationExtract
         Write-Host "}"
         #endregion
 
+        $sessions = Get-PSSession | Where-Object -FilterScript {$_.Name -like "SfBPowerShellSessionViaTeamsModule_*" -or `
+            $_.Name -like "ExchangeOnlineInternalSession*"}
+        foreach ($session in $sessions)
+        {
+            try
+            {
+                Write-Verbose -Message "Closing PSSession {$($session.Name)}"
+                Remove-PSSession $session | Out-Null
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+            }
+        }
+
         $shouldOpenOutputDirectory = !$Quiet
         #region Prompt the user for a location to save the extract and generate the files
         if ([System.String]::IsNullOrEmpty($Path))
