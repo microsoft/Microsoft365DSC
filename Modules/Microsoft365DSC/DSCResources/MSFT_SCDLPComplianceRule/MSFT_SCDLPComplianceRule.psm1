@@ -231,20 +231,11 @@ function Get-TargetResource
             {
                 if ($null -ne $SensitiveInfo.groups)
                 {
-                    $groups = $SensitiveInfo.groups
-                    $SensitiveInfo = @()
-                    foreach ($group in $groups)
-                    {
-                        foreach ($siEntry in $group.sensitivetypes)
-                        {
-                            $SensitiveInfo += [System.Collections.Hashtable]$siEntry
-                        }
-                        $SensitiveInfoTypes += $SensitiveInfo
-                    }
+                    $SensitiveInfoTypes += Get-SCDLPSensitiveInformationGroups -SensitiveInformationGroups $PolicyRule.ContentContainsSensitiveInformation
                 }
                 else
                 {
-                    $SensitiveInfoTypes += [System.Collections.Hashtable]$SensitiveInfo
+                    $SensitiveInfoTypes += Get-SCDLPSensitiveInformation -SensitiveInformation $PolicyRule.ContentContainsSensitiveInformation
                 }
             }
 
@@ -278,8 +269,8 @@ function Get-TargetResource
                 BlockAccess                                 = $PolicyRule.BlockAccess
                 BlockAccessScope                            = $PolicyRule.BlockAccessScope
                 Comment                                     = $PolicyRule.Comment
-                ContentContainsSensitiveInformation         = $SensitiveInfoTypes
-                ExceptIfContentContainsSensitiveInformation = $ExceptSensitiveInfoTypes
+                ContentContainsSensitiveInformation         = $PolicyRule.ContentContainsSensitiveInformation
+                ExceptIfContentContainsSensitiveInformation = $PolicyRule.ExceptIfContentContainsSensitiveInformation
                 ContentPropertyContainsWords                = $PolicyRule.ContentPropertyContainsWords
                 Disabled                                    = $PolicyRule.Disabled
                 GenerateAlert                               = $PolicyRule.GenerateAlert
@@ -529,7 +520,14 @@ function Set-TargetResource
             $value = @()
             foreach ($item in $CreationParams.ContentContainsSensitiveInformation)
             {
-                $value += Get-SCDLPSensitiveInformation $item
+                if ($null -ne $item.groups)
+                {
+                    $value += Get-SCDLPSensitiveInformationGroups $item
+                }
+                else
+                {
+                    $value += Get-SCDLPSensitiveInformation $item
+                }
             }
             $CreationParams.ContentContainsSensitiveInformation = $value
         }
@@ -539,7 +537,14 @@ function Set-TargetResource
             $value = @()
             foreach ($item in $CreationParams.ExceptIfContentContainsSensitiveInformation)
             {
-                $value += Get-SCDLPSensitiveInformation $item
+                if ($null -ne $item.groups)
+                {
+                    $value += Get-SCDLPSensitiveInformationGroups $item
+                }
+                else
+                {
+                    $value += Get-SCDLPSensitiveInformation $item
+                }
             }
             $CreationParams.ExceptIfContentContainsSensitiveInformation = $value
         }
@@ -560,7 +565,14 @@ function Set-TargetResource
             $value = @()
             foreach ($item in $UpdateParams.ContentContainsSensitiveInformation)
             {
-                $value += Get-SCDLPSensitiveInformation $item
+                if ($null -ne $item.groups)
+                {
+                    $value += Get-SCDLPSensitiveInformationGroups $item
+                }
+                else
+                {
+                    $value += Get-SCDLPSensitiveInformation $item
+                }
             }
             $UpdateParams.ContentContainsSensitiveInformation = $value
         }
@@ -570,7 +582,14 @@ function Set-TargetResource
             $value = @()
             foreach ($item in $UpdateParams.ExceptIfContentContainsSensitiveInformation)
             {
-                $value += Get-SCDLPSensitiveInformation $item
+                if ($null -ne $item.groups)
+                {
+                    $value += Get-SCDLPSensitiveInformationGroups $item
+                }
+                else
+                {
+                    $value += Get-SCDLPSensitiveInformation $item
+                }
             }
             $UpdateParams.ExceptIfContentContainsSensitiveInformation = $value
         }
@@ -870,7 +889,14 @@ function Export-TargetResource
             }
             if ($null -ne $Results.ContentContainsSensitiveInformation)
             {
-                $Results.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $Results.ContentContainsSensitiveInformation
+                if ($null -ne $results.ContentContainsSensitiveInformation.Groups)
+                {
+                    $Results.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationStringGroup -InformationArray $Results.ContentContainsSensitiveInformation
+                }
+                else
+                {
+                    $Results.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $Results.ContentContainsSensitiveInformation
+                }
             }
 
             $IsCIMArray = $false
@@ -880,7 +906,14 @@ function Export-TargetResource
             }
             if ($null -ne $Results.ExceptIfContentContainsSensitiveInformation)
             {
-                $Results.ExceptIfContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $Results.ExceptIfContentContainsSensitiveInformation
+                if ($null -ne $results.ExceptIfContentContainsSensitiveInformation.Groups)
+                {
+                    $Results.ExceptIfContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationStringGroup -InformationArray $Results.ExceptIfContentContainsSensitiveInformation
+                }
+                else
+                {
+                    $Results.ExceptIfContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $Results.ExceptIfContentContainsSensitiveInformation
+                }
             }
 
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -931,7 +964,7 @@ function Export-TargetResource
     }
 }
 
-function ConvertTo-SCDLPSensitiveInformationString
+function ConvertTo-SCDLPSensitiveInformationStringGroup
 {
     [CmdletBinding()]
     [OutputType([System.String[]])]
@@ -945,7 +978,77 @@ function ConvertTo-SCDLPSensitiveInformationString
 
     foreach ($SensitiveInformationHash in $InformationArray)
     {
-        $StringContent = "MSFT_SCDLPSensitiveInformation`r`n            {`r`n"
+        $StringContent = "MSFT_SCDLPContainsSensitiveInformation`r`n            {`r`n"
+        if ($null -ne $InformationArray.Groups)
+        {
+            $StringContent += "                        operator = '$($SensitiveInformationHash.operator.Replace("'", "''"))'`r`n"
+            $StringContent += "                         Groups =  `r`n"
+        }
+        foreach ($group in $SensitiveInformationHash.Groups)
+        {
+            $StringContent += "MSFT_SCDLPContainsSensitiveInformationGroup`r`n            {`r`n"
+            $StringContent += "                operator = '$($group.operator.Replace("'", "''"))'`r`n"
+            $StringContent += "                name = '$($group.name.Replace("'", "''"))'`r`n"
+            $StringContent += "                SensitiveInformation = "
+            foreach ($sit in $group.sensitivetypes)
+            {
+                $StringContent += "            MSFT_SCDLPSensitiveInformation`r`n            {`r`n"
+                $StringContent += "                    name = '$($sit.name.Replace("'", "''"))'`r`n"
+                if ($null -ne $sit.id)
+                {
+                    $StringContent += "                id = '$($sit.id)'`r`n"
+                }
+
+                if ($null -ne $sit.maxconfidence)
+                {
+                    $StringContent += "                maxconfidence = '$($sit.maxconfidence)'`r`n"
+                }
+
+                if ($null -ne $sit.minconfidence)
+                {
+                    $StringContent += "                minconfidence = '$($sit.minconfidence)'`r`n"
+                }
+
+                if ($null -ne $sit.classifiertype)
+                {
+                    $StringContent += "                classifiertype = '$($sit.classifiertype)'`r`n"
+                }
+
+                if ($null -ne $sit.mincount)
+                {
+                    $StringContent += "                mincount = '$($sit.mincount)'`r`n"
+                }
+
+                if ($null -ne $sit.maxcount)
+                {
+                    $StringContent += "                maxcount = '$($sit.maxcount)'`r`n"
+                }
+
+                $StringContent += "            }`r`n"
+            }
+            $StringContent += "            }`r`n"
+        }
+        $StringContent += "            }`r`n"
+        $result += $StringContent
+    }
+    return $result
+}
+function ConvertTo-SCDLPSensitiveInformationString
+{
+    [CmdletBinding()]
+    [OutputType([System.String[]])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $InformationArray
+    )
+    $result = @()
+    $StringContent = "MSFT_SCDLPContainsSensitiveInformation`r`n            {`r`n"
+    $StringContent += "                SensitiveInformation = "
+    foreach ($SensitiveInformationHash in $InformationArray)
+    {
+        $StringContent += "MSFT_SCDLPSensitiveInformation`r`n            {`r`n"
         $StringContent += "                name = '$($SensitiveInformationHash.name.Replace("'", "''"))'`r`n"
 
         if ($null -ne $SensitiveInformationHash.id)
@@ -979,8 +1082,9 @@ function ConvertTo-SCDLPSensitiveInformationString
         }
 
         $StringContent += "            }`r`n"
-        $result += $StringContent
     }
+    $StringContent += "            }`r`n"
+    $result += $StringContent
     return $result
 }
 
@@ -1039,6 +1143,80 @@ function Get-SCDLPSensitiveInformation
         }
         $returnValue += $result
     }
+    return $returnValue
+}
+
+function Get-SCDLPSensitiveInformationGroups
+{
+    [CmdletBinding()]
+    [OutputType([System.Object[]])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $SensitiveInformationGroups
+    )
+
+    $returnValue = @()
+    $sits = @()
+    $groups = @()
+
+    $result = @{
+        operator = $SensitiveInformationGroups.operator
+    }
+
+    foreach ($group in $SensitiveInformationGroups.groups)
+    {
+        $myGroup = @{
+            name = $group.name
+        }
+        if ($null -ne $group.operator)
+        {
+            $myGroup.Add("operator", $group.operator)
+        }
+
+        foreach ($item in $group.sensitivetypes)
+        {
+            $sit = @{
+                name = $item.name
+            }
+            if ($null -ne $item.maxconfidence)
+            {
+                $sit.Add("maxconfidence", $item.maxconfidence)
+            }
+
+            if ($null -ne $item.minconfidence)
+            {
+                $sit.Add("minconfidence", $item.minconfidence)
+            }
+            <#
+            if ($null -ne $item.rulePackId)
+            {
+                $sit.Add("rulePackId", $item.rulePackId)
+            }
+            #>
+
+            if ($null -ne $item.classifiertype)
+            {
+                $sit.Add("classifiertype", $item.classifiertype)
+            }
+
+            if ($null -ne $item.mincount)
+            {
+                $sit.Add("mincount", $item.mincount)
+            }
+
+            if ($null -ne $item.maxcount)
+            {
+                $sit.Add("maxcount", $item.maxcount)
+            }
+            $sits += $sit
+        }
+        $myGroup.Add("sensitivetypes", $sits)
+        $groups += $myGroup
+    }
+    $result.Add("groups", $groups)
+    $returnValue += $result
     return $returnValue
 }
 
