@@ -776,7 +776,7 @@ function Set-TargetResource
 
     if ($isAutoExpandingArchiveEnabled -eq $True)
     {
-        $SetValues.Remove('AutoExpandingArchiveEnabled') | Out-Null
+        $SetValues.Remove('AutoExpandingArchive') | Out-Null
     } 
     
     Set-OrganizationConfig @SetValues
