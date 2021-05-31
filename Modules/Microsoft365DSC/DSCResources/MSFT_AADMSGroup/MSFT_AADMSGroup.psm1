@@ -8,6 +8,10 @@ function Get-TargetResource
         [System.String]
         $DisplayName,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $MailNickname,
+
         [Parameter()]
         [System.String]
         $Id,
@@ -40,10 +44,6 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $IsAssignableToRole,
-
-        [Parameter()]
-        [System.String]
-        $MailNickname,
 
         [Parameter()]
         [ValidateSet('Public', 'Private', 'HiddenMembership')]
@@ -184,6 +184,10 @@ function Set-TargetResource
         [System.String]
         $DisplayName,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $MailNickname,
+
         [Parameter()]
         [System.String]
         $Id,
@@ -216,10 +220,6 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $IsAssignableToRole,
-
-        [Parameter()]
-        [System.String]
-        $MailNickname,
 
         [Parameter()]
         [ValidateSet('Public', 'Private', 'HiddenMembership')]
@@ -259,15 +259,17 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $currentGroup = Get-TargetResource @PSBoundParameters
     $currentParameters = $PSBoundParameters
-    $currentParameters.Remove("ApplicationId")
-    $currentParameters.Remove("TenantId")
-    $currentParameters.Remove("CertificateThumbprint")
-    $currentParameters.Remove("GlobalAdminAccount")
-    $currentParameters.Remove("Ensure")
+    $currentGroup = Get-TargetResource @PSBoundParameters
+    $currentParameters.Remove("ApplicationId") | Out-Null
+    $currentParameters.Remove("TenantId") | Out-Null
+    $currentParameters.Remove("CertificateThumbprint") | Out-Null
+    $currentParameters.Remove("GlobalAdminAccount") | Out-Null
+    $currentParameters.Remove("Ensure") | Out-Null
 
-    if ($Ensure -eq 'Present' -and $GroupTypes.Contains("Unified") -and $MailEnabled -eq $false)
+    if ($Ensure -eq 'Present' -and `
+        ($null -ne $GroupTypes -and $GroupTypes.Contains("Unified")) -and `
+        ($null -ne $MailEnabled -and $MailEnabled -eq $false))
     {
         Write-Verbose -Message "Cannot set mailenabled to false if GroupTypes is set to Unified when creating group."
         throw "Cannot set mailenabled to false if GroupTypes is set to Unified when creating a group."
@@ -275,8 +277,10 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentGroup.Ensure -eq 'Present')
     {
+        Write-Verbose -Message "Group {$DisplayName} exists and it should."
         try
         {
+            Write-Verbose -Message "Updating settings by ID for group {$DisplayName}"
             if ($true -eq $currentParameters.ContainsKey("IsAssignableToRole"))
             {
                 Write-Verbose -Message "Cannot set IsAssignableToRole once group is created."
@@ -288,6 +292,7 @@ function Set-TargetResource
             }
             else
             {
+                Write-Verbose -Message "Updating settings for group {$DisplayName}"
                 Set-AzureADMSGroup @currentParameters
             }
         }
@@ -333,6 +338,10 @@ function Test-TargetResource
         [System.String]
         $DisplayName,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $MailNickname,
+
         [Parameter()]
         [System.String]
         $Id,
@@ -365,10 +374,6 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $IsAssignableToRole,
-
-        [Parameter()]
-        [System.String]
-        $MailNickname,
 
         [Parameter()]
         [ValidateSet('Public', 'Private', 'HiddenMembership')]
