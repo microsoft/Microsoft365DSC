@@ -72,7 +72,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-CsTeamsUpgradePolicy -MockWith {
                     return @{
-                        Identity       = 'Islands'
+                        Identity       = 'Test Policy'
                         Description    = 'This is a configuration drift'
                         NotifySfBUsers = $false
                     }
@@ -80,7 +80,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-CsOnlineUser -MockWith {
                     return @{
-                        UserPrincipalName  = 'John.Smith@contoso.onmicrosoft.com'
+                        UserPrincipalName  = 'Bob.Houle@contoso.onmicrosoft.com'
                         TeamsUpgradePolicy = "Global"
                     }
                 }
@@ -96,7 +96,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "When the policy already exsits and IS in the Desired State" -Fixture {
+        Context -Name "When the policy already exists and IS in the Desired State" -Fixture {
             BeforeAll {
                 $testParams = @{
                     Identity               = 'Islands'
