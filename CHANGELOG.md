@@ -1,5 +1,22 @@
 # Change log for Microsoft365DSC
-1.21.526.2
+
+# 1.21.602.1
+
+* AADMSGroups
+  * Fix for the export where the MailNickName was being prompted;
+* EXOManagementRole
+  * BREAKING: Now requires the Parent property as Mandatory;
+* TeamsChannel
+  * Fixed an issue where content was dedup and boolean
+    values were appended to the exported content;
+* TeamsUpgradePolicy
+  * Improved performance retrieving users assigned to policy;
+* MISC
+  * Fix for Teams authentication. Improvements on session
+    reuse.
+
+# 1.21.526.2
+
 *  EXOSafeAttachmentRule
   * Fixed issue #1213 Policy X already has rule Y associated with it
     if rule exists already
@@ -14,7 +31,7 @@
 * EXOTransportRule
   * Fix #1230 Changed ExceptIfSenderInRecipientList to array
 
-1.21.519.2
+# 1.21.519.2
 
 * AzureADRoleDefinition
   * Fix an issue where deprecated roles were not increasing
@@ -30,7 +47,7 @@
   * Forces a Global load of the new MicrosoftTeams module for
     Teams resources;
 
-1.21.519.1
+#1.21.519.1
 
 * TeamsClientConfiguration
   * Fixed an issue where the RestrictedSenderList was not properly

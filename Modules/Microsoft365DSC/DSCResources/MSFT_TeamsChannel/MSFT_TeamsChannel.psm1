@@ -383,15 +383,15 @@ function Export-TargetResource
                 if ($ConnectionMode -eq 'Credential')
                 {
                     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                    $result.Remove("ApplicationId")
-                    $result.Remove("TenantId")
-                    $result.Remove("CertificateThumbprint")
+                    $result.Remove("ApplicationId") | Out-Null
+                    $result.Remove("TenantId") | Out-Null
+                    $result.Remove("CertificateThumbprint") | Out-Null
                 }
                 else
                 {
                     $result.Remove("GlobalAdminAccount")
                 }
-                $currentDSCBlock += "        TeamsChannel " + (New-Guid).ToString() + "`r`n"
+                $currentDSCBlock = "        TeamsChannel " + (New-Guid).ToString() + "`r`n"
                 $currentDSCBlock += "        {`r`n"
                 $content = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
                 if ($ConnectionMode -eq 'Credential')
@@ -411,6 +411,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

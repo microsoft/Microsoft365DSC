@@ -184,13 +184,13 @@ function Set-TargetResource
     Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
 
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("TeamName")
+    $CurrentParameters.Remove("TeamName") | Out-Null
     $CurrentParameters.Add("GroupId", $team.GroupId)
-    $CurrentParameters.Remove("GlobalAdminAccount")
-    $CurrentParameters.Remove("ApplicationId")
-    $CurrentParameters.Remove("TenantId")
-    $CurrentParameters.Remove("CertificateThumbprint")
-    $CurrentParameters.Remove("Ensure")
+    $CurrentParameters.Remove("GlobalAdminAccount") | Out-Null
+    $CurrentParameters.Remove("ApplicationId") | Out-Null
+    $CurrentParameters.Remove("TenantId") | Out-Null
+    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
+    $CurrentParameters.Remove("Ensure") | Out-Null
 
     if ($Ensure -eq "Present")
     {
@@ -201,7 +201,7 @@ function Set-TargetResource
     {
         if ($Role -eq "Member" -and $CurrentParameters.ContainsKey("Role"))
         {
-            $CurrentParameters.Remove("Role")
+            $CurrentParameters.Remove("Role") | Out-Null
             Write-Verbose -Message "Removed role parameter"
         }
         Remove-TeamUser @CurrentParameters
@@ -265,7 +265,7 @@ function Test-TargetResource
 
     if ($null -eq $Role)
     {
-        $CurrentValues.Remove("Role")
+        $CurrentValues.Remove("Role") | Out-Null
     }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
@@ -452,13 +452,13 @@ function Export-TargetResource
                                     if ($ConnectionMode -eq 'Credential')
                                     {
                                         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                                        $result.Remove("ApplicationId")
-                                        $result.Remove("TenantId")
-                                        $result.Remove("CertificateThumbprint")
+                                        $result.Remove("ApplicationId") | Out-Null
+                                        $result.Remove("TenantId") | Out-Null
+                                        $result.Remove("CertificateThumbprint") | Out-Null
                                     }
                                     else
                                     {
-                                        $result.Remove("GlobalAdminAccount")
+                                        $result.Remove("GlobalAdminAccount") | Out-Null
                                     }
                                     $currentDSCBlock = "        TeamsUser " + (New-Guid).ToString() + "`r`n"
                                     $currentDSCBlock += "        {`r`n"
@@ -521,12 +521,12 @@ function Export-TargetResource
                 {
                     $partialResult = Receive-Job -Name $job.name
                     $result += $partialResult
-                    Remove-Job -Name $job.name
+                    Remove-Job -Name $job.name | Out-Null
                     $jobsCompleted++
                 }
                 elseif ($job.JobStateInfo.State -eq 'Failed')
                 {
-                    Remove-Job -Name $job.name
+                    Remove-Job -Name $job.name | Out-Null
                     Write-Warning "{$($job.name)} failed"
                     break
                 }
@@ -551,6 +551,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_
