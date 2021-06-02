@@ -4,6 +4,8 @@
 
 * AADMSGroups
   * Fix for the export where the MailNickName was being prompted;
+* EXOManagementRole
+  * BREAKING: Now requires the Parent property as Mandatory;
 * TeamsChannel
   * Fixed an issue where content was dedup and boolean
     values were appended to the exported content;
