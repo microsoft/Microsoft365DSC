@@ -701,21 +701,21 @@ function Export-TargetResource
                 $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
             }
 
-            $result.Remove("GroupID")
+            $result.Remove("GroupID") | Out-Null
             if ("" -eq $result.Owner)
             {
-                $result.Remove("Owner")
+                $result.Remove("Owner") | Out-Null
             }
             $currentDSCBlock = "        TeamsTeam " + (New-Guid).ToString() + "`r`n"
             $currentDSCBlock += "        {`r`n"
             $content = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             if ($ConnectionMode -eq 'Credential')
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "GlobalAdminAccount"
+                $currentDSCBlock += Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "GlobalAdminAccount"
             }
             else
             {
-                $currentDSCBlock = $content
+                $currentDSCBlock += $content
             }
             $currentDSCBlock += "        }`r`n"
             if ($currentDSCBlock.ToLower().Contains("@" + $organization.ToLower()))

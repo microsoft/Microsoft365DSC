@@ -428,6 +428,14 @@ function Export-TargetResource
     {
         [array]$siteScripts = Get-PnPSiteScript -ErrorAction Stop
 
+        if ($siteScripts.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
         foreach ($script in $siteScripts)
         {
             Write-Host "    [$i/$($siteScripts.Length)] $($script.Title)"

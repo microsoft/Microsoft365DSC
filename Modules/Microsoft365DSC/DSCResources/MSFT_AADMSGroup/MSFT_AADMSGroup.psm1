@@ -478,6 +478,7 @@ function Export-TargetResource
             $Params = @{
                 GlobalAdminAccount    = $GlobalAdminAccount
                 DisplayName           = $group.DisplayName
+                MailNickName          = $group.MailNickName
                 Id                    = $group.Id
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

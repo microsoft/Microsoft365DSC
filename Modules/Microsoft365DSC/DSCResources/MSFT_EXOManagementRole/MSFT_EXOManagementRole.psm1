@@ -357,7 +357,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$AllManagementRoles = Get-ManagementRole -ErrorAction Stop
+        [array]$AllManagementRoles = Get-ManagementRole | Where-Object -FilterScript {$_.Parent -ne $null}
 
         $dscContent = ""
 
@@ -382,6 +382,7 @@ function Export-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
+                Parent                = $ManagementRole.Parent
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -403,6 +404,7 @@ function Export-TargetResource
     {
         try
         {
+            Write-Host $Global:M365DSCEmojiRedX
             Write-Verbose -Message $_
             $tenantIdValue = ""
             if (-not [System.String]::IsNullOrEmpty($TenantId))

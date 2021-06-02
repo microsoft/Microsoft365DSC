@@ -2523,6 +2523,10 @@ function Export-TargetResource
         [array]$AllTransportRules = Get-TransportRule
         $dscContent = ""
         $i = 1
+        if ($AllTransportRules.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
         foreach ($TransportRule in $AllTransportRules)
         {
             Write-Host "    |---[$i/$($AllTransportRules.Count)] $($TransportRule.Name)" -NoNewline
@@ -2555,6 +2559,7 @@ function Export-TargetResource
     {
         try
         {
+            Write-Host $Global:M365DSCEmojiRedX
             Write-Verbose -Message $_
             $tenantIdValue = ""
             if (-not [System.String]::IsNullOrEmpty($TenantId))
