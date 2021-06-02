@@ -40,7 +40,15 @@ function Get-TargetResource
     {
         $policy = Get-CsTeamsUpgradePolicy -Identity $Identity `
             -ErrorAction SilentlyContinue
-        [array]$users = Get-CsOnlineUser | Where-Object -Filter { $_.TeamsUpgradePolicy -eq $Identity }
+
+        try
+        {
+            [array]$users = Get-CsOnlineUser -Filter "TeamsUpgradePolicy -eq '$Identity'"
+        }
+        catch
+        {
+            [array]$users = Get-CsOnlineUser | Where-Object -Filter { $_.TeamsUpgradePolicy -eq $Identity }
+        }
 
         if ($null -eq $policy)
         {

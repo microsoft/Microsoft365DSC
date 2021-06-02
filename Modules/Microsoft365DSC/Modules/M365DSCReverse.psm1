@@ -104,11 +104,11 @@ function Start-M365DSCConfigurationExtract
         }
 
         $ComponentsToSkip = @()
-        if ($Mode -eq 'Default')
+        if ($Mode -eq 'Default' -and $null -eq $ComponentsToExtract)
         {
             $ComponentsToSkip = $Global:FullComponents
         }
-        elseif ($Mode -eq 'Lite')
+        elseif ($Mode -eq 'Lite' -and $null -eq $ComponentsToExtract)
         {
             $ComponentsToSkip = $Global:DefaultComponents + $Global:FullComponents
         }
@@ -435,7 +435,8 @@ function Start-M365DSCConfigurationExtract
                         ($ComponentsToExtract -contains $resourceName -or $ComponentsToExtract -contains ("chck" + $resourceName))) -or
                     $AllComponents -or `
                     ($null -eq $ComponentsToExtract -and $null -eq $Workloads) -and `
-                    ($ComponentsToExtractSpecified -or -not $ComponentsToSkip.Contains($resourceName)))
+                    ($ComponentsToExtractSpecified -or -not $ComponentsToSkip.Contains($resourceName)) -and `
+                    $resourcesNotSupported -notcontains $ResourceModule.Name.Split('.')[0].Replace('MSFT_', ''))
                 {
                     $ResourcesToExport += $ResourceModule
                 }
@@ -491,7 +492,7 @@ function Start-M365DSCConfigurationExtract
             {
                 $parameters.Add("CertificatePassword", $CertificatePassword)
             }
-            if ($ComponentsToSkip -notcontains $resourceName)
+            if ($ComponentsToSkip -notcontains $resource.Name.Split('.')[0].Replace('MSFT_', ''))
             {
                 Write-Host "[$i/$($ResourcesToExport.Length)] Extracting [$($resource.Name.Split('.')[0].Replace('MSFT_', ''))]..." -NoNewline
                 $exportString = ""

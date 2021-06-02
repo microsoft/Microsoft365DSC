@@ -2,9 +2,16 @@
 
 # 1.21.602.1
 
+* AADMSGroups
+  * Fix for the export where the MailNickName was being prompted;
 * TeamsChannel
   * Fixed an issue where content was dedup and boolean
     values were appended to the exported content;
+* TeamsUpgradePolicy
+  * Improved performance retrieving users assigned to policy;
+* MISC
+  * Fix for Teams authentication. Improvements on session
+    reuse.
 
 # 1.21.526.2
 
