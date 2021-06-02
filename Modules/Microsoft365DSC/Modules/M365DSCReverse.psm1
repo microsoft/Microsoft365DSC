@@ -104,11 +104,11 @@ function Start-M365DSCConfigurationExtract
         }
 
         $ComponentsToSkip = @()
-        if ($Mode -eq 'Default')
+        if ($Mode -eq 'Default' -and $null -eq $ComponentsToExtract)
         {
             $ComponentsToSkip = $Global:FullComponents
         }
-        elseif ($Mode -eq 'Lite')
+        elseif ($Mode -eq 'Lite' -and $null -eq $ComponentsToExtract)
         {
             $ComponentsToSkip = $Global:DefaultComponents + $Global:FullComponents
         }
