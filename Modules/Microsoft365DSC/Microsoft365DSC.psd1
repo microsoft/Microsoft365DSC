@@ -177,11 +177,18 @@
             IconUri      = 'https://github.com/microsoft/Microsoft365DSC/blob/Dev/Modules/Microsoft365DSC/Dependencies/Images/Logo.png?raw=true'
 
             # ReleaseNotes of this module
-            ReleaseNotes = "* EXOManagementRole
+            ReleaseNotes = "* AADMSGroups
+            * Fix for the export where the MailNickName was being prompted;
+          * EXOManagementRole
             * BREAKING: Now requires the Parent property as Mandatory;
           * TeamsChannel
             * Fixed an issue where content was dedup and boolean
-              values were appended to the exported content;"
+              values were appended to the exported content;
+          * TeamsUpgradePolicy
+            * Improved performance retrieving users assigned to policy;
+          * MISC
+            * Fix for Teams authentication. Improvements on session
+              reuse."
 
             # Flag to indicate whether the module requires explicit user acceptance for install/update
             # RequireLicenseAcceptance = $false
