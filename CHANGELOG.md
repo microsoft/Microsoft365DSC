@@ -2,6 +2,8 @@
 
 # 1.21.602.1
 
+* EXOManagementRole
+  * BREAKING: Now requires the Parent property as Mandatory;
 * TeamsChannel
   * Fixed an issue where content was dedup and boolean
     values were appended to the exported content;
