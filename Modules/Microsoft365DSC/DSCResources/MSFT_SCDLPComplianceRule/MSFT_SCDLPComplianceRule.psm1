@@ -926,7 +926,8 @@ function Export-TargetResource
 
             if ($null -ne $Results.ContentContainsSensitiveInformation )
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation" -IsCIMArray $IsSitCIMArray
+               # $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation" -IsCIMArray $IsSitCIMArray
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation"
             }
             if ($null -ne $Results.ExceptIfContentContainsSensitiveInformation )
             {
@@ -1033,6 +1034,7 @@ function ConvertTo-SCDLPSensitiveInformationStringGroup
     }
     return $result
 }
+
 function ConvertTo-SCDLPSensitiveInformationString
 {
     [CmdletBinding()]
@@ -1046,9 +1048,10 @@ function ConvertTo-SCDLPSensitiveInformationString
     $result = @()
     $StringContent = "MSFT_SCDLPContainsSensitiveInformation`r`n            {`r`n"
     $StringContent += "                SensitiveInformation = "
+    $result += $StringContent
     foreach ($SensitiveInformationHash in $InformationArray)
     {
-        $StringContent += "MSFT_SCDLPSensitiveInformation`r`n            {`r`n"
+        $StringContent = "MSFT_SCDLPSensitiveInformation`r`n            {`r`n"
         $StringContent += "                name = '$($SensitiveInformationHash.name.Replace("'", "''"))'`r`n"
 
         if ($null -ne $SensitiveInformationHash.id)
@@ -1082,11 +1085,13 @@ function ConvertTo-SCDLPSensitiveInformationString
         }
 
         $StringContent += "            }`r`n"
+        $result += $StringContent
     }
-    $StringContent += "            }`r`n"
-    $result += $StringContent
+    $result += "            }`r`n"
     return $result
 }
+
+
 
 function Get-SCDLPSensitiveInformation
 {
