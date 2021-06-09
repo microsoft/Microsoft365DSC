@@ -61,7 +61,7 @@
         },
         @{
             ModuleName      = "ExchangeOnlineManagement"
-            RequiredVersion = "2.0.4"
+            RequiredVersion = "2.0.5"
         },
         @{
             ModuleName      = "Microsoft.Graph.Authentication"
@@ -77,15 +77,15 @@
         },
         @{
             ModuleName      = "Microsoft.Graph.Planner"
-            RequiredVersion = "1.4.2"
+            RequiredVersion = "1.5.0"
         },
         @{
             ModuleName      = "Microsoft.Graph.Teams"
-            RequiredVersion = "1.4.2"
+            RequiredVersion = "1.5.0"
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
-            RequiredVersion = "2.0.112"
+            RequiredVersion = "2.0.125"
         },
         @{
             ModuleName      = "MicrosoftTeams"
@@ -97,7 +97,7 @@
         },
         @{
             ModuleName      = "PnP.PowerShell"
-            RequiredVersion = "1.5.0"
+            RequiredVersion = "1.6.0"
         },
         @{
             ModuleName      = "ReverseDSC"

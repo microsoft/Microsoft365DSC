@@ -1,5 +1,18 @@
 # Change log for Microsoft365DSC
 
+# 1.21.609.1
+
+* TeamsUpgradePolicy
+  * Fixes to how we are retrieving users assigned to the
+    Global Upgrade Policy.
+* DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 2.0.5;
+  * Updated Microsoft.Graph.Planner to version 1.5.0;
+  * Updated Microsoft.Graph.Teams to version 1.5.0;
+  * Updated Microsoft.PowerApps.Administration.PowerShell
+    to version 2.0.125;
+  * Updated PnP.PowerShell to version 1.6.0;
+
 # 1.21.602.1
 
 * AADMSGroups
