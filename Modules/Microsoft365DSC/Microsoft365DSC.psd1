@@ -177,19 +177,16 @@
             IconUri      = 'https://github.com/microsoft/Microsoft365DSC/blob/Dev/Modules/Microsoft365DSC/Dependencies/Images/Logo.png?raw=true'
 
             # ReleaseNotes of this module
-            ReleaseNotes = "* AADMSGroups
-              * Fix for the export where the MailNickName was being prompted;
-            * EXOManagementRole
-              * BREAKING: Now requires the Parent property as Mandatory;
-            * TeamsChannel
-              * Fixed an issue where content was dedup and boolean
-                values were appended to the exported content;
-            * TeamsUpgradePolicy
-              * Improved performance retrieving users assigned to policy;
-            * MISC
-              * Fix for Teams authentication. Improvements on session
-                reuse.
-            "
+            ReleaseNotes = "* TeamsUpgradePolicy
+            * Fixes to how we are retrieving users assigned to the
+              Global Upgrade Policy.
+          * DEPENDENCIES
+            * Updated ExchangeOnlineManagement to version 2.0.5;
+            * Updated Microsoft.Graph.Planner to version 1.5.0;
+            * Updated Microsoft.Graph.Teams to version 1.5.0;
+            * Updated Microsoft.PowerApps.Administration.PowerShell
+              to version 2.0.126;
+            * Updated PnP.PowerShell to version 1.6.0;"
 
             # Flag to indicate whether the module requires explicit user acceptance for install/update
             # RequireLicenseAcceptance = $false
