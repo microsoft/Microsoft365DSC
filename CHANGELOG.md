@@ -10,7 +10,7 @@
   * Updated Microsoft.Graph.Planner to version 1.5.0;
   * Updated Microsoft.Graph.Teams to version 1.5.0;
   * Updated Microsoft.PowerApps.Administration.PowerShell
-    to version 2.0.125;
+    to version 2.0.126;
   * Updated PnP.PowerShell to version 1.6.0;
 
 # 1.21.602.1
