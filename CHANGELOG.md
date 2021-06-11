@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# 1.21.609.2
+
+* Fixed dependency on Microsoft.Graph.Authentication for
+  version 1.5.0.
+
 # 1.21.609.1
 
 * TeamsUpgradePolicy
