@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# 1.21.616.1
+
+* DEPENDENCIES
+  * Updated Microsoft.Graph.Authentication to version 1.6.0;
+  * Updated Microsoft.Graph.Planner to version 1.6.0;
+  * Updated Microsoft.Graph.Teams to version 1.6.0;
+
 # 1.21.609.2
 
 * Fixed dependency on Microsoft.Graph.Authentication for

@@ -65,7 +65,7 @@
         },
         @{
             ModuleName      = "Microsoft.Graph.Authentication"
-            RequiredVersion = "1.5.0"
+            RequiredVersion = "1.6.0"
         },
         @{
             ModuleName      = "Microsoft.Graph.Groups.Planner"
@@ -77,11 +77,11 @@
         },
         @{
             ModuleName      = "Microsoft.Graph.Planner"
-            RequiredVersion = "1.5.0"
+            RequiredVersion = "1.6.0"
         },
         @{
             ModuleName      = "Microsoft.Graph.Teams"
-            RequiredVersion = "1.5.0"
+            RequiredVersion = "1.6.0"
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
