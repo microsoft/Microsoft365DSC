@@ -2,6 +2,9 @@
 
 # 1.21.616.1
 
+* SPOSiteAuditSettings
+  * Fixed issue with Export where property Ensure was added
+    when an access forbidden error was encountered;
 * DEPENDENCIES
   * Updated Microsoft.Graph.Authentication to version 1.6.0;
   * Updated Microsoft.Graph.Planner to version 1.6.0;
