@@ -2523,6 +2523,10 @@ function Export-TargetResource
         [array]$AllTransportRules = Get-TransportRule
         $dscContent = ""
         $i = 1
+        if ($AllTransportRules.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
         foreach ($TransportRule in $AllTransportRules)
         {
             Write-Host "    |---[$i/$($AllTransportRules.Count)] $($TransportRule.Name)" -NoNewline
@@ -2538,11 +2542,14 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
@@ -2552,6 +2559,7 @@ function Export-TargetResource
     {
         try
         {
+            Write-Host $Global:M365DSCEmojiRedX
             Write-Verbose -Message $_
             $tenantIdValue = ""
             if (-not [System.String]::IsNullOrEmpty($TenantId))

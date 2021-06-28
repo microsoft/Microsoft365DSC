@@ -428,12 +428,12 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n" -NoNewLine
+            Write-Host "`r`n" -NoNewline
         }
         $i = 1
         foreach ($ApplicationAccessPolicy in $AllApplicationAccessPolicies)
         {
-            Write-Host "    |---[$i/$($AllApplicationAccessPolicies.Count)] $($ApplicationAccessPolicy.Identity)" -NoNewLine
+            Write-Host "    |---[$i/$($AllApplicationAccessPolicies.Count)] $($ApplicationAccessPolicy.Identity)" -NoNewline
 
             $Params = @{
                 Identity              = $ApplicationAccessPolicy.Identity
@@ -447,11 +447,15 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }

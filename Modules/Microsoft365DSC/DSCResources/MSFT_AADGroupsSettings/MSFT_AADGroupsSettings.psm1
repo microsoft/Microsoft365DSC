@@ -77,7 +77,7 @@ function Get-TargetResource
     $nullReturn.Ensure = "Absent"
     try
     {
-        $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript {$_.DisplayName -eq "Group.Unified"}
+        $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq "Group.Unified" }
 
         if ($null -eq $Policy)
         {
@@ -93,19 +93,19 @@ function Get-TargetResource
                 $AllowedGroupName = $groupObject.DisplayName
             }
             $result = @{
-                IsSingleInstance               = 'Yes'
-                EnableGroupCreation            = [Boolean]::Parse($Policy["EnableGroupCreation"])
-                AllowGuestsToBeGroupOwner      = [Boolean]::Parse($Policy["AllowGuestsToBeGroupOwner"])
-                AllowGuestsToAccessGroups      = [Boolean]::Parse($Policy["AllowGuestsToAccessGroups"])
-                GuestUsageGuidelinesUrl        = $Policy["GuestUsageGuidelinesUrl"]
-                GroupCreationAllowedGroupName  = $AllowedGroupName
-                AllowToAddGuests               = [Boolean]::Parse($Policy["AllowToAddGuests"])
-                UsageGuidelinesUrl             = $Policy["UsageGuidelinesUrl"]
-                Ensure                         = "Present"
-                GlobalAdminAccount             = $GlobalAdminAccount
-                ApplicationId                  = $ApplicationId
-                TenantId                       = $TenantId
-                CertificateThumbprint          = $CertificateThumbprint
+                IsSingleInstance              = 'Yes'
+                EnableGroupCreation           = [Boolean]::Parse($Policy["EnableGroupCreation"])
+                AllowGuestsToBeGroupOwner     = [Boolean]::Parse($Policy["AllowGuestsToBeGroupOwner"])
+                AllowGuestsToAccessGroups     = [Boolean]::Parse($Policy["AllowGuestsToAccessGroups"])
+                GuestUsageGuidelinesUrl       = $Policy["GuestUsageGuidelinesUrl"]
+                GroupCreationAllowedGroupName = $AllowedGroupName
+                AllowToAddGuests              = [Boolean]::Parse($Policy["AllowToAddGuests"])
+                UsageGuidelinesUrl            = $Policy["UsageGuidelinesUrl"]
+                Ensure                        = "Present"
+                GlobalAdminAccount            = $GlobalAdminAccount
+                ApplicationId                 = $ApplicationId
+                TenantId                      = $TenantId
+                CertificateThumbprint         = $CertificateThumbprint
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -220,7 +220,7 @@ function Set-TargetResource
         $needToUpdate = $true
     }
 
-    $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript {$_.DisplayName -eq "Group.Unified"}
+    $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq "Group.Unified" }
 
     if (($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present') -or $needToUpdate)
     {
@@ -230,13 +230,13 @@ function Set-TargetResource
         {
             $groupId = $groupObject.ObjectId
         }
-        $Policy["EnableGroupCreation"]           = [System.Boolean]$EnableGroupCreation
-        $Policy["AllowGuestsToBeGroupOwner"]     = [System.Boolean]$AllowGuestsToBeGroupOwner
-        $Policy["AllowGuestsToAccessGroups"]     = [System.Boolean]$AllowGuestsToAccessGroups
-        $Policy["GuestUsageGuidelinesUrl"]       = $GuestUsageGuidelinesUrl
-        $Policy["GroupCreationAllowedGroupId"]   = $groupId
-        $Policy["AllowToAddGuests"]              = [System.Boolean]$AllowToAddGuests
-        $Policy["UsageGuidelinesUrl"]            = $UsageGuidelinesUrl
+        $Policy["EnableGroupCreation"] = [System.Boolean]$EnableGroupCreation
+        $Policy["AllowGuestsToBeGroupOwner"] = [System.Boolean]$AllowGuestsToBeGroupOwner
+        $Policy["AllowGuestsToAccessGroups"] = [System.Boolean]$AllowGuestsToAccessGroups
+        $Policy["GuestUsageGuidelinesUrl"] = $GuestUsageGuidelinesUrl
+        $Policy["GroupCreationAllowedGroupId"] = $groupId
+        $Policy["AllowToAddGuests"] = [System.Boolean]$AllowToAddGuests
+        $Policy["UsageGuidelinesUrl"] = $UsageGuidelinesUrl
 
         Set-AzureADDirectorySetting -Id $Policy.id -DirectorySetting $Policy
     }
@@ -375,21 +375,24 @@ function Export-TargetResource
     {
         $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
         $Params = @{
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                IsSingleInstance      = 'Yes'
-                GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            IsSingleInstance      = 'Yes'
+            GlobalAdminAccount    = $GlobalAdminAccount
         }
         $dscContent = ''
         $Results = Get-TargetResource @Params
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
             -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
             -ConnectionMode $ConnectionMode `
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+        $dscContent += $currentDSCBlock
+        Save-M365DSCPartialExport -Content $currentDSCBlock `
+            -FileName $Global:PartialExportFileName
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         return $dscContent
     }

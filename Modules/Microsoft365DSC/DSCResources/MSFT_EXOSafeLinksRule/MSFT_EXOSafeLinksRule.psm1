@@ -272,8 +272,16 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     $SafeLinksRules = Get-SafeLinksRule
-
     $SafeLinksRule = $SafeLinksRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    $SafeLinksRuleParams = [System.Collections.Hashtable]($PSBoundParameters)
+    $SafeLinksRuleParams.Remove('Ensure') | Out-Null
+    $SafeLinksRuleParams.Remove('GlobalAdminAccount') | Out-Null
+    $SafeLinksRuleParams.Remove('ApplicationId') | Out-Null
+    $SafeLinksRuleParams.Remove('TenantId') | Out-Null
+    $SafeLinksRuleParams.Remove('CertificateThumbprint') | Out-Null
+    $SafeLinksRuleParams.Remove('CertificatePath') | Out-Null
+    $SafeLinksRuleParams.Remove('CertificatePassword') | Out-Null 
+
 
     if (('Present' -eq $Ensure ) -and (-not $SafeLinksRule))
     {
@@ -292,7 +300,15 @@ function Set-TargetResource
         }
         else
         {
-            Set-EXOSafeLinksRule -SafeLinksRuleParams $PSBoundParameters
+            if ($SafeLinksRuleParams.SafeLinksPolicy -ne $SafeLinksRule.SafeLinksPolicy)
+            {
+                Set-EXOSafeLinksRule -SafeLinksRuleParams $SafeLinksRuleParams
+            }
+            else
+            {
+                $SafeLinksRuleParams.Remove('SafeLinksPolicy')
+                Set-EXOSafeLinksRule -SafeLinksRuleParams $SafeLinksRuleParams
+            } 
         }
     }
 
@@ -495,11 +511,14 @@ function Export-TargetResource
                 $Results = Get-TargetResource @Params
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
-                $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -GlobalAdminAccount $GlobalAdminAccount
+                $dscContent += $currentDSCBlock
+                Save-M365DSCPartialExport -Content $currentDSCBlock `
+                    -FileName $Global:PartialExportFileName
                 Write-Host $Global:M365DSCEmojiGreenCheckMark
                 $i++
             }

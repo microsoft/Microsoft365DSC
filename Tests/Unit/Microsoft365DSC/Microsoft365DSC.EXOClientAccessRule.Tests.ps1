@@ -213,6 +213,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-ClientAccessRule -MockWith {
                     return @{
                         Identity = 'ExampleCASRule'
+                        Action   = 'AllowAccess'
                     }
                 }
             }

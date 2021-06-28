@@ -789,6 +789,7 @@ Configuration Master
             AllowPrivateMeetingScheduling              = $True;
             AllowSharedNotes                           = $True;
             AllowTranscription                         = $False;
+            AllowPSTNUsersToBypassLobby                = $true
             AllowWhiteboard                            = $True;
             AutoAdmittedUsers                          = "Everyone";
             Description                                = "Integration Meeting Policy";

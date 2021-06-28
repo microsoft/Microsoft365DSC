@@ -260,7 +260,7 @@ function Export-TargetResource
     {
         $i = 1
         [array]$policies = Get-CsOnlineVoiceRoutingPolicy -ErrorAction Stop
-        $content = ''
+        $dscContent = ''
         Write-Host "`r`n" -NoNewline
         foreach ($policy in $policies)
         {
@@ -270,20 +270,25 @@ function Export-TargetResource
                 Ensure             = 'Present'
                 GlobalAdminAccount = $GlobalAdminAccount
             }
-            $result = Get-TargetResource @params
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $content += "        TeamsVoiceRoutingPolicy " + (New-Guid).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            $content += "        }`r`n"
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        return $content
+        return $dscContent
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

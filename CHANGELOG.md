@@ -1,6 +1,71 @@
 # Change log for Microsoft365DSC
 
-1.21.519.2
+# 1.21.630.1
+
+* O365User
+  * Fix where export was throwing an error about an empty DSCBlock
+    ISSUE #1275;
+
+# 1.21.616.1
+
+* SPOSiteAuditSettings
+  * Fixed issue with Export where property Ensure was added
+    when an access forbidden error was encountered;
+* DEPENDENCIES
+  * Updated Microsoft.Graph.Authentication to version 1.6.0;
+  * Updated Microsoft.Graph.Planner to version 1.6.0;
+  * Updated Microsoft.Graph.Teams to version 1.6.0;
+
+# 1.21.609.2
+
+* Fixed dependency on Microsoft.Graph.Authentication for
+  version 1.5.0.
+
+# 1.21.609.1
+
+* TeamsUpgradePolicy
+  * Fixes to how we are retrieving users assigned to the
+    Global Upgrade Policy.
+* DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 2.0.5;
+  * Updated Microsoft.Graph.Planner to version 1.5.0;
+  * Updated Microsoft.Graph.Teams to version 1.5.0;
+  * Updated Microsoft.PowerApps.Administration.PowerShell
+    to version 2.0.126;
+  * Updated PnP.PowerShell to version 1.6.0;
+
+# 1.21.602.1
+
+* AADMSGroups
+  * Fix for the export where the MailNickName was being prompted;
+* EXOManagementRole
+  * BREAKING: Now requires the Parent property as Mandatory;
+* TeamsChannel
+  * Fixed an issue where content was dedup and boolean
+    values were appended to the exported content;
+* TeamsUpgradePolicy
+  * Improved performance retrieving users assigned to policy;
+* MISC
+  * Fix for Teams authentication. Improvements on session
+    reuse.
+
+# 1.21.526.2
+
+*  EXOSafeAttachmentRule
+  * Fixed issue #1213 Policy X already has rule Y associated with it
+    if rule exists already
+* MSFT_IntuneDeviceCompliancePolicyAndroid
+  * New resource
+* MSFT_IntuneDeviceCompliancePolicyAndroidWorkProfile
+  * New resource
+* MSFT_IntuneDeviceCompliancePolicyMacOS
+  * New resource
+* MSFT_IntuneDeviceCompliancePolicyiOs
+  * New resource
+* EXOTransportRule
+  * Fix #1230 Changed ExceptIfSenderInRecipientList to array
+
+# 1.21.519.2
 
 * AzureADRoleDefinition
   * Fix an issue where deprecated roles were not increasing
@@ -16,7 +81,7 @@
   * Forces a Global load of the new MicrosoftTeams module for
     Teams resources;
 
-1.21.519.1
+#1.21.519.1
 
 * TeamsClientConfiguration
   * Fixed an issue where the RestrictedSenderList was not properly

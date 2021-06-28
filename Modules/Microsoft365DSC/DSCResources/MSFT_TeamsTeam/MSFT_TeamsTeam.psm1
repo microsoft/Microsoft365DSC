@@ -682,7 +682,7 @@ function Export-TargetResource
 
         $teams = Get-Team
         $i = 1
-        $content = ""
+        $dscContent = ""
         Write-Host "`r`n" -NoNewline
         foreach ($team in $teams)
         {
@@ -701,36 +701,39 @@ function Export-TargetResource
                 $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
             }
 
-            $result.Remove("GroupID")
+            $result.Remove("GroupID") | Out-Null
             if ("" -eq $result.Owner)
             {
-                $result.Remove("Owner")
+                $result.Remove("Owner") | Out-Null
             }
-            $content += "        TeamsTeam " + (New-Guid).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $currentDSCBlock = "        TeamsTeam " + (New-Guid).ToString() + "`r`n"
+            $currentDSCBlock += "        {`r`n"
+            $content = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             if ($ConnectionMode -eq 'Credential')
             {
-                $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                $currentDSCBlock += Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "GlobalAdminAccount"
             }
             else
             {
-                $partialContent = $currentDSCBlock
+                $currentDSCBlock += $content
             }
-            $partialContent += "        }`r`n"
-            if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
+            $currentDSCBlock += "        }`r`n"
+            if ($currentDSCBlock.ToLower().Contains("@" + $organization.ToLower()))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+                $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
             }
-            $content += $partialContent
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckmark
         }
 
-        return $content
+        return $dscContent
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

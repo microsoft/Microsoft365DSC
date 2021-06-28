@@ -318,12 +318,12 @@ function Export-TargetResource
     }
     else
     {
-        Write-Host "`r`n"-NoNewLine
+        Write-Host "`r`n"-NoNewline
     }
     $dscContent = ''
     foreach ($mailbox in $mailboxes)
     {
-        Write-Host "    |---[$i/$($mailboxes.Length)] $($mailbox.Name)" -NoNewLine
+        Write-Host "    |---[$i/$($mailboxes.Length)] $($mailbox.Name)" -NoNewline
         $mailboxName = $mailbox.Name
         if (![System.String]::IsNullOrEmpty($mailboxName))
         {
@@ -342,11 +342,14 @@ function Export-TargetResource
             {
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
-                $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -GlobalAdminAccount $GlobalAdminAccount
+                $dscContent += $currentDSCBlock
+                Save-M365DSCPartialExport -Content $currentDSCBlock `
+                    -FileName $Global:PartialExportFileName
             }
         }
         Write-Host $Global:M365DSCEmojiGreenCheckMark

@@ -428,6 +428,14 @@ function Export-TargetResource
     {
         [array]$siteScripts = Get-PnPSiteScript -ErrorAction Stop
 
+        if ($siteScripts.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
         foreach ($script in $siteScripts)
         {
             Write-Host "    [$i/$($siteScripts.Length)] $($script.Title)"
@@ -445,11 +453,14 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }

@@ -310,7 +310,7 @@ function Export-TargetResource
     {
         $i = 1
         [array]$policies = Get-CsTeamsEmergencyCallRoutingPolicy -ErrorAction Stop
-        $content = ''
+        $dscContent = ''
         Write-Host "`r`n" -NoNewline
         foreach ($policy in $policies)
         {
@@ -321,30 +321,34 @@ function Export-TargetResource
             }
             $result = Get-TargetResource @params
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $content += "        TeamsEmergencyCallRoutingPolicy " + (New-Guid).ToString() + "`r`n"
-            $content += "        {`r`n"
+            $currentDSCBlock = "        TeamsEmergencyCallRoutingPolicy " + (New-Guid).ToString() + "`r`n"
+            $currentDSCBlock += "        {`r`n"
 
             if ($null -ne $result.EmergencyNumbers)
             {
                 $result.EmergencyNumbers = ConvertTo-TeamsEmergencyNumbersString -Numbers $result.EmergencyNumbers
             }
 
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $content = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
 
             if ($null -ne $result.EmergencyNumbers)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "EmergencyNumbers"
+                $content = Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "EmergencyNumbers"
             }
 
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            $content += "        }`r`n"
+            $currentDSCBlock += Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "GlobalAdminAccount"
+            $currentDSCBlock += "        }`r`n"
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        return $content
+        return $dscContent
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

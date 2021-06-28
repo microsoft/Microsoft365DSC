@@ -226,7 +226,7 @@ function Export-TargetResource
     {
         [array]$configPolicies = Get-IntuneAppConfigurationPolicyTargeted -ErrorAction Stop
         $i = 1
-        $content = ''
+        $dscContent = ''
         Write-Host "`r`n" -NoNewLine
         foreach ($configPolicy in $configPolicies)
         {
@@ -238,15 +238,18 @@ function Export-TargetResource
             }
             $result = Get-TargetResource @params
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $content += "        IntuneAppConfigurationPolicy " + (New-GUID).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            $content += "        }`r`n"
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        return $content
+        return $dscContent
     }
     catch
     {
