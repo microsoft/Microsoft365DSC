@@ -429,7 +429,6 @@ function Set-TargetResource
         [System.String]
         $RuleErrorAction,
 
-
         [Parameter()]
         [System.String[]]
         $AnyOfRecipientAddressContainsWords,
@@ -572,9 +571,10 @@ function Set-TargetResource
                 else
                 {
                     $value += Get-SCDLPSensitiveInformation $item
+                    Write-Verbose "Input values: $($item.Name))"
                 }
             }
-            $UpdateParams.ContentContainsSensitiveInformation = $value
+            $UpdateParams.ContentContainsSensitiveInformation = Get-SCDLPSensitiveInformation -SensitiveInformation $value
         }
 
         if ($null -ne $UpdateParams.ExceptIfContentContainsSensitiveInformation)
@@ -593,6 +593,7 @@ function Set-TargetResource
             }
             $UpdateParams.ExceptIfContentContainsSensitiveInformation = $value
         }
+        Write-Verbose "Updating ContentContainsSensitiveInformation values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParams.ContentContainsSensitiveInformation)"
         $UpdateParams.Remove("GlobalAdminAccount") | Out-Null
         $UpdateParams.Remove("Ensure") | Out-Null
         $UpdateParams.Remove("Name") | Out-Null
@@ -926,8 +927,8 @@ function Export-TargetResource
 
             if ($null -ne $Results.ContentContainsSensitiveInformation )
             {
-               # $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation" -IsCIMArray $IsSitCIMArray
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation"
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation" -IsCIMArray $IsSitCIMArray
+               # $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation"
             }
             if ($null -ne $Results.ExceptIfContentContainsSensitiveInformation )
             {
@@ -1048,9 +1049,11 @@ function ConvertTo-SCDLPSensitiveInformationString
     $result = @()
     $StringContent = "MSFT_SCDLPContainsSensitiveInformation`r`n            {`r`n"
     $StringContent += "                SensitiveInformation = "
+    $StringContent += "@(`r`n"
     $result += $StringContent
     foreach ($SensitiveInformationHash in $InformationArray)
     {
+
         $StringContent = "MSFT_SCDLPSensitiveInformation`r`n            {`r`n"
         $StringContent += "                name = '$($SensitiveInformationHash.name.Replace("'", "''"))'`r`n"
 
@@ -1087,6 +1090,7 @@ function ConvertTo-SCDLPSensitiveInformationString
         $StringContent += "            }`r`n"
         $result += $StringContent
     }
+    $result += "            )"
     $result += "            }`r`n"
     return $result
 }
@@ -1112,6 +1116,8 @@ function Get-SCDLPSensitiveInformation
             name = $item.name
         }
 
+        Write-Verbose -Message "CONVERTTODLP: `n $($item.name)"
+
         if ($null -ne $item.id)
         {
             $result.Add("id", $item.id)
@@ -1125,11 +1131,6 @@ function Get-SCDLPSensitiveInformation
         if ($null -ne $item.minconfidence)
         {
             $result.Add("minconfidence", $item.minconfidence)
-        }
-
-        if ($null -ne $item.rulePackId)
-        {
-            $result.Add("rulePackId", $item.rulePackId)
         }
 
         if ($null -ne $item.classifiertype)
