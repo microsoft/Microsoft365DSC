@@ -34,6 +34,7 @@ Configuration Example
             ApplyAppEnforcedRestrictionsToAdHocRecipients = $true
             FilePickerExternalImageSearchEnabled          = $true
             HideDefaultThemes                             = $false
+            MarkNewFilesSensitiveByDefault                = "AllowExternalSharing"
             Ensure                                        = "Present"
         }
     }
