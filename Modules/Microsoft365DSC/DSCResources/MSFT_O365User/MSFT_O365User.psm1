@@ -751,7 +751,7 @@ function Export-TargetResource
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
                         -GlobalAdminAccount $GlobalAdminAccount
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentContent -ParameterName "Password"
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Password"
                     $dscContent += $currentDSCBlock
 
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
