@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* SPOTenantSettings
+  * Added support for specifying MarkNewFilesSensitiveByDefault
+
 # 1.21.630.1
 
 * O365User
