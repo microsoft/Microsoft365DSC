@@ -95,12 +95,12 @@ function Get-TargetResource
             Write-Verbose -Message "GroupID was specified"
             try
             {
-                $Group = Get-AzureADMSGroup -Id $Id -ErrorAction Stop
+                $Group = Get-AzureADGroup -ObjectId $Id -ErrorAction Stop
             }
             catch
             {
                 Write-Verbose -Message "Couldn't get group by ID, trying by name"
-                $Group = Get-AzureADMSGroup -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+                $Group = Get-AzureADGroup -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
                 if ($Group.Length -gt 1)
                 {
                     throw "Duplicate AzureAD Groups named $DisplayName exist in tenant"
@@ -111,7 +111,7 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Id was NOT specified"
             ## Can retreive multiple AAD Groups since displayname is not unique
-            $Group = Get-AzureADMSGroup -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+            $Group = Get-AzureADGroup -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
             if ($Group.Length -gt 1)
             {
                 throw "Duplicate AzureAD Groups named $DisplayName exist in tenant"
@@ -468,7 +468,7 @@ function Export-TargetResource
 
     try
     {
-        [array] $groups = Get-AzureADMSGroup -All:$true -ErrorAction Stop
+        [array] $groups = Get-AzureADGroup -All:$true -ErrorAction Stop
         $i = 1
         $dscContent = ''
         Write-Host "`r`n" -NoNewline
