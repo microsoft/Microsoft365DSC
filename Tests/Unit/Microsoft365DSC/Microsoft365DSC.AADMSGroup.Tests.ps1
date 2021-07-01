@@ -71,13 +71,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADMSGroup -MockWith {
+                Mock -CommandName Get-AzureADGroup -MockWith {
                     return $null
                 }
             }
             It "Should return Values from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-                Should -Invoke -CommandName "Get-AzureADMSGroup" -Exactly 1
+                Should -Invoke -CommandName "Get-AzureADGroup" -Exactly 1
             }
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
@@ -106,7 +106,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADMSGroup -MockWith {
+                Mock -CommandName Get-AzureADGroup -MockWith {
                     return @{DisplayName = "DSCGroup"
                             ID = "12345-12345-12345-12345"    }
                 }
@@ -114,7 +114,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return Values from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-                Should -Invoke -CommandName "Get-AzureADMSGroup" -Exactly 1
+                Should -Invoke -CommandName "Get-AzureADGroup" -Exactly 1
             }
 
             It 'Should return true from the Test method' {
@@ -145,7 +145,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADMSGroup -MockWith {
+                Mock -CommandName Get-AzureADGroup -MockWith {
                     return @{
                         DisplayName                   = "DSCGroup"
                         ID                            = "12345-12345-12345-12345"
@@ -162,7 +162,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return Values from the Get method" {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-AzureADMSGroup" -Exactly 1
+                Should -Invoke -CommandName "Get-AzureADGroup" -Exactly 1
             }
 
             It 'Should return true from the Test method' {
@@ -188,7 +188,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADMSGroup -MockWith {
+                Mock -CommandName Get-AzureADGroup -MockWith {
                     return @{
                         DisplayName                   = "DSCGroup"
                         Description                   = "Microsoft DSC" #Drift
@@ -200,7 +200,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-AzureADMSGroup -MockWith {
+                Mock -CommandName Get-AzureADGroup -MockWith {
                     return @{DisplayName = "DSCGroup"
                             ID = "12345-12345-12345-12345"    }
                 }
@@ -208,7 +208,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return Values from the Get method" {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-AzureADMSGroup" -Exactly 1
+                Should -Invoke -CommandName "Get-AzureADGroup" -Exactly 1
             }
 
             It 'Should return false from the Test method' {
@@ -231,7 +231,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADMSGroup -MockWith {
+                Mock -CommandName Get-AzureADGroup -MockWith {
                     return @{
                         DisplayName = "Test Team"
                         ID = "12345-12345-12345-12345"

@@ -1,5 +1,13 @@
 # Change log for Microsoft365DSC
 
+# 1.21.630.1
+
+* O365User
+  * Fix where export was throwing an error about an empty DSCBlock
+    ISSUE #1275;
+* SPOTenantSettings
+  * Added support for specifying MarkNewFilesSensitiveByDefault
+
 # 1.21.616.1
 
 * SPOSiteAuditSettings
