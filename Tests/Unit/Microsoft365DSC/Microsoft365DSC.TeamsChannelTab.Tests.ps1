@@ -25,12 +25,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
             $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
+            $Global:PartialExportFileName = "c:\TestPath"
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
+                return "FakeDSCContent"
+            }
+            Mock -CommandName Save-M365DSCPartialExport -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -290,7 +293,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    ApplicationId        = "12345-12345-12345-12345-12345"
+                    TenantID             = "11111-11111-22222-22222-22222"
+                    CertificateThumbprint = "111111111111"
                 }
 
                 Mock -CommandName Get-Team -MockWith {

@@ -24,17 +24,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
             $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.onmicrosoft.com", $secpasswd)
 
+            $Global:PartialExportFileName = "c:\TestPath"
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
-                return $Results
+                return @{}
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-                return @"
-    SPOSite Test
-    {
-        Url = https://contoso.sharepoint.com
-    }
-"@
+                return "FakeDSCContent"
+            }
+            Mock -CommandName Save-M365DSCPartialExport -MockWith {
             }
 
             Mock -CommandName Set-PnPTenantSite -MockWith {

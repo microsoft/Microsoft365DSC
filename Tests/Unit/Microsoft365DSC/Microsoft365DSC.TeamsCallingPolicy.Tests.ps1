@@ -25,14 +25,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString "Pass@word1)" -AsPlainText -Force
             $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
+            
+            $Global:PartialExportFileName = "c:\TestPath"
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
+                return "FakeDSCContent"
+            }          
+            Mock -CommandName Save-M365DSCPartialExport -MockWith {
 
             }
-
+  
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credential"
             }
@@ -218,7 +223,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     GlobalAdminAccount = $GlobalAdminAccount
                 }
-
                 Mock -CommandName Get-CsTeamsCallingPolicy -MockWith {
                     return @{
                         Identity                   = 'Test Calling Policy'
