@@ -2,9 +2,15 @@
 
 # 1.21.707.1
 
+* EXODkimSigningConfig
+  * Change the logic to remove an entry to disable it instead since the
+    cmdlet didn't exist to remove it.
+    ISSUE #6187
 * EXOSharedMailbox
   * Improved speed of extraction and removed warning about maximum 1,000
     items retrieved;
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.127;
 
 # 1.21.630.1
 
