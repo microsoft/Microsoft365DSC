@@ -55,8 +55,8 @@ function Get-TargetResource
         $TestMode,
 
         [Parameter()]
-        [System.String[]]
-        $TlsDomain = @(),
+        [System.String]
+        $TlsDomain,
 
         [Parameter()]
         [ValidateSet('EncryptionOnly', 'CertificateValidation', 'DomainValidation')]
@@ -260,8 +260,8 @@ function Set-TargetResource
         $TestMode,
 
         [Parameter()]
-        [System.String[]]
-        $TlsDomain = @(),
+        [System.String]
+        $TlsDomain,
 
         [Parameter()]
         [ValidateSet('EncryptionOnly', 'CertificateValidation', 'DomainValidation')]
@@ -409,8 +409,8 @@ function Test-TargetResource
         $TestMode,
 
         [Parameter()]
-        [System.String[]]
-        $TlsDomain = @(),
+        [System.String]
+        $TlsDomain,
 
         [Parameter()]
         [ValidateSet('EncryptionOnly', 'CertificateValidation', 'DomainValidation')]
