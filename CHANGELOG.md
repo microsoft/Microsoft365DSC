@@ -5,7 +5,7 @@
 * EXODkimSigningConfig
   * Change the logic to remove an entry to disable it instead since the
     cmdlet didn't exist to remove it.
-    ISSUE #6187
+    ISSUE #1253
 * EXOSharedMailbox
   * Improved speed of extraction and removed warning about maximum 1,000
     items retrieved;
