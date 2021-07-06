@@ -181,7 +181,7 @@ function Export-M365DSCDiagnosticData
     $null = New-Item -Path $tempPath -ItemType 'Directory'
 
     # Copy DSC Verbose Logs
-    Write-Host '  * Copying DSC Verbose Logs' -ForegroundColor Grey
+    Write-Host '  * Copying DSC Verbose Logs' -ForegroundColor Gray
     $logPath = Join-Path -Path $tempPath -ChildPath 'DSCLogs'
     $null = New-Item -Path $logPath -ItemType 'Directory'
 
@@ -191,7 +191,7 @@ function Export-M365DSCDiagnosticData
 
     if ($Anonymize)
     {
-        Write-Host '    * Anonymizing DSC Verbose Logs' -ForegroundColor Grey
+        Write-Host '    * Anonymizing DSC Verbose Logs' -ForegroundColor Gray
         foreach ($file in (Get-ChildItem -Path $logPath))
         {
             $content = Get-Content -Path $file.FullName -Raw -Encoding Unicode
@@ -201,12 +201,12 @@ function Export-M365DSCDiagnosticData
     }
 
     # Export M365Dsc event log
-    Write-Host '  * Exporting DSC Event Log' -ForegroundColor Grey
+    Write-Host '  * Exporting DSC Event Log' -ForegroundColor Gray
     $evtExportLog = Join-Path -Path $tempPath -ChildPath 'M365Dsc.csv'
 
     try
     {
-        Write-Host '    * Anonymizing DSC Event Log' -ForegroundColor Grey
+        Write-Host '    * Anonymizing DSC Event Log' -ForegroundColor Gray
         Get-EventLog -LogName 'M365Dsc' -After $afterDate | Export-Csv $evtExportLog -NoTypeInformation
         if ($Anonymize)
         {
@@ -228,12 +228,12 @@ function Export-M365DSCDiagnosticData
     }
 
     # PowerShell Version
-    Write-Host '  * Exporting PowerShell Version info' -ForegroundColor Grey
+    Write-Host '  * Exporting PowerShell Version info' -ForegroundColor Gray
     $psInfoFile = Join-Path -Path $tempPath -ChildPath 'PSInfo.txt'
     $PSVersionTable | Out-File -FilePath $psInfoFile
 
     # OS Version
-    Write-Host '  * Exporting OS Version info' -ForegroundColor Grey
+    Write-Host '  * Exporting OS Version info' -ForegroundColor Gray
     $computerInfoFile = Join-Path -Path $tempPath -ChildPath 'OSInfo.txt'
 
     Get-ComputerInfo -Property @(
@@ -246,16 +246,16 @@ function Export-M365DSCDiagnosticData
         'OsMuiLanguages') | Out-File -FilePath $computerInfoFile
 
     # LCM settings
-    Write-Host '  * Exporting LCM Configuration info' -ForegroundColor Grey
+    Write-Host '  * Exporting LCM Configuration info' -ForegroundColor Gray
     $lcmInfoFile = Join-Path -Path $tempPath -ChildPath 'LCMInfo.txt'
     Get-DscLocalConfigurationManager | Out-File -FilePath $lcmInfoFile
 
     # Creating export package
-    Write-Host '  * Creating Zip file with all collected information' -ForegroundColor Grey
+    Write-Host '  * Creating Zip file with all collected information' -ForegroundColor Gray
     Compress-Archive -Path $tempPath -DestinationPath $ExportFilePath -Force
 
     # Cleaning up temporary data
-    Write-Host '  * Removing temporary data' -ForegroundColor Grey
+    Write-Host '  * Removing temporary data' -ForegroundColor Gray
     Remove-Item $tempPath -Recurse -Force -Confirm:$false
 
     Write-Host ('Completed with export. Information exported to {0}' -f $ExportFilePath) -ForegroundColor Yellow
