@@ -772,7 +772,7 @@ function Set-TargetResource
     $SetValues.Remove('CertificatePath') | Out-Null
     $SetValues.Remove('CertificatePassword') | Out-Null
 
-    $isAutoExpandingArchiveEnabled = Get-OrganizationConfig | select AutoExpandingArchiveEnabled
+    $isAutoExpandingArchiveEnabled = Get-OrganizationConfig | Select-Object -Property AutoExpandingArchiveEnabled
 
     if ($isAutoExpandingArchiveEnabled -eq $True)
     {
