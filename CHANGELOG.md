@@ -6,6 +6,12 @@
   * Change the logic to remove an entry to disable it instead since the
     cmdlet didn't exist to remove it.
     ISSUE #1253
+* EXOHostedContentFilterPolicy
+  * Fixed the value type for the senders addresses, regions and domains;
+    ISSUE #1165
+* EXOOutboundConnector
+  * Fixed the creation logic to include ValidationRecipients;
+    ISSUE #1165
 * EXOSharedMailbox
   * Improved speed of extraction and removed warning about maximum 1,000
     items retrieved;
