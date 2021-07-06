@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# 1.21.707.1
+
+* EXOSharedMailbox
+  * Improved speed of extraction and removed warning about mximum 1,000
+    items retrieved;
+
 # 1.21.630.1
 
 * O365User
