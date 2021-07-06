@@ -3,7 +3,7 @@
 # 1.21.707.1
 
 * EXOSharedMailbox
-  * Improved speed of extraction and removed warning about mximum 1,000
+  * Improved speed of extraction and removed warning about maximum 1,000
     items retrieved;
 
 # 1.21.630.1
