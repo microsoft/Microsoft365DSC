@@ -239,8 +239,8 @@ function Set-TargetResource
 
     if (('Absent' -eq $Ensure ) -and ($DkimSigningConfig))
     {
-        Write-Verbose -Message "Removing DkimSigningConfig $($Identity) "
-        Remove-DkimSigningConfig -Identity $Identity -Confirm:$false
+        Write-Verbose -Message "Disabling DkimSigningConfig $($Identity) "
+        Set-DkimSigningConfig -Identity $Identity -Enabled $false -Confirm:$false
     }
 }
 
