@@ -338,6 +338,12 @@ function Set-TargetResource
         $OutBoundConnectorParams.Add("Name", $Identity)
         $OutBoundConnectorParams.Remove('Identity') | Out-Null
         New-OutBoundConnector @OutBoundConnectorParams
+
+        if ($null -ne $ValidationRecipients)
+        {
+            Write-Verbose -Message "Updating ValidationRecipients"
+            Set-OutboundConnector -Identity $Identity -ValidationRecipients $ValidationRecipients -Confirm:$false
+        }
     }
     elseif (('Present' -eq $Ensure ) -and ($Null -ne $OutBoundConnector))
     {
