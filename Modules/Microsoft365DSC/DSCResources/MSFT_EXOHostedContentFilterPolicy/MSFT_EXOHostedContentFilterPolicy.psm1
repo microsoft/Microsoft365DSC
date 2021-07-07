@@ -291,15 +291,17 @@ function Get-TargetResource
         }
         else
         {
+            $AllowedSendersValues = $HostedContentFilterPolicy.AllowedSenders.Sender | Select-Object Address -ExpandProperty Address
+            $BlockedSendersValues =  $HostedContentFilterPolicy.BlockedSenders.Sender | Select-Object Address -ExpandProperty Address
             $result = @{
                 Ensure                               = 'Present'
                 Identity                             = $Identity
                 AddXHeaderValue                      = $HostedContentFilterPolicy.AddXHeaderValue
                 AdminDisplayName                     = $HostedContentFilterPolicy.AdminDisplayName
-                AllowedSenderDomains                 = $HostedContentFilterPolicy.AllowedSenderDomains
-                AllowedSenders                       = $HostedContentFilterPolicy.AllowedSenders
-                BlockedSenderDomains                 = $HostedContentFilterPolicy.BlockedSenderDomains
-                BlockedSenders                       = $HostedContentFilterPolicy.BlockedSenders
+                AllowedSenderDomains                 = $HostedContentFilterPolicy.AllowedSenderDomains.Domain
+                AllowedSenders                       = $AllowedSendersValues
+                BlockedSenderDomains                 = $HostedContentFilterPolicy.BlockedSenderDomains.Domain
+                BlockedSenders                       = $BlockedSendersValues
                 BulkSpamAction                       = $HostedContentFilterPolicy.BulkSpamAction
                 BulkThreshold                        = $HostedContentFilterPolicy.BulkThreshold
                 DownloadLink                         = $HostedContentFilterPolicy.DownloadLink
