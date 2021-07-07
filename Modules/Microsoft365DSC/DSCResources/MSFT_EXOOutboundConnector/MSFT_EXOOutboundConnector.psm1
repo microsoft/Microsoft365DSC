@@ -337,6 +337,7 @@ function Set-TargetResource
         Write-Verbose -Message "Creating OutBoundConnector $($Identity)."
         $OutBoundConnectorParams.Add("Name", $Identity)
         $OutBoundConnectorParams.Remove('Identity') | Out-Null
+        $OutBoundConnectorParams.Remove("ValidationRecipients") | Out-Null
         New-OutBoundConnector @OutBoundConnectorParams
 
         if ($null -ne $ValidationRecipients)
