@@ -281,9 +281,8 @@ function Get-TargetResource
     $nullReturn.Ensure = 'Absent'
     try
     {
-        $HostedContentFilterPolicies = Get-HostedContentFilterPolicy -ErrorAction Stop
+        $HostedContentFilterPolicy = Get-HostedContentFilterPolicy -Identity $Identity -ErrorAction Stop
 
-        $HostedContentFilterPolicy = $HostedContentFilterPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
         if ($null -eq $HostedContentFilterPolicy)
         {
             Write-Verbose -Message "HostedContentFilterPolicy $($Identity) does not exist."
