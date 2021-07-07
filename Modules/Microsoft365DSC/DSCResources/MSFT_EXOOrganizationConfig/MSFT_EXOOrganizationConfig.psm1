@@ -771,6 +771,14 @@ function Set-TargetResource
     $SetValues.Remove('CertificateThumbprint') | Out-Null
     $SetValues.Remove('CertificatePath') | Out-Null
     $SetValues.Remove('CertificatePassword') | Out-Null
+
+    $isAutoExpandingArchiveEnabled = Get-OrganizationConfig | Select-Object -Property AutoExpandingArchiveEnabled
+
+    if ($isAutoExpandingArchiveEnabled -eq $True)
+    {
+        $SetValues.Remove('AutoExpandingArchive') | Out-Null
+    } 
+
     Set-OrganizationConfig @SetValues
 }
 

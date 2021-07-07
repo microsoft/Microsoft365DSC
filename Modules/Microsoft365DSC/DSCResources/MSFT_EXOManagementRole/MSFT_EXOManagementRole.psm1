@@ -140,7 +140,7 @@ function Set-TargetResource
         [System.String]
         $Name,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Parent,
 
@@ -238,7 +238,7 @@ function Test-TargetResource
         [System.String]
         $Name,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Parent,
 

@@ -75,11 +75,10 @@ function Get-TargetResource
 
     try
     {
-        $mailboxes = Get-Mailbox -ErrorAction Stop
-        $mailbox = $mailboxes | Where-Object -FilterScript {
-            $_.RecipientTypeDetails -eq "SharedMailbox" -and `
-                $_.Identity -eq $DisplayName
-        }
+        $mailbox = Get-Mailbox -Identity $DisplayName `
+                               -RecipientTypeDetails "SharedMailbox" `
+                               -ResultSize Unlimited `
+                               -ErrorAction Stop
 
         if ($null -eq $mailbox)
         {
