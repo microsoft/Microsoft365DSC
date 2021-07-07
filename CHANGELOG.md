@@ -11,6 +11,10 @@
     items retrieved;
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.127;
+* MISC
+  * Delta Report - Fixes to compare null arrays properly and report as
+    a discrepancy.
+    ISSUES #1178 & #1249
 
 # 1.21.630.1
 
