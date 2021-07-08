@@ -1,10 +1,40 @@
 # Change log for Microsoft365DSC
 
+# 1.21.714.1
+
+* EXOHostedContentFilterPolicy
+  * Fixed issues with null values falsely detected as drifts;
+    ISSUE #1165
+
+# 1.21.707.1
+
+* EXODkimSigningConfig
+  * Change the logic to remove an entry to disable it instead since the
+    cmdlet didn't exist to remove it.
+    ISSUE #1253
+* EXOHostedContentFilterPolicy
+  * Fixed the value type for the senders addresses, regions and domains;
+    ISSUE #1165
+* EXOOutboundConnector
+  * Fixed the creation logic to include ValidationRecipients;
+    ISSUE #1165
+* EXOSharedMailbox
+  * Improved speed of extraction and removed warning about maximum 1,000
+    items retrieved;
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.127;
+* MISC
+  * Delta Report - Fixes to compare null arrays properly and report as
+    a discrepancy.
+    ISSUES #1178 & #1249
+
 # 1.21.630.1
 
 * O365User
   * Fix where export was throwing an error about an empty DSCBlock
     ISSUE #1275;
+* SPOTenantSettings
+  * Added support for specifying MarkNewFilesSensitiveByDefault
 
 # 1.21.616.1
 

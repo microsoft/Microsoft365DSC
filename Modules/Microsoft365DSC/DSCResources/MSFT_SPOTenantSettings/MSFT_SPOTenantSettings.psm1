@@ -79,6 +79,11 @@ function Get-TargetResource
         $HideDefaultThemes,
 
         [Parameter()]
+        [ValidateSet("AllowExternalSharing", "BlockExternalSharing")]
+        [System.String]
+        $MarkNewFilesSensitiveByDefault,
+
+        [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
@@ -160,6 +165,7 @@ function Get-TargetResource
             ApplyAppEnforcedRestrictionsToAdHocRecipients = $SPOTenantSettings.ApplyAppEnforcedRestrictionsToAdHocRecipients
             FilePickerExternalImageSearchEnabled          = $SPOTenantSettings.FilePickerExternalImageSearchEnabled
             HideDefaultThemes                             = $SPOTenantSettings.HideDefaultThemes
+            MarkNewFilesSensitiveByDefault                = $SPOTenantSettings.MarkNewFilesSensitiveByDefault
             GlobalAdminAccount                            = $GlobalAdminAccount
             ApplicationId                                 = $ApplicationId
             TenantId                                      = $TenantId
@@ -276,6 +282,11 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $HideDefaultThemes,
+
+        [Parameter()]
+        [ValidateSet("AllowExternalSharing", "BlockExternalSharing")]
+        [System.String]
+        $MarkNewFilesSensitiveByDefault,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -423,6 +434,11 @@ function Test-TargetResource
         $HideDefaultThemes,
 
         [Parameter()]
+        [ValidateSet("AllowExternalSharing", "BlockExternalSharing")]
+        [System.String]
+        $MarkNewFilesSensitiveByDefault,
+
+        [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
@@ -492,7 +508,9 @@ function Test-TargetResource
             "OwnerAnonymousNotification", `
             "ApplyAppEnforcedRestrictionsToAdHocRecipients", `
             "FilePickerExternalImageSearchEnabled", `
-            "HideDefaultThemes")
+            "HideDefaultThemes", `
+            "MarkNewFilesSensitiveByDefault"
+            )
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
     return $TestResult
