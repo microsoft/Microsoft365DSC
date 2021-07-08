@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# 1.21.714.1
+
+* EXOHostedContentFilterPolicy
+  * Fixed issues with null values falsely detected as drifts;
+    ISSUE #1165
+
 # 1.21.707.1
 
 * EXODkimSigningConfig
