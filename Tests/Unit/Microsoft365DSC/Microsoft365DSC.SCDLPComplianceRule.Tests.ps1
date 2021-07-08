@@ -2,14 +2,14 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath "..\..\Unit" `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath "\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
@@ -62,140 +62,148 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                              = 'Present'
                     Policy                              = "MyParentPolicy"
                     Comment                             = "";
-                    ContentContainsSensitiveInformation = (New-CimInstance -ClassName MSFT_SCDLPSensitiveInformation -Property @{
-                            name     = "rulename"
-                            maxcount = "10"
-                            mincount = "0"
-                        } -ClientOnly)
-                    BlockAccess                         = $False;
-                    Name                                = 'TestPolicy'
-                    GlobalAdminAccount                  = $GlobalAdminAccount
-                }
+                    ContentContainsSensitiveInformation = @(New-CimInstance -ClassName MSFT_SCDLPContainsSensitiveInformation -Property @{
+                                SensitiveInformation = @(New-CimInstance -ClassName  MSFT_SCDLPSensitiveInformation -Property @{
+                                        name           = 'ABA Routing Number'
+                                        id             = 'cb353f78-2b72-4c3c-8827-92ebe4f69fdf'
+                                        maxconfidence  = '100'
+                                        minconfidence  = '75'
+                                        classifiertype = 'Content'
+                                        mincount       = '1'
+                                        maxcount       = '-1'
+                                    } -clientOnly)
+                            } -clientOnly)
 
-                Mock -CommandName Get-DLPComplianceRule -MockWith {
-                    return $null
-                }
-            }
+                        BlockAccess = $False;
+                        Name = 'TestPolicy'
+                        GlobalAdminAccount = $GlobalAdminAccount
+                    }
 
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It 'Should return Absent from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Absent"
-            }
-
-            It "Should call the Set method" {
-                Set-TargetResource @testParams
-            }
-        }
-
-        Context -Name "Rule already exists, and should" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Ensure                              = 'Present'
-                    Policy                              = "MyParentPolicy"
-                    Comment                             = "New comment";
-                    ContentContainsSensitiveInformation = (New-CimInstance -ClassName MSFT_SCDLPSensitiveInformation -Property @{
-                            maxconfidence  = "100";
-                            id             = "eefbb00e-8282-433c-8620-8f1da3bffdb2";
-                            minconfidence  = "75";
-                            rulePackId     = "00000000-0000-0000-0000-000000000000";
-                            classifiertype = "Content";
-                            name           = "Argentina National Identity (DNI) Number";
-                            mincount       = "1";
-                            maxcount       = "9";
-                        } -ClientOnly)
-                    BlockAccess                         = $False;
-                    Name                                = 'TestPolicy'
-                    GlobalAdminAccount                  = $GlobalAdminAccount
-                }
-
-                Mock -CommandName Get-DLPComplianceRule -MockWith {
-                    return @{
-                        Name                                = "TestPolicy"
-                        Comment                             = "New Comment"
-                        ParentPolicyName                    = "MyParentPolicy"
-                        ContentContainsSensitiveInformation = @(@{maxconfidence = "100"; id = "eefbb00e-8282-433c-8620-8f1da3bffdb2"; minconfidence = "75"; rulePackId = "00000000-0000-0000-0000-000000000000"; classifiertype = "Content"; name = "Argentina National Identity (DNI) Number"; mincount = "1"; maxcount = "9"; })
-                        BlockAccess                         = $False;
+                    Mock -CommandName Get-DLPComplianceRule -MockWith {
+                        return $null
                     }
                 }
-            }
 
-            It 'Should return true from the Test method' {
-                Test-TargetResource @testParams | Should -Be $true
-            }
-
-            It 'Should recreate from the Set method' {
-                Set-TargetResource @testParams
-            }
-
-            It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
-            }
-        }
-
-        Context -Name "Rule should not exist" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Ensure             = 'Absent'
-                    Policy             = "MyParentPolicy"
-                    Comment            = "";
-                    BlockAccess        = $False;
-                    Name               = 'TestPolicy'
-                    GlobalAdminAccount = $GlobalAdminAccount
+                It 'Should return false from the Test method' {
+                    Test-TargetResource @testParams | Should -Be $false
                 }
 
-                Mock -CommandName Get-DLPComplianceRule -MockWith {
-                    return @{
-                        Name                                = "TestPolicy"
-                        ParentPolicyName                    = "MyParentPolicy"
-                        ContentContainsSensitiveInformation = @(@{maxconfidence = "100"; id = "eefbb00e-8282-433c-8620-8f1da3bffdb2"; minconfidence = "75"; rulePackId = "00000000-0000-0000-0000-000000000000"; classifiertype = "Content"; name = "Argentina National Identity (DNI) Number"; mincount = "1"; maxcount = "9"; })
-                        Comment                             = "";
+                It 'Should return Absent from the Get method' {
+                    (Get-TargetResource @testParams).Ensure | Should -Be "Absent"
+                }
+
+                It "Should call the Set method" {
+                    Set-TargetResource @testParams
+                }
+            }
+
+            Context -Name "Rule already exists, and should" -Fixture {
+                BeforeAll {
+                    $testParams = @{
+                        Ensure                              = 'Present'
+                        Policy                              = "MyParentPolicy"
+                        Comment                             = "New comment";
+                        ContentContainsSensitiveInformation = @(New-CimInstance -ClassName MSFT_SCDLPContainsSensitiveInformation -Property @{
+                            SensitiveInformation = @(New-CimInstance -ClassName  MSFT_SCDLPSensitiveInformation -Property @{
+                                    name           = 'ABA Routing Number'
+                                    id             = 'cb353f78-2b72-4c3c-8827-92ebe4f69fdf'
+                                    maxconfidence  = '100'
+                                    minconfidence  = '75'
+                                    classifiertype = 'Content'
+                                    mincount       = '1'
+                                    maxcount       = '-1'
+                                } -ClientOnly)
+                        } -clientOnly)
                         BlockAccess                         = $False;
+                        Name                                = 'TestPolicy'
+                        GlobalAdminAccount                  = $GlobalAdminAccount
+                    }
+
+                    Mock -CommandName Get-DLPComplianceRule -MockWith {
+                        return @{
+                            Name                                = "TestPolicy"
+                            Comment                             = "New Comment"
+                            ParentPolicyName                    = "MyParentPolicy"
+                            ContentContainsSensitiveInformation = @(@{maxconfidence = "100"; id = "eefbb00e-8282-433c-8620-8f1da3bffdb2"; minconfidence = "75"; rulePackId = "00000000-0000-0000-0000-000000000000"; classifiertype = "Content"; name = "Argentina National Identity (DNI) Number"; mincount = "1"; maxcount = "9"; })
+                            BlockAccess                         = $False;
+                        }
                     }
                 }
-            }
 
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It 'Should delete from the Set method' {
-                Set-TargetResource @testParams
-            }
-
-            It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
-            }
-        }
-
-        Context -Name "ReverseDSC Tests" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                It 'Should return true from the Test method' {
+                    Test-TargetResource @testParams | Should -Be $true
                 }
 
-                Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-                    return "SCDLPComplianceRule Test{ContentContainsSensitiveInformation = `"`$Test`"}"
+                It 'Should recreate from the Set method' {
+                    Set-TargetResource @testParams
                 }
 
-                Mock -CommandName Get-DLPComplianceRule -MockWith {
-                    return @{
-                        Name                                = "TestPolicy"
-                        ParentPolicyName                    = "MyParentPolicy"
-                        ContentContainsSensitiveInformation = @(@{maxconfidence = "100"; id = "eefbb00e-8282-433c-8620-8f1da3bffdb2"; minconfidence = "75"; rulePackId = "00000000-0000-0000-0000-000000000000"; classifiertype = "Content"; name = "Argentina National Identity (DNI) Number"; mincount = "1"; maxcount = "9"; })
-                        Comment                             = "";
-                        BlockAccess                         = $False;
+                It 'Should return Present from the Get method' {
+                    (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+                }
+            }
+
+            Context -Name "Rule should not exist" -Fixture {
+                BeforeAll {
+                    $testParams = @{
+                        Ensure             = 'Absent'
+                        Policy             = "MyParentPolicy"
+                        Comment            = "";
+                        BlockAccess        = $False;
+                        Name               = 'TestPolicy'
+                        GlobalAdminAccount = $GlobalAdminAccount
+                    }
+
+                    Mock -CommandName Get-DLPComplianceRule -MockWith {
+                        return @{
+                            Name                                = "TestPolicy"
+                            ParentPolicyName                    = "MyParentPolicy"
+                            ContentContainsSensitiveInformation = @(@{maxconfidence = "100"; id = "eefbb00e-8282-433c-8620-8f1da3bffdb2"; minconfidence = "75"; rulePackId = "00000000-0000-0000-0000-000000000000"; classifiertype = "Content"; name = "Argentina National Identity (DNI) Number"; mincount = "1"; maxcount = "9"; })
+                            Comment                             = "";
+                            BlockAccess                         = $False;
+                        }
                     }
                 }
+
+                It 'Should return false from the Test method' {
+                    Test-TargetResource @testParams | Should -Be $false
+                }
+
+                It 'Should delete from the Set method' {
+                    Set-TargetResource @testParams
+                }
+
+                It 'Should return Present from the Get method' {
+                    (Get-TargetResource @testParams).Ensure | Should -Be "Present"
+                }
             }
 
-            It "Should Reverse Engineer resource from the Export method" {
-                Export-TargetResource @testParams
+            Context -Name "ReverseDSC Tests" -Fixture {
+                BeforeAll {
+                    $testParams = @{
+                        GlobalAdminAccount = $GlobalAdminAccount
+                    }
+
+                    Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
+                        return "SCDLPComplianceRule Test{ContentContainsSensitiveInformation = `"`$Test`"}"
+                    }
+
+                    Mock -CommandName Get-DLPComplianceRule -MockWith {
+                        return @{
+                            Name                                = "TestPolicy"
+                            ParentPolicyName                    = "MyParentPolicy"
+                            ContentContainsSensitiveInformation = @(@{maxconfidence = "100"; id = "eefbb00e-8282-433c-8620-8f1da3bffdb2"; minconfidence = "75"; rulePackId = "00000000-0000-0000-0000-000000000000"; classifiertype = "Content"; name = "Argentina National Identity (DNI) Number"; mincount = "1"; maxcount = "9"; })
+                            Comment                             = "";
+                            BlockAccess                         = $False;
+                        }
+                    }
+                }
+
+                It "Should Reverse Engineer resource from the Export method" {
+                    Export-TargetResource @testParams
+                }
             }
         }
     }
-}
 
-Invoke-Command -ScriptBlock $Global:DscHelper.CleanupScript -NoNewScope
+    Invoke-Command -ScriptBlock $Global:DscHelper.CleanupScript -NoNewScope
