@@ -1,0 +1,20 @@
+{
+    "description": "This resource configures an Azure Active Directory Application.",
+    "permissions": [
+        {
+            "read": [
+                {
+                    "name":"User.Read.All"
+                }
+            ],
+            "update": [
+                {
+                    "name": "User.Write.All"
+                },
+                {
+                    "name": "User.ReadWrite.All"
+                }
+            ]
+        }
+    ]
+}
