@@ -9,8 +9,8 @@ This resource configures an Azure Active Directory Application.
 To authenticate via Azure Active Directory, this resource required the following Application permissions:
 
 * **Automate**
-  * None
+  * Application.ReadWrite.All
 * **Export**
-  * None
+  * Directory.Read.All, Application.Read.All
 
 NOTE: All permisions listed above require admin consent.

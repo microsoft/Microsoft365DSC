@@ -1,0 +1,17 @@
+{
+    "description": "This resource configures the Azure AD Tenant Details.",
+    "permissions": [
+        {
+            "read": [
+                {
+                    "name": "Organization.Read.All"
+                }
+            ],
+            "update": [
+                {
+                    "name": "Organization.ReadWrite.All"
+                }
+            ]
+        }
+    ]
+}
