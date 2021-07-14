@@ -8,6 +8,10 @@
 * DEPENDENCIES
   * Removed dependency on Microsoft.Graph.Groups.Planner;
   * Updated Microsoft.Graph.Teams to version 1.6.1;
+* MISC
+  * Allowed for Desired and Current values to be captured by the Telemetry engine
+    if an organization is using a custom App Insights account;
+    ISSUE #1222
 
 # 1.21.707.1
 
