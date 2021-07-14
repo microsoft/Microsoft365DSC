@@ -1,5 +1,19 @@
 # Change log for Microsoft365DSC
 
+# 1.21.714.1
+
+* EXOHostedContentFilterPolicy
+  * Fixed issues with null values falsely detected as drifts;
+    ISSUE #1165
+* DEPENDENCIES
+  * Removed dependency on Microsoft.Graph.Groups.Planner;
+  * Updated Microsoft.Graph.Teams to version 1.6.1;
+  * Updated MSCloudLoginAssistant to version 1.0.54;
+* MISC
+  * Allowed for Desired and Current values to be captured by the Telemetry engine
+    if an organization is using a custom App Insights account;
+    ISSUE #1222
+
 # 1.21.707.1
 
 * EXODkimSigningConfig
