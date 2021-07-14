@@ -68,10 +68,6 @@
             RequiredVersion = "1.6.0"
         },
         @{
-            ModuleName      = "Microsoft.Graph.Groups.Planner"
-            RequiredVersion = "0.9.1"
-        },
-        @{
             ModuleName      = "Microsoft.Graph.Intune"
             RequiredVersion = "6.1907.1.0"
         },
@@ -81,7 +77,7 @@
         },
         @{
             ModuleName      = "Microsoft.Graph.Teams"
-            RequiredVersion = "1.6.0"
+            RequiredVersion = "1.6.1"
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"

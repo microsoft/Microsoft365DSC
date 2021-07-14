@@ -5,6 +5,9 @@
 * EXOHostedContentFilterPolicy
   * Fixed issues with null values falsely detected as drifts;
     ISSUE #1165
+* DEPENDENCIES
+  * Removed dependency on Microsoft.Graph.Groups.Planner;
+  * Updated Microsoft.Graph.Teams to version 1.6.1;
 
 # 1.21.707.1
 
