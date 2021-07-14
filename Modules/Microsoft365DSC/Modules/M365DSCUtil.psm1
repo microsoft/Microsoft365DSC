@@ -746,6 +746,15 @@ function Test-M365DSCParameterState
             $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
             $driftedData.Add("Event", "DriftedParameter")
             $driftedData.Add("Parameter", "[$Source]$key")
+
+            # If custom App Insights is specified, allow for the current and desired values to be captured;
+            # ISSUE #1222
+            if($null -ne $env:M365DSCTelemetryInstrumentationKey -and `
+                $env:M365DSCTelemetryInstrumentationKey -ne "bc5aa204-0b1e-4499-a955-d6a639bdb4fa")
+            {
+                $driftedData.Add("CurrentValue",[string]($CurrentValues[$key]));
+                $driftedData.Add("DesiredValue",[string]($DesiredValues[$key]));
+            }
             Add-M365DSCTelemetryEvent -Type "DriftInfo" -Data $driftedData
             #endregion
             $EventMessage += "            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n"
