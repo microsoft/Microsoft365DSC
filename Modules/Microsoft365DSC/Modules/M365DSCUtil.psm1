@@ -749,7 +749,7 @@ function Test-M365DSCParameterState
 
             # If custom App Insights is specified, allow for the current and desired values to be captured;
             # ISSUE #1222
-            if($null -ne $null -ne $env:M365DSCTelemetryInstrumentationKey -and `
+            if($null -ne $env:M365DSCTelemetryInstrumentationKey -and `
                 $env:M365DSCTelemetryInstrumentationKey -ne "bc5aa204-0b1e-4499-a955-d6a639bdb4fa")
             {
                 $driftedData.Add("CurrentValue",[string]($CurrentValues[$key]));
