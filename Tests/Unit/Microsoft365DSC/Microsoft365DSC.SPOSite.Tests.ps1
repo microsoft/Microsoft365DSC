@@ -208,7 +208,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         RestrictedToRegion             = "Unknown";
                         SocialBarOnSitePagesDisabled   = $False;
                         StorageQuota                   = 26214400;
-                        StorageQuotaWarningLevel       = 2557440000;
+                        StorageQuotaWarningLevel       = 25574400;
                         Title                          = "CommNik";
                         Template                       = "STS#3";
                         HubSiteId                      = "fcc3c848-6d2f-4821-a56c-980eea7990c5"

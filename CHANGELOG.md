@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+# 1.21.721.1
+
+* AADMSGroup
+  * Fixed an issue where the Visibility parameter was never properly returned
+    which always threw a detected drift when used.
+* SPOSite
+  * Fixed the StorageQuotaWarningLevel value returned by the Get-TargetResource
+    function.
+
 # 1.21.714.1
 
 * EXOHostedContentFilterPolicy

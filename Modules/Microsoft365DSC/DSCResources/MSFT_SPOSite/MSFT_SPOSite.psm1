@@ -230,10 +230,6 @@ function Get-TargetResource
                 }
             }
         }
-        if ($site.StorageQuotaWarningLevel -gt 0)
-        {
-            $quotaWarning = $site.StorageQuotaWarningLevel / 100
-        }
         return @{
             Url                                         = $Url
             Title                                       = $site.Title
@@ -245,7 +241,7 @@ function Get-TargetResource
             LogoFilePath                                = $LogoFilePath
             SharingCapability                           = $site.SharingCapability
             StorageMaximumLevel                         = $site.StorageQuota
-            StorageWarningLevel                         = $quotaWarning
+            StorageWarningLevel                         = $site.StorageQuotaWarningLevel
             AllowSelfServiceUpgrade                     = $site.AllowSelfServiceUpgrade
             Owner                                       = $siteOwnerEmail
             CommentsOnSitePagesDisabled                 = $site.CommentsOnSitePagesDisabled
