@@ -31,11 +31,11 @@ function Get-TargetResource
         $Comment,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $ContentContainsSensitiveInformation,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $ExceptIfContentContainsSensitiveInformation,
 
         [Parameter()]
@@ -374,11 +374,11 @@ function Set-TargetResource
         $Comment,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $ContentContainsSensitiveInformation,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $ExceptIfContentContainsSensitiveInformation,
 
         [Parameter()]
@@ -643,11 +643,11 @@ function Test-TargetResource
         $Comment,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $ContentContainsSensitiveInformation,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $ExceptIfContentContainsSensitiveInformation,
 
         [Parameter()]
@@ -979,7 +979,7 @@ function ConvertTo-SCDLPSensitiveInformationStringGroup
         [System.Object[]]
         $InformationArray
     )
-    $result = @()
+    $result = ""
 
     foreach ($SensitiveInformationHash in $InformationArray)
     {
@@ -987,14 +987,14 @@ function ConvertTo-SCDLPSensitiveInformationStringGroup
         if ($null -ne $InformationArray.Groups)
         {
             $StringContent += "                        operator = '$($SensitiveInformationHash.operator.Replace("'", "''"))'`r`n"
-            $StringContent += "                         Groups =  `r`n"
+            $StringContent += "                         Groups =  `r`n@("
         }
         foreach ($group in $SensitiveInformationHash.Groups)
         {
             $StringContent += "MSFT_SCDLPContainsSensitiveInformationGroup`r`n            {`r`n"
             $StringContent += "                operator = '$($group.operator.Replace("'", "''"))'`r`n"
             $StringContent += "                name = '$($group.name.Replace("'", "''"))'`r`n"
-            $StringContent += "                SensitiveInformation = "
+            $StringContent += "                SensitiveInformation = @("
             foreach ($sit in $group.sensitivetypes)
             {
                 $StringContent += "            MSFT_SCDLPSensitiveInformation`r`n            {`r`n"
@@ -1031,9 +1031,9 @@ function ConvertTo-SCDLPSensitiveInformationStringGroup
 
                 $StringContent += "            }`r`n"
             }
-            $StringContent += "            }`r`n"
+            $StringContent += "            )}`r`n"
         }
-        $StringContent += "            }`r`n"
+        $StringContent += "            )}`r`n"
         $result += $StringContent
     }
     return $result
@@ -1049,7 +1049,7 @@ function ConvertTo-SCDLPSensitiveInformationString
         [System.Object[]]
         $InformationArray
     )
-    $result = @()
+    $result = ""
     $StringContent = "MSFT_SCDLPContainsSensitiveInformation`r`n            {`r`n"
     $StringContent += "                SensitiveInformation = "
     $StringContent += "@(`r`n"
@@ -1099,7 +1099,6 @@ function ConvertTo-SCDLPSensitiveInformationString
 }
 
 
-
 function Get-SCDLPSensitiveInformation
 {
     [CmdletBinding()]
@@ -1108,18 +1107,16 @@ function Get-SCDLPSensitiveInformation
     (
         [Parameter(Mandatory = $true)]
         [System.Object[]]
-        $SensitiveInformation
+        $SensitiveInformationItems
     )
 
     $returnValue = @()
 
-    foreach ($item in $SensitiveInformation)
+    foreach ($item in $SensitiveInformationItems.SensitiveInformation)
     {
         $result = @{
             name = $item.name
         }
-
-        Write-Verbose -Message "CONVERTTODLP: `n $($item.name)"
 
         if ($null -ne $item.id)
         {
@@ -1184,7 +1181,7 @@ function Get-SCDLPSensitiveInformationGroups
             $myGroup.Add("operator", $group.operator)
         }
 
-        foreach ($item in $group.sensitivetypes)
+        foreach ($item in $group.SensitiveInformation)
         {
             $sit = @{
                 name = $item.name
@@ -1198,12 +1195,6 @@ function Get-SCDLPSensitiveInformationGroups
             {
                 $sit.Add("minconfidence", $item.minconfidence)
             }
-            <#
-            if ($null -ne $item.rulePackId)
-            {
-                $sit.Add("rulePackId", $item.rulePackId)
-            }
-            #>
 
             if ($null -ne $item.classifiertype)
             {

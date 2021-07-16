@@ -62,8 +62,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                              = 'Present'
                     Policy                              = "MyParentPolicy"
                     Comment                             = "";
-                    ContentContainsSensitiveInformation = @(New-CimInstance -ClassName MSFT_SCDLPContainsSensitiveInformation -Property @{
-                                SensitiveInformation = @(New-CimInstance -ClassName  MSFT_SCDLPSensitiveInformation -Property @{
+                    ContentContainsSensitiveInformation = (New-CimInstance -ClassName MSFT_SCDLPContainsSensitiveInformation -Property @{
+                                SensitiveInformation = (New-CimInstance -ClassName  MSFT_SCDLPSensitiveInformation -Property @{
                                         name           = 'ABA Routing Number'
                                         id             = 'cb353f78-2b72-4c3c-8827-92ebe4f69fdf'
                                         maxconfidence  = '100'
@@ -97,14 +97,70 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Context -Name "Rule Group doesn't already exist but should" -Fixture {
+                BeforeAll {
+                    $testParams = @{
+                        Ensure                              = 'Present'
+                        Policy                              = "MyParentPolicy"
+                        Comment                             = "";
+                        ContentContainsSensitiveInformation = (New-CimInstance -ClassName MSFT_SCDLPContainsSensitiveInformation -Property @{
+                                    Operator= "And"
+                                    Groups = (New-CimInstance -ClassName  MSFT_SCDLPContainsSensitiveInformationGroup -Property @{
+                                    Name   = "default"
+                                    operator = "and"
+                                    SensitiveInformation = (New-CimInstance -ClassName  MSFT_SCDLPSensitiveInformation -Property @{
+                                            name           = 'ABA Routing Number'
+                                            id             = 'cb353f78-2b72-4c3c-8827-92ebe4f69fdf'
+                                            maxconfidence  = '100'
+                                            minconfidence  = '75'
+                                            classifiertype = 'Content'
+                                            mincount       = '1'
+                                            maxcount       = '-1'
+                                        },
+                                        New-CimInstance -ClassName  MSFT_SCDLPSensitiveInformation -Property @{
+                                        
+                                            name = 'Argentina Unique Tax Identification Key (CUIT/CUIL)'
+                                            id = '98da3da1-9199-4571-b7c4-b6522980b507'
+                                            maxconfidence = '100'
+                                            minconfidence = '75'
+                                            classifiertype = 'Content'
+                                            mincount = '1'
+                                            maxcount = '-1'
+                                        } -clientOnly)
+                                    } -clientOnly)
+                                } -clientOnly)
+
+                            BlockAccess = $False;
+                            Name = 'TestPolicy'
+                            GlobalAdminAccount = $GlobalAdminAccount
+                        }
+
+                        Mock -CommandName Get-DLPComplianceRule -MockWith {
+                            return $null
+                        }
+                    }
+
+                    It 'Should return false from the Test method' {
+                        Test-TargetResource @testParams | Should -Be $false
+                    }
+
+                    It 'Should return Absent from the Get method' {
+                        (Get-TargetResource @testParams).Ensure | Should -Be "Absent"
+                    }
+
+                    It "Should call the Set method" {
+                        Set-TargetResource @testParams
+                    }
+                }
+
             Context -Name "Rule already exists, and should" -Fixture {
                 BeforeAll {
                     $testParams = @{
                         Ensure                              = 'Present'
                         Policy                              = "MyParentPolicy"
                         Comment                             = "New comment";
-                        ContentContainsSensitiveInformation = @(New-CimInstance -ClassName MSFT_SCDLPContainsSensitiveInformation -Property @{
-                            SensitiveInformation = @(New-CimInstance -ClassName  MSFT_SCDLPSensitiveInformation -Property @{
+                        ContentContainsSensitiveInformation = (New-CimInstance -ClassName MSFT_SCDLPContainsSensitiveInformation -Property @{
+                            SensitiveInformation = (New-CimInstance -ClassName  MSFT_SCDLPSensitiveInformation -Property @{
                                     name           = 'ABA Routing Number'
                                     id             = 'cb353f78-2b72-4c3c-8827-92ebe4f69fdf'
                                     maxconfidence  = '100'
