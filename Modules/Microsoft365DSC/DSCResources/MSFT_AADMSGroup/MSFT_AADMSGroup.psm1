@@ -95,12 +95,12 @@ function Get-TargetResource
             Write-Verbose -Message "GroupID was specified"
             try
             {
-                $Group = Get-AzureADGroup -ObjectId $Id -ErrorAction Stop
+                $Group = Get-AzureADMSGroup -ObjectId $Id -ErrorAction Stop
             }
             catch
             {
                 Write-Verbose -Message "Couldn't get group by ID, trying by name"
-                $Group = Get-AzureADGroup -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+                $Group = Get-AzureADMSGroup -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
                 if ($Group.Length -gt 1)
                 {
                     throw "Duplicate AzureAD Groups named $DisplayName exist in tenant"
