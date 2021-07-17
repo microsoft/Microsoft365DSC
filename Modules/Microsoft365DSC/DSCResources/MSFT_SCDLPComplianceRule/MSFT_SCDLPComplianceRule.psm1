@@ -571,10 +571,9 @@ function Set-TargetResource
                 else
                 {
                     $value += Get-SCDLPSensitiveInformation $item
-                    Write-Verbose "Input values: $($item.Name))"
                 }
             }
-            $UpdateParams.ContentContainsSensitiveInformation = Get-SCDLPSensitiveInformation -SensitiveInformation $value
+            $UpdateParams.ContentContainsSensitiveInformation = $value
         }
 
         if ($null -ne $UpdateParams.ExceptIfContentContainsSensitiveInformation)
@@ -593,7 +592,7 @@ function Set-TargetResource
             }
             $UpdateParams.ExceptIfContentContainsSensitiveInformation = $value
         }
-        Write-Verbose "Updating ContentContainsSensitiveInformation values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParams.ContentContainsSensitiveInformation)"
+
         $UpdateParams.Remove("GlobalAdminAccount") | Out-Null
         $UpdateParams.Remove("Ensure") | Out-Null
         $UpdateParams.Remove("Name") | Out-Null
@@ -786,44 +785,24 @@ function Test-TargetResource
     # For each Desired SIT check to see if there is an existing rule with the same name
     if ($null -ne $ValuesToCheck['ContentContainsSensitiveInformation'])
     {
-        $contentSITS = Get-SCDLPSensitiveInformation -SensitiveInformation $ValuesToCheck['ContentContainsSensitiveInformation']
-    }
-
-    foreach ($sit in $contentSITS)
-    {
-        Write-Verbose -Message "Trying to find existing Sensitive Information Action matching name {$($sit.name)}"
-        $matchingExistingRule = $CurrentValues.ContentContainsSensitiveInformation | Where-Object -FilterScript { $_.name -eq $sit.name }
-
-        if ($null -ne $matchingExistingRule)
+        if ($null -ne $ValuesToCheck['ContentContainsSensitiveInformation'].groups)
         {
-            Write-Verbose -Message "Sensitive Information Action {$($sit.name)} was found"
-            $propertiesTocheck = @("id", "maxconfidence", "minconfidence", "classifiertype", "mincount", "maxcount")
-
-            foreach ($property in $propertiesToCheck)
-            {
-                Write-Verbose -Message "Checking property {$property} for Sensitive Information Action {$($sit.name)}"
-                if ($sit.$property -ne $matchingExistingRule.$property)
-                {
-                    Write-Verbose -Message "Property {$property} is set to {$($matchingExistingRule.$property)} and is expected to be {$($sit.$property)}."
-                    $EventMessage = "DLP Compliance Rule {$Name} was not in the desired state.`r`n" + `
-                        "Sensitive Information Action {$($sit.name)} has invalid value for property {$property}. " + `
-                        "Current value is {$($matchingExistingRule.$property)} and is expected to be {$($sit.$property)}."
-                    Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
-                        -EventID 1 -Source $($MyInvocation.MyCommand.Source)
-                    return $false
-                }
-            }
+            $contentSITS = Get-SCDLPSensitiveInformationGroups -SensitiveInformation $ValuesToCheck['ContentContainsSensitiveInformation']
+            $desiredState = Test-ContainsSensitiveInformationGroups -targetValues $contentSITS -sourceValue $CurrentValues.ContentContainsSensitiveInformation
         }
         else
         {
-            Write-Verbose -Message "Sensitive Information Action {$($sit.name)} was not found"
-            $EventMessage = "DLP Compliance Rule {$Name} was not in the desired state.`r`n" + `
-                "An action on {$($sit.name)} Sensitive Information Type is missing."
-            Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
-            return $false
+            $contentSITS = Get-SCDLPSensitiveInformation -SensitiveInformation $ValuesToCheck['ContentContainsSensitiveInformation']
+            $desiredState = Test-ContainsSensitiveInformation -targetValues $contentSITS -sourceValue $CurrentValues.ContentContainsSensitiveInformation
         }
     }
+
+    if ($desiredState -eq $false)
+    {
+        Write-Verbose -Message "Test-TargetResource returned $desiredState"
+        return $false
+    }
+
     #endregion
     $ValuesToCheck.Remove('ContentContainsSensitiveInformation') | Out-Null
     $ValuesToCheck.Remove('ExceptIfContentContainsSensitiveInformation') | Out-Null
@@ -928,7 +907,7 @@ function Export-TargetResource
             if ($null -ne $Results.ContentContainsSensitiveInformation )
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation" -IsCIMArray $IsSitCIMArray
-               # $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation"
+                # $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation"
             }
             if ($null -ne $Results.ExceptIfContentContainsSensitiveInformation )
             {
@@ -1218,6 +1197,117 @@ function Get-SCDLPSensitiveInformationGroups
     $result.Add("groups", $groups)
     $returnValue += $result
     return $returnValue
+}
+
+function Test-ContainsSensitiveInformation {
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $targetValues,
+
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $sourceValues
+    )
+
+    foreach ($sit in $targetValues)
+    {
+        Write-Verbose -Message "Trying to find existing Sensitive Information Action matching name {$($sit.name)}"
+        $matchingExistingRule = $sourceValues | Where-Object -FilterScript { $_.name -eq $sit.name }
+
+        if ($null -ne $matchingExistingRule)
+        {
+            Write-Verbose -Message "Sensitive Information Action {$($sit.name)} was found"
+            $propertiesTocheck = @("id", "maxconfidence", "minconfidence", "classifiertype", "mincount", "maxcount")
+
+            foreach ($property in $propertiesToCheck)
+            {
+                Write-Verbose -Message "Checking property {$property} for Sensitive Information Action {$($sit.name)}"
+                if ($sit.$property -ne $matchingExistingRule.$property)
+                {
+                    Write-Verbose -Message "Property {$property} is set to {$($matchingExistingRule.$property)} and is expected to be {$($sit.$property)}."
+                    $EventMessage = "DLP Compliance Rule {$Name} was not in the desired state.`r`n" + `
+                        "Sensitive Information Action {$($sit.name)} has invalid value for property {$property}. " + `
+                        "Current value is {$($matchingExistingRule.$property)} and is expected to be {$($sit.$property)}."
+                    Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+                    return $false
+                }
+            }
+        }
+        else
+        {
+            Write-Verbose -Message "Sensitive Information Action {$($sit.name)} was not found"
+            $EventMessage = "DLP Compliance Rule {$Name} was not in the desired state.`r`n" + `
+                "An action on {$($sit.name)} Sensitive Information Type is missing."
+            Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+            return $false
+        }
+    }
+}
+
+function Test-ContainsSensitiveInformationGroups {
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $targetValues,
+
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $sourceValues
+    )
+
+    if ($targetValues.operator -ne $sourceValues.operator)
+    {
+        $EventMessage = "DLP Compliance Rule {$Name} was not in the desired state.`r`n" + `
+        "DLP Compliance Rule {$Name} has invalid value for property operator. " + `
+        "Current value is {$($targetValues.$operator)} and is expected to be {$($sourceValues.$operator)}."
+    Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+        -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+        return $false
+    }
+
+    foreach ($group in $targetValues.groups)
+    {
+        $matchingExistingGroup = $sourceValues.groups | Where-Object -FilterScript { $_.name -eq $group.name }
+
+        if ($null -ne $matchingExistingGroup)
+        {
+            Write-Verbose -Message "ContainsSensitiveInformationGroup {$($group.name)} was found"
+            if ($group.operator -ne $matchingExistingGroup.operator)
+            {
+                $EventMessage = "DLP Compliance Rule {$Name} was not in the desired state.`r`n" + `
+                "Group {$($group.name)} has invalid value for property operator. " + `
+                "Current value is {$($matchingExistingRule.$operator)} and is expected to be {$($group.$operator)}."
+            Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+            return $false
+            }
+        }
+        else
+        {
+            Write-Verbose -Message "Sensitive Information Action {$($group.name)} was not found"
+            $EventMessage = "DLP Compliance Rule {$Name} was not in the desired state.`r`n" + `
+                "An action on {$($sit.name)} Sensitive Information Type is missing."
+            Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+            return $false
+        }
+
+        $desiredState = Test-ContainsSensitiveInformation -targetValues $group.sensitivetypes `
+            -sourceValues $matchingExistingGroup.sensitivetypes
+        if ($desiredState -eq $false)
+        {
+            return $false
+        }
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource
