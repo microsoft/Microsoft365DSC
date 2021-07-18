@@ -225,7 +225,7 @@ function Get-TargetResource
                 $ExceptIfContentExtensionMatchesWords = $PolicyRule.ExceptIfContentExtensionMatchesWords.Replace(' ', '').Split(',')
             }
 
-
+            <#
             [array] $SensitiveInfoTypes = @()
             foreach ($SensitiveInfo in $PolicyRule.ContentContainsSensitiveInformation)
             {
@@ -244,23 +244,14 @@ function Get-TargetResource
             {
                 if ($null -ne $SensitiveInfo.groups)
                 {
-                    $groups = $SensitiveInfo.groups
-                    $SensitiveInfo = @()
-                    foreach ($group in $groups)
-                    {
-                        foreach ($siEntry in $group.sensitivetypes)
-                        {
-                            $SensitiveInfo += [System.Collections.Hashtable]$siEntry
-                        }
-                        $ExceptSensitiveInfoTypes += $SensitiveInfo
-                    }
+                    $SensitiveInfoTypes += Get-SCDLPSensitiveInformationGroups -SensitiveInformationGroups $PolicyRule.ExceptIfContentContainsSensitiveInformation
                 }
                 else
                 {
-                    $ExceptSensitiveInfoTypes += [System.Collections.Hashtable]$SensitiveInfo
+                    $SensitiveInfoTypes += Get-SCDLPSensitiveInformation -SensitiveInformation $PolicyRule.ExceptIfContentContainsSensitiveInformation
                 }
             }
-
+            #>
             $result = @{
                 Ensure                                      = 'Present'
                 Name                                        = $PolicyRule.Name
@@ -803,6 +794,26 @@ function Test-TargetResource
         return $false
     }
 
+    if ($null -ne $ValuesToCheck['ExceptIfContentContainsSensitiveInformation'])
+    {
+        if ($null -ne $ValuesToCheck['ExceptIfContentContainsSensitiveInformation'].groups)
+        {
+            $contentSITS = Get-SCDLPSensitiveInformationGroups -SensitiveInformation $ValuesToCheck['ExceptIfContentContainsSensitiveInformation']
+            $desiredState = Test-ContainsSensitiveInformationGroups -targetValues $contentSITS -sourceValue $CurrentValues.ExceptIfContentContainsSensitiveInformation
+        }
+        else
+        {
+            $contentSITS = Get-SCDLPSensitiveInformation -SensitiveInformation $ValuesToCheck['ExceptIfContentContainsSensitiveInformation']
+            $desiredState = Test-ContainsSensitiveInformation -targetValues $contentSITS -sourceValue $CurrentValues.ExceptIfContentContainsSensitiveInformation
+        }
+    }
+
+    if ($desiredState -eq $false)
+    {
+        Write-Verbose -Message "Test-TargetResource returned $desiredState"
+        return $false
+    }
+
     #endregion
     $ValuesToCheck.Remove('ContentContainsSensitiveInformation') | Out-Null
     $ValuesToCheck.Remove('ExceptIfContentContainsSensitiveInformation') | Out-Null
@@ -862,11 +873,18 @@ function Export-TargetResource
             }
             $Results = Get-TargetResource @Params
 
+            $IsCIMArray = $false
             $IsSitCIMArray = $false
             if ($Results.ContentContainsSensitiveInformation.Length -gt 1)
             {
                 $IsSitCIMArray = $true
             }
+
+            if ($Results.ExceptIfContentContainsSensitiveInformation.Length -gt 1)
+            {
+                $IsCIMArray = $true
+            }
+
             if ($null -ne $Results.ContentContainsSensitiveInformation)
             {
                 if ($null -ne $results.ContentContainsSensitiveInformation.Groups)
@@ -879,11 +897,6 @@ function Export-TargetResource
                 }
             }
 
-            $IsCIMArray = $false
-            if ($Results.ExceptIfContentContainsSensitiveInformation.Length -gt 1)
-            {
-                $IsCIMArray = $true
-            }
             if ($null -ne $Results.ExceptIfContentContainsSensitiveInformation)
             {
                 if ($null -ne $results.ExceptIfContentContainsSensitiveInformation.Groups)
@@ -907,7 +920,6 @@ function Export-TargetResource
             if ($null -ne $Results.ContentContainsSensitiveInformation )
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation" -IsCIMArray $IsSitCIMArray
-                # $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation"
             }
             if ($null -ne $Results.ExceptIfContentContainsSensitiveInformation )
             {
@@ -1159,12 +1171,18 @@ function Get-SCDLPSensitiveInformationGroups
         {
             $myGroup.Add("operator", $group.operator)
         }
-
+        $sits = @()
         foreach ($item in $group.SensitiveInformation)
         {
             $sit = @{
                 name = $item.name
             }
+
+            if ($null -ne $item.id)
+            {
+                $sit.Add("id", $item.id)
+            }
+
             if ($null -ne $item.maxconfidence)
             {
                 $sit.Add("maxconfidence", $item.maxconfidence)
