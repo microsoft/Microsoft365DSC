@@ -1790,7 +1790,11 @@ function Set-M365DSCAgentCertificateConfiguration
 {
     [CmdletBinding()]
     [OutputType([System.String])]
-    param()
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $KeepCertificate = $false
+    )
 
     $existingCertificate = Get-ChildItem -Path Cert:\LocalMachine\My | `
         Where-Object { $_.Subject -match "M365DSCEncryptionCert" }
@@ -1834,8 +1838,16 @@ function Set-M365DSCAgentCertificateConfiguration
 "@
     $LCMConfigContent | Out-File $configOutputFile
     & $configOutputFile
-    Remove-Item -Path $configOutputFile -Confirm:$false
-    Remove-Item -Path "./M365AgentConfig" -Recurse -Confirm:$false
+
+    if ($KeepCertificate)
+    {
+        Write-Host "Certificate {$thumbprint} was stored under {$($env:Temp)} with name M365DSC.cer and M365DSC.pfx"
+    }
+    else
+    {
+        Remove-Item -Path $configOutputFile -Confirm:$false
+        Remove-Item -Path "./M365AgentConfig" -Recurse -Confirm:$false
+    }
     return $thumbprint
 }
 
