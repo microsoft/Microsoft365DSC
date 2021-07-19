@@ -5,6 +5,8 @@
 * AADMSGroup
   * Fixed an issue where the Visibility parameter was never properly returned
     which always threw a detected drift when used.
+* EXOJournalRule
+  * Initial Release.
 * SPOSite
   * Fixed the StorageQuotaWarningLevel value returned by the Get-TargetResource
     function.
