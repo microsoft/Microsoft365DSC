@@ -1874,6 +1874,14 @@ function Get-AntiPhishPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Impersonation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Advanced,
+
+        [Parameter()]
         [System.Object]
         $Identity,
 
@@ -1929,6 +1937,19 @@ function Get-App
     )
 }
 function Get-ApplicationAccessPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-AtpPolicyForO365
 {
     [CmdletBinding()]
     param(
@@ -2628,6 +2649,66 @@ function Get-RoleAssignmentPolicy
         $AsJob
     )
 }
+function Get-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $State,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-SafeLinksRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $State,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Get-SharingPolicy
 {
     [CmdletBinding()]
@@ -2793,39 +2874,7 @@ function New-AntiPhishPolicy
     param(
         [Parameter()]
         [System.Object]
-        $EnableUnauthenticatedSender,
-
-        [Parameter()]
-        [System.Object]
-        $EnableSpoofIntelligence,
-
-        [Parameter()]
-        [System.Object]
-        $Name,
-
-        [Parameter()]
-        [System.Object]
         $EnableFirstContactSafetyTips,
-
-        [Parameter()]
-        [System.Object]
-        $AdminDisplayName,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $RecommendedPolicyType,
-
-        [Parameter()]
-        [System.Object]
-        $EnableViaTag,
-
-        [Parameter()]
-        [System.Object]
-        $AuthenticationFailAction,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -2833,7 +2882,131 @@ function New-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
+        $PhishThresholdLevel,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $EnableTargetedDomainsProtection,
+
+        [Parameter()]
+        [System.Object]
         $Enabled,
+
+        [Parameter()]
+        [System.Object]
+        $EnableViaTag,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxIntelligenceProtectionAction,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedDomainsToProtect,
+
+        [Parameter()]
+        [System.Object]
+        $EnableOrganizationDomainsProtection,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSpoofIntelligence,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSimilarUsersSafetyTips,
+
+        [Parameter()]
+        [System.Object]
+        $ExcludedDomains,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedDomainActionRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $EnableMailboxIntelligence,
+
+        [Parameter()]
+        [System.Object]
+        $SimilarUsersSafetyTipsCustomText,
+
+        [Parameter()]
+        [System.Object]
+        $ImpersonationProtectionState,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedDomainProtectionAction,
+
+        [Parameter()]
+        [System.Object]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Object]
+        $AuthenticationFailAction,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedUsersToProtect,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedUserProtectionAction,
+
+        [Parameter()]
+        [System.Object]
+        $RecommendedPolicyType,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxIntelligenceProtectionActionRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $UnusualCharactersSafetyTipsCustomText,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSimilarDomainsSafetyTips,
+
+        [Parameter()]
+        [System.Object]
+        $EnableTargetedUserProtection,
+
+        [Parameter()]
+        [System.Object]
+        $EnableUnauthenticatedSender,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyTag,
+
+        [Parameter()]
+        [System.Object]
+        $EnableUnusualCharactersSafetyTips,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $EnableMailboxIntelligenceProtection,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedUserActionRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $ExcludedSenders,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -4574,6 +4747,258 @@ function New-RoleAssignmentPolicy
         $AsJob
     )
 }
+function New-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Redirect,
+
+        [Parameter()]
+        [System.Object]
+        $RecommendedPolicyType,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $MakeBuiltInProtection,
+
+        [Parameter()]
+        [System.Object]
+        $Enable,
+
+        [Parameter()]
+        [System.Object]
+        $RedirectAddress,
+
+        [Parameter()]
+        [System.Object]
+        $Action,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $ActionOnError,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $Comments,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $SafeAttachmentPolicy,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $Enabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $EnableOrganizationBranding,
+
+        [Parameter()]
+        [System.Object]
+        $ExcludedUrls,
+
+        [Parameter()]
+        [System.Object]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $UseTranslatedNotificationText,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $DoNotTrackUserClicks,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $MakeBuiltInProtection,
+
+        [Parameter()]
+        [System.Object]
+        $DoNotRewriteUrls,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSafeLinksForTeams,
+
+        [Parameter()]
+        [System.Object]
+        $WhiteListedUrls,
+
+        [Parameter()]
+        [System.Object]
+        $TrackClicks,
+
+        [Parameter()]
+        [System.Object]
+        $AllowClickThrough,
+
+        [Parameter()]
+        [System.Object]
+        $RecommendedPolicyType,
+
+        [Parameter()]
+        [System.Object]
+        $DoNotAllowClickThrough,
+
+        [Parameter()]
+        [System.Object]
+        $CustomNotificationText,
+
+        [Parameter()]
+        [System.Object]
+        $DeliverMessageAfterScan,
+
+        [Parameter()]
+        [System.Object]
+        $ScanUrls,
+
+        [Parameter()]
+        [System.Object]
+        $IsEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $EnableForInternalSenders,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-SafeLinksRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $Comments,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $SafeLinksPolicy,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $Enabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function New-SharingPolicy
 {
     [CmdletBinding()]
@@ -5996,6 +6421,82 @@ function Remove-RoleAssignmentPolicy
         $AsJob
     )
 }
+function Remove-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Remove-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Remove-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Remove-SafeLinksRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Remove-SharingPolicy
 {
     [CmdletBinding()]
@@ -6161,35 +6662,7 @@ function Set-AntiPhishPolicy
     param(
         [Parameter()]
         [System.Object]
-        $EnableUnauthenticatedSender,
-
-        [Parameter()]
-        [System.Object]
-        $EnableSpoofIntelligence,
-
-        [Parameter()]
-        [System.Object]
         $EnableFirstContactSafetyTips,
-
-        [Parameter()]
-        [System.Object]
-        $AdminDisplayName,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $EnableViaTag,
-
-        [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Object]
-        $AuthenticationFailAction,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -6197,7 +6670,119 @@ function Set-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
+        $PhishThresholdLevel,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $EnableTargetedDomainsProtection,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
         $Enabled,
+
+        [Parameter()]
+        [System.Object]
+        $EnableViaTag,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxIntelligenceProtectionAction,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedDomainsToProtect,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedUsersToProtect,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSpoofIntelligence,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSimilarUsersSafetyTips,
+
+        [Parameter()]
+        [System.Object]
+        $ExcludedDomains,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyTag,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedDomainActionRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $EnableMailboxIntelligence,
+
+        [Parameter()]
+        [System.Object]
+        $ImpersonationProtectionState,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedDomainProtectionAction,
+
+        [Parameter()]
+        [System.Object]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Object]
+        $AuthenticationFailAction,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedUserProtectionAction,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxIntelligenceProtectionActionRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSimilarDomainsSafetyTips,
+
+        [Parameter()]
+        [System.Object]
+        $EnableTargetedUserProtection,
+
+        [Parameter()]
+        [System.Object]
+        $EnableUnauthenticatedSender,
+
+        [Parameter()]
+        [System.Object]
+        $EnableOrganizationDomainsProtection,
+
+        [Parameter()]
+        [System.Object]
+        $EnableUnusualCharactersSafetyTips,
+
+        [Parameter()]
+        [System.Object]
+        $EnableMailboxIntelligenceProtection,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedUserActionRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $ExcludedSenders,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -6317,6 +6902,55 @@ function Set-ApplicationAccessPolicy
         [Parameter()]
         [System.Object]
         $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-AtpPolicyForO365
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $TrackClicks,
+
+        [Parameter()]
+        [System.Object]
+        $EnableATPForSPOTeamsODB,
+
+        [Parameter()]
+        [System.Object]
+        $BlockUrls,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $AllowClickThrough,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSafeLinksForO365Clients,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSafeLinksForWebAccessCompanion,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSafeDocs,
+
+        [Parameter()]
+        [System.Object]
+        $AllowSafeDocsOpen,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -7394,6 +8028,10 @@ function Set-Mailbox
 
         [Parameter()]
         [System.Object]
+        $SourceArchiveMailboxGuid,
+
+        [Parameter()]
+        [System.Object]
         $Alias,
 
         [Parameter()]
@@ -7514,7 +8152,7 @@ function Set-Mailbox
 
         [Parameter()]
         [System.Object]
-        $SourceArchiveMailboxGuid,
+        $DataEncryptionPolicy,
 
         [Parameter()]
         [System.Object]
@@ -8597,6 +9235,10 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Object]
+        $CustomerLockboxEnabled,
+
+        [Parameter()]
+        [System.Object]
         $OutlookMobileHelpShiftEnabled,
 
         [Parameter()]
@@ -9413,6 +10055,242 @@ function Set-RoleAssignmentPolicy
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $IsDefault,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Redirect,
+
+        [Parameter()]
+        [System.Object]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Object]
+        $Enable,
+
+        [Parameter()]
+        [System.Object]
+        $RedirectAddress,
+
+        [Parameter()]
+        [System.Object]
+        $Action,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ActionOnError,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $Comments,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $SafeAttachmentPolicy,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $EnableOrganizationBranding,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ExcludedUrls,
+
+        [Parameter()]
+        [System.Object]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $UseTranslatedNotificationText,
+
+        [Parameter()]
+        [System.Object]
+        $DoNotTrackUserClicks,
+
+        [Parameter()]
+        [System.Object]
+        $DoNotRewriteUrls,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSafeLinksForTeams,
+
+        [Parameter()]
+        [System.Object]
+        $WhiteListedUrls,
+
+        [Parameter()]
+        [System.Object]
+        $TrackClicks,
+
+        [Parameter()]
+        [System.Object]
+        $AllowClickThrough,
+
+        [Parameter()]
+        [System.Object]
+        $DoNotAllowClickThrough,
+
+        [Parameter()]
+        [System.Object]
+        $CustomNotificationText,
+
+        [Parameter()]
+        [System.Object]
+        $DeliverMessageAfterScan,
+
+        [Parameter()]
+        [System.Object]
+        $ScanUrls,
+
+        [Parameter()]
+        [System.Object]
+        $IsEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $EnableForInternalSenders,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-SafeLinksRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $Comments,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $SafeLinksPolicy,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentToMemberOf,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -17111,6 +17989,10 @@ function Get-DlpCompliancePolicy
     param(
         [Parameter()]
         [System.Object]
+        $IncludeExtendedProperties,
+
+        [Parameter()]
+        [System.Object]
         $Identity,
 
         [Parameter()]
@@ -17332,6 +18214,23 @@ function Get-RetentionComplianceRule
         [Parameter()]
         [System.Object]
         $Policy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-SupervisoryReviewPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -17889,6 +18788,10 @@ function New-DlpCompliancePolicy
 
         [Parameter()]
         [System.Object]
+        $EndpointDlpLocationException,
+
+        [Parameter()]
+        [System.Object]
         $ExchangeSenderMemberOfException,
 
         [Parameter()]
@@ -17930,6 +18833,10 @@ function New-DlpCompliancePolicy
         [Parameter()]
         [System.Object]
         $OnPremisesScannerDlpLocation,
+
+        [Parameter()]
+        [System.Object]
+        $EndpointDlpLocation,
 
         [Parameter()]
         [System.Object]
@@ -18258,6 +19165,10 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
         $SubjectContainsWords,
 
         [Parameter()]
@@ -18394,7 +19305,7 @@ function New-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
-        $Name,
+        $EndpointDlpRestrictions,
 
         [Parameter()]
         [System.Object]
@@ -18585,6 +19496,10 @@ function New-Label
 
         [Parameter()]
         [System.Object]
+        $ApplyContentMarkingFooterEnabled,
+
+        [Parameter()]
+        [System.Object]
         $ApplyContentMarkingFooterFontSize,
 
         [Parameter()]
@@ -18609,7 +19524,15 @@ function New-Label
 
         [Parameter()]
         [System.Object]
+        $SiteAndGroupProtectionLevel,
+
+        [Parameter()]
+        [System.Object]
         $ApplyContentMarkingFooterText,
+
+        [Parameter()]
+        [System.Object]
+        $ColumnAssetCondition,
 
         [Parameter()]
         [System.Object]
@@ -18641,7 +19564,7 @@ function New-Label
 
         [Parameter()]
         [System.Object]
-        $ApplyContentMarkingFooterEnabled,
+        $SqlAssetCondition,
 
         [Parameter()]
         [System.Object]
@@ -18654,10 +19577,6 @@ function New-Label
         [Parameter()]
         [System.Object]
         $ApplyWaterMarkingLayout,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyContentMarkingFooterMargin,
 
         [Parameter()]
         [System.Object]
@@ -18782,6 +19701,10 @@ function New-Label
         [Parameter()]
         [System.Object]
         $ApplyWaterMarkingEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingFooterMargin,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -19033,6 +19956,39 @@ function New-RetentionComplianceRule
         [Parameter()]
         [System.Object]
         $RetentionDurationDisplayHint,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-SupervisoryReviewPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $Condition,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyType,
+
+        [Parameter()]
+        [System.Object]
+        $Reviewers,
+
+        [Parameter()]
+        [System.Object]
+        $SamplingRate,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -19576,6 +20532,19 @@ function Remove-RetentionComplianceRule
         $AsJob
     )
 }
+function Remove-SupervisoryReviewPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Remove-SupervisoryReviewPolicyV2
 {
     [CmdletBinding()]
@@ -20060,15 +21029,11 @@ function Set-DlpCompliancePolicy
 
         [Parameter()]
         [System.Object]
+        $RemoveEndpointDlpLocation,
+
+        [Parameter()]
+        [System.Object]
         $OneDriveSharedByMemberOf,
-
-        [Parameter()]
-        [System.Object]
-        $RemoveTeamsLocationException,
-
-        [Parameter()]
-        [System.Object]
-        $RemoveOneDriveLocationException,
 
         [Parameter()]
         [System.Object]
@@ -20092,6 +21057,14 @@ function Set-DlpCompliancePolicy
 
         [Parameter()]
         [System.Object]
+        $RemoveTeamsLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveOneDriveLocationException,
+
+        [Parameter()]
+        [System.Object]
         $RemoveSharePointLocation,
 
         [Parameter()]
@@ -20112,6 +21085,10 @@ function Set-DlpCompliancePolicy
 
         [Parameter()]
         [System.Object]
+        $AddEndpointDlpLocation,
+
+        [Parameter()]
+        [System.Object]
         $AddSharePointLocation,
 
         [Parameter()]
@@ -20129,6 +21106,10 @@ function Set-DlpCompliancePolicy
         [Parameter()]
         [System.Object]
         $AddThirdPartyAppDlpLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $AddEndpointDlpLocationException,
 
         [Parameter()]
         [System.Object]
@@ -20169,6 +21150,10 @@ function Set-DlpCompliancePolicy
         [Parameter()]
         [System.Object]
         $Mode,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveEndpointDlpLocationException,
 
         [Parameter()]
         [System.Object]
@@ -20601,6 +21586,10 @@ function Set-DlpComplianceRule
 
         [Parameter()]
         [System.Object]
+        $EndpointDlpRestrictions,
+
+        [Parameter()]
+        [System.Object]
         $DocumentContainsWords,
 
         [Parameter()]
@@ -20703,6 +21692,10 @@ function Set-Label
 
         [Parameter()]
         [System.Object]
+        $ApplyContentMarkingFooterEnabled,
+
+        [Parameter()]
+        [System.Object]
         $ApplyContentMarkingFooterFontSize,
 
         [Parameter()]
@@ -20731,7 +21724,15 @@ function Set-Label
 
         [Parameter()]
         [System.Object]
+        $SiteAndGroupProtectionLevel,
+
+        [Parameter()]
+        [System.Object]
         $ApplyContentMarkingFooterText,
+
+        [Parameter()]
+        [System.Object]
+        $ColumnAssetCondition,
 
         [Parameter()]
         [System.Object]
@@ -20759,7 +21760,7 @@ function Set-Label
 
         [Parameter()]
         [System.Object]
-        $ApplyContentMarkingFooterEnabled,
+        $SqlAssetCondition,
 
         [Parameter()]
         [System.Object]
@@ -21267,6 +22268,47 @@ function Set-RetentionComplianceRule
         [Parameter()]
         [System.Object]
         $RetentionDurationDisplayHint,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-SupervisoryReviewPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Object]
+        $AddReviewers,
+
+        [Parameter()]
+        [System.Object]
+        $Condition,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyType,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveReviewers,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Reviewers,
+
+        [Parameter()]
+        [System.Object]
+        $SamplingRate,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
