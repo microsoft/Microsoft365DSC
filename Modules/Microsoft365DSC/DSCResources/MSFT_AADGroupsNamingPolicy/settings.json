@@ -1,0 +1,17 @@
+{
+    "description": "This resource configures the Azure Active Directory groups naming policy.",
+    "permissions": [
+        {
+            "read": [
+                {
+                    "name":"Group.Read.All"
+                }
+            ],
+            "update": [
+                {
+                    "name": "Group.ReadWrite.All"
+                }
+            ]
+        }
+    ]
+}
