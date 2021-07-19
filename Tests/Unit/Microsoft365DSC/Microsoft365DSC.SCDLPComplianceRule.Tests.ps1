@@ -137,21 +137,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-DLPComplianceRule -MockWith {
-                    return @{
-                        Name                                = "TestPolicy"
-                        Comment                             = "New Comment"
-                        ParentPolicyName                    = "MyParentPolicy"
-                        ContentContainsSensitiveInformation = @{operator="and";groups=@({name="default";
-                                    operator="and";
-                                    SensitiveInformation= @({maxconfidence = "100" = "cb353f78-2b72-4c3c-8827-92ebe4f69fdf"; minconfidence = "75"; rulePackId = "00000000-0000-0000-0000-000000000000";
-                                            classifiertype = "Content"; name = "ABA Routing Number"; mincount = "1"; maxcount = "-1";},
-                                            {maxconfidence = "100"; id = "98da3da1-9199-4571-b7c4-b6522980b507"; minconfidence = "75"; rulePackId = "00000000-0000-0000-0000-000000000000";
-                                            classifiertype = "Content"; name = "Argentina Unique Tax Identification Key (CUIT/CUIL)"; mincount = "1"; maxcount = "-1";
-                                            })
-                                })
-                            BlockAccess                   = $False;
-                        }
-                    }
+                    return $null
                 }
             }
                 It 'Should return false from the Test method' {
@@ -194,7 +180,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Name                                = "TestPolicy"
                             Comment                             = "New Comment"
                             ParentPolicyName                    = "MyParentPolicy"
-                            ContentContainsSensitiveInformation = @(@{maxconfidence = "100"; id = "eefbb00e-8282-433c-8620-8f1da3bffdb2"; minconfidence = "75"; rulePackId = "00000000-0000-0000-0000-000000000000"; classifiertype = "Content"; name = "Argentina National Identity (DNI) Number"; mincount = "1"; maxcount = "9"; })
+                            ContentContainsSensitiveInformation = @(@{maxconfidence = "100"; id = "cb353f78-2b72-4c3c-8827-92ebe4f69fdf"; minconfidence = "75"; rulePackId = "00000000-0000-0000-0000-000000000000"; classifiertype = "Content"; name = "ABA Routing Number"; mincount = "1"; maxcount = "-1"; })
                             BlockAccess                         = $False;
                         }
                     }
