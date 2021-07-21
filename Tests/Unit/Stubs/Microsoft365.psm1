@@ -866,7 +866,7 @@ function New-AzureADUser
         $AgeGroup,
 
         [Parameter()]
-        [System.Collections.Generic.Dictionary`2[System.String, System.String]]
+        [System.Collections.Generic.Dictionary`2[System.String,System.String]]
         $ExtensionProperty,
 
         [Parameter()]
@@ -1583,7 +1583,7 @@ function Set-AzureADUser
         $AgeGroup,
 
         [Parameter()]
-        [System.Collections.Generic.Dictionary`2[System.String, System.String]]
+        [System.Collections.Generic.Dictionary`2[System.String,System.String]]
         $ExtensionProperty,
 
         [Parameter()]
@@ -1735,6 +1735,40 @@ function Add-UnifiedGroupLinks
         [Parameter()]
         [System.Object]
         $Links,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Disable-JournalRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Enable-JournalRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -2234,6 +2268,19 @@ function Get-InboundConnector
     )
 }
 function Get-IntraOrganizationConnector
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-JournalRule
 {
     [CmdletBinding()]
     param(
@@ -2830,8 +2877,8 @@ function New-AntiPhishPolicy
         $EnableFirstContactSafetyTips,
 
         [Parameter()]
-        [System.Object]
-        $EnableMailboxIntelligenceProtection,
+        [System.Management.Automation.SwitchParameter]
+        $MakeDefault,
 
         [Parameter()]
         [System.Object]
@@ -2948,6 +2995,10 @@ function New-AntiPhishPolicy
         [Parameter()]
         [System.Object]
         $Name,
+
+        [Parameter()]
+        [System.Object]
+        $EnableMailboxIntelligenceProtection,
 
         [Parameter()]
         [System.Object]
@@ -3716,6 +3767,39 @@ function New-IntraOrganizationConnector
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Enabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-JournalRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Scope,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $JournalEmailAddress,
+
+        [Parameter()]
+        [System.Object]
+        $Recipient,
 
         [Parameter()]
         [System.Object]
@@ -4684,6 +4768,10 @@ function New-SafeAttachmentPolicy
         $AdminDisplayName,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $MakeBuiltInProtection,
+
+        [Parameter()]
         [System.Object]
         $Enable,
 
@@ -4798,8 +4886,16 @@ function New-SafeLinksPolicy
         $DoNotTrackUserClicks,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $MakeBuiltInProtection,
+
+        [Parameter()]
         [System.Object]
         $DoNotRewriteUrls,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSafeLinksForTeams,
 
         [Parameter()]
         [System.Object]
@@ -6022,6 +6118,23 @@ function Remove-InboundConnector
     )
 }
 function Remove-IntraOrganizationConnector
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Remove-JournalRule
 {
     [CmdletBinding()]
     param(
@@ -7405,10 +7518,6 @@ function Set-HostedContentFilterPolicy
 
         [Parameter()]
         [System.Object]
-        $OverrideJMF,
-
-        [Parameter()]
-        [System.Object]
         $AllowedSenders,
 
         [Parameter()]
@@ -7696,6 +7805,39 @@ function Set-IntraOrganizationConnector
         $AsJob
     )
 }
+function Set-JournalRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Scope,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $JournalEmailAddress,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Recipient,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Set-Mailbox
 {
     [CmdletBinding()]
@@ -7722,7 +7864,7 @@ function Set-Mailbox
 
         [Parameter()]
         [System.Object]
-        $UserCertificate,
+        $AssociateSourceArchive,
 
         [Parameter()]
         [System.Object]
@@ -7802,7 +7944,7 @@ function Set-Mailbox
 
         [Parameter()]
         [System.Object]
-        $AuditLogAgeLimit,
+        $AcceptMessagesOnlyFrom,
 
         [Parameter()]
         [System.Object]
@@ -7870,7 +8012,7 @@ function Set-Mailbox
 
         [Parameter()]
         [System.Object]
-        $SharingPolicy,
+        $SchedulerAssistant,
 
         [Parameter()]
         [System.Object]
@@ -7883,6 +8025,10 @@ function Set-Mailbox
         [Parameter()]
         [System.Object]
         $RulesQuota,
+
+        [Parameter()]
+        [System.Object]
+        $SourceArchiveMailboxGuid,
 
         [Parameter()]
         [System.Object]
@@ -7982,10 +8128,6 @@ function Set-Mailbox
 
         [Parameter()]
         [System.Object]
-        $AcceptMessagesOnlyFrom,
-
-        [Parameter()]
-        [System.Object]
         $AuditDelegate,
 
         [Parameter()]
@@ -8077,6 +8219,10 @@ function Set-Mailbox
         $ExternalOofOptions,
 
         [Parameter()]
+        [System.Object]
+        $AuditLogAgeLimit,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $RemoveMailboxProvisioningConstraint,
 
@@ -8126,7 +8272,15 @@ function Set-Mailbox
 
         [Parameter()]
         [System.Object]
+        $SharingPolicy,
+
+        [Parameter()]
+        [System.Object]
         $CustomAttribute4,
+
+        [Parameter()]
+        [System.Object]
+        $UserCertificate,
 
         [Parameter()]
         [System.Object]
@@ -8697,7 +8851,7 @@ function Set-OrganizationConfig
     param(
         [Parameter()]
         [System.Object]
-        $RequiredCharsetCoverage,
+        $FindTimeLockPollForAttendeesEnabled,
 
         [Parameter()]
         [System.Object]
@@ -8909,6 +9063,10 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Object]
+        $RequiredCharsetCoverage,
+
+        [Parameter()]
+        [System.Object]
         $AsyncSendEnabled,
 
         [Parameter()]
@@ -8954,6 +9112,10 @@ function Set-OrganizationConfig
         [Parameter()]
         [System.Object]
         $BookingsPaymentsEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $MessageHighlightsEnabled,
 
         [Parameter()]
         [System.Object]
@@ -9377,6 +9539,10 @@ function Set-OwaMailboxPolicy
         [Parameter()]
         [System.Object]
         $OutlookBetaToggleEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $SMimeSuppressNameChecksEnabled,
 
         [Parameter()]
         [System.Object]
@@ -10028,6 +10194,10 @@ function Set-SafeLinksPolicy
         [Parameter()]
         [System.Object]
         $DoNotRewriteUrls,
+
+        [Parameter()]
+        [System.Object]
+        $EnableSafeLinksForTeams,
 
         [Parameter()]
         [System.Object]
@@ -16397,6 +16567,27 @@ function Set-PnPAuditing
         $RetentionTime
     )
 }
+function Set-PnPBrowserIdleSignout
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.TimeSpan]
+        $WarnAfter,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $SignoutAfter,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled
+    )
+}
 function Set-PnPGroup
 {
     [CmdletBinding()]
@@ -16492,12 +16683,12 @@ function Set-PnPHomeSite
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
-        $Connection,
+        [System.String]
+        $HomeSiteUrl,
 
         [Parameter()]
-        [System.String]
-        $Url
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection
     )
 }
 function Set-PnPHubSite
@@ -16836,8 +17027,8 @@ function Set-PnPTenant
         $DisallowInfectedFileDownload,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
-        $Connection,
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]]
+        $SharingCapability,
 
         [Parameter()]
         [System.Boolean]
@@ -16858,10 +17049,6 @@ function Set-PnPTenant
         [Parameter()]
         [System.Boolean]
         $RequireAcceptingAccountMatchInvitedAccount,
-
-        [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType]]
-        $DefaultLinkPermission,
 
         [Parameter()]
         [System.Boolean]
@@ -16918,6 +17105,10 @@ function Set-PnPTenant
         [Parameter()]
         [System.Boolean]
         $PublicCdnEnabled,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SensitiveByDefaultState]]
+        $MarkNewFilesSensitiveByDefault,
 
         [Parameter()]
         [System.String]
@@ -16992,6 +17183,10 @@ function Set-PnPTenant
         $DisplayStartASiteOption,
 
         [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType]]
+        $DefaultLinkPermission,
+
+        [Parameter()]
         [System.Boolean]
         $ApplyAppEnforcedRestrictionsToAdHocRecipients,
 
@@ -17008,8 +17203,8 @@ function Set-PnPTenant
         $IPAddressEnforcement,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]]
-        $SharingCapability,
+        [System.String]
+        $SharingBlockedDomainList,
 
         [Parameter()]
         [System.Boolean]
@@ -17029,6 +17224,10 @@ function Set-PnPTenant
 
         [Parameter()]
         [System.Boolean]
+        $DisableBackToClassic,
+
+        [Parameter()]
+        [System.Boolean]
         $PreventExternalUsersFromResharing,
 
         [Parameter()]
@@ -17038,6 +17237,10 @@ function Set-PnPTenant
         [Parameter()]
         [System.Boolean]
         $LegacyAuthProtocolsEnabled,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Base.PnPConnection]
+        $Connection,
 
         [Parameter()]
         [System.String]
@@ -17052,10 +17255,6 @@ function Set-PnPTenant
         $UserVoiceForFeedbackEnabled,
 
         [Parameter()]
-        [System.Nullable`1[System.Int32]]
-        $EmailAttestationReAuthDays,
-
-        [Parameter()]
         [System.Nullable`1[System.Int64]]
         $OneDriveStorageQuota,
 
@@ -17064,12 +17263,12 @@ function Set-PnPTenant
         $MaxCompatibilityLevel,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.SharePoint.Client.SharingState]]
-        $ODBMembersCanShare,
+        [System.Nullable`1[System.Int32]]
+        $EmailAttestationReAuthDays,
 
         [Parameter()]
-        [System.String]
-        $SharingBlockedDomainList
+        [System.Nullable`1[Microsoft.SharePoint.Client.SharingState]]
+        $ODBMembersCanShare
     )
 }
 function Set-PnPTenantCdnEnabled
@@ -17363,7 +17562,6 @@ function Unregister-PnPHubSite
     )
 }
 #endregion
-
 #region PowerPlatforms
 function Get-AdminPowerApp
 {
@@ -17791,6 +17989,10 @@ function Get-DlpCompliancePolicy
     param(
         [Parameter()]
         [System.Object]
+        $IncludeExtendedProperties,
+
+        [Parameter()]
+        [System.Object]
         $Identity,
 
         [Parameter()]
@@ -18012,6 +18214,23 @@ function Get-RetentionComplianceRule
         [Parameter()]
         [System.Object]
         $Policy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-SupervisoryReviewPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -19305,6 +19524,10 @@ function New-Label
 
         [Parameter()]
         [System.Object]
+        $SiteAndGroupProtectionLevel,
+
+        [Parameter()]
+        [System.Object]
         $ApplyContentMarkingFooterText,
 
         [Parameter()]
@@ -19314,6 +19537,10 @@ function New-Label
         [Parameter()]
         [System.Object]
         $SiteAndGroupProtectionAllowEmailFromGuestUsers,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsLobbyBypassScope,
 
         [Parameter()]
         [System.Object]
@@ -19350,10 +19577,6 @@ function New-Label
         [Parameter()]
         [System.Object]
         $ApplyWaterMarkingLayout,
-
-        [Parameter()]
-        [System.Object]
-        $ApplyContentMarkingFooterMargin,
 
         [Parameter()]
         [System.Object]
@@ -19478,6 +19701,10 @@ function New-Label
         [Parameter()]
         [System.Object]
         $ApplyWaterMarkingEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingFooterMargin,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -19729,6 +19956,39 @@ function New-RetentionComplianceRule
         [Parameter()]
         [System.Object]
         $RetentionDurationDisplayHint,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-SupervisoryReviewPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $Condition,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyType,
+
+        [Parameter()]
+        [System.Object]
+        $Reviewers,
+
+        [Parameter()]
+        [System.Object]
+        $SamplingRate,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -20266,6 +20526,19 @@ function Remove-RetentionComplianceRule
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ForceDeletion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Remove-SupervisoryReviewPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -21451,6 +21724,10 @@ function Set-Label
 
         [Parameter()]
         [System.Object]
+        $SiteAndGroupProtectionLevel,
+
+        [Parameter()]
+        [System.Object]
         $ApplyContentMarkingFooterText,
 
         [Parameter()]
@@ -21460,6 +21737,10 @@ function Set-Label
         [Parameter()]
         [System.Object]
         $SiteAndGroupProtectionAllowEmailFromGuestUsers,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsLobbyBypassScope,
 
         [Parameter()]
         [System.Object]
@@ -21987,6 +22268,47 @@ function Set-RetentionComplianceRule
         [Parameter()]
         [System.Object]
         $RetentionDurationDisplayHint,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-SupervisoryReviewPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Object]
+        $AddReviewers,
+
+        [Parameter()]
+        [System.Object]
+        $Condition,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyType,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveReviewers,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Reviewers,
+
+        [Parameter()]
+        [System.Object]
+        $SamplingRate,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
