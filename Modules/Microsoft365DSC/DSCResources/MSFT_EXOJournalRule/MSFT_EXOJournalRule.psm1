@@ -252,6 +252,7 @@ function Set-TargetResource
     # If the Rule exists and it should not - Delete the Rule
     elseif ($Ensure -eq 'Absent' -and $currentValues.Ensure -eq 'Present')
     {
+        Write-Verbose -Message "Removing Journal Rule ${$Name}"
         Remove-JournalRule -Identity $Name | Out-Null
     }
 }
