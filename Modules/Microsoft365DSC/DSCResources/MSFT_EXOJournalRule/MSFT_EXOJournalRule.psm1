@@ -223,7 +223,7 @@ function Set-TargetResource
     # If the Rule should exist, but it doesn't - Create the Rule
     if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating new Journal Rule {$Name}"
+        Write-Verbose -Message "Creating new Journal Rule {$Name} with Enabled set to {$enabledValue}"
         New-JournalRule @opsParams | Out-Null
     }
     # If the Rule should exist and it already does - Update the Rule
@@ -241,7 +241,6 @@ function Set-TargetResource
 
             if ($Enabled -eq $true)
             {
-                Write-Host "TADA!!!"
                 Enable-JournalRule -Identity $Name | Out-Null
             }
             else

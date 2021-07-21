@@ -3,7 +3,7 @@
 class MSFT_EXOJournalRule : OMI_BaseResource
 {
     [Key, Description("Name of the Journal Rule")] String Name;
-    [Key, Description("The JournalEmailAddress parameter specifies a recipient object to which journal reports are sent. You ean use any value that uniquely identifies the recipient.")] String JournalEmailAddress;
+    [Key, Description("The JournalEmailAddress parameter specifies a recipient object to which journal reports are sent. You can use any value that uniquely identifies the recipient.")] String JournalEmailAddress;
     [Write, Description("The Recipient parameter specifies the SMTP address of a mailbox, contact, or distribution group to journal. If you specify a distribution group, all recipients in that distribution group are journaled. All messages sent to or from a recipient are journaled.")] String Recipient;
     [Write, Description("Specifies whether the Journal Rule is enabled or not.")] Boolean Enabled;
     [Write, Description("The Scope parameter specifies the scope of email messages to which the journal rule is applied"), ValueMap{"Global","Internal","External"}, Values{"Global","Internal","External"}] String RuleScope;
