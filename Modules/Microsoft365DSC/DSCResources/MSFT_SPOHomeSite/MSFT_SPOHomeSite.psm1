@@ -188,7 +188,7 @@ function Set-TargetResource
         }
 
         Write-Verbose -Message "Configuring site collection as Home Site"
-        Set-PnPHomeSite -Url $Url
+        Set-PnPHomeSite -HomeSiteUrl $Url
     }
 
     if ($Ensure -eq "Absent" -and $currentValues.Ensure -eq "Present")
