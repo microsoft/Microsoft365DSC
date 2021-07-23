@@ -116,7 +116,7 @@ function Get-TargetResource
         [ValidateSet('Absent', 'Present')]
         $Ensure,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount,
 
@@ -342,7 +342,7 @@ function Set-TargetResource
         [ValidateSet('Absent', 'Present')]
         $Ensure,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount,
 
@@ -536,7 +536,7 @@ function Test-TargetResource
         [ValidateSet('Absent', 'Present')]
         $Ensure,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount,
 
@@ -591,7 +591,7 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount,
 
