@@ -69,6 +69,9 @@ function Get-TargetResource
             Description        = $configPolicy.Description
             Ensure             = 'Present'
             GlobalAdminAccount = $GlobalAdminAccount
+            ApplicationId      = $ApplicationId
+            TenantId           = $TenantId
+            ApplicationSecret  = $ApplicationSecret
         }
     }
     catch
@@ -224,6 +227,9 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
                                              -Source $($MyInvocation.MyCommand.Source) `
