@@ -17,9 +17,23 @@ function Get-TargetResource
         [ValidateSet('Absent', 'Present')]
         $Ensure,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret
+
+
     )
     Write-Verbose -Message "Checking for the Intune App Configuration Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
@@ -55,6 +69,9 @@ function Get-TargetResource
             Description        = $configPolicy.Description
             Ensure             = 'Present'
             GlobalAdminAccount = $GlobalAdminAccount
+            ApplicationId      = $ApplicationId
+            TenantId           = $TenantId
+            ApplicationSecret  = $ApplicationSecret
         }
     }
     catch
@@ -101,9 +118,21 @@ function Set-TargetResource
         [ValidateSet('Absent', 'Present')]
         $Ensure,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret
     )
 
     Write-Verbose -Message "Intune App Configuration Policy {$DisplayName}"
@@ -164,9 +193,21 @@ function Test-TargetResource
         [ValidateSet('Absent', 'Present')]
         $Ensure,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret
     )
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -186,6 +227,9 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
                                              -Source $($MyInvocation.MyCommand.Source) `
@@ -203,9 +247,21 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret
     )
     $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
         -InboundParameters $PSBoundParameters
@@ -221,7 +277,6 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-
     try
     {
         [array]$configPolicies = Get-IntuneAppConfigurationPolicyTargeted -ErrorAction Stop
@@ -235,9 +290,13 @@ function Export-TargetResource
                 DisplayName        = $configPolicy.displayName
                 Ensure             = 'Present'
                 GlobalAdminAccount = $GlobalAdminAccount
+                ApplicationID      = $ApplicationId
+                TenantId           = $TenantId
+                ApplicationSecret  = $ApplicationSecret
             }
-            $result = Get-TargetResource @params
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $results = Get-TargetResource @params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
