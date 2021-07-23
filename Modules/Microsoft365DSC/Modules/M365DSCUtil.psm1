@@ -1792,12 +1792,33 @@ function Set-M365DSCAgentCertificateConfiguration
     [OutputType([System.String])]
     param(
         [Parameter()]
-        [System.Boolean]
-        $KeepCertificate = $false
+        [Switch]
+        $KeepCertificate,
+
+        [Parameter()]
+        [Switch]
+        $ForceRenew,
+
+        [Parameter()]
+        [Switch]
+        $GeneratePFX,
+
+        [Parameter()]
+        [System.String]
+        $Password
     )
 
     $existingCertificate = Get-ChildItem -Path Cert:\LocalMachine\My | `
         Where-Object { $_.Subject -match "M365DSCEncryptionCert" }
+
+    if ($ForceRenew)
+    {
+        foreach ($cert in $existingCertificate)
+        {
+            Remove-Item $cert.PSPath | Out-Null
+        }
+        $existingCertificate = $null
+    }
     if ($null -eq $existingCertificate)
     {
         Write-Verbose -Message "No existing M365DSC certificate found. Creating one."
@@ -1845,8 +1866,26 @@ function Set-M365DSCAgentCertificateConfiguration
     }
     else
     {
-        Remove-Item -Path $configOutputFile -Confirm:$false
-        Remove-Item -Path "./M365AgentConfig" -Recurse -Confirm:$false
+        try {
+            Remove-Item -Path $configOutputFile -Confirm:$false -ErrorAction SilentlyContinue
+            Remove-Item -Path "./M365AgentConfig" -Recurse -Confirm:$false -ErrorAction SilentlyContinue
+        }
+        catch
+        {
+            Write-Error $_
+        }
+    }
+
+    if ($GeneratePFX)
+    {
+        if ($Password -eq $null)
+        {
+            Throw "When the GeneratePFX switch is used, you also need to provide a password."
+        }
+        $securePassword = ConvertTo-SecureString -String $password -Force -AsPlainText
+        Export-PfxCertificate -Cert $existingCertificate.PSPath `
+            -FilePath $certificateFilePath.Replace('.cer','.pfx') `
+            -Password $securePassword | Out-Null
     }
     return $thumbprint
 }
