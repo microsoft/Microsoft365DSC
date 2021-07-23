@@ -1,4 +1,4 @@
-name: AzureCloud - Integration
+name: AzureCloud - GCCHigh - Integration
 on: [push]
 
 jobs:
@@ -41,8 +41,8 @@ jobs:
     - name: Run Integration Tests
       shell : powershell
       env:
-        PUBLIC_USERNAME: ${{ secrets.GCCHIGH_USERNAME }}
-        PUBLIC_PASSWORD: ${{ secrets.GCCHIGH_PASSWORD }}
+        GCCHIGH_USERNAME: ${{ secrets.GCCHIGH_USERNAME }}
+        GCCHIGH_PASSWORD: ${{ secrets.GCCHIGH_PASSWORD }}
       run: |
        Set-ExecutionPolicy Unrestricted -Force
        Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
