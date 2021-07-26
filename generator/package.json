@@ -27,8 +27,8 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "pwsh -command '.\\scripts\\Build-Workloads.ps1' && react-scripts start",
+    "build": "pwsh -command '.\\scripts\\Build-Workloads.ps1' && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
