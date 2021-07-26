@@ -15,7 +15,7 @@ jobs:
         with:
           submodules: true
       - name: Generate workloads and resources
-        shell: powershell
+        shell: pwsh
         run: pwsh -command ".\$GITHUB_WORKSPACE\generator\scripts\Build-Workloads.ps1"
       - name: Build And Deploy
         id: builddeploy
