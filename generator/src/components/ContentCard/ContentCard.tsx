@@ -10,12 +10,14 @@ import { Workload } from '../../models/Workload';
 
 export interface IContentCardProps {
   workload: Workload;
+  onSelectAll(workload: Workload, isIndeterminate?: boolean, checked?: boolean): void;
 }
 export const ContentCard: React.FunctionComponent<IContentCardProps> = (props) => {
   const history = useHistory();
   const [isHovered, setIsHovered] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isChecked, setIsChecked] = useState(false);
-  const [isInderminate, setIsInderminate] = useState(false);
+  const [isIndeterminate, setIsIndeterminate] = useState(false);
   const theme = getTheme();
   const setSelectedWorkload = useSetRecoilState(selectedWorkloadState);
   const [selectedResources, setSelectedResources] = useRecoilState(selectedResourcesState);
@@ -33,27 +35,11 @@ export const ContentCard: React.FunctionComponent<IContentCardProps> = (props) =
       setIsChecked(false)
     } else {
       setIsChecked(false);
-      setIsInderminate(true);
+      setIsIndeterminate(true);
     }
-  }, [_getWorkloadResources]);
 
-  const _onSelectAll = (workload: Workload, checked?: boolean) => {
-    if(isInderminate || checked) {
-      setSelectedResources((selectedResources) => {
-        return selectedResources.map((resource) => {
-          const updatedResource = resource.workload === workload.id ? { ...resource, checked: true } : resource;
-          return updatedResource;
-        });
-      });
-    } else {
-      setSelectedResources((selectedResources) => {
-        return selectedResources.map((resource) => {
-          const updatedResource = resource.workload === workload.id ? { ...resource, checked: false } : resource;
-          return updatedResource;
-        });
-      });
-    }
-  };
+    setIsLoading(false);
+  }, [_getWorkloadResources]);
 
   const _getCheckedWorkloadResources = () => {
     return _getWorkloadResources().filter((r) => r.checked === true);
@@ -111,14 +97,16 @@ export const ContentCard: React.FunctionComponent<IContentCardProps> = (props) =
                   setSelectedWorkload(props.workload.title);
                 }} />
               )}
-              <Checkbox
-                id={`chkSelectAll-${props.workload.id}`}
-                label={isInderminate ? `${_getCheckedWorkloadResources().length} selected` : isChecked ? "Unselect all" : "Select all" }
-                styles={{ root: {right: 0, marginRight: '80px', position: 'absolute'}}}
-                checked={isChecked}
-                indeterminate={isInderminate}
-                onChange={(ev, checked) => _onSelectAll(props.workload, checked)}
-              />
+              {!isLoading &&
+                <Checkbox
+                  id={`chkSelectAll-${props.workload.id}`}
+                  key={props.workload.id}
+                  label={isIndeterminate ? `${_getCheckedWorkloadResources().length} selected` : isChecked ? "Unselect all" : "Select all" }
+                  styles={{ root: {right: 0, marginRight: '80px', position: 'absolute'}}}
+                  checked={isChecked}
+                  indeterminate={isIndeterminate}
+                  onChange={(ev, checked) => props.onSelectAll(props.workload, isIndeterminate, checked)} />
+              }
           </h2>
         )}
 

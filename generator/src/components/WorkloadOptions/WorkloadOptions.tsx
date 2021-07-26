@@ -7,7 +7,7 @@ import {
   StackItem
 } from '@fluentui/react';
 import * as React from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { Resource } from '../../models/Resource';
 import { Workload } from '../../models/Workload';
 import { selectedResourcesState } from '../../state/resourcesState';
@@ -20,7 +20,7 @@ export interface IWorkloadOptionsProps {
 
 export const WorkloadOptions: React.FunctionComponent<IWorkloadOptionsProps> = (props) => {
   const workloads = useRecoilValue(workloadsState);
-  const resources = useRecoilValue(selectedResourcesState);
+  const [resources, setResources] = useRecoilState(selectedResourcesState);
 
   const wrapStackTokens: IStackTokens = { childrenGap: 30 };
 
@@ -41,10 +41,20 @@ export const WorkloadOptions: React.FunctionComponent<IWorkloadOptionsProps> = (
     props.onSelectedResourcesChange(resource, false);
   };
 
+  const onSelectAll = (workload: Workload, isIndeterminate?: boolean, checked?: boolean) => {
+      setResources((selectedResources) => {
+        return selectedResources.map((resource) => {
+          const updatedResource = resource.workload === workload.id ? { ...resource, checked: isIndeterminate || checked } : resource;
+          return updatedResource;
+        });
+      });
+
+  };
+
   return (
     <>
       {workloads?.map((workload: Workload) => (
-        <ContentCard workload={workload} key={workload.id}>
+        <ContentCard workload={workload} key={workload.id} onSelectAll={onSelectAll}>
           <Stack horizontal wrap styles={stackStyles} tokens={wrapStackTokens}>
             {resources
               ?.filter((resource) => resource.workload === workload.id)
