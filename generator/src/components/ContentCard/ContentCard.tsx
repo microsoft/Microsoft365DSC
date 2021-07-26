@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { getTheme } from '@fluentui/react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { selectedWorkloadState } from '../../state/selectedWorkloadState';
 import { selectedResourcesState } from '../../state/resourcesState';
 import { Workload } from '../../models/Workload';
@@ -20,7 +20,7 @@ export const ContentCard: React.FunctionComponent<IContentCardProps> = (props) =
   const [isIndeterminate, setIsIndeterminate] = useState(false);
   const theme = getTheme();
   const setSelectedWorkload = useSetRecoilState(selectedWorkloadState);
-  const [selectedResources, setSelectedResources] = useRecoilState(selectedResourcesState);
+  const selectedResources = useRecoilValue(selectedResourcesState);
 
   const _getWorkloadResources = React.useCallback(() => {
     return selectedResources.filter((r) => r.workload === props.workload.id);
