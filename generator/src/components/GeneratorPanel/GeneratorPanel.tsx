@@ -31,6 +31,24 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
     return scriptHeader += "\n"
   }
 
+  const _getScriptAuthentication = () => {
+    let scriptAuthentication = "";
+
+    switch(authenticationType) {
+      case AuthenticationType.Credentials :
+        scriptAuthentication =   ` -GlobalAdminAccount $creds`;
+        break;
+      case AuthenticationType.Application :
+        scriptAuthentication =   ` -ApplicationId $ApplicationId -ApplicationSecret $ApplicationSecret -TenantId $TenantId`;
+        break;
+      case AuthenticationType.Certificate :
+        scriptAuthentication =   ` -ApplicationId $ApplicationId -CertificateThumbprint $CertificateThumbprint -TenantId $TenantId`;
+          break;
+    }
+
+    return scriptAuthentication;
+  }
+
   const _getScriptPrompts = () => {
     let scriptPrompts = "";
 
@@ -39,6 +57,18 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
         scriptPrompts =   `# Getting client credentials\n`;
         scriptPrompts +=  `$creds = Get-Credential\n`
         break;
+      case AuthenticationType.Application :
+        scriptPrompts =   `# Getting application information for Application + Secret authentication\n`;
+        scriptPrompts +=  `$ApplicationId = Read-Host -Prompt 'Application Id'\n`
+        scriptPrompts +=  `$ApplicationSecret = Read-Host -Prompt 'Application Secret'\n`
+        scriptPrompts +=  `$TenantId = Read-Host -Prompt 'Tenant Id'\n`
+        break;
+      case AuthenticationType.Certificate :
+          scriptPrompts =   `# Getting application information for Application + Certificate authentication\n`;
+          scriptPrompts +=  `$ApplicationId = Read-Host -Prompt 'Application Id'\n`
+          scriptPrompts +=  `$CertificateThumbprint = Read-Host -Prompt 'Certificate Thumbprint'\n`
+          scriptPrompts +=  `$TenantId = Read-Host -Prompt 'Tenant Id'\n`
+          break;
     }
     return scriptPrompts += "\n";
   }
@@ -48,15 +78,16 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
     let scriptResources = `# Exporting resources\nExport-M365DSCConfiguration -Quiet -ComponentsToExtract @("${resourcesToExport.join(
       '", "'
     )}")`;
-    return scriptResources += "\n"
+    return scriptResources;
   }
 
   const _getExportScript = () => {
     let scriptHeader = _getScriptHeader();
     let scriptPrompts = _getScriptPrompts();
     let scriptResources = _getScriptResources();
+    let scriptAuthentication = _getScriptAuthentication();
 
-    return scriptHeader.concat(scriptPrompts, scriptResources);
+    return scriptHeader.concat(scriptPrompts, scriptResources, scriptAuthentication);
   };
 
   const _onRenderFooterContent = React.useCallback(
@@ -87,9 +118,8 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
       onRenderFooterContent={_onRenderFooterContent}
       isFooterAtBottom={true}
     >
-      <p>Use the following script to export the selected resources.</p>
       <Editor
-        height="calc(100% - 19px)"
+        height="calc(100%)"
         defaultLanguage="powershell"
         theme="light"
         value={_getExportScript()}
