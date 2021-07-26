@@ -74,10 +74,6 @@ function Get-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -94,7 +90,7 @@ function Get-TargetResource
         $CertificateThumbprint
     )
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     Write-Verbose -Message "Getting configuration of Azure AD Application"
@@ -103,7 +99,7 @@ function Get-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $ApplicationId)
     $data.Add("TenantId", $TenantId)
     $data.Add("COnnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -117,7 +113,7 @@ function Get-TargetResource
         {
             if ($null -ne $ObjectID)
             {
-                $AADApp = Get-AzureADApplication -ObjectId $ObjectId
+                $AADApp = Get-MgApplication -ObjectId $ObjectId
             }
         }
         catch
@@ -128,7 +124,7 @@ function Get-TargetResource
         if ($null -eq $AADApp)
         {
             Write-Verbose -Message "Attempting to retrieve Azure AD Application by DisplayName {$DisplayName}"
-            $AADApp = Get-AzureADApplication -Filter "DisplayName eq '$($DisplayName)'"
+            $AADApp = Get-MgApplication -Filter "DisplayName eq '$($DisplayName)'"
         }
         if ($null -ne $AADApp -and $AADApp.Count -gt 1)
         {
@@ -166,9 +162,9 @@ function Get-TargetResource
                 AppId                      = $AADApp.AppId
                 Permissions                = $permissionsObj
                 Ensure                     = "Present"
-                GlobalAdminAccount         = $GlobalAdminAccount
                 ApplicationId              = $ApplicationId
                 TenantId                   = $TenantId
+                ApplicationSecret          = $ApplicationSecret
                 CertificateThumbprint      = $CertificateThumbprint
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -184,10 +180,6 @@ function Get-TargetResource
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $GlobalAdminAccount)
-            {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -276,10 +268,6 @@ function Set-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -302,7 +290,7 @@ function Set-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $ApplicationId)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -324,7 +312,7 @@ function Set-TargetResource
     $currentParameters.Remove("ApplicationId")  | Out-Null
     $currentParameters.Remove("TenantId")  | Out-Null
     $currentParameters.Remove("CertificateThumbprint")  | Out-Null
-    $currentParameters.Remove("GlobalAdminAccount")  | Out-Null
+    $currentParameters.Remove("ApplicationSecret")  | Out-Null
     $currentParameters.Remove("Ensure")  | Out-Null
 
     if ($null -ne $KnownClientApplications)
@@ -334,7 +322,7 @@ function Set-TargetResource
         foreach ($KnownClientApplication in $KnownClientApplications)
         {
             $knownAADApp = $null
-            $knownAADApp = Get-AzureADApplication -Filter "AppID eq '$($KnownClientApplication)'"
+            $knownAADApp = Get-MgApplication -Filter "AppID eq '$($KnownClientApplication)'"
             if ($null -ne $knownAADApp)
             {
                 $testedKnownClientApplications.Add($knownAADApp.AppId)
@@ -357,7 +345,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating New AzureAD Application {$DisplayName} with values:`r`n$($currentParameters | Out-String)"
         $currentParameters.Remove("ObjectId") | Out-Null
-        $currentAADApp = New-AzureADApplication @currentParameters
+        $currentAADApp = New-MgApplication @currentParameters
         Write-Verbose -Message "Azure AD Application {$DisplayName} was successfully created"
         $needToUpdatePermissions = $true
         Start-Sleep 5
@@ -367,14 +355,14 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating existing AzureAD Application {$DisplayName} with values:`r`n$($currentParameters | Out-String)"
         $currentParameters.ObjectId = $currentAADApp.ObjectId
-        Set-AzureADApplication @currentParameters
+        Set-MgApplication @currentParameters
         $needToUpdatePermissions = $true
     }
     # App exists but should not
     elseif ($Ensure -eq 'Absent' -and $currentAADApp.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing AzureAD Application {$DisplayName} by ObjectID {$($currentAADApp.ObjectID)}"
-        Remove-AzureADApplication -ObjectId $currentAADApp.ObjectID
+        Remove-MgApplication -ObjectId $currentAADApp.ObjectID
     }
 
     if ($needToUpdatePermissions -and -not [System.String]::IsNullOrEmpty($Permissions) -and $Permissions.Length -gt 0)
@@ -387,7 +375,7 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Adding permissions for API {$($sourceAPI)}"
             $permissionsForcurrentAPI = $Permissions | Where-Object -FilterScript { $_.SourceAPI -eq $sourceAPI }
-            $apiPrincipal = Get-AzureADServicePrincipal -Filter "DisplayName eq '$($sourceAPI)'"
+            $apiPrincipal = Get-MgServicePrincipal -Filter "DisplayName eq '$($sourceAPI)'"
             $currentAPIAccess = New-Object -TypeName "Microsoft.Open.AzureAD.Model.RequiredResourceAccess"
             $currentAPIAccess.ResourceAppId = $apiPrincipal.AppId
             foreach ($permission in $permissionsForcurrentAPI)
@@ -417,7 +405,7 @@ function Set-TargetResource
         }
 
         Write-Verbose -Message "Updating permissions for Azure AD Application {$($currentAADApp.DisplayName)} with RequiredResourceAccess:`r`n$($allRequiredAccess.ResourceAccess | Out-String)"
-        Set-AzureADApplication -ObjectId ($currentAADApp.ObjectId) `
+        Set-MgApplication -ObjectId ($currentAADApp.ObjectId) `
             -RequiredResourceAccess $allRequiredAccess | Out-Null
     }
 }
@@ -498,10 +486,6 @@ function Test-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -522,7 +506,7 @@ function Test-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $ApplicationId)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -569,10 +553,13 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove("ObjectId") | Out-Null
     $ValuesToCheck.Remove("AppId") | Out-Null
     $ValuesToCheck.Remove("Permissions") | Out-Null
+    $ValuesToCheck.Remove("ApplicationId") | Out-Null
+    $ValuesToCheck.Remove("TenantId") | Out-Null
+    $ValuesToCheck.Remove("ApplicationSecret") | Out-Null
+    $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -591,10 +578,6 @@ function Export-TargetResource
     param
     (
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -611,13 +594,14 @@ function Export-TargetResource
         $CertificateThumbprint
     )
     #region Telemetry
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
 
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $ApplicationId)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -628,12 +612,11 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewline
     try
     {
-        $AADApplications = Get-AzureADApplication -ErrorAction Stop
+        $AADApplications = Get-MgApplication -ErrorAction Stop
         foreach ($AADApp in $AADApplications)
         {
             Write-Host "    |---[$i/$($AADApplications.Count)] $($AADApp.DisplayName)" -NoNewline
             $Params = @{
-                GlobalAdminAccount    = $GlobalAdminAccount
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
@@ -653,12 +636,12 @@ function Export-TargetResource
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
-                    -Results $Results `
-                    -GlobalAdminAccount $GlobalAdminAccount
+                    -Results $Results
 
                 if ($null -ne $Results.Permissions)
                 {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Permissions"
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                        -ParameterName "Permissions"
                 }
 
                 $dscContent += $currentDSCBlock
@@ -679,10 +662,6 @@ function Export-TargetResource
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $GlobalAdminAccount)
-            {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
