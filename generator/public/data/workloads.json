@@ -1,514 +1,75 @@
 [
   {
     "title": "Azure AD",
-    "description": "Nunc gravida maximus arcu, ut varius nisi elementum et. Sed faucibus porttitor sagittis. Fusce ut eros placerat, rhoncus velit ac, tincidunt nisl. Proin metus dolor, rutrum at diam ac, consequat dictum leo. Sed tristique massa eget dui blandit, in molestie leo viverra. Nunc rhoncus libero metus, at mattis risus aliquam vel.",
+    "iconName": "AADLogo",
+    "thumbnailUrl": "https://raw.githubusercontent.com/microsoft/Microsoft365DSC/Dev/Modules/Microsoft365DSC/Dependencies/Images/AzureAD.jpg",
     "key": "AAD",
     "extractionModes": {
       "full": ["AADMSGroup", "AADServicePrincipal"]
-    },
-    "resources": [
-      {
-        "name": "AADApplication"
-      },
-      {
-        "name": "AADConditionalAccessPolicy"
-      },
-      {
-        "name": "AADGroupsNamingPolicy"
-      },
-      {
-        "name": "AADGroupsSettings"
-      },
-      {
-        "name": "AADMSGroup"
-      },
-      {
-        "name": "AADMSGroupLifecyclePolicy"
-      },
-      {
-        "name": "AADNamedLocationPolicy"
-      },
-      {
-        "name": "AADPolicy"
-      },
-      {
-        "name": "AADRoleDefinition"
-      },
-      {
-        "name": "AADServicePrincipal"
-      },
-      {
-        "name": "AADTenantDetails"
-      }
-    ]
+    }
   },
   {
     "title": "Exchange",
-    "description": "Nunc gravida maximus arcu, ut varius nisi elementum et. Sed faucibus porttitor sagittis. Fusce ut eros placerat, rhoncus velit ac, tincidunt nisl. Proin metus dolor, rutrum at diam ac, consequat dictum leo. Sed tristique massa eget dui blandit, in molestie leo viverra. Nunc rhoncus libero metus, at mattis risus aliquam vel.",
     "key": "EXO",
+    "iconName": "ExchangeLogo",
     "extractionModes": {
       "full": ["EXOMailboxSettings", "EXOManagementRole"]
-    },
-    "resources": [
-      {
-        "name": "EXOAcceptedDomain"
-      },
-      {
-        "name": "EXOActiveSyncDeviceAccessRule"
-      },
-      {
-        "name": "EXOAddressBookPolicy"
-      },
-      {
-        "name": "EXOAddressList"
-      },
-      {
-        "name": "EXOAntiPhishPolicy"
-      },
-      {
-        "name": "EXOAntiPhishRule"
-      },
-      {
-        "name": "EXOApplicationAccessPolicy"
-      },
-      {
-        "name": "EXOAtpPolicyForO365"
-      },
-      {
-        "name": "EXOAvailabilityAddressSpace"
-      },
-      {
-        "name": "EXOAvailabilityConfig"
-      },
-      {
-        "name": "EXOCASMailboxPlan"
-      },
-      {
-        "name": "EXOClientAccessRule"
-      },
-      {
-        "name": "EXODkimSigningConfig"
-      },
-      {
-        "name": "EXOEmailAddressPolicy"
-      },
-      {
-        "name": "EXOGlobalAddressList"
-      },
-      {
-        "name": "EXOHostedConnectionFilterPolicy"
-      },
-      {
-        "name": "EXOHostedContentFilterPolicy"
-      },
-      {
-        "name": "EXOHostedContentFilterRule"
-      },
-      {
-        "name": "EXOHostedOutboundSpamFilterPolicy"
-      },
-      {
-        "name": "EXOInboundConnector"
-      },
-      {
-        "name": "EXOIntraOrganizationConnector"
-      },
-      {
-        "name": "EXOMailboxSettings"
-      },
-      {
-        "name": "EXOMailTips"
-      },
-      {
-        "name": "EXOMalwareFilterPolicy"
-      },
-      {
-        "name": "EXOMalwareFilterRule"
-      },
-      {
-        "name": "EXOManagementRole"
-      },
-      {
-        "name": "EXOMobileDeviceMailboxPolicy"
-      },
-      {
-        "name": "EXOOfflineAddressBook"
-      },
-      {
-        "name": "EXOOnPremisesOrganization"
-      },
-      {
-        "name": "EXOOrganizationConfig"
-      },
-      {
-        "name": "EXOOrganizationRelationship"
-      },
-      {
-        "name": "EXOOutboundConnector"
-      },
-      {
-        "name": "EXOOwaMailboxPolicy"
-      },
-      {
-        "name": "EXOPartnerApplication"
-      },
-      {
-        "name": "EXOPolicyTipConfig"
-      },
-      {
-        "name": "EXORemoteDomain"
-      },
-      {
-        "name": "EXORoleAssignmentPolicy"
-      },
-      {
-        "name": "EXOSafeAttachmentPolicy"
-      },
-      {
-        "name": "EXOSafeAttachmentRule"
-      },
-      {
-        "name": "EXOSafeLinksPolicy"
-      },
-      {
-        "name": "EXOSafeLinksRule"
-      },
-      {
-        "name": "EXOSharedMailbox"
-      },
-      {
-        "name": "EXOSharingPolicy"
-      },
-      {
-        "name": "EXOTransportRule"
-      }
-    ]
+    }
   },
   {
     "title": "Intune",
-    "description": "Donec condimentum massa eget augue hendrerit, dignissim interdum lorem laoreet. Ut et mi quis dui venenatis lobortis. Nunc non lobortis libero.",
     "key": "Intune",
-    "resources": [
-      {
-        "name": "IntuneAppConfigurationPolicy"
-      },
-      {
-        "name": "IntuneAppProtectionPolicyiOS"
-      },
-      {
-        "name": "IntuneDeviceCategory"
-      },
-      {
-        "name": "IntuneDeviceCompliancePolicyiOs"
-      },
-      {
-        "name": "IntuneDeviceConfigurationPolicyiOS"
-      },
-      {
-        "name": "IntuneDeviceEnrollmentLimitRestriction"
-      },
-      {
-        "name": "IntuneDeviceEnrollmentPlatformRestriction"
-      }
-    ]
+    "iconName": "Devices2"
   },
   {
     "title": "Office 365",
-    "description": "Donec condimentum massa eget augue hendrerit, dignissim interdum lorem laoreet. Ut et mi quis dui venenatis lobortis. Nunc non lobortis libero.",
     "key": "O365",
+    "iconName": "OfficeLogo",
     "extractionModes": {
       "full": ["O365Group", "O365User"]
-    },
-    "resources": [
-      {
-        "name": "O365AdminAuditLogConfig"
-      },
-      {
-        "name": "O365Group"
-      },
-      {
-        "name": "O365OrgCustomizationSetting"
-      },
-      {
-        "name": "O365User"
-      }
-    ]
+    }
   },
   {
     "title": "OneDrive",
-    "description": "Donec condimentum massa eget augue hendrerit, dignissim interdum lorem laoreet. Ut et mi quis dui venenatis lobortis. Nunc non lobortis libero.",
     "key": "OD",
-    "resources": [
-      {
-        "name": "ODSettings"
-      }
-    ]
+    "iconName": "OneDriveLogo"
   },
   {
     "title": "Planner",
-    "description": "Donec condimentum massa eget augue hendrerit, dignissim interdum lorem laoreet. Ut et mi quis dui venenatis lobortis. Nunc non lobortis libero.",
     "key": "Planner",
+    "iconName": "PlannerLogo",
     "extractionModes": {
       "full": ["PlannerPlan", "PlannerBucket", "PlannerTask"]
-    },
-    "resources": [
-      {
-        "name": "PlannerBucket"
-      },
-      {
-        "name": "PlannerPlan"
-      },
-      {
-        "name": "PlannerTask"
-      }
-    ]
+    }
   },
   {
     "title": "Power Platform",
-    "description": "Donec condimentum massa eget augue hendrerit, dignissim interdum lorem laoreet. Ut et mi quis dui venenatis lobortis. Nunc non lobortis libero.",
     "key": "PP",
+    "iconName": "PowerAppsLogo",
     "extractionModes": {
       "full": ["PPPowerAppsEnvironment"]
-    },
-    "resources": [
-      {
-        "name": "PPPowerAppsEnvironment"
-      }
-    ]
+    }
   },
   {
     "title": "Security & Compliance",
-    "description": "Donec condimentum massa eget augue hendrerit, dignissim interdum lorem laoreet. Ut et mi quis dui venenatis lobortis. Nunc non lobortis libero.",
     "key": "SC",
-    "resources": [
-      {
-        "name": "SCAuditConfigurationPolicy"
-      },
-      {
-        "name": "SCCaseHoldPolicy"
-      },
-      {
-        "name": "SCCaseHoldRule"
-      },
-      {
-        "name": "SCComplianceCase"
-      },
-      {
-        "name": "SCComplianceSearch"
-      },
-      {
-        "name": "SCComplianceSearchAction"
-      },
-      {
-        "name": "SCComplianceTag"
-      },
-      {
-        "name": "SCDeviceConditionalAccessPolicy"
-      },
-      {
-        "name": "SCDeviceConfigurationPolicy"
-      },
-      {
-        "name": "SCDLPCompliancePolicy"
-      },
-      {
-        "name": "SCDLPComplianceRule"
-      },
-      {
-        "name": "SCFilePlanPropertyAuthority"
-      },
-      {
-        "name": "SCFilePlanPropertyCategory"
-      },
-      {
-        "name": "SCFilePlanPropertyCitation"
-      },
-      {
-        "name": "SCFilePlanPropertyDepartment"
-      },
-      {
-        "name": "SCFilePlanPropertyReferenceId"
-      },
-      {
-        "name": "SCFilePlanPropertySubCategory"
-      },
-      {
-        "name": "SCLabelPolicy"
-      },
-      {
-        "name": "SCRetentionCompliancePolicy"
-      },
-      {
-        "name": "SCRetentionComplianceRule"
-      },
-      {
-        "name": "SCRetentionEventType"
-      },
-      {
-        "name": "SCSensitivityLabel"
-      },
-      {
-        "name": "SCSupervisoryReviewPolicy"
-      },
-      {
-        "name": "SCSupervisoryReviewRule"
-      }
-    ]
+    "iconName": "Encryption"
   },
   {
     "title": "SharePoint",
-    "description": "Aliquam pretium egestas elit vitae scelerisque. Quisque a diam eu nulla suscipit rhoncus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris porta lorem ex, dapibus euismod arcu imperdiet eget. Maecenas lacinia feugiat nibh, id vulputate sem molestie vitae. Sed at ante non nibh venenatis dictum vel vitae purus. Pellentesque eget ipsum nec felis bibendum luctus. Curabitur vestibulum feugiat augue, quis vehicula enim aliquet sit amet.",
     "key": "SPO",
+    "iconName": "SharepointLogo",
     "extractionModes": {
       "default": ["SPOApp", "SPOSiteDesign"],
       "full": ["SPOSiteAuditSettings", "SPOSiteGroup", "SPOSite", "SPOUserProfileProperty", "SPOPropertyBag"]
-    },
-    "resources": [
-      {
-        "name": "SPOAccessControlSettings"
-      },
-      {
-        "name": "SPOApp"
-      },
-      {
-        "name": "SPOBrowserIdleSignout"
-      },
-      {
-        "name": "SPOHomeSite"
-      },
-      {
-        "name": "SPOHubSite"
-      },
-      {
-        "name": "SPOOrgAssetsLibrary"
-      },
-      {
-        "name": "SPOPropertyBag"
-      },
-      {
-        "name": "SPOSearchManagedProperty"
-      },
-      {
-        "name": "SPOSearchResultSource"
-      },
-      {
-        "name": "SPOSharingSettings"
-      },
-      {
-        "name": "SPOSite"
-      },
-      {
-        "name": "SPOSiteAuditSettings"
-      },
-      {
-        "name": "SPOSiteDesign"
-      },
-      {
-        "name": "SPOSiteDesignRights"
-      },
-      {
-        "name": "SPOSiteGroup"
-      },
-      {
-        "name": "SPOSiteScript"
-      },
-      {
-        "name": "SPOStorageEntity"
-      },
-      {
-        "name": "SPOTenantCdnEnabled"
-      },
-      {
-        "name": "SPOTenantCdnPolicy"
-      },
-      {
-        "name": "SPOTenantSettings"
-      },
-      {
-        "name": "SPOTheme"
-      },
-      {
-        "name": "SPOUserProfileProperty"
-      }
-    ]
+    }
   },
   {
     "title": "Teams",
-    "description": "Mauris euismod consequat orci nec pretium. Nam viverra sed lectus in mattis.",
     "key": "Teams",
+    "iconName": "TeamsLogo",
     "extractionModes": {
       "full": ["TeamsTeam", "TeamsUser", "TeamsChannelTab"]
-    },
-    "resources": [
-      {
-        "name": "TeamsCallingPolicy"
-      },
-      {
-        "name": "TeamsChannel"
-      },
-      {
-        "name": "TeamsChannelsPolicy"
-      },
-      {
-        "name": "TeamsChannelTab"
-      },
-      {
-        "name": "TeamsClientConfiguration"
-      },
-      {
-        "name": "TeamsEmergencyCallingPolicy"
-      },
-      {
-        "name": "TeamsEmergencyCallRoutingPolicy"
-      },
-      {
-        "name": "TeamsGuestCallingConfiguration"
-      },
-      {
-        "name": "TeamsGuestMeetingConfiguration"
-      },
-      {
-        "name": "TeamsGuestMessagingConfiguration"
-      },
-      {
-        "name": "TeamsMeetingBroadcastConfiguration"
-      },
-      {
-        "name": "TeamsMeetingBroadcastPolicy"
-      },
-      {
-        "name": "TeamsMeetingConfiguration"
-      },
-      {
-        "name": "TeamsMeetingPolicy"
-      },
-      {
-        "name": "TeamsMessagingPolicy"
-      },
-      {
-        "name": "TeamsPstnUsage"
-      },
-      {
-        "name": "TeamsTeam"
-      },
-      {
-        "name": "TeamsTenantDialPlan"
-      },
-      {
-        "name": "TeamsUpgradeConfiguration"
-      },
-      {
-        "name": "TeamsUpgradePolicy"
-      },
-      {
-        "name": "TeamsUser"
-      },
-      {
-        "name": "TeamsVoiceRoute"
-      },
-      {
-        "name": "TeamsVoiceRoutingPolicy"
-      }
-    ]
+    }
   }
 ]

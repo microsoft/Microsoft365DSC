@@ -34,13 +34,15 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
       onDismiss={_dismissPanel}
       type={PanelType.large}
       closeButtonAriaLabel="Close"
+      isBlocking={true}
       headerText="Export"
     >
       <p>Use the following script to export the selected resources.</p>
       <Editor
-        height="80vh"
+        height="400px"
         defaultLanguage="powershell"
-        defaultValue={_getExportScript()}
+        theme="vs-dark"
+        value={_getExportScript()}
         options={{ wordWrap: 'wordWrapColumn', wordWrapColumn: 120, readOnly: true, minimap: { enabled: false } }}
       />
     </Panel>

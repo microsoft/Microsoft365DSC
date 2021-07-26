@@ -3,4 +3,5 @@ export interface Resource {
   description: string;
   checked?: boolean;
   workload: string;
+  hovered?: boolean;
 }

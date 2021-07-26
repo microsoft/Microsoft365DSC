@@ -62,6 +62,8 @@ export const GeneratorPage: React.FunctionComponent = () => {
           {
             name: 'Home',
             url: '#Home',
+            icon: 'Home',
+            key: 'Home'
           },
         ],
       },
@@ -69,7 +71,9 @@ export const GeneratorPage: React.FunctionComponent = () => {
     workloads.forEach((workload: Workload) => {
       navigation[0].links.push({
         name: workload.title,
+        key: workload.title,
         url: `#${workload.title}`,
+        icon: workload.iconName
       });
     });
 
@@ -113,6 +117,7 @@ export const GeneratorPage: React.FunctionComponent = () => {
 
       resourcesData = resourcesData.map((resource) => {
         resource.checked = false;
+        resource.hovered = false;
         return resource;
       });
 
