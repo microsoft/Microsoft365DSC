@@ -11,10 +11,11 @@ import { selectedResourcesState } from '../../state/resourcesState';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { extractionTypeState } from '../../state/extractionTypeState';
 import { workloadsState } from '../../state/workloadState';
+import { generatorPanelState } from '../../state/generatorPanelState';
 
 export const GeneratorPage: React.FunctionComponent = () => {
   const extractionType = useRecoilValue(extractionTypeState);
-  const [generatorPanelOpen, setGeneratorPanelOpen] = React.useState<boolean>(false);
+  const [generatorPanelOpen, setGeneratorPanelOpen] = useRecoilState(generatorPanelState);
   const [navigationItems, setNavigationItems] = React.useState<INavLinkGroup[]>([]);
   const [selectedResources, setSelectedResources] = useRecoilState(selectedResourcesState);
   const [workloads, setWorkloads] = useRecoilState(workloadsState);
@@ -193,7 +194,7 @@ export const GeneratorPage: React.FunctionComponent = () => {
           </header>
           <Generator></Generator>
 
-          {generatorPanelOpen && <GeneratorPanel onDismiss={_onGenerateToggle}></GeneratorPanel>}
+          {generatorPanelOpen && <GeneratorPanel></GeneratorPanel>}
         </Main>
       </Content>
     </Page>
