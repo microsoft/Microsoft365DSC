@@ -8,21 +8,19 @@ import { generatorPanelState } from '../../state/generatorPanelState';
 import { selectedResourcesState } from '../../state/resourcesState';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import './GeneratorPanel.module.css';
+import { ScriptParameter } from '../../models/ScriptParameter';
 
 export interface IGeneratorPanelProps {
 }
 
 export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (props) => {
   const [isCopied, setIsCopied] = React.useState<boolean>(false);
+  const [parameters, setParameters] = React.useState<ScriptParameter[]>([]);
   const authenticationType = useRecoilValue(authenticationTypeState);
   const [selectedResources] = useRecoilState(selectedResourcesState);
   const setGeneratorPanel = useSetRecoilState(generatorPanelState);
 
   const buttonStyles = { root: { marginRight: 8 } };
-
-  const _dismissPanel = (ev?: any) => {
-    setGeneratorPanel(false);
-  };
 
   const _getScriptHeader = () => {
     let scriptHeader = "";
@@ -31,22 +29,28 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
     return scriptHeader += "\n"
   }
 
-  const _getScriptAuthentication = () => {
-    let scriptAuthentication = "";
+  const _getParameters = () => {
+    var parameters: ScriptParameter[] = [];
+    parameters.push({ name: 'Quiet'});
+    parameters.push({ name: 'ComponentsToExtract', value: selectedResources.filter((r) => r.checked === true).map((r) => r.name)});
 
     switch(authenticationType) {
       case AuthenticationType.Credentials :
-        scriptAuthentication =   ` -GlobalAdminAccount $creds`;
+        parameters.push({ name: 'GlobalAdminAccount', value: '$creds'});
         break;
       case AuthenticationType.Application :
-        scriptAuthentication =   ` -ApplicationId $ApplicationId -ApplicationSecret $ApplicationSecret -TenantId $TenantId`;
+        parameters.push({ name: 'ApplicationId', value: '$credApplicationIds'});
+        parameters.push({ name: 'ApplicationSecret', value: '$ApplicationSecret'});
+        parameters.push({ name: 'TenantId', value: '$TenantId'});
         break;
       case AuthenticationType.Certificate :
-        scriptAuthentication =   ` -ApplicationId $ApplicationId -CertificateThumbprint $CertificateThumbprint -TenantId $TenantId`;
-          break;
+        parameters.push({ name: 'ApplicationId', value: '$credApplicationIds'});
+        parameters.push({ name: 'CertificateThumbprint', value: '$CertificateThumbprint'});
+        parameters.push({ name: 'TenantId', value: '$TenantId'});
+        break;
     }
 
-    return scriptAuthentication;
+    return parameters;
   }
 
   const _getScriptPrompts = () => {
@@ -73,21 +77,32 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
     return scriptPrompts += "\n";
   }
 
-  const _getScriptResources = () => {
-    let resourcesToExport: string[] = selectedResources.filter((r) => r.checked === true).map((r) => r.name);
-    let scriptResources = `# Exporting resources\nExport-M365DSCConfiguration -Quiet -ComponentsToExtract @("${resourcesToExport.join(
-      '", "'
-    )}")`;
-    return scriptResources;
+  const _getScriptExport = () => {
+    let parameters = _getParameters();
+    let scriptExport = `# Exporting resources using ${authenticationType}\n`;
+    scriptExport += "Export-M365DSCConfiguration";
+
+    parameters.map((parameter) => {
+      if(parameter.value) {
+        if(typeof parameter.value === 'string' || parameter.value instanceof String) {
+          scriptExport += ` -${parameter.name} ${parameter.value}`;
+        } else if(parameter.value.constructor === Array) {
+          scriptExport += ` -${parameter.name} @("${parameter.value.join('", "')})`;
+        }
+      } else {
+        scriptExport += ` -${parameter.name}`;
+      }
+    })
+
+    return scriptExport;
   }
 
   const _getExportScript = () => {
     let scriptHeader = _getScriptHeader();
     let scriptPrompts = _getScriptPrompts();
-    let scriptResources = _getScriptResources();
-    let scriptAuthentication = _getScriptAuthentication();
+    let scriptExport = _getScriptExport();
 
-    return scriptHeader.concat(scriptPrompts, scriptResources, scriptAuthentication);
+    return scriptHeader.concat(scriptPrompts, scriptExport);
   };
 
   const _onRenderFooterContent = React.useCallback(
@@ -100,16 +115,15 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
             {isCopied ? "Copied!" : "Copy to clipboard"}
           </PrimaryButton>
         </CopyToClipboard>
-        <DefaultButton onClick={_dismissPanel}>Cancel</DefaultButton>
+        <DefaultButton onClick={() => setGeneratorPanel(false)}>Cancel</DefaultButton>
       </div>
-    ),
-    [_dismissPanel],
+    ), [],
   );
 
   return (
     <Panel
       isOpen={true}
-      onDismiss={_dismissPanel}
+      onDismiss={() => setGeneratorPanel(false)}
       type={PanelType.large}
       closeButtonAriaLabel="Close"
       isBlocking={true}
