@@ -44,10 +44,10 @@ export const WorkloadOptions: React.FunctionComponent<IWorkloadOptionsProps> = (
   return (
     <>
       {workloads?.map((workload: Workload) => (
-        <ContentCard title={workload.title} iconName={workload.iconName}>
+        <ContentCard workload={workload} key={workload.id}>
           <Stack horizontal wrap styles={stackStyles} tokens={wrapStackTokens}>
             {resources
-              ?.filter((resource) => resource.workload === workload.key)
+              ?.filter((resource) => resource.workload === workload.id)
               .map((resource: Resource) => (
                 <StackItem styles={stackItemStyles}>
                   <Checkbox

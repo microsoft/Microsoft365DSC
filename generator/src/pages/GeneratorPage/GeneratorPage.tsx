@@ -22,7 +22,7 @@ export const GeneratorPage: React.FunctionComponent = () => {
 
   const _isResourceChecked = React.useCallback(
     (resource: Resource) => {
-      const workload = workloads.find((workload) => workload.key === resource.workload);
+      const workload = workloads.find((workload) => workload.id === resource.workload);
 
       if (workload !== undefined) {
         switch (extractionType) {
@@ -72,7 +72,7 @@ export const GeneratorPage: React.FunctionComponent = () => {
     workloads.forEach((workload: Workload) => {
       navigation[0].links.push({
         name: workload.title,
-        key: workload.title,
+        key: workload.id,
         url: `#${workload.title}`,
         icon: workload.iconName
       });

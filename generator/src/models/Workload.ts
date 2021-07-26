@@ -4,6 +4,6 @@ import { Resource } from './Resource';
 export interface Workload {
   title: string;
   iconName: string;
-  key: string;
+  id: string;
   extractionModes: ExtractionModes;
 }

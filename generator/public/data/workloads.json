@@ -1,63 +1,62 @@
 [
   {
+    "id": "AAD",
     "title": "Azure AD",
     "iconName": "AADLogo",
-    "thumbnailUrl": "https://raw.githubusercontent.com/microsoft/Microsoft365DSC/Dev/Modules/Microsoft365DSC/Dependencies/Images/AzureAD.jpg",
-    "key": "AAD",
     "extractionModes": {
       "full": ["AADMSGroup", "AADServicePrincipal"]
     }
   },
   {
+    "id": "EXO",
     "title": "Exchange",
-    "key": "EXO",
     "iconName": "ExchangeLogo",
     "extractionModes": {
       "full": ["EXOMailboxSettings", "EXOManagementRole"]
     }
   },
   {
+    "id": "Intune",
     "title": "Intune",
-    "key": "Intune",
     "iconName": "Devices2"
   },
   {
+    "id": "O365",
     "title": "Office 365",
-    "key": "O365",
     "iconName": "OfficeLogo",
     "extractionModes": {
       "full": ["O365Group", "O365User"]
     }
   },
   {
+    "id": "OD",
     "title": "OneDrive",
-    "key": "OD",
     "iconName": "OneDriveLogo"
   },
   {
+    "id": "Planner",
     "title": "Planner",
-    "key": "Planner",
     "iconName": "PlannerLogo",
     "extractionModes": {
       "full": ["PlannerPlan", "PlannerBucket", "PlannerTask"]
     }
   },
   {
+    "id": "PP",
     "title": "Power Platform",
-    "key": "PP",
     "iconName": "PowerAppsLogo",
     "extractionModes": {
       "full": ["PPPowerAppsEnvironment"]
     }
   },
   {
+    "id": "SC",
     "title": "Security & Compliance",
-    "key": "SC",
     "iconName": "Encryption"
   },
   {
+    "id": "SPO",
     "title": "SharePoint",
-    "key": "SPO",
     "iconName": "SharepointLogo",
     "extractionModes": {
       "default": ["SPOApp", "SPOSiteDesign"],
@@ -65,8 +64,8 @@
     }
   },
   {
+    "id": "Teams",
     "title": "Teams",
-    "key": "Teams",
     "iconName": "TeamsLogo",
     "extractionModes": {
       "full": ["TeamsTeam", "TeamsUser", "TeamsChannelTab"]

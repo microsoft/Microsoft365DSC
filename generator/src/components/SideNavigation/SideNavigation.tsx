@@ -31,7 +31,7 @@ const SideNavigationComponent: React.FunctionComponent<ISideNavigationProps> = (
       selectedKey={selectedWorkload}
       onLinkClick={(ev?: React.MouseEvent<HTMLElement>, item?: INavLink) => {
         history.push(item!.url);
-        setSelectedWorkload(item!.key);
+        setSelectedWorkload(item?.key);
       }}
     />
   );
