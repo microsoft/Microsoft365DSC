@@ -35,15 +35,15 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
 
     switch(authenticationType) {
       case AuthenticationType.Credentials :
-        parameters.push({ name: 'GlobalAdminAccount', value: '$creds'});
+        parameters.push({ name: 'GlobalAdminAccount', value: '$Credentials'});
         break;
       case AuthenticationType.Application :
-        parameters.push({ name: 'ApplicationId', value: '$credApplicationIds'});
+        parameters.push({ name: 'ApplicationId', value: '$ApplicationId'});
         parameters.push({ name: 'ApplicationSecret', value: '$ApplicationSecret'});
         parameters.push({ name: 'TenantId', value: '$TenantId'});
         break;
       case AuthenticationType.Certificate :
-        parameters.push({ name: 'ApplicationId', value: '$credApplicationIds'});
+        parameters.push({ name: 'ApplicationId', value: '$ApplicationId'});
         parameters.push({ name: 'CertificateThumbprint', value: '$CertificateThumbprint'});
         parameters.push({ name: 'TenantId', value: '$TenantId'});
         break;
@@ -58,7 +58,7 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
     switch(authenticationType) {
       case AuthenticationType.Credentials :
         scriptPrompts =   `# Getting client credentials\n`;
-        scriptPrompts +=  `$creds = Get-Credential\n`
+        scriptPrompts +=  `$Credentials = Get-Credential\n`
         break;
       case AuthenticationType.Application :
         scriptPrompts =   `# Getting application information for Application + Secret authentication\n`;
