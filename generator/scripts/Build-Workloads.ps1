@@ -5,10 +5,9 @@ param(
 )
 
 $Workloads = Get-Content -Raw -Path "./generator/src/data/workloads.json" | ConvertFrom-Json
-Push-Location -Path ../../Modules/Microsoft365DSC/DSCResources
 $Resources = @()
 
-Get-ChildItem -Directory | ForEach-Object {
+Get-ChildItem -Path "./Modules/Microsoft365DSC/DSCResources" -Directory | ForEach-Object {
     $CurrentResource = $_.Name.Replace('MSFT_', '')
     $Workloads | ForEach-Object {
         $CurrentWorkload = $_
@@ -21,8 +20,6 @@ Get-ChildItem -Directory | ForEach-Object {
         }
     }
 }
-
-Pop-Location
 
 ConvertTo-Json -InputObject $Resources -Depth 5 | Out-File $ResourcesOutputPath -Force:$Force
 ConvertTo-Json -InputObject $Workloads -Depth 5 | Out-File $WorkloadsOutputPath -Force:$Force
