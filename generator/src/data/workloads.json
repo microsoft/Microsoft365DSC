@@ -1,84 +1,74 @@
 [
   {
+    "id": "AAD",
     "title": "Azure AD",
-    "description": "Nunc gravida maximus arcu, ut varius nisi elementum et. Sed faucibus porttitor sagittis. Fusce ut eros placerat, rhoncus velit ac, tincidunt nisl. Proin metus dolor, rutrum at diam ac, consequat dictum leo. Sed tristique massa eget dui blandit, in molestie leo viverra. Nunc rhoncus libero metus, at mattis risus aliquam vel.",
-    "acronym": "AAD",
+    "iconName": "AADLogo",
     "extractionModes": {
       "full": ["AADMSGroup", "AADServicePrincipal"]
-    },
-    "resources": []
+    }
   },
   {
+    "id": "EXO",
     "title": "Exchange",
-    "description": "Nunc gravida maximus arcu, ut varius nisi elementum et. Sed faucibus porttitor sagittis. Fusce ut eros placerat, rhoncus velit ac, tincidunt nisl. Proin metus dolor, rutrum at diam ac, consequat dictum leo. Sed tristique massa eget dui blandit, in molestie leo viverra. Nunc rhoncus libero metus, at mattis risus aliquam vel.",
-    "acronym": "EXO",
+    "iconName": "ExchangeLogo",
     "extractionModes": {
       "full": ["EXOMailboxSettings", "EXOManagementRole"]
-    },
-    "resources": []
+    }
   },
   {
+    "id": "Intune",
     "title": "Intune",
-    "description": "Donec condimentum massa eget augue hendrerit, dignissim interdum lorem laoreet. Ut et mi quis dui venenatis lobortis. Nunc non lobortis libero.",
-    "acronym": "Intune",
-    "resources": []
+    "iconName": "Devices2"
   },
   {
+    "id": "O365",
     "title": "Office 365",
-    "description": "Donec condimentum massa eget augue hendrerit, dignissim interdum lorem laoreet. Ut et mi quis dui venenatis lobortis. Nunc non lobortis libero.",
-    "acronym": "O365",
+    "iconName": "OfficeLogo",
     "extractionModes": {
       "full": ["O365Group", "O365User"]
-    },
-    "resources": []
+    }
   },
   {
+    "id": "OD",
     "title": "OneDrive",
-    "description": "Donec condimentum massa eget augue hendrerit, dignissim interdum lorem laoreet. Ut et mi quis dui venenatis lobortis. Nunc non lobortis libero.",
-    "acronym": "OD",
-    "resources": []
+    "iconName": "OneDriveLogo"
   },
   {
+    "id": "Planner",
     "title": "Planner",
-    "description": "Donec condimentum massa eget augue hendrerit, dignissim interdum lorem laoreet. Ut et mi quis dui venenatis lobortis. Nunc non lobortis libero.",
-    "acronym": "Planner",
+    "iconName": "PlannerLogo",
     "extractionModes": {
       "full": ["PlannerPlan", "PlannerBucket", "PlannerTask"]
-    },
-    "resources": []
+    }
   },
   {
+    "id": "PP",
     "title": "Power Platform",
-    "description": "Donec condimentum massa eget augue hendrerit, dignissim interdum lorem laoreet. Ut et mi quis dui venenatis lobortis. Nunc non lobortis libero.",
-    "acronym": "PP",
+    "iconName": "PowerAppsLogo",
     "extractionModes": {
       "full": ["PPPowerAppsEnvironment"]
-    },
-    "resources": []
+    }
   },
   {
+    "id": "SC",
     "title": "Security & Compliance",
-    "description": "Donec condimentum massa eget augue hendrerit, dignissim interdum lorem laoreet. Ut et mi quis dui venenatis lobortis. Nunc non lobortis libero.",
-    "acronym": "SC",
-    "resources": []
+    "iconName": "Encryption"
   },
   {
+    "id": "SPO",
     "title": "SharePoint",
-    "description": "Aliquam pretium egestas elit vitae scelerisque. Quisque a diam eu nulla suscipit rhoncus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris porta lorem ex, dapibus euismod arcu imperdiet eget. Maecenas lacinia feugiat nibh, id vulputate sem molestie vitae. Sed at ante non nibh venenatis dictum vel vitae purus. Pellentesque eget ipsum nec felis bibendum luctus. Curabitur vestibulum feugiat augue, quis vehicula enim aliquet sit amet.",
-    "acronym": "SPO",
+    "iconName": "SharepointLogo",
     "extractionModes": {
       "default": ["SPOApp", "SPOSiteDesign"],
       "full": ["SPOSiteAuditSettings", "SPOSiteGroup", "SPOSite", "SPOUserProfileProperty", "SPOPropertyBag"]
-    },
-    "resources": []
+    }
   },
   {
+    "id": "Teams",
     "title": "Teams",
-    "description": "Mauris euismod consequat orci nec pretium. Nam viverra sed lectus in mattis.",
-    "acronym": "Teams",
+    "iconName": "TeamsLogo",
     "extractionModes": {
       "full": ["TeamsTeam", "TeamsUser", "TeamsChannelTab"]
-    },
-    "resources": []
+    }
   }
 ]
