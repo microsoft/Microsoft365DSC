@@ -32,7 +32,7 @@ class MSFT_IntuneDeviceCompliancePolicyAndroid : OMI_BaseResource
     [Write, Description("RestrictedApps of the Android device compliance policy.")] String RestrictedApps;
     [Write, Description("RoleScopeTagIds of the Android device compliance policy.")] String RoleScopeTagIds;
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
-        [Write, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+    [Write, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Secret of the Azure Active Directory tenant used for authentication.")] String ApplicationSecret;
