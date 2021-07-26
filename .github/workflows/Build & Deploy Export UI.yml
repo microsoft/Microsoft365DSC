@@ -16,7 +16,7 @@ jobs:
           submodules: true
       - name: Update available Resources
         shell: powershell
-        run: pwsh -command ".\$GITHUB_WORKSPACE\generator\scripts\Build-Workloads.ps1"
+        run: pwsh -command ".\$GITHUB_WORKSPACE\Microsoft365DSC\generator\scripts\Build-Workloads.ps1"
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
