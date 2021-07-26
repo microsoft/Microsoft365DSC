@@ -1,4 +1,4 @@
-import { BaseButton, Button, DefaultButton, Panel, PanelType, PrimaryButton } from '@fluentui/react';
+import { DefaultButton, Panel, PanelType, PrimaryButton } from '@fluentui/react';
 import Editor from '@monaco-editor/react';
 import * as React from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
@@ -15,7 +15,6 @@ export interface IGeneratorPanelProps {
 
 export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (props) => {
   const [isCopied, setIsCopied] = React.useState<boolean>(false);
-  const [parameters, setParameters] = React.useState<ScriptParameter[]>([]);
   const authenticationType = useRecoilValue(authenticationTypeState);
   const [selectedResources] = useRecoilState(selectedResourcesState);
   const setGeneratorPanel = useSetRecoilState(generatorPanelState);
@@ -82,7 +81,7 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
     let scriptExport = `# Exporting resources using ${authenticationType}\n`;
     scriptExport += "Export-M365DSCConfiguration";
 
-    parameters.map((parameter) => {
+    parameters.forEach((parameter) => {
       if(parameter.value) {
         if(typeof parameter.value === 'string' || parameter.value instanceof String) {
           scriptExport += ` -${parameter.name} ${parameter.value}`;
@@ -105,8 +104,8 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
     return scriptHeader.concat(scriptPrompts, scriptExport);
   };
 
-  const _onRenderFooterContent = React.useCallback(
-    () => (
+  const _onRenderFooterContent = () => {
+    return (
       <div style={{display: 'flex'}}>
         <CopyToClipboard
           text={_getExportScript()}
@@ -117,8 +116,8 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
         </CopyToClipboard>
         <DefaultButton onClick={() => setGeneratorPanel(false)}>Cancel</DefaultButton>
       </div>
-    ), [],
-  );
+    )
+  }
 
   return (
     <Panel
