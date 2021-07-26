@@ -86,7 +86,7 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
         if(typeof parameter.value === 'string' || parameter.value instanceof String) {
           scriptExport += ` -${parameter.name} ${parameter.value}`;
         } else if(parameter.value.constructor === Array) {
-          scriptExport += ` -${parameter.name} @("${parameter.value.join('", "')})`;
+          scriptExport += ` -${parameter.name} @("${parameter.value.join('", "')}")`;
         }
       } else {
         scriptExport += ` -${parameter.name}`;
