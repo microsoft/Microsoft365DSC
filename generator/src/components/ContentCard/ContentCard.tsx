@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { getTheme } from '@fluentui/react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { selectedWorkloadState } from '../../state/selectedWorkloadState';
 import { selectedResourcesState } from '../../state/resourcesState';
 import { Workload } from '../../models/Workload';
@@ -20,6 +20,10 @@ export const ContentCard: React.FunctionComponent<IContentCardProps> = (props) =
   const setSelectedWorkload = useSetRecoilState(selectedWorkloadState);
   const [selectedResources, setSelectedResources] = useRecoilState(selectedResourcesState);
 
+  const _getWorkloadResources = React.useCallback(() => {
+    return selectedResources.filter((r) => r.workload === props.workload.id);
+  }, [selectedResources, props]);
+
   React.useEffect(() => {
     let workloadResources = _getWorkloadResources();
 
@@ -31,7 +35,7 @@ export const ContentCard: React.FunctionComponent<IContentCardProps> = (props) =
       setIsChecked(false);
       setIsInderminate(true);
     }
-  }, []);
+  }, [_getWorkloadResources]);
 
   const _onSelectAll = (workload: Workload, checked?: boolean) => {
     if(isInderminate || checked) {
@@ -50,10 +54,6 @@ export const ContentCard: React.FunctionComponent<IContentCardProps> = (props) =
       });
     }
   };
-
-  const _getWorkloadResources = () => {
-    return selectedResources.filter((r) => r.workload === props.workload.id);
-  }
 
   const _getCheckedWorkloadResources = () => {
     return _getWorkloadResources().filter((r) => r.checked === true);
