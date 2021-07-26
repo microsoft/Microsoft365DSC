@@ -1,10 +1,10 @@
 param(
-    [String]$ResourcesOutputPath = "../public/data/resources.json",
-    [String]$WorkloadsOutputPath = "../public/data/workloads.json",
+    [String]$ResourcesOutputPath = "./generator/public/data/resources.json",
+    [String]$WorkloadsOutputPath = "./generator/public/data/workloads.json",
     [switch]$Force
 )
 
-$Workloads = Get-Content -Raw -Path "../src/data/workloads.json" | ConvertFrom-Json
+$Workloads = Get-Content -Raw -Path "./generator/src/data/workloads.json" | ConvertFrom-Json
 Push-Location -Path ../../Modules/Microsoft365DSC/DSCResources
 $Resources = @()
 

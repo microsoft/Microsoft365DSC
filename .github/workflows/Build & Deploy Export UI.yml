@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - name: Update available Resources
+      - name: Generate workloads and resources
         shell: powershell
         run: pwsh -command ".\$GITHUB_WORKSPACE\generator\scripts\Build-Workloads.ps1"
       - name: Build And Deploy
