@@ -18,15 +18,17 @@ jobs:
         run: pwsh -command ".\$GITHUB_WORKSPACE\generator\scripts\Build-Workloads.ps1 -Force"
       - name: Install Packages
         run: npm install
+        working-directory: $GITHUB_WORKSPACE\generator
       - name: Build page
         run: npm run build
+        working-directory: $GITHUB_WORKSPACE\generator
 
   deploy_preview:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     environment:
       name: PREVIEW
-    name: Build
+    name: Deploy to Preview
     needs: build
     steps:
       - name: Deploy to Preview Azure Static Web App
@@ -39,7 +41,6 @@ jobs:
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: "/generator/" # App source code path
-          api_location: "api" # Api source code path - optional
           output_location: "build" # Built app content directory - optional
           skip_app_build: true
           ###### End of Repository/Build Configurations ######
@@ -49,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: PROD
-    name: Build
+    name: Deploy to Production
     needs: build
     steps:
       - name: Deploy
