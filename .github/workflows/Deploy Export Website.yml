@@ -45,7 +45,7 @@ jobs:
           ###### End of Repository/Build Configurations ######
 
   deploy_prod:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    if: (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')) && github.repository == 'microsoft/Microsoft365DSC' && github.event.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     environment:
       name: PROD
