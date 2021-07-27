@@ -64,9 +64,25 @@
             RequiredVersion = "2.0.5"
         },
         @{
+            ModuleName      = "Microsoft.Graph.Applications"
+            RequiredVersion = "1.6.1"
+        },
+        @{
             ModuleName      = "Microsoft.Graph.Authentication"
             RequiredVersion = "1.6.0"
         },
+        @{
+            ModuleName      = "Microsoft.Graph.Groups"
+            RequiredVersion = "1.6.1"
+        },
+        @{
+            ModuleName      = "Microsoft.Graph.Identity.DirectoryManagement"
+            RequiredVersion = "1.6.1"
+        }
+        @{
+            ModuleName      = "Microsoft.Graph.Identity.SignIns"
+            RequiredVersion = "1.6.1"
+        }
         @{
             ModuleName      = "Microsoft.Graph.Intune"
             RequiredVersion = "6.1907.1.0"
@@ -77,6 +93,10 @@
         },
         @{
             ModuleName      = "Microsoft.Graph.Teams"
+            RequiredVersion = "1.6.1"
+        },
+        @{
+            ModuleName      = "Microsoft.Graph.Users"
             RequiredVersion = "1.6.1"
         },
         @{

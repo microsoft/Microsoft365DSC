@@ -23,10 +23,6 @@ function Get-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -49,18 +45,19 @@ function Get-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $ApplicationId)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters -ProfileName "beta"
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
     try
     {
-        $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq "Group.Unified" }
+        $Policy = Get-MgDirectorySetting  | Where-Object -FilterScript {$_.DisplayName -eq 'Group.Unified'}
 
         if ($null -eq $Policy)
         {
@@ -69,14 +66,17 @@ function Get-TargetResource
         else
         {
             Write-Verbose "Found existing AzureAD Groups Naming Policy"
+            $valuePrefix = $Policy.Values | Where-Object -FilterScript {$_.Name -eq "PrefixSuffixNamingRequirement"}
+            $valueBlockedWords = $Policy.Values | Where-Object -FilterScript {$_.Name -eq "CustomBlockedWordsList"}
             $result = @{
                 IsSingleInstance              = 'Yes'
-                PrefixSuffixNamingRequirement = $Policy["PrefixSuffixNamingRequirement"]
-                CustomBlockedWordsList        = $Policy["CustomBlockedWordsList"].Split(',')
+                PrefixSuffixNamingRequirement = $valuePrefix.Value
+                CustomBlockedWordsList        = $valueBlockedWords.Value.Split(',')
                 Ensure                        = "Present"
                 GlobalAdminAccount            = $GlobalAdminAccount
                 ApplicationId                 = $ApplicationId
                 TenantId                      = $TenantId
+                ApplicationSecret             = $ApplicationSecret
                 CertificateThumbprint         = $CertificateThumbprint
             }
 
@@ -93,10 +93,6 @@ function Get-TargetResource
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $GlobalAdminAccount)
-            {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -134,16 +130,16 @@ function Set-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
         [System.String]
         $ApplicationId,
 
         [Parameter()]
         [System.String]
         $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
@@ -156,7 +152,7 @@ function Set-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $ApplicationId)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -167,28 +163,41 @@ function Set-TargetResource
     $needToUpdate = $false
     if ($Ensure -eq "Present" -and $currentPolicy.Ensure -eq "Absent")
     {
-        $ds = (Get-AzureADDirectorySettingTemplate -id 62375ab9-6b52-47ed-826b-58e47e0e304b).CreateDirectorySetting()
-        New-AzureADDirectorySetting -DirectorySetting $ds
+        $Policy = New-AzureADDirectorySetting -TemplateId '62375ab9-6b52-47ed-826b-58e47e0e304b' | Out-Null
         $needToUpdate = $true
     }
 
-    $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq "Group.Unified" }
+    if ($null -eq $Policy)
+    {
+        $Policy = Get-MgDirectorySetting | Where-Object -FilterScript {$_.DisplayName -eq 'Group.Unified'}
+    }
 
     if (($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present') -or $needToUpdate)
     {
-        $Policy["PrefixSuffixNamingRequirement"] = $PrefixSuffixNamingRequirement
 
         [string]$blockedWordsValue = $null
-
         $blockedWordsValue = $CustomBlockedWordsList -join ","
-        $Policy["CustomBlockedWordsList"] = $blockedWordsValue
 
-        Set-AzureADDirectorySetting -Id $Policy.id -DirectorySetting $Policy
+        $index = 0
+        foreach ($property in $Policy.Values)
+        {
+            if ($property.Name -eq 'CustomBlockedWordsList')
+            {
+                $Policy.Values[$index].Value = $blockedWordsValue
+            }
+            elseif ($property.Name -eq 'PrefixSuffixNamingRequirement')
+            {
+                $Policy.Values[$index].Value = $PrefixSuffixNamingRequirement
+            }
+            $index++;
+        }
+
+        Update-MgDirectorySetting -DirectorySettingId $Policy.id -Values $Policy.Values | Out-Null
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
-        $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq "Group.Unified" }
-        Remove-AzureADDirectorySetting -Id $policy.Id
+        $Policy = Get-MgDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq "Group.Unified" }
+        Remove-MgDDirectorySetting -DirectorySettingId $policy.Id | Out-Null
     }
 }
 
@@ -217,16 +226,16 @@ function Test-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
         [System.String]
         $ApplicationId,
 
         [Parameter()]
         [System.String]
         $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
@@ -238,7 +247,7 @@ function Test-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $ApplicationId)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -249,7 +258,9 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -267,9 +278,6 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
 
         [Parameter()]
         [System.String]
@@ -281,10 +289,16 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret
     )
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
+      -InboundParameters $PSBoundParameters `
+      -ProfileName "beta"
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -305,7 +319,7 @@ function Export-TargetResource
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             IsSingleInstance      = 'Yes'
-            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationSecret     = $ApplicationSecret
         }
 
         $Results = Get-TargetResource @Params
@@ -317,8 +331,7 @@ function Export-TargetResource
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
+                -Results $Results
             $dscContent += $currentDSCBlock
         }
 

@@ -210,7 +210,12 @@ function New-M365DSCConnection
 
         [Parameter()]
         [System.Boolean]
-        $SkipModuleReload
+        $SkipModuleReload,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("v1.0", "beta")]
+        $Profile = "v1.0"
     )
 }
 

@@ -111,14 +111,14 @@ function Get-TargetResource
     {
         try
         {
-            if ($null -ne $ObjectID)
+            if (-not [System.String]::IsNullOrEmpty($AppId))
             {
-                $AADApp = Get-MgApplication -ObjectId $ObjectId
+                $AADApp = Get-MgApplication -Filter "AppId eq '$AppId'"
             }
         }
         catch
         {
-            Write-Verbose -Message "Could not retrieve AzureAD Application by Object ID {$ObjectID}"
+            Write-Verbose -Message "Could not retrieve AzureAD Application by Application ID {$AppId}"
         }
 
         if ($null -eq $AADApp)
@@ -618,10 +618,12 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($AADApplications.Count)] $($AADApp.DisplayName)" -NoNewline
             $Params = @{
                 ApplicationId         = $ApplicationId
+                AppId                 = $AADApp.AppId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                ApplicationSecret     = $ApplicationSecret
                 DisplayName           = $AADApp.DisplayName
-                ObjectID              = $AADApp.ObjectID
+                ObjectID              = $AADApp.Id
             }
             $Results = Get-TargetResource @Params
 
@@ -686,7 +688,7 @@ function Get-M365DSCAzureADAppPermissions
     )
     Write-Verbose -Message "Retrieving permissions for Azure AD Application {$($App.DisplayName)}"
     [array]$requiredAccess = $App.RequiredResourceAccess.ResourceAccess
-    $servicePrincipal = Get-AzureADServicePrincipal -Filter "AppId eq '$($App.AppId)'" -All:$true
+    $servicePrincipal = Get-MgServicePrincipal -Filter "AppId eq '$($App.AppId)'" -All:$true
 
     $permissions = @()
     $i = 1
@@ -699,12 +701,12 @@ function Get-M365DSCAzureADAppPermissions
             $currentPermission = @{}
             $currentPermission.Add("Type", "AppOnly")
             $foundPermission = $null
-            $AppRoleAssignments = Get-AzureADServiceAppRoleAssignedTo -ObjectId $ServicePrincipal.ObjectId | Sort-Object ResourceDisplayName -Unique
+            $AppRoleAssignments = Get-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $ServicePrincipal.Id
             foreach ($oAuth2Grant in $AppRoleAssignments)
             {
-                $apiPrincipal = Get-AzureADServicePrincipal -ObjectId $oAuth2Grant.ResourceId
+                $apiPrincipal = Get-MgServicePrincipal -ServicePrincipalId $oAuth2Grant.ResourceId
                 Write-Verbose -Message "    Obtained service principal for {$($apiPrincipal.DisplayName)}"
-                $foundPermission = $oAuth2Grant | Where-Object -FilterScript { $_.Id -eq $apiPermission.Id }
+                $foundPermission = $AppRoleAssignments | Where-Object -FilterScript { $_.AppRoleId -eq $apiPermission.Id }
 
                 $role = $apiPrincipal.AppRoles | Where-Object { $_.Id -eq $apiPermission.Id }
 
@@ -728,7 +730,7 @@ function Get-M365DSCAzureADAppPermissions
         }
         elseif ($apiPermission.Type -eq 'Scope')
         {
-            $oAuth2Grants = Get-AzureADServicePrincipalOAuth2PermissionGrant -ObjectId $servicePrincipal.ObjectId -All $true
+            $oAuth2Grants = Get-MgServicePrincipalOauth2PermissionGrant -ServicePrincipalId $servicePrincipal.Id
             Write-Verbose -Message "    App's permission is {Delegated}"
             $currentPermission = @{}
             $currentPermission.Add("Type", "Delegated")
@@ -736,8 +738,8 @@ function Get-M365DSCAzureADAppPermissions
 
             foreach ($oAuth2Grant in $oAuth2Grants)
             {
-                $apiPrincipal = Get-AzureADServicePrincipal -ObjectId $oAuth2Grant.ResourceId
-                $scope = $apiPrincipal.Oauth2Permissions | Where-Object { $_.Id -eq $apiPermission.Id }
+                $apiPrincipal = Get-MgServicePrincipal -ServicePrincipalId $oAuth2Grant.ResourceId
+                $scope = $apiPrincipal.Oauth2PermissionScopes | Where-Object { $_.Id -eq $apiPermission.Id }
                 $foundPermission = $oAuth2Grant.Scope.Split(" ") -contains $scope.Value
 
                 if ($scope)

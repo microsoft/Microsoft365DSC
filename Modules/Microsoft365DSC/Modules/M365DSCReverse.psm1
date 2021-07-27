@@ -327,6 +327,14 @@ function Start-M365DSCConfigurationExtract
                     -Description "The Id or Name of the tenant to authenticate against"
             }
 
+            if (-not [System.String]::IsNullOrEmpty($ApplicationSecret))
+            {
+                Add-ConfigurationDataEntry -Node "NonNodeData" `
+                    -Key "ApplicationSecret" `
+                    -Value $ApplicationSecret `
+                    -Description "Azure AD Application Secret for Authentication"
+            }
+
             if (-not [System.String]::IsNullOrEmpty($CertificatePath))
             {
                 Add-ConfigurationDataEntry -Node "NonNodeData" `

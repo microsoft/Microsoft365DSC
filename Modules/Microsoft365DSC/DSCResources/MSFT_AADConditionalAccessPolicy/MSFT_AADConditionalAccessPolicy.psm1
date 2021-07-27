@@ -147,10 +147,6 @@ function Get-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -168,14 +164,15 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of AzureAD Conditional Access Policy"
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $ApplicationId)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -186,11 +183,11 @@ function Get-TargetResource
         Write-Verbose -Message "PolicyID was specified"
         try
         {
-            $Policy = Get-AzureADMSConditionalAccessPolicy -PolicyId $Id
+            $Policy = Get-MgIdentityConditionalAccessPolicy -ConditionalAccessPolicyId $Id
         }
         catch
         {
-            $Policy = Get-AzureADMSConditionalAccessPolicy | Where-Object { $_.DisplayName -eq $DisplayName }
+            $Policy = Get-MgIdentityConditionalAccessPolicy -Filter "DisplayName eq '$DisplayName'"
             if ($Policy.Length -gt 1)
             {
                 throw "Duplicate CA Policies named $DisplayName exist in tenant"
@@ -201,7 +198,7 @@ function Get-TargetResource
     {
         Write-Verbose -Message "Id was NOT specified"
         ## Can retreive multiple CA Policies since displayname is not unique
-        $Policy = Get-AzureADMSConditionalAccessPolicy | Where-Object { $_.DisplayName -eq $DisplayName }
+        $Policy = Get-MgIdentityConditionalAccessPolicy -Filter "DisplayName eq '$DisplayName'"
         if ($Policy.Length -gt 1)
         {
             throw "Duplicate CA Policies named $DisplayName exist in tenant"
@@ -226,12 +223,12 @@ function Get-TargetResource
         {
             foreach ($IncludeUserGUID in $Policy.Conditions.Users.IncludeUsers)
             {
-                if ($IncludeUserGUID -notin "GuestsOrExternalUsers", "All")
+                if ($IncludeUserGUID -notin "GuestsOrExternalUsers", "All", "None")
                 {
                     $IncludeUser = $null
                     try
                     {
-                        $IncludeUser = (Get-AzureADUser -ObjectId $IncludeUserGUID).userprincipalname
+                        $IncludeUser = (Get-MgUser -UserId $IncludeUserGUID).userprincipalname
                     }
                     catch
                     {
@@ -280,7 +277,7 @@ function Get-TargetResource
                     $ExcludeUser = $null
                     try
                     {
-                        $ExcludeUser = (Get-AzureADUser -ObjectId $ExcludeUserGUID).userprincipalname
+                        $ExcludeUser = (Get-MgUser -UserId $ExcludeUserGUID).userprincipalname
                     }
                     catch
                     {
@@ -328,7 +325,7 @@ function Get-TargetResource
                 $IncludeGroup = $null
                 try
                 {
-                    $IncludeGroup = (Get-AzureADGroup -ObjectId $IncludeGroupGUID).displayname
+                    $IncludeGroup = (Get-MgGroup -GroupId $IncludeGroupGUID).displayname
                 }
                 catch
                 {
@@ -371,7 +368,7 @@ function Get-TargetResource
                 $ExcludeGroup = $null
                 try
                 {
-                    $ExcludeGroup = (Get-AzureADGroup -ObjectId $ExcludeGroupGUID).displayname
+                    $ExcludeGroup = (Get-MgGroup GroupId $ExcludeGroupGUID).displayname
                 }
                 catch
                 {
@@ -413,7 +410,7 @@ function Get-TargetResource
             Write-Verbose -Message "Get-TargetResource: Role condition defined, processing"
             #build role translation table
             $rolelookup = @{}
-            foreach ($role in Get-AzureADDirectoryRoleTemplate)
+            foreach ($role in Get-MgDirectoryRoleTemplate)
             {
                 $rolelookup[$role.ObjectId] = $role.DisplayName
             }
@@ -500,7 +497,7 @@ function Get-TargetResource
             Write-Verbose -Message "Get-TargetResource: Location condition defined, processing"
             #build Location translation table
             $Locationlookup = @{}
-            foreach ($Location in Get-AzureADMSNamedLocationPolicy)
+            foreach ($Location in Get-MgIdentityConditionalAccessNamedLocation)
             {
                 $Locationlookup[$Location.Id] = $Location.DisplayName
             }
@@ -584,8 +581,6 @@ function Get-TargetResource
                     }
                 }
             }
-
-
         }
         if ($Policy.SessionControls.CloudAppSecurity.IsEnabled)
         {
@@ -666,7 +661,7 @@ function Get-TargetResource
             #no translation needed
             #Standard part
             Ensure                                   = "Present"
-            GlobalAdminAccount                       = $GlobalAdminAccount
+            ApplicationSecret                        = $ApplicationSecret
             ApplicationId                            = $ApplicationId
             TenantId                                 = $TenantId
             CertificateThumbprint                    = $CertificateThumbprint
@@ -824,10 +819,6 @@ function Set-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -844,18 +835,16 @@ function Set-TargetResource
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Set-Targetresource: Start processing"
-    Write-Verbose -Message "Set-Targetresource: Starting telemetry"
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $ApplicationId)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Write-Verbose -Message "Set-Targetresource: Finished telemetry"
+
     Write-Verbose -Message "Set-Targetresource: Running Get-TargetResource"
     $currentPolicy = Get-TargetResource @PSBoundParameters
     Write-Verbose -Message "Set-Targetresource: Cleaning up parameters"
@@ -863,7 +852,7 @@ function Set-TargetResource
     $currentParameters.Remove("ApplicationId") | Out-Null
     $currentParameters.Remove("TenantId") | Out-Null
     $currentParameters.Remove("CertificateThumbprint") | Out-Null
-    $currentParameters.Remove("GlobalAdminAccount") | Out-Null
+    $currentParameters.Remove("ApplicationSecret") | Out-Null
     $currentParameters.Remove("Ensure") | Out-Null
 
     if ($Ensure -eq 'Present')#create policy attribute objects
@@ -895,7 +884,7 @@ function Set-TargetResource
                 {
                     $userguid = $null
                     try
-                    { $userguid = (Get-AzureADUser -ObjectId $includeuser).ObjectId
+                    { $userguid = (Get-MgUser -UserId $includeuser).ObjectId
                     }
                     catch
                     {
@@ -967,7 +956,7 @@ function Set-TargetResource
                 {
                     $userguid = $null
                     try
-                    { $userguid = (Get-AzureADUser -ObjectId $excludeuser).ObjectId
+                    { $userguid = (Get-MgUser -UserId $excludeuser).ObjectId
                     }
                     catch
                     {
@@ -1037,7 +1026,8 @@ function Set-TargetResource
             {
                 $GroupLookup = $null
                 try
-                { $GroupLookup = Get-AzureADGroup -Filter "DisplayName eq '$includegroup'"
+                {
+                    $GroupLookup = Get-MgGroup -Filter "DisplayName eq '$includegroup'"
                 }
                 catch
                 {
@@ -1130,7 +1120,8 @@ function Set-TargetResource
             {
                 $GroupLookup = $null
                 try
-                { $GroupLookup = Get-AzureADGroup -Filter "DisplayName eq '$ExcludeGroup'"
+                {
+                    $GroupLookup = Get-MgGroup -Filter "DisplayName eq '$ExcludeGroup'"
                 }
                 catch
                 {
@@ -1220,7 +1211,7 @@ function Set-TargetResource
         {
             #translate role names to template guid if defined
             $rolelookup = @{}
-            foreach ($role in Get-AzureADDirectoryRoleTemplate)
+            foreach ($role in Get-MgDirectoryRoleTemplate)
             { $rolelookup[$role.DisplayName] = $role.ObjectId
             }
             foreach ($IncludeRole in $IncludeRoles)
@@ -1264,7 +1255,7 @@ function Set-TargetResource
         {
             #translate role names to template guid if defined
             $rolelookup = @{}
-            foreach ($role in Get-AzureADDirectoryRoleTemplate)
+            foreach ($role in Get-MgDirectoryRoleTemplate)
             { $rolelookup[$role.DisplayName] = $role.ObjectId
             }
             foreach ($ExcludeRole in $ExcludeRoles)
@@ -1329,7 +1320,7 @@ function Set-TargetResource
             Write-Verbose -Message "Set-Targetresource: locations specified"
             #create and provision Location condition object if used, translate Location names to guid
             $LocationLookup = @{}
-            foreach ($Location in Get-AzureADMSNamedLocationPolicy)
+            foreach ($Location in Get-MgIdentityConditionalAccessNamedLocation)
             {
                 $LocationLookup[$Location.DisplayName] = $Location.Id
             }
@@ -1490,7 +1481,7 @@ function Set-TargetResource
         $NewParameters.Add("PolicyId", $currentPolicy.Id)
         try
         {
-            Set-AzureADMSConditionalAccessPolicy @NewParameters
+            Set-MgIdentityConditionalAccessPolicy @NewParameters
         }
         catch
         {
@@ -1525,7 +1516,7 @@ function Set-TargetResource
         Write-Verbose -Message "Set-Targetresource: create policy $DisplayName"
         try
         {
-            New-AzureADMSConditionalAccessPolicy @NewParameters
+            New-MgIdentityConditionalAccessPolicy @NewParameters
         }
         catch
         {
@@ -1560,7 +1551,7 @@ function Set-TargetResource
         Write-Verbose -Message "Set-Targetresource: delete policy $DisplayName"
         try
         {
-            Remove-AzureADMSConditionalAccessPolicy -PolicyId $currentPolicy.ID
+            Remove-MgIdentityConditionalAccessPolicy -ConditionalAccessPolicyId $currentPolicy.ID
         }
         catch
         {
@@ -1742,10 +1733,6 @@ function Test-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -1769,7 +1756,9 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
     $ValuesToCheck.Remove('Id') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
@@ -1789,10 +1778,6 @@ function Export-TargetResource
     param
     (
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -1809,13 +1794,14 @@ function Export-TargetResource
         $CertificateThumbprint
     )
     #region Telemetry
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
 
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $ApplicationId)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -1823,7 +1809,7 @@ function Export-TargetResource
 
     try
     {
-        [array] $Policies = Get-AzureADMSConditionalAccessPolicy
+        [array] $Policies = Get-MgIdentityConditionalAccessPolicy
         $i = 1
         $dscContent = ''
 
@@ -1838,11 +1824,11 @@ function Export-TargetResource
             {
                 Write-Host "    |---[$i/$($Policies.Count)] $($Policy.DisplayName)" -NoNewline
                 $Params = @{
-                    GlobalAdminAccount    = $GlobalAdminAccount
                     DisplayName           = $Policy.DisplayName
                     Id                    = $Policy.Id
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
+                    ApplicationSecret     = $ApplicationSecret
                     CertificateThumbprint = $CertificateThumbprint
                 }
                 $Results = Get-TargetResource @Params
@@ -1851,8 +1837,7 @@ function Export-TargetResource
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
-                    -Results $Results `
-                    -GlobalAdminAccount $GlobalAdminAccount
+                    -Results $Results
 
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `

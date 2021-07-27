@@ -39,10 +39,6 @@ function Get-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -60,14 +56,15 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of AAD Named Location"
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $ApplicationId)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -81,7 +78,7 @@ function Get-TargetResource
         {
             if ($null -ne $Id)
             {
-                $NamedLocation = Get-AzureADMSNamedLocationPolicy -PolicyId $Id
+                $NamedLocation = Get-MgIdentityConditionalAccessNamedLocation -NamedLocationId $Id
             }
         }
         catch
@@ -92,7 +89,7 @@ function Get-TargetResource
         {
             try
             {
-                $NamedLocation = Get-AzureADMSNamedLocationPolicy -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
+                $NamedLocation = Get-MgIdentityConditionalAccessNamedLocation -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
             }
             catch
             {
@@ -117,7 +114,7 @@ function Get-TargetResource
                 CountriesAndRegions               = [String[]]$NamedLocation.CountriesAndRegions
                 IncludeUnknownCountriesAndRegions = $NamedLocation.IncludeUnknownCountriesAndRegions
                 Ensure                            = "Present"
-                GlobalAdminAccount                = $GlobalAdminAccount
+                ApplicationSecret                 = $ApplicationSecret
                 ApplicationId                     = $ApplicationId
                 TenantId                          = $TenantId
                 CertificateThumbprint             = $CertificateThumbprint
@@ -176,10 +173,6 @@ function Set-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -202,7 +195,7 @@ function Set-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $ApplicationId)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -212,7 +205,7 @@ function Set-TargetResource
     $currentParameters.Remove("ApplicationId")  | Out-Null
     $currentParameters.Remove("TenantId")  | Out-Null
     $currentParameters.Remove("CertificateThumbprint")  | Out-Null
-    $currentParameters.Remove("GlobalAdminAccount")  | Out-Null
+    $currentParameters.Remove("ApplicationSecret")  | Out-Null
     $currentParameters.Remove("Ensure")  | Out-Null
 
     # Named Location should exist but it doesn't
@@ -221,22 +214,23 @@ function Set-TargetResource
         $currentParameters.Remove("Id") | Out-Null
         $VerboseAttributes = ($currentParameters | Out-String)
         Write-Verbose -Message "Creating New AAD Named Location {$Displayname)} with attributes: $VerboseAttributes"
-        New-AzureADMSNamedLocationPolicy @currentParameters
+        New-MgIdentityConditionalAccessNamedLocation @currentParameters
     }
     # Named Location should exist and will be configured to desired state
     elseif ($Ensure -eq 'Present' -and $CurrentAADNamedLocation.Ensure -eq 'Present')
     {
         $currentParameters["PolicyId"] = $currentAADNamedLocation.ID
+        $currentParameters.Add("NamedLocationId", $currentAADNamedLocation.Id) | Out-Null
         $currentParameters.Remove("Id") | Out-Null
         $VerboseAttributes = ($currentParameters | Out-String)
         Write-Verbose -Message "Updating existing AAD Named Location {$Displayname)} with attributes: $VerboseAttributes"
-        Set-AzureADMSNamedLocationPolicy @currentParameters
+        Update-MgIdentityConditionalAccessNamedLocation @currentParameters
     }
     # Named Location exist but should not
     elseif ($Ensure -eq 'Absent' -and $CurrentAADNamedLocation.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing AAD Named Location {$Displayname)}"
-        Remove-AzureADMSNamedLocationPolicy -PolicyId $currentAADNamedLocation.ID
+        Remove-MgIdentityConditionalAccessNamedLocation -NamedLocationId $currentAADNamedLocation.ID
     }
 }
 
@@ -281,10 +275,6 @@ function Test-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -308,7 +298,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
     $ValuesToCheck.Remove("Id") | Out-Null
     $ValuesToCheck.Remove("ApplicationId") | Out-Null
     $ValuesToCheck.Remove("TenantId") | Out-Null
@@ -330,10 +320,6 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
         [Parameter()]
         [System.String]
         $ApplicationId,
@@ -357,7 +343,7 @@ function Export-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $ApplicationId)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -368,12 +354,12 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewline
     try
     {
-        $AADNamedLocations = Get-AzureADMSNamedLocationPolicy -ErrorAction Stop
+        $AADNamedLocations = Get-MgIdentityConditionalAccessNamedLocation -ErrorAction Stop
         foreach ($AADNamedLocation in $AADNamedLocations)
         {
             Write-Host "    |---[$i/$($AADNamedLocations.Count)] $($AADNamedLocation.DisplayName)" -NoNewline
             $Params = @{
-                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationSecret     = $ApplicationSecret
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
@@ -389,8 +375,7 @@ function Export-TargetResource
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
-                    -Results $Results `
-                    -GlobalAdminAccount $GlobalAdminAccount
+                    -Results $Results
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
