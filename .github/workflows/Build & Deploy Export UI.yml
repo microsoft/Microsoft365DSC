@@ -11,11 +11,11 @@ jobs:
         with:
           submodules: true
       - name: Install Packages
+        working-directory: $GITHUB_WORKSPACE/generator
         run: npm install
-        working-directory: /$GITHUB_WORKSPACE/generator
       - name: Build page
+        working-directory: $GITHUB_WORKSPACE/generator
         run: npm run build
-        working-directory: /$GITHUB_WORKSPACE/generator
       - name: Generate workloads and resources
         shell: pwsh
         run: pwsh -command ".\$GITHUB_WORKSPACE\generator\scripts\Build-Workloads.ps1 -Force"
