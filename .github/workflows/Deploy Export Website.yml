@@ -21,10 +21,11 @@ jobs:
       - name: Generate workloads and resources
         shell: pwsh
         run: pwsh -command ".\$GITHUB_WORKSPACE\generator\scripts\Build-Workloads.ps1 -Force"
-      - uses: actions/upload-artifact@master
+      - name: Publish Artifact
+        uses: actions/upload-artifact@master
         with:
           name: website-build
-          path: ${GITHUB_WORKSPACE}/generator
+          path: ${{ github.workspace }}/generator/build
 
   deploy_preview:
     runs-on: ubuntu-latest
@@ -45,7 +46,7 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "/generator/build"
+          app_location: ""
           output_location: ""
           skip_app_build: true
 
