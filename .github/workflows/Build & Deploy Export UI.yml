@@ -10,14 +10,14 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - name: Where am I?
-        run: echo "${GITHUB_WORKSPACE}/generator"
       - name: Install packages
-        working-directory: ./${GITHUB_WORKSPACE}/generator
-        run: npm install
+        run: |
+          cd ./${GITHUB_WORKSPACE}/generator
+          npm install
       - name: Build generator
-        working-directory: ./${GITHUB_WORKSPACE}/generator
-        run: npm run build
+        run: |
+          cd ./${GITHUB_WORKSPACE}/generator
+          npm run build
       - name: Generate workloads and resources
         shell: pwsh
         run: pwsh -command ".\$GITHUB_WORKSPACE\generator\scripts\Build-Workloads.ps1 -Force"
