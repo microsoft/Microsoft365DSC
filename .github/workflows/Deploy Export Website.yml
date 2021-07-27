@@ -1,0 +1,74 @@
+name: Export Website
+on: [push]
+
+jobs:
+  build:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    runs-on: ubuntu-latest
+    name: Build
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Generate workloads and resources
+        shell: pwsh
+        run: pwsh -command ".\$GITHUB_WORKSPACE\generator\scripts\Build-Workloads.ps1 -Force"
+      - name: Install packages
+        run: |
+          cd ${GITHUB_WORKSPACE}/generator
+          npm install
+      - name: Build generator
+        run: |
+          cd ${GITHUB_WORKSPACE}/generator
+          npm run build
+      - name: Publish Artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: website-build
+          path: ${{ github.workspace }}/generator/build
+
+  deploy_preview:
+    runs-on: ubuntu-latest
+    environment:
+      name: PREVIEW
+    name: Deploy to Preview
+    needs: build
+    steps:
+      - uses: actions/download-artifact@master
+        with:
+          name: website-build
+      - name: Display structure of downloaded files
+        run: ls -R
+      - name: Deploy to Preview Azure Static Web App
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: ""
+          output_location: ""
+          skip_app_build: true
+
+  deploy_prod:
+    if: github.repository == 'microsoft/Microsoft365DSC' && github.event.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    environment:
+      name: PROD
+    name: Deploy to Production
+    needs: deploy_preview
+    steps:
+      - name: Deploy
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+          action: "upload"
+          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
+          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
+          app_location: "/generator/" # App source code path
+          api_location: "api" # Api source code path - optional
+          output_location: "build" # Built app content directory - optional
+          skip_app_build: true
+          ###### End of Repository/Build Configurations ######
