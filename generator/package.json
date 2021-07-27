@@ -28,7 +28,7 @@
   },
   "scripts": {
     "start": "pwsh -command '.\\scripts\\Build-Workloads.ps1' && react-scripts start",
-    "build": "pwsh -command '.\\scripts\\Build-Workloads.ps1' && react-scripts build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
