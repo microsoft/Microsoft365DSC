@@ -94,7 +94,7 @@ export const ContentCard: React.FunctionComponent<IContentCardProps> = (props) =
                   let hash = "#" + props.workload.title;
                   window.location.hash = hash;
                   history.push(hash);
-                  setSelectedWorkload(props.workload.title);
+                  setSelectedWorkload(props.workload.id);
                 }} />
               )}
               {!isLoading &&
