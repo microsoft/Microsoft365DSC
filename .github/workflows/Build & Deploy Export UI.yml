@@ -11,13 +11,12 @@ jobs:
         with:
           submodules: true
       - name: Where am I?
-        working-directory: $GITHUB_WORKSPACE/generator
-        run: echo "$GITHUB_WORKSPACE/generator"
+        run: echo "${GITHUB_WORKSPACE}/generator"
       - name: Install packages
-        working-directory: $GITHUB_WORKSPACE/generator
+        working-directory: ${GITHUB_WORKSPACE}/generator
         run: npm install
       - name: Build generator
-        working-directory: $GITHUB_WORKSPACE/generator
+        working-directory: ${GITHUB_WORKSPACE}/generator
         run: npm run build
       - name: Generate workloads and resources
         shell: pwsh
