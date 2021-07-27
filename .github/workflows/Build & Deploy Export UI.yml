@@ -12,11 +12,11 @@ jobs:
           submodules: true
       - name: Install packages
         run: |
-          cd ./${GITHUB_WORKSPACE}/generator
+          cd ${GITHUB_WORKSPACE}/generator
           npm install
       - name: Build generator
         run: |
-          cd ./${GITHUB_WORKSPACE}/generator
+          cd ${GITHUB_WORKSPACE}/generator
           npm run build
       - name: Generate workloads and resources
         shell: pwsh
