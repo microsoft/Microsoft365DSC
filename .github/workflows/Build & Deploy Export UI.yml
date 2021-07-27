@@ -10,10 +10,13 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - name: Install Packages
+      - name: Where am I?
+        working-directory: $GITHUB_WORKSPACE/generator
+        run: echo "$GITHUB_WORKSPACE/generator"
+      - name: Install packages
         working-directory: $GITHUB_WORKSPACE/generator
         run: npm install
-      - name: Build page
+      - name: Build generator
         working-directory: $GITHUB_WORKSPACE/generator
         run: npm run build
       - name: Generate workloads and resources
