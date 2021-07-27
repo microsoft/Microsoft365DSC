@@ -27,8 +27,9 @@ jobs:
     environment:
       name: PREVIEW
     name: Build
+    needs: build
     steps:
-      - name: Deploy
+      - name: Deploy to Preview Azure Static Web App
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         with:
@@ -49,6 +50,7 @@ jobs:
     environment:
       name: PROD
     name: Build
+    needs: build
     steps:
       - name: Deploy
         id: builddeploy
