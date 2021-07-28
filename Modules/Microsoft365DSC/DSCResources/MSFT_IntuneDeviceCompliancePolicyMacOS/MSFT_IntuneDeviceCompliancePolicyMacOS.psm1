@@ -87,9 +87,21 @@ function Get-TargetResource
         [ValidateSet('Absent', 'Present')]
         $Ensure,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret
     )
 
     Write-Verbose -Message "Checking for the Intune Device Compliance MacOS Policy {$DisplayName}"
@@ -145,6 +157,9 @@ function Get-TargetResource
             FirewallEnableStealthMode                   = $devicePolicy.FanagedEmailProfileRequired
             Ensure                                      = 'Present'
             GlobalAdminAccount                          = $GlobalAdminAccount
+            ApplicationId                               = $ApplicationId
+            TenantId                                    = $TenantId
+            ApplicationSecret                           = $ApplicationSecret
         }
         return [System.Collections.Hashtable] $results
     }
@@ -262,9 +277,21 @@ function Set-TargetResource
         [ValidateSet('Absent', 'Present')]
         $Ensure,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret
     )
 
 
@@ -416,9 +443,21 @@ function Test-TargetResource
         [ValidateSet('Absent', 'Present')]
         $Ensure,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret
     )
 
     #region Telemetry
@@ -440,6 +479,9 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -457,9 +499,21 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret
     )
 
     $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
@@ -483,7 +537,14 @@ function Export-TargetResource
             -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.macOSCompliancePolicy' }
         $i = 1
         $content = ''
-        Write-Host "`r`n" -NoNewline
+        if ($configDeviceMacOsPolicies.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
 
         foreach ($configDeviceMacOsPolicy in $configDeviceMacOsPolicies)
         {
@@ -492,6 +553,9 @@ function Export-TargetResource
                 DisplayName        = $configDeviceMacOsPolicy.displayName
                 Ensure             = 'Present'
                 GlobalAdminAccount = $GlobalAdminAccount
+                ApplicationId      = $ApplicationId
+                TenantId           = $TenantId
+                ApplicationSecret  = $ApplicationSecret
             }
             $result = Get-TargetResource @params
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"

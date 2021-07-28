@@ -1,4 +1,5 @@
 {
+    "resourceName": "AADGroupsNamingPolicy",
     "description": "This resource configures the Azure Active Directory groups naming policy.",
     "permissions": [
         {

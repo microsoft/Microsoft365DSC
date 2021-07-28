@@ -509,9 +509,21 @@ function Get-TargetResource
         [ValidateSet('Absent', 'Present')]
         $Ensure,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret
     )
 
     Write-Verbose -Message "Checking for the Intune Device Configuration Policy {$DisplayName}"
@@ -672,6 +684,9 @@ function Get-TargetResource
             WallpaperBlockModification                     = $policy.WallpaperBlockModification
             Ensure                                         = "Present"
             GlobalAdminAccount                             = $GlobalAdminAccount
+            ApplicationId                                  = $ApplicationId
+            TenantId                                       = $TenantId
+            ApplicationSecret                              = $ApplicationSecret
         }
     }
     catch
@@ -1203,9 +1218,21 @@ function Set-TargetResource
         [ValidateSet('Absent', 'Present')]
         $Ensure,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret
     )
 
     $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
@@ -1226,6 +1253,9 @@ function Set-TargetResource
     $setParams = $PSBoundParameters
     $setParams.Remove("Ensure") | Out-Null
     $setParams.Remove("GlobalAdminAccount") | Out-Null
+    $setParams.Remove("ApplicationId") | Out-Null
+    $setParams.Remove("TenantId") | Out-Null
+    $setParams.Remove("ApplicationSecret") | Out-Null
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Device Configuration Policy {$DisplayName}"
@@ -1756,9 +1786,21 @@ function Test-TargetResource
         [ValidateSet('Absent', 'Present')]
         $Ensure,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret
     )
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -1778,6 +1820,9 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -1795,9 +1840,21 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret
     )
     $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
         -InboundParameters $PSBoundParameters
@@ -1818,7 +1875,14 @@ function Export-TargetResource
         [array]$policies = Get-IntuneDeviceConfigurationPolicy -ErrorAction Stop | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration' }
         $i = 1
         $dscContent = ''
-        Write-Host "`r`n" -NoNewline
+        if ($policies.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
         foreach ($policy in $policies)
         {
             Write-Host "    |---[$i/$($policies.Count)] $($policy.displayName)" -NoNewline
@@ -1826,6 +1890,9 @@ function Export-TargetResource
                 DisplayName        = $policy.displayName
                 Ensure             = 'Present'
                 GlobalAdminAccount = $GlobalAdminAccount
+                ApplicationId      = $ApplicationId
+                TenantId           = $TenantId
+                ApplicationSecret  = $ApplicationSecret
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

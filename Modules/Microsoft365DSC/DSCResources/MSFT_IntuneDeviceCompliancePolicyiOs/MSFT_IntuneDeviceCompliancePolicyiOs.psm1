@@ -73,9 +73,21 @@ function Get-TargetResource
         [ValidateSet('Absent', 'Present')]
         $Ensure,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret
     )
 
     Write-Verbose -Message "Checking for the Intune Device Compliance iOS Policy {$DisplayName}"
@@ -128,6 +140,9 @@ function Get-TargetResource
             ManagedEmailProfileRequired                 = $devicePolicy.ManagedEmailProfileRequired
             Ensure                                      = 'Present'
             GlobalAdminAccount                          = $GlobalAdminAccount
+            ApplicationId                               = $ApplicationId
+            TenantId                                    = $TenantId
+            ApplicationSecret                           = $ApplicationSecret
         }
         return [System.Collections.Hashtable] $results
     }
@@ -231,12 +246,22 @@ function Set-TargetResource
         [ValidateSet('Absent', 'Present')]
         $Ensure,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret
     )
-
-
     Write-Verbose -Message "Intune Device Compliance iOS Policy {$DisplayName}"
 
     $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
@@ -371,9 +396,21 @@ function Test-TargetResource
         [ValidateSet('Absent', 'Present')]
         $Ensure,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret
     )
 
     #region Telemetry
@@ -395,6 +432,9 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -412,9 +452,21 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret
     )
 
     $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
@@ -438,7 +490,14 @@ function Export-TargetResource
             -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.iosCompliancePolicy' }
         $i = 1
         $dscContent = ''
-        Write-Host "`r`n" -NoNewline
+        if ($configDeviceiOsPolicies.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
         foreach ($configDeviceiOsPolicy in $configDeviceiOsPolicies)
         {
             Write-Host "    |---[$i/$($configDeviceiOsPolicies.Count)] $($configDeviceiOsPolicy.displayName)" -NoNewline
@@ -446,6 +505,9 @@ function Export-TargetResource
                 DisplayName        = $configDeviceiOsPolicy.displayName
                 Ensure             = 'Present'
                 GlobalAdminAccount = $GlobalAdminAccount
+                ApplicationId      = $ApplicationId
+                TenantId           = $TenantId
+                ApplicationSecret  = $ApplicationSecret
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
