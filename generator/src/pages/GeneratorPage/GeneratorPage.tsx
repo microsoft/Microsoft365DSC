@@ -189,10 +189,6 @@ export const GeneratorPage: React.FunctionComponent = () => {
           <SideNavigation items={navigationItems}></SideNavigation>
         </Sidebar>
         <Main>
-          <header>
-            <h1 id="Home">Generator</h1>
-          </header
-
           <Generator></Generator>
 
           {generatorPanelOpen && (
