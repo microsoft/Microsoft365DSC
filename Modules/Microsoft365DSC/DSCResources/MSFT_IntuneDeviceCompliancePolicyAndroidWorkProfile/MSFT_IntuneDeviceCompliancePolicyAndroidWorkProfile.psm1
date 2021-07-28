@@ -629,7 +629,14 @@ function Export-TargetResource
             -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidWorkProfileCompliancePolicy'}
         $i = 1
         $dscContent = ''
-        Write-Host "`r`n" -NoNewline
+        if ($configDeviceAndroidPolicies.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
         foreach ($configDeviceAndroidPolicy in $configDeviceAndroidPolicies)
         {
             Write-Host "    |---[$i/$($configDeviceAndroidPolicies.Count)] $($configDeviceAndroidPolicy.displayName)" -NoNewline

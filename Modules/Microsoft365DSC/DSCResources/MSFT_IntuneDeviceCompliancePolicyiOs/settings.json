@@ -1,0 +1,18 @@
+{
+    "resourceName": "IntuneDeviceCompliancePolicyiOs",
+    "description": "This resource configures the Intune compliance policies for iOs devices.",
+    "permissions": [
+        {
+            "read": [
+                {
+                    "name": "DeviceManagementConfiguration.Read.All"
+                }
+            ],
+            "update": [
+                {
+                    "name": "DeviceManagementConfiguration.ReadWrite.All"
+                }
+            ]
+        }
+    ]
+}

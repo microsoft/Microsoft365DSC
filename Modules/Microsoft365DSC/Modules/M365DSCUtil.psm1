@@ -858,6 +858,7 @@ function Export-M365DSCConfiguration
         [System.String]
         $CertificatePath
     )
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Event", "Extraction")
@@ -877,6 +878,8 @@ function Export-M365DSCConfiguration
 
     if (-not $Quiet)
     {
+        Write-Host "THIS GRAPHICAL USER INTERFACE IS DEPRECATED. STARTING OCTOBER 6TH 2021, IT WILL BE DISABLED AND REPLACED BY AN ONLINE VERSION. TRY IT OUT NOW AT https://export-preview.Microsoft365DSC.com" -ForegroundColor Black -BackgroundColor Yellow
+        explorer "https://export-preview.Microsoft365dsc.com"
         Show-M365DSCGUI -Path $Path -FileName $FileName `
             -GenerateInfo $GenerateInfo
     }

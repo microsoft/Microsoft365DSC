@@ -281,7 +281,15 @@ function Export-TargetResource
         [array]$categories = Get-IntuneDeviceCategory -ErrorAction Stop
         $i = 1
         $dscContent = ''
-        Write-Host "`r`n" -NoNewLine
+        if ($categories.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
+
         foreach ($category in $categories)
         {
             Write-Host "    |---[$i/$($categories.Count)] $($category.displayName)" -NoNewLine

@@ -1,0 +1,18 @@
+{
+    "resourceName": "IntuneDeviceCompliancePolicyAndroidWorkProfile",
+    "description": "This resource configures the settings of Android Work Profile device compliance policies in your cloud-based organization.",
+    "permissions": [
+        {
+            "read": [
+                {
+                    "name": "DeviceManagementConfiguration.Read.All"
+                }
+            ],
+            "update": [
+                {
+                    "name": "DeviceManagementConfiguration.ReadWrite.All"
+                }
+            ]
+        }
+    ]
+}
