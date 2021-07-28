@@ -11,7 +11,7 @@ export const App: React.FunctionComponent = (theme) => {
       <BrowserRouter>
         <TelemetryProvider instrumentationKey={process.env.REACT_APP_INSTRUMENTATION_KEY}>
           <GeneratorPage></GeneratorPage>
-        </TelemetryProvider
+        </TelemetryProvider>
       </BrowserRouter>
     </RecoilRoot>
   );
