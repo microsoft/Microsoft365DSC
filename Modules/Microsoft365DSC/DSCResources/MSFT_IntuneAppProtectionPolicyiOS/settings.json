@@ -1,0 +1,18 @@
+{
+    "resourceName": "IntuneDeviceConfigurationPolicyiOS",
+    "description": "This resource configures an Intune device configuration profile for an iOS Device.",
+    "permissions": [
+        {
+            "read": [
+                {
+                    "name":"DeviceManagementApps.Read.All"
+                }
+            ],
+            "update": [
+                {
+                    "name": "DeviceManagementApps.ReadWrite.All"
+                }
+            ]
+        }
+    ]
+}

@@ -636,7 +636,14 @@ function Export-TargetResource
         [array]$policies = Get-IntuneAppProtectionPolicy -ErrorAction Stop | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.iosManagedAppProtection' }
         $i = 1
         $dscContent = ''
-        Write-Host "`r`n" -NoNewline
+        if ($policies.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
         foreach ($policy in $policies)
         {
             Write-Host "    |---[$i/$($policies.Count)] $($policy.displayName)" -NoNewline

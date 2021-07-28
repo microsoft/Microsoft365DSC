@@ -719,7 +719,15 @@ function Export-TargetResource
             -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.windows10CompliancePolicy' }
         $i = 1
         $content = ''
-        Write-Host "`r`n" -NoNewline
+        if ($configDeviceWindowsPolicies.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
+
 
         foreach ($configDeviceWindowsPolicy in $configDeviceWindowsPolicies)
         {

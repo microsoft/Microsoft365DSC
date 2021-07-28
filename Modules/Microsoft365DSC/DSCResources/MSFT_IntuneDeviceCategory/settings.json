@@ -1,0 +1,18 @@
+{
+    "resourceName": "IntuneDeviceCategory",
+    "description": "This resource configures the Intune device categories.",
+    "permissions": [
+        {
+            "read": [
+                {
+                    "name":"DeviceManagementManagedDevices.Read.All"
+                }
+            ],
+            "update": [
+                {
+                    "name": "DeviceManagementManagedDevices.ReadWrite.All"
+                }
+            ]
+        }
+    ]
+}
