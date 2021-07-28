@@ -1,4 +1,4 @@
-name: Export Website
+name: Build & Deploy to Preview
 on: [push]
 
 jobs:
