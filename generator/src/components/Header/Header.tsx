@@ -60,7 +60,7 @@ const HeaderComponent: React.FunctionComponent<IHeaderProps> = (props: IHeaderPr
           aria-label={process.env.REACT_APP_SITE_NAME}
           styles={pipeFabricStyles}
         >
-          Configuration-as-Code for the Cloud
+          {process.env.REACT_APP_SITE_DESCRIPTION}
         </Link>
       </Stack>
       <PrimaryButton text="Generate" onClick={props.onGenerate} />
