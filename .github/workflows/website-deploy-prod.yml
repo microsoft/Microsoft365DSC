@@ -5,6 +5,8 @@ jobs:
   build:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
+    environment:
+      name: PROD
     name: Build
     steps:
       - uses: actions/checkout@v2
