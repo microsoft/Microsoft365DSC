@@ -21,9 +21,6 @@ jobs:
         run: |
           cd ${GITHUB_WORKSPACE}/generator
           npm run build
-        env:
-          REACT_APP_SITE_NAME: ${{ secrets.REACT_APP_SITE_NAME }}
-          REACT_APP_INSTRUMENTATION_KEY: ${{ secrets.REACT_APP_INSTRUMENTATION_KEY }}
       - name: Publish Artifact
         uses: actions/upload-artifact@master
         with:
