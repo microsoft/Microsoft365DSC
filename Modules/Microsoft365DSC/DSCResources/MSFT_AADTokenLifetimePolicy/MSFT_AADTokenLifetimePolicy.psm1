@@ -50,7 +50,7 @@ function Get-TargetResource
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Getting configuration of AzureAD Policy"
+    Write-Verbose -Message "Getting configuration of AzureAD Token Lifetime Policy"
     $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -73,18 +73,18 @@ function Get-TargetResource
         {
             if ($null -ne $Id)
             {
-                $Policy = Get-AzureADPolicy -ID $Id
+                $Policy = Get-MgPolicyTokenLifetimePolicy -TokenLifetimePolicyId $Id
             }
         }
         catch
         {
-            Write-Verbose -Message "Could not retrieve AzureAD Policy by ID {$Id}"
+            Write-Verbose -Message "Could not retrieve AzureAD Token Lifetime Policy by ID {$Id}"
         }
         if ($null -eq $Policy)
         {
             try
             {
-                $Policy = Get-AzureADPolicy -All $True -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -like $DisplayName }
+                $Policy = Get-AzureADPolicy -Filter "DisplayName eq '$DisplayName'"
             }
             catch
             {
