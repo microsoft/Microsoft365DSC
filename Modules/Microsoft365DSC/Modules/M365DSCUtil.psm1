@@ -858,6 +858,7 @@ function Export-M365DSCConfiguration
         [System.String]
         $CertificatePath
     )
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Event", "Extraction")
@@ -877,6 +878,8 @@ function Export-M365DSCConfiguration
 
     if (-not $Quiet)
     {
+        Write-Host "THIS GRAPHICAL USER INTERFACE IS DEPRECATED. STARTING OCTOBER 6TH 2021, IT WILL BE DISABLED AND REPLACED BY AN ONLINE VERSION. TRY IT OUT NOW AT https://export-preview.Microsoft365DSC.com" -ForegroundColor Black -BackgroundColor Yellow
+        explorer "https://export-preview.Microsoft365dsc.com"
         Show-M365DSCGUI -Path $Path -FileName $FileName `
             -GenerateInfo $GenerateInfo
     }
@@ -2080,6 +2083,10 @@ function Update-M365DSCExportAuthenticationResults
         {
             $Results.Remove("TenantId") | Out-Null
         }
+        if ($Results.ContainsKey("ApplicationSecret"))
+        {
+            $Results.Remove("ApplicationSecret") | Out-Null
+        }
         if ($Results.ContainsKey("CertificateThumbprint"))
         {
             $Results.Remove("CertificateThumbprint") | Out-Null
@@ -2157,6 +2164,21 @@ function Update-M365DSCExportAuthenticationResults
             catch
             {
                 Write-Verbose -Message "Error removing TenantId from Update-M365DSCExportAuthenticationResults"
+            }
+        }
+        if (-not [System.String]::IsNullOrEmpty($Results.ApplicationSecret))
+        {
+            $Results.ApplicationSecret = "`$ConfigurationData.NonNodeData.ApplicationSecret"
+        }
+        else
+        {
+            try
+            {
+                $Results.Remove("ApplicationSecret") | Out-Null
+            }
+            catch
+            {
+                Write-Verbose -Message "Error removing ApplicationSecret from Update-M365DSCExportAuthenticationResults"
             }
         }
         if ($null -ne $Results.CertificatePassword)
@@ -2237,6 +2259,11 @@ function Get-M365DSCExportContentForResource
         {
             $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
                 -ParameterName "TenantId"
+        }
+        if (![System.String]::IsNullOrEmpty($Results.ApplicationSecret))
+        {
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+                -ParameterName "ApplicationSecret"
         }
         if (![System.String]::IsNullOrEmpty($Results.CertificatePath))
         {

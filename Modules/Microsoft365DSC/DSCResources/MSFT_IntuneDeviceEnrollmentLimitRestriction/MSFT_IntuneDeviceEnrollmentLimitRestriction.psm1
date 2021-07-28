@@ -289,7 +289,14 @@ function Export-TargetResource
         [array]$configs = Get-IntuneDeviceEnrollmentConfiguration -ErrorAction Stop | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
         $i = 1
         $dscContent = ''
-        Write-Host "`r`n" -NoNewline
+        if ($configs.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
         foreach ($config in $configs)
         {
             Write-Host "    |---[$i/$($configs.Count)] $($config.displayName)" -NoNewline

@@ -1,4 +1,5 @@
 {
+    "resourceName": "AADPolicy",
     "description": "This resource configures the Azure AD Policies.",
     "permissions": [
         {
