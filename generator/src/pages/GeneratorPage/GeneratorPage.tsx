@@ -192,9 +192,12 @@ export const GeneratorPage: React.FunctionComponent = () => {
           <header>
             <h1 id="Home">Generator</h1>
           </header>
+
           <Generator></Generator>
 
-          {generatorPanelOpen && <GeneratorPanel></GeneratorPanel>}
+          {generatorPanelOpen && (
+            <GeneratorPanel></GeneratorPanel>
+          )}
         </Main>
       </Content>
     </Page>
