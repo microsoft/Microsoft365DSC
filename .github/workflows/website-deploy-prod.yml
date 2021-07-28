@@ -38,7 +38,7 @@ jobs:
     environment:
       name: PROD
     name: Deploy to Production
-    needs: deploy_preview
+    needs: build
     steps:
       - name: Deploy
         id: builddeploy
