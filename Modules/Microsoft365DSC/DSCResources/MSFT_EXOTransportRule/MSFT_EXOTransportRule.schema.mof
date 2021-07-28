@@ -17,7 +17,7 @@ class MSFT_EXOTransportRule : OMI_BaseResource
     [Write, Description("The AnyOfToHeaderMemberOf parameter specifies a condition that looks for group members in the To field of messages.")] String AnyOfToHeaderMemberOf[];
     [Write, Description("The ApplyClassification parameter specifies an action that applies a message classification to messages. ")] String ApplyClassification;
     [Write, Description("The ApplyHtmlDisclaimerFallbackAction parameter specifies what to do if the HTML disclaimer can't be added to a message."), ValueMap{"Wrap","Ignore","Reject"}, Values{"Wrap","Ignore","Reject"}] String ApplyHtmlDisclaimerFallbackAction;
-    [Write, Description("The ApplyHtmlDisclaimerLocation parameter specifies where to insert the HTML disclaimer text in the body of messages."), ValueMap{"Append","Prepand"}, Values{"Append","Prepand"}] String ApplyHtmlDisclaimerLocation;
+    [Write, Description("The ApplyHtmlDisclaimerLocation parameter specifies where to insert the HTML disclaimer text in the body of messages."), ValueMap{"Append","Prepend"}, Values{"Append","Prepend"}] String ApplyHtmlDisclaimerLocation;
     [Write, Description("The ApplyHtmlDisclaimerText parameter specifies an action that adds the disclaimer text to messages.")] String ApplyHtmlDisclaimerText;
     [Write, Description("The ApplyOME parameter specifies an action that encrypts messages and their attachments by using Office 365 Message Encryption.")] Boolean ApplyOME;
     [Write, Description("The ApplyRightsProtectionTemplate parameter specifies an action that applies rights management service (RMS) templates to messages. ")] String ApplyRightsProtectionTemplate;
@@ -86,10 +86,11 @@ class MSFT_EXOTransportRule : OMI_BaseResource
     [Write, Description("The ExceptIfRecipientAddressMatchesPatterns parameter specifies an exception that looks for text patterns in recipient email addresses by using regular expressions.")] String ExceptIfRecipientAddressMatchesPatterns[];
     [Write, Description("The ExceptIfRecipientDomainIs parameter specifies an exception that looks for recipients with email address in the specified domains.")] String ExceptIfRecipientDomainIs[];
     [Write, Description("This parameter is reserved for internal Microsoft use.")] String ExceptIfRecipientInSenderList[];
+    [Write, Description("The ExceptIfSCLOver parameter specifies an exception that looks for the SCL value of messages")] String ExceptIfSCLOver;
     [Write, Description("The ExceptIfSenderADAttributeContainsWords parameter specifies an exception that looks for words in Active Directory attributes of message senders.")] String ExceptIfSenderADAttributeContainsWords[];
     [Write, Description("The ExceptIfSenderADAttributeMatchesPatterns parameter specifies an exception that looks for text patterns in Active Directory attributes of message senders by using regular expressions.")] String ExceptIfSenderADAttributeMatchesPatterns[];
     [Write, Description("The ExceptIfSenderDomainIs parameter specifies an exception that looks for senders with email address in the specified domains.")] String ExceptIfSenderDomainIs[];
-    [Write, Description("This parameter is reserved for internal Microsoft use.")] String ExceptIfSenderInRecipientList;
+    [Write, Description("This parameter is reserved for internal Microsoft use.")] String ExceptIfSenderInRecipientList[];
     [Write, Description("The ExceptIfSenderIpRanges parameter specifies an exception that looks for senders whose IP addresses matches the specified value, or fall within the specified ranges.")] String ExceptIfSenderIpRanges[];
     [Write, Description("The ExceptIfSenderManagementRelationship parameter specifies an exception that looks for the relationship between the sender and recipients in messages."), ValueMap{"Manager","DirectReport"}, Values{"Manager","DirectReport"}] String ExceptIfSenderManagementRelationship;
     [Write, Description("The ExceptIfSentTo parameter specifies an exception that looks for recipients in messages. You can use any value that uniquely identifies the recipient.")] String ExceptIfSentTo[];
@@ -145,6 +146,7 @@ class MSFT_EXOTransportRule : OMI_BaseResource
     [Write, Description("The RouteMessageOutboundRequireTls parameter specifies an action that uses Transport Layer Security (TLS) encryption to deliver messages outside your organization.")] Boolean RouteMessageOutboundRequireTls;
     [Write, Description("The RuleErrorAction parameter specifies what to do if rule processing can't be completed on messages."), ValueMap{"Ignore","Defer"}, Values{"Ignore","Defer"}] String RuleErrorAction;
     [Write, Description("The RuleSubType parameter specifies the rule type."), ValueMap{"Dlp","None"}, Values{"Dlp","None"}] String RuleSubType;
+    [Write, Description("The SCLOver parameter specifies a condition that looks for the SCL value of messages")] String SCLOver;
     [Write, Description("The SenderADAttributeContainsWords parameter specifies a condition that looks for words in Active Directory attributes of message senders.")] String SenderADAttributeContainsWords[];
     [Write, Description("The SenderADAttributeMatchesPatterns parameter specifies a condition that looks for text patterns in Active Directory attributes of message senders by using regular expressions.")] String SenderADAttributeMatchesPatterns[];
     [Write, Description("The SenderAddressLocation parameter specifies where to look for sender addresses in conditions and exceptions that examine sender email addresses."), ValueMap{"Header","Envelope","HeaderOrEnvelope"}, Values{"Header","Envelope","HeaderOrEnvelope"}] String SenderAddressLocation;

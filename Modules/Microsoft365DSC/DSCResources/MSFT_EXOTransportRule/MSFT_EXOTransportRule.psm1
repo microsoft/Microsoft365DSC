@@ -73,7 +73,7 @@ function Get-TargetResource
         $ApplyHtmlDisclaimerFallbackAction,
 
         [Parameter()]
-        [ValidateSet('Append', 'Prepand')]
+        [ValidateSet('Append', 'Prepend')]
         [System.String]
         $ApplyHtmlDisclaimerLocation,
 
@@ -354,6 +354,10 @@ function Get-TargetResource
         $ExceptIfRecipientInSenderList,
 
         [Parameter()]
+        [System.String]
+        $ExceptIfSCLOver,
+
+        [Parameter()]
         [System.String[]]
         $ExceptIfSenderADAttributeContainsWords,
 
@@ -600,6 +604,10 @@ function Get-TargetResource
         $RuleSubType,
 
         [Parameter()]
+        [System.String]
+        $SCLOver,
+
+        [Parameter()]
         [System.String[]]
         $SenderADAttributeContainsWords,
 
@@ -672,7 +680,7 @@ function Get-TargetResource
         $SubjectMatchesPatterns,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SubjectOrBodyContainsWords,
 
         [Parameter()]
@@ -715,12 +723,6 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting Transport Rule configuration for $Name"
-    #region Telemetry
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
 
     if ($Global:CurrentModeIsExport)
     {
@@ -733,6 +735,18 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
 
     $AllTransportRules = Get-TransportRule
 
@@ -833,6 +847,7 @@ function Get-TargetResource
             ExceptIfRecipientAddressMatchesPatterns       = $TransportRule.ExceptIfRecipientAddressMatchesPatterns
             ExceptIfRecipientDomainIs                     = $TransportRule.ExceptIfRecipientDomainIs
             ExceptIfRecipientInSenderList                 = $TransportRule.ExceptIfRecipientInSenderList
+            ExceptIfSCLOver                               = $TransportRule.ExceptIfSCLOver
             ExceptIfSenderADAttributeContainsWords        = $TransportRule.ExceptIfSenderADAttributeContainsWords
             ExceptIfSenderADAttributeMatchesPatterns      = $TransportRule.ExceptIfSenderADAttributeMatchesPatterns
             ExceptIfSenderDomainIs                        = $TransportRule.ExceptIfSenderDomainIs
@@ -892,6 +907,7 @@ function Get-TargetResource
             RouteMessageOutboundRequireTls                = $TransportRule.RouteMessageOutboundRequireTls
             RuleErrorAction                               = $TransportRule.RuleErrorAction
             RuleSubType                                   = $TransportRule.RuleSubType
+            SCLOver                                       = $TransportRule.SCLOver
             SenderADAttributeContainsWords                = $TransportRule.SenderADAttributeContainsWords
             SenderADAttributeMatchesPatterns              = $TransportRule.SenderADAttributeMatchesPatterns
             SenderAddressLocation                         = $TransportRule.SenderAddressLocation
@@ -919,6 +935,16 @@ function Get-TargetResource
             CertificatePath                               = $CertificatePath
             CertificatePassword                           = $CertificatePassword
             TenantId                                      = $TenantId
+        }
+
+        # Formats DateTime as String
+        if ($null -ne $result.ActivationDate)
+        {
+            $result.ActivationDate = $TransportRule.ActivationDate.ToUniversalTime().ToString()
+        }
+        if ($null -ne $result.ExpiryDate)
+        {
+            $result.ExpiryDate = $TransportRule.ExpiryDate.ToUniversalTime().ToString()
         }
 
         Write-Verbose -Message "Found Transport Rule $($Name)"
@@ -1000,7 +1026,7 @@ function Set-TargetResource
         $ApplyHtmlDisclaimerFallbackAction,
 
         [Parameter()]
-        [ValidateSet('Append', 'Prepand')]
+        [ValidateSet('Append', 'Prepend')]
         [System.String]
         $ApplyHtmlDisclaimerLocation,
 
@@ -1281,6 +1307,10 @@ function Set-TargetResource
         $ExceptIfRecipientInSenderList,
 
         [Parameter()]
+        [System.String]
+        $ExceptIfSCLOver,
+
+        [Parameter()]
         [System.String[]]
         $ExceptIfSenderADAttributeContainsWords,
 
@@ -1527,6 +1557,10 @@ function Set-TargetResource
         $RuleSubType,
 
         [Parameter()]
+        [System.String]
+        $SCLOver,
+
+        [Parameter()]
         [System.String[]]
         $SenderADAttributeContainsWords,
 
@@ -1599,7 +1633,7 @@ function Set-TargetResource
         $SubjectMatchesPatterns,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SubjectOrBodyContainsWords,
 
         [Parameter()]
@@ -1654,173 +1688,15 @@ function Set-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' -InboundParameters $PSBoundParameters
 
-    $NewTransportRuleParams = @{
-        Name                                          = $Name
-        ADComparisonAttribute                         = $ADComparisonAttribute
-        ADComparisonOperator                          = $ADComparisonOperator
-        ActivationDate                                = $ActivationDate
-        AddManagerAsRecipientType                     = $AddManagerAsRecipientType
-        AddToRecipients                               = $AddToRecipients
-        AnyOfCcHeader                                 = $AnyOfCcHeader
-        AnyOfCcHeaderMemberOf                         = $AnyOfCcHeaderMemberOf
-        AnyOfRecipientAddressContainsWords            = $AnyOfRecipientAddressContainsWords
-        AnyOfRecipientAddressMatchesPatterns          = $AnyOfRecipientAddressMatchesPatterns
-        AnyOfToCcHeader                               = $AnyOfToCcHeader
-        AnyOfToCcHeaderMemberOf                       = $AnyOfToCcHeaderMemberOf
-        AnyOfToHeader                                 = $AnyOfToHeader
-        AnyOfToHeaderMemberOf                         = $AnyOfToHeaderMemberOf
-        ApplyClassification                           = $ApplyClassification
-        ApplyHtmlDisclaimerFallbackAction             = $ApplyHtmlDisclaimerFallbackAction
-        ApplyHtmlDisclaimerLocation                   = $ApplyHtmlDisclaimerLocation
-        ApplyHtmlDisclaimerText                       = $ApplyHtmlDisclaimerText
-        ApplyOME                                      = $ApplyOME
-        ApplyRightsProtectionTemplate                 = $ApplyRightsProtectionTemplate
-        AttachmentContainsWords                       = $AttachmentContainsWords
-        AttachmentExtensionMatchesWords               = $AttachmentExtensionMatchesWords
-        AttachmentHasExecutableContent                = $AttachmentHasExecutableContent
-        AttachmentIsPasswordProtected                 = $AttachmentIsPasswordProtected
-        AttachmentIsUnsupported                       = $AttachmentIsUnsupported
-        AttachmentMatchesPatterns                     = $AttachmentMatchesPatterns
-        AttachmentNameMatchesPatterns                 = $AttachmentNameMatchesPatterns
-        AttachmentPropertyContainsWords               = $AttachmentPropertyContainsWords
-        AttachmentProcessingLimitExceeded             = $AttachmentProcessingLimitExceeded
-        AttachmentSizeOver                            = $AttachmentSizeOver
-        BetweenMemberOf1                              = $BetweenMemberOf1
-        BetweenMemberOf2                              = $BetweenMemberOf2
-        BlindCopyTo                                   = $BlindCopyTo
-        Comments                                      = $Comments
-        ContentCharacterSetContainsWords              = $ContentCharacterSetContainsWords
-        CopyTo                                        = $CopyTo
-        DeleteMessage                                 = $DeleteMessage
-        DlpPolicy                                     = $DlpPolicy
-        ExceptIfADComparisonAttribute                 = $ExceptIfADComparisonAttribute
-        ExceptIfADComparisonOperator                  = $ExceptIfADComparisonOperator
-        ExceptIfAnyOfCcHeader                         = $ExceptIfAnyOfCcHeader
-        ExceptIfAnyOfCcHeaderMemberOf                 = $ExceptIfAnyOfCcHeaderMemberOf
-        ExceptIfAnyOfRecipientAddressContainsWords    = $ExceptIfAnyOfRecipientAddressContainsWords
-        ExceptIfAnyOfRecipientAddressMatchesPatterns  = $ExceptIfAnyOfRecipientAddressMatchesPatterns
-        ExceptIfAnyOfToCcHeader                       = $ExceptIfAnyOfToCcHeader
-        ExceptIfAnyOfToCcHeaderMemberOf               = $ExceptIfAnyOfToCcHeaderMemberOf
-        ExceptIfAnyOfToHeader                         = $ExceptIfAnyOfToHeader
-        ExceptIfAnyOfToHeaderMemberOf                 = $ExceptIfAnyOfToHeaderMemberOf
-        ExceptIfAttachmentContainsWords               = $ExceptIfAttachmentContainsWords
-        ExceptIfAttachmentExtensionMatchesWords       = $ExceptIfAttachmentExtensionMatchesWords
-        ExceptIfAttachmentHasExecutableContent        = $ExceptIfAttachmentHasExecutableContent
-        ExceptIfAttachmentIsPasswordProtected         = $ExceptIfAttachmentIsPasswordProtected
-        ExceptIfAttachmentIsUnsupported               = $ExceptIfAttachmentIsUnsupported
-        ExceptIfAttachmentMatchesPatterns             = $ExceptIfAttachmentMatchesPatterns
-        ExceptIfAttachmentNameMatchesPatterns         = $ExceptIfAttachmentNameMatchesPatterns
-        ExceptIfAttachmentPropertyContainsWords       = $ExceptIfAttachmentPropertyContainsWords
-        ExceptIfAttachmentProcessingLimitExceeded     = $ExceptIfAttachmentProcessingLimitExceeded
-        ExceptIfAttachmentSizeOver                    = $ExceptIfAttachmentSizeOver
-        ExceptIfBetweenMemberOf1                      = $ExceptIfBetweenMemberOf1
-        ExceptIfBetweenMemberOf2                      = $ExceptIfBetweenMemberOf2
-        ExceptIfContentCharacterSetContainsWords      = $ExceptIfContentCharacterSetContainsWords
-        ExceptIfFrom                                  = $ExceptIfFrom
-        ExceptIfFromAddressContainsWords              = $ExceptIfFromAddressContainsWords
-        ExceptIfFromAddressMatchesPatterns            = $ExceptIfFromAddressMatchesPatterns
-        ExceptIfFromMemberOf                          = $ExceptIfFromMemberOf
-        ExceptIfFromScope                             = $ExceptIfFromScope
-        ExceptIfHasClassification                     = $ExceptIfHasClassification
-        ExceptIfHasNoClassification                   = $ExceptIfHasNoClassification
-        ExceptIfHasSenderOverride                     = $ExceptIfHasSenderOverride
-        ExceptIfHeaderContainsMessageHeader           = $ExceptIfHeaderContainsMessageHeader
-        ExceptIfHeaderContainsWords                   = $ExceptIfHeaderContainsWords
-        ExceptIfHeaderMatchesMessageHeader            = $ExceptIfHeaderMatchesMessageHeader
-        ExceptIfHeaderMatchesPatterns                 = $ExceptIfHeaderMatchesPatterns
-        ExceptIfManagerAddresses                      = $ExceptIfManagerAddresses
-        ExceptIfManagerForEvaluatedUser               = $ExceptIfManagerForEvaluatedUser
-        ExceptIfMessageTypeMatches                    = $ExceptIfMessageTypeMatches
-        ExceptIfMessageContainsAllDataClassifications = $ExceptIfMessageContainsAllDataClassifications
-        ExceptIfMessageContainsDataClassifications    = $ExceptIfMessageContainsDataClassifications
-        ExceptIfMessageSizeOver                       = $ExceptIfMessageSizeOver
-        ExceptIfRecipientADAttributeContainsWords     = $ExceptIfRecipientADAttributeContainsWords
-        ExceptIfRecipientADAttributeMatchesPatterns   = $ExceptIfRecipientADAttributeMatchesPatterns
-        ExceptIfRecipientAddressContainsWords         = $ExceptIfRecipientAddressContainsWords
-        ExceptIfRecipientAddressMatchesPatterns       = $ExceptIfRecipientAddressMatchesPatterns
-        ExceptIfRecipientDomainIs                     = $ExceptIfRecipientDomainIs
-        ExceptIfRecipientInSenderList                 = $ExceptIfRecipientInSenderList
-        ExceptIfSenderADAttributeContainsWords        = $ExceptIfSenderADAttributeContainsWords
-        ExceptIfSenderADAttributeMatchesPatterns      = $ExceptIfSenderADAttributeMatchesPatterns
-        ExceptIfSenderDomainIs                        = $ExceptIfSenderDomainIs
-        ExceptIfSenderInRecipientList                 = $ExceptIfSenderInRecipientList
-        ExceptIfSenderIpRanges                        = $ExceptIfSenderIpRanges
-        ExceptIfSenderManagementRelationship          = $ExceptIfSenderManagementRelationship
-        ExceptIfSentTo                                = $ExceptIfSentTo
-        ExceptIfSentToMemberOf                        = $ExceptIfSentToMemberOf
-        ExceptIfSentToScope                           = $ExceptIfSentToScope
-        ExceptIfSubjectContainsWords                  = $ExceptIfSubjectContainsWords
-        ExceptIfSubjectMatchesPatterns                = $ExceptIfSubjectMatchesPatterns
-        ExceptIfSubjectOrBodyContainsWords            = $ExceptIfSubjectOrBodyContainsWords
-        ExceptIfSubjectOrBodyMatchesPatterns          = $ExceptIfSubjectOrBodyMatchesPatterns
-        ExceptIfWithImportance                        = $ExceptIfWithImportance
-        ExpiryDate                                    = $ExpiryDate
-        From                                          = $From
-        FromAddressContainsWords                      = $FromAddressContainsWords
-        FromAddressMatchesPatterns                    = $FromAddressMatchesPatterns
-        FromMemberOf                                  = $FromMemberOf
-        FromScope                                     = $FromScope
-        GenerateIncidentReport                        = $GenerateIncidentReport
-        GenerateNotification                          = $GenerateNotification
-        HasClassification                             = $HasClassification
-        HasNoClassification                           = $HasNoClassification
-        HasSenderOverride                             = $HasSenderOverride
-        HeaderContainsMessageHeader                   = $HeaderContainsMessageHeader
-        HeaderContainsWords                           = $HeaderContainsWords
-        HeaderMatchesMessageHeader                    = $HeaderMatchesMessageHeader
-        HeaderMatchesPatterns                         = $HeaderMatchesPatterns
-        IncidentReportContent                         = $IncidentReportContent
-        IncidentReportOriginalMail                    = $IncidentReportOriginalMail
-        ManagerAddresses                              = $ManagerAddresses
-        ManagerForEvaluatedUser                       = $ManagerForEvaluatedUser
-        MessageContainsAllDataClassifications         = $MessageContainsAllDataClassifications
-        MessageContainsDataClassifications            = $MessageContainsDataClassifications
-        MessageSizeOver                               = $MessageSizeOver
-        MessageTypeMatches                            = $MessageTypeMatches
-        Mode                                          = $Mode
-        ModerateMessageByManager                      = $ModerateMessageByManager
-        ModerateMessageByUser                         = $ModerateMessageByUser
-        NotifySender                                  = $NotifySender
-        PrependSubject                                = $PrependSubject
-        Priority                                      = $Priority
-        RecipientADAttributeContainsWords             = $RecipientADAttributeContainsWords
-        RecipientADAttributeMatchesPatterns           = $RecipientADAttributeMatchesPatterns
-        RecipientAddressContainsWords                 = $RecipientAddressContainsWords
-        RecipientAddressMatchesPatterns               = $RecipientAddressMatchesPatterns
-        RecipientDomainIs                             = $RecipientDomainIs
-        RecipientInSenderList                         = $RecipientInSenderList
-        RedirectMessageTo                             = $RedirectMessageTo
-        RejectMessageEnhancedStatusCode               = $RejectMessageEnhancedStatusCode
-        RejectMessageReasonText                       = $RejectMessageReasonText
-        RemoveHeader                                  = $RemoveHeader
-        RemoveOME                                     = $RemoveOME
-        RemoveOMEv2                                   = $RemoveOMEv2
-        RouteMessageOutboundConnector                 = $RouteMessageOutboundConnector
-        RouteMessageOutboundRequireTls                = $RouteMessageOutboundRequireTls
-        RuleErrorAction                               = $RuleErrorAction
-        RuleSubType                                   = $RuleSubType
-        SenderADAttributeContainsWords                = $SenderADAttributeContainsWords
-        SenderADAttributeMatchesPatterns              = $SenderADAttributeMatchesPatterns
-        SenderAddressLocation                         = $SenderAddressLocation
-        SenderDomainIs                                = $SenderDomainIs
-        SenderInRecipientList                         = $SenderInRecipientList
-        SenderIpRanges                                = $SenderIpRanges
-        SenderManagementRelationship                  = $SenderManagementRelationship
-        SentTo                                        = $SentTo
-        SentToMemberOf                                = $SentToMemberOf
-        SentToScope                                   = $SentToScope
-        SetAuditSeverity                              = $SetAuditSeverity
-        SetHeaderName                                 = $SetHeaderName
-        SetHeaderValue                                = $SetHeaderValue
-        SetSCL                                        = $SetSCL
-        StopRuleProcessing                            = $StopRuleProcessing
-        SubjectContainsWords                          = $SubjectContainsWords
-        SubjectMatchesPatterns                        = $SubjectMatchesPatterns
-        SubjectOrBodyContainsWords                    = $SubjectOrBodyContainsWords
-        SubjectOrBodyMatchesPatterns                  = $SubjectOrBodyMatchesPatterns
-        WithImportance                                = $WithImportance
-        Confirm                                       = $false
-    }
+    $NewTransportRuleParams = [System.Collections.Hashtable]($PSBoundParameters)
+    $NewTransportRuleParams.Remove('Ensure') | Out-Null
+    $NewTransportRuleParams.Remove('GlobalAdminAccount') | Out-Null
+    $NewTransportRuleParams.Remove('MakeDefault') | Out-Null
+    $NewTransportRuleParams.Remove('ApplicationId') | Out-Null
+    $NewTransportRuleParams.Remove('TenantId') | Out-Null
+    $NewTransportRuleParams.Remove('CertificateThumbprint') | Out-Null
+    $NewTransportRuleParams.Remove('CertificatePath') | Out-Null
+    $NewTransportRuleParams.Remove('CertificatePassword') | Out-Null
 
     $SetTransportRuleParams = $NewTransportRuleParams.Clone()
     $SetTransportRuleParams.Add('Identity', $Name)
@@ -1923,7 +1799,7 @@ function Test-TargetResource
         $ApplyHtmlDisclaimerFallbackAction,
 
         [Parameter()]
-        [ValidateSet('Append', 'Prepand')]
+        [ValidateSet('Append', 'Prepend')]
         [System.String]
         $ApplyHtmlDisclaimerLocation,
 
@@ -2204,6 +2080,10 @@ function Test-TargetResource
         $ExceptIfRecipientInSenderList,
 
         [Parameter()]
+        [System.String]
+        $ExceptIfSCLOver,
+
+        [Parameter()]
         [System.String[]]
         $ExceptIfSenderADAttributeContainsWords,
 
@@ -2450,6 +2330,10 @@ function Test-TargetResource
         $RuleSubType,
 
         [Parameter()]
+        [System.String]
+        $SCLOver,
+
+        [Parameter()]
         [System.String[]]
         $SenderADAttributeContainsWords,
 
@@ -2522,7 +2406,7 @@ function Test-TargetResource
         $SubjectMatchesPatterns,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SubjectOrBodyContainsWords,
 
         [Parameter()]
@@ -2619,24 +2503,33 @@ function Export-TargetResource
         $CertificatePassword
     )
     $InformationPreference = 'Continue'
-    #region Telemetry
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     try
     {
         [array]$AllTransportRules = Get-TransportRule
         $dscContent = ""
         $i = 1
+        if ($AllTransportRules.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
         foreach ($TransportRule in $AllTransportRules)
         {
-            Write-Information "    [$i/$($AllTransportRules.Count)] $($TransportRule.Name)"
+            Write-Host "    |---[$i/$($AllTransportRules.Count)] $($TransportRule.Name)" -NoNewline
             $Params = @{
                 Name                  = $TransportRule.Name
                 GlobalAdminAccount    = $GlobalAdminAccount
@@ -2649,11 +2542,15 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
         return $dscContent
@@ -2662,6 +2559,7 @@ function Export-TargetResource
     {
         try
         {
+            Write-Host $Global:M365DSCEmojiRedX
             Write-Verbose -Message $_
             $tenantIdValue = ""
             if (-not [System.String]::IsNullOrEmpty($TenantId))

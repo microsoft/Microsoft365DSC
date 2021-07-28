@@ -335,9 +335,7 @@ function Compare-M365DSCConfigurations
             foreach ($propertyName in $sourceResource.Keys)
             {
                 # Needs to be a separate nested if statement otherwise the ReferenceObject an be null and it will error out;
-                if((-not [System.String]::IsNullOrEmpty($sourceResource.$propertyName) -and `
-                     -not [System.String]::IsNullOrEmpty($destinationResource.$propertyName)) -and `
-                     $null -ne (Compare-Object -ReferenceObject ($sourceResource.$propertyName)`
+                if($null -ne (Compare-Object -ReferenceObject ($sourceResource.$propertyName)`
                                              -DifferenceObject ($destinationResource.$propertyName)))
                 {
                     if ($null -eq $drift)

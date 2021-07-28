@@ -1,0 +1,17 @@
+{
+    "description": "This resource configures the Azure Active Directory groups settings.",
+    "permissions": [
+        {
+            "read": [
+                {
+                    "name":"Directory.Read.All"
+                }
+            ],
+            "update": [
+                {
+                    "name": "Directory.ReadWrite.All"
+                }
+            ]
+        }
+    ]
+}

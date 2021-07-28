@@ -79,6 +79,11 @@ function Get-TargetResource
         $HideDefaultThemes,
 
         [Parameter()]
+        [ValidateSet("AllowExternalSharing", "BlockExternalSharing")]
+        [System.String]
+        $MarkNewFilesSensitiveByDefault,
+
+        [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
@@ -109,6 +114,8 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for SPO Tenant"
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -116,6 +123,7 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -123,8 +131,6 @@ function Get-TargetResource
     {
         Write-Warning "RequireAcceptingAccountMatchInvitedAccount is deprecated. Please remove this parameter from your configuration."
     }
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
-
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
 
@@ -159,6 +165,7 @@ function Get-TargetResource
             ApplyAppEnforcedRestrictionsToAdHocRecipients = $SPOTenantSettings.ApplyAppEnforcedRestrictionsToAdHocRecipients
             FilePickerExternalImageSearchEnabled          = $SPOTenantSettings.FilePickerExternalImageSearchEnabled
             HideDefaultThemes                             = $SPOTenantSettings.HideDefaultThemes
+            MarkNewFilesSensitiveByDefault                = $SPOTenantSettings.MarkNewFilesSensitiveByDefault
             GlobalAdminAccount                            = $GlobalAdminAccount
             ApplicationId                                 = $ApplicationId
             TenantId                                      = $TenantId
@@ -275,6 +282,11 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $HideDefaultThemes,
+
+        [Parameter()]
+        [ValidateSet("AllowExternalSharing", "BlockExternalSharing")]
+        [System.String]
+        $MarkNewFilesSensitiveByDefault,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -422,6 +434,11 @@ function Test-TargetResource
         $HideDefaultThemes,
 
         [Parameter()]
+        [ValidateSet("AllowExternalSharing", "BlockExternalSharing")]
+        [System.String]
+        $MarkNewFilesSensitiveByDefault,
+
+        [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
@@ -474,9 +491,7 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("IsSingleInsta", `
-            "RequireAcceptingAccountMatchInvitedAccount", `
-            "RequireAcceptingAccountMatchInvitedAccountnce", `
+        -ValuesToCheck @("IsSingleInstance", `
             "GlobalAdminAccount", `
             "MaxCompatibilityLevel", `
             "SearchResolveExactEmailOrUPN", `
@@ -493,10 +508,11 @@ function Test-TargetResource
             "OwnerAnonymousNotification", `
             "ApplyAppEnforcedRestrictionsToAdHocRecipients", `
             "FilePickerExternalImageSearchEnabled", `
-            "HideDefaultThemes")
+            "HideDefaultThemes", `
+            "MarkNewFilesSensitiveByDefault"
+            )
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
-
     return $TestResult
 }
 
@@ -530,6 +546,9 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -537,11 +556,9 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
-        -InboundParameters $PSBoundParameters
 
     try
     {
@@ -566,11 +583,14 @@ function Export-TargetResource
         }
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
             -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
             -ConnectionMode $ConnectionMode `
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+        $dscContent += $currentDSCBlock
+        Save-M365DSCPartialExport -Content $currentDSCBlock `
+            -FileName $Global:PartialExportFileName
         Write-Host $Global:M365DSCEmojiGreenCheckmark
         return $dscContent
     }

@@ -191,7 +191,7 @@ export const GeneratorPage: React.FunctionComponent = () => {
         <Main>
           <header>
             <h1 id="Home">Generator</h1>
-          </header>
+          </header
 
           <Generator></Generator>
 

@@ -1,5 +1,199 @@
 # Change log for Microsoft365DSC
 
+# 1.21.721.1
+
+* AADMSGroup
+  * Fixed an issue where the Visibility parameter was never properly returned
+    which always threw a detected drift when used.
+* EXOJournalRule
+  * Initial Release.
+* SPOSite
+  * Fixed the StorageQuotaWarningLevel value returned by the Get-TargetResource
+    function.
+
+# 1.21.714.1
+
+* EXOHostedContentFilterPolicy
+  * Fixed issues with null values falsely detected as drifts;
+    ISSUE #1165
+* DEPENDENCIES
+  * Removed dependency on Microsoft.Graph.Groups.Planner;
+  * Updated Microsoft.Graph.Teams to version 1.6.1;
+  * Updated MSCloudLoginAssistant to version 1.0.54;
+* MISC
+  * Allowed for Desired and Current values to be captured by the Telemetry engine
+    if an organization is using a custom App Insights account;
+    ISSUE #1222
+
+# 1.21.707.1
+
+* EXODkimSigningConfig
+  * Change the logic to remove an entry to disable it instead since the
+    cmdlet didn't exist to remove it.
+    ISSUE #1253
+* EXOHostedContentFilterPolicy
+  * Fixed the value type for the senders addresses, regions and domains;
+    ISSUE #1165
+* EXOOutboundConnector
+  * Fixed the creation logic to include ValidationRecipients;
+    ISSUE #1165
+* EXOSharedMailbox
+  * Improved speed of extraction and removed warning about maximum 1,000
+    items retrieved;
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.127;
+* MISC
+  * Delta Report - Fixes to compare null arrays properly and report as
+    a discrepancy.
+    ISSUES #1178 & #1249
+
+# 1.21.630.1
+
+* O365User
+  * Fix where export was throwing an error about an empty DSCBlock
+    ISSUE #1275;
+* SPOTenantSettings
+  * Added support for specifying MarkNewFilesSensitiveByDefault
+
+# 1.21.616.1
+
+* SPOSiteAuditSettings
+  * Fixed issue with Export where property Ensure was added
+    when an access forbidden error was encountered;
+* DEPENDENCIES
+  * Updated Microsoft.Graph.Authentication to version 1.6.0;
+  * Updated Microsoft.Graph.Planner to version 1.6.0;
+  * Updated Microsoft.Graph.Teams to version 1.6.0;
+
+# 1.21.609.2
+
+* Fixed dependency on Microsoft.Graph.Authentication for
+  version 1.5.0.
+
+# 1.21.609.1
+
+* TeamsUpgradePolicy
+  * Fixes to how we are retrieving users assigned to the
+    Global Upgrade Policy.
+* DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 2.0.5;
+  * Updated Microsoft.Graph.Planner to version 1.5.0;
+  * Updated Microsoft.Graph.Teams to version 1.5.0;
+  * Updated Microsoft.PowerApps.Administration.PowerShell
+    to version 2.0.126;
+  * Updated PnP.PowerShell to version 1.6.0;
+
+# 1.21.602.1
+
+* AADMSGroups
+  * Fix for the export where the MailNickName was being prompted;
+* EXOManagementRole
+  * BREAKING: Now requires the Parent property as Mandatory;
+* TeamsChannel
+  * Fixed an issue where content was dedup and boolean
+    values were appended to the exported content;
+* TeamsUpgradePolicy
+  * Improved performance retrieving users assigned to policy;
+* MISC
+  * Fix for Teams authentication. Improvements on session
+    reuse.
+
+# 1.21.526.2
+
+*  EXOSafeAttachmentRule
+  * Fixed issue #1213 Policy X already has rule Y associated with it
+    if rule exists already
+* MSFT_IntuneDeviceCompliancePolicyAndroid
+  * New resource
+* MSFT_IntuneDeviceCompliancePolicyAndroidWorkProfile
+  * New resource
+* MSFT_IntuneDeviceCompliancePolicyMacOS
+  * New resource
+* MSFT_IntuneDeviceCompliancePolicyiOs
+  * New resource
+* EXOTransportRule
+  * Fix #1230 Changed ExceptIfSenderInRecipientList to array
+
+# 1.21.519.2
+
+* AzureADRoleDefinition
+  * Fix an issue where deprecated roles were not increasing
+    the index which resulted in an incorrect count being
+    displayed during the extraction.
+* EXORoleAssignmentPolicy
+  * Added missing ErrorAction value in the Export;
+* TeamsTenantDialPlan
+  * Fixed issue around normalization rules export;
+* SPOTenantSettings
+  * Fix issue with typo and dup property issue #1219
+* MISC
+  * Forces a Global load of the new MicrosoftTeams module for
+    Teams resources;
+
+#1.21.519.1
+
+* TeamsClientConfiguration
+  * Fixed an issue where the RestrictedSenderList was not properly
+    being converted to a comma separated string.
+    Issue #1191
+* DEPENDENCIES
+  * Updated AzureADPreview to version 2.0.2.136;
+
+# 1.21.512.1
+
+* EXOOfflineAddresBook
+  * Fixed issue in Set-TargetResource where ConfiguredAttributes
+    was passed and resulted in an error.
+* SCDLPComplianceRule
+  * Added several new parameters
+  * Fixed several bugs on extract
+
+# 1.21.505.1
+
+* EXOTransportRule
+  * Adding ExceptIfSCLOver and SCLOver.
+  * Fixes SubjectOrBodyContainsWords parameter not being an array.
+  * Fixes DateTime formating on ExpiryDate and ActivationDate
+
+# 1.21.428.2
+
+* EXOTransportRule
+  * Fixed typo in accepted value for ApplyHtmlDisclaimerLocation;
+* IntuneAppConfigurationPolicy
+  * Revamp of Telemetry;
+  * Using shorter cmdlets names;
+* IntuneDeviceCompliancePolicyAndroid
+  * Initial Release;
+* IntuneDeviceCompliancePolicyAndroidWorkProfile
+  * InitialRelease
+* IntuneDeviceCompliancePolicyiOs
+  * Using shorter cmdlet names;
+* IntuneDeviceConfigurationPolicyiOS
+  * Using shorter cmdlet names;
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Revamp of Telemetry;
+  * Using Shorter cmdlet names;
+
+# 1.21.421.2
+
+* MISC
+  * Updated the SkipModuleReload logic for a dozen of EXO modules
+    which were failing authentication;
+
+# 1.21.421.1
+
+* AADConditionalAccessPolicy
+  * Fix to allow 'undefined' as a value for multiple parameters;
+* EXOTransportRule
+  * Fixed schema to support Service Principal Auth;
+* TeamsChannelTab
+  * Fixed typo in parameter 'TeamId';
+* MISC
+  * Refactor of all EXO resources to fixes for Set-TargetResource
+    functions where Service Principal was used to authenticate;
+  * Refactored connections across all resources to help with
+    Telemetry regarding what auth method users are leveraging.
+
 # 1.21.414.2
 
 * AADConditionalAccessPolicy
@@ -36,7 +230,7 @@
   * Fixed issue in most EXO resources where AzureAD App information
     was not returned by the Get-TargetResource function;
 
-1.21.331.1
+# 1.21.331.1
 
 * AADApplication
   * Added support for API Permissions;

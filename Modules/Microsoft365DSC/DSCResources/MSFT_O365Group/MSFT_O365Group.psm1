@@ -55,6 +55,9 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Group $DisplayName"
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -62,6 +65,7 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -70,9 +74,6 @@ function Get-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
-            -InboundParameters $PSBoundParameters
-
         Write-Verbose -Message "Retrieving AzureADGroup by MailNickName {$MailNickName}"
         [array]$ADGroup = Get-AzureADGroup -All:$true | Where-Object -FilterScript { $_.MailNickName -eq $MailNickName }
         if ($null -eq $ADGroup)
@@ -490,6 +491,8 @@ function Export-TargetResource
         $CertificatePassword
     )
 
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+        -InboundParameters $PSBoundParameters
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -497,14 +500,13 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
     try
     {
         $dscContent = ''
-        $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
-            -InboundParameters $PSBoundParameters
         $groups = Get-AzureADGroup -All $true | Where-Object -FilterScript {
             $_.MailNickName -ne "00000000-0000-0000-0000-000000000000"
         }
@@ -526,11 +528,15 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+            $dscContent += $currentDSCBlock
+
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }

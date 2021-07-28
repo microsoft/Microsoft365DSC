@@ -37,11 +37,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credential"
             }
 
-            Mock -CommandName Update-DeviceManagement_DeviceCompliancePolicies -MockWith {
+            Mock -CommandName Update-IntuneDeviceCompliancePolicy -MockWith {
             }
-            Mock -CommandName New-DeviceManagement_DeviceCompliancePolicies -MockWith {
+            Mock -CommandName New-IntuneDeviceCompliancePolicy -MockWith {
             }
-            Mock -CommandName Remove-DeviceManagement_DeviceCompliancePolicies -MockWith {
+            Mock -CommandName Remove-IntuneDeviceCompliancePolicy -MockWith {
             }
 
             # Test contexts
@@ -50,25 +50,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $testParams = @{
                         DisplayName                                 = 'Test iOS Device Compliance Policy'
                         Description                                 = 'Test iOS Device Compliance Policy Description'
-                        passcodeBlockSimple                         = $True
-                        passcodeExpirationDays                      = 365
-                        passcodeMinimumLength                       = 6
-                        passcodeMinutesOfInactivityBeforeLock       = 5
-                        passcodePreviousPasscodeBlockCount          = 3
-                        passcodeMinimumCharacterSetCount            = 2
-                        passcodeRequiredType                        = 'numeric'
-                        passcodeRequired                            = $True
-                        osMinimumVersion                            = 10
-                        osMaximumVersion                            = 12
-                        securityBlockJailbrokenDevices              = $True
-                        deviceThreatProtectionEnabled               = $True
-                        deviceThreatProtectionRequiredSecurityLevel = 'medium'
-                        managedEmailProfileRequired                 = $True
+                        PasscodeBlockSimple                         = $True
+                        PasscodeExpirationDays                      = 365
+                        PasscodeMinimumLength                       = 6
+                        PasscodeMinutesOfInactivityBeforeLock       = 5
+                        PasscodePreviousPasscodeBlockCount          = 3
+                        PasscodeMinimumCharacterSetCount            = 2
+                        PasscodeRequiredType                        = 'numeric'
+                        PasscodeRequired                            = $True
+                        OsMinimumVersion                            = 10
+                        OsMaximumVersion                            = 12
+                        SecurityBlockJailbrokenDevices              = $True
+                        DeviceThreatProtectionEnabled               = $True
+                        DeviceThreatProtectionRequiredSecurityLevel = 'medium'
+                        ManagedEmailProfileRequired                 = $True
+                        RoleScopeTagIds                             = "0"
                         Ensure                                      = 'Present'
                         GlobalAdminAccount                          = $GlobalAdminAccount
                     }
 
-                    Mock -CommandName Get-DeviceManagement_DeviceCompliancePolicies -MockWith {
+                    Mock -CommandName Get-IntuneDeviceCompliancePolicy -MockWith {
                         return $null
                     }
                 }
@@ -83,7 +84,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 It "Should create the iOS Device Compliance Policy from the Set method" {
                     Set-TargetResource @testParams
-                    Should -Invoke -CommandName "New-DeviceManagement_DeviceCompliancePolicies" -Exactly 1
+                    Should -Invoke -CommandName "New-IntuneDeviceCompliancePolicy" -Exactly 1
                 }
             }
 
@@ -92,44 +93,45 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $testParams = @{
                         DisplayName                                 = 'Test iOS Device Compliance Policy'
                         Description                                 = 'Test iOS Device Compliance Policy Description'
-                        passcodeBlockSimple                         = $True
-                        passcodeExpirationDays                      = 365
-                        passcodeMinimumLength                       = 6
-                        passcodeMinutesOfInactivityBeforeLock       = 5
-                        passcodePreviousPasscodeBlockCount          = 3
-                        passcodeMinimumCharacterSetCount            = 2
-                        passcodeRequiredType                        = 'numeric'
-                        passcodeRequired                            = $True
-                        osMinimumVersion                            = 10
-                        osMaximumVersion                            = 12
-                        securityBlockJailbrokenDevices              = $True
-                        deviceThreatProtectionEnabled               = $True
-                        deviceThreatProtectionRequiredSecurityLevel = 'medium'
-                        managedEmailProfileRequired                 = $True
+                        PasscodeBlockSimple                         = $True
+                        PasscodeExpirationDays                      = 365
+                        PasscodeMinimumLength                       = 6
+                        PasscodeMinutesOfInactivityBeforeLock       = 5
+                        PasscodePreviousPasscodeBlockCount          = 3
+                        PasscodeMinimumCharacterSetCount            = 2
+                        PasscodeRequiredType                        = 'numeric'
+                        PasscodeRequired                            = $True
+                        OsMinimumVersion                            = 10
+                        OsMaximumVersion                            = 12
+                        SecurityBlockJailbrokenDevices              = $True
+                        DeviceThreatProtectionEnabled               = $True
+                        DeviceThreatProtectionRequiredSecurityLevel = 'medium'
+                        ManagedEmailProfileRequired                 = $True
+                        RoleScopeTagIds                             = "0"
                         Ensure                                      = 'Present'
                         GlobalAdminAccount                          = $GlobalAdminAccount
                     }
 
-                    Mock -CommandName Get-DeviceManagement_DeviceCompliancePolicies -MockWith {
+                    Mock -CommandName Get-IntuneDeviceCompliancePolicy -MockWith {
                         return @{
                             DisplayName                                 = 'Test iOS Device Compliance Policy'
                             Description                                 = 'Different Value'
-                            id                                          = '9c4e2ed7-706e-4874-a826-0c2778352d45'
-                            deviceCompliancePolicyId                    = '9c4e2ed7-706e-4874-a826-0c2778352d45'
-                            passcodeBlockSimple                         = $True
-                            passcodeExpirationDays                      = 365
-                            passcodeMinimumLength                       = 6
-                            passcodeMinutesOfInactivityBeforeLock       = 5
-                            passcodePreviousPasscodeBlockCount          = 3
-                            passcodeMinimumCharacterSetCount            = 2
-                            passcodeRequiredType                        = 'numeric'
-                            passcodeRequired                            = $True
-                            osMinimumVersion                            = 10
-                            osMaximumVersion                            = 12
-                            securityBlockJailbrokenDevices              = $True
-                            deviceThreatProtectionEnabled               = $True
-                            deviceThreatProtectionRequiredSecurityLevel = 'medium'
-                            managedEmailProfileRequired                 = $True
+                            Id                                          = '9c4e2ed7-706e-4874-a826-0c2778352d45'
+                            PasscodeBlockSimple                         = $True
+                            PasscodeExpirationDays                      = 365
+                            PasscodeMinimumLength                       = 6
+                            PasscodeMinutesOfInactivityBeforeLock       = 5
+                            PasscodePreviousPasscodeBlockCount          = 3
+                            PasscodeMinimumCharacterSetCount            = 2
+                            PasscodeRequiredType                        = 'numeric'
+                            PasscodeRequired                            = $True
+                            OsMinimumVersion                            = 10
+                            OsMaximumVersion                            = 12
+                            SecurityBlockJailbrokenDevices              = $True
+                            DeviceThreatProtectionEnabled               = $True
+                            DeviceThreatProtectionRequiredSecurityLevel = 'medium'
+                            ManagedEmailProfileRequired                 = $True
+                            RoleScopeTagIds                             = "0"
                         }
                     }
                 }
@@ -144,7 +146,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 It "Should update the iOS Device Compliance Policy from the Set method" {
                     Set-TargetResource @testParams
-                    Should -Invoke -CommandName Update-DeviceManagement_DeviceCompliancePolicies -Exactly 1
+                    Should -Invoke -CommandName Update-IntuneDeviceCompliancePolicy -Exactly 1
                 }
             }
 
@@ -153,44 +155,45 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $testParams = @{
                         DisplayName                                 = 'Test iOS Device Compliance Policy'
                         Description                                 = 'Test iOS Device Compliance Policy Description'
-                        passcodeBlockSimple                         = $True
-                        passcodeExpirationDays                      = 365
-                        passcodeMinimumLength                       = 6
-                        passcodeMinutesOfInactivityBeforeLock       = 5
-                        passcodePreviousPasscodeBlockCount          = 3
-                        passcodeMinimumCharacterSetCount            = 2
-                        passcodeRequiredType                        = 'numeric'
-                        passcodeRequired                            = $True
-                        osMinimumVersion                            = 10
-                        osMaximumVersion                            = 12
-                        securityBlockJailbrokenDevices              = $True
-                        deviceThreatProtectionEnabled               = $True
-                        deviceThreatProtectionRequiredSecurityLevel = 'medium'
-                        managedEmailProfileRequired                 = $True
+                        PasscodeBlockSimple                         = $True
+                        PasscodeExpirationDays                      = 365
+                        PasscodeMinimumLength                       = 6
+                        PasscodeMinutesOfInactivityBeforeLock       = 5
+                        PasscodePreviousPasscodeBlockCount          = 3
+                        PasscodeMinimumCharacterSetCount            = 2
+                        PasscodeRequiredType                        = 'numeric'
+                        PasscodeRequired                            = $True
+                        OsMinimumVersion                            = 10
+                        OsMaximumVersion                            = 12
+                        SecurityBlockJailbrokenDevices              = $True
+                        DeviceThreatProtectionEnabled               = $True
+                        DeviceThreatProtectionRequiredSecurityLevel = 'medium'
+                        ManagedEmailProfileRequired                 = $True
+                        RoleScopeTagIds                             = "0"
                         Ensure                                      = 'Present'
                         GlobalAdminAccount                          = $GlobalAdminAccount
                     }
 
-                    Mock -CommandName Get-DeviceManagement_DeviceCompliancePolicies -MockWith {
+                    Mock -CommandName Get-IntuneDeviceCompliancePolicy -MockWith {
                         return @{
                             DisplayName                                 = 'Test iOS Device Compliance Policy'
                             Description                                 = 'Test iOS Device Compliance Policy Description'
-                            id                                          = '9c4e2ed7-706e-4874-a826-0c2778352d45'
-                            deviceCompliancePolicyId                    = '9c4e2ed7-706e-4874-a826-0c2778352d45'
-                            passcodeBlockSimple                         = $True
-                            passcodeExpirationDays                      = 365
-                            passcodeMinimumLength                       = 6
-                            passcodeMinutesOfInactivityBeforeLock       = 5
-                            passcodePreviousPasscodeBlockCount          = 3
-                            passcodeMinimumCharacterSetCount            = 2
-                            passcodeRequiredType                        = 'numeric'
-                            passcodeRequired                            = $True
-                            osMinimumVersion                            = 10
-                            osMaximumVersion                            = 12
-                            securityBlockJailbrokenDevices              = $True
-                            deviceThreatProtectionEnabled               = $True
-                            deviceThreatProtectionRequiredSecurityLevel = 'medium'
-                            managedEmailProfileRequired                 = $True
+                            Id                                          = '9c4e2ed7-706e-4874-a826-0c2778352d45'
+                            PasscodeBlockSimple                         = $True
+                            PasscodeExpirationDays                      = 365
+                            PasscodeMinimumLength                       = 6
+                            PasscodeMinutesOfInactivityBeforeLock       = 5
+                            PasscodePreviousPasscodeBlockCount          = 3
+                            PasscodeMinimumCharacterSetCount            = 2
+                            PasscodeRequiredType                        = 'numeric'
+                            PasscodeRequired                            = $True
+                            OsMinimumVersion                            = 10
+                            OsMaximumVersion                            = 12
+                            SecurityBlockJailbrokenDevices              = $True
+                            DeviceThreatProtectionEnabled               = $True
+                            DeviceThreatProtectionRequiredSecurityLevel = 'medium'
+                            ManagedEmailProfileRequired                 = $True
+                            RoleScopeTagIds                             = "0"
                         }
                     }
                 }
@@ -205,44 +208,45 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $testParams = @{
                         DisplayName                                 = 'Test iOS Device Compliance Policy'
                         Description                                 = 'Test iOS Device Compliance Policy Description'
-                        passcodeBlockSimple                         = $True
-                        passcodeExpirationDays                      = 365
-                        passcodeMinimumLength                       = 6
-                        passcodeMinutesOfInactivityBeforeLock       = 5
-                        passcodePreviousPasscodeBlockCount          = 3
-                        passcodeMinimumCharacterSetCount            = 2
-                        passcodeRequiredType                        = 'numeric'
-                        passcodeRequired                            = $True
-                        osMinimumVersion                            = 10
-                        osMaximumVersion                            = 12
-                        securityBlockJailbrokenDevices              = $True
-                        deviceThreatProtectionEnabled               = $True
-                        deviceThreatProtectionRequiredSecurityLevel = 'medium'
-                        managedEmailProfileRequired                 = $True
-                        Ensure                                      = 'Absent'
+                        PasscodeBlockSimple                         = $True
+                        PasscodeExpirationDays                      = 365
+                        PasscodeMinimumLength                       = 6
+                        PasscodeMinutesOfInactivityBeforeLock       = 5
+                        PasscodePreviousPasscodeBlockCount          = 3
+                        PasscodeMinimumCharacterSetCount            = 2
+                        PasscodeRequiredType                        = 'numeric'
+                        PasscodeRequired                            = $True
+                        OsMinimumVersion                            = 10
+                        OsMaximumVersion                            = 12
+                        SecurityBlockJailbrokenDevices              = $True
+                        DeviceThreatProtectionEnabled               = $True
+                        DeviceThreatProtectionRequiredSecurityLevel = 'medium'
+                        ManagedEmailProfileRequired                 = $True
+                        RoleScopeTagIds                             = "0"
+                        Ensure                                      = 'Present'
                         GlobalAdminAccount                          = $GlobalAdminAccount
                     }
 
-                    Mock -CommandName Get-DeviceManagement_DeviceCompliancePolicies -MockWith {
+                    Mock -CommandName Get-IntuneDeviceCompliancePolicy -MockWith {
                         return @{
                             DisplayName                                 = 'Test iOS Device Compliance Policy'
                             Description                                 = 'Test iOS Device Compliance Policy Description'
-                            id                                          = '9c4e2ed7-706e-4874-a826-0c2778352d45'
-                            deviceCompliancePolicyId                    = '9c4e2ed7-706e-4874-a826-0c2778352d45'
-                            passcodeBlockSimple                         = $True
-                            passcodeExpirationDays                      = 365
-                            passcodeMinimumLength                       = 6
-                            passcodeMinutesOfInactivityBeforeLock       = 5
-                            passcodePreviousPasscodeBlockCount          = 3
-                            passcodeMinimumCharacterSetCount            = 2
-                            passcodeRequiredType                        = 'numeric'
-                            passcodeRequired                            = $True
-                            osMinimumVersion                            = 10
-                            osMaximumVersion                            = 12
-                            securityBlockJailbrokenDevices              = $True
-                            deviceThreatProtectionEnabled               = $True
-                            deviceThreatProtectionRequiredSecurityLevel = 'medium'
-                            managedEmailProfileRequired                 = $True
+                            Id                                          = '9c4e2ed7-706e-4874-a826-0c2778352d45'
+                            PasscodeBlockSimple                         = $True
+                            PasscodeExpirationDays                      = 365
+                            PasscodeMinimumLength                       = 6
+                            PasscodeMinutesOfInactivityBeforeLock       = 5
+                            PasscodePreviousPasscodeBlockCount          = 3
+                            PasscodeMinimumCharacterSetCount            = 2
+                            PasscodeRequiredType                        = 'numeric'
+                            PasscodeRequired                            = $True
+                            OsMinimumVersion                            = 10
+                            OsMaximumVersion                            = 12
+                            SecurityBlockJailbrokenDevices              = $True
+                            DeviceThreatProtectionEnabled               = $True
+                            DeviceThreatProtectionRequiredSecurityLevel = 'medium'
+                            ManagedEmailProfileRequired                 = $True
+                            RoleScopeTagIds                             = "0"
                         }
                     }
                 }
@@ -257,7 +261,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 It "Should remove the iOS Device Compliance Policy from the Set method" {
                     Set-TargetResource @testParams
-                    Should -Invoke -CommandName Remove-DeviceManagement_DeviceCompliancePolicies -Exactly 1
+                    Should -Invoke -CommandName Remove-IntuneDeviceCompliancePolicy -Exactly 1
                 }
             }
 
@@ -267,26 +271,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GlobalAdminAccount = $GlobalAdminAccount;
                     }
 
-                    Mock -CommandName Get-DeviceManagement_DeviceCompliancePolicies -MockWith {
+                    Mock -CommandName Get-IntuneDeviceCompliancePolicy -MockWith {
                         return @{
                             DisplayName                                 = 'Test iOS Device Compliance Policy'
                             Description                                 = 'Test iOS Device Compliance Policy Description'
-                            id                                          = '9c4e2ed7-706e-4874-a826-0c2778352d45'
-                            deviceCompliancePolicyId                    = '9c4e2ed7-706e-4874-a826-0c2778352d45'
-                            passcodeBlockSimple                         = $True
-                            passcodeExpirationDays                      = 365
-                            passcodeMinimumLength                       = 6
-                            passcodeMinutesOfInactivityBeforeLock       = 5
-                            passcodePreviousPasscodeBlockCount          = 3
-                            passcodeMinimumCharacterSetCount            = 2
-                            passcodeRequiredType                        = 'numeric'
-                            passcodeRequired                            = $True
-                            osMinimumVersion                            = 10
-                            osMaximumVersion                            = 12
-                            securityBlockJailbrokenDevices              = $True
-                            deviceThreatProtectionEnabled               = $True
-                            deviceThreatProtectionRequiredSecurityLevel = 'medium'
-                            managedEmailProfileRequired                 = $True
+                            Id                                          = '9c4e2ed7-706e-4874-a826-0c2778352d45'
+                            PasscodeBlockSimple                         = $True
+                            PasscodeExpirationDays                      = 365
+                            PasscodeMinimumLength                       = 6
+                            PasscodeMinutesOfInactivityBeforeLock       = 5
+                            PasscodePreviousPasscodeBlockCount          = 3
+                            PasscodeMinimumCharacterSetCount            = 2
+                            PasscodeRequiredType                        = 'numeric'
+                            PasscodeRequired                            = $True
+                            OsMinimumVersion                            = 10
+                            OsMaximumVersion                            = 12
+                            SecurityBlockJailbrokenDevices              = $True
+                            DeviceThreatProtectionEnabled               = $True
+                            DeviceThreatProtectionRequiredSecurityLevel = 'medium'
+                            ManagedEmailProfileRequired                 = $True
+                            RoleScopeTagIds                             = "0"
                         }
                     }
                 }
@@ -299,4 +303,4 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     }
 }
 
-    Invoke-Command -ScriptBlock $Global:DscHelper.CleanupScript -NoNewScope
+Invoke-Command -ScriptBlock $Global:DscHelper.CleanupScript -NoNewScope

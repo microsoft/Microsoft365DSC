@@ -123,6 +123,8 @@ function Get-TargetResource
     )
     Write-Verbose -Message "Getting configuration of Team $DisplayName"
 
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -130,6 +132,7 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -137,8 +140,6 @@ function Get-TargetResource
     $nullReturn.Ensure = "Absent"
 
     Write-Verbose -Message "Checking for existence of Team $DisplayName"
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' -InboundParameters $PSBoundParameters
 
     try
     {
@@ -452,8 +453,15 @@ function Set-TargetResource
         }
         else
         {
+            $OwnerValue = $Owner[0].ToString()
+            $CurrentParameters.Owner = [System.String]$OwnerValue
             $CurrentParameters.Remove("GlobalAdminAccount") | Out-Null
-            New-Team @CurrentParameters
+            $newTeam = New-Team @CurrentParameters
+
+            for ($i = 1; $i -le $Owner.Length; $i++)
+            {
+                Add-TeamUser -GroupId $newTeam.GroupId -User $Owner[$i] -Role 'Owner'
+            }
         }
     }
     elseif ($Ensure -eq "Absent" -and ($team.Ensure -eq "Present"))
@@ -648,6 +656,8 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -655,12 +665,12 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' -InboundParameters $PSBoundParameters
         if ($ConnectionMode -eq 'ServicePrincipal')
         {
             $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
@@ -672,7 +682,7 @@ function Export-TargetResource
 
         $teams = Get-Team
         $i = 1
-        $content = ""
+        $dscContent = ""
         Write-Host "`r`n" -NoNewline
         foreach ($team in $teams)
         {
@@ -691,36 +701,39 @@ function Export-TargetResource
                 $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
             }
 
-            $result.Remove("GroupID")
+            $result.Remove("GroupID") | Out-Null
             if ("" -eq $result.Owner)
             {
-                $result.Remove("Owner")
+                $result.Remove("Owner") | Out-Null
             }
-            $content += "        TeamsTeam " + (New-Guid).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $currentDSCBlock = "        TeamsTeam " + (New-Guid).ToString() + "`r`n"
+            $currentDSCBlock += "        {`r`n"
+            $content = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             if ($ConnectionMode -eq 'Credential')
             {
-                $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                $currentDSCBlock += Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "GlobalAdminAccount"
             }
             else
             {
-                $partialContent = $currentDSCBlock
+                $currentDSCBlock += $content
             }
-            $partialContent += "        }`r`n"
-            if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
+            $currentDSCBlock += "        }`r`n"
+            if ($currentDSCBlock.ToLower().Contains("@" + $organization.ToLower()))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+                $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
             }
-            $content += $partialContent
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckmark
         }
 
-        return $content
+        return $dscContent
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

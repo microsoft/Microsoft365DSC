@@ -42,6 +42,7 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", "ServicePrincipal")
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -271,6 +272,7 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", "ServicePrincipal")
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -283,7 +285,7 @@ function Export-TargetResource
 
         $ConnectionMode = Connect-Graph -Scopes "Group.ReadWrite.All"
         $i = 1
-        $content = ''
+        $dscContent = ''
         Write-Host "`r`n" -NoNewline
         foreach ($group in $groups)
         {
@@ -309,12 +311,18 @@ function Export-TargetResource
                             TenantId              = $TenantId
                             CertificateThumbprint = $CertificateThumbprint
                         }
-                        $result = Get-TargetResource @params
-                        $content += "        PlannerBucket " + (New-Guid).ToString() + "`r`n"
-                        $content += "        {`r`n"
-                        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-                        $content += $currentDSCBlock
-                        $content += "        }`r`n"
+                        $results = Get-TargetResource @params
+                        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                            -Results $Results
+                        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                            -ConnectionMode $ConnectionMode `
+                            -ModulePath $PSScriptRoot `
+                            -Results $Results `
+                            -GlobalAdminAccount $GlobalAdminAccount
+                        $dscContent += $currentDSCBlock
+
+                        Save-M365DSCPartialExport -Content $currentDSCBlock `
+                            -FileName $Global:PartialExportFileName
                         Write-Host $Global:M365DSCEmojiGreenCheckMark
                         $k++
                     }
@@ -346,7 +354,7 @@ function Export-TargetResource
                 }
             }
         }
-        return $content
+        return $dscContent
     }
     catch
     {

@@ -2,14 +2,14 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath "..\..\Unit" `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath "\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
@@ -25,12 +25,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString "Pass@word1)" -AsPlainText -Force
             $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
+            $Global:PartialExportFileName = "c:\TestPath"
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
+                return "FakeDSCContent"
+            }
+            Mock -CommandName Save-M365DSCPartialExport -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -103,7 +106,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-PnPSiteDesign -MockWith {
                     return @{
                         Title               = "DSC Site Design"
-                        Id                  = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                        Id                  = "93cd8bf8-516c-4f24-a215-d4afded51fc1"
                         SiteScriptNames     = "Cust List"
                         WebTemplate         = "TeamSite"
                         Description         = "Updated by DSC"
@@ -112,8 +115,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
                 Mock -CommandName Get-PnPSiteScript -MockWith {
                     return @{
-                        Title = "DSC Site Design"
-                        Id    = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                        Title = "Cust List"
+                        Id    = "93cd8bf8-516c-4f24-a215-d4afded51fc1"
                     }
                 }
 

@@ -8,6 +8,10 @@ function Get-TargetResource
         [System.String]
         $DisplayName,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $MailNickname,
+
         [Parameter()]
         [System.String]
         $Id,
@@ -42,10 +46,6 @@ function Get-TargetResource
         $IsAssignableToRole,
 
         [Parameter()]
-        [System.String]
-        $MailNickname,
-
-        [Parameter()]
         [ValidateSet('Public', 'Private', 'HiddenMembership')]
         [System.String]
         $Visibility,
@@ -73,6 +73,8 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of AzureAD Group"
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -80,10 +82,10 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
     try
@@ -93,7 +95,7 @@ function Get-TargetResource
             Write-Verbose -Message "GroupID was specified"
             try
             {
-                $Group = Get-AzureADMSGroup -Id $Id -ErrorAction Stop
+                $Group = Get-AzureADMSGroup -ObjectId $Id -ErrorAction Stop
             }
             catch
             {
@@ -109,6 +111,7 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Id was NOT specified"
             ## Can retreive multiple AAD Groups since displayname is not unique
+            ## Get-AzureADMSGroup is required for the visibility param to be returned. Get-AzureADGroup won't work.
             $Group = Get-AzureADMSGroup -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
             if ($Group.Length -gt 1)
             {
@@ -182,6 +185,10 @@ function Set-TargetResource
         [System.String]
         $DisplayName,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $MailNickname,
+
         [Parameter()]
         [System.String]
         $Id,
@@ -214,10 +221,6 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $IsAssignableToRole,
-
-        [Parameter()]
-        [System.String]
-        $MailNickname,
 
         [Parameter()]
         [ValidateSet('Public', 'Private', 'HiddenMembership')]
@@ -257,15 +260,17 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $currentGroup = Get-TargetResource @PSBoundParameters
     $currentParameters = $PSBoundParameters
-    $currentParameters.Remove("ApplicationId")
-    $currentParameters.Remove("TenantId")
-    $currentParameters.Remove("CertificateThumbprint")
-    $currentParameters.Remove("GlobalAdminAccount")
-    $currentParameters.Remove("Ensure")
+    $currentGroup = Get-TargetResource @PSBoundParameters
+    $currentParameters.Remove("ApplicationId") | Out-Null
+    $currentParameters.Remove("TenantId") | Out-Null
+    $currentParameters.Remove("CertificateThumbprint") | Out-Null
+    $currentParameters.Remove("GlobalAdminAccount") | Out-Null
+    $currentParameters.Remove("Ensure") | Out-Null
 
-    if ($Ensure -eq 'Present' -and $GroupTypes.Contains("Unified") -and $MailEnabled -eq $false)
+    if ($Ensure -eq 'Present' -and `
+        ($null -ne $GroupTypes -and $GroupTypes.Contains("Unified")) -and `
+        ($null -ne $MailEnabled -and $MailEnabled -eq $false))
     {
         Write-Verbose -Message "Cannot set mailenabled to false if GroupTypes is set to Unified when creating group."
         throw "Cannot set mailenabled to false if GroupTypes is set to Unified when creating a group."
@@ -273,8 +278,10 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentGroup.Ensure -eq 'Present')
     {
+        Write-Verbose -Message "Group {$DisplayName} exists and it should."
         try
         {
+            Write-Verbose -Message "Updating settings by ID for group {$DisplayName}"
             if ($true -eq $currentParameters.ContainsKey("IsAssignableToRole"))
             {
                 Write-Verbose -Message "Cannot set IsAssignableToRole once group is created."
@@ -286,6 +293,7 @@ function Set-TargetResource
             }
             else
             {
+                Write-Verbose -Message "Updating settings for group {$DisplayName}"
                 Set-AzureADMSGroup @currentParameters
             }
         }
@@ -331,6 +339,10 @@ function Test-TargetResource
         [System.String]
         $DisplayName,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $MailNickname,
+
         [Parameter()]
         [System.String]
         $Id,
@@ -363,10 +375,6 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $IsAssignableToRole,
-
-        [Parameter()]
-        [System.String]
-        $MailNickname,
 
         [Parameter()]
         [ValidateSet('Public', 'Private', 'HiddenMembership')]
@@ -413,6 +421,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('Id') | Out-Null
+    $ValuesToCheck.Remove('GroupTypes') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -446,6 +455,8 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -453,13 +464,13 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
     try
     {
-        [array] $groups = Get-AzureADMSGroup -All:$true -ErrorAction Stop
+        [array] $groups = Get-AzureADGroup -All:$true -ErrorAction Stop
         $i = 1
         $dscContent = ''
         Write-Host "`r`n" -NoNewline
@@ -469,6 +480,7 @@ function Export-TargetResource
             $Params = @{
                 GlobalAdminAccount    = $GlobalAdminAccount
                 DisplayName           = $group.DisplayName
+                MailNickName          = $group.MailNickName
                 Id                    = $group.Id
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
@@ -477,11 +489,15 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }

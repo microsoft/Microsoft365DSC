@@ -66,6 +66,9 @@ function Get-TargetResource
     )
     Write-Verbose -Message "Getting configuration of Tab $DisplayName"
 
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -73,14 +76,13 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
-        -InboundParameters $PSBoundParameters
 
     try
     {
@@ -447,6 +449,13 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
+
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
+            -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -454,17 +463,12 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
-
-        $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
-            -InboundParameters $PSBoundParameters
-
         [array]$teams = Get-Team
         $i = 1
         $dscContent = ""
@@ -524,10 +528,13 @@ function Export-TargetResource
                     {
                         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                             -Results $Results
-                        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                             -ConnectionMode $ConnectionMode `
                             -ModulePath $PSScriptRoot `
                             -Results $Results
+                        $dscContent += $currentDSCBlock
+                        Save-M365DSCPartialExport -Content $currentDSCBlock `
+                            -FileName $Global:PartialExportFileName
                     }
                     Write-Host $Global:M365DSCEmojiGreenCheckmark
                     $k++
@@ -541,6 +548,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

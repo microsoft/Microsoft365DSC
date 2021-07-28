@@ -42,6 +42,11 @@ function Get-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    Write-Verbose -Message "Getting configuration for hub site collection $Url"
+
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -49,13 +54,9 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    Write-Verbose -Message "Getting configuration for hub site collection $Url"
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-        -InboundParameters $PSBoundParameters
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
@@ -177,7 +178,7 @@ function Set-TargetResource
         try
         {
             Write-Verbose -Message "Setting home site collection $Url"
-            Get-PnPTenantSite -Url $Url
+            Get-PnPTenantSite -Identity $Url
         }
         catch
         {
@@ -187,7 +188,7 @@ function Set-TargetResource
         }
 
         Write-Verbose -Message "Configuring site collection as Home Site"
-        Set-PnPHomeSite -Url $Url
+        Set-PnPHomeSite -HomeSiteUrl $Url
     }
 
     if ($Ensure -eq "Absent" -and $currentValues.Ensure -eq "Present")
@@ -304,6 +305,9 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -311,10 +315,9 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
-        -InboundParameters $PSBoundParameters
 
     try
     {
@@ -327,14 +330,18 @@ function Export-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             GlobalAdminAccount    = $GlobalAdminAccount
         }
+        $dscContent = ''
         $Results = Get-TargetResource @Params
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
             -Results $Results
-        $dscContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
             -ConnectionMode $ConnectionMode `
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+        $dscContent += $currentDSCBlock
+        Save-M365DSCPartialExport -Content $currentDSCBlock `
+            -FileName $Global:PartialExportFileName
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         return $dscContent
     }

@@ -144,6 +144,8 @@ function Get-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+        -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -152,11 +154,9 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-        -InboundParameters $PSBoundParameters
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
@@ -165,7 +165,7 @@ function Get-TargetResource
     {
         Write-Verbose -Message "Getting site collection $Url"
 
-        $site = Get-PnPTenantSite -Url $Url -ErrorAction 'SilentlyContinue'
+        $site = Get-PnPTenantSite -Identity $Url -ErrorAction 'SilentlyContinue'
         if ($null -eq $site)
         {
             Write-Verbose -Message "The specified Site Collection {$Url} doesn't exist."
@@ -230,10 +230,6 @@ function Get-TargetResource
                 }
             }
         }
-        if ($site.StorageQuotaWarningLevel -gt 0)
-        {
-            $quotaWarning = $site.StorageQuotaWarningLevel / 100
-        }
         return @{
             Url                                         = $Url
             Title                                       = $site.Title
@@ -245,7 +241,7 @@ function Get-TargetResource
             LogoFilePath                                = $LogoFilePath
             SharingCapability                           = $site.SharingCapability
             StorageMaximumLevel                         = $site.StorageQuota
-            StorageWarningLevel                         = $quotaWarning
+            StorageWarningLevel                         = $site.StorageQuotaWarningLevel
             AllowSelfServiceUpgrade                     = $site.AllowSelfServiceUpgrade
             Owner                                       = $siteOwnerEmail
             CommentsOnSitePagesDisabled                 = $site.CommentsOnSitePagesDisabled
@@ -496,7 +492,7 @@ function Set-TargetResource
                 Start-Sleep -Seconds 15
                 try
                 {
-                    $site = Get-PnPTenantSite -Url $Url -ErrorAction Stop
+                    $site = Get-PnPTenantSite -Identity $Url -ErrorAction Stop
                 }
                 catch
                 {
@@ -577,16 +573,22 @@ function Set-TargetResource
             SharingDomainRestrictionMode                = $SharingDomainRestrictionMode
             AnonymousLinkExpirationInDays               = $AnonymousLinkExpirationInDays
             OverrideTenantAnonymousLinkExpirationPolicy = $OverrideTenantAnonymousLinkExpirationPolicy
-            # DenyAddAndCustomizePages                    = $deny
+            DenyAddAndCustomizePages                    = $deny
         }
         $UpdateParams = Remove-NullEntriesFromHashtable -Hash $UpdateParams
+
+        $UpdateParams.Add("StorageQuota", $StorageMaximumLevel)
+        $UpdateParams.Remove("StorageMaximumLevel") | Out-Null
+        $UpdateParams.Add("StorageQuotaWarningLevel", $StorageWarningLevel)
+        $UpdateParams.Remove("StorageWarningLevel") | Out-Null
+        $UpdateParams.Add("Identity", $Url)
+        $UpdateParams.Remove("Url") | Out-Null
 
         Set-PnPTenantSite @UpdateParams -ErrorAction Stop
 
         $UpdateParams = @{}
         $UpdateParams = @{
             SocialBarOnSitePagesDisabled = $SocialBarOnSitePagesDisabled
-            DenyAndAddCustomizePages     = $deny
         }
         $UpdateParams = Remove-NullEntriesFromHashtable -Hash $UpdateParams
 
@@ -868,6 +870,9 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -875,11 +880,9 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-        -InboundParameters $PSBoundParameters
 
     try
     {
@@ -906,7 +909,7 @@ function Export-TargetResource
         foreach ($site in $sites)
         {
             Write-Host "    [$i/$($sites.Length)] $($site.Url)" -NoNewline
-            $site = Get-PnPTenantSite -Url $site.Url
+            $site = Get-PnPTenantSite -Identity $site.Url
             $siteTitle = "Null"
             if (-not [System.String]::IsNullOrEmpty($site.Title))
             {
@@ -959,18 +962,20 @@ function Export-TargetResource
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
 
-                $partialContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -GlobalAdminAccount $GlobalAdminAccount
-                if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
-                        $partialContent.ToLower().Contains($principal.ToLower()))
+                if ($currentDSCBlock.ToLower().Contains($organization.ToLower()) -or `
+                        $currentDSCBlock.ToLower().Contains($principal.ToLower()))
                 {
-                    $partialContent = $partialContent -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
-                    $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+                    $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
+                    $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
                 }
-                $dscContent += $partialContent
+                $dscContent += $currentDSCBlock
+                Save-M365DSCPartialExport -Content $currentDSCBlock `
+                    -FileName $Global:PartialExportFileName
                 Write-Host $Global:M365DSCEmojiGreenCheckMark
             }
             catch

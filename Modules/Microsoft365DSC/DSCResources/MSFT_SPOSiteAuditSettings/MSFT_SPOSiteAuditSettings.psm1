@@ -38,6 +38,10 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting SPOSiteAuditSettings for {$Url}"
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+        -InboundParameters $PSBoundParameters `
+        -Url $Url -ErrorAction SilentlyContinue
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -45,17 +49,12 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
-
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
-            -InboundParameters $PSBoundParameters `
-            -Url $Url -ErrorAction SilentlyContinue
         $auditSettings = Get-PnPAuditing -ErrorAction Stop
         $auditFlag = $auditSettings.AuditFlags
         if ($null -eq $auditFlag)
@@ -100,7 +99,7 @@ function Get-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return $nullReturn
+        return $null
     }
 }
 
@@ -263,6 +262,9 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -270,10 +272,9 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
-        -InboundParameters $PSBoundParameters
 
     try
     {
@@ -318,30 +319,54 @@ function Export-TargetResource
 
                 $Results = Get-TargetResource @params
 
-                if ([System.String]::IsNullOrEmpty($Results.AuditFlags))
+                if ($null -ne $Results)
                 {
-                    $Results.AuditFlags = 'None'
-                }
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
-                $partialContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                    -ConnectionMode $ConnectionMode `
-                    -ModulePath $PSScriptRoot `
-                    -Results $Results `
-                    -GlobalAdminAccount $GlobalAdminAccount
+                    if ([System.String]::IsNullOrEmpty($Results.AuditFlags))
+                    {
+                        $Results.AuditFlags = 'None'
+                    }
+                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                        -Results $Results
+                    $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                        -ConnectionMode $ConnectionMode `
+                        -ModulePath $PSScriptRoot `
+                        -Results $Results `
+                        -GlobalAdminAccount $GlobalAdminAccount
 
-                # Make the Url parameterized
-                if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
-                        $partialContent.ToLower().Contains($principal.ToLower()))
+                    # Make the Url parameterized
+                    if ($currentDSCBlock.ToLower().Contains($currentDSCBlock.ToLower()) -or `
+                            $currentDSCBlock.ToLower().Contains($currentDSCBlock.ToLower()))
+                    {
+                        $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
+                    }
+                    $dscContent += $currentDSCBlock
+                    Save-M365DSCPartialExport -Content $currentDSCBlock `
+                        -FileName $Global:PartialExportFileName
+
+                    Write-Host $Global:M365DSCEmojiGreenCheckMark
+                }
+                else
                 {
-                    $partialContent = $partialContent -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
+                    Write-Host $Global:M365DSCEmojiRedX
                 }
-                $dscContent += $partialContent
-
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
             }
             catch
             {
+                Write-Verbose -Message $_
+                $tenantIdValue = ""
+                if (-not [System.String]::IsNullOrEmpty($TenantId))
+                {
+                    $tenantIdValue = $TenantId
+                }
+                elseif ($null -ne $GlobalAdminAccount)
+                {
+                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                }
+                $message = $_.ToString() + $site.Url
+                Add-M365DSCEvent -Message $message -EntryType 'Error' `
+                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $tenantIdValue
+                Write-Host $Global:M365DSCEmojiRedX
                 Write-Verbose "There was an issue retrieving Audit Settings for $Url"
             }
             $i++
@@ -376,6 +401,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
+        Write-Host $Global:M365DSCEmojiRedX
         return ""
     }
 }

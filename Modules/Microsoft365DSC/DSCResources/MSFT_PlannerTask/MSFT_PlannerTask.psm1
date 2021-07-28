@@ -85,6 +85,7 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", "ServicePrincipal")
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -554,6 +555,7 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", "ServicePrincipal")
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -565,7 +567,7 @@ function Export-TargetResource
         [array]$groups = Get-AzureADGroup -All:$true
 
         $i = 1
-        $content = ''
+        $dscContent = ''
         foreach ($group in $groups)
         {
             Write-Host "    |---[$i/$($groups.Length)] $($group.DisplayName) - {$($group.ObjectID)}"
@@ -630,25 +632,37 @@ function Export-TargetResource
                         $result.Notes = $result.Notes.Replace('"', '``"')
                         $result.Notes = $result.Notes.Replace("&", "``&")
 
-                        $content += "        PlannerTask " + (New-Guid).ToString() + "`r`n"
-                        $content += "        {`r`n"
-                        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                        $currentDSCBlock += "        PlannerTask " + (New-Guid).ToString() + "`r`n"
+                        $currentDSCBlock += "        {`r`n"
+                        $content = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+                        $content = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
                             -ParameterName "GlobalAdminAccount"
                         if ($result.Attachments.Length -gt 0)
                         {
-                            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                            $content = Convert-DSCStringParamToVariable -DSCBlock $content `
                                 -ParameterName "Attachments" `
                                 -IsCIMArray $true
                         }
                         if ($result.Checklist.Length -gt 0)
                         {
-                            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                            $content = Convert-DSCStringParamToVariable -DSCBlock $content `
                                 -ParameterName "Checklist" `
                                 -IsCIMArray $true
                         }
-                        $content += $currentDSCBlock
-                        $content += "        }`r`n"
+                        $currentDSCBlock += $content
+                        $currentDSCBlock += "        }`r`n"
+                        $dscContent += $currentDSCBlock
+                        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                            -Results $Results
+                        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                            -ConnectionMode $ConnectionMode `
+                            -ModulePath $PSScriptRoot `
+                            -Results $Results `
+                            -GlobalAdminAccount $GlobalAdminAccount
+                        $dscContent += $currentDSCBlock
+
+                        Save-M365DSCPartialExport -Content $currentDSCBlock `
+                            -FileName $Global:PartialExportFileName
                         $k++
                         Write-Host $Global:M365DSCEmojiGreenCheckmark
                     }
@@ -680,7 +694,7 @@ function Export-TargetResource
             }
             $i++
         }
-        return $content
+        return $dscContent
     }
     catch
     {

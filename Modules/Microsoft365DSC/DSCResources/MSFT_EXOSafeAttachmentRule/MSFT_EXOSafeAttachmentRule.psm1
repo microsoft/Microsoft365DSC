@@ -79,16 +79,6 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of SafeAttachmentRule for $Identity"
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
     if ($Global:CurrentModeIsExport)
     {
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
@@ -100,6 +90,17 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
@@ -282,31 +283,46 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     $SafeAttachmentRules = Get-SafeAttachmentRule
-
     $SafeAttachmentRule = $SafeAttachmentRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    $SafeAttachmentRuleParams = [System.Collections.Hashtable]($PSBoundParameters)
+    $SafeAttachmentRuleParams.Remove('Ensure') | Out-Null
+    $SafeAttachmentRuleParams.Remove('GlobalAdminAccount') | Out-Null
+    $SafeAttachmentRuleParams.Remove('ApplicationId') | Out-Null
+    $SafeAttachmentRuleParams.Remove('TenantId') | Out-Null
+    $SafeAttachmentRuleParams.Remove('CertificateThumbprint') | Out-Null
+    $SafeAttachmentRuleParams.Remove('CertificatePath') | Out-Null
+    $SafeAttachmentRuleParams.Remove('CertificatePassword') | Out-Null 
 
     if (('Present' -eq $Ensure ) -and (-not $SafeAttachmentRule))
     {
         New-EXOSafeAttachmentRule -SafeAttachmentRuleParams $PSBoundParameters
     }
 
-    if (('Present' -eq $Ensure ) -and ($SafeAttachmentRule))
+    elseif (('Present' -eq $Ensure ) -and ($SafeAttachmentRule))
     {
-        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $SafeAttachmentRule.State))
+         if ($SafeAttachmentRuleParams.Enabled -and ('Disabled' -eq $SafeAttachmentRule.State))
         {
             # New-SafeAttachmentRule has the Enabled parameter, Set-SafeAttachmentRule does not.
             # There doesn't appear to be any way to change the Enabled state of a rule once created.
             Write-Verbose -Message "Removing SafeAttachmentRule $($Identity) in order to change Enabled state."
             Remove-SafeAttachmentRule -Identity $Identity -Confirm:$false
-            New-EXOSafeAttachmentRule -SafeAttachmentRuleParams $PSBoundParameters
+            New-EXOSafeAttachmentRule -SafeAttachmentRuleParams $SafeAttachmentRuleParams
         }
         else
         {
-            Set-EXOSafeAttachmentRule -SafeAttachmentRuleParams $PSBoundParameters
-        }
+            if ($SafeAttachmentRuleParams.SafeAttachmentPolicy -ne $SafeAttachmentRule.SafeAttachmentPolicy)
+            {
+                Set-EXOSafeAttachmentRule -SafeAttachmentRuleParams $SafeAttachmentRuleParams
+            }
+            else
+            {
+                $SafeAttachmentRuleParams.Remove('SafeAttachmentPolicy')
+                Set-EXOSafeAttachmentRule -SafeAttachmentRuleParams $SafeAttachmentRuleParams
+            }
+        } 
     }
 
-    if (('Absent' -eq $Ensure ) -and ($SafeAttachmentRule))
+    elseif (('Absent' -eq $Ensure ) -and ($SafeAttachmentRule))
     {
         Write-Verbose -Message "Removing SafeAttachmentRule $($Identity)"
         Remove-SafeAttachmentRule -Identity $Identity -Confirm:$false
@@ -457,6 +473,10 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -464,12 +484,9 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
     $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
 
     $dscContent = ''
     try
@@ -495,11 +512,14 @@ function Export-TargetResource
                 $Results = Get-TargetResource @Params
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
-                $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -GlobalAdminAccount $GlobalAdminAccount
+                $dscContent += $currentDSCBlock
+                Save-M365DSCPartialExport -Content $currentDSCBlock `
+                    -FileName $Global:PartialExportFileName
                 Write-Host $Global:M365DSCEmojiGreenCheckMark
                 $i++
             }

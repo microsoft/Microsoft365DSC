@@ -43,17 +43,19 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Teams Tenant Dial Plan"
 
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
+        -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
-        -InboundParameters $PSBoundParameters
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
@@ -178,7 +180,7 @@ function Set-TargetResource
         {
             # Need to create the rule
             Write-Verbose "Creating VoiceNormalizationRule {$($rule.Identity)}"
-            $ruleObject = New-CSVoiceNormalizationRule -Identity "Global/$($rule.Identity.Replace('Tag:', ''))" `
+            $ruleObject = New-CsVoiceNormalizationRule -Identity "Global/$($rule.Identity.Replace('Tag:', ''))" `
                 -Description $rule.Description `
                 -Pattern $rule.Pattern `
                 -Translation $rule.Translation `
@@ -192,7 +194,7 @@ function Set-TargetResource
         $NewParameters.Remove("Ensure")
         $NewParameters.NormalizationRules = @{Add = $AllRules }
 
-        New-CSTenantDialPlan @NewParameters
+        New-CsTenantDialPlan @NewParameters
     }
     elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
     {
@@ -223,13 +225,13 @@ function Set-TargetResource
         foreach ($ruleToAdd in $differences.RulesToAdd)
         {
             Write-Verbose "Adding new VoiceNormalizationRule {$($ruleToAdd.Identity)}"
-            $ruleObject = New-CSVoiceNormalizationRule -Identity "Global/$($ruleToAdd.Identity.Replace('Tag:', ''))" `
+            $ruleObject = New-CsVoiceNormalizationRule -Identity "Global/$($ruleToAdd.Identity.Replace('Tag:', ''))" `
                 -Description $ruleToAdd.Description `
                 -Pattern $ruleToAdd.Pattern `
                 -Translation $ruleToAdd.Translation `
                 -InMemory
             Write-Verbose "VoiceNormalizationRule created"
-            Set-CSTenantDialPlan -Identity $Identity -NormalizationRules @{Add = $ruleObject }
+            Set-CsTenantDialPlan -Identity $Identity -NormalizationRules @{Add = $ruleObject }
             Write-Verbose "Updated the Tenant Dial Plan"
         }
         foreach ($ruleToRemove in $differences.RulesToRemove)
@@ -244,7 +246,7 @@ function Set-TargetResource
             {
                 Write-Verbose "Removing VoiceNormalizationRule {$($ruleToRemove.Identity)}"
                 Write-Verbose "VoiceNormalizationRule created"
-                Set-CSTenantDialPlan -Identity $Identity -NormalizationRules @{Remove = $ruleObject }
+                Set-CsTenantDialPlan -Identity $Identity -NormalizationRules @{Remove = $ruleObject }
                 Write-Verbose "Updated the Tenant Dial Plan"
             }
         }
@@ -259,14 +261,14 @@ function Set-TargetResource
             if ($null -ne $ruleObject)
             {
                 Write-Verbose "Updating VoiceNormalizationRule {$($ruleToUpdate.Identity)}"
-                Set-CSTenantDialPlan -Identity $Identity -NormalizationRules @{Remove = $ruleObject }
-                $ruleObject = New-CSVoiceNormalizationRule -Identity "Global/$($ruleToUpdate.Identity.Replace('Tag:', ''))" `
+                Set-CsTenantDialPlan -Identity $Identity -NormalizationRules @{Remove = $ruleObject }
+                $ruleObject = New-CsVoiceNormalizationRule -Identity "Global/$($ruleToUpdate.Identity.Replace('Tag:', ''))" `
                     -Description $ruleToUpdate.Description `
                     -Pattern $ruleToUpdate.Pattern `
                     -Translation $ruleToUpdate.Translation `
                     -InMemory
                 Write-Verbose "VoiceNormalizationRule Updated"
-                Set-CSTenantDialPlan -Identity $Identity -NormalizationRules @{Add = $ruleObject }
+                Set-CsTenantDialPlan -Identity $Identity -NormalizationRules @{Add = $ruleObject }
                 Write-Verbose "Updated the Tenant Dial Plan"
             }
         }
@@ -274,7 +276,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Tenant Dial Plan {$Identity} exists and shouldn't. Removing it."
-        Remove-CSTenantDialPlan -Identity $Identity -Confirm:$false
+        Remove-CsTenantDialPlan -Identity $Identity -Confirm:$false
     }
 }
 
@@ -390,22 +392,24 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
+        -InboundParameters $PSBoundParameters
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
+    $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
-            -InboundParameters $PSBoundParameters
         [array]$tenantDialPlans = Get-CsTenantDialPlan -ErrorAction Stop
 
-        $content = ''
+        $dscContent = ''
         $i = 1
         Write-Host "`r`n" -NoNewline
         foreach ($plan in $tenantDialPlans)
@@ -415,26 +419,38 @@ function Export-TargetResource
                 Identity           = $plan.Identity
                 GlobalAdminAccount = $GlobalAdminAccount
             }
-            $result = Get-TargetResource @params
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $results = Get-TargetResource @params
+            $results.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
 
-            if ($result.NormalizationRules.Count -gt 0)
+            if ($results.NormalizationRules.Count -gt 0)
             {
-                $result.NormalizationRules = Get-M365DSCNormalizationRulesAsString $result.NormalizationRules
+                if ($results.NormalizationRules.GetType().Name -eq "Hashtable")
+                {
+                    $results.NormalizationRules = Get-M365DSCNormalizationRulesAsString $results.NormalizationRules
+                }
+                else
+                {
+                    $results.NormalizationRules = Get-M365DSCNormalizationRulesAsString $results.NormalizationRules[0]
+                }
             }
-            $content += "        TeamsTenantDialPlan " + (New-Guid).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "NormalizationRules"
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            $content += "        }`r`n"
+            $currentDSCBlock = "        TeamsTenantDialPlan " + (New-Guid).ToString() + "`r`n"
+            $currentDSCBlock += "        {`r`n"
+            $content = Get-DSCBlock -Params $results -ModulePath $PSScriptRoot
+
+            $content = Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "NormalizationRules"
+            $currentDSCBlock += Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "GlobalAdminAccount"
+            $currentDSCBlock += "        }`r`n"
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        return $content
+        return $dscContent
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

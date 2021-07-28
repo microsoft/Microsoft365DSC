@@ -746,6 +746,15 @@ function Test-M365DSCParameterState
             $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
             $driftedData.Add("Event", "DriftedParameter")
             $driftedData.Add("Parameter", "[$Source]$key")
+
+            # If custom App Insights is specified, allow for the current and desired values to be captured;
+            # ISSUE #1222
+            if($null -ne $env:M365DSCTelemetryInstrumentationKey -and `
+                $env:M365DSCTelemetryInstrumentationKey -ne "bc5aa204-0b1e-4499-a955-d6a639bdb4fa")
+            {
+                $driftedData.Add("CurrentValue",[string]($CurrentValues[$key]));
+                $driftedData.Add("DesiredValue",[string]($DesiredValues[$key]));
+            }
             Add-M365DSCTelemetryEvent -Type "DriftInfo" -Data $driftedData
             #endregion
             $EventMessage += "            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n"
@@ -831,6 +840,10 @@ function Export-M365DSCConfiguration
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
@@ -878,6 +891,7 @@ function Export-M365DSCConfiguration
                 -MaxProcesses $MaxProcesses `
                 -ConfigurationName $ConfigurationName `
                 -ApplicationId $ApplicationId `
+                -ApplicationSecret $ApplicationSecret `
                 -TenantId $TenantId `
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
@@ -893,6 +907,7 @@ function Export-M365DSCConfiguration
                 -MaxProcesses $MaxProcesses `
                 -ConfigurationName $ConfigurationName `
                 -ApplicationId $ApplicationId `
+                -ApplicationSecret $ApplicationSecret `
                 -TenantId $TenantId `
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
@@ -908,6 +923,7 @@ function Export-M365DSCConfiguration
                 -MaxProcesses $MaxProcesses `
                 -ConfigurationName $ConfigurationName `
                 -ApplicationId $ApplicationId `
+                -ApplicationSecret $ApplicationSecret `
                 -TenantId $TenantId `
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
@@ -995,7 +1011,7 @@ function New-M365DSCConnection
         [Parameter(Mandatory = $true)]
         [ValidateSet("Azure", "AzureAD", "ExchangeOnline", "Intune", `
                 "SecurityComplianceCenter", "PnP", "PowerPlatforms", `
-                "MicrosoftTeams", "SkypeForBusiness", "MicrosoftGraph", `
+                "MicrosoftTeams", "MicrosoftGraph", `
                 "MicrosoftGraphBeta")]
         [System.String]
         $Platform,
@@ -1012,6 +1028,18 @@ function New-M365DSCConnection
         [System.Boolean]
         $SkipModuleReload = $false
     )
+
+    if ($Platform -eq "MicrosoftTeams")
+    {
+        try
+        {
+            $cmdlet = Get-Command "Connect-MicrosoftTeams" -ErrorAction Stop
+        }
+        catch
+        {
+            Import-Module 'MicrosoftTeams' -Global -Force | Out-Null
+        }
+    }
 
     Write-Verbose -Message "Attempting connection to {$Platform} with:"
     Write-Verbose -Message "$($InboundParameters | Out-String)"
@@ -1044,6 +1072,11 @@ function New-M365DSCConnection
         -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
     {
         $data.Add("ApplicationId", "Yes")
+    }
+    if ($InboundParameters.ContainsKey("ApplicationSecret") -and
+        -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationSecret))
+    {
+        $data.Add("ApplicationSecret", "Yes")
     }
     if ($InboundParameters.ContainsKey("CertificatePath") -and
         -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePath))
@@ -1191,6 +1224,34 @@ function New-M365DSCConnection
                 -TenantId $InboundParameters.TenantId `
                 -CertificatePassword $InboundParameters.CertificatePassword.Password `
                 -CertificatePath $InboundParameters.CertificatePath `
+                -ConnectionUrl $Url `
+                -SkipModuleReload $Global:CurrentModeIsExport
+        }
+        $data.Add("ConnectionType", "ServicePrincipal")
+        Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
+        return 'ServicePrincipal'
+    }
+    # Case only the ApplicationSecret, TenantId and ApplicationID are specified
+    elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationSecret))
+    {
+        if ([System.String]::IsNullOrEmpty($url))
+        {
+            Write-Verbose -Message "ApplicationId, TenantId, ApplicationSecret were specified. Connecting via Service Principal"
+            Test-MSCloudLogin -Platform $Platform `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -TenantId $InboundParameters.TenantId `
+                -ApplicationSecret $InboundParameters.ApplicationSecret `
+                -SkipModuleReload $Global:CurrentModeIsExport
+        }
+        else
+        {
+            Test-MSCloudLogin -Platform $Platform `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -TenantId $InboundParameters.TenantId `
+                -ApplicationSecret $InboundParameters.ApplicationSecret `
                 -ConnectionUrl $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
@@ -1769,10 +1830,35 @@ function Set-M365DSCAgentCertificateConfiguration
 {
     [CmdletBinding()]
     [OutputType([System.String])]
-    param()
+    param(
+        [Parameter()]
+        [Switch]
+        $KeepCertificate,
+
+        [Parameter()]
+        [Switch]
+        $ForceRenew,
+
+        [Parameter()]
+        [Switch]
+        $GeneratePFX,
+
+        [Parameter()]
+        [System.String]
+        $Password
+    )
 
     $existingCertificate = Get-ChildItem -Path Cert:\LocalMachine\My | `
         Where-Object { $_.Subject -match "M365DSCEncryptionCert" }
+
+    if ($ForceRenew)
+    {
+        foreach ($cert in $existingCertificate)
+        {
+            Remove-Item $cert.PSPath | Out-Null
+        }
+        $existingCertificate = $null
+    }
     if ($null -eq $existingCertificate)
     {
         Write-Verbose -Message "No existing M365DSC certificate found. Creating one."
@@ -1813,8 +1899,34 @@ function Set-M365DSCAgentCertificateConfiguration
 "@
     $LCMConfigContent | Out-File $configOutputFile
     & $configOutputFile
-    Remove-Item -Path $configOutputFile -Confirm:$false
-    Remove-Item -Path "./M365AgentConfig" -Recurse -Confirm:$false
+
+    if ($KeepCertificate)
+    {
+        Write-Host "Certificate {$thumbprint} was stored under {$($env:Temp)} with name M365DSC.cer and M365DSC.pfx"
+    }
+    else
+    {
+        try {
+            Remove-Item -Path $configOutputFile -Confirm:$false -ErrorAction SilentlyContinue
+            Remove-Item -Path "./M365AgentConfig" -Recurse -Confirm:$false -ErrorAction SilentlyContinue
+        }
+        catch
+        {
+            Write-Error $_
+        }
+    }
+
+    if ($GeneratePFX)
+    {
+        if ($Password -eq $null)
+        {
+            Throw "When the GeneratePFX switch is used, you also need to provide a password."
+        }
+        $securePassword = ConvertTo-SecureString -String $password -Force -AsPlainText
+        Export-PfxCertificate -Cert $existingCertificate.PSPath `
+            -FilePath $certificateFilePath.Replace('.cer','.pfx') `
+            -Password $securePassword | Out-Null
+    }
     return $thumbprint
 }
 
@@ -2238,6 +2350,15 @@ function Get-M365DSCComponentsForAuthenticationType
             ($parameters.Contains('CertificateThumbprint') -or `
                     $parameters.Contains('CertificatePath') -or `
                     $parameters.Contains('CertificatePassword')) -and `
+                $parameters.Contains('TenantId'))
+        {
+            $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+        }
+
+        # Case - Resource contains ApplicationSecret
+        elseif ($AuthenticationMethod.Contains("Application") -and `
+                $parameters.Contains('ApplicationId') -and `
+                $parameters.Contains('ApplicationSecret') -and `
                 $parameters.Contains('TenantId'))
         {
             $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")

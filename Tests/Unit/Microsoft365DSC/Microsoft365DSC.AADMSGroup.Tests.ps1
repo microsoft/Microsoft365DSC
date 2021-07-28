@@ -199,11 +199,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Visibility                    = "Private"
                     }
                 }
-
-                Mock -CommandName Get-AzureADMSGroup -MockWith {
-                    return @{DisplayName = "DSCGroup"
-                            ID = "12345-12345-12345-12345"    }
-                }
             }
 
             It "Should return Values from the Get method" {
