@@ -34,10 +34,6 @@ function Get-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -55,14 +51,15 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of AzureAD Policy"
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $ApplicationId)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
