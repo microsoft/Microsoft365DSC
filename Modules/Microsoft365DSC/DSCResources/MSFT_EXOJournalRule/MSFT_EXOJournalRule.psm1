@@ -395,11 +395,18 @@ function Export-TargetResource
 
     try
     {
-        $allRules = Get-JournalRule
+        [array]$allRules = Get-JournalRule
 
         $i = 1
         $dscContent = ""
-        Write-Host "`r`n" -NoNewline
+        if ($allRules.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
         foreach ($rule in $allRules)
         {
             Write-Host "    |---[$i/$($allRules.Length)] $($rule.Name)" -NoNewline

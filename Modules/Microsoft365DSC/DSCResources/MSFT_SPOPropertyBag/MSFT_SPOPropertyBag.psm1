@@ -35,6 +35,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -117,6 +121,7 @@ function Get-TargetResource
                 GlobalAdminAccount    = $GlobalAdminAccount
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
@@ -185,6 +190,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
@@ -267,6 +276,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -299,6 +312,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove("CertificatePath") | Out-Null
     $ValuesToCheck.Remove("CertificatePassword") | Out-Null
     $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
+    $ValuesToCheck.Remove("ApplicationSecret") | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -334,6 +348,10 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -363,7 +381,7 @@ function Export-TargetResource
         $result = ""
 
         # Get all Site Collections in tenant;
-        $instances = Get-PnPTenantSite
+        $instances = Get-PnPTenantSite -ErrorAction Stop
         if ($instances.Length -ge $MaxProcesses)
         {
             $instances = Split-ArrayByParts -Array $instances -Parts $MaxProcesses
@@ -401,6 +419,10 @@ function Export-TargetResource
                     [Parameter()]
                     [System.String]
                     $TenantId,
+
+                    [Parameter()]
+                    [System.String]
+                    $ApplicationSecret,
 
                     [Parameter()]
                     [System.String]
@@ -454,6 +476,7 @@ function Export-TargetResource
                                         Value                 = '*'
                                         ApplicationId         = $ApplicationId
                                         TenantId              = $TenantId
+                                        ApplicationSecret     = $ApplicationSecret
                                         CertificatePassword   = $CertificatePassword
                                         CertificatePath       = $CertificatePath
                                         CertificateThumbprint = $CertificateThumbprint
@@ -482,7 +505,7 @@ function Export-TargetResource
                     return $dscContent
                 }
                 return $returnValue
-            } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount, $ApplicationId, $TenantId, $CertificateThumbprint, $CertificatePassword, $CertificatePath) | Out-Null
+            } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount, $ApplicationId, $TenantId, $ApplicationSecret, $CertificateThumbprint, $CertificatePassword, $CertificatePath) | Out-Null
             $i++
         }
 
@@ -545,6 +568,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

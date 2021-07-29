@@ -26,6 +26,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -67,6 +71,7 @@ function Get-TargetResource
             GlobalAdminAccount    = $GlobalAdminAccount
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
@@ -127,6 +132,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
@@ -196,6 +205,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -249,6 +262,10 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
@@ -311,6 +328,7 @@ function Export-TargetResource
                     AuditFlags            = 'None'
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
+                    ApplicationSecret     = $ApplicationSecret
                     CertificatePassword   = $CertificatePassword
                     CertificatePath       = $CertificatePath
                     CertificateThumbprint = $CertificateThumbprint
@@ -352,6 +370,7 @@ function Export-TargetResource
             }
             catch
             {
+                Write-Host $Global:M365DSCEmojiRedX
                 Write-Verbose -Message $_
                 $tenantIdValue = ""
                 if (-not [System.String]::IsNullOrEmpty($TenantId))

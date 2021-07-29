@@ -36,6 +36,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -147,6 +151,7 @@ function Get-TargetResource
                         GlobalAdminAccount    = $GlobalAdminAccount
                         ApplicationId         = $ApplicationId
                         TenantId              = $TenantId
+                        ApplicationSecret     = $ApplicationSecret
                         CertificatePassword   = $CertificatePassword
                         CertificatePath       = $CertificatePath
                         CertificateThumbprint = $CertificateThumbprint
@@ -223,6 +228,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -254,6 +263,7 @@ function Set-TargetResource
     $currentParameters.Remove("CertificatePath") | Out-Null
     $currentParameters.Remove("CertificatePassword") | Out-Null
     $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
+    $CurrentParameters.Remove("ApplicationSecret") | Out-Null
 
     $cdn = $null
     if ($CdnType -eq 'Public')
@@ -336,6 +346,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -369,6 +383,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove("CertificatePath") | Out-Null
     $ValuesToCheck.Remove("CertificatePassword") | Out-Null
     $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
+    $ValuesToCheck.Remove("ApplicationSecret") | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -397,6 +412,10 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
@@ -430,7 +449,14 @@ function Export-TargetResource
         $i = 1
         $dscContent = ''
 
-        Write-Host "`r`n" -NoNewline
+        if ($orgAssets.Length -gt 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
         if ($null -ne $orgAssets)
         {
             foreach ($orgAssetLib in $orgAssets.OrgAssetsLibraries)
@@ -439,12 +465,12 @@ function Export-TargetResource
                 $Params = @{
                     GlobalAdminAccount    = $GlobalAdminAccount
                     LibraryUrl            = "https://$tenantName.sharepoint.com/$($orgAssetLib.libraryurl.DecodedUrl)"
-
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificatePassword   = $CertificatePassword
                     CertificatePath       = $CertificatePath
                     CertificateThumbprint = $CertificateThumbprint
+                    ApplicationSecret     = $ApplicationSecret
                 }
                 $Results = Get-TargetResource @Params
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -465,6 +491,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

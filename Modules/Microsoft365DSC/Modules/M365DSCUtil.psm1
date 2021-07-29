@@ -858,6 +858,11 @@ function Export-M365DSCConfiguration
         [System.String]
         $CertificatePath
     )
+    # Suppress Progress overlays
+    $Global:ProgressPreference = 'SilentlyContinue'
+
+    # Suppress Warnings
+    $Global:WarningPreference = 'SilentlyContinue'
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -1604,30 +1609,38 @@ function Get-AllSPOPackages
         $CertificateThumbprint
     )
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-        -InboundParameters $PSBoundParameters
-
-    $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-        -InboundParameters $PSBoundParameters `
-        -Url $tenantAppCatalogUrl
-
-    $filesToDownload = @()
-
-    if ($null -ne $tenantAppCatalogUrl)
+    try
     {
-        $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
-        $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
+        $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+            -InboundParameters $PSBoundParameters
 
-        $allFiles = $spfxFiles + $appFiles
+        $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl -ErrorAction Stop
 
-        foreach ($file in $allFiles)
+        $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+            -InboundParameters $PSBoundParameters `
+            -Url $tenantAppCatalogUrl
+
+        $filesToDownload = @()
+
+        if ($null -ne $tenantAppCatalogUrl)
         {
-            $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl; Title = $file.Title }
+            $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
+            $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
+
+            $allFiles = $spfxFiles + $appFiles
+
+            foreach ($file in $allFiles)
+            {
+                $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl; Title = $file.Title }
+            }
         }
+        return $filesToDownload
     }
-    return $filesToDownload
+    catch
+    {
+        Write-Verbose -Message $_
+    }
+    return $null
 }
 
 function Remove-NullEntriesFromHashtable

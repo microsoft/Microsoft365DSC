@@ -291,7 +291,7 @@ function Set-TargetResource
     $SafeAttachmentRuleParams.Remove('TenantId') | Out-Null
     $SafeAttachmentRuleParams.Remove('CertificateThumbprint') | Out-Null
     $SafeAttachmentRuleParams.Remove('CertificatePath') | Out-Null
-    $SafeAttachmentRuleParams.Remove('CertificatePassword') | Out-Null 
+    $SafeAttachmentRuleParams.Remove('CertificatePassword') | Out-Null
 
     if (('Present' -eq $Ensure ) -and (-not $SafeAttachmentRule))
     {
@@ -319,7 +319,7 @@ function Set-TargetResource
                 $SafeAttachmentRuleParams.Remove('SafeAttachmentPolicy')
                 Set-EXOSafeAttachmentRule -SafeAttachmentRuleParams $SafeAttachmentRuleParams
             }
-        } 
+        }
     }
 
     elseif (('Absent' -eq $Ensure ) -and ($SafeAttachmentRule))
@@ -495,7 +495,16 @@ function Export-TargetResource
         {
             [array]$SafeAttachmentRules = Get-SafeAttachmentRule
             $i = 1
-            Write-Host "`r`n" -NoNewline
+
+            if ($SafeAttachmentRules.Length -eq 0)
+            {
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
+            }
+            else
+            {
+                Write-Host "`r`n" -NoNewline
+            }
+
             foreach ($SafeAttachmentRule in $SafeAttachmentRules)
             {
                 Write-Host "    |---[$i/$($SafeAttachmentRules.Length)] $($SafeAttachmentRule.Identity)" -NoNewline
@@ -522,10 +531,6 @@ function Export-TargetResource
                     -FileName $Global:PartialExportFileName
                 Write-Host $Global:M365DSCEmojiGreenCheckMark
                 $i++
-            }
-            if ($SafeAttachmentRules.Length -eq 0)
-            {
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
             }
         }
         else

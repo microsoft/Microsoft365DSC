@@ -102,6 +102,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -169,6 +173,7 @@ function Get-TargetResource
             GlobalAdminAccount                            = $GlobalAdminAccount
             ApplicationId                                 = $ApplicationId
             TenantId                                      = $TenantId
+            ApplicationSecret                             = $ApplicationSecret
             CertificatePassword                           = $CertificatePassword
             CertificatePath                               = $CertificatePath
             CertificateThumbprint                         = $CertificateThumbprint
@@ -307,6 +312,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -345,6 +354,7 @@ function Set-TargetResource
     $CurrentParameters.Remove("CertificatePath") | Out-Null
     $CurrentParameters.Remove("CertificatePassword") | Out-Null
     $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
+    $CurrentParameters.Remove("ApplicationSecret") | Out-Null
 
     if ($PublicCdnEnabled -eq $false)
     {
@@ -457,6 +467,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -492,7 +506,6 @@ function Test-TargetResource
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("IsSingleInstance", `
-            "GlobalAdminAccount", `
             "MaxCompatibilityLevel", `
             "SearchResolveExactEmailOrUPN", `
             "OfficeClientADALDisabled", `
@@ -536,6 +549,10 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -566,6 +583,7 @@ function Export-TargetResource
             IsSingleInstance      = 'Yes'
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
@@ -596,6 +614,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

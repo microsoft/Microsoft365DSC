@@ -39,6 +39,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -85,6 +89,7 @@ function Get-TargetResource
             Ensure                = "Present"
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
@@ -155,6 +160,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
@@ -242,6 +251,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -300,6 +313,10 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -348,7 +365,16 @@ function Export-TargetResource
 
             $dscContent = ''
             $i = 1
-            Write-Host "`r`n" -NoNewline
+
+
+            if ($filesToDownload.Length -eq 0)
+            {
+                Write-Host $Global:M365DSCEmojiGreenCheckmark
+            }
+            else
+            {
+                Write-Host "`r`n" -NoNewline
+            }
             foreach ($file in $filesToDownload)
             {
                 Write-Host "    |---[$i/$($filesToDownload.Length)] $($file.Name)" -NoNewline
@@ -368,6 +394,7 @@ function Export-TargetResource
                         Path                  = ("`$PSScriptRoot\" + $file.Name)
                         ApplicationId         = $ApplicationId
                         TenantId              = $TenantId
+                        ApplicationSecret     = $ApplicationSecret
                         CertificatePassword   = $CertificatePassword
                         CertificatePath       = $CertificatePath
                         CertificateThumbprint = $CertificateThumbprint
@@ -409,6 +436,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

@@ -30,6 +30,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
 
@@ -75,6 +79,7 @@ function Get-TargetResource
             Ensure                = "Present"
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
         }
 
@@ -135,6 +140,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
@@ -206,6 +215,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
     #region Telemetry
@@ -254,6 +267,10 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
@@ -321,6 +338,10 @@ function Export-TargetResource
 
                     [Parameter()]
                     [System.String]
+                    $ApplicationSecret,
+
+                    [Parameter()]
+                    [System.String]
                     $CertificateThumbprint
                 )
 
@@ -345,6 +366,7 @@ function Export-TargetResource
                                 UserName              = $user.UserPrincipalName
                                 ApplicationId         = $ApplicationId
                                 TenantId              = $TenantId
+                                ApplicationSecret     = $ApplicationSecret
                                 CertificateThumbprint = $CertificateThumbprint
                                 GlobalAdminAccount    = $GlobalAdminAccount
                             }
@@ -376,11 +398,11 @@ function Export-TargetResource
                     return $dscContent
                 }
                 return $returnValue
-            } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount, $ApplicationId, $TenantId, $CertificateThumbprint) | Out-Null
+            } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount, $ApplicationId, $TenantId, $ApplicationSecret, $CertificateThumbprint) | Out-Null
             $i++
         }
 
-        Write-Host "    Broke extraction process down into {$MaxProcesses} jobs of {$batchSize} item(s) each"
+        Write-Host "`r`n    Broke extraction process down into {$MaxProcesses} jobs of {$batchSize} item(s) each"
         $totalJobs = $MaxProcesses
         $jobsCompleted = 0
         $status = "Running..."
@@ -431,6 +453,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

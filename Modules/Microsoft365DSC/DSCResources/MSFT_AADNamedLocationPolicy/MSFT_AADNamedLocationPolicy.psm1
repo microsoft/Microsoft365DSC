@@ -349,10 +349,18 @@ function Export-TargetResource
 
     $dscContent = ''
     $i = 1
-    Write-Host "`r`n" -NoNewline
+
     try
     {
         $AADNamedLocations = Get-AzureADMSNamedLocationPolicy -ErrorAction Stop
+        if ($AADNamedLocation.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
         foreach ($AADNamedLocation in $AADNamedLocations)
         {
             Write-Host "    |---[$i/$($AADNamedLocations.Count)] $($AADNamedLocation.DisplayName)" -NoNewline

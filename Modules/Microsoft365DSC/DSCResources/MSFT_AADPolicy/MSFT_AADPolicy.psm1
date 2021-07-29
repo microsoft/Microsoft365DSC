@@ -335,10 +335,19 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewline
     try
     {
-        $AADPolicys = Get-AzureADPolicy -ErrorAction Stop
-        foreach ($AADPolicy in $AADPolicys)
+        [array]$AADPolicies = Get-AzureADPolicy -ErrorAction Stop
+
+        if ($AADPolicies.Length -eq 0)
         {
-            Write-Host "    |---[$i/$($AADPolicys.Count)] $($AADPolicy.DisplayName)" -NoNewline
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
+        foreach ($AADPolicy in $AADPolicies)
+        {
+            Write-Host "    |---[$i/$($AADPolicies.Count)] $($AADPolicy.DisplayName)" -NoNewline
             $Params = @{
                 GlobalAdminAccount    = $GlobalAdminAccount
                 ApplicationId         = $ApplicationId

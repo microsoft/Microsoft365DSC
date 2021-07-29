@@ -415,7 +415,14 @@ function Export-TargetResource
         if (Confirm-ImportedCmdletIsAvailable -CmdletName 'Get-SafeAttachmentPolicy')
         {
             [array]$SafeAttachmentPolicies = Get-SafeAttachmentPolicy -ErrorAction Stop
-            Write-Host "`r`n" -NoNewline
+            if ($SafeAttachmentPolicies.Length -eq 0)
+            {
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
+            }
+            else
+            {
+                Write-Host "`r`n" -NoNewline
+            }
             $i = 1
             foreach ($SafeAttachmentPolicy in $SafeAttachmentPolicies)
             {
@@ -442,10 +449,6 @@ function Export-TargetResource
                     -FileName $Global:PartialExportFileName
                 Write-Host $Global:M365DSCEmojiGreenCheckMark
                 $i++
-            }
-            if ($SafeAttachmentPolicies.Length -eq 0)
-            {
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
             }
         }
         else

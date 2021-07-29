@@ -48,6 +48,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -110,6 +114,7 @@ function Get-TargetResource
             GlobalAdminAccount    = $GlobalAdminAccount
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
@@ -190,6 +195,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -227,6 +236,7 @@ function Set-TargetResource
     $CurrentParameters.Remove("CertificatePath") | Out-Null
     $CurrentParameters.Remove("CertificatePassword") | Out-Null
     $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
+    $CurrentParameters.Remove("ApplicationSecret") | Out-Null
     $CurrentParameters.Add("Scope", $EntityScope)
 
     if (($Ensure -eq "Absent" -and $curStorageEntry.Ensure -eq "Present"))
@@ -302,6 +312,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -365,6 +379,10 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -412,7 +430,16 @@ function Export-TargetResource
         {
             $centralAdminUrl = "https://$principal-admin.sharepoint.com"
         }
-        Write-Host "`r`n" -NoNewline
+
+        if ($storageEntities.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckmark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
+
         foreach ($storageEntity in $storageEntities)
         {
             $Params = @{
@@ -421,6 +448,7 @@ function Export-TargetResource
                 SiteUrl               = $centralAdminUrl
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
@@ -450,15 +478,11 @@ function Export-TargetResource
             Write-Host $Global:M365DSCEmojiGreenCheckmark
         }
 
-        if ($i -eq 1)
-        {
-            Write-Host ""
-        }
-
         return $dscContent
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

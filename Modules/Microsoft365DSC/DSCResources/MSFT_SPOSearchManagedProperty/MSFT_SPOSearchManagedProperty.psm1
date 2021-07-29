@@ -102,6 +102,10 @@ function Get-TargetResource
 
                 [Parameter()]
                 [System.String]
+                $ApplicationSecret,
+
+                [Parameter()]
+                [System.String]
                 $CertificateThumbprint,
 
                 [Parameter()]
@@ -201,6 +205,13 @@ function Get-TargetResource
                         MappedCrawledProperties     = $mappings
                         CompanyNameExtraction       = $CompanyNameExtraction
                         Ensure                      = "Present"
+                        GlobalAdminAccount          = $GlobalAdminAccount
+                        ApplicationId               = $ApplicationId
+                        TenantId                    = $TenantId
+                        ApplicationSecret           = $ApplicationSecret
+                        CertificatePassword         = $CertificatePassword
+                        CertificatePath             = $CertificatePath
+                        CertificateThumbprint       = $CertificateThumbprint
                 }
         }
         catch
@@ -329,6 +340,10 @@ function Set-TargetResource
                 [Parameter()]
                 [System.String]
                 $TenantId,
+
+                [Parameter()]
+                [System.String]
+                $ApplicationSecret,
 
                 [Parameter()]
                 [System.String]
@@ -772,6 +787,10 @@ function Test-TargetResource
 
                 [Parameter()]
                 [System.String]
+                $ApplicationSecret,
+
+                [Parameter()]
+                [System.String]
                 $CertificateThumbprint,
 
                 [Parameter()]
@@ -831,6 +850,10 @@ function Export-TargetResource
 
                 [Parameter()]
                 [System.String]
+                $ApplicationSecret,
+
+                [Parameter()]
+                [System.String]
                 $CertificateThumbprint,
 
                 [Parameter()]
@@ -857,12 +880,20 @@ function Export-TargetResource
 
         try
         {
-                $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
+                $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription -ErrorAction Stop)
                 [array]$properties = $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
 
                 $dscContent = ""
                 $i = 1
-                Write-Host "`r`n" -NoNewline
+
+                if ($properties.Length -eq 0)
+                {
+                    Write-Host $Global:M365DSCEmojiGreenCheckMark
+                }
+                else
+                {
+                        Write-Host "`r`n" -NoNewline
+                }
                 foreach ($property in $properties)
                 {
                         Write-Host "    |---[$i/$($properties.Length)] $($property.Value.Name)" -NoNewline
@@ -872,6 +903,7 @@ function Export-TargetResource
                                 Type                  = $property.Value.ManagedType
                                 ApplicationId         = $ApplicationId
                                 TenantId              = $TenantId
+                                ApplicationSecret     = $ApplicationSecret
                                 CertificateThumbprint = $CertificateThumbprint
                                 CertificatePath       = $CertificatePath
                                 CertificatePassword   = $CertificatePassword
@@ -894,6 +926,7 @@ function Export-TargetResource
         }
         catch
         {
+                Write-Host $Global:M365DSCEmojiRedX
                 try
                 {
                         Write-Verbose -Message $_

@@ -462,7 +462,15 @@ function Export-TargetResource
         if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeLinksPolicy)
         {
             [array]$SafeLinksPolicies = Get-SafeLinksPolicy
-            Write-Host "`r`n" -NoNewline
+
+            if ($SafeLinksPolicies.Length -eq 0)
+            {
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
+            }
+            else
+            {
+                Write-Host "`r`n" -NoNewline
+            }g
             $i = 1
             foreach ($SafeLinksPolicy in $SafeLinksPolicies)
             {
@@ -489,10 +497,6 @@ function Export-TargetResource
                     -FileName $Global:PartialExportFileName
                 Write-Host $Global:M365DSCEmojiGreenCheckMark
                 $i++
-            }
-            if ($SafeLinksPolicies.Length -eq 0)
-            {
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
             }
         }
         else
