@@ -353,7 +353,7 @@ function Export-TargetResource
     try
     {
         $AADNamedLocations = Get-AzureADMSNamedLocationPolicy -ErrorAction Stop
-        if ($AADNamedLocation.Length -eq 0)
+        if ($AADNamedLocations.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }

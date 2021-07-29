@@ -332,7 +332,6 @@ function Export-TargetResource
 
     $dscContent = ''
     $i = 1
-    Write-Host "`r`n" -NoNewline
     try
     {
         [array]$AADPolicies = Get-AzureADPolicy -ErrorAction Stop
