@@ -148,7 +148,7 @@ function Get-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -219,7 +219,7 @@ function Get-TargetResource
             {
                 try
                 {
-                    New-M365DSCConnection -Platform "AzureAD" `
+                    New-M365DSCConnection -Workload "AzureAD" `
                         -InboundParameters $PSBoundParameters | Out-Null
                     $app = Get-AzureADApplication -Filter "AppId eq '$ApplicationID'"
                     $owner = (Get-AzureADApplicationOwner -ObjectId $app.ObjectId)
@@ -462,7 +462,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -603,7 +603,7 @@ function Set-TargetResource
 
         if ($UpdateParams)
         {
-            $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+            $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
                 -InboundParameters $PSBoundParameters `
                 -Url $Url
             Write-Verbose -Message "Updating props via Set-PNPSite on $($Url)"
@@ -617,7 +617,7 @@ function Set-TargetResource
                 $PSBoundParameters.LocaleId -ne $site.Lcid)
         {
             Write-Verbose -Message "Updating LocaleId of RootWeb to $($PSBoundParameters.LocaleId)"
-            $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+            $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
                 -InboundParameters $PSBoundParameters `
                 -Url $Url
 
@@ -891,7 +891,7 @@ function Export-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
             -InboundParameters $PSBoundParameters
 
         #region Telemetry

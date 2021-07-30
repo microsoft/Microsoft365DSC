@@ -214,48 +214,6 @@ function New-M365DSCConnection
     )
 }
 
-function Test-MSCloudLogin
-{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [ValidateSet("Azure", "AzureAD", "SharePointOnline", "ExchangeOnline", `
-                "SecurityComplianceCenter", "MSOnline", "PnP", "PowerPlatforms", `
-                "MicrosoftTeams")]
-        [System.String]
-        $Platform,
-
-        [Parameter()]
-        [System.String]
-        $ConnectionUrl,
-
-        [Parameter()]
-        [Alias("o365Credential")]
-        [System.Management.Automation.PSCredential]
-        $CloudCredential,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationSecret,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint,
-
-        [Parameter()]
-        [Switch]
-        $UseModernAuth
-    )
-}
-
 function Start-Job
 {
     [CmdletBinding()]

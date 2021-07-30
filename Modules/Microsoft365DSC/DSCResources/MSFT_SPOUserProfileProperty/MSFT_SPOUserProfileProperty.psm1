@@ -39,7 +39,7 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting SPO Profile Properties for user {$UserName}"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -162,7 +162,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters
 
     $currentProperties = Get-TargetResource @PSBoundParameters
 
@@ -279,7 +279,7 @@ function Export-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
             -InboundParameters $PSBoundParameters
 
         #region Telemetry

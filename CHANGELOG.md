@@ -1,5 +1,13 @@
 # Change log for Microsoft365DSC
 
+# 1.21.804.1
+
+* DEPENDENCIES;
+  * Updated MSCloudLoginAssistant to version 1.0.60;
+* MISC
+  * Added support for ApplicationSecret in SPO resources;
+  * Revamped the entire display from an Export;
+
 # 1.21.728.1
 
 * DEPENDENCIES;

@@ -54,7 +54,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting SPOSiteGroups for {$Url}"
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -87,7 +87,7 @@ function Get-TargetResource
         }
         try
         {
-            $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+            $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
                 -InboundParameters $PSBoundParameters `
                 -Url $Url
             $siteGroup = Get-PnPGroup -Identity $Identity `
@@ -229,7 +229,7 @@ function Set-TargetResource
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters `
         -ErrorAction SilentlyContinue
 
     $currentValues = Get-TargetResource @PSBoundParameters
@@ -459,7 +459,7 @@ function Export-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters `
+        $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters `
             -ErrorAction SilentlyContinue
 
         #region Telemetry
@@ -504,7 +504,7 @@ function Export-TargetResource
             try
             {
 
-                $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+                $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
                     -InboundParameters $PSBoundParameters `
                     -Url $site.Url
                 $siteGroups = Get-PnPGroup -ErrorAction Stop

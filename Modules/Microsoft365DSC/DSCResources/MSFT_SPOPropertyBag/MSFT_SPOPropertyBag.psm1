@@ -53,7 +53,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of SPOPropertyBag for $Key"
     Write-Verbose -Message "Connecting to PnP from the Get method"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters `
         -Url $Url
 
@@ -88,7 +88,7 @@ function Get-TargetResource
             }
             elseif ($_.Exception -like "*The underlying connection was closed*")
             {
-                $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
                     -InboundParameters $PSBoundParameters `
                     -Url $Url
 
@@ -219,7 +219,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters `
         -Url $Url
 
@@ -365,7 +365,7 @@ function Export-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
             -InboundParameters $PSBoundParameters
 
         #region Telemetry
@@ -456,7 +456,7 @@ function Export-TargetResource
                             $siteUrl = $site.Url
                             try
                             {
-                                $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                                $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
                                     -InboundParameters $PSBoundParameters `
                                     -Url $siteUrl
                             }

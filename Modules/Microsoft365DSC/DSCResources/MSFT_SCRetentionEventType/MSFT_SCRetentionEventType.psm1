@@ -25,13 +25,13 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of Retention Event Type for $Name"
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -133,7 +133,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters
 
     $CurrentEventType = Get-TargetResource @PSBoundParameters
@@ -223,7 +223,7 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
@@ -240,10 +240,17 @@ function Export-TargetResource
 
     try
     {
-        $EventTypes = Get-ComplianceRetentionEventType -ErrorAction Stop
+        [array]$EventTypes = Get-ComplianceRetentionEventType -ErrorAction Stop
         $dscContent = ''
 
-        Write-Host "`r`n" -NoNewline
+        if ($EventTypes.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
         $i = 1
 
         foreach ($eventType in $EventTypes)
@@ -272,6 +279,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

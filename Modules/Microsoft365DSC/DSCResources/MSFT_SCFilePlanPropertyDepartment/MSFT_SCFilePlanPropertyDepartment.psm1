@@ -21,13 +21,13 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of SCFilePlanPropertyDepartment for $Name"
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -123,7 +123,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters
 
     $Current = Get-TargetResource @PSBoundParameters
@@ -219,7 +219,7 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
@@ -236,11 +236,18 @@ function Export-TargetResource
 
     try
     {
-        $Properties = Get-FilePlanPropertyDepartment -ErrorAction Stop
+        [array]$Properties = Get-FilePlanPropertyDepartment -ErrorAction Stop
 
         $i = 1
         $dscContent = ""
-        Write-Host "`r`n" -NoNewline
+        if ($Properties.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
         foreach ($Property in $Properties)
         {
             Write-Host "    |---[$i/$($Properties.Length)] $($Property.Name)" -NoNewline
@@ -266,6 +273,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

@@ -127,7 +127,7 @@ function Get-TargetResource
             #region Task Assignment
             if ($task.Assignments.Length -gt 0)
             {
-                $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+                $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
                     -InboundParameters $PSBoundParameters
                 $assignedValues = @()
                 foreach ($assignee in $task.Assignments)
@@ -330,7 +330,7 @@ function Set-TargetResource
     #region Assignments
     if ($AssignedUsers.Length -gt 0)
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
             -InboundParameters $PSBoundParameters
         $AssignmentsValue = @()
         foreach ($userName in $AssignedUsers)
@@ -561,7 +561,7 @@ function Export-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
             -InboundParameters $PSBoundParameters
 
         [array]$groups = Get-AzureADGroup -All:$true

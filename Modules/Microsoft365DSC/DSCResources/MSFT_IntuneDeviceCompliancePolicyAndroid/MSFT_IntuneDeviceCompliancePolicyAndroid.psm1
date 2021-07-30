@@ -150,7 +150,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Checking for the Intune Android Device Compliance Policy {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -396,7 +396,7 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Intune Device Owner Device Compliance Android Policy {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -660,7 +660,7 @@ function Export-TargetResource
         $ApplicationSecret
     )
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry

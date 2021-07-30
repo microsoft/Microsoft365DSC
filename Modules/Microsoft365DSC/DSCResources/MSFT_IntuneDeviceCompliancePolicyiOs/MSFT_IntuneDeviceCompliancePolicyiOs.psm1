@@ -91,7 +91,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Checking for the Intune Device Compliance iOS Policy {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -264,7 +264,7 @@ function Set-TargetResource
     )
     Write-Verbose -Message "Intune Device Compliance iOS Policy {$DisplayName}"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -469,7 +469,7 @@ function Export-TargetResource
         $ApplicationSecret
     )
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry

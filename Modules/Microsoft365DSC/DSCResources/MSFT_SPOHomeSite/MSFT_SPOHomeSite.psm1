@@ -48,7 +48,7 @@ function Get-TargetResource
     )
     Write-Verbose -Message "Getting configuration for hub site collection $Url"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -176,7 +176,7 @@ function Set-TargetResource
     #endregion
     Write-Verbose -Message "Setting configuration for home site '$Url'"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
     $currentValues = Get-TargetResource @PSBoundParameters
@@ -324,7 +324,7 @@ function Export-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
             -InboundParameters $PSBoundParameters
 
         #region Telemetry
