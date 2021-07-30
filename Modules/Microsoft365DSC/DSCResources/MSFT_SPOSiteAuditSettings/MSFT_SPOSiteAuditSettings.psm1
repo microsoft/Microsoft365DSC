@@ -26,6 +26,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -38,7 +42,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting SPOSiteAuditSettings for {$Url}"
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
         -InboundParameters $PSBoundParameters `
         -Url $Url -ErrorAction SilentlyContinue
 
@@ -67,6 +71,7 @@ function Get-TargetResource
             GlobalAdminAccount    = $GlobalAdminAccount
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
@@ -130,6 +135,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -154,7 +163,7 @@ function Set-TargetResource
     #endregion
 
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
         -InboundParameters $PSBoundParameters `
         -Url $Url
 
@@ -193,6 +202,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
@@ -252,6 +265,10 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -262,22 +279,23 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
-        -InboundParameters $PSBoundParameters
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
 
     try
     {
+        $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
+            -InboundParameters $PSBoundParameters
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+        $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+        $data.Add("Resource", $ResourceName)
+        $data.Add("Method", $MyInvocation.MyCommand)
+        $data.Add("Principal", $GlobalAdminAccount.UserName)
+        $data.Add("TenantId", $TenantId)
+        $data.Add("ConnectionMode", $ConnectionMode)
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
         $sites = Get-PnPTenantSite -ErrorAction Stop
 
         $i = 1
@@ -311,6 +329,7 @@ function Export-TargetResource
                     AuditFlags            = 'None'
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
+                    ApplicationSecret     = $ApplicationSecret
                     CertificatePassword   = $CertificatePassword
                     CertificatePath       = $CertificatePath
                     CertificateThumbprint = $CertificateThumbprint
@@ -352,6 +371,7 @@ function Export-TargetResource
             }
             catch
             {
+                Write-Host $Global:M365DSCEmojiRedX
                 Write-Verbose -Message $_
                 $tenantIdValue = ""
                 if (-not [System.String]::IsNullOrEmpty($TenantId))

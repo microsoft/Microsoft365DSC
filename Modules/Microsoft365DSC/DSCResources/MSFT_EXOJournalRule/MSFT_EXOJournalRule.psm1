@@ -58,13 +58,13 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of Journal Rule for {$Name}"
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -206,7 +206,7 @@ function Set-TargetResource
 
     $currentValues = Get-TargetResource @PSBoundParameters
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
     $opsParams = $PSBoundParameters
@@ -378,7 +378,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
@@ -395,11 +395,18 @@ function Export-TargetResource
 
     try
     {
-        $allRules = Get-JournalRule
+        [array]$allRules = Get-JournalRule
 
         $i = 1
         $dscContent = ""
-        Write-Host "`r`n" -NoNewline
+        if ($allRules.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
         foreach ($rule in $allRules)
         {
             Write-Host "    |---[$i/$($allRules.Length)] $($rule.Name)" -NoNewline

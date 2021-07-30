@@ -36,7 +36,7 @@ function Get-TargetResource
 
     )
     Write-Verbose -Message "Checking for the Intune App Configuration Policy {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -137,7 +137,7 @@ function Set-TargetResource
 
     Write-Verbose -Message "Intune App Configuration Policy {$DisplayName}"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -263,7 +263,7 @@ function Export-TargetResource
         [System.String]
         $ApplicationSecret
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -282,7 +282,14 @@ function Export-TargetResource
         [array]$configPolicies = Get-IntuneAppConfigurationPolicyTargeted -ErrorAction Stop
         $i = 1
         $dscContent = ''
-        Write-Host "`r`n" -NoNewLine
+        if ($configPolicies.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
         foreach ($configPolicy in $configPolicies)
         {
             Write-Host "    |---[$i/$($configPolicies.Count)] $($configPolicy.displayName)" -NoNewLine
@@ -312,7 +319,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

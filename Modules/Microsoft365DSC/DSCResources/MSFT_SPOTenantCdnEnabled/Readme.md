@@ -4,6 +4,8 @@
 
 This resource enables / disables SharePoint online CDN
 
+* Not supported in GCC High
+
 ## Azure AD Permissions
 
 To authenticate via Azure Active Directory, this resource required the following Application permissions:

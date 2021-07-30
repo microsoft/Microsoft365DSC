@@ -43,7 +43,7 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Teams Tenant Dial Plan"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -392,7 +392,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")

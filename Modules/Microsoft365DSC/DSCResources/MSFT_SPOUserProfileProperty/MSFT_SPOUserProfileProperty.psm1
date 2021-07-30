@@ -30,12 +30,16 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting SPO Profile Properties for user {$UserName}"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -75,6 +79,7 @@ function Get-TargetResource
             Ensure                = "Present"
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
         }
 
@@ -138,6 +143,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
 
@@ -153,7 +162,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters
 
     $currentProperties = Get-TargetResource @PSBoundParameters
 
@@ -203,6 +212,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
@@ -257,26 +270,31 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
-        -InboundParameters $PSBoundParameters
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $result = ""
 
     try
     {
+        $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+            -InboundParameters $PSBoundParameters
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+        $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+        $data.Add("Resource", $ResourceName)
+        $data.Add("Method", $MyInvocation.MyCommand)
+        $data.Add("Principal", $GlobalAdminAccount.UserName)
+        $data.Add("TenantId", $TenantId)
+        $data.Add("ConnectionMode", $ConnectionMode)
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $result = ""
+
         # Get all instances;
         $instances = Get-AzureADUser
 
@@ -321,6 +339,10 @@ function Export-TargetResource
 
                     [Parameter()]
                     [System.String]
+                    $ApplicationSecret,
+
+                    [Parameter()]
+                    [System.String]
                     $CertificateThumbprint
                 )
 
@@ -345,6 +367,7 @@ function Export-TargetResource
                                 UserName              = $user.UserPrincipalName
                                 ApplicationId         = $ApplicationId
                                 TenantId              = $TenantId
+                                ApplicationSecret     = $ApplicationSecret
                                 CertificateThumbprint = $CertificateThumbprint
                                 GlobalAdminAccount    = $GlobalAdminAccount
                             }
@@ -376,11 +399,11 @@ function Export-TargetResource
                     return $dscContent
                 }
                 return $returnValue
-            } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount, $ApplicationId, $TenantId, $CertificateThumbprint) | Out-Null
+            } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount, $ApplicationId, $TenantId, $ApplicationSecret, $CertificateThumbprint) | Out-Null
             $i++
         }
 
-        Write-Host "    Broke extraction process down into {$MaxProcesses} jobs of {$batchSize} item(s) each"
+        Write-Host "`r`n    Broke extraction process down into {$MaxProcesses} jobs of {$batchSize} item(s) each"
         $totalJobs = $MaxProcesses
         $jobsCompleted = 0
         $status = "Running..."
@@ -431,6 +454,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

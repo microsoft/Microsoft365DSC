@@ -66,7 +66,7 @@ function Get-TargetResource
     )
     Write-Verbose -Message "Getting configuration of Tab $DisplayName"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -124,7 +124,7 @@ function Get-TargetResource
 
         $nullReturn.TeamId = $teamInstance.GroupId
 
-        $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
         # Get the Channel ID
         Write-Verbose -Message "Getting Channels for Team {$TeamName} with ID {$($teamInstance.GroupId)}"
@@ -277,7 +277,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     $tab = Get-TargetResource @PSBoundParameters
@@ -450,10 +450,10 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
             -InboundParameters $PSBoundParameters
 
     #region Telemetry

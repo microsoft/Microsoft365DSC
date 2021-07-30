@@ -45,7 +45,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for Office 365 Audit Log"
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -172,7 +172,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
     $OldErrorActionPreference = $ErrorActionPreference
@@ -308,7 +308,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")

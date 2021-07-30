@@ -54,6 +54,6 @@ jobs:
           $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($env:PUBLIC_USERNAME, $GlobalAdminPassword)
           Set-M365DSCTelemetryOption -Enabled $false
           Write-Verbose -Message "Trying to connect to SC"
-          Test-MSCloudLogin -Platform SecurityComplianceCenter -CloudCredential $GlobalAdminAccount
+          Connect-M365Tenant -Workload SecurityComplianceCenter -Credential $GlobalAdminAccount
           Write-Verbose -Message "Connected to SC"
           Export-M365DSCConfiguration -Quiet -GlobalAdminAccount $GlobalAdminAccount -Path "." -FileName 'ExtractedSPO.ps1' -Workload 'SC' -Verbose
