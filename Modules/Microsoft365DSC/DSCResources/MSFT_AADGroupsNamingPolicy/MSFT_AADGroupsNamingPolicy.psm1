@@ -50,7 +50,7 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters -ProfileName "beta"
 
     $nullReturn = $PSBoundParameters
@@ -296,7 +296,8 @@ function Export-TargetResource
         $ApplicationSecret
     )
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
       -InboundParameters $PSBoundParameters `
       -ProfileName "beta"
 

@@ -90,8 +90,7 @@ function Get-TargetResource
         $CertificateThumbprint
     )
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
 
     Write-Verbose -Message "Getting configuration of Azure AD Application"
     #region Telemetry
@@ -594,7 +593,8 @@ function Export-TargetResource
         $CertificateThumbprint
     )
     #region Telemetry
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")

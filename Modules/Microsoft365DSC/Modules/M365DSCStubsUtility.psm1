@@ -74,7 +74,7 @@ function New-M365DSCStubFiles
         $CurrentModuleName = $Module.ModuleName
         if ($null -eq $CurrentModuleName)
         {
-            $ConnectionMode = New-M365DSCConnection -Platform $Module.Platform `
+            $ConnectionMode = New-M365DSCConnection -Workload $Module.Platform `
                 -InboundParameters $PSBoundParameters
             $foundModule = Get-Module | Where-Object -FilterScript { $_.ExportedCommands.Values.Name -ccontains $Module.RandomCmdlet }
             $CurrentModuleName = $foundModule.Name
@@ -83,7 +83,7 @@ function New-M365DSCStubFiles
         else
         {
             Import-Module $CurrentModuleName -Force -Global -ErrorAction SilentlyContinue
-            $ConnectionMode = New-M365DSCConnection -Platform $Module.Platform `
+            $ConnectionMode = New-M365DSCConnection -Workload $Module.Platform `
                 -InboundParameters $PSBoundParameters
         }
 

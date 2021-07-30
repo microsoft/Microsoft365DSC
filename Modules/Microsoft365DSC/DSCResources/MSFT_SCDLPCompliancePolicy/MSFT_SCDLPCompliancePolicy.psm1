@@ -70,13 +70,13 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of DLPCompliancePolicy for $Name"
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -231,7 +231,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters
 
     $CurrentPolicy = Get-TargetResource @PSBoundParameters
@@ -532,7 +532,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
@@ -553,7 +553,14 @@ function Export-TargetResource
 
         $i = 1
         $dscContent = ''
-        Write-Host "`r`n" -NoNewline
+        if ($policies.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
         foreach ($policy in $policies)
         {
             Write-Host "    |---[$i/$($policies.Count)] $($policy.Name)" -NoNewline
@@ -579,6 +586,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

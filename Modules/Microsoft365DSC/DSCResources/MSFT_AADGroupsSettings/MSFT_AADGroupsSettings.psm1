@@ -60,7 +60,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of AzureAD Groups Settings"
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
 
@@ -397,7 +397,8 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
 

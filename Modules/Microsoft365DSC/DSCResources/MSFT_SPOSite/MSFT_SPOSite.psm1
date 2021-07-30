@@ -134,6 +134,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -144,7 +148,7 @@ function Get-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -215,7 +219,7 @@ function Get-TargetResource
             {
                 try
                 {
-                    New-M365DSCConnection -Platform "AzureAD" `
+                    New-M365DSCConnection -Workload "AzureAD" `
                         -InboundParameters $PSBoundParameters | Out-Null
                     $app = Get-AzureADApplication -Filter "AppId eq '$ApplicationID'"
                     $owner = (Get-AzureADApplicationOwner -ObjectId $app.ObjectId)
@@ -265,6 +269,7 @@ function Get-TargetResource
             GlobalAdminAccount                          = $GlobalAdminAccount
             ApplicationId                               = $ApplicationId
             TenantId                                    = $TenantId
+            ApplicationSecret                           = $ApplicationSecret
             CertificatePassword                         = $CertificatePassword
             CertificatePath                             = $CertificatePath
             CertificateThumbprint                       = $CertificateThumbprint
@@ -431,6 +436,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -453,7 +462,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -594,7 +603,7 @@ function Set-TargetResource
 
         if ($UpdateParams)
         {
-            $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+            $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
                 -InboundParameters $PSBoundParameters `
                 -Url $Url
             Write-Verbose -Message "Updating props via Set-PNPSite on $($Url)"
@@ -608,7 +617,7 @@ function Set-TargetResource
                 $PSBoundParameters.LocaleId -ne $site.Lcid)
         {
             Write-Verbose -Message "Updating LocaleId of RootWeb to $($PSBoundParameters.LocaleId)"
-            $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+            $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
                 -InboundParameters $PSBoundParameters `
                 -Url $Url
 
@@ -796,6 +805,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -826,6 +839,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove("CertificatePath") | Out-Null
     $ValuesToCheck.Remove("CertificatePassword") | Out-Null
     $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
+    $ValuesToCheck.Remove("ApplicationSecret") | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -860,6 +874,10 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -870,22 +888,23 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-        -InboundParameters $PSBoundParameters
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
 
     try
     {
+        $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
+            -InboundParameters $PSBoundParameters
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+        $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+        $data.Add("Resource", $ResourceName)
+        $data.Add("Method", $MyInvocation.MyCommand)
+        $data.Add("Principal", $GlobalAdminAccount.UserName)
+        $data.Add("TenantId", $TenantId)
+        $data.Add("ConnectionMode", $ConnectionMode)
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
         $sites = Get-PnPTenantSite -ErrorAction Stop | Where-Object -FilterScript { $_.Template -ne 'SRCHCEN#0' -and $_.Template -ne 'SPSMSITEHOST#0' }
         $organization = ""
         $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
@@ -924,6 +943,7 @@ function Export-TargetResource
                 TimeZoneId            = $site.TimeZoneID
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
@@ -988,6 +1008,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

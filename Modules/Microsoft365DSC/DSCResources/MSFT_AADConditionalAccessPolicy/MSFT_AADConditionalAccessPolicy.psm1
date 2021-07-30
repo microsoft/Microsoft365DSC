@@ -164,7 +164,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of AzureAD Conditional Access Policy"
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -1794,7 +1794,8 @@ function Export-TargetResource
         $CertificateThumbprint
     )
     #region Telemetry
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")

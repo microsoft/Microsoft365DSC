@@ -34,8 +34,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Save-M365DSCPartialExport -MockWith {
             }
-            Mock -CommandName Test-MSCloudLogin -MockWith {
-            }
 
             Mock -CommandName New-CsOnlineVoiceRoute -MockWith {
             }

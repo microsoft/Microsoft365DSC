@@ -56,9 +56,8 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of AAD Named Location"
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftGraph' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
-
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -336,7 +335,7 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -351,10 +350,19 @@ function Export-TargetResource
 
     $dscContent = ''
     $i = 1
-    Write-Host "`r`n" -NoNewline
+
     try
     {
-        $AADNamedLocations = Get-MgIdentityConditionalAccessNamedLocation -ErrorAction Stop
+
+        $AADNamedLocations = Get-AzureADMSNamedLocationPolicy -ErrorAction Stop
+        if ($AADNamedLocations.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
         foreach ($AADNamedLocation in $AADNamedLocations)
         {
             Write-Host "    |---[$i/$($AADNamedLocations.Count)] $($AADNamedLocation.DisplayName)" -NoNewline

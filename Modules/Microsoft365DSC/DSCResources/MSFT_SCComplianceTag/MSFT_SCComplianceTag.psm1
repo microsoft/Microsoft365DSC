@@ -63,13 +63,13 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of ComplianceTag for $Name"
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
             -InboundParameters $PSBoundParameters
     }
     #region Telemetry
@@ -220,7 +220,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters
 
     $CurrentTag = Get-TargetResource @PSBoundParameters
@@ -408,7 +408,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
     #region Telemetry
@@ -424,7 +424,7 @@ function Export-TargetResource
 
     try
     {
-        $tags = Get-ComplianceTag -ErrorAction Stop
+        [array]$tags = Get-ComplianceTag -ErrorAction Stop
 
         $totalTags = $tags.Length
         if ($null -eq $totalTags)
@@ -432,7 +432,14 @@ function Export-TargetResource
             $totalTags = 1
         }
         $i = 1
-        Write-Host "`r`n" -NoNewline
+        if ($tags.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
         $dscContent = ''
         foreach ($tag in $tags)
         {
@@ -464,6 +471,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

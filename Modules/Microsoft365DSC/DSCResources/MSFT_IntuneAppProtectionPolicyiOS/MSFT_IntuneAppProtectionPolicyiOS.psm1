@@ -130,7 +130,7 @@ function Get-TargetResource
         $ApplicationSecret
     )
     Write-Verbose -Message "Checking for the Intune iOS App Protection Policy {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -374,7 +374,7 @@ function Set-TargetResource
         $ApplicationSecret
     )
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -617,7 +617,7 @@ function Export-TargetResource
         [System.String]
         $ApplicationSecret
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -673,6 +673,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         if ($_.Exception -like '*401*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."

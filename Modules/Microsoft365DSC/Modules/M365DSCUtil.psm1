@@ -858,6 +858,11 @@ function Export-M365DSCConfiguration
         [System.String]
         $CertificatePath
     )
+    # Suppress Progress overlays
+    $Global:ProgressPreference = 'SilentlyContinue'
+
+    # Suppress Warnings
+    $Global:WarningPreference = 'SilentlyContinue'
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -959,7 +964,7 @@ function Get-M365DSCTenantDomain
 
     if ($null -eq $CertificatePath)
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
             -InboundParameters $PSBoundParameters
         $tenantDetails = Get-AzureADTenantDetail
         $defaultDomain = $tenantDetails.VerifiedDomains | Where-Object -FilterScript { $_.Initial }
@@ -1017,7 +1022,7 @@ function New-M365DSCConnection
                 "MicrosoftTeams", "MicrosoftGraph", `
                 "MicrosoftGraphBeta")]
         [System.String]
-        $Platform,
+        $Workload,
 
         [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]
@@ -1037,56 +1042,100 @@ function New-M365DSCConnection
         $ProfileName = "v1.0"
     )
 
-    try
+    if ($Workload -eq "MicrosoftTeams")
     {
-        if ($Platform -eq "MicrosoftTeams")
+        try
         {
-            try
-            {
-                $cmdlet = Get-Command "Connect-MicrosoftTeams" -ErrorAction Stop
-            }
-            catch
-            {
-                Import-Module 'MicrosoftTeams' -Global -Force | Out-Null
-            }
+            $cmdlet = Get-Command "Connect-MicrosoftTeams" -ErrorAction Stop
         }
-
-        Write-Verbose -Message "Attempting connection to {$Platform} with:"
-        Write-Verbose -Message "$($InboundParameters | Out-String)"
-
-        if ($SkipModuleReload -eq $true)
+        catch
         {
-            $Global:CurrentModeIsExport = $true
+            Import-Module 'MicrosoftTeams' -Global -Force | Out-Null
         }
-        else
-        {
-            $Global:CurrentModeIsExport = $false
-        }
+    }
 
-        #region Telemetry
-        $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-        $data.Add("Source", "M365DSCUtil")
-        $data.Add("Platform", $Platform)
+    Write-Verbose -Message "Attempting connection to {$Workload} with:"
+    Write-Verbose -Message "$($InboundParameters | Out-String)"
 
-        if ($InboundParameters.ContainsKey("TenantId"))
+    if ($SkipModuleReload -eq $true)
+    {
+        $Global:CurrentModeIsExport = $true
+    }
+    else
+    {
+        $Global:CurrentModeIsExport = $false
+    }
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Source", "M365DSCUtil")
+    $data.Add("Platform", $Workload)
+
+    # Case both authentication methods are attempted
+    if ($null -ne $InboundParameters.GlobalAdminAccount -and `
+        (-not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -or `
+                -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint)))
+    {
+        $message = 'Both Authentication methods are attempted'
+        Write-Verbose -Message $message
+        $data.Add("Event", "Error")
+        $data.Add("Exception", $message)
+        $errorText = "You can't specify both the GlobalAdminAccount and one of {TenantId, CertificateThumbprint}"
+        $data.Add("CustomMessage", $errorText)
+        Add-M365DSCTelemetryEvent -Type "Error" -Data $data
+        throw $errorText
+    }
+    # Case no authentication method is specified
+    elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
+            [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+            [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+            [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
+    {
+        $message = 'No Authentication method was provided'
+        Write-Verbose -Message $message
+        $data.Add("Event", "Error")
+        $data.Add("Exception", $message)
+        $errorText = "You must specify either the GlobalAdminAccount or ApplicationId, TenantId and CertificateThumbprint parameters."
+        $data.Add("CustomMessage", $errorText)
+        Add-M365DSCTelemetryEvent -Type "Error" -Data $data
+        throw $errorText
+    }
+    # Case only GlobalAdminAccount is specified
+    elseif ($null -ne $InboundParameters.GlobalAdminAccount -and `
+            [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+            [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+            [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
+    {
+        Write-Verbose -Message "GlobalAdminAccount was specified. Connecting via User Principal"
+        if ([System.String]::IsNullOrEmpty($Url))
         {
-            $tenantId = $InboundParameters.TenantId
-            $data.Add("TenantId", $tenantId)
+            Connect-M365Tenant -Workload $Workload `
+                -Credential $InboundParameters.GlobalAdminAccount `
+                -SkipModuleReload $Global:CurrentModeIsExport
         }
         if ($InboundParameters.ContainsKey("GlobalAdminAccount") -and
             $null -ne $InboundParameters.GlobalAdminAccount)
         {
-            $data.Add("GlobalAdminAccount", "Yes")
+            Connect-M365Tenant -Workload $Workload `
+                -Credential $InboundParameters.GlobalAdminAccount `
+                -Url $Url `
+                -SkipModuleReload $Global:CurrentModeIsExport
         }
         if ($InboundParameters.ContainsKey("ApplicationId") -and
             -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
         {
-            $data.Add("ApplicationId", "Yes")
+            Connect-M365Tenant -Workload $Workload `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -Credential $InboundParameters.GlobalAdminAccount `
+                -SkipModuleReload $Global:CurrentModeIsExport
         }
         if ($InboundParameters.ContainsKey("ApplicationSecret") -and
             -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationSecret))
         {
-            $data.Add("ApplicationSecret", "Yes")
+            Connect-M365Tenant -Workload $Workload `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -Credential $InboundParameters.GlobalAdminAccount `
+                -Url $Url `
+                -SkipModuleReload $Global:CurrentModeIsExport
         }
         if ($InboundParameters.ContainsKey("CertificatePath") -and
             -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePath))
@@ -1096,12 +1145,43 @@ function New-M365DSCConnection
         if ($InboundParameters.ContainsKey("CertificateThumbprint") -and
             -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
         {
-            $data.Add("CertificateThumbprint", "Yes")
+            Write-Verbose -Message "ApplicationId, TenantId and CertificateThumprint were specified. Connecting via Service Principal"
+            Connect-M365Tenant -Workload $Workload `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -TenantId $InboundParameters.TenantId `
+                -CertificateThumbprint $InboundParameters.CertificateThumbprint `
+                -SkipModuleReload $Global:CurrentModeIsExport
         }
         if ($InboundParameters.ContainsKey("CertificatePassword") -and
             -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePassword))
         {
-            $data.Add("CertificatePassword", "Yes")
+            Connect-M365Tenant -Workload $Workload `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -TenantId $InboundParameters.TenantId `
+                -CertificateThumbprint $InboundParameters.CertificateThumbprint `
+                -Url $Url `
+                -SkipModuleReload $Global:CurrentModeIsExport
+        }
+        $data.Add("ConnectionType", "ServicePrincipal")
+        Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
+        return 'ServicePrincipal'
+    }
+    # Case only the ServicePrincipal with Thumbprint parameters are specified
+    elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePath) -and `
+            $null -ne $InboundParameters.CertificatePassword)
+    {
+        if ([System.String]::IsNullOrEmpty($url))
+        {
+            Write-Verbose -Message "ApplicationId, TenantId, CertificatePath & CertificatePassword were specified. Connecting via Service Principal"
+            Connect-M365Tenant -Workload $Workload `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -TenantId $InboundParameters.TenantId `
+                -CertificatePassword $InboundParameters.CertificatePassword.Password `
+                -CertificatePath $InboundParameters.CertificatePath `
+                -SkipModuleReload $Global:CurrentModeIsExport
         }
         #endregion
 
@@ -1164,128 +1244,41 @@ function New-M365DSCConnection
         elseif ($null -ne $InboundParameters.GlobalAdminAccount -and `
                 -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
         {
-            Write-Verbose -Message "GlobalAdminAccount and ApplicationId were specified. Connecting via Delegated Service Principal"
-            if ([System.String]::IsNullOrEmpty($url))
-            {
-                Test-MSCloudLogin -Platform $Platform `
-                    -ApplicationId $InboundParameters.ApplicationId `
-                    -CloudCredential $InboundParameters.GlobalAdminAccount `
-                    -SkipModuleReload $Global:CurrentModeIsExport `
-                    -ProfileName $ProfileName
-            }
-            else
-            {
-                Test-MSCloudLogin -Platform $Platform `
-                    -ApplicationId $InboundParameters.ApplicationId `
-                    -CloudCredential $InboundParameters.GlobalAdminAccount `
-                    -ConnectionUrl $Url `
-                    -SkipModuleReload $Global:CurrentModeIsExport `
-                    -ProfileName $ProfileName
-            }
-            $data.Add("ConnectionType", "ServicePrincipal")
-            Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
-            return 'ServicePrincipal'
+            Connect-M365Tenant -Workload $Workload `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -TenantId $InboundParameters.TenantId `
+                -CertificatePassword $InboundParameters.CertificatePassword.Password `
+                -CertificatePath $InboundParameters.CertificatePath `
+                -Url $Url `
+                -SkipModuleReload $Global:CurrentModeIsExport
         }
-        # Case only the ServicePrincipal with Thumbprint parameters are specified
-        elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
-                -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
-                -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
-                -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
+        $data.Add("ConnectionType", "ServicePrincipal")
+        Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
+        return 'ServicePrincipal'
+    }
+    # Case only the ApplicationSecret, TenantId and ApplicationID are specified
+    elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationSecret))
+    {
+        if ([System.String]::IsNullOrEmpty($url))
         {
-            if ([System.String]::IsNullOrEmpty($url))
-            {
-                Write-Verbose -Message "ApplicationId, TenantId and CertificateThumprint were specified. Connecting via Service Principal"
-                Test-MSCloudLogin -Platform $Platform `
-                    -ApplicationId $InboundParameters.ApplicationId `
-                    -TenantId $InboundParameters.TenantId `
-                    -CertificateThumbprint $InboundParameters.CertificateThumbprint `
-                    -SkipModuleReload $Global:CurrentModeIsExport `
-                    -ProfileName $ProfileName
-            }
-            else
-            {
-                Test-MSCloudLogin -Platform $Platform `
-                    -ApplicationId $InboundParameters.ApplicationId `
-                    -TenantId $InboundParameters.TenantId `
-                    -CertificateThumbprint $InboundParameters.CertificateThumbprint `
-                    -ConnectionUrl $Url `
-                    -SkipModuleReload $Global:CurrentModeIsExport `
-                    -ProfileName $ProfileName
-            }
-            $data.Add("ConnectionType", "ServicePrincipal")
-            Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
-            return 'ServicePrincipal'
-        }
-        # Case only the ServicePrincipal with Thumbprint parameters are specified
-        elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
-                -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
-                -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
-                -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePath) -and `
-                $null -ne $InboundParameters.CertificatePassword)
-        {
-            if ([System.String]::IsNullOrEmpty($url))
-            {
-                Write-Verbose -Message "ApplicationId, TenantId, CertificatePath & CertificatePassword were specified. Connecting via Service Principal"
-                Test-MSCloudLogin -Platform $Platform `
-                    -ApplicationId $InboundParameters.ApplicationId `
-                    -TenantId $InboundParameters.TenantId `
-                    -CertificatePassword $InboundParameters.CertificatePassword.Password `
-                    -CertificatePath $InboundParameters.CertificatePath `
-                    -SkipModuleReload $Global:CurrentModeIsExport `
-                    -ProfileName $ProfileName
-            }
-            else
-            {
-                Test-MSCloudLogin -Platform $Platform `
-                    -ApplicationId $InboundParameters.ApplicationId `
-                    -TenantId $InboundParameters.TenantId `
-                    -CertificatePassword $InboundParameters.CertificatePassword.Password `
-                    -CertificatePath $InboundParameters.CertificatePath `
-                    -ConnectionUrl $Url `
-                    -SkipModuleReload $Global:CurrentModeIsExport `
-                    -ProfileName $ProfileName
-            }
-            $data.Add("ConnectionType", "ServicePrincipal")
-            Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
-            return 'ServicePrincipal'
-        }
-        # Case only the ApplicationSecret, TenantId and ApplicationID are specified
-        elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
-                -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
-                -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
-                -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationSecret))
-        {
-            if ([System.String]::IsNullOrEmpty($url))
-            {
-                Write-Verbose -Message "ApplicationId, TenantId, ApplicationSecret were specified. Connecting via Service Principal"
-                Test-MSCloudLogin -Platform $Platform `
-                    -ApplicationId $InboundParameters.ApplicationId `
-                    -TenantId $InboundParameters.TenantId `
-                    -ApplicationSecret $InboundParameters.ApplicationSecret `
-                    -SkipModuleReload $Global:CurrentModeIsExport `
-                    -ProfileName $ProfileName
-            }
-            else
-            {
-                Test-MSCloudLogin -Platform $Platform `
-                    -ApplicationId $InboundParameters.ApplicationId `
-                    -TenantId $InboundParameters.TenantId `
-                    -ApplicationSecret $InboundParameters.ApplicationSecret `
-                    -ConnectionUrl $Url `
-                    -SkipModuleReload $Global:CurrentModeIsExport `
-                    -ProfileName $ProfileName
-            }
-            $data.Add("ConnectionType", "ServicePrincipal")
-            Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
-            return 'ServicePrincipal'
+            Write-Verbose -Message "ApplicationId, TenantId, ApplicationSecret were specified. Connecting via Service Principal"
+            Connect-M365Tenant -Workload $Workload `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -TenantId $InboundParameters.TenantId `
+                -ApplicationSecret $InboundParameters.ApplicationSecret `
+                -SkipModuleReload $Global:CurrentModeIsExport
         }
         else
         {
-            $data.Add("Event", "Error")
-            $errorText = 'Unexpected error getting the Authentication Method'
-            $data.Add("CustomMessage", $errorText)
-            Add-M365DSCTelemetryEvent -Data $data -Type "Error"
-            throw $errorText
+            Connect-M365Tenant -Workload $Workload `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -TenantId $InboundParameters.TenantId `
+                -ApplicationSecret $InboundParameters.ApplicationSecret `
+                -Url $Url `
+                -SkipModuleReload $Global:CurrentModeIsExport
         }
     }
     catch
@@ -1331,7 +1324,7 @@ function Get-SPOAdministrationUrl
         $UseMFASwitch = @{ }
     }
     Write-Verbose -Message "Connection to Azure AD is required to automatically determine SharePoint Online admin URL..."
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
         -InboundParameters $PSBoundParameters
     Write-Verbose -Message "Getting SharePoint Online admin URL..."
     $defaultDomain = Get-AzureADDomain | Where-Object { ($_.Name -like "*.onmicrosoft.com" -or $_.Name -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
@@ -1371,7 +1364,7 @@ function Get-M365TenantName
         $UseMFASwitch = @{ }
     }
     Write-Verbose -Message "Connection to Azure AD is required to automatically determine SharePoint Online admin URL..."
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
         -InboundParameters $PSBoundParameters
     Write-Verbose -Message "Getting SharePoint Online admin URL..."
     $defaultDomain = Get-AzureADDomain | Where-Object { ($_.Name -like "*.onmicrosoft.com" -or $_.Name -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
@@ -1641,30 +1634,38 @@ function Get-AllSPOPackages
         $CertificateThumbprint
     )
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-        -InboundParameters $PSBoundParameters
-
-    $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-        -InboundParameters $PSBoundParameters `
-        -Url $tenantAppCatalogUrl
-
-    $filesToDownload = @()
-
-    if ($null -ne $tenantAppCatalogUrl)
+    try
     {
-        $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
-        $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
+        $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
+            -InboundParameters $PSBoundParameters
 
-        $allFiles = $spfxFiles + $appFiles
+        $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl -ErrorAction Stop
 
-        foreach ($file in $allFiles)
+        $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
+            -InboundParameters $PSBoundParameters `
+            -Url $tenantAppCatalogUrl
+
+        $filesToDownload = @()
+
+        if ($null -ne $tenantAppCatalogUrl)
         {
-            $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl; Title = $file.Title }
+            $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
+            $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
+
+            $allFiles = $spfxFiles + $appFiles
+
+            foreach ($file in $allFiles)
+            {
+                $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl; Title = $file.Title }
+            }
         }
+        return $filesToDownload
     }
-    return $filesToDownload
+    catch
+    {
+        Write-Verbose -Message $_
+    }
+    return $null
 }
 
 function Remove-NullEntriesFromHashtable
