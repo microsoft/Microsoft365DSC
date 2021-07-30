@@ -557,7 +557,7 @@ function Export-TargetResource
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        else`
+        else
         {
             Write-Host "`r`n" -NoNewline
         }
@@ -586,6 +586,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

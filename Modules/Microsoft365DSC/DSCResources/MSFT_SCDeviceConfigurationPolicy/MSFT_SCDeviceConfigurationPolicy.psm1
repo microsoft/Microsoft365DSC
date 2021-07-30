@@ -263,11 +263,11 @@ function Export-TargetResource
         $dscContent = ''
         if ($policies.Length -eq 0)
         {
-            Write-Host "`r`n" -NoNewline
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
         else
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-Host "`r`n" -NoNewline
         }
         foreach ($policy in $policies)
         {

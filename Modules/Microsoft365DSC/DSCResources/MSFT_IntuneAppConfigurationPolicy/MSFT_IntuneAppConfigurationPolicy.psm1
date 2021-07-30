@@ -282,7 +282,14 @@ function Export-TargetResource
         [array]$configPolicies = Get-IntuneAppConfigurationPolicyTargeted -ErrorAction Stop
         $i = 1
         $dscContent = ''
-        Write-Host "`r`n" -NoNewLine
+        if ($configPolicies.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
         foreach ($configPolicy in $configPolicies)
         {
             Write-Host "    |---[$i/$($configPolicies.Count)] $($configPolicy.displayName)" -NoNewLine
@@ -312,7 +319,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_
