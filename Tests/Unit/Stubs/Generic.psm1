@@ -198,7 +198,7 @@ function New-M365DSCConnection
                 "SecurityComplianceCenter", "MSOnline", "PnP", "PowerPlatforms", `
                 "MicrosoftTeams", "MicrosoftGraph")]
         [System.String]
-        $Platform,
+        $Workload,
 
         [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]
