@@ -78,13 +78,13 @@ function Get-TargetResource
 
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -262,7 +262,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
     $SafeLinksPolicies = Get-SafeLinksPolicy
@@ -440,7 +440,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
@@ -462,7 +462,15 @@ function Export-TargetResource
         if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeLinksPolicy)
         {
             [array]$SafeLinksPolicies = Get-SafeLinksPolicy
-            Write-Host "`r`n" -NoNewline
+
+            if ($SafeLinksPolicies.Length -eq 0)
+            {
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
+            }
+            else
+            {
+                Write-Host "`r`n" -NoNewline
+            }g
             $i = 1
             foreach ($SafeLinksPolicy in $SafeLinksPolicies)
             {
@@ -489,10 +497,6 @@ function Export-TargetResource
                     -FileName $Global:PartialExportFileName
                 Write-Host $Global:M365DSCEmojiGreenCheckMark
                 $i++
-            }
-            if ($SafeLinksPolicies.Length -eq 0)
-            {
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
             }
         }
         else

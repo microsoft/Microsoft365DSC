@@ -1,5 +1,22 @@
 # Change log for Microsoft365DSC
 
+# 1.21.804.1
+
+* DEPENDENCIES;
+  * Updated MSCloudLoginAssistant to version 1.0.60;
+* MISC
+  * Added support for ApplicationSecret in SPO resources;
+  * Revamped the entire display from an Export;
+
+# 1.21.728.1
+
+* DEPENDENCIES;
+  * Updated MSCloudLoginAssistant to version 1.0.59;
+  * Updated PnP.PowerShell to version 1.7.0;
+* MISC
+  * Added support for Service Principal Authentication for all Intune resources;
+  * Deprecated GUI and added reference to new Web based GUI;
+
 # 1.21.721.1
 
 * AADMSGroup

@@ -296,13 +296,13 @@ function Get-TargetResource
     Write-Verbose -Message "Getting EXOOrganizationConfig"
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -758,7 +758,7 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting EXOOrganizationConfig"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
 
@@ -777,7 +777,7 @@ function Set-TargetResource
     if ($isAutoExpandingArchiveEnabled.AutoExpandingArchiveEnabled -eq $True)
     {
         $SetValues.Remove('AutoExpandingArchive') | Out-Null
-    } 
+    }
 
     Set-OrganizationConfig @SetValues
 }
@@ -1142,7 +1142,7 @@ function Export-TargetResource
         $CertificatePassword
     )
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 

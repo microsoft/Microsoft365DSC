@@ -840,6 +840,10 @@ function Export-M365DSCConfiguration
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
@@ -854,6 +858,12 @@ function Export-M365DSCConfiguration
         [System.String]
         $CertificatePath
     )
+    # Suppress Progress overlays
+    $Global:ProgressPreference = 'SilentlyContinue'
+
+    # Suppress Warnings
+    $Global:WarningPreference = 'SilentlyContinue'
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Event", "Extraction")
@@ -873,6 +883,8 @@ function Export-M365DSCConfiguration
 
     if (-not $Quiet)
     {
+        Write-Host "THIS GRAPHICAL USER INTERFACE IS DEPRECATED. STARTING OCTOBER 6TH 2021, IT WILL BE DISABLED AND REPLACED BY AN ONLINE VERSION. TRY IT OUT NOW AT https://export-preview.Microsoft365DSC.com" -ForegroundColor Black -BackgroundColor Yellow
+        explorer "https://export-preview.Microsoft365dsc.com"
         Show-M365DSCGUI -Path $Path -FileName $FileName `
             -GenerateInfo $GenerateInfo
     }
@@ -887,6 +899,7 @@ function Export-M365DSCConfiguration
                 -MaxProcesses $MaxProcesses `
                 -ConfigurationName $ConfigurationName `
                 -ApplicationId $ApplicationId `
+                -ApplicationSecret $ApplicationSecret `
                 -TenantId $TenantId `
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
@@ -902,6 +915,7 @@ function Export-M365DSCConfiguration
                 -MaxProcesses $MaxProcesses `
                 -ConfigurationName $ConfigurationName `
                 -ApplicationId $ApplicationId `
+                -ApplicationSecret $ApplicationSecret `
                 -TenantId $TenantId `
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
@@ -917,6 +931,7 @@ function Export-M365DSCConfiguration
                 -MaxProcesses $MaxProcesses `
                 -ConfigurationName $ConfigurationName `
                 -ApplicationId $ApplicationId `
+                -ApplicationSecret $ApplicationSecret `
                 -TenantId $TenantId `
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
@@ -949,7 +964,7 @@ function Get-M365DSCTenantDomain
 
     if ($null -eq $CertificatePath)
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
             -InboundParameters $PSBoundParameters
         $tenantDetails = Get-AzureADTenantDetail
         $defaultDomain = $tenantDetails.VerifiedDomains | Where-Object -FilterScript { $_.Initial }
@@ -1007,7 +1022,7 @@ function New-M365DSCConnection
                 "MicrosoftTeams", "MicrosoftGraph", `
                 "MicrosoftGraphBeta")]
         [System.String]
-        $Platform,
+        $Workload,
 
         [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]
@@ -1022,7 +1037,7 @@ function New-M365DSCConnection
         $SkipModuleReload = $false
     )
 
-    if ($Platform -eq "MicrosoftTeams")
+    if ($Workload -eq "MicrosoftTeams")
     {
         try
         {
@@ -1034,7 +1049,7 @@ function New-M365DSCConnection
         }
     }
 
-    Write-Verbose -Message "Attempting connection to {$Platform} with:"
+    Write-Verbose -Message "Attempting connection to {$Workload} with:"
     Write-Verbose -Message "$($InboundParameters | Out-String)"
 
     if ($SkipModuleReload -eq $true)
@@ -1049,7 +1064,7 @@ function New-M365DSCConnection
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Source", "M365DSCUtil")
-    $data.Add("Platform", $Platform)
+    $data.Add("Platform", $Workload)
 
     if ($InboundParameters.ContainsKey("TenantId"))
     {
@@ -1065,6 +1080,11 @@ function New-M365DSCConnection
         -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
     {
         $data.Add("ApplicationId", "Yes")
+    }
+    if ($InboundParameters.ContainsKey("ApplicationSecret") -and
+        -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationSecret))
+    {
+        $data.Add("ApplicationSecret", "Yes")
     }
     if ($InboundParameters.ContainsKey("CertificatePath") -and
         -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePath))
@@ -1121,15 +1141,15 @@ function New-M365DSCConnection
         Write-Verbose -Message "GlobalAdminAccount was specified. Connecting via User Principal"
         if ([System.String]::IsNullOrEmpty($Url))
         {
-            Test-MSCloudLogin -Platform $Platform `
-                -CloudCredential $InboundParameters.GlobalAdminAccount `
+            Connect-M365Tenant -Workload $Workload `
+                -Credential $InboundParameters.GlobalAdminAccount `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
         else
         {
-            Test-MSCloudLogin -Platform $Platform `
-                -CloudCredential $InboundParameters.GlobalAdminAccount `
-                -ConnectionUrl $Url `
+            Connect-M365Tenant -Workload $Workload `
+                -Credential $InboundParameters.GlobalAdminAccount `
+                -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
         $data.Add("ConnectionType", "Credential")
@@ -1143,17 +1163,17 @@ function New-M365DSCConnection
         Write-Verbose -Message "GlobalAdminAccount and ApplicationId were specified. Connecting via Delegated Service Principal"
         if ([System.String]::IsNullOrEmpty($url))
         {
-            Test-MSCloudLogin -Platform $Platform `
+            Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
-                -CloudCredential $InboundParameters.GlobalAdminAccount `
+                -Credential $InboundParameters.GlobalAdminAccount `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
         else
         {
-            Test-MSCloudLogin -Platform $Platform `
+            Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
-                -CloudCredential $InboundParameters.GlobalAdminAccount `
-                -ConnectionUrl $Url `
+                -Credential $InboundParameters.GlobalAdminAccount `
+                -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
         $data.Add("ConnectionType", "ServicePrincipal")
@@ -1169,7 +1189,7 @@ function New-M365DSCConnection
         if ([System.String]::IsNullOrEmpty($url))
         {
             Write-Verbose -Message "ApplicationId, TenantId and CertificateThumprint were specified. Connecting via Service Principal"
-            Test-MSCloudLogin -Platform $Platform `
+            Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
                 -CertificateThumbprint $InboundParameters.CertificateThumbprint `
@@ -1177,11 +1197,11 @@ function New-M365DSCConnection
         }
         else
         {
-            Test-MSCloudLogin -Platform $Platform `
+            Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
                 -CertificateThumbprint $InboundParameters.CertificateThumbprint `
-                -ConnectionUrl $Url `
+                -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
         $data.Add("ConnectionType", "ServicePrincipal")
@@ -1198,7 +1218,7 @@ function New-M365DSCConnection
         if ([System.String]::IsNullOrEmpty($url))
         {
             Write-Verbose -Message "ApplicationId, TenantId, CertificatePath & CertificatePassword were specified. Connecting via Service Principal"
-            Test-MSCloudLogin -Platform $Platform `
+            Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
                 -CertificatePassword $InboundParameters.CertificatePassword.Password `
@@ -1207,12 +1227,40 @@ function New-M365DSCConnection
         }
         else
         {
-            Test-MSCloudLogin -Platform $Platform `
+            Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
                 -CertificatePassword $InboundParameters.CertificatePassword.Password `
                 -CertificatePath $InboundParameters.CertificatePath `
-                -ConnectionUrl $Url `
+                -Url $Url `
+                -SkipModuleReload $Global:CurrentModeIsExport
+        }
+        $data.Add("ConnectionType", "ServicePrincipal")
+        Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
+        return 'ServicePrincipal'
+    }
+    # Case only the ApplicationSecret, TenantId and ApplicationID are specified
+    elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationSecret))
+    {
+        if ([System.String]::IsNullOrEmpty($url))
+        {
+            Write-Verbose -Message "ApplicationId, TenantId, ApplicationSecret were specified. Connecting via Service Principal"
+            Connect-M365Tenant -Workload $Workload `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -TenantId $InboundParameters.TenantId `
+                -ApplicationSecret $InboundParameters.ApplicationSecret `
+                -SkipModuleReload $Global:CurrentModeIsExport
+        }
+        else
+        {
+            Connect-M365Tenant -Workload $Workload `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -TenantId $InboundParameters.TenantId `
+                -ApplicationSecret $InboundParameters.ApplicationSecret `
+                -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
         $data.Add("ConnectionType", "ServicePrincipal")
@@ -1251,7 +1299,7 @@ function Get-SPOAdministrationUrl
         $UseMFASwitch = @{ }
     }
     Write-Verbose -Message "Connection to Azure AD is required to automatically determine SharePoint Online admin URL..."
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
         -InboundParameters $PSBoundParameters
     Write-Verbose -Message "Getting SharePoint Online admin URL..."
     $defaultDomain = Get-AzureADDomain | Where-Object { ($_.Name -like "*.onmicrosoft.com" -or $_.Name -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
@@ -1291,7 +1339,7 @@ function Get-M365TenantName
         $UseMFASwitch = @{ }
     }
     Write-Verbose -Message "Connection to Azure AD is required to automatically determine SharePoint Online admin URL..."
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
         -InboundParameters $PSBoundParameters
     Write-Verbose -Message "Getting SharePoint Online admin URL..."
     $defaultDomain = Get-AzureADDomain | Where-Object { ($_.Name -like "*.onmicrosoft.com" -or $_.Name -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
@@ -1561,30 +1609,38 @@ function Get-AllSPOPackages
         $CertificateThumbprint
     )
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-        -InboundParameters $PSBoundParameters
-
-    $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-        -InboundParameters $PSBoundParameters `
-        -Url $tenantAppCatalogUrl
-
-    $filesToDownload = @()
-
-    if ($null -ne $tenantAppCatalogUrl)
+    try
     {
-        $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
-        $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
+        $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
+            -InboundParameters $PSBoundParameters
 
-        $allFiles = $spfxFiles + $appFiles
+        $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl -ErrorAction Stop
 
-        foreach ($file in $allFiles)
+        $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
+            -InboundParameters $PSBoundParameters `
+            -Url $tenantAppCatalogUrl
+
+        $filesToDownload = @()
+
+        if ($null -ne $tenantAppCatalogUrl)
         {
-            $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl; Title = $file.Title }
+            $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
+            $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
+
+            $allFiles = $spfxFiles + $appFiles
+
+            foreach ($file in $allFiles)
+            {
+                $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl; Title = $file.Title }
+            }
         }
+        return $filesToDownload
     }
-    return $filesToDownload
+    catch
+    {
+        Write-Verbose -Message $_
+    }
+    return $null
 }
 
 function Remove-NullEntriesFromHashtable
@@ -1792,12 +1848,33 @@ function Set-M365DSCAgentCertificateConfiguration
     [OutputType([System.String])]
     param(
         [Parameter()]
-        [System.Boolean]
-        $KeepCertificate = $false
+        [Switch]
+        $KeepCertificate,
+
+        [Parameter()]
+        [Switch]
+        $ForceRenew,
+
+        [Parameter()]
+        [Switch]
+        $GeneratePFX,
+
+        [Parameter()]
+        [System.String]
+        $Password
     )
 
     $existingCertificate = Get-ChildItem -Path Cert:\LocalMachine\My | `
         Where-Object { $_.Subject -match "M365DSCEncryptionCert" }
+
+    if ($ForceRenew)
+    {
+        foreach ($cert in $existingCertificate)
+        {
+            Remove-Item $cert.PSPath | Out-Null
+        }
+        $existingCertificate = $null
+    }
     if ($null -eq $existingCertificate)
     {
         Write-Verbose -Message "No existing M365DSC certificate found. Creating one."
@@ -1845,8 +1922,26 @@ function Set-M365DSCAgentCertificateConfiguration
     }
     else
     {
-        Remove-Item -Path $configOutputFile -Confirm:$false
-        Remove-Item -Path "./M365AgentConfig" -Recurse -Confirm:$false
+        try {
+            Remove-Item -Path $configOutputFile -Confirm:$false -ErrorAction SilentlyContinue
+            Remove-Item -Path "./M365AgentConfig" -Recurse -Confirm:$false -ErrorAction SilentlyContinue
+        }
+        catch
+        {
+            Write-Error $_
+        }
+    }
+
+    if ($GeneratePFX)
+    {
+        if ($Password -eq $null)
+        {
+            Throw "When the GeneratePFX switch is used, you also need to provide a password."
+        }
+        $securePassword = ConvertTo-SecureString -String $password -Force -AsPlainText
+        Export-PfxCertificate -Cert $existingCertificate.PSPath `
+            -FilePath $certificateFilePath.Replace('.cer','.pfx') `
+            -Password $securePassword | Out-Null
     }
     return $thumbprint
 }
@@ -2001,6 +2096,10 @@ function Update-M365DSCExportAuthenticationResults
         {
             $Results.Remove("TenantId") | Out-Null
         }
+        if ($Results.ContainsKey("ApplicationSecret"))
+        {
+            $Results.Remove("ApplicationSecret") | Out-Null
+        }
         if ($Results.ContainsKey("CertificateThumbprint"))
         {
             $Results.Remove("CertificateThumbprint") | Out-Null
@@ -2078,6 +2177,21 @@ function Update-M365DSCExportAuthenticationResults
             catch
             {
                 Write-Verbose -Message "Error removing TenantId from Update-M365DSCExportAuthenticationResults"
+            }
+        }
+        if (-not [System.String]::IsNullOrEmpty($Results.ApplicationSecret))
+        {
+            $Results.ApplicationSecret = "`$ConfigurationData.NonNodeData.ApplicationSecret"
+        }
+        else
+        {
+            try
+            {
+                $Results.Remove("ApplicationSecret") | Out-Null
+            }
+            catch
+            {
+                Write-Verbose -Message "Error removing ApplicationSecret from Update-M365DSCExportAuthenticationResults"
             }
         }
         if ($null -ne $Results.CertificatePassword)
@@ -2158,6 +2272,11 @@ function Get-M365DSCExportContentForResource
         {
             $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
                 -ParameterName "TenantId"
+        }
+        if (![System.String]::IsNullOrEmpty($Results.ApplicationSecret))
+        {
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+                -ParameterName "ApplicationSecret"
         }
         if (![System.String]::IsNullOrEmpty($Results.CertificatePath))
         {
@@ -2271,6 +2390,15 @@ function Get-M365DSCComponentsForAuthenticationType
             ($parameters.Contains('CertificateThumbprint') -or `
                     $parameters.Contains('CertificatePath') -or `
                     $parameters.Contains('CertificatePassword')) -and `
+                $parameters.Contains('TenantId'))
+        {
+            $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+        }
+
+        # Case - Resource contains ApplicationSecret
+        elseif ($AuthenticationMethod.Contains("Application") -and `
+                $parameters.Contains('ApplicationId') -and `
+                $parameters.Contains('ApplicationSecret') -and `
                 $parameters.Contains('TenantId'))
         {
             $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")

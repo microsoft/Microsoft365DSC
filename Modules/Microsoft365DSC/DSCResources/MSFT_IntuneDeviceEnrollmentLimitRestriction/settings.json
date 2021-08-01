@@ -1,0 +1,18 @@
+{
+    "resourceName": "IntuneDeviceEnrollmentLimitRestriction",
+    "description": "This resource configures the Intune device enrollment limit restrictions.",
+    "permissions": [
+        {
+            "read": [
+                {
+                    "name": "DeviceManagementServiceConfig.Read.All"
+                }
+            ],
+            "update": [
+                {
+                    "name": "DeviceManagementServiceConfig.ReadWrite.All"
+                }
+            ]
+        }
+    ]
+}

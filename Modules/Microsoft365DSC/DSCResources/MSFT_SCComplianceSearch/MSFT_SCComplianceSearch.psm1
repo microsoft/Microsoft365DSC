@@ -69,13 +69,13 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of SCComplianceSearch for $Name"
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
             -InboundParameters $PSBoundParameters
     }
     #region Telemetry
@@ -250,7 +250,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters
 
     $CurrentSearch = Get-TargetResource @PSBoundParameters
@@ -389,7 +389,7 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 
@@ -406,9 +406,16 @@ function Export-TargetResource
 
     try
     {
-        $searches = Get-ComplianceSearch -ErrorAction Stop
+        [array]$searches = Get-ComplianceSearch -ErrorAction Stop
 
-        Write-Host "    `r`n* Searches not assigned to an eDiscovery Case"
+        if ($searches.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "    `r`n* Searches not assigned to an eDiscovery Case"
+        }
         $i = 1
         $dscContent = ""
         $partialContent = ""
@@ -470,6 +477,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

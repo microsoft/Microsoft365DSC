@@ -55,6 +55,10 @@ function Start-M365DSCConfigurationExtract
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $TenantId,
 
         [Parameter()]
@@ -323,6 +327,14 @@ function Start-M365DSCConfigurationExtract
                     -Description "The Id or Name of the tenant to authenticate against"
             }
 
+            if (-not [System.String]::IsNullOrEmpty($ApplicationSecret))
+            {
+                Add-ConfigurationDataEntry -Node "NonNodeData" `
+                    -Key "ApplicationSecret" `
+                    -Value $ApplicationSecret `
+                    -Description "Azure AD Application Secret for Authentication"
+            }
+
             if (-not [System.String]::IsNullOrEmpty($CertificatePath))
             {
                 Add-ConfigurationDataEntry -Node "NonNodeData" `
@@ -455,6 +467,7 @@ function Start-M365DSCConfigurationExtract
             $CertThumbprintExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("CertificateThumbprint")
             $TenantIdExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("TenantId")
             $AppIdExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("ApplicationId")
+            $AppSecretExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("ApplicationSecret")
             $GlobalAdminExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("GlobalAdminAccount")
             $CertPathExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("CertificatePath")
             $CertPasswordExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("CertificatePassword")
@@ -468,10 +481,6 @@ function Start-M365DSCConfigurationExtract
             {
                 $parameters.Add("MaxProcesses", $MaxProcesses)
             }
-            if ($AppSecretExists -and -not [System.String]::IsNullOrEmpty($ApplicationSecret))
-            {
-                $parameters.Add("AppplicationSecret", $ApplicationSecret)
-            }
             if ($CertThumbprintExists -and -not [System.String]::IsNullOrEmpty($CertificateThumbprint))
             {
                 $parameters.Add("CertificateThumbprint", $CertificateThumbprint)
@@ -483,6 +492,10 @@ function Start-M365DSCConfigurationExtract
             if ($AppIdExists -and -not [System.String]::IsNullOrEmpty($ApplicationId))
             {
                 $parameters.Add("ApplicationId", $ApplicationId)
+            }
+            if ($AppSecretExists -and -not [System.String]::IsNullOrEmpty($ApplicationSecret))
+            {
+                $parameters.Add("ApplicationSecret", $ApplicationSecret)
             }
             if ($CertPathExists -and -not [System.String]::IsNullOrEmpty($CertificatePath))
             {

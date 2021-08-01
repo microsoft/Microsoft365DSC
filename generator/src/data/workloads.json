@@ -1,0 +1,74 @@
+[
+  {
+    "id": "AAD",
+    "title": "Azure AD",
+    "iconName": "AADLogo",
+    "extractionModes": {
+      "full": ["AADMSGroup", "AADServicePrincipal"]
+    }
+  },
+  {
+    "id": "EXO",
+    "title": "Exchange",
+    "iconName": "ExchangeLogo",
+    "extractionModes": {
+      "full": ["EXOMailboxSettings", "EXOManagementRole"]
+    }
+  },
+  {
+    "id": "Intune",
+    "title": "Intune",
+    "iconName": "Devices2"
+  },
+  {
+    "id": "O365",
+    "title": "Office 365",
+    "iconName": "OfficeLogo",
+    "extractionModes": {
+      "full": ["O365Group", "O365User"]
+    }
+  },
+  {
+    "id": "OD",
+    "title": "OneDrive",
+    "iconName": "OneDriveLogo"
+  },
+  {
+    "id": "Planner",
+    "title": "Planner",
+    "iconName": "PlannerLogo",
+    "extractionModes": {
+      "full": ["PlannerPlan", "PlannerBucket", "PlannerTask"]
+    }
+  },
+  {
+    "id": "PP",
+    "title": "Power Platform",
+    "iconName": "PowerAppsLogo",
+    "extractionModes": {
+      "full": ["PPPowerAppsEnvironment"]
+    }
+  },
+  {
+    "id": "SC",
+    "title": "Security & Compliance",
+    "iconName": "Encryption"
+  },
+  {
+    "id": "SPO",
+    "title": "SharePoint",
+    "iconName": "SharepointLogo",
+    "extractionModes": {
+      "default": ["SPOApp", "SPOSiteDesign"],
+      "full": ["SPOSiteAuditSettings", "SPOSiteGroup", "SPOSite", "SPOUserProfileProperty", "SPOPropertyBag"]
+    }
+  },
+  {
+    "id": "Teams",
+    "title": "Teams",
+    "iconName": "TeamsLogo",
+    "extractionModes": {
+      "full": ["TeamsTeam", "TeamsUser", "TeamsChannelTab"]
+    }
+  }
+]

@@ -1,4 +1,5 @@
 {
+    "resourceName": "AADConditionalAccessPolicy",
     "description": "This resource configures an Azure Active Directory Conditional Access Policy.",
     "permissions": [
         {

@@ -5,6 +5,8 @@
 This resource configures Content Delivery Network policies
 for SharePoint Online.
 
+* Not supported in GCC High
+
 ## Azure AD Permissions
 
 To authenticate via Azure Active Directory, this resource required the following Application permissions:

@@ -39,6 +39,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -51,7 +55,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for app $Identity"
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -85,6 +89,7 @@ function Get-TargetResource
             Ensure                = "Present"
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
@@ -158,6 +163,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -180,7 +189,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
     $currentApp = Get-TargetResource @PSBoundParameters
@@ -242,6 +251,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -300,6 +313,10 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -310,25 +327,26 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-        -InboundParameters $PSBoundParameters
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
 
     try
     {
+        $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
+            -InboundParameters $PSBoundParameters
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+        $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+        $data.Add("Resource", $ResourceName)
+        $data.Add("Method", $MyInvocation.MyCommand)
+        $data.Add("Principal", $GlobalAdminAccount.UserName)
+        $data.Add("TenantId", $TenantId)
+        $data.Add("ConnectionMode", $ConnectionMode)
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
         $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl -ErrorAction Stop
 
-        $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
             -InboundParameters $PSBoundParameters `
             -Url $tenantAppCatalogUrl
 
@@ -348,7 +366,16 @@ function Export-TargetResource
 
             $dscContent = ''
             $i = 1
-            Write-Host "`r`n" -NoNewline
+
+
+            if ($filesToDownload.Length -eq 0)
+            {
+                Write-Host $Global:M365DSCEmojiGreenCheckmark
+            }
+            else
+            {
+                Write-Host "`r`n" -NoNewline
+            }
             foreach ($file in $filesToDownload)
             {
                 Write-Host "    |---[$i/$($filesToDownload.Length)] $($file.Name)" -NoNewline
@@ -368,6 +395,7 @@ function Export-TargetResource
                         Path                  = ("`$PSScriptRoot\" + $file.Name)
                         ApplicationId         = $ApplicationId
                         TenantId              = $TenantId
+                        ApplicationSecret     = $ApplicationSecret
                         CertificatePassword   = $CertificatePassword
                         CertificatePath       = $CertificatePath
                         CertificateThumbprint = $CertificateThumbprint
@@ -390,7 +418,7 @@ function Export-TargetResource
                 Write-Host $Global:M365DSCEmojiGreenCheckmark
             }
 
-            $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+            $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
                 -InboundParameters $PSBoundParameters `
                 -Url $tenantAppCatalogUrl
 
@@ -409,6 +437,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_
