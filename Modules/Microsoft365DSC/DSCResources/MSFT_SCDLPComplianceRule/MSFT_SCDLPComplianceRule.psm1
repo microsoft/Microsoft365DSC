@@ -957,44 +957,68 @@ function ConvertTo-SCDLPSensitiveInformationStringGroup
             $StringContent += "MSFT_SCDLPContainsSensitiveInformationGroup`r`n            {`r`n"
             $StringContent += "                operator = '$($group.operator.Replace("'", "''"))'`r`n"
             $StringContent += "                name = '$($group.name.Replace("'", "''"))'`r`n"
-            $StringContent += "                SensitiveInformation = @("
-            foreach ($sit in $group.sensitivetypes)
+            if ($null -ne $group.sensitivetypes)
             {
-                $StringContent += "            MSFT_SCDLPSensitiveInformation`r`n            {`r`n"
-                $StringContent += "                    name = '$($sit.name.Replace("'", "''"))'`r`n"
-                if ($null -ne $sit.id)
+                $StringContent += "                SensitiveInformation = @("
+                foreach ($sit in $group.sensitivetypes)
                 {
-                    $StringContent += "                id = '$($sit.id)'`r`n"
-                }
+                    $StringContent += "            MSFT_SCDLPSensitiveInformation`r`n            {`r`n"
+                    $StringContent += "                    name = '$($sit.name.Replace("'", "''"))'`r`n"
+                    if ($null -ne $sit.id)
+                    {
+                        $StringContent += "                id = '$($sit.id)'`r`n"
+                    }
 
-                if ($null -ne $sit.maxconfidence)
-                {
-                    $StringContent += "                maxconfidence = '$($sit.maxconfidence)'`r`n"
-                }
+                    if ($null -ne $sit.maxconfidence)
+                    {
+                        $StringContent += "                maxconfidence = '$($sit.maxconfidence)'`r`n"
+                    }
 
-                if ($null -ne $sit.minconfidence)
-                {
-                    $StringContent += "                minconfidence = '$($sit.minconfidence)'`r`n"
-                }
+                    if ($null -ne $sit.minconfidence)
+                    {
+                        $StringContent += "                minconfidence = '$($sit.minconfidence)'`r`n"
+                    }
 
-                if ($null -ne $sit.classifiertype)
-                {
-                    $StringContent += "                classifiertype = '$($sit.classifiertype)'`r`n"
-                }
+                    if ($null -ne $sit.classifiertype)
+                    {
+                        $StringContent += "                classifiertype = '$($sit.classifiertype)'`r`n"
+                    }
 
-                if ($null -ne $sit.mincount)
-                {
-                    $StringContent += "                mincount = '$($sit.mincount)'`r`n"
-                }
+                    if ($null -ne $sit.mincount)
+                    {
+                        $StringContent += "                mincount = '$($sit.mincount)'`r`n"
+                    }
 
-                if ($null -ne $sit.maxcount)
-                {
-                    $StringContent += "                maxcount = '$($sit.maxcount)'`r`n"
-                }
+                    if ($null -ne $sit.maxcount)
+                    {
+                        $StringContent += "                maxcount = '$($sit.maxcount)'`r`n"
+                    }
 
-                $StringContent += "            }`r`n"
+                    $StringContent += "            }`r`n"
+                }
+                $StringContent += "            )}`r`n"
             }
-            $StringContent += "            )}`r`n"
+            if ($null -ne $group.labels)
+            {
+                $StringContent += "                labels = @("
+                foreach ($label in $group.labels)
+                {
+                    $StringContent += "            MSFT_SCDLPLabel`r`n            {`r`n"
+                    $StringContent += "                    name = '$($label.name.Replace("'", "''"))'`r`n"
+                    if ($null -ne $label.id)
+                    {
+                        $StringContent += "                id = '$($label.id)'`r`n"
+                    }
+
+                    if ($null -ne $label.type)
+                    {
+                        $StringContent += "                type = '$($sit.type)'`r`n"
+                    }
+
+                    $StringContent += "            }`r`n"
+                }
+                $StringContent += "            )}`r`n"
+            }
         }
         $StringContent += "            )}`r`n"
         $result += $StringContent
@@ -1180,7 +1204,32 @@ function Get-SCDLPSensitiveInformationGroups
             }
             $sits += $sit
         }
-        $myGroup.Add("sensitivetypes", $sits)
+        if ($sits.Length -gt 0)
+        {
+            $myGroup.Add("sensitivetypes", $sits)
+        }
+        $labels = @()
+        foreach ($item in $group.labels)
+        {
+            $label = @{
+                name = $item.name
+            }
+
+            if ($null -ne $item.id)
+            {
+                $label.Add("id", $item.id)
+            }
+
+            if ($null -ne $item.type)
+            {
+                $label.Add("type", $item.type)
+            }
+            $slabels += $label
+        }
+        if ($labels.Length -gt 0)
+        {
+            $myGroup.Add("labels", $labels)
+        }
         $groups += $myGroup
     }
     $result.Add("groups", $groups)
@@ -1188,7 +1237,8 @@ function Get-SCDLPSensitiveInformationGroups
     return $returnValue
 }
 
-function Test-ContainsSensitiveInformation {
+function Test-ContainsSensitiveInformation
+{
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
@@ -1239,7 +1289,60 @@ function Test-ContainsSensitiveInformation {
     }
 }
 
-function Test-ContainsSensitiveInformationGroups {
+function Test-ContainsSensitiveInformationLabels
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $targetValues,
+
+        [Parameter()]
+        [System.Object[]]
+        $sourceValues
+    )
+
+    foreach ($sit in $targetValues)
+    {
+        Write-Verbose -Message "Trying to find existing Sensitive Information labels matching name {$($sit.name)}"
+        $matchingExistingRule = $sourceValues | Where-Object -FilterScript { $_.name -eq $sit.name }
+
+        if ($null -ne $matchingExistingRule)
+        {
+            Write-Verbose -Message "Sensitive Information label {$($sit.name)} was found"
+            $propertiesTocheck = @("id", "type")
+
+            foreach ($property in $propertiesToCheck)
+            {
+                Write-Verbose -Message "Checking property {$property} for Sensitive Information label {$($sit.name)}"
+                if ($sit.$property -ne $matchingExistingRule.$property)
+                {
+                    Write-Verbose -Message "Property {$property} is set to {$($matchingExistingRule.$property)} and is expected to be {$($sit.$property)}."
+                    $EventMessage = "DLP Compliance Rule {$Name} was not in the desired state.`r`n" + `
+                        "Sensitive Information Action {$($sit.name)} has invalid value for property {$property}. " + `
+                        "Current value is {$($matchingExistingRule.$property)} and is expected to be {$($sit.$property)}."
+                    Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+                    return $false
+                }
+            }
+        }
+        else
+        {
+            Write-Verbose -Message "Sensitive Information label {$($sit.name)} was not found"
+            $EventMessage = "DLP Compliance Rule {$Name} was not in the desired state.`r`n" + `
+                "An action on {$($sit.name)} Sensitive Information label is missing."
+            Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+            return $false
+        }
+    }
+}
+
+function Test-ContainsSensitiveInformationGroups
+{
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
@@ -1256,10 +1359,10 @@ function Test-ContainsSensitiveInformationGroups {
     if ($targetValues.operator -ne $sourceValues.operator)
     {
         $EventMessage = "DLP Compliance Rule {$Name} was not in the desired state.`r`n" + `
-        "DLP Compliance Rule {$Name} has invalid value for property operator. " + `
-        "Current value is {$($targetValues.$operator)} and is expected to be {$($sourceValues.$operator)}."
-    Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
-        -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+            "DLP Compliance Rule {$Name} has invalid value for property operator. " + `
+            "Current value is {$($targetValues.$operator)} and is expected to be {$($sourceValues.$operator)}."
+        Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
         return $false
     }
 
@@ -1273,11 +1376,11 @@ function Test-ContainsSensitiveInformationGroups {
             if ($group.operator -ne $matchingExistingGroup.operator)
             {
                 $EventMessage = "DLP Compliance Rule {$Name} was not in the desired state.`r`n" + `
-                "Group {$($group.name)} has invalid value for property operator. " + `
-                "Current value is {$($matchingExistingRule.$operator)} and is expected to be {$($group.$operator)}."
-            Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
-            return $false
+                    "Group {$($group.name)} has invalid value for property operator. " + `
+                    "Current value is {$($matchingExistingRule.$operator)} and is expected to be {$($group.$operator)}."
+                Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+                    -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+                return $false
             }
         }
         else
@@ -1290,11 +1393,24 @@ function Test-ContainsSensitiveInformationGroups {
             return $false
         }
 
-        $desiredState = Test-ContainsSensitiveInformation -targetValues $group.sensitivetypes `
-            -sourceValues $matchingExistingGroup.sensitivetypes
-        if ($desiredState -eq $false)
+        if ($null -ne  $group.sensitivetypes)
         {
-            return $false
+            $desiredState = Test-ContainsSensitiveInformation -targetValues $group.sensitivetypes `
+                -sourceValues $matchingExistingGroup.sensitivetypes
+            if ($desiredState -eq $false)
+            {
+                return $false
+            }
+        }
+
+        if ($null -ne  $group.labels)
+        {
+            $desiredState = Test-ContainsSensitiveInformationLabels -targetValues $group.labels `
+                -sourceValues $matchingExistingGroup.labels
+            if ($desiredState -eq $false)
+            {
+                return $false
+            }
         }
     }
 }
