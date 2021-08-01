@@ -1012,7 +1012,7 @@ function ConvertTo-SCDLPSensitiveInformationStringGroup
 
                     if ($null -ne $label.type)
                     {
-                        $StringContent += "                type = '$($sit.type)'`r`n"
+                        $StringContent += "                type = '$($label.type)'`r`n"
                     }
 
                     $StringContent += "            }`r`n"
@@ -1224,7 +1224,7 @@ function Get-SCDLPSensitiveInformationGroups
             {
                 $label.Add("type", $item.type)
             }
-            $slabels += $label
+            $labels += $label
         }
         if ($labels.Length -gt 0)
         {
