@@ -7,6 +7,7 @@
 * MISC
   * Added support for ApplicationSecret in SPO resources;
   * Revamped the entire display from an Export;
+  * Fixed issue where SCDLPCompliance rule failed when using senstitivy labels
 
 # 1.21.728.1
 
