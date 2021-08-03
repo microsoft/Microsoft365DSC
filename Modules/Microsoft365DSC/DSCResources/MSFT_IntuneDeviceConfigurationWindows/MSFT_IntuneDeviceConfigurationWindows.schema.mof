@@ -1,5 +1,0 @@
-[ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceConfigurationWindows")]
-class MSFT_IntuneDeviceConfigurationWindows : OMI_BaseResource
-{
-    [Key, Description("DisplayName of the Policy")] string DisplayName;
-  };
