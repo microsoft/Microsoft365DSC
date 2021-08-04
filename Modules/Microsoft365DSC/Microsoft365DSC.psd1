@@ -89,7 +89,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.61"
+            RequiredVersion = "1.0.62"
         },
         @{
             ModuleName      = "PnP.PowerShell"
@@ -177,7 +177,7 @@
             ReleaseNotes = "* SCDLPComplianceRule
             * Fixed issue where SCDLPCompliance rule failed when using senstitivy labels;
           * DEPENDENCIES;
-            * Updated MSCloudLoginAssistant to version 1.0.61;
+            * Updated MSCloudLoginAssistant to version 1.0.62;
           * MISC
             * Added support for ApplicationSecret in SPO resources;
             * Revamped the entire display from an Export;"
