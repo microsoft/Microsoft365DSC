@@ -3,7 +3,7 @@
 # 1.21.804.1
 
 * DEPENDENCIES;
-  * Updated MSCloudLoginAssistant to version 1.0.60;
+  * Updated MSCloudLoginAssistant to version 1.0.61;
 * MISC
   * Added support for ApplicationSecret in SPO resources;
   * Revamped the entire display from an Export;
