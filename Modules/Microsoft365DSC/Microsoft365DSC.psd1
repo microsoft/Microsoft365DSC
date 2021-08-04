@@ -174,12 +174,13 @@
             IconUri      = 'https://github.com/microsoft/Microsoft365DSC/blob/Dev/Modules/Microsoft365DSC/Dependencies/Images/Logo.png?raw=true'
 
             # ReleaseNotes of this module
-            ReleaseNotes = "* DEPENDENCIES;
-            * Updated MSCloudLoginAssistant to version 1.0.59;
-            * Updated PnP.PowerShell to version 1.7.0;
+            ReleaseNotes = "* SCDLPComplianceRule
+            * Fixed issue where SCDLPCompliance rule failed when using senstitivy labels;
+          * DEPENDENCIES;
+            * Updated MSCloudLoginAssistant to version 1.0.61;
           * MISC
-            * Added support for Service Principal Authentication for all Intune resources;
-            * Deprecated GUI and added reference to new Web based GUI;"
+            * Added support for ApplicationSecret in SPO resources;
+            * Revamped the entire display from an Export;"
 
             # Flag to indicate whether the module requires explicit user acceptance for install/update
             # RequireLicenseAcceptance = $false

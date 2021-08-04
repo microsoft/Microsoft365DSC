@@ -2,12 +2,13 @@
 
 # 1.21.804.1
 
+* SCDLPComplianceRule
+  * Fixed issue where SCDLPCompliance rule failed when using senstitivy labels;
 * DEPENDENCIES;
   * Updated MSCloudLoginAssistant to version 1.0.61;
 * MISC
   * Added support for ApplicationSecret in SPO resources;
   * Revamped the entire display from an Export;
-  * Fixed issue where SCDLPCompliance rule failed when using senstitivy labels
 
 # 1.21.728.1
 
