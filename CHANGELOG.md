@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# 1.21.811.1
+
+* DEPENDENCIES;
+  * Updated AzureADPreview to version 2.0.2.138;
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.128;
+
 # 1.21.804.1
 
 * SCDLPComplianceRule
