@@ -1,0 +1,21 @@
+[ClassVersion("1.0.0.0"), FriendlyName("PPPowerAppsEnvironment")]
+class MSFT_PPPowerAppsEnvironment : OMI_BaseResource
+{
+    [Key, Description("Should be set to yes"),ValueMap{"Yes"},Values{"Yes"}] string IsSingleInstance;
+    [Write, Description("When set to true this will disable the ability to use Modern Authentication that leverages ADAL across the tenant.")] boolean WalkMeOptOut;
+    [Write, Description("When set to true this will disable the ability to use Modern Authentication that leverages ADAL across the tenant.")] boolean DisableNPSCommentsReachout;
+    [Write, Description("When set to true this will disable the ability to use Modern Authentication that leverages ADAL across the tenant.")] boolean DisableNewsletterSendout;
+    [Write, Description("When set to true this will disable the ability to use Modern Authentication that leverages ADAL across the tenant.")] boolean DisableEnvironmentCreationByNonAdminUsers;
+    [Write, Description("When set to true this will disable the ability to use Modern Authentication that leverages ADAL across the tenant.")] boolean DisablePortalsCreationByNonAdminUsers;
+    [Write, Description("When set to true this will disable the ability to use Modern Authentication that leverages ADAL across the tenant.")] boolean DisableSurveyFeedback;
+    [Write, Description("When set to true this will disable the ability to use Modern Authentication that leverages ADAL across the tenant.")] boolean DisableTrialEnvironmentCreationByNonAdminUsers;
+    [Write, Description("When set to true this will disable the ability to use Modern Authentication that leverages ADAL across the tenant.")] boolean DisableCapacityAllocationByEnvironmentAdmins;
+    [Write, Description("When set to true this will disable the ability to use Modern Authentication that leverages ADAL across the tenant.")] boolean DisableSupportTicketsVisibleByAllUsers;
+    [Write, Description("When set to true this will disable the ability to use Modern Authentication that leverages ADAL across the tenant.")] boolean DisableDocsSearch;
+    [Write, Description("When set to true this will disable the ability to use Modern Authentication that leverages ADAL across the tenant.")] boolean DisableCommunitySearch;
+    [Write, Description("When set to true this will disable the ability to use Modern Authentication that leverages ADAL across the tenant.")] boolean DisableBingVideoSearch;
+    [Write, Description("When set to true this will disable the ability to use Modern Authentication that leverages ADAL across the tenant.")] boolean DisableShareWithEveryone;
+    [Write, Description("When set to true this will disable the ability to use Modern Authentication that leverages ADAL across the tenant.")] boolean EnableGuestsToMake;
+    [Write, Description("When set to true this will disable the ability to use Modern Authentication that leverages ADAL across the tenant.")] uint32 ShareWithColleaguesUserLimit;
+    [Write, Description("Credentials of the Azure Active Directory Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+};
