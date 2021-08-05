@@ -53,7 +53,7 @@
     RequiredModules   = @(
         @{
             ModuleName      = "AzureADPreview"
-            RequiredVersion = "2.0.2.136"
+            RequiredVersion = "2.0.2.138"
         },
         @{
             ModuleName      = "DSCParser"
@@ -81,7 +81,7 @@
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
-            RequiredVersion = "2.0.127"
+            RequiredVersion = "2.0.128"
         },
         @{
             ModuleName      = "MicrosoftTeams"
