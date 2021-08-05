@@ -24,27 +24,29 @@ no contributions should be made directly to this branch.
 
 ### dev
 
-[![codecov](https://codecov.io/gh/microsoft/Microsoft365DSC/branch/Dev/graph/badge.svg)](https://codecov.io/gh/microsoft/Microsoft365DSC)
+[![Code Coverage](https://github.com/microsoft/Microsoft365DSC/actions/workflows/CodeCoverage.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/CodeCoverage.yml)
 
-![AzureCloud - Full-Circle - EXO](https://github.com/microsoft/Microsoft365DSC/workflows/AzureCloud%20-%20Full-Circle%20-%20EXO/badge.svg)
+[![AzureCloud - Full-Circle - EXO](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureCloud%20-%20Full-Circle%20-%20EXO.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureCloud%20-%20Full-Circle%20-%20EXO.yml)
 
-![AzureCloud - Full-Circle - O365](https://github.com/microsoft/Microsoft365DSC/workflows/AzureCloud%20-%20Full-Circle%20-%20O365/badge.svg)
+[![AzureCloud - Full-Circle - O365](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureCloud%20-%20Full-Circle%20-%20O365.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureCloud%20-%20Full-Circle%20-%20O365.yml)
 
-![AzureCloud - Full-Circle - OD](https://github.com/microsoft/Microsoft365DSC/workflows/AzureCloud%20-%20Full-Circle%20-%20OD/badge.svg)
+[![AzureCloud - Full-Circle - OD](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureCloud%20-%20Full-Circle%20-%20OD.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureCloud%20-%20Full-Circle%20-%20OD.yml)
 
-![AzureCloud - Full-Circle - PP](https://github.com/microsoft/Microsoft365DSC/workflows/AzureCloud%20-%20Full-Circle%20-%20PP/badge.svg)
+[![AzureCloud - Full-Circle - PP](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureCloud%20-%20Full-Circle%20-%20PP.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureCloud%20-%20Full-Circle%20-%20PP.yml)
 
-![AzureCloud - Full-Circle - SC](https://github.com/microsoft/Microsoft365DSC/workflows/AzureCloud%20-%20Full-Circle%20-%20SC/badge.svg)
+[![AzureCloud - Full-Circle - SC](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureCloud%20-%20Full-Circle%20-%20SC.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureCloud%20-%20Full-Circle%20-%20SC.yml)
 
-![AzureCloud - Full-Circle - SPO](https://github.com/microsoft/Microsoft365DSC/workflows/AzureCloud%20-%20Full-Circle%20-%20SPO/badge.svg)
+[![AzureCloud - Full-Circle - SPO](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureCloud%20-%20Full-Circle%20-%20SPO.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureCloud%20-%20Full-Circle%20-%20SPO.yml)
 
-![AzureCloud - Full-Circle - TEAMS](https://github.com/microsoft/Microsoft365DSC/workflows/AzureCloud%20-%20Full-Circle%20-%20TEAMS/badge.svg)
+[![AzureCloud - Full-Circle - TEAMS](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureCloud%20-%20Full-Circle%20-%20TEAMS.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureCloud%20-%20Full-Circle%20-%20TEAMS.yml)
 
-![AzureCloud - Integration](https://github.com/microsoft/Microsoft365DSC/workflows/AzureCloud%20-%20Integration/badge.svg)
+[![AzureCloud - Integration](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureCloud%20-%20Integration.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureCloud%20-%20Integration.yml)
 
-![AzureUSGovernment - Integration](https://github.com/microsoft/Microsoft365DSC/workflows/AzureUSGovernment%20-%20Integration/badge.svg)
+[![AzureUSGovernment - Integration](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureUSGovernment%20-%20Integration.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureUSGovernment%20-%20Integration.yml)
 
-![Unit Tests](https://github.com/microsoft/Microsoft365DSC/workflows/Unit%20Tests/badge.svg)
+[![AzureCloud - GCCHigh - Integration](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureUSGovernmentHigh%20-%20Integration.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/AzureUSGovernmentHigh%20-%20Integration.yml)
+
+[![Unit Tests](https://github.com/microsoft/Microsoft365DSC/actions/workflows/Unit%20Tests.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/Unit%20Tests.yml)
 
 This is the development branch
 to which contributions should be proposed by contributors as pull requests.

@@ -51,6 +51,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
@@ -63,7 +67,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for hub site collection $Url"
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -98,7 +102,7 @@ function Get-TargetResource
         else
         {
             $hubSite = Get-PnPHubSite -Identity $Url
-            $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+            $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
                 -InboundParameters $PSBoundParameters
             $principals = @()
             foreach ($permission in $hubSite.Permissions.PrincipalName)
@@ -147,6 +151,7 @@ function Get-TargetResource
                 GlobalAdminAccount    = $GlobalAdminAccount
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
             }
             return $result
@@ -230,6 +235,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
@@ -252,10 +261,10 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
         -InboundParameters $PSBoundParameters
 
     try
@@ -490,6 +499,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
@@ -554,6 +567,10 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
@@ -564,26 +581,34 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-        -InboundParameters $PSBoundParameters
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
 
     try
     {
+        $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
+            -InboundParameters $PSBoundParameters
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+        $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+        $data.Add("Resource", $ResourceName)
+        $data.Add("Method", $MyInvocation.MyCommand)
+        $data.Add("Principal", $GlobalAdminAccount.UserName)
+        $data.Add("TenantId", $TenantId)
+        $data.Add("ConnectionMode", $ConnectionMode)
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
         [array]$hubSites = Get-PnPHubSite -ErrorAction Stop
 
         $i = 1
-        Write-Host "`r`n" -NoNewline
+        if ($hubSites.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
 
         $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
         if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
@@ -614,6 +639,7 @@ function Export-TargetResource
                 GlobalAdminAccount    = $GlobalAdminAccount
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
+                ApplicationSecret     = $ApplicationSecret
             }
 
             $Results = Get-TargetResource @Params
@@ -642,6 +668,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

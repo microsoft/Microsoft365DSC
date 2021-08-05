@@ -90,6 +90,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
@@ -102,7 +106,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for Result Source instance $Name"
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -146,15 +150,21 @@ function Get-TargetResource
         $mapping = $InfoMapping | Where-Object -FilterScript { $_.ProviderID -eq $source.ProviderId }
 
         $returnValue = @{
-            Name               = $Name
-            Description        = [string] $source.Description
-            Protocol           = $mapping.Protocol
-            Type               = $mapping.Type
-            QueryTransform     = [string] $source.QueryTransform._QueryTemplate
-            SourceURL          = [string] $source.ConnectionUrlTemplate
-            UseAutoDiscover    = $SourceHasAutoDiscover
-            GlobalAdminAccount = $GlobalAdminAccount
-            Ensure             = "Present"
+            Name                  = $Name
+            Description           = [string] $source.Description
+            Protocol              = $mapping.Protocol
+            Type                  = $mapping.Type
+            QueryTransform        = [string] $source.QueryTransform._QueryTemplate
+            SourceURL             = [string] $source.ConnectionUrlTemplate
+            UseAutoDiscover       = $SourceHasAutoDiscover
+            Ensure                = "Present"
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
         }
 
         if ($null -ne $allowPartial)
@@ -248,6 +258,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
@@ -270,7 +284,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
     Write-Verbose -Message "Reading SearchConfigurationSettings XML file"
@@ -469,6 +483,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
@@ -525,6 +543,10 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
@@ -535,29 +557,38 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-        -InboundParameters $PSBoundParameters
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
 
     try
     {
-        $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
+        $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
+            -InboundParameters $PSBoundParameters
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+        $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+        $data.Add("Resource", $ResourceName)
+        $data.Add("Method", $MyInvocation.MyCommand)
+        $data.Add("Principal", $GlobalAdminAccount.UserName)
+        $data.Add("TenantId", $TenantId)
+        $data.Add("ConnectionMode", $ConnectionMode)
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription -ErrorAction Stop)
         [array]$sources = $SearchConfig.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source
 
         $dscContent = ''
         $i = 1
         $sourcesLength = $sources.Length
-        Write-Host "`r`n" -NoNewline
+
+        if ($sources.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
         foreach ($source in $sources)
         {
             $mapping = $InfoMapping | Where-Object -FilterScript { $_.ProviderID -eq $source.ProviderId }
@@ -569,6 +600,7 @@ function Export-TargetResource
                 GlobalAdminAccount    = $GlobalAdminAccount
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePath       = $CertificatePath
                 CertificatePassword   = $CertificatePassword
@@ -591,6 +623,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

@@ -1,5 +1,15 @@
 # Change log for Microsoft365DSC
 
+# 1.21.804.1
+
+* SCDLPComplianceRule
+  * Fixed issue where SCDLPCompliance rule failed when using senstitivy labels;
+* DEPENDENCIES;
+  * Updated MSCloudLoginAssistant to version 1.0.62;
+* MISC
+  * Added support for ApplicationSecret in SPO resources;
+  * Revamped the entire display from an Export;
+
 # 1.21.728.1
 
 * DEPENDENCIES;

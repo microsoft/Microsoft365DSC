@@ -36,6 +36,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -48,7 +52,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for SPO SiteDesignRights for $SiteDesignTitle"
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -102,6 +106,7 @@ function Get-TargetResource
             GlobalAdminAccount    = $GlobalAdminAccount
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
@@ -170,6 +175,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -193,7 +202,7 @@ function Set-TargetResource
     #endregion
 
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters
 
     $cursiteDesign = Get-PnPSiteDesign -Identity $SiteDesignTitle
     if ($null -eq $cursiteDesign)
@@ -290,6 +299,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -349,6 +362,10 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -359,27 +376,35 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
-        -InboundParameters $PSBoundParameters
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
 
     try
     {
+        $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
+            -InboundParameters $PSBoundParameters
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+        $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+        $data.Add("Resource", $ResourceName)
+        $data.Add("Method", $MyInvocation.MyCommand)
+        $data.Add("Principal", $GlobalAdminAccount.UserName)
+        $data.Add("TenantId", $TenantId)
+        $data.Add("ConnectionMode", $ConnectionMode)
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
         [array]$siteDesigns = Get-PnPSiteDesign -ErrorAction Stop
 
         $dscContent = ""
         $i = 1
-        Write-Host "`r`n" -NoNewline
+        if ($siteDesigns.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
         foreach ($siteDesign in $siteDesigns)
         {
             Write-Host "    |---[$i/$($siteDesigns.Count)] $($siteDesign.Title)" -NoNewline
@@ -389,6 +414,7 @@ function Export-TargetResource
                 Rights                = "View"
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
@@ -415,6 +441,7 @@ function Export-TargetResource
                 Rights                = "None"
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint

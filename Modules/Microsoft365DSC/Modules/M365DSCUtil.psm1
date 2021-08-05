@@ -858,6 +858,11 @@ function Export-M365DSCConfiguration
         [System.String]
         $CertificatePath
     )
+    # Suppress Progress overlays
+    $Global:ProgressPreference = 'SilentlyContinue'
+
+    # Suppress Warnings
+    $Global:WarningPreference = 'SilentlyContinue'
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -959,7 +964,7 @@ function Get-M365DSCTenantDomain
 
     if ($null -eq $CertificatePath)
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
             -InboundParameters $PSBoundParameters
         $tenantDetails = Get-AzureADTenantDetail
         $defaultDomain = $tenantDetails.VerifiedDomains | Where-Object -FilterScript { $_.Initial }
@@ -1017,7 +1022,7 @@ function New-M365DSCConnection
                 "MicrosoftTeams", "MicrosoftGraph", `
                 "MicrosoftGraphBeta")]
         [System.String]
-        $Platform,
+        $Workload,
 
         [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]
@@ -1032,7 +1037,7 @@ function New-M365DSCConnection
         $SkipModuleReload = $false
     )
 
-    if ($Platform -eq "MicrosoftTeams")
+    if ($Workload -eq "MicrosoftTeams")
     {
         try
         {
@@ -1044,7 +1049,7 @@ function New-M365DSCConnection
         }
     }
 
-    Write-Verbose -Message "Attempting connection to {$Platform} with:"
+    Write-Verbose -Message "Attempting connection to {$Workload} with:"
     Write-Verbose -Message "$($InboundParameters | Out-String)"
 
     if ($SkipModuleReload -eq $true)
@@ -1059,7 +1064,7 @@ function New-M365DSCConnection
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Source", "M365DSCUtil")
-    $data.Add("Platform", $Platform)
+    $data.Add("Platform", $Workload)
 
     if ($InboundParameters.ContainsKey("TenantId"))
     {
@@ -1136,15 +1141,15 @@ function New-M365DSCConnection
         Write-Verbose -Message "GlobalAdminAccount was specified. Connecting via User Principal"
         if ([System.String]::IsNullOrEmpty($Url))
         {
-            Test-MSCloudLogin -Platform $Platform `
-                -CloudCredential $InboundParameters.GlobalAdminAccount `
+            Connect-M365Tenant -Workload $Workload `
+                -Credential $InboundParameters.GlobalAdminAccount `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
         else
         {
-            Test-MSCloudLogin -Platform $Platform `
-                -CloudCredential $InboundParameters.GlobalAdminAccount `
-                -ConnectionUrl $Url `
+            Connect-M365Tenant -Workload $Workload `
+                -Credential $InboundParameters.GlobalAdminAccount `
+                -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
         $data.Add("ConnectionType", "Credential")
@@ -1158,17 +1163,17 @@ function New-M365DSCConnection
         Write-Verbose -Message "GlobalAdminAccount and ApplicationId were specified. Connecting via Delegated Service Principal"
         if ([System.String]::IsNullOrEmpty($url))
         {
-            Test-MSCloudLogin -Platform $Platform `
+            Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
-                -CloudCredential $InboundParameters.GlobalAdminAccount `
+                -Credential $InboundParameters.GlobalAdminAccount `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
         else
         {
-            Test-MSCloudLogin -Platform $Platform `
+            Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
-                -CloudCredential $InboundParameters.GlobalAdminAccount `
-                -ConnectionUrl $Url `
+                -Credential $InboundParameters.GlobalAdminAccount `
+                -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
         $data.Add("ConnectionType", "ServicePrincipal")
@@ -1184,7 +1189,7 @@ function New-M365DSCConnection
         if ([System.String]::IsNullOrEmpty($url))
         {
             Write-Verbose -Message "ApplicationId, TenantId and CertificateThumprint were specified. Connecting via Service Principal"
-            Test-MSCloudLogin -Platform $Platform `
+            Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
                 -CertificateThumbprint $InboundParameters.CertificateThumbprint `
@@ -1192,11 +1197,11 @@ function New-M365DSCConnection
         }
         else
         {
-            Test-MSCloudLogin -Platform $Platform `
+            Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
                 -CertificateThumbprint $InboundParameters.CertificateThumbprint `
-                -ConnectionUrl $Url `
+                -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
         $data.Add("ConnectionType", "ServicePrincipal")
@@ -1213,7 +1218,7 @@ function New-M365DSCConnection
         if ([System.String]::IsNullOrEmpty($url))
         {
             Write-Verbose -Message "ApplicationId, TenantId, CertificatePath & CertificatePassword were specified. Connecting via Service Principal"
-            Test-MSCloudLogin -Platform $Platform `
+            Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
                 -CertificatePassword $InboundParameters.CertificatePassword.Password `
@@ -1222,12 +1227,12 @@ function New-M365DSCConnection
         }
         else
         {
-            Test-MSCloudLogin -Platform $Platform `
+            Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
                 -CertificatePassword $InboundParameters.CertificatePassword.Password `
                 -CertificatePath $InboundParameters.CertificatePath `
-                -ConnectionUrl $Url `
+                -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
         $data.Add("ConnectionType", "ServicePrincipal")
@@ -1243,7 +1248,7 @@ function New-M365DSCConnection
         if ([System.String]::IsNullOrEmpty($url))
         {
             Write-Verbose -Message "ApplicationId, TenantId, ApplicationSecret were specified. Connecting via Service Principal"
-            Test-MSCloudLogin -Platform $Platform `
+            Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
                 -ApplicationSecret $InboundParameters.ApplicationSecret `
@@ -1251,11 +1256,11 @@ function New-M365DSCConnection
         }
         else
         {
-            Test-MSCloudLogin -Platform $Platform `
+            Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
                 -ApplicationSecret $InboundParameters.ApplicationSecret `
-                -ConnectionUrl $Url `
+                -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
         $data.Add("ConnectionType", "ServicePrincipal")
@@ -1294,7 +1299,7 @@ function Get-SPOAdministrationUrl
         $UseMFASwitch = @{ }
     }
     Write-Verbose -Message "Connection to Azure AD is required to automatically determine SharePoint Online admin URL..."
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
         -InboundParameters $PSBoundParameters
     Write-Verbose -Message "Getting SharePoint Online admin URL..."
     $defaultDomain = Get-AzureADDomain | Where-Object { ($_.Name -like "*.onmicrosoft.com" -or $_.Name -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
@@ -1334,7 +1339,7 @@ function Get-M365TenantName
         $UseMFASwitch = @{ }
     }
     Write-Verbose -Message "Connection to Azure AD is required to automatically determine SharePoint Online admin URL..."
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
         -InboundParameters $PSBoundParameters
     Write-Verbose -Message "Getting SharePoint Online admin URL..."
     $defaultDomain = Get-AzureADDomain | Where-Object { ($_.Name -like "*.onmicrosoft.com" -or $_.Name -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
@@ -1604,30 +1609,38 @@ function Get-AllSPOPackages
         $CertificateThumbprint
     )
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-        -InboundParameters $PSBoundParameters
-
-    $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-        -InboundParameters $PSBoundParameters `
-        -Url $tenantAppCatalogUrl
-
-    $filesToDownload = @()
-
-    if ($null -ne $tenantAppCatalogUrl)
+    try
     {
-        $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
-        $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
+        $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
+            -InboundParameters $PSBoundParameters
 
-        $allFiles = $spfxFiles + $appFiles
+        $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl -ErrorAction Stop
 
-        foreach ($file in $allFiles)
+        $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
+            -InboundParameters $PSBoundParameters `
+            -Url $tenantAppCatalogUrl
+
+        $filesToDownload = @()
+
+        if ($null -ne $tenantAppCatalogUrl)
         {
-            $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl; Title = $file.Title }
+            $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
+            $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
+
+            $allFiles = $spfxFiles + $appFiles
+
+            foreach ($file in $allFiles)
+            {
+                $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl; Title = $file.Title }
+            }
         }
+        return $filesToDownload
     }
-    return $filesToDownload
+    catch
+    {
+        Write-Verbose -Message $_
+    }
+    return $null
 }
 
 function Remove-NullEntriesFromHashtable

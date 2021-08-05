@@ -123,7 +123,7 @@ function Get-TargetResource
     )
     Write-Verbose -Message "Getting configuration of Team $DisplayName"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -374,7 +374,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' -InboundParameters $PSBoundParameters
 
     $team = Get-TargetResource @PSBoundParameters
 
@@ -420,7 +420,7 @@ function Set-TargetResource
 
         if ($ConnectionMode -eq "ServicePrincipal")
         {
-            $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+            $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
                 -InboundParameters $PSBoundParameters
             $group = New-AzureADMSGroup -DisplayName $DisplayName -GroupTypes "Unified" -MailEnabled $true -SecurityEnabled $true -MailNickname $MailNickName
             $currentOwner = (($CurrentParameters.Owner)[0])
@@ -656,7 +656,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")

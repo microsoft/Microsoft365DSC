@@ -276,7 +276,7 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
         -InboundParameters $PSBoundParameters
 
     try

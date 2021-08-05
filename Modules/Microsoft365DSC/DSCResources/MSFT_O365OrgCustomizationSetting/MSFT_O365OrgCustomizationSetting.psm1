@@ -38,7 +38,7 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -155,7 +155,7 @@ function Set-TargetResource
     #endregion
 
     Write-Verbose -Message "Setting configuration of Office 365 Group $DisplayName"
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
     Enable-OrganizationCustomization
@@ -258,7 +258,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry

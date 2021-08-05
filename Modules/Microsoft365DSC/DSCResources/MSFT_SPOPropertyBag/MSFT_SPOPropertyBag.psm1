@@ -35,6 +35,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -49,7 +53,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of SPOPropertyBag for $Key"
     Write-Verbose -Message "Connecting to PnP from the Get method"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters `
         -Url $Url
 
@@ -84,7 +88,7 @@ function Get-TargetResource
             }
             elseif ($_.Exception -like "*The underlying connection was closed*")
             {
-                $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
                     -InboundParameters $PSBoundParameters `
                     -Url $Url
 
@@ -117,6 +121,7 @@ function Get-TargetResource
                 GlobalAdminAccount    = $GlobalAdminAccount
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
@@ -188,6 +193,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -210,7 +219,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters `
         -Url $Url
 
@@ -267,6 +276,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -299,6 +312,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove("CertificatePath") | Out-Null
     $ValuesToCheck.Remove("CertificatePassword") | Out-Null
     $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
+    $ValuesToCheck.Remove("ApplicationSecret") | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -334,6 +348,10 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificatePath,
 
         [Parameter()]
@@ -344,26 +362,26 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-        -InboundParameters $PSBoundParameters
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
 
     try
     {
+        $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
+            -InboundParameters $PSBoundParameters
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+        $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+        $data.Add("Resource", $ResourceName)
+        $data.Add("Method", $MyInvocation.MyCommand)
+        $data.Add("Principal", $GlobalAdminAccount.UserName)
+        $data.Add("TenantId", $TenantId)
+        $data.Add("ConnectionMode", $ConnectionMode)
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
         $result = ""
 
         # Get all Site Collections in tenant;
-        $instances = Get-PnPTenantSite
+        $instances = Get-PnPTenantSite -ErrorAction Stop
         if ($instances.Length -ge $MaxProcesses)
         {
             $instances = Split-ArrayByParts -Array $instances -Parts $MaxProcesses
@@ -404,6 +422,10 @@ function Export-TargetResource
 
                     [Parameter()]
                     [System.String]
+                    $ApplicationSecret,
+
+                    [Parameter()]
+                    [System.String]
                     $CertificatePath,
 
                     [Parameter()]
@@ -434,7 +456,7 @@ function Export-TargetResource
                             $siteUrl = $site.Url
                             try
                             {
-                                $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                                $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
                                     -InboundParameters $PSBoundParameters `
                                     -Url $siteUrl
                             }
@@ -454,6 +476,7 @@ function Export-TargetResource
                                         Value                 = '*'
                                         ApplicationId         = $ApplicationId
                                         TenantId              = $TenantId
+                                        ApplicationSecret     = $ApplicationSecret
                                         CertificatePassword   = $CertificatePassword
                                         CertificatePath       = $CertificatePath
                                         CertificateThumbprint = $CertificateThumbprint
@@ -482,7 +505,7 @@ function Export-TargetResource
                     return $dscContent
                 }
                 return $returnValue
-            } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount, $ApplicationId, $TenantId, $CertificateThumbprint, $CertificatePassword, $CertificatePath) | Out-Null
+            } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount, $ApplicationId, $TenantId, $ApplicationSecret, $CertificateThumbprint, $CertificatePassword, $CertificatePath) | Out-Null
             $i++
         }
 
@@ -545,6 +568,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

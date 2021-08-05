@@ -726,13 +726,13 @@ function Get-TargetResource
 
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -1686,7 +1686,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' -InboundParameters $PSBoundParameters
 
     $NewTransportRuleParams = [System.Collections.Hashtable]($PSBoundParameters)
     $NewTransportRuleParams.Remove('Ensure') | Out-Null
@@ -2503,7 +2503,7 @@ function Export-TargetResource
         $CertificatePassword
     )
     $InformationPreference = 'Continue'
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
 

@@ -20,7 +20,7 @@ function Get-TargetResource
 
     Write-Verbose -Message 'Getting Global PSTN Usage(s)'
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -120,7 +120,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -200,7 +200,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -219,7 +219,14 @@ function Export-TargetResource
         $i = 1
         [array]$usages = Get-CsOnlinePstnUsage -ErrorAction Stop | Select-Object -ExpandProperty Usage
         $dscContent = ''
-        Write-Host "`r`n" -NoNewline
+        if ($usages.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
         foreach ($usage in $usages)
         {
             Write-Host "    |---[$i/$($usages.Count)] $usage" -NoNewline

@@ -51,7 +51,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of AzureAD Policy"
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -317,7 +317,7 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -332,13 +332,21 @@ function Export-TargetResource
 
     $dscContent = ''
     $i = 1
-    Write-Host "`r`n" -NoNewline
     try
     {
-        $AADPolicys = Get-AzureADPolicy -ErrorAction Stop
-        foreach ($AADPolicy in $AADPolicys)
+        [array]$AADPolicies = Get-AzureADPolicy -ErrorAction Stop
+
+        if ($AADPolicies.Length -eq 0)
         {
-            Write-Host "    |---[$i/$($AADPolicys.Count)] $($AADPolicy.DisplayName)" -NoNewline
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
+        foreach ($AADPolicy in $AADPolicies)
+        {
+            Write-Host "    |---[$i/$($AADPolicies.Count)] $($AADPolicy.DisplayName)" -NoNewline
             $Params = @{
                 GlobalAdminAccount    = $GlobalAdminAccount
                 ApplicationId         = $ApplicationId
