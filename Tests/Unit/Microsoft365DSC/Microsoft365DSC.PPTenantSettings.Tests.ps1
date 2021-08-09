@@ -141,55 +141,56 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
           Set-TargetResource @testParams
         }
       }
+    }
 
-      Context -Name 'ReverseDSC Tests' -Fixture {
-        BeforeAll {
-          $testParams = @{
-            GlobalAdminAccount = $GlobalAdminAccount
-          }
+    Context -Name 'ReverseDSC Tests' -Fixture {
+      BeforeAll {
+        $testParams = @{
+          GlobalAdminAccount = $GlobalAdminAccount
+        }
 
-          Mock -CommandName Get-TenantSettings -MockWith {
-            return @{
-              TenantSettings = @{
-                WalkMeOptOut                                   = $testParams.WalkMeOptOut
-                DisableNPSCommentsReachout                     = $testParams.DisableNPSCommentsReachout
-                DisableNewsletterSendout                       = $testParams.DisableNewsletterSendout
-                DisableEnvironmentCreationByNonAdminUsers      = $testParams.DisableEnvironmentCreationByNonAdminUsers
-                DisablePortalsCreationByNonAdminUsers          = $testParams.DisablePortalsCreationByNonAdminUsers
-                DisableSurveyFeedback                          = $testParams.DisableSurveyFeedback
-                DisableTrialEnvironmentCreationByNonAdminUsers = $testParams.DisableTrialEnvironmentCreationByNonAdminUsers
-                DisableCapacityAllocationByEnvironmentAdmins   = $testParams.DisableCapacityAllocationByEnvironmentAdmins
-                DisableSupportTicketsVisibleByAllUsers         = $testParams.DisableSupportTicketsVisibleByAllUsers
-                powerPlatform                                  = @(
-                  @{
-                    search = @{
-                      DisableDocsSearch      = $testParams.DisableDocsSearch
-                      DisableCommunitySearch = $testParams.DisableCommunitySearch
-                      DisableBingVideoSearch = $testParams.DisableBingVideoSearch
-                    }
-                  },
-                  @{
-                    powerApps = @{
-                      DisableShareWithEveryone = $testParams.DisableShareWithEveryone
-                      EnableGuestsToMake       = $testParams.EnableGuestsToMake
-                    }
-                  },
-                  @{
-                    teamsIntegration = @{
-                      ShareWithColleaguesUserLimit = $testParams.ShareWithColleaguesUserLimit
-                    }
+        Mock -CommandName Get-TenantSettings -MockWith {
+          return @{
+            TenantSettings = @{
+              WalkMeOptOut                                   = $testParams.WalkMeOptOut
+              DisableNPSCommentsReachout                     = $testParams.DisableNPSCommentsReachout
+              DisableNewsletterSendout                       = $testParams.DisableNewsletterSendout
+              DisableEnvironmentCreationByNonAdminUsers      = $testParams.DisableEnvironmentCreationByNonAdminUsers
+              DisablePortalsCreationByNonAdminUsers          = $testParams.DisablePortalsCreationByNonAdminUsers
+              DisableSurveyFeedback                          = $testParams.DisableSurveyFeedback
+              DisableTrialEnvironmentCreationByNonAdminUsers = $testParams.DisableTrialEnvironmentCreationByNonAdminUsers
+              DisableCapacityAllocationByEnvironmentAdmins   = $testParams.DisableCapacityAllocationByEnvironmentAdmins
+              DisableSupportTicketsVisibleByAllUsers         = $testParams.DisableSupportTicketsVisibleByAllUsers
+              powerPlatform                                  = @(
+                @{
+                  search = @{
+                    DisableDocsSearch      = $testParams.DisableDocsSearch
+                    DisableCommunitySearch = $testParams.DisableCommunitySearch
+                    DisableBingVideoSearch = $testParams.DisableBingVideoSearch
                   }
-                )
-              }
+                },
+                @{
+                  powerApps = @{
+                    DisableShareWithEveryone = $testParams.DisableShareWithEveryone
+                    EnableGuestsToMake       = $testParams.EnableGuestsToMake
+                  }
+                },
+                @{
+                  teamsIntegration = @{
+                    ShareWithColleaguesUserLimit = $testParams.ShareWithColleaguesUserLimit
+                  }
+                }
+              )
             }
           }
         }
-
-        It 'Should Reverse Engineer resource from the Export method' {
-          Export-TargetResource @testParams
-        }
       }
-    }#inmodulescope
-  }#describe
 
-  Invoke-Command -ScriptBlock $Global:DscHelper.CleanupScript -NoNewScope
+      It 'Should Reverse Engineer resource from the Export method' {
+        Export-TargetResource @testParams
+      }
+    }
+  }#inmodulescope
+}#describe
+
+Invoke-Command -ScriptBlock $Global:DscHelper.CleanupScript -NoNewScope
