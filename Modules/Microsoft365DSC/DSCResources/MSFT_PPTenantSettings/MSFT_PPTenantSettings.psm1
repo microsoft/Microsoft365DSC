@@ -383,6 +383,7 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewline
 
     $Params = @{
+      IsSingleInstance                               = 'Yes'
       WalkMeOptOut                                   = $settings.walkMeOptOut
       DisableNPSCommentsReachout                     = $settings.disableNPSCommentsReachout
       DisableNewsletterSendout                       = $settings.disableNewsletterSendout
@@ -398,7 +399,6 @@ function Export-TargetResource
       DisableShareWithEveryone                       = $settings.powerPlatform.powerApps.disableShareWithEveryone
       EnableGuestsToMake                             = $settings.powerPlatform.powerApps.enableGuestsToMake
       ShareWithColleaguesUserLimit                   = $settings.powerPlatform.teamsIntegration.shareWithColleaguesUserLimit
-      Ensure                                         = 'Present'
       GlobalAdminAccount                             = $GlobalAdminAccount
     }
     $Results = Get-TargetResource @Params
