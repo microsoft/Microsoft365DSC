@@ -137,7 +137,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
           Test-TargetResource @testParams | Should -Be $false
         }
 
-        It 'Sets the tenant AccessControl settings in Set method' {
+        It 'Sets the tenant settings in Set method' {
           Set-TargetResource @testParams
         }
       }
