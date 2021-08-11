@@ -450,7 +450,7 @@ function Export-TargetResource
         $i = 1
         $dscContent = ''
 
-        if ($orgAssets.Length -gt 0)
+        if ($orgAssets.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
@@ -462,7 +462,7 @@ function Export-TargetResource
         {
             foreach ($orgAssetLib in $orgAssets.OrgAssetsLibraries)
             {
-                Write-Host "    [$i/$($orgAssets.Length)] $LibraryUrl" -NoNewline
+                Write-Host "    [$i/$($orgAssets.Length)] $($orgAssetLib.libraryurl.DecodedUrl)" -NoNewline
                 $Params = @{
                     GlobalAdminAccount    = $GlobalAdminAccount
                     LibraryUrl            = "https://$tenantName.sharepoint.com/$($orgAssetLib.libraryurl.DecodedUrl)"
