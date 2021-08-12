@@ -25,19 +25,19 @@ function Get-TargetResource
         $AllowPrivateMeetNow,
 
         [Parameter()]
-        [ValidateSet("Disabled", "Enabled")]
+        [ValidateSet('Disabled', 'Enabled')]
         [System.String]
-        $MeetingChatEnabledType = "Enabled",
+        $MeetingChatEnabledType = 'Enabled',
 
         [Parameter()]
-        [ValidateSet("Disabled", "DisabledUserOverride")]
+        [ValidateSet('Disabled', 'DisabledUserOverride')]
         [System.String]
-        $LiveCaptionsEnabledType = "DisabledUserOverride",
+        $LiveCaptionsEnabledType = 'DisabledUserOverride',
 
         [Parameter()]
-        [ValidateSet("OrganizerOnlyUserOverride", "EveryoneInCompanyUserOverride", "EveryoneUserOverride")]
+        [ValidateSet('OrganizerOnlyUserOverride', 'EveryoneInCompanyUserOverride', 'EveryoneUserOverride')]
         [System.String]
-        $DesignatedPresenterRoleMode = "EveryoneUserOverride",
+        $DesignatedPresenterRoleMode = 'EveryoneUserOverride',
 
         [Parameter()]
         [System.Boolean]
@@ -48,19 +48,19 @@ function Get-TargetResource
         $AllowIPVideo,
 
         [Parameter()]
-        [ValidateSet("Enabled", "Disabled")]
+        [ValidateSet('Enabled', 'Disabled')]
         [System.String]
-        $AllowEngagementReport = "Disabled",
+        $AllowEngagementReport = 'Disabled',
 
         [Parameter()]
-        [ValidateSet("EnabledOutgoingIncoming", "Disabled")]
+        [ValidateSet('EnabledOutgoingIncoming', 'Disabled')]
         [System.String]
-        $IPAudioMode = "EnabledOutgoingIncoming",
+        $IPAudioMode = 'EnabledOutgoingIncoming',
 
         [Parameter()]
-        [ValidateSet("EnabledOutgoingIncoming", "Disabled")]
+        [ValidateSet('EnabledOutgoingIncoming', 'Disabled')]
         [System.String]
-        $IPVideoMode = "EnabledOutgoingIncoming",
+        $IPVideoMode = 'EnabledOutgoingIncoming',
 
         [Parameter()]
         [System.Boolean]
@@ -76,7 +76,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('EveryoneInCompany', 'Everyone', 'EveryoneInSameAndFederatedCompany', 'OrganizerOnly')]
+        [ValidateSet('EveryoneInCompany', 'Everyone', 'EveryoneInSameAndFederatedCompany', 'OrganizerOnly', 'InvitedUsers')]
         $AutoAdmittedUsers,
 
         [Parameter()]
@@ -157,26 +157,26 @@ function Get-TargetResource
         $AllowUserToJoinExternalMeeting,
 
         [Parameter()]
-        [ValidateSet("Disabled", "Enabled")]
+        [ValidateSet('Disabled', 'Enabled')]
         [System.String]
-        $EnrollUserOverride = "Disabled",
+        $EnrollUserOverride = 'Disabled',
 
         [Parameter()]
-        [ValidateSet("Off", "Distinguish", "Attribute")]
+        [ValidateSet('Off', 'Distinguish', 'Attribute')]
         [System.String]
-        $RoomAttributeUserOverride = "Off",
+        $RoomAttributeUserOverride = 'Off',
 
         [Parameter()]
-        [ValidateSet("Disabled", "Enabled")]
+        [ValidateSet('Disabled', 'Enabled')]
         [System.String]
-        $StreamingAttendeeMode = "Enabled",
+        $StreamingAttendeeMode = 'Enabled',
 
         [Parameter()]
         [System.Boolean]
         $AllowBreakoutRooms,
 
         [Parameter()]
-        [ValidateSet("Disabled", "Enabled")]
+        [ValidateSet('Disabled', 'Enabled')]
         [System.String]
         $TeamsCameraFarEndPTZMode,
 
@@ -185,9 +185,9 @@ function Get-TargetResource
         $AllowMeetingReactions,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -200,19 +200,19 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
+    $data.Add('Resource', $ResourceName)
+    $data.Add('Method', $MyInvocation.MyCommand)
+    $data.Add('Principal', $GlobalAdminAccount.UserName)
+    $data.Add('TenantId', $TenantId)
+    $data.Add('ConnectionMode', $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullReturn.Ensure = 'Absent'
     try
     {
         $policy = Get-CsTeamsMeetingPolicy -Identity $Identity `
@@ -265,7 +265,7 @@ function Get-TargetResource
             AllowBreakoutRooms                         = $policy.AllowBreakoutRooms
             TeamsCameraFarEndPTZMode                   = $policy.TeamsCameraFarEndPTZMode
             AllowMeetingReactions                      = $policy.AllowMeetingReactions
-            Ensure                                     = "Present"
+            Ensure                                     = 'Present'
             GlobalAdminAccount                         = $GlobalAdminAccount
         }
     }
@@ -274,7 +274,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -321,19 +321,19 @@ function Set-TargetResource
         $AllowPrivateMeetNow,
 
         [Parameter()]
-        [ValidateSet("Disabled", "Enabled")]
+        [ValidateSet('Disabled', 'Enabled')]
         [System.String]
-        $MeetingChatEnabledType = "Enabled",
+        $MeetingChatEnabledType = 'Enabled',
 
         [Parameter()]
-        [ValidateSet("Disabled", "DisabledUserOverride")]
+        [ValidateSet('Disabled', 'DisabledUserOverride')]
         [System.String]
-        $LiveCaptionsEnabledType = "DisabledUserOverride",
+        $LiveCaptionsEnabledType = 'DisabledUserOverride',
 
         [Parameter()]
-        [ValidateSet("OrganizerOnlyUserOverride", "EveryoneInCompanyUserOverride", "EveryoneUserOverride")]
+        [ValidateSet('OrganizerOnlyUserOverride', 'EveryoneInCompanyUserOverride', 'EveryoneUserOverride')]
         [System.String]
-        $DesignatedPresenterRoleMode = "EveryoneUserOverride",
+        $DesignatedPresenterRoleMode = 'EveryoneUserOverride',
 
         [Parameter()]
         [System.Boolean]
@@ -344,19 +344,19 @@ function Set-TargetResource
         $AllowIPVideo,
 
         [Parameter()]
-        [ValidateSet("Enabled", "Disabled")]
+        [ValidateSet('Enabled', 'Disabled')]
         [System.String]
-        $AllowEngagementReport = "Disabled",
+        $AllowEngagementReport = 'Disabled',
 
         [Parameter()]
-        [ValidateSet("EnabledOutgoingIncoming", "Disabled")]
+        [ValidateSet('EnabledOutgoingIncoming', 'Disabled')]
         [System.String]
-        $IPAudioMode = "EnabledOutgoingIncoming",
+        $IPAudioMode = 'EnabledOutgoingIncoming',
 
         [Parameter()]
-        [ValidateSet("EnabledOutgoingIncoming", "Disabled")]
+        [ValidateSet('EnabledOutgoingIncoming', 'Disabled')]
         [System.String]
-        $IPVideoMode = "EnabledOutgoingIncoming",
+        $IPVideoMode = 'EnabledOutgoingIncoming',
 
         [Parameter()]
         [System.Boolean]
@@ -453,26 +453,26 @@ function Set-TargetResource
         $AllowUserToJoinExternalMeeting,
 
         [Parameter()]
-        [ValidateSet("Disabled", "Enabled")]
+        [ValidateSet('Disabled', 'Enabled')]
         [System.String]
-        $EnrollUserOverride = "Disabled",
+        $EnrollUserOverride = 'Disabled',
 
         [Parameter()]
-        [ValidateSet("Off", "Distinguish", "Attribute")]
+        [ValidateSet('Off', 'Distinguish', 'Attribute')]
         [System.String]
-        $RoomAttributeUserOverride = "Off",
+        $RoomAttributeUserOverride = 'Off',
 
         [Parameter()]
-        [ValidateSet("Disabled", "Enabled")]
+        [ValidateSet('Disabled', 'Enabled')]
         [System.String]
-        $StreamingAttendeeMode = "Enabled",
+        $StreamingAttendeeMode = 'Enabled',
 
         [Parameter()]
         [System.Boolean]
         $AllowBreakoutRooms,
 
         [Parameter()]
-        [ValidateSet("Disabled", "Enabled")]
+        [ValidateSet('Disabled', 'Enabled')]
         [System.String]
         $TeamsCameraFarEndPTZMode,
 
@@ -481,23 +481,23 @@ function Set-TargetResource
         $AllowMeetingReactions,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting Teams Meeting Policy"
+    Write-Verbose -Message 'Setting Teams Meeting Policy'
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add('Resource', $ResourceName)
+    $data.Add('Method', $MyInvocation.MyCommand)
+    $data.Add('Principal', $GlobalAdminAccount.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -507,8 +507,8 @@ function Set-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     $SetParameters = $PSBoundParameters
-    $SetParameters.Remove("Ensure") | Out-Null
-    $SetParameters.Remove("GlobalAdminAccount") | Out-Null
+    $SetParameters.Remove('Ensure') | Out-Null
+    $SetParameters.Remove('GlobalAdminAccount') | Out-Null
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
@@ -516,9 +516,9 @@ function Set-TargetResource
 
         # The AllowAnonymousUsersToDialOut is temporarly disabled. Therefore
         # we can't create or update a policy with it and it needs to be removed;
-        if ($SetParameters.ContainsKey("AllowAnonymousUsersToDialOut"))
+        if ($SetParameters.ContainsKey('AllowAnonymousUsersToDialOut'))
         {
-            $SetParameters.Remove("AllowAnonymousUsersToDialOut") | Out-Null
+            $SetParameters.Remove('AllowAnonymousUsersToDialOut') | Out-Null
         }
         New-CsTeamsMeetingPolicy @SetParameters
     }
@@ -530,14 +530,14 @@ function Set-TargetResource
 
         # The AllowAnonymousUsersToDialOut is temporarly disabled. Therefore
         # we can't create or update a policy with it and it needs to be removed;
-        if ($SetParameters.ContainsKey("AllowAnonymousUsersToDialOut"))
+        if ($SetParameters.ContainsKey('AllowAnonymousUsersToDialOut'))
         {
-            $SetParameters.Remove("AllowAnonymousUsersToDialOut") | Out-Null
+            $SetParameters.Remove('AllowAnonymousUsersToDialOut') | Out-Null
         }
         if ($SetParameters.AllowCloudRecording -eq $false )
         {
-            $SetParameters.Remove("RecordingStorageMode")
-            $SetParameters.Remove("AllowRecordingStorageOutsideRegion")
+            $SetParameters.Remove('RecordingStorageMode')
+            $SetParameters.Remove('AllowRecordingStorageOutsideRegion')
         }
         Set-CsTeamsMeetingPolicy @SetParameters
     }
@@ -575,19 +575,19 @@ function Test-TargetResource
         $AllowPrivateMeetNow,
 
         [Parameter()]
-        [ValidateSet("Disabled", "Enabled")]
+        [ValidateSet('Disabled', 'Enabled')]
         [System.String]
-        $MeetingChatEnabledType = "Enabled",
+        $MeetingChatEnabledType = 'Enabled',
 
         [Parameter()]
-        [ValidateSet("Disabled", "DisabledUserOverride")]
+        [ValidateSet('Disabled', 'DisabledUserOverride')]
         [System.String]
-        $LiveCaptionsEnabledType = "DisabledUserOverride",
+        $LiveCaptionsEnabledType = 'DisabledUserOverride',
 
         [Parameter()]
-        [ValidateSet("OrganizerOnlyUserOverride", "EveryoneInCompanyUserOverride", "EveryoneUserOverride")]
+        [ValidateSet('OrganizerOnlyUserOverride', 'EveryoneInCompanyUserOverride', 'EveryoneUserOverride')]
         [System.String]
-        $DesignatedPresenterRoleMode = "EveryoneUserOverride",
+        $DesignatedPresenterRoleMode = 'EveryoneUserOverride',
 
         [Parameter()]
         [System.Boolean]
@@ -598,19 +598,19 @@ function Test-TargetResource
         $AllowIPVideo,
 
         [Parameter()]
-        [ValidateSet("Enabled", "Disabled")]
+        [ValidateSet('Enabled', 'Disabled')]
         [System.String]
-        $AllowEngagementReport = "Disabled",
+        $AllowEngagementReport = 'Disabled',
 
         [Parameter()]
-        [ValidateSet("EnabledOutgoingIncoming", "Disabled")]
+        [ValidateSet('EnabledOutgoingIncoming', 'Disabled')]
         [System.String]
-        $IPAudioMode = "EnabledOutgoingIncoming",
+        $IPAudioMode = 'EnabledOutgoingIncoming',
 
         [Parameter()]
-        [ValidateSet("EnabledOutgoingIncoming", "Disabled")]
+        [ValidateSet('EnabledOutgoingIncoming', 'Disabled')]
         [System.String]
-        $IPVideoMode = "EnabledOutgoingIncoming",
+        $IPVideoMode = 'EnabledOutgoingIncoming',
 
         [Parameter()]
         [System.Boolean]
@@ -707,26 +707,26 @@ function Test-TargetResource
         $AllowUserToJoinExternalMeeting,
 
         [Parameter()]
-        [ValidateSet("Disabled", "Enabled")]
+        [ValidateSet('Disabled', 'Enabled')]
         [System.String]
-        $EnrollUserOverride = "Disabled",
+        $EnrollUserOverride = 'Disabled',
 
         [Parameter()]
-        [ValidateSet("Off", "Distinguish", "Attribute")]
+        [ValidateSet('Off', 'Distinguish', 'Attribute')]
         [System.String]
-        $RoomAttributeUserOverride = "Off",
+        $RoomAttributeUserOverride = 'Off',
 
         [Parameter()]
-        [ValidateSet("Disabled", "Enabled")]
+        [ValidateSet('Disabled', 'Enabled')]
         [System.String]
-        $StreamingAttendeeMode = "Enabled",
+        $StreamingAttendeeMode = 'Enabled',
 
         [Parameter()]
         [System.Boolean]
         $AllowBreakoutRooms,
 
         [Parameter()]
-        [ValidateSet("Disabled", "Enabled")]
+        [ValidateSet('Disabled', 'Enabled')]
         [System.String]
         $TeamsCameraFarEndPTZMode,
 
@@ -735,21 +735,21 @@ function Test-TargetResource
         $AllowMeetingReactions,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
+    $data.Add('Resource', $ResourceName)
+    $data.Add('Method', $MyInvocation.MyCommand)
+    $data.Add('Principal', $GlobalAdminAccount.UserName)
+    $data.Add('TenantId', $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -764,7 +764,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     # The AllowAnonymousUsersToDialOut is temporarly disabled. Therefore
     # we can't create or update a policy with it and it needs to be removed;
-    $ValuesToCheck.Remove("AllowAnonymousUsersToDialOut") | Out-Null
+    $ValuesToCheck.Remove('AllowAnonymousUsersToDialOut') | Out-Null
 
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
@@ -791,13 +791,13 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
+    $data.Add('Resource', $ResourceName)
+    $data.Add('Method', $MyInvocation.MyCommand)
+    $data.Add('Principal', $GlobalAdminAccount.UserName)
+    $data.Add('TenantId', $TenantId)
+    $data.Add('ConnectionMode', $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -836,7 +836,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = ""
+            $tenantIdValue = ''
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
@@ -853,7 +853,7 @@ function Export-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return ""
+        return ''
     }
 }
 
