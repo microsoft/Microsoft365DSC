@@ -5,6 +5,8 @@
 * DEPENDENCIES;
   * Updated AzureADPreview to version 2.0.2.138;
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.128;
+* MISC
+  * Additional display alignment fixes for Export;
 
 # 1.21.804.1
 
