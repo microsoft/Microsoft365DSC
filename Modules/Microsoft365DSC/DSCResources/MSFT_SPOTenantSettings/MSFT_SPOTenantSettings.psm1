@@ -89,6 +89,10 @@ function Get-TargetResource
         $ConditionalAccessPolicy,
 
         [Parameter()]
+        [System.Guid[]]
+        $DisabledWebPartIds,
+
+        [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
@@ -176,6 +180,7 @@ function Get-TargetResource
             HideDefaultThemes                             = $SPOTenantSettings.HideDefaultThemes
             MarkNewFilesSensitiveByDefault                = $SPOTenantSettings.MarkNewFilesSensitiveByDefault
             ConditionalAccessPolicy                       = $SPOTenantSettings.ConditionalAccessPolicy
+            DisabledWebPartIds                            = $SPOTenantSettings.DisabledWebPartIds
             GlobalAdminAccount                            = $GlobalAdminAccount
             ApplicationId                                 = $ApplicationId
             TenantId                                      = $TenantId
@@ -303,6 +308,10 @@ function Set-TargetResource
         [ValidateSet("AllowFullAccess","AllowLimitedAccess", "BlockAccess")]
         [System.String]
         $ConditionalAccessPolicy,
+
+        [Parameter()]
+        [System.Guid[]]
+        $DisabledWebPartIds,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -465,6 +474,10 @@ function Test-TargetResource
         $ConditionalAccessPolicy,
 
         [Parameter()]
+        [System.Guid[]]
+        $DisabledWebPartIds,
+
+        [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
@@ -539,7 +552,8 @@ function Test-TargetResource
             "FilePickerExternalImageSearchEnabled", `
             "HideDefaultThemes", `
             "MarkNewFilesSensitiveByDefault", `
-            "ConditionalAccessPolicy"
+            "ConditionalAccessPolicy", `
+            "DisabledWebPartIds"
             )
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
