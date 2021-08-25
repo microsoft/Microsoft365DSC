@@ -470,7 +470,7 @@ function Export-TargetResource
             else
             {
                 Write-Host "`r`n" -NoNewline
-            }g
+            }
             $i = 1
             foreach ($SafeLinksPolicy in $SafeLinksPolicies)
             {

@@ -1,5 +1,16 @@
 # Change log for Microsoft365DSC
 
+# 1.21.825.1
+
+* SPOTenantSettings
+  * Added the DisabledWebpartIds & ConditionalAccessPolicy properties;
+* DEPENDENCIES;
+  * Updated AzureADPreview to version 2.0.2.138;
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.131;
+  * Updated Microsoft.Teams to version 2.5.0;
+* MISC
+  * Additional display alignment fixes for Export;
+
 # 1.21.804.1
 
 * SCDLPComplianceRule

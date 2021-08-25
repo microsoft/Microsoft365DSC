@@ -84,6 +84,15 @@ function Get-TargetResource
         $MarkNewFilesSensitiveByDefault,
 
         [Parameter()]
+        [ValidateSet("AllowFullAccess", "AllowLimitedAccess", "BlockAccess")]
+        [System.String]
+        $ConditionalAccessPolicy,
+
+        [Parameter()]
+        [System.Guid[]]
+        $DisabledWebPartIds,
+
+        [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
@@ -170,6 +179,8 @@ function Get-TargetResource
             FilePickerExternalImageSearchEnabled          = $SPOTenantSettings.FilePickerExternalImageSearchEnabled
             HideDefaultThemes                             = $SPOTenantSettings.HideDefaultThemes
             MarkNewFilesSensitiveByDefault                = $SPOTenantSettings.MarkNewFilesSensitiveByDefault
+            ConditionalAccessPolicy                       = $SPOTenantSettings.ConditionalAccessPolicy
+            DisabledWebPartIds                            = $SPOTenantSettings.DisabledWebPartIds
             GlobalAdminAccount                            = $GlobalAdminAccount
             ApplicationId                                 = $ApplicationId
             TenantId                                      = $TenantId
@@ -292,6 +303,15 @@ function Set-TargetResource
         [ValidateSet("AllowExternalSharing", "BlockExternalSharing")]
         [System.String]
         $MarkNewFilesSensitiveByDefault,
+
+        [Parameter()]
+        [ValidateSet("AllowFullAccess","AllowLimitedAccess", "BlockAccess")]
+        [System.String]
+        $ConditionalAccessPolicy,
+
+        [Parameter()]
+        [System.Guid[]]
+        $DisabledWebPartIds,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -449,6 +469,15 @@ function Test-TargetResource
         $MarkNewFilesSensitiveByDefault,
 
         [Parameter()]
+        [ValidateSet("AllowFullAccess", "AllowLimitedAccess", "BlockAccess")]
+        [System.String]
+        $ConditionalAccessPolicy,
+
+        [Parameter()]
+        [System.Guid[]]
+        $DisabledWebPartIds,
+
+        [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
@@ -522,7 +551,9 @@ function Test-TargetResource
             "ApplyAppEnforcedRestrictionsToAdHocRecipients", `
             "FilePickerExternalImageSearchEnabled", `
             "HideDefaultThemes", `
-            "MarkNewFilesSensitiveByDefault"
+            "MarkNewFilesSensitiveByDefault", `
+            "ConditionalAccessPolicy", `
+            "DisabledWebPartIds"
             )
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
