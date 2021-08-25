@@ -2,6 +2,8 @@
 
 # 1.21.825.1
 
+* SPOTenantSettings
+  * Added the DisabledWebpartIds & ConditionalAccessPolicy properties;
 * DEPENDENCIES;
   * Updated AzureADPreview to version 2.0.2.138;
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.131;
