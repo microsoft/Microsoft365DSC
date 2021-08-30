@@ -734,7 +734,7 @@ function Get-M365DSCResourcesByWorkloads
         $ResourceName = $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
         foreach ($Workload in $Workloads)
         {
-            if ($ResourceName.StartsWith($Workload) -and
+            if ($ResourceName.StartsWith($Workload, "CurrentCultureIgnoreCase") -and
                 ($Mode -eq "Full" -or `
                     ($Mode -eq "Default" -and -not $Global:FullComponents.Contains($ResourceName)) -or `
                     ($Mode -eq "Lite" -and -not $Global:FullComponents.Contains($ResourceName) -and -not $Global:DefaultComponents.Contains($ResourceName))))
