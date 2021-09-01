@@ -651,9 +651,10 @@ function Set-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
-
+Write-Verbose "Here"
+    Write-Verbose (Get-HostedContentFilterPolicy | Out-String)
     $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
-
+    Write-Verbose "Here2"
     $HostedContentFilterPolicy = $HostedContentFilterPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
     $HostedContentFilterPolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
     $HostedContentFilterPolicyParams.Remove('Ensure') | Out-Null
@@ -664,7 +665,7 @@ function Set-TargetResource
     $HostedContentFilterPolicyParams.Remove('CertificateThumbprint') | Out-Null
     $HostedContentFilterPolicyParams.Remove('CertificatePath') | Out-Null
     $HostedContentFilterPolicyParams.Remove('CertificatePassword') | Out-Null
-
+    Write-Verbose "Here3"
     if ($HostedContentFilterPolicyParams.Contains('EndUserSpamNotificationCustomFromAddress'))
     {
         $HostedContentFilterPolicyParams.Remove('EndUserSpamNotificationCustomFromAddress') | Out-Null
@@ -675,7 +676,7 @@ function Set-TargetResource
         $HostedContentFilterPolicyParams.Remove('EndUserSpamNotificationCustomFromName') | Out-Null
         Write-Verbose -Message "The EndUserSpamNotificationCustomFromName parameter is no longer available and will be depricated."
     }
-
+    Write-Verbose "Here4"
     if (('Present' -eq $Ensure ) -and ($null -eq $HostedContentFilterPolicy))
     {
         $HostedContentFilterPolicyParams += @{
@@ -686,7 +687,7 @@ function Set-TargetResource
         New-HostedContentFilterPolicy @HostedContentFilterPolicyParams
     }
     elseif (('Present' -eq $Ensure ) -and ($null -ne $HostedContentFilterPolicy))
-    {
+    {Write-Verbose "Here5"
         Write-Verbose -Message "Setting HostedContentFilterPolicy $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $HostedContentFilterPolicyParams)."
         if ($PSBoundParameters.MakeDefault)
         {
