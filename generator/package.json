@@ -38,7 +38,10 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "parserOptions": {
+      "warnOnUnsupportedTypeScriptVersion": false
+    }
   },
   "browserslist": {
     "production": [
@@ -57,6 +60,6 @@
     "@types/react-router-dom": "^5.1.7",
     "node-sass": "^5.0.0",
     "prettier": "^2.2.1",
-    "postcss": ">=7.0.36"
+    "postcss": "7.0.36"
   }
 }
