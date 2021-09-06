@@ -6,171 +6,177 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $DisplayName,
+        $displayName,
 
         [Parameter()]
         [System.String]
-        $Description,
+        $description,
 
         [Parameter()]
         [System.String]
         $enterpriseCloudPrintDiscoveryEndPoint,
 
         [Parameter()]
-        [System.String]
+        [System.String]                
         $enterpriseCloudPrintOAuthAuthority,
 
         [Parameter()]
-        [System.String]
+        [System.String]                
         $enterpriseCloudPrintOAuthClientIdentifier,
 
         [Parameter()]
-        [System.Integer]
+        [System.String]                
+        $enterpriseCloudPrintResourceIdentifier,
+
+        [Parameter()]
+        [System.Uint64]                
         $enterpriseCloudPrintDiscoveryMaxLimit,
 
         [Parameter()]
-        [System.String]
+        [System.String]                
         $enterpriseCloudPrintMopriaDiscoveryResourceIdentifier,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $searchBlockDiacritics,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
+        $searchDisableAutoLanguageDetection,
+
+        [Parameter()]
+        [System.Boolean]                
         $searchDisableIndexingEncryptedItems,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $searchEnableRemoteQueries,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $searchDisableIndexerBackoff,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $searchDisableIndexingRemovableDrive,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $searchEnableAutomaticIndexSizeManangement,
 
         [Parameter()]
-        [System.String]
-        $diagnosticsDataSubmissionMode= 'none',
+        [ValidateSet("userDefined", "none", "basic","enhanced","full")]
+        [System.String]                
+        $diagnosticsDataSubmissionMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $oneDriveDisableFileSync,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $smartScreenEnableAppInstallControl,
 
         [Parameter()]
-        [System.String]
+        [System.String]                
         $personalizationDesktopImageUrl,
 
         [Parameter()]
-        [System.String]
+        [System.String]                
         $personalizationLockScreenImageUrl,
 
         [Parameter()]
-        #[System.String]
+        [System.String[]]                
         $bluetoothAllowedServices,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $bluetoothBlockAdvertising,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $bluetoothBlockDiscoverableMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $bluetoothBlockPrePairing,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockAutofill,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlocked,
 
         [Parameter()]
-        [System.Boolean]
+        [ValidateSet("userDefined", "allow", "blockThirdparty","blockAll")]
+        [System.String]                
         $edgeCookiePolicy,
 
         [Parameter()]
-        [System.String[]]
+        [System.Boolean]                
         $edgeBlockDeveloperTools,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockSendingDoNotTrackHeader,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockExtensions,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockInPrivateBrowsing,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockJavaScript,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockPasswordManager,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockAddressBarDropdown,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockCompatibilityList,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeClearBrowsingDataOnExit,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeAllowStartPagesModification,
 
         [Parameter()]
-        [System.Boolean]
-        $DocumentsBlockUnmanagedDocumentsInManagedApps,
-
-        [Parameter()]
-        [System.String[]]
+        [System.Boolean]                
         $edgeDisableFirstRunPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockLiveTileDataCollection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeSyncFavoritesWithInternetExplorer,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $cellularBlockDataWhenRoaming,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $cellularBlockVpn,
 
         [Parameter()]
-        [System.Boolean]
-        $cellularBlockVpnWhenRoaming,
+        [System.Boolean]                                     
+        $cellularBlockVpnWhenRoaming,                         
 
         [Parameter()]
         [System.Boolean]
@@ -201,6 +207,7 @@ function Get-TargetResource
         $defenderSignatureUpdateIntervalInHours,
 
         [Parameter()]
+        [ValidateSet("userDefined", "disable", "monitorAllFiles","monitorIncomingFileOnly","monitorOutgoingFilesOnly")]
         [System.String]
         $defenderMonitorFileActivity,
 
@@ -237,10 +244,12 @@ function Get-TargetResource
         $defenderRequireCloudProtection,
 
         [Parameter()]
+        [ValidateSet("notConfigured", "high", "highPlus","zeroTolerance")]
         [System.String]
         $defenderCloudBlockLevel,
 
         [Parameter()]
+        [ValidateSet("userDefined", "alwaysPrompt", "promptBeforeSendingPersonalData","neverSendData","sendAllDataWithoutPrompting")]
         [System.String]
         $defenderPromptForSampleSubmission,
 
@@ -249,6 +258,7 @@ function Get-TargetResource
         $defenderScheduledQuickScanTime,
 
         [Parameter()]
+        [ValidateSet("userDefined", "disabled", "quick","full")]
         [System.String]
         $defenderScanType,
 
@@ -261,248 +271,574 @@ function Get-TargetResource
         $defenderScheduledScanTime,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $defenderFileExtensionsToExclude,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $defenderFilesAndFoldersToExclude,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $defenderProcessesToExclude,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String[]]
+        $defenderDetectedMalwareActions,
+
+        [Parameter()]
+        [System.Boolean]                
         $lockScreenAllowTimeoutConfiguration,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $lockScreenBlockActionCenterNotifications,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $lockScreenBlockCortana,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $lockScreenBlockToastNotifications,
 
         [Parameter()]
-        [System.Uint64]
+        [System.Uint64]                
         $lockScreenTimeoutInSeconds,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $passwordBlockSimple,
 
         [Parameter()]
-        [System.Uint64]
+        [System.Uint64]                
         $passwordExpirationDays,
 
         [Parameter()]
-        [System.Uint64]
+        [System.Uint64]                
         $passwordMinimumLength,
 
         [Parameter()]
-        [System.Uint64]
+        [System.Uint64]                
         $passwordMinutesOfInactivityBeforeScreenTimeout,
 
         [Parameter()]
-        [System.Uint64]
+        [System.Uint64]                
         $passwordMinimumCharacterSetCount,
 
         [Parameter()]
-        [System.Uint64]
+        [System.Uint64]                
         $passwordPreviousPasswordBlockCount,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $passwordRequired,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $passwordRequireWhenResumeFromIdleState,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("deviceDefault", "alphanumeric", "numeric")]
+        [System.String]                
         $passwordRequiredType,
 
         [Parameter()]
-        [System.Uint64]
+        [System.Uint64]                
         $passwordSignInFailureCountBeforeFactoryReset,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "blocked", "allowed")]
+        [System.String]                
         $privacyAdvertisingId,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
+        $privacyAutoAcceptPairingAndConsentPrompts,
+
+        [Parameter()]
+        [System.Boolean]                
         $privacyBlockInputPersonalization,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startBlockUnpinningAppsFromTaskbar,
 
         [Parameter()]
+        [ValidateSet("userDefined", "collapse", "remove","disableSettingsApp")]
         [System.String]
         $startMenuAppListVisibility,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHideChangeAccountSettings,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHideFrequentlyUsedApps,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHideHibernate,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHideLock,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHidePowerButton,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHideRecentJumpLists,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHideRecentlyAddedApps,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHideRestartOptions,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $startMenuHideShutDown,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $startMenuHideSignOut,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $startMenuHideSleep,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $startMenuHideSwitchAccount,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $startMenuHideUserTile,
 
         [Parameter()]
-        [System.String]
+        [System.String]                
+        $startMenuLayoutEdgeAssetsXml,
+
+        [Parameter()]
+        [System.String]                
+        $startMenuLayoutXml,
+
+        [Parameter()]
+        [ValidateSet("userDefined", "fullScreen", "nonFullScreen")]
+        [System.String]                
         $startMenuMode,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderDocuments,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderDownloads,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderFileExplorer,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderHomeGroup,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderMusic,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderNetwork,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderPersonalFolder,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderPictures,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderSettings,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderVideos,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockSettingsApp,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
+        $settingsBlockSystemPage,
+
+        [Parameter()]
+        [System.Boolean]                
         $settingsBlockDevicesPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockNetworkInternetPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockPersonalizationPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockAccountsPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockTimeLanguagePage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockEaseOfAccessPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockPrivacyPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockUpdateSecurityPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockAppsPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockGamingPage,
 
         [Parameter()]
-        [System.Boolean]
-        $windowsSpotlightBlockConsumerSpecificFeatures,
+        [System.Boolean]                
+        $WindowsSpotlightBlockConsumerSpecificFeatures,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $windowsSpotlightBlocked,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $windowsSpotlightBlockOnActionCenter,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $windowsSpotlightBlockTailoredExperiences,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsSpotlightBlockThirdPartyNotifications,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsSpotlightBlockWelcomeExperience,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsSpotlightBlockWindowsTips,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "disabled", "enabled")]
+        [System.String]
+        $windowsSpotlightConfigureOnLockScreen,
+
+        [Parameter()]
+        [System.Boolean]                
+        $networkProxyApplySettingsDeviceWide,
+
+        [Parameter()]
+        [System.Boolean]                
+        $networkProxyDisableAutoDetect,
+
+        [Parameter()]
+        [System.String]                
+        $networkProxyAutomaticConfigurationUrl,
+
+        [Parameter()]
+        [System.String[]]
+        $networkProxyServer,
+
+        [Parameter()]
+        [System.Boolean]                
+        $accountsBlockAddingNonMicrosoftAccountEmail,
+
+        [Parameter()]
+        [System.Boolean]                
+        $antiTheftModeBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $bluetoothBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $cameraBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $connectedDevicesServiceBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $certificatesBlockManualRootCertificateInstallation,
+
+        [Parameter()]
+        [System.Boolean]                
+        $copyPasteBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $cortanaBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $deviceManagementBlockFactoryResetOnMobile,
+
+        [Parameter()]
+        [System.Boolean]                
+        $deviceManagementBlockManualUnenroll,
+
+        [Parameter()]
+        [ValidateSet("userDefined", "strict", "moderate")]
+        [System.String]                
+        $safeSearchFilter,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockSearchSuggestions,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockSendingIntranetTrafficToInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeSendIntranetTrafficToInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeRequireSmartScreen,
+
+        [Parameter()]
+        [System.String]                
+        $edgeEnterpriseModeSiteListLocation,
+
+        [Parameter()]
+        [System.String]                
+        $edgeFirstRunUrl,
+
+        [Parameter()]
+        [System.String]
+        $edgeSearchEngine,
+
+        [Parameter()]
+        [System.String[]]                
+        $edgeHomepageUrls,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockAccessToAboutFlags,
+
+        [Parameter()]
+        [System.Boolean]                
+        $smartScreenBlockPromptOverride,
+
+        [Parameter()]
+        [System.Boolean]                
+        $smartScreenBlockPromptOverrideForFiles,
+
+        [Parameter()]
+        [System.Boolean]                
+        $webRtcBlockLocalhostIpAddress,
+
+        [Parameter()]
+        [System.Boolean]                
+        $internetSharingBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockAddProvisioningPackage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockRemoveProvisioningPackage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockChangeSystemTime,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockEditDeviceName,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockChangeRegion,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockChangeLanguage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockChangePowerSleep,
+
+        [Parameter()]
+        [System.Boolean]                
+        $locationServicesBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $microsoftAccountBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $microsoftAccountBlockSettingsSync,
+
+        [Parameter()]
+        [System.Boolean]                
+        $nfcBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $resetProtectionModeBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $storageBlockRemovableStorage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $storageRequireMobileDeviceEncryption,
+
+        [Parameter()]
+        [System.Boolean]                
+        $usbBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $voiceRecordingBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wiFiBlockAutomaticConnectHotspots,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wiFiBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wiFiBlockManualConfiguration,
+
+        [Parameter()]
+        [System.Uint64]                
+        $wiFiScanInterval,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wirelessDisplayBlockProjectionToThisDevice,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wirelessDisplayBlockUserInputFromReceiver,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wirelessDisplayRequirePinForPairing,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsStoreBlocked,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("notConfigured", "blocked", "allowed")]
+        $appsAllowTrustedAppsSideloading,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsStoreBlockAutoUpdate,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "blocked", "allowed")]
+        [System.String]
+        $developerUnlockSetting,
+
+        [Parameter()]
+        [System.Boolean]                
+        $sharedUserAppDataAllowed,
+
+        [Parameter()]
+        [System.Boolean]                
+        $appsBlockWindowsStoreOriginatedApps,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsStoreEnablePrivateStoreOnly,
+
+        [Parameter()]
+        [System.Boolean]                
+        $storageRestrictAppDataToSystemVolume,
+
+        [Parameter()]
+        [System.Boolean]                
+        $storageRestrictAppInstallToSystemVolume,
+
+        [Parameter()]
+        [System.Boolean]                
+        $gameDvrBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $experienceBlockDeviceDiscovery,
+
+        [Parameter()]
+        [System.Boolean]                
+        $experienceBlockErrorDialogWhenNoSIM,
+
+        [Parameter()]
+        [System.Boolean]                
+        $experienceBlockTaskSwitcher,
+
+        [Parameter()]
+        [System.Boolean]                
+        $logonBlockFastUserSwitching,                         
+
+        [Parameter()]
+        [System.Boolean]
+        $tenantLockdownRequireNetworkDuringOutOfBoxExperience,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -523,7 +859,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Checking for the Intune Device Configuration Policy {$DisplayName}"
@@ -545,6 +881,7 @@ function Get-TargetResource
 
     try
     {
+        #Connect-MSGraph -Credential $GlobalAdmin
         $policyInfo = Get-IntuneDeviceConfigurationPolicy -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.windows10GeneralConfiguration' }
 
@@ -793,167 +1130,177 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $DisplayName,
+        $displayName,
 
         [Parameter()]
         [System.String]
-        $Description,
+        $description,
 
         [Parameter()]
         [System.String]
         $enterpriseCloudPrintDiscoveryEndPoint,
 
         [Parameter()]
-        [System.String]
+        [System.String]                
         $enterpriseCloudPrintOAuthAuthority,
 
         [Parameter()]
-        [System.String]
+        [System.String]                
         $enterpriseCloudPrintOAuthClientIdentifier,
 
         [Parameter()]
-        [System.Integer]
+        [System.String]                
+        $enterpriseCloudPrintResourceIdentifier,
+
+        [Parameter()]
+        [System.Uint64]                
         $enterpriseCloudPrintDiscoveryMaxLimit,
 
         [Parameter()]
-        [System.String]
+        [System.String]                
         $enterpriseCloudPrintMopriaDiscoveryResourceIdentifier,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $searchBlockDiacritics,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
+        $searchDisableAutoLanguageDetection,
+
+        [Parameter()]
+        [System.Boolean]                
         $searchDisableIndexingEncryptedItems,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $searchEnableRemoteQueries,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $searchDisableIndexerBackoff,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $searchDisableIndexingRemovableDrive,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $searchEnableAutomaticIndexSizeManangement,
 
         [Parameter()]
-        [System.String]
-        $diagnosticsDataSubmissionMode= 'none',
+        [ValidateSet("userDefined", "none", "basic","enhanced","full")]
+        [System.String]                
+        $diagnosticsDataSubmissionMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $oneDriveDisableFileSync,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $smartScreenEnableAppInstallControl,
 
         [Parameter()]
-        [System.String]
+        [System.String]                
         $personalizationDesktopImageUrl,
 
         [Parameter()]
-        [System.String]
+        [System.String]                
         $personalizationLockScreenImageUrl,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]                
         $bluetoothAllowedServices,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $bluetoothBlockAdvertising,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $bluetoothBlockDiscoverableMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $bluetoothBlockPrePairing,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockAutofill,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlocked,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("userDefined", "allow", "blockThirdparty","blockAll")]
+        [System.String]                
         $edgeCookiePolicy,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockDeveloperTools,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockSendingDoNotTrackHeader,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockExtensions,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockInPrivateBrowsing,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockJavaScript,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockPasswordManager,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockAddressBarDropdown,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockCompatibilityList,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeClearBrowsingDataOnExit,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeAllowStartPagesModification,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeDisableFirstRunPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockLiveTileDataCollection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeSyncFavoritesWithInternetExplorer,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $cellularBlockDataWhenRoaming,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $cellularBlockVpn,
 
         [Parameter()]
-        [System.Boolean]
-        $cellularBlockVpnWhenRoaming,
+        [System.Boolean]                                     
+        $cellularBlockVpnWhenRoaming,                         
 
         [Parameter()]
         [System.Boolean]
@@ -984,6 +1331,7 @@ function Set-TargetResource
         $defenderSignatureUpdateIntervalInHours,
 
         [Parameter()]
+        [ValidateSet("userDefined", "disable", "monitorAllFiles","monitorIncomingFileOnly","monitorOutgoingFilesOnly")]
         [System.String]
         $defenderMonitorFileActivity,
 
@@ -1020,10 +1368,12 @@ function Set-TargetResource
         $defenderRequireCloudProtection,
 
         [Parameter()]
+        [ValidateSet("notConfigured", "high", "highPlus","zeroTolerance")]
         [System.String]
         $defenderCloudBlockLevel,
 
         [Parameter()]
+        [ValidateSet("userDefined", "alwaysPrompt", "promptBeforeSendingPersonalData","neverSendData","sendAllDataWithoutPrompting")]
         [System.String]
         $defenderPromptForSampleSubmission,
 
@@ -1032,6 +1382,7 @@ function Set-TargetResource
         $defenderScheduledQuickScanTime,
 
         [Parameter()]
+        [ValidateSet("userDefined", "disabled", "quick","full")]
         [System.String]
         $defenderScanType,
 
@@ -1044,248 +1395,574 @@ function Set-TargetResource
         $defenderScheduledScanTime,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $defenderFileExtensionsToExclude,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $defenderFilesAndFoldersToExclude,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $defenderProcessesToExclude,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String[]]
+        $defenderDetectedMalwareActions,
+
+        [Parameter()]
+        [System.Boolean]                
         $lockScreenAllowTimeoutConfiguration,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $lockScreenBlockActionCenterNotifications,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $lockScreenBlockCortana,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $lockScreenBlockToastNotifications,
 
         [Parameter()]
-        [System.Uint64]
+        [System.Uint64]                
         $lockScreenTimeoutInSeconds,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $passwordBlockSimple,
 
         [Parameter()]
-        [System.Uint64]
+        [System.Uint64]                
         $passwordExpirationDays,
 
         [Parameter()]
-        [System.Uint64]
+        [System.Uint64]                
         $passwordMinimumLength,
 
         [Parameter()]
-        [System.Uint64]
+        [System.Uint64]                
         $passwordMinutesOfInactivityBeforeScreenTimeout,
 
         [Parameter()]
-        [System.Uint64]
+        [System.Uint64]                
         $passwordMinimumCharacterSetCount,
 
         [Parameter()]
-        [System.Uint64]
+        [System.Uint64]                
         $passwordPreviousPasswordBlockCount,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $passwordRequired,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $passwordRequireWhenResumeFromIdleState,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("deviceDefault", "alphanumeric", "numeric")]
+        [System.String]                
         $passwordRequiredType,
 
         [Parameter()]
-        [System.Uint64]
+        [System.Uint64]                
         $passwordSignInFailureCountBeforeFactoryReset,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "blocked", "allowed")]
+        [System.String]                
         $privacyAdvertisingId,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
+        $privacyAutoAcceptPairingAndConsentPrompts,
+
+        [Parameter()]
+        [System.Boolean]                
         $privacyBlockInputPersonalization,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startBlockUnpinningAppsFromTaskbar,
 
         [Parameter()]
+        [ValidateSet("userDefined", "collapse", "remove","disableSettingsApp")]
         [System.String]
         $startMenuAppListVisibility,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHideChangeAccountSettings,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHideFrequentlyUsedApps,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHideHibernate,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHideLock,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHidePowerButton,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHideRecentJumpLists,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHideRecentlyAddedApps,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHideRestartOptions,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $startMenuHideShutDown,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $startMenuHideSignOut,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $startMenuHideSleep,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $startMenuHideSwitchAccount,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $startMenuHideUserTile,
 
         [Parameter()]
-        [System.String]
+        [System.String]                
+        $startMenuLayoutEdgeAssetsXml,
+
+        [Parameter()]
+        [System.String]                
+        $startMenuLayoutXml,
+
+        [Parameter()]
+        [ValidateSet("userDefined", "fullScreen", "nonFullScreen")]
+        [System.String]                
         $startMenuMode,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderDocuments,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderDownloads,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderFileExplorer,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderHomeGroup,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderMusic,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderNetwork,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderPersonalFolder,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderPictures,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderSettings,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderVideos,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockSettingsApp,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
+        $settingsBlockSystemPage,
+
+        [Parameter()]
+        [System.Boolean]                
         $settingsBlockDevicesPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockNetworkInternetPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockPersonalizationPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockAccountsPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockTimeLanguagePage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockEaseOfAccessPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockPrivacyPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockUpdateSecurityPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockAppsPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockGamingPage,
 
         [Parameter()]
-        [System.Boolean]
-        $windowsSpotlightBlockConsumerSpecificFeatures,
+        [System.Boolean]                
+        $WindowsSpotlightBlockConsumerSpecificFeatures,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $windowsSpotlightBlocked,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $windowsSpotlightBlockOnActionCenter,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $windowsSpotlightBlockTailoredExperiences,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsSpotlightBlockThirdPartyNotifications,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsSpotlightBlockWelcomeExperience,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsSpotlightBlockWindowsTips,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "disabled", "enabled")]
+        [System.String]
+        $windowsSpotlightConfigureOnLockScreen,
+
+        [Parameter()]
+        [System.Boolean]                
+        $networkProxyApplySettingsDeviceWide,
+
+        [Parameter()]
+        [System.Boolean]                
+        $networkProxyDisableAutoDetect,
+
+        [Parameter()]
+        [System.String]                
+        $networkProxyAutomaticConfigurationUrl,
+
+        [Parameter()]
+        [System.String[]]
+        $networkProxyServer,
+
+        [Parameter()]
+        [System.Boolean]                
+        $accountsBlockAddingNonMicrosoftAccountEmail,
+
+        [Parameter()]
+        [System.Boolean]                
+        $antiTheftModeBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $bluetoothBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $cameraBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $connectedDevicesServiceBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $certificatesBlockManualRootCertificateInstallation,
+
+        [Parameter()]
+        [System.Boolean]                
+        $copyPasteBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $cortanaBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $deviceManagementBlockFactoryResetOnMobile,
+
+        [Parameter()]
+        [System.Boolean]                
+        $deviceManagementBlockManualUnenroll,
+
+        [Parameter()]
+        [ValidateSet("userDefined", "strict", "moderate")]
+        [System.String]                
+        $safeSearchFilter,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockSearchSuggestions,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockSendingIntranetTrafficToInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeSendIntranetTrafficToInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeRequireSmartScreen,
+
+        [Parameter()]
+        [System.String]                
+        $edgeEnterpriseModeSiteListLocation,
+
+        [Parameter()]
+        [System.String]                
+        $edgeFirstRunUrl,
+
+        [Parameter()]
+        [System.String]
+        $edgeSearchEngine,
+
+        [Parameter()]
+        [System.String[]]                
+        $edgeHomepageUrls,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockAccessToAboutFlags,
+
+        [Parameter()]
+        [System.Boolean]                
+        $smartScreenBlockPromptOverride,
+
+        [Parameter()]
+        [System.Boolean]                
+        $smartScreenBlockPromptOverrideForFiles,
+
+        [Parameter()]
+        [System.Boolean]                
+        $webRtcBlockLocalhostIpAddress,
+
+        [Parameter()]
+        [System.Boolean]                
+        $internetSharingBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockAddProvisioningPackage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockRemoveProvisioningPackage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockChangeSystemTime,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockEditDeviceName,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockChangeRegion,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockChangeLanguage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockChangePowerSleep,
+
+        [Parameter()]
+        [System.Boolean]                
+        $locationServicesBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $microsoftAccountBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $microsoftAccountBlockSettingsSync,
+
+        [Parameter()]
+        [System.Boolean]                
+        $nfcBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $resetProtectionModeBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $storageBlockRemovableStorage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $storageRequireMobileDeviceEncryption,
+
+        [Parameter()]
+        [System.Boolean]                
+        $usbBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $voiceRecordingBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wiFiBlockAutomaticConnectHotspots,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wiFiBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wiFiBlockManualConfiguration,
+
+        [Parameter()]
+        [System.Uint64]                
+        $wiFiScanInterval,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wirelessDisplayBlockProjectionToThisDevice,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wirelessDisplayBlockUserInputFromReceiver,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wirelessDisplayRequirePinForPairing,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsStoreBlocked,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("notConfigured", "blocked", "allowed")]
+        $appsAllowTrustedAppsSideloading,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsStoreBlockAutoUpdate,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "blocked", "allowed")]
+        [System.String]
+        $developerUnlockSetting,
+
+        [Parameter()]
+        [System.Boolean]                
+        $sharedUserAppDataAllowed,
+
+        [Parameter()]
+        [System.Boolean]                
+        $appsBlockWindowsStoreOriginatedApps,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsStoreEnablePrivateStoreOnly,
+
+        [Parameter()]
+        [System.Boolean]                
+        $storageRestrictAppDataToSystemVolume,
+
+        [Parameter()]
+        [System.Boolean]                
+        $storageRestrictAppInstallToSystemVolume,
+
+        [Parameter()]
+        [System.Boolean]                
+        $gameDvrBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $experienceBlockDeviceDiscovery,
+
+        [Parameter()]
+        [System.Boolean]                
+        $experienceBlockErrorDialogWhenNoSIM,
+
+        [Parameter()]
+        [System.Boolean]                
+        $experienceBlockTaskSwitcher,
+
+        [Parameter()]
+        [System.Boolean]                
+        $logonBlockFastUserSwitching,                         
+
+        [Parameter()]
+        [System.Boolean]
+        $tenantLockdownRequireNetworkDuringOutOfBoxExperience,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -1306,9 +1983,8 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $CertificateThumbprint
     )
-
 
     $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
         -InboundParameters $PSBoundParameters
@@ -1358,171 +2034,177 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $DisplayName,
+        $displayName,
 
         [Parameter()]
         [System.String]
-        $Description,
+        $description,
 
         [Parameter()]
         [System.String]
         $enterpriseCloudPrintDiscoveryEndPoint,
 
         [Parameter()]
-        [System.String]
+        [System.String]                
         $enterpriseCloudPrintOAuthAuthority,
 
         [Parameter()]
-        [System.String]
+        [System.String]                
         $enterpriseCloudPrintOAuthClientIdentifier,
 
         [Parameter()]
-        [System.Integer]
+        [System.String]                
+        $enterpriseCloudPrintResourceIdentifier,
+
+        [Parameter()]
+        [System.Uint64]                
         $enterpriseCloudPrintDiscoveryMaxLimit,
 
         [Parameter()]
-        [System.String]
+        [System.String]                
         $enterpriseCloudPrintMopriaDiscoveryResourceIdentifier,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $searchBlockDiacritics,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
+        $searchDisableAutoLanguageDetection,
+
+        [Parameter()]
+        [System.Boolean]                
         $searchDisableIndexingEncryptedItems,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $searchEnableRemoteQueries,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $searchDisableIndexerBackoff,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $searchDisableIndexingRemovableDrive,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $searchEnableAutomaticIndexSizeManangement,
 
         [Parameter()]
-        [System.String]
-        $diagnosticsDataSubmissionMode= 'none',
+        [ValidateSet("userDefined", "none", "basic","enhanced","full")]
+        [System.String]                
+        $diagnosticsDataSubmissionMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $oneDriveDisableFileSync,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $smartScreenEnableAppInstallControl,
 
         [Parameter()]
-        [System.String]
+        [System.String]                
         $personalizationDesktopImageUrl,
 
         [Parameter()]
-        [System.String]
+        [System.String]                
         $personalizationLockScreenImageUrl,
 
         [Parameter()]
-        #[System.String]
+        [System.String[]]                
         $bluetoothAllowedServices,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $bluetoothBlockAdvertising,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $bluetoothBlockDiscoverableMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $bluetoothBlockPrePairing,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockAutofill,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlocked,
 
         [Parameter()]
-        [System.Boolean]
+        [ValidateSet("userDefined", "allow", "blockThirdparty","blockAll")]
+        [System.String]                
         $edgeCookiePolicy,
 
         [Parameter()]
-        [System.String[]]
+        [System.Boolean]                
         $edgeBlockDeveloperTools,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockSendingDoNotTrackHeader,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockExtensions,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockInPrivateBrowsing,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockJavaScript,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockPasswordManager,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockAddressBarDropdown,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockCompatibilityList,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeClearBrowsingDataOnExit,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeAllowStartPagesModification,
 
         [Parameter()]
-        [System.Boolean]
-        $DocumentsBlockUnmanagedDocumentsInManagedApps,
-
-        [Parameter()]
-        [System.String[]]
+        [System.Boolean]                
         $edgeDisableFirstRunPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeBlockLiveTileDataCollection,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $edgeSyncFavoritesWithInternetExplorer,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $cellularBlockDataWhenRoaming,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $cellularBlockVpn,
 
         [Parameter()]
-        [System.Boolean]
-        $cellularBlockVpnWhenRoaming,
+        [System.Boolean]                                     
+        $cellularBlockVpnWhenRoaming,                         
 
         [Parameter()]
         [System.Boolean]
@@ -1553,6 +2235,7 @@ function Test-TargetResource
         $defenderSignatureUpdateIntervalInHours,
 
         [Parameter()]
+        [ValidateSet("userDefined", "disable", "monitorAllFiles","monitorIncomingFileOnly","monitorOutgoingFilesOnly")]
         [System.String]
         $defenderMonitorFileActivity,
 
@@ -1589,10 +2272,12 @@ function Test-TargetResource
         $defenderRequireCloudProtection,
 
         [Parameter()]
+        [ValidateSet("notConfigured", "high", "highPlus","zeroTolerance")]
         [System.String]
         $defenderCloudBlockLevel,
 
         [Parameter()]
+        [ValidateSet("userDefined", "alwaysPrompt", "promptBeforeSendingPersonalData","neverSendData","sendAllDataWithoutPrompting")]
         [System.String]
         $defenderPromptForSampleSubmission,
 
@@ -1601,6 +2286,7 @@ function Test-TargetResource
         $defenderScheduledQuickScanTime,
 
         [Parameter()]
+        [ValidateSet("userDefined", "disabled", "quick","full")]
         [System.String]
         $defenderScanType,
 
@@ -1613,248 +2299,574 @@ function Test-TargetResource
         $defenderScheduledScanTime,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $defenderFileExtensionsToExclude,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $defenderFilesAndFoldersToExclude,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $defenderProcessesToExclude,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String[]]
+        $defenderDetectedMalwareActions,
+
+        [Parameter()]
+        [System.Boolean]                
         $lockScreenAllowTimeoutConfiguration,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $lockScreenBlockActionCenterNotifications,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $lockScreenBlockCortana,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $lockScreenBlockToastNotifications,
 
         [Parameter()]
-        [System.Uint64]
+        [System.Uint64]                
         $lockScreenTimeoutInSeconds,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $passwordBlockSimple,
 
         [Parameter()]
-        [System.Uint64]
+        [System.Uint64]                
         $passwordExpirationDays,
 
         [Parameter()]
-        [System.Uint64]
+        [System.Uint64]                
         $passwordMinimumLength,
 
         [Parameter()]
-        [System.Uint64]
+        [System.Uint64]                
         $passwordMinutesOfInactivityBeforeScreenTimeout,
 
         [Parameter()]
-        [System.Uint64]
+        [System.Uint64]                
         $passwordMinimumCharacterSetCount,
 
         [Parameter()]
-        [System.Uint64]
+        [System.Uint64]                
         $passwordPreviousPasswordBlockCount,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $passwordRequired,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $passwordRequireWhenResumeFromIdleState,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("deviceDefault", "alphanumeric", "numeric")]
+        [System.String]                
         $passwordRequiredType,
 
         [Parameter()]
-        [System.Uint64]
+        [System.Uint64]                
         $passwordSignInFailureCountBeforeFactoryReset,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "blocked", "allowed")]
+        [System.String]                
         $privacyAdvertisingId,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
+        $privacyAutoAcceptPairingAndConsentPrompts,
+
+        [Parameter()]
+        [System.Boolean]                
         $privacyBlockInputPersonalization,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startBlockUnpinningAppsFromTaskbar,
 
         [Parameter()]
+        [ValidateSet("userDefined", "collapse", "remove","disableSettingsApp")]
         [System.String]
         $startMenuAppListVisibility,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHideChangeAccountSettings,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHideFrequentlyUsedApps,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHideHibernate,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHideLock,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHidePowerButton,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHideRecentJumpLists,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHideRecentlyAddedApps,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]                
         $startMenuHideRestartOptions,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $startMenuHideShutDown,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $startMenuHideSignOut,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $startMenuHideSleep,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $startMenuHideSwitchAccount,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $startMenuHideUserTile,
 
         [Parameter()]
-        [System.String]
+        [System.String]                
+        $startMenuLayoutEdgeAssetsXml,
+
+        [Parameter()]
+        [System.String]                
+        $startMenuLayoutXml,
+
+        [Parameter()]
+        [ValidateSet("userDefined", "fullScreen", "nonFullScreen")]
+        [System.String]                
         $startMenuMode,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderDocuments,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderDownloads,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderFileExplorer,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderHomeGroup,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderMusic,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderNetwork,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderPersonalFolder,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderPictures,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderSettings,
 
         [Parameter()]
-        [System.String]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
         $startMenuPinnedFolderVideos,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockSettingsApp,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
+        $settingsBlockSystemPage,
+
+        [Parameter()]
+        [System.Boolean]                
         $settingsBlockDevicesPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockNetworkInternetPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockPersonalizationPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockAccountsPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockTimeLanguagePage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockEaseOfAccessPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockPrivacyPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockUpdateSecurityPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockAppsPage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $settingsBlockGamingPage,
 
         [Parameter()]
-        [System.Boolean]
-        $windowsSpotlightBlockConsumerSpecificFeatures,
+        [System.Boolean]                
+        $WindowsSpotlightBlockConsumerSpecificFeatures,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $windowsSpotlightBlocked,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $windowsSpotlightBlockOnActionCenter,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Boolean]                
         $windowsSpotlightBlockTailoredExperiences,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsSpotlightBlockThirdPartyNotifications,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsSpotlightBlockWelcomeExperience,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsSpotlightBlockWindowsTips,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "disabled", "enabled")]
+        [System.String]
+        $windowsSpotlightConfigureOnLockScreen,
+
+        [Parameter()]
+        [System.Boolean]                
+        $networkProxyApplySettingsDeviceWide,
+
+        [Parameter()]
+        [System.Boolean]                
+        $networkProxyDisableAutoDetect,
+
+        [Parameter()]
+        [System.String]                
+        $networkProxyAutomaticConfigurationUrl,
+
+        [Parameter()]
+        [System.String[]]
+        $networkProxyServer,
+
+        [Parameter()]
+        [System.Boolean]                
+        $accountsBlockAddingNonMicrosoftAccountEmail,
+
+        [Parameter()]
+        [System.Boolean]                
+        $antiTheftModeBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $bluetoothBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $cameraBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $connectedDevicesServiceBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $certificatesBlockManualRootCertificateInstallation,
+
+        [Parameter()]
+        [System.Boolean]                
+        $copyPasteBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $cortanaBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $deviceManagementBlockFactoryResetOnMobile,
+
+        [Parameter()]
+        [System.Boolean]                
+        $deviceManagementBlockManualUnenroll,
+
+        [Parameter()]
+        [ValidateSet("userDefined", "strict", "moderate")]
+        [System.String]                
+        $safeSearchFilter,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockSearchSuggestions,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockSendingIntranetTrafficToInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeSendIntranetTrafficToInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeRequireSmartScreen,
+
+        [Parameter()]
+        [System.String]                
+        $edgeEnterpriseModeSiteListLocation,
+
+        [Parameter()]
+        [System.String]                
+        $edgeFirstRunUrl,
+
+        [Parameter()]
+        [System.String]
+        $edgeSearchEngine,
+
+        [Parameter()]
+        [System.String[]]                
+        $edgeHomepageUrls,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockAccessToAboutFlags,
+
+        [Parameter()]
+        [System.Boolean]                
+        $smartScreenBlockPromptOverride,
+
+        [Parameter()]
+        [System.Boolean]                
+        $smartScreenBlockPromptOverrideForFiles,
+
+        [Parameter()]
+        [System.Boolean]                
+        $webRtcBlockLocalhostIpAddress,
+
+        [Parameter()]
+        [System.Boolean]                
+        $internetSharingBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockAddProvisioningPackage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockRemoveProvisioningPackage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockChangeSystemTime,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockEditDeviceName,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockChangeRegion,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockChangeLanguage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockChangePowerSleep,
+
+        [Parameter()]
+        [System.Boolean]                
+        $locationServicesBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $microsoftAccountBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $microsoftAccountBlockSettingsSync,
+
+        [Parameter()]
+        [System.Boolean]                
+        $nfcBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $resetProtectionModeBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $storageBlockRemovableStorage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $storageRequireMobileDeviceEncryption,
+
+        [Parameter()]
+        [System.Boolean]                
+        $usbBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $voiceRecordingBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wiFiBlockAutomaticConnectHotspots,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wiFiBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wiFiBlockManualConfiguration,
+
+        [Parameter()]
+        [System.Uint64]                
+        $wiFiScanInterval,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wirelessDisplayBlockProjectionToThisDevice,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wirelessDisplayBlockUserInputFromReceiver,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wirelessDisplayRequirePinForPairing,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsStoreBlocked,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("notConfigured", "blocked", "allowed")]
+        $appsAllowTrustedAppsSideloading,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsStoreBlockAutoUpdate,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "blocked", "allowed")]
+        [System.String]
+        $developerUnlockSetting,
+
+        [Parameter()]
+        [System.Boolean]                
+        $sharedUserAppDataAllowed,
+
+        [Parameter()]
+        [System.Boolean]                
+        $appsBlockWindowsStoreOriginatedApps,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsStoreEnablePrivateStoreOnly,
+
+        [Parameter()]
+        [System.Boolean]                
+        $storageRestrictAppDataToSystemVolume,
+
+        [Parameter()]
+        [System.Boolean]                
+        $storageRestrictAppInstallToSystemVolume,
+
+        [Parameter()]
+        [System.Boolean]                
+        $gameDvrBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $experienceBlockDeviceDiscovery,
+
+        [Parameter()]
+        [System.Boolean]                
+        $experienceBlockErrorDialogWhenNoSIM,
+
+        [Parameter()]
+        [System.Boolean]                
+        $experienceBlockTaskSwitcher,
+
+        [Parameter()]
+        [System.Boolean]                
+        $logonBlockFastUserSwitching,                         
+
+        [Parameter()]
+        [System.Boolean]
+        $tenantLockdownRequireNetworkDuringOutOfBoxExperience,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -1875,8 +2887,9 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $CertificateThumbprint
     )
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -1915,6 +2928,847 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $displayName,
+
+        [Parameter()]
+        [System.String]
+        $description,
+
+        [Parameter()]
+        [System.String]
+        $enterpriseCloudPrintDiscoveryEndPoint,
+
+        [Parameter()]
+        [System.String]                
+        $enterpriseCloudPrintOAuthAuthority,
+
+        [Parameter()]
+        [System.String]                
+        $enterpriseCloudPrintOAuthClientIdentifier,
+
+        [Parameter()]
+        [System.String]                
+        $enterpriseCloudPrintResourceIdentifier,
+
+        [Parameter()]
+        [System.Uint64]                
+        $enterpriseCloudPrintDiscoveryMaxLimit,
+
+        [Parameter()]
+        [System.String]                
+        $enterpriseCloudPrintMopriaDiscoveryResourceIdentifier,
+
+        [Parameter()]
+        [System.Boolean]                
+        $searchBlockDiacritics,
+
+        [Parameter()]
+        [System.Boolean]                
+        $searchDisableAutoLanguageDetection,
+
+        [Parameter()]
+        [System.Boolean]                
+        $searchDisableIndexingEncryptedItems,
+
+        [Parameter()]
+        [System.Boolean]                
+        $searchEnableRemoteQueries,
+
+        [Parameter()]
+        [System.Boolean]                
+        $searchDisableIndexerBackoff,
+
+        [Parameter()]
+        [System.Boolean]                
+        $searchDisableIndexingRemovableDrive,
+
+        [Parameter()]
+        [System.Boolean]                
+        $searchEnableAutomaticIndexSizeManangement,
+
+        [Parameter()]
+        [ValidateSet("userDefined", "none", "basic","enhanced","full")]
+        [System.String]                
+        $diagnosticsDataSubmissionMode,
+
+        [Parameter()]
+        [System.Boolean]                
+        $oneDriveDisableFileSync,
+
+        [Parameter()]
+        [System.Boolean]                
+        $smartScreenEnableAppInstallControl,
+
+        [Parameter()]
+        [System.String]                
+        $personalizationDesktopImageUrl,
+
+        [Parameter()]
+        [System.String]                
+        $personalizationLockScreenImageUrl,
+
+        [Parameter()]
+        [System.String[]]                
+        $bluetoothAllowedServices,
+
+        [Parameter()]
+        [System.Boolean]                
+        $bluetoothBlockAdvertising,
+
+        [Parameter()]
+        [System.Boolean]                
+        $bluetoothBlockDiscoverableMode,
+
+        [Parameter()]
+        [System.Boolean]                
+        $bluetoothBlockPrePairing,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockAutofill,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlocked,
+
+        [Parameter()]
+        [ValidateSet("userDefined", "allow", "blockThirdparty","blockAll")]
+        [System.String]                
+        $edgeCookiePolicy,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockDeveloperTools,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockSendingDoNotTrackHeader,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockExtensions,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockInPrivateBrowsing,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockJavaScript,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockPasswordManager,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockAddressBarDropdown,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockCompatibilityList,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeClearBrowsingDataOnExit,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeAllowStartPagesModification,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeDisableFirstRunPage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockLiveTileDataCollection,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeSyncFavoritesWithInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]                
+        $cellularBlockDataWhenRoaming,
+
+        [Parameter()]
+        [System.Boolean]                
+        $cellularBlockVpn,
+
+        [Parameter()]
+        [System.Boolean]                                     
+        $cellularBlockVpnWhenRoaming,                         
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireRealTimeMonitoring,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireBehaviorMonitoring,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireNetworkInspectionSystem,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanDownloads,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanScriptsLoadedInInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderBlockEndUserAccess,
+
+        [Parameter()]
+        [System.Uint64]
+        $defenderSignatureUpdateIntervalInHours,
+
+        [Parameter()]
+        [ValidateSet("userDefined", "disable", "monitorAllFiles","monitorIncomingFileOnly","monitorOutgoingFilesOnly")]
+        [System.String]
+        $defenderMonitorFileActivity,
+
+        [Parameter()]
+        [System.Uint64]
+        $defenderDaysBeforeDeletingQuarantinedMalware,
+
+        [Parameter()]
+        [System.Uint64]
+        $defenderScanMaxCpu,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanArchiveFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanIncomingMail,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanRemovableDrivesDuringFullScan,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanMappedNetworkDrivesDuringFullScan,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderScanNetworkFiles,
+
+        [Parameter()]
+        [System.Boolean]
+        $defenderRequireCloudProtection,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "high", "highPlus","zeroTolerance")]
+        [System.String]
+        $defenderCloudBlockLevel,
+
+        [Parameter()]
+        [ValidateSet("userDefined", "alwaysPrompt", "promptBeforeSendingPersonalData","neverSendData","sendAllDataWithoutPrompting")]
+        [System.String]
+        $defenderPromptForSampleSubmission,
+
+        [Parameter()]
+        [System.String]
+        $defenderScheduledQuickScanTime,
+
+        [Parameter()]
+        [ValidateSet("userDefined", "disabled", "quick","full")]
+        [System.String]
+        $defenderScanType,
+
+        [Parameter()]
+        [System.string]
+        $defenderSystemScanSchedule,
+
+        [Parameter()]
+        [System.String]
+        $defenderScheduledScanTime,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderFileExtensionsToExclude,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderFilesAndFoldersToExclude,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderProcessesToExclude,
+
+        [Parameter()]
+        [System.String[]]
+        $defenderDetectedMalwareActions,
+
+        [Parameter()]
+        [System.Boolean]                
+        $lockScreenAllowTimeoutConfiguration,
+
+        [Parameter()]
+        [System.Boolean]                
+        $lockScreenBlockActionCenterNotifications,
+
+        [Parameter()]
+        [System.Boolean]                
+        $lockScreenBlockCortana,
+
+        [Parameter()]
+        [System.Boolean]                
+        $lockScreenBlockToastNotifications,
+
+        [Parameter()]
+        [System.Uint64]                
+        $lockScreenTimeoutInSeconds,
+
+        [Parameter()]
+        [System.Boolean]                
+        $passwordBlockSimple,
+
+        [Parameter()]
+        [System.Uint64]                
+        $passwordExpirationDays,
+
+        [Parameter()]
+        [System.Uint64]                
+        $passwordMinimumLength,
+
+        [Parameter()]
+        [System.Uint64]                
+        $passwordMinutesOfInactivityBeforeScreenTimeout,
+
+        [Parameter()]
+        [System.Uint64]                
+        $passwordMinimumCharacterSetCount,
+
+        [Parameter()]
+        [System.Uint64]                
+        $passwordPreviousPasswordBlockCount,
+
+        [Parameter()]
+        [System.Boolean]                
+        $passwordRequired,
+
+        [Parameter()]
+        [System.Boolean]                
+        $passwordRequireWhenResumeFromIdleState,
+
+        [Parameter()]
+        [ValidateSet("deviceDefault", "alphanumeric", "numeric")]
+        [System.String]                
+        $passwordRequiredType,
+
+        [Parameter()]
+        [System.Uint64]                
+        $passwordSignInFailureCountBeforeFactoryReset,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "blocked", "allowed")]
+        [System.String]                
+        $privacyAdvertisingId,
+
+        [Parameter()]
+        [System.Boolean]                
+        $privacyAutoAcceptPairingAndConsentPrompts,
+
+        [Parameter()]
+        [System.Boolean]                
+        $privacyBlockInputPersonalization,
+
+        [Parameter()]
+        [System.Boolean]                
+        $startBlockUnpinningAppsFromTaskbar,
+
+        [Parameter()]
+        [ValidateSet("userDefined", "collapse", "remove","disableSettingsApp")]
+        [System.String]
+        $startMenuAppListVisibility,
+
+        [Parameter()]
+        [System.Boolean]                
+        $startMenuHideChangeAccountSettings,
+
+        [Parameter()]
+        [System.Boolean]                
+        $startMenuHideFrequentlyUsedApps,
+
+        [Parameter()]
+        [System.Boolean]                
+        $startMenuHideHibernate,
+
+        [Parameter()]
+        [System.Boolean]                
+        $startMenuHideLock,
+
+        [Parameter()]
+        [System.Boolean]                
+        $startMenuHidePowerButton,
+
+        [Parameter()]
+        [System.Boolean]                
+        $startMenuHideRecentJumpLists,
+
+        [Parameter()]
+        [System.Boolean]                
+        $startMenuHideRecentlyAddedApps,
+
+        [Parameter()]
+        [System.Boolean]                
+        $startMenuHideRestartOptions,
+
+        [Parameter()]
+        [System.Boolean]                
+        $startMenuHideShutDown,
+
+        [Parameter()]
+        [System.Boolean]                
+        $startMenuHideSignOut,
+
+        [Parameter()]
+        [System.Boolean]                
+        $startMenuHideSleep,
+
+        [Parameter()]
+        [System.Boolean]                
+        $startMenuHideSwitchAccount,
+
+        [Parameter()]
+        [System.Boolean]                
+        $startMenuHideUserTile,
+
+        [Parameter()]
+        [System.String]                
+        $startMenuLayoutEdgeAssetsXml,
+
+        [Parameter()]
+        [System.String]                
+        $startMenuLayoutXml,
+
+        [Parameter()]
+        [ValidateSet("userDefined", "fullScreen", "nonFullScreen")]
+        [System.String]                
+        $startMenuMode,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
+        $startMenuPinnedFolderDocuments,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
+        $startMenuPinnedFolderDownloads,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
+        $startMenuPinnedFolderFileExplorer,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
+        $startMenuPinnedFolderHomeGroup,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
+        $startMenuPinnedFolderMusic,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
+        $startMenuPinnedFolderNetwork,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
+        $startMenuPinnedFolderPersonalFolder,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
+        $startMenuPinnedFolderPictures,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
+        $startMenuPinnedFolderSettings,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "hide", "show")]
+        [System.String]                
+        $startMenuPinnedFolderVideos,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockSettingsApp,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockSystemPage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockDevicesPage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockNetworkInternetPage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockPersonalizationPage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockAccountsPage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockTimeLanguagePage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockEaseOfAccessPage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockPrivacyPage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockUpdateSecurityPage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockAppsPage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockGamingPage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $WindowsSpotlightBlockConsumerSpecificFeatures,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsSpotlightBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsSpotlightBlockOnActionCenter,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsSpotlightBlockTailoredExperiences,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsSpotlightBlockThirdPartyNotifications,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsSpotlightBlockWelcomeExperience,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsSpotlightBlockWindowsTips,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "disabled", "enabled")]
+        [System.String]
+        $windowsSpotlightConfigureOnLockScreen,
+
+        [Parameter()]
+        [System.Boolean]                
+        $networkProxyApplySettingsDeviceWide,
+
+        [Parameter()]
+        [System.Boolean]                
+        $networkProxyDisableAutoDetect,
+
+        [Parameter()]
+        [System.String]                
+        $networkProxyAutomaticConfigurationUrl,
+
+        [Parameter()]
+        [System.String[]]
+        $networkProxyServer,
+
+        [Parameter()]
+        [System.Boolean]                
+        $accountsBlockAddingNonMicrosoftAccountEmail,
+
+        [Parameter()]
+        [System.Boolean]                
+        $antiTheftModeBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $bluetoothBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $cameraBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $connectedDevicesServiceBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $certificatesBlockManualRootCertificateInstallation,
+
+        [Parameter()]
+        [System.Boolean]                
+        $copyPasteBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $cortanaBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $deviceManagementBlockFactoryResetOnMobile,
+
+        [Parameter()]
+        [System.Boolean]                
+        $deviceManagementBlockManualUnenroll,
+
+        [Parameter()]
+        [ValidateSet("userDefined", "strict", "moderate")]
+        [System.String]                
+        $safeSearchFilter,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockPopups,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockSearchSuggestions,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockSendingIntranetTrafficToInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeSendIntranetTrafficToInternetExplorer,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeRequireSmartScreen,
+
+        [Parameter()]
+        [System.String]                
+        $edgeEnterpriseModeSiteListLocation,
+
+        [Parameter()]
+        [System.String]                
+        $edgeFirstRunUrl,
+
+        [Parameter()]
+        [System.String]
+        $edgeSearchEngine,
+
+        [Parameter()]
+        [System.String[]]                
+        $edgeHomepageUrls,
+
+        [Parameter()]
+        [System.Boolean]                
+        $edgeBlockAccessToAboutFlags,
+
+        [Parameter()]
+        [System.Boolean]                
+        $smartScreenBlockPromptOverride,
+
+        [Parameter()]
+        [System.Boolean]                
+        $smartScreenBlockPromptOverrideForFiles,
+
+        [Parameter()]
+        [System.Boolean]                
+        $webRtcBlockLocalhostIpAddress,
+
+        [Parameter()]
+        [System.Boolean]                
+        $internetSharingBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockAddProvisioningPackage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockRemoveProvisioningPackage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockChangeSystemTime,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockEditDeviceName,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockChangeRegion,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockChangeLanguage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $settingsBlockChangePowerSleep,
+
+        [Parameter()]
+        [System.Boolean]                
+        $locationServicesBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $microsoftAccountBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $microsoftAccountBlockSettingsSync,
+
+        [Parameter()]
+        [System.Boolean]                
+        $nfcBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $resetProtectionModeBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $screenCaptureBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $storageBlockRemovableStorage,
+
+        [Parameter()]
+        [System.Boolean]                
+        $storageRequireMobileDeviceEncryption,
+
+        [Parameter()]
+        [System.Boolean]                
+        $usbBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $voiceRecordingBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wiFiBlockAutomaticConnectHotspots,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wiFiBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wiFiBlockManualConfiguration,
+
+        [Parameter()]
+        [System.Uint64]                
+        $wiFiScanInterval,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wirelessDisplayBlockProjectionToThisDevice,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wirelessDisplayBlockUserInputFromReceiver,
+
+        [Parameter()]
+        [System.Boolean]                
+        $wirelessDisplayRequirePinForPairing,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsStoreBlocked,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("notConfigured", "blocked", "allowed")]
+        $appsAllowTrustedAppsSideloading,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsStoreBlockAutoUpdate,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "blocked", "allowed")]
+        [System.String]
+        $developerUnlockSetting,
+
+        [Parameter()]
+        [System.Boolean]                
+        $sharedUserAppDataAllowed,
+
+        [Parameter()]
+        [System.Boolean]                
+        $appsBlockWindowsStoreOriginatedApps,
+
+        [Parameter()]
+        [System.Boolean]                
+        $windowsStoreEnablePrivateStoreOnly,
+
+        [Parameter()]
+        [System.Boolean]                
+        $storageRestrictAppDataToSystemVolume,
+
+        [Parameter()]
+        [System.Boolean]                
+        $storageRestrictAppInstallToSystemVolume,
+
+        [Parameter()]
+        [System.Boolean]                
+        $gameDvrBlocked,
+
+        [Parameter()]
+        [System.Boolean]                
+        $experienceBlockDeviceDiscovery,
+
+        [Parameter()]
+        [System.Boolean]                
+        $experienceBlockErrorDialogWhenNoSIM,
+
+        [Parameter()]
+        [System.Boolean]                
+        $experienceBlockTaskSwitcher,
+
+        [Parameter()]
+        [System.Boolean]                
+        $logonBlockFastUserSwitching,                         
+
+        [Parameter()]
+        [System.Boolean]
+        $tenantLockdownRequireNetworkDuringOutOfBoxExperience,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('Absent', 'Present')]
+        $Ensure,
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount,
@@ -1929,8 +3783,9 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $CertificateThumbprint
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
         -InboundParameters $PSBoundParameters
 
@@ -2019,7 +3874,7 @@ function Get-M365DSCIntuneDeviceConfigurationPolicyWindows
     )
     try
     {
-        $Url = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations/$PolicyId"
+        $Url = "https://graph.microsoft.com/v1.0/deviceManagement/deviceConfigurations/$($policyInfo.id)"
         $response = Invoke-MSGraphRequest -HttpMethod Get `
             -Url $Url
         return $response
@@ -2056,7 +3911,42 @@ function New-M365DSCIntuneDeviceConfigurationPolicyWindows
             $length = $key.Length
             $fixedKeyName = $key[0].ToString().ToLower() + $key.Substring(1, $length - 1)
             $jsonString += "`"$fixedKeyName`": "
-            if ($Parameters.$key.GetType().Name -eq "String")
+            if ($key -like 'defenderDetectedMalwareActions'){
+                $jsonString += "{`r`n"
+                $jsonString += "`"@odata.type`": `"#microsoft.graph.defenderDetectedMalwareActions`",`r`n"
+
+                foreach($Action in $Parameters.defenderDetectedMalwareActions){
+                  $jsonString +=  "`"$($Action.split('=')[0])" + "`" : `"" + "$($Action.split('=')[1])" + "`",`r`n"
+                }
+                $jsonString = $jsonString.TrimEnd(",`r`n")
+                $jsonString += "`r`n},`r`n"
+            }elseif($key -like 'networkProxyServer'){
+                $jsonString += "{`r`n"
+                $jsonString += "`"@odata.type`": `"microsoft.graph.windows10NetworkProxyServer`",`r`n"
+                foreach($Entry in $Parameters.networkProxyServer){
+                  if($Entry -like 'exceptions*'){
+                    $jsonString +=  "`"$($Entry.split('=')[0])" + "`" : [`r`n`"" + "$($Entry.split('=')[1])" + "`",`r`n"
+                    $jsonString += "],`r`n"
+                  }else{
+                    $jsonString +=  "`"$($Entry.split('=')[0])" + "`" : `"" + "$($Entry.split('=')[1])" + "`",`r`n"
+                  }
+                }
+                $jsonString = $jsonString.TrimEnd(",`r`n")
+                $jsonString += "`r`n},`r`n"
+     
+                #}  
+            }elseif($key -like 'edgeSearchEngine'){
+                $jsonString += "{`r`n"
+                if( $Parameters.edgeSearchEngine -like 'bing'){
+                    $jsonString += "`"@odata.type`": `"#microsoft.graph.edgeSearchEngine`",`r`n"
+                    $jsonString +=  "`"edgeSearchEngineType" + "`" : `"" + "$($Parameters.edgeSearchEngine)" + "`",`r`n"
+                }else{
+                    $jsonString += "`"@odata.type`": `"#microsoft.graph.edgeSearchEngineCustom`",`r`n"
+                    $jsonString +=  "`"edgeSearchEngineOpenSearchXmlUrl" + "`" : `"" + "$($Parameters.edgeSearchEngine)" + "`",`r`n"
+                }                $jsonString = $jsonString.TrimEnd(",`r`n")
+                $jsonString += "`r`n},`r`n"
+            }
+            elseif ($Parameters.$key.GetType().Name -eq "String")
             {
                 $jsonString += "`"$($Parameters.$key)`",`r`n"
             }
@@ -2071,7 +3961,8 @@ function New-M365DSCIntuneDeviceConfigurationPolicyWindows
         }
         $jsonString = $jsonString.TrimEnd(",`r`n")
         $jsonString += "`r`n}"
-        $Url = 'https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations/'
+
+        $Url = 'https://graph.microsoft.com/v1.0/deviceManagement/deviceConfigurations/'
         Write-Verbose -Message "Creating new Device config policy with JSON payload: `r`n$jsonString"
         Invoke-MSGraphRequest -HttpMethod POST `
             -Url $Url `
@@ -2107,13 +3998,49 @@ function Set-M365DSCIntuneDeviceConfigurationPolicyWindows
             $Parameters.Remove("Verbose") | Out-Null
         }
         # replace the first letter of each key by a lower case;
-        $jsonString = "{`r`n`"@odata.type`":`"#microsoft.graph.Windows10GeneralConfiguration`",`r`n"
+        $jsonString = "{`r`n`"@odata.type`":`"#microsoft.graph.windows10GeneralConfiguration`",`r`n"
         foreach ($key in $Parameters.Keys)
         {
             $length = $key.Length
             $fixedKeyName = $key[0].ToString().ToLower() + $key.Substring(1, $length - 1)
             $jsonString += "`"$fixedKeyName`": "
-            if ($Parameters.$key.GetType().Name -eq "String")
+            if ($key -like 'defenderDetectedMalwareActions'){
+                $jsonString += "{`r`n"
+                $jsonString += "`"@odata.type`": `"microsoft.graph.defenderDetectedMalwareActions`",`r`n"
+
+                foreach($Action in $Parameters.defenderDetectedMalwareActions){
+                  $jsonString +=  "`"$($Action.split('=')[0])" + "`" : `"" + "$($Action.split('=')[1])" + "`",`r`n"
+                }
+                $jsonString = $jsonString.TrimEnd(",`r`n")
+                $jsonString += "`r`n},`r`n"
+             }elseif($key -like 'networkProxyServer'){
+                $jsonString += "{`r`n"
+                $jsonString += "`"@odata.type`": `"microsoft.graph.windows10NetworkProxyServer`",`r`n"
+                foreach($Entry in $Parameters.networkProxyServer){
+                  if($Entry -like 'exceptions*'){
+                    $jsonString +=  "`"$($Entry.split('=')[0])" + "`" : [`r`n`"" + "$($Entry.split('=')[1])" + "`",`r`n"
+                    $jsonString += "],`r`n"
+                  }else{
+                    $jsonString +=  "`"$($Entry.split('=')[0])" + "`" : `"" + "$($Entry.split('=')[1])" + "`",`r`n"
+                  }
+                }
+                $jsonString = $jsonString.TrimEnd(",`r`n")
+                $jsonString += "`r`n},`r`n"
+     
+                #}  
+            }elseif($key -like 'edgeSearchEngine'){
+                $jsonString += "{`r`n"
+                if( $Parameters.edgeSearchEngine -like 'bing'){
+                    $jsonString += "`"@odata.type`": `"#microsoft.graph.edgeSearchEngine`",`r`n"
+                    $jsonString +=  "`"edgeSearchEngineType" + "`" : `"" + "$($Parameters.edgeSearchEngine)" + "`",`r`n"
+                }else{
+                    $jsonString += "`"@odata.type`": `"#microsoft.graph.edgeSearchEngineCustom`",`r`n"
+                    $jsonString +=  "`"edgeSearchEngineOpenSearchXmlUrl" + "`" : `"" + "$($Parameters.edgeSearchEngine)" + "`",`r`n"
+                }
+                $jsonString = $jsonString.TrimEnd(",`r`n")
+                $jsonString += "`r`n},`r`n"
+            } 
+            elseif($Parameters.$key.GetType().Name -eq "String")
             {
                 $jsonString += "`"$($Parameters.$key)`",`r`n"
             }
@@ -2126,9 +4053,11 @@ function Set-M365DSCIntuneDeviceConfigurationPolicyWindows
                 $jsonString += "$($Parameters.$key),`r`n"
             }
         }
+        if($PolicyId){
         $jsonString = $jsonString.TrimEnd(",`r`n")
         $jsonString += "`r`n}"
-        $Url = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations/$PolicyId"
+        $Url = "https://graph.microsoft.com/v1.0/deviceManagement/deviceConfigurations/$PolicyId"
+        }
         Write-Verbose -Message "Updating Device config policy with JSON payload: `r`n$jsonString"
         Invoke-MSGraphRequest -HttpMethod PATCH `
             -Url $Url `
