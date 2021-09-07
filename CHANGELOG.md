@@ -4,7 +4,6 @@
 
 * DEPENDENCIES;
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.133;
-  * Updated MSCloudLoginAssistant to version 1.063;
   * Updated MicrosoftTeams to version 2.5.1;
 * MISC
   * Additional display alignment fixes for Export;
