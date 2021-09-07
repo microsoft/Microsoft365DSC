@@ -319,7 +319,15 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        if ($_.Exception -like '*401*')
+        {
+            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+        }
+        else
+        {
+            Write-Host $Global:M365DSCEmojiRedX
+        }
+
         try
         {
             Write-Verbose -Message $_

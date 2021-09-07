@@ -457,7 +457,7 @@ function Export-TargetResource
         }
         foreach ($script in $siteScripts)
         {
-            Write-Host "    [$i/$($siteScripts.Length)] $($script.Title)"
+            Write-Host "    [$i/$($siteScripts.Length)] $($script.Title)" -NoNewline
             $params = @{
                 Identity              = $script.Id
                 Title                 = $script.Title
