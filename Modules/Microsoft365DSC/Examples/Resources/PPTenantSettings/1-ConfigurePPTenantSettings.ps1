@@ -15,6 +15,7 @@ Configuration Example
   {
     PPTenantSettings TenantSettings
     {
+      IsSingleInstance                               = $true
       WalkMeOptOut                                   = $false
       DisableNPSCommentsReachout                     = $false
       DisableNewsletterSendout                       = $false

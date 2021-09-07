@@ -234,7 +234,7 @@ function Set-TargetResource
   $SetParameters = $PSBoundParameters
   $RequestBody = Get-M365DSCPowerPlatformTenantSettingsJSON -Parameters $SetParameters
 
-  Set-TenantSettings -RequestBody $RequestBody
+  Set-TenantSettings -RequestBody $RequestBody | Out-Null
 }
 
 function Test-TargetResource
@@ -416,7 +416,6 @@ function Export-TargetResource
 
     Write-Host $Global:M365DSCEmojiGreenCheckMark
 
-
     return $dscContent
   }
   catch
@@ -458,28 +457,28 @@ function Get-M365DSCPowerPlatformTenantSettingsJSON
 
   $JsonContent = @"
     {
-        "walkMeOptOut" : $Parameters.WalkMeOptOut,
-        "disableNPSCommentsReachout" : $Parameters.DisableNPSCommentsReachout,
-        "disableNewsletterSendout" : $Parameters.DisableNewsletterSendout,
-        "disableEnvironmentCreationByNonAdminUsers" : $Parameters.DisableEnvironmentCreationByNonAdminUsers,
-        "disablePortalsCreationByNonAdminUsers" : $Parameters.DisablePortalsCreationByNonAdminUsers,
-        "disableSurveyFeedback" : $Parameters.DisableSurveyFeedback,
-        "disableTrialEnvironmentCreationByNonAdminUsers" : $Parameters.DisableTrialEnvironmentCreationByNonAdminUsers,
-        "disableCapacityAllocationByEnvironmentAdmins" : $Parameters.DisableCapacityAllocationByEnvironmentAdmins,
-        "disableSupportTicketsVisibleByAllUsers" : $Parameters.DisableSupportTicketsVisibleByAllUsers,
+        "walkMeOptOut" : $($Parameters.WalkMeOptOut),
+        "disableNPSCommentsReachout" : $($Parameters.DisableNPSCommentsReachout),
+        "disableNewsletterSendout" : $($Parameters.DisableNewsletterSendout),
+        "disableEnvironmentCreationByNonAdminUsers" : $($Parameters.DisableEnvironmentCreationByNonAdminUsers),
+        "disablePortalsCreationByNonAdminUsers" : $($Parameters.DisablePortalsCreationByNonAdminUsers),
+        "disableSurveyFeedback" : $($Parameters.DisableSurveyFeedback),
+        "disableTrialEnvironmentCreationByNonAdminUsers" : $($Parameters.DisableTrialEnvironmentCreationByNonAdminUsers),
+        "disableCapacityAllocationByEnvironmentAdmins" : $($Parameters.DisableCapacityAllocationByEnvironmentAdmins),
+        "disableSupportTicketsVisibleByAllUsers" : $($Parameters.DisableSupportTicketsVisibleByAllUsers),
 
         "powerPlatform": {
           "search:{
-            "disableDocsSearch" : $Parameters.DisableDocsSearch,
-            "disableCommunitySearch" : $Parameters.DisableCommunitySearch,
-            "disableBingVideoSearch" : $Parameters.DisableBingVideoSearch
+            "disableDocsSearch" : $($Parameters.DisableDocsSearch),
+            "disableCommunitySearch" : $($Parameters.DisableCommunitySearch),
+            "disableBingVideoSearch" : $($Parameters.DisableBingVideoSearch)
           },
           "powerApps": {
-            "disableShareWithEveryone" : $Parameters.DisableShareWithEveryone,
-            "enableGuestsToMake" : $Parameters.EnableGuestsToMake
+            "disableShareWithEveryone" : $($Parameters.DisableShareWithEveryone),
+            "enableGuestsToMake" : $($Parameters.EnableGuestsToMake)
           },
           "teamsIntegration": {
-            "shareWithColleaguesUserLimit": $Parameters.ShareWithColleaguesUserLimit
+            "shareWithColleaguesUserLimit": $($Parameters.ShareWithColleaguesUserLimit)
           }
         }
     }
