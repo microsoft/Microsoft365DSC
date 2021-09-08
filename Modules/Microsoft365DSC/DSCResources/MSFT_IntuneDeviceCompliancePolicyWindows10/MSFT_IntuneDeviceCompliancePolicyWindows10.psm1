@@ -94,6 +94,10 @@ function Get-TargetResource
         $ActiveFirewallRequired,
 
         [Parameter()]
+        [System.Boolean]
+        $DefenderEnabled,
+
+        [Parameter()]
         [System.String]
         $DefenderVersion,
 
@@ -161,6 +165,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Checking for the Intune Device Compliance Windows 10 Policy {$DisplayName}"
+    $GraphSchema =  Update-MSGraphEnvironment -SchemaVersion beta -Quiet | Out-Null
     $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
         -InboundParameters $PSBoundParameters
 
@@ -354,6 +359,10 @@ function Set-TargetResource
         $ActiveFirewallRequired,
 
         [Parameter()]
+        [System.Boolean]
+        $DefenderEnabled,
+
+        [Parameter()]
         [System.String]
         $DefenderVersion,
 
@@ -422,7 +431,7 @@ function Set-TargetResource
 
 
     Write-Verbose -Message "Intune Device Compliance Windows 10 Policy {$DisplayName}"
-
+    $GraphSchema =  Update-MSGraphEnvironment -SchemaVersion beta -Quiet | Out-Null
     $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
         -InboundParameters $PSBoundParameters
 
@@ -576,6 +585,10 @@ function Test-TargetResource
         $ActiveFirewallRequired,
 
         [Parameter()]
+        [System.Boolean]
+        $DefenderEnabled,
+
+        [Parameter()]
         [System.String]
         $DefenderVersion,
 
@@ -697,7 +710,7 @@ function Export-TargetResource
         [System.String]
         $ApplicationSecret
     )
-
+    $GraphSchema =  Update-MSGraphEnvironment -SchemaVersion beta | Out-Null
     $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
         -InboundParameters $PSBoundParameters
 
