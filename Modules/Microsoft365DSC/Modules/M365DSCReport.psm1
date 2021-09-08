@@ -476,6 +476,16 @@ function Get-M365DSCResourceKey
         {
             return @("Id")
         }
+        if ($Resource.ResourceName -eq 'TeamsChannel' -and -not [System.String]::IsNullOrEmpty($Resource.TeamName))
+        {
+            # Teams Channel displaynames are not tenant-unique (e.g. "General" is almost in every team), but should be unique per team
+            return @('TeamName','DisplayName')
+        }
+        if ($Resource.ResourceName -eq 'TeamsTeam' -and -not [System.String]::IsNullOrEmpty($Resource.MailNickName))
+        {
+            # Teams names are not unique
+            return @('MailNickName','DisplayName')
+        }
         return @("DisplayName")
     }
     elseif ($Resource.Contains("Identity"))
