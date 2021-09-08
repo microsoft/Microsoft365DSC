@@ -1,5 +1,22 @@
 # Change log for Microsoft365DSC
 
+# 1.21.908.1
+
+* PPTenantSettings
+  * Initial Release;
+* DEPENDENCIES;
+  * Updated MSCloudLoginAssistant to version 1.0.64;
+* MISC
+  * Fixing duplicate teams names in reports;
+
+# 1.21.901.1
+
+* DEPENDENCIES;
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.133;
+  * Updated MicrosoftTeams to version 2.5.1;
+* MISC
+  * Additional display alignment fixes for Export;
+
 # 1.21.825.1
 
 * SPOTenantSettings

@@ -1302,7 +1302,7 @@ function Get-SPOAdministrationUrl
     $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
         -InboundParameters $PSBoundParameters
     Write-Verbose -Message "Getting SharePoint Online admin URL..."
-    $defaultDomain = Get-AzureADDomain | Where-Object { ($_.Name -like "*.onmicrosoft.com" -or $_.Name -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
+    $defaultDomain = Get-AzureADDomain | Where-Object { ($_.Name -like "*.onmicrosoft.com" -or $_.Name -like "*.onmicrosoft.de" -or $_.Name -like "*.onmicrosoft.us") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
 
     if ($defaultDomain[0].Name -like '*.onmicrosoft.com*')
     {
@@ -2454,4 +2454,79 @@ function Test-M365DSCObjectHasProperty
         }
     }
     return $false
+}
+
+function Get-M365DSCWorkloadsListFromResourceNames
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true, Position = 1)]
+        [String[]]
+        $ResourceNames
+    )
+
+    [Array] $workloads = @()
+    foreach ($resource in $ResourceNames)
+    {
+        switch ($resource.Substring(5,2))
+        {
+            "AA" {
+                if (-not $workloads.Contains("AzureAD"))
+                {
+                    $workloads += "AzureAD"
+                }
+            }
+            "EX" {
+                if (-not $workloads.Contains("ExchangeOnline"))
+                {
+                    $workloads += "ExchangeOnline"
+                }
+            }
+            "In" {
+                if (-not $workloads.Contains("Intune"))
+                {
+                    $workloads += "Intune"
+                }
+            }
+            "O3" {
+                if (-not $workloads.Contains("AzureAD"))
+                {
+                    $workloads += "AzureAD"
+                }
+            }
+            "OD" {
+                if (-not $workloads.Contains("PnP"))
+                {
+                    $workloads += "PnP"
+                }
+            }
+            "Pl" {
+                if (-not $workloads.Contains("MicrosoftGraph"))
+                {
+                    $workloads += "MicrosoftGraph"
+                }
+            }
+            "SP" {
+                if (-not $workloads.Contains("PnP"))
+                {
+                    $workloads += "PnP"
+                }
+            }
+            "SC" {
+                if (-not $workloads.Contains("SecurityComplianceCenter"))
+                {
+                    $workloads += "SecurityComplianceCenter"
+                }
+            }
+            "Te" {
+                if (-not $workloads.Contains("MicrosoftTeams"))
+                {
+                    $workloads += "MicrosoftTeams"
+                }
+            }
+        }
+    }
+    return $workloads
 }

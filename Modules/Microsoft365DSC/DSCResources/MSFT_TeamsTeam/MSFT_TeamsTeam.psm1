@@ -158,7 +158,8 @@ function Get-TargetResource
         {
             Write-Verbose -Message "GroupID was NOT specified"
             ## Can retreive multiple Teams since displayname is not unique
-            $team = Get-Team -DisplayName $DisplayName
+            # Filter on DisplayName as -DisplayName also does partial matches and will report duplicate names that are not real duplicate names
+            $team = Get-Team -DisplayName $DisplayName | Where-Object {$_.DisplayName -eq $DisplayName}
             if ($null -eq $team)
             {
                 Write-Verbose -Message "Teams with displayname $DisplayName doesn't exist"
@@ -689,6 +690,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($teams.Length)] $($team.DisplayName)" -NoNewline
             $params = @{
                 DisplayName           = $team.DisplayName
+                GroupID               = $team.GroupId
                 GlobalAdminAccount    = $GlobalAdminAccount
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

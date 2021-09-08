@@ -89,7 +89,6 @@ function Get-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-
     $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
         -InboundParameters $PSBoundParameters
 
