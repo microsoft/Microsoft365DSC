@@ -380,7 +380,6 @@ function Export-TargetResource
   {
     $settings = Get-TenantSettings -ErrorAction Stop
     $dscContent = ''
-    Write-Host "`r`n" -NoNewline
 
     $Params = @{
       IsSingleInstance                               = 'Yes'
@@ -422,6 +421,7 @@ function Export-TargetResource
   {
     try
     {
+      Write-Host $Global:M365DSCEmojiRedX
       Write-Verbose -Message $_
       $tenantIdValue = ''
       if (-not [System.String]::IsNullOrEmpty($TenantId))

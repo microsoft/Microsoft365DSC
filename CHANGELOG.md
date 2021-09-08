@@ -2,8 +2,12 @@
 
 # 1.21.908.1
 
+* PPTenantSettings
+  * Initial Release;
 * DEPENDENCIES;
   * Updated MSCloudLoginAssistant to version 1.0.64;
+* MISC
+  * Fixing duplicate teams names in reports;
 
 # 1.21.901.1
 
