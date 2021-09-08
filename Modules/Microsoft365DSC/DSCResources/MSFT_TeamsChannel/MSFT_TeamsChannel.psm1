@@ -223,7 +223,7 @@ function Set-TargetResource
             {
                 $CurrentParameters.Remove("NewDisplayName")
             }
-            Write-Verbose -Message "Creating team channel  $DislayName"
+            Write-Verbose -Message "Creating team channel $DisplayName"
             New-TeamChannel @CurrentParameters
         }
     }
@@ -231,7 +231,7 @@ function Set-TargetResource
     {
         if ($channel.DisplayName)
         {
-            Write-Verbose -Message "Removing team channel $DislayName"
+            Write-Verbose -Message "Removing team channel $DisplayName"
             Remove-TeamChannel -GroupId $team.GroupId -DisplayName $DisplayName
         }
     }
