@@ -83,7 +83,6 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_
@@ -103,6 +102,12 @@ function Get-TargetResource
         catch
         {
             Write-Verbose -Message $_
+        }
+
+        # This method is not implemented in some sovereign clouds (e.g. GCCHigh)
+        if ($_.Exception -like '*The method or operation is not implemented*')
+        {
+            throw $_
         }
         return ""
     }
@@ -324,8 +329,6 @@ function Export-TargetResource
         Write-Host "`r`n" -NoNewline
         foreach ($cType in $cdnTypes)
         {
-            Write-Host "    |---[$i/2] $cType" -NoNewline
-
             $Params = @{
                 GlobalAdminAccount    = $GlobalAdminAccount
                 CdnType               = $cType
@@ -338,6 +341,7 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
+            Write-Host "    |---[$i/2] $cType" -NoNewline
             if ($Results.Enable -eq $True)
             {
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -359,26 +363,34 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
-        try
+        # This method is not implemented in some sovereign clouds (e.g. GCCHigh)
+        if ($_.Exception -like '*The method or operation is not implemented*')
         {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $GlobalAdminAccount)
-            {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
+            Write-Host "    $($Global:M365DSCEmojiYellowCircle) The current tenant does not support this feature."
         }
-        catch
+        else
         {
-            Write-Verbose -Message $_
+            Write-Host $Global:M365DSCEmojiRedX
+            try
+            {
+                Write-Verbose -Message $_
+                $tenantIdValue = ""
+                if (-not [System.String]::IsNullOrEmpty($TenantId))
+                {
+                    $tenantIdValue = $TenantId
+                }
+                elseif ($null -ne $GlobalAdminAccount)
+                {
+                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                }
+                Add-M365DSCEvent -Message $_ -EntryType 'Error' `
+                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $tenantIdValue
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+            }
         }
         return ""
     }

@@ -652,6 +652,7 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
+    Write-Verbose (Get-HostedContentFilterPolicy | Out-String)
     $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
 
     $HostedContentFilterPolicy = $HostedContentFilterPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
