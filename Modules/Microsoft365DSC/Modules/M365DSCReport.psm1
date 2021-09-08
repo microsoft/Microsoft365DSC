@@ -308,17 +308,20 @@ function Compare-M365DSCConfigurations
         Write-Progress -Activity "Scanning Source $Source...[$i/$($SourceObject.Count)]" -PercentComplete ($i/($SourceObject.Count)*100)
         [array]$destinationResource = $DestinationObject | Where-Object -FilterScript {$_.ResourceName -eq $sourceResource.ResourceName -and $_.($key[0]) -eq $sourceResource.($key[0])}
 
+        $keyname=$key[0..1] -join '\'
+        $SourceKeyValue=$sourceResource.($key[0])
         # Filter on the second key
         if ($key.Count -gt 1)
         {
             [array]$destinationResource = $destinationResource | Where-Object -FilterScript {$_.ResourceName -eq $sourceResource.ResourceName -and $_.($key[1]) -eq $sourceResource.($key[1])}
+            $SourceKeyValue=$sourceResource.($key[0]),$sourceResource.($key[1]) -join '\'
         }
         if ($null -eq $destinationResource)
         {
             $drift = @{
                 ResourceName       = $sourceResource.ResourceName
-                Key                = $key[0]
-                KeyValue           = $sourceResource.($key[0])
+                Key                = $keyName
+                KeyValue           = $SourceKeyValue
                 Properties         = @(@{
                     ParameterName      = 'Ensure'
                     ValueInSource      = 'Present'
@@ -342,8 +345,8 @@ function Compare-M365DSCConfigurations
                     {
                         $drift = @{
                             ResourceName       = $sourceResource.ResourceName
-                            Key                = $key[0]
-                            KeyValue           = $sourceResource.($key[0])
+                            Key                = $keyname
+                            KeyValue           = $SourceKeyValue
                             Properties = @(@{
                                 ParameterName      = $propertyName
                                 ValueInSource      = $sourceResource.$propertyName
@@ -390,8 +393,8 @@ function Compare-M365DSCConfigurations
                     {
                         $drift = @{
                             ResourceName       = $sourceResource.ResourceName
-                            Key                = $key[0]
-                            KeyValue           = $sourceResource.($key[0])
+                            Key                = $keyName
+                            KeyValue           = $SourceKeyValue
                             Properties         = @(@{
                                 ParameterName      = $propertyName
                                 ValueInSource      = $null
@@ -428,18 +431,20 @@ function Compare-M365DSCConfigurations
         $key = Get-M365DSCResourceKey -Resource $currentDestinationResource
         Write-Progress -Activity "Scanning Destination $Destination...[$i/$($DestinationObject.Count)]" -PercentComplete ($i/($DestinationObject.Count)*100)
         $sourceResource = $SourceObject | Where-Object -FilterScript {$_.ResourceName -eq $currentDestinationResource.ResourceName -and $_.($key[0]) -eq $currentDestinationResource.($key[0])}
+        $currentDestinationKeyValue=$currentDestinationResource.($key[0])
 
         # Filter on the second key
         if ($key.Count -gt 1)
         {
             [array]$sourceResource = $sourceResource | Where-Object -FilterScript {$_.ResourceName -eq $currentDestinationResource.ResourceName -and $_.($key[1]) -eq $currentDestinationResource.($key[1])}
+            $currentDestinationKeyValue=$currentDestinationResource.($key[0]),$currentDestinationResource.($key[1]) -join '\'
         }
         if ($null -eq $sourceResource)
         {
             $drift = @{
                 ResourceName       = $currentDestinationResource.ResourceName
-                Key                = $key[0]
-                KeyValue           = $currentDestinationResource.($key[0])
+                Key                = $keyName
+                KeyValue           = $currentDestinationKeyValue
                 Properties         = @(@{
                     ParameterName      = 'Ensure'
                     ValueInSource      = 'Absent'
@@ -475,6 +480,16 @@ function Get-M365DSCResourceKey
         if ($Resource.ResourceName -eq 'AADMSGroup' -and -not [System.String]::IsNullOrEmpty($Resource.Id))
         {
             return @("Id")
+        }
+        if ($Resource.ResourceName -eq 'TeamsChannel' -and -not [System.String]::IsNullOrEmpty($Resource.TeamName))
+        {
+            # Teams Channel displaynames are not tenant-unique (e.g. "General" is almost in every team), but should be unique per team
+            return @('TeamName','DisplayName')
+        }
+        if ($Resource.ResourceName -eq 'TeamsTeam' -and -not [System.String]::IsNullOrEmpty($Resource.MailNickName))
+        {
+            # Teams names are not unique
+            return @('MailNickName','DisplayName')
         }
         return @("DisplayName")
     }
