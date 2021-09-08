@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# 1.21.915.1
+
+* DEPENDENCIES;
+  * Updated MSCloudLoginAssistant to version 1.0.65;
+
 # 1.21.908.1
 
 * PPTenantSettings
