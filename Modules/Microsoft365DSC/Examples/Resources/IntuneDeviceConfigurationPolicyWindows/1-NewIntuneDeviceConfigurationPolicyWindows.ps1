@@ -77,7 +77,7 @@ Configuration Example
             startMenuHideSleep = $true  
             startMenuHideSwitchAccount = $true  
             startMenuHideUserTile = $true
-            startMenuLayoutXml = "$xml"  
+            startMenuLayoutXml = "+DQogICAGlmaWNhdGlvblRlbXBsYXRlPg=="  
             startMenuMode = "fullScreen"    
             startMenuPinnedFolderDocuments = "hide"  
             startMenuPinnedFolderDownloads = "hide"  
