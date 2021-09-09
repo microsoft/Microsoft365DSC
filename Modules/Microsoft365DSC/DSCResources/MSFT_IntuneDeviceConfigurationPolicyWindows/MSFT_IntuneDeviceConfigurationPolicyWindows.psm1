@@ -207,7 +207,7 @@ function Get-TargetResource
         $DefenderSignatureUpdateIntervalInHours,
 
         [Parameter()]
-        [ValidateSet("userDefined", "disable", "monitorAllFiles","monitorIncomingFileOnly","monitorOutgoingFilesOnly")]
+        [ValidateSet("userDefined", "disable", "monitorAllFiles","monitorIncomingFilesOnly","monitorOutgoingFilesOnly")]
         [System.String]
         $DefenderMonitorFileActivity,
 
@@ -1330,7 +1330,7 @@ function Set-TargetResource
         $DefenderSignatureUpdateIntervalInHours,
 
         [Parameter()]
-        [ValidateSet("userDefined", "disable", "monitorAllFiles","monitorIncomingFileOnly","monitorOutgoingFilesOnly")]
+        [ValidateSet("userDefined", "disable", "monitorAllFiles","monitorIncomingFilesOnly","monitorOutgoingFilesOnly")]
         [System.String]
         $DefenderMonitorFileActivity,
 
@@ -2234,7 +2234,7 @@ function Test-TargetResource
         $DefenderSignatureUpdateIntervalInHours,
 
         [Parameter()]
-        [ValidateSet("userDefined", "disable", "monitorAllFiles","monitorIncomingFileOnly","monitorOutgoingFilesOnly")]
+        [ValidateSet("userDefined", "disable", "monitorAllFiles","monitorIncomingFilesOnly","monitorOutgoingFilesOnly")]
         [System.String]
         $DefenderMonitorFileActivity,
 
@@ -3130,7 +3130,7 @@ function Export-TargetResource
         $DefenderSignatureUpdateIntervalInHours,
 
         [Parameter()]
-        [ValidateSet("userDefined", "disable", "monitorAllFiles","monitorIncomingFileOnly","monitorOutgoingFilesOnly")]
+        [ValidateSet("userDefined", "disable", "monitorAllFiles","monitorIncomingFilesOnly","monitorOutgoingFilesOnly")]
         [System.String]
         $DefenderMonitorFileActivity,
 
