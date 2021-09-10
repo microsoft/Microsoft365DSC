@@ -29,6 +29,26 @@ function Get-TargetResource
         $NotifyOutboundSpam = $true,
 
         [Parameter()]
+        [System.String]
+        $RecipientLimitInternalPerHour,
+
+        [Parameter()]
+        [System.String]
+        $RecipientLimitPerDay,
+
+        [Parameter()]
+        [System.String]
+        $RecipientLimitExternalPerHour,
+
+        [Parameter()]
+        [System.String]
+        $ActionWhenThresholdReached,
+
+        [Parameter()]
+        [System.String]
+        $AutoForwardingMode,
+
+        [Parameter()]
         [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
@@ -105,6 +125,11 @@ function Get-TargetResource
                 BccSuspiciousOutboundMail                 = $HostedOutboundSpamFilterPolicy.BccSuspiciousOutboundMail
                 NotifyOutboundSpamRecipients              = $HostedOutboundSpamFilterPolicy.NotifyOutboundSpamRecipients
                 NotifyOutboundSpam                        = $HostedOutboundSpamFilterPolicy.NotifyOutboundSpam
+                RecipientLimitInternalPerHour             = $HostedOutboundSpamFilterPolicy.RecipientLimitInternalPerHour
+                RecipientLimitPerDay                      = $HostedOutboundSpamFilterPolicy.RecipientLimitPerDay
+                RecipientLimitExternalPerHour             = $HostedOutboundSpamFilterPolicy.RecipientLimitExternalPerHour
+                ActionWhenThresholdReached                = $HostedOutboundSpamFilterPolicy.ActionWhenThresholdReached
+                AutoForwardingMode                        = $HostedOutboundSpamFilterPolicy.AutoForwardingMode
                 GlobalAdminAccount                        = $GlobalAdminAccount
                 ApplicationId                             = $ApplicationId
                 CertificateThumbprint                     = $CertificateThumbprint
@@ -172,6 +197,26 @@ function Set-TargetResource
         [Parameter()]
         [Boolean]
         $NotifyOutboundSpam = $true,
+
+        [Parameter()]
+        [System.String]
+        $RecipientLimitInternalPerHour,
+
+        [Parameter()]
+        [System.String]
+        $RecipientLimitPerDay,
+
+        [Parameter()]
+        [System.String]
+        $RecipientLimitExternalPerHour,
+
+        [Parameter()]
+        [System.String]
+        $ActionWhenThresholdReached,
+
+        [Parameter()]
+        [System.String]
+        $AutoForwardingMode,
 
         [Parameter()]
         [ValidateSet('Present')]
@@ -259,6 +304,26 @@ function Test-TargetResource
         [Parameter()]
         [Boolean]
         $NotifyOutboundSpam = $true,
+
+        [Parameter()]
+        [System.String]
+        $RecipientLimitInternalPerHour,
+
+        [Parameter()]
+        [System.String]
+        $RecipientLimitPerDay,
+
+        [Parameter()]
+        [System.String]
+        $RecipientLimitExternalPerHour,
+
+        [Parameter()]
+        [System.String]
+        $ActionWhenThresholdReached,
+
+        [Parameter()]
+        [System.String]
+        $AutoForwardingMode,
 
         [Parameter()]
         [ValidateSet('Present')]
