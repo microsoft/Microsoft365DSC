@@ -96,12 +96,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     HostedOutboundSpamFilterPolicy = 'TestPolicy'
                     Enabled                        = $true
                     Priority                       = 0
-                    ExceptIfRecipientDomainIs      = @('dev.contoso.com')
-                    ExceptIfSentTo                 = @('test@contoso.com')
-                    ExceptIfSentToMemberOf         = @('Special Group')
-                    RecipientDomainIs              = @('contoso.com')
-                    SentTo                         = @('someone@contoso.com')
-                    SentToMemberOf                 = @('Some Group', 'Some Other Group')
+                    ExceptIfSenderDomainIs         = @('dev.contoso.com')
+                    ExceptIfFrom                   = @('test@contoso.com')
+                    ExceptIfFromMemberOf           = @('Special Group')
+                    SenderDomainIs                 = @('contoso.com')
+                    From                           = @('someone@contoso.com')
+                    FromMemberOf                   = @('Some Group', 'Some Other Group')
                 }
 
                 Mock -CommandName Get-HostedOutboundSpamFilterRule -MockWith {
@@ -110,12 +110,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Identity                       = 'TestRule'
                         HostedOutboundSpamFilterPolicy = 'TestPolicy'
                         Priority                       = 0
-                        ExceptIfRecipientDomainIs      = @('dev.contoso.com')
-                        ExceptIfSentTo                 = @('test@contoso.com')
-                        ExceptIfSentToMemberOf         = @('Special Group')
-                        RecipientDomainIs              = @('contoso.com')
-                        SentTo                         = @('someone@contoso.com')
-                        SentToMemberOf                 = @('Some Group', 'Some Other Group')
+                        ExceptIfSenderDomainIs         = @('dev.contoso.com')
+                        ExceptIfFrom                   = @('test@contoso.com')
+                        ExceptIfFromMemberOf           = @('Special Group')
+                        SenderDomainIs                 = @('contoso.com')
+                        From                           = @('someone@contoso.com')
+                        FromMemberOf                   = @('Some Group', 'Some Other Group')
                         State                          = 'Enabled'
                     }
                 }
@@ -141,12 +141,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     HostedOutboundSpamFilterPolicy = 'TestPolicy'
                     Enabled                        = $true
                     Priority                       = 0
-                    ExceptIfRecipientDomainIs      = @('dev.contoso.com')
-                    ExceptIfSentTo                 = @('test@contoso.com')
-                    ExceptIfSentToMemberOf         = @('Special Group')
-                    RecipientDomainIs              = @('contoso.com')
-                    SentTo                         = @('someone@contoso.com')
-                    SentToMemberOf                 = @('Some Group', 'Some Other Group')
+                    ExceptIfSenderDomainIs         = @('dev.contoso.com')
+                    ExceptIfFrom                   = @('test@contoso.com')
+                    ExceptIfFromMemberOf           = @('Special Group')
+                    SenderDomainIs                 = @('contoso.com')
+                    From                           = @('someone@contoso.com')
+                    FromMemberOf                   = @('Some Group', 'Some Other Group')
                 }
 
                 Mock -CommandName Get-HostedOutboundSpamFilterRule -MockWith {
@@ -157,12 +157,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         HostedOutboundSpamFilterPolicy = 'TestPolicy'
                         Enabled                        = $true
                         Priority                       = 0
-                        ExceptIfRecipientDomainIs      = @('notdev.contoso.com')
-                        ExceptIfSentTo                 = @('nottest@contoso.com')
-                        ExceptIfSentToMemberOf         = @('UnSpecial Group')
-                        RecipientDomainIs              = @('contoso.com')
-                        SentTo                         = @('wrongperson@contoso.com', 'someone@contoso.com')
-                        SentToMemberOf                 = @('Some Group', 'Some Other Group', 'DeletedGroup')
+                        ExceptIfSenderDomainIs         = @('notdev.contoso.com')
+                        ExceptIfFrom                   = @('nottest@contoso.com')
+                        ExceptIfFromMemberOf           = @('UnSpecial Group')
+                        SenderDomainIs                 = @('contoso.com')
+                        From                           = @('wrongperson@contoso.com', 'someone@contoso.com')
+                        FromMemberOf                   = @('Some Group', 'Some Other Group', 'DeletedGroup')
                     }
                 }
 
