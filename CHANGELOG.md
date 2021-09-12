@@ -4,6 +4,9 @@
 
 * DEPENDENCIES;
   * Updated MSCloudLoginAssistant to version 1.0.65;
+* IntuneDeviceCompliancePolicyWindows10
+  * Removed the App Secret and Application ID from the output
+  * Added DefenderEnabled to the Resource  
 
 # 1.21.908.1
 
