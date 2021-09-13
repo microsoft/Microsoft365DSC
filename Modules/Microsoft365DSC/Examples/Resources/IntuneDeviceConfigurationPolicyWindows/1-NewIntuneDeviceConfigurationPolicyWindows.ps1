@@ -134,7 +134,6 @@ Configuration Example
             edgeRequireSmartScreen = $true
             edgeFirstRunUrl = "https://contoso.com/" 
             edgeBlockAccessToAboutFlags = $true 
-            edgeBlockSendingIntranetTrafficToInternetExplorer = $true
             edgeHomepageUrls = "[`"https://microsoft.com`"]"
             smartScreenBlockPromptOverride = $true  
             smartScreenBlockPromptOverrideForFiles = $true  
