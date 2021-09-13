@@ -105,9 +105,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Owner = "12345-12345-12345-12345-12345"
                     }
                 }
-
-                Mock -CommandName Update-MgGroupPlannerPlan -MockWith {
-                }
             }
 
             It "Should return Present from the Get method" {
