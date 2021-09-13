@@ -65,7 +65,7 @@
         },
         @{
             ModuleName      = "Microsoft.Graph.Authentication"
-            RequiredVersion = "1.6.0"
+            RequiredVersion = "1.7.0"
         },
         @{
             ModuleName      = "Microsoft.Graph.Intune"
@@ -73,15 +73,15 @@
         },
         @{
             ModuleName      = "Microsoft.Graph.Planner"
-            RequiredVersion = "1.6.0"
+            RequiredVersion = "1.7.0"
         },
         @{
             ModuleName      = "Microsoft.Graph.Teams"
-            RequiredVersion = "1.6.1"
+            RequiredVersion = "1.7.0"
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
-            RequiredVersion = "2.0.133"
+            RequiredVersion = "2.0.135"
         },
         @{
             ModuleName      = "MicrosoftTeams"
@@ -89,7 +89,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.65"
+            RequiredVersion = "1.0.66"
         },
         @{
             ModuleName      = "PnP.PowerShell"
