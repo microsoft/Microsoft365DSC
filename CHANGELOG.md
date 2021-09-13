@@ -2,11 +2,15 @@
 
 # 1.21.915.1
 
-* DEPENDENCIES;
-  * Updated MSCloudLoginAssistant to version 1.0.65;
 * IntuneDeviceCompliancePolicyWindows10
   * Removed the App Secret and Application ID from the output
-  * Added DefenderEnabled to the Resource  
+  * Added DefenderEnabled to the Resource
+* DEPENDENCIES;
+  * Updated Microsoft.Graph.Authentication to version 1.7.0;
+  * Updated Microsoft.Graph.Planner to version 1.7.0;
+  * Updated Microsoft.Graph.Teams to version 1.7.0;
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.135;
+  * Updated MSCloudLoginAssistant to version 1.0.66;
 
 # 1.21.908.1
 
