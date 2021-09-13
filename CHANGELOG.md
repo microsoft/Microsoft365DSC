@@ -2,6 +2,9 @@
 
 # 1.21.915.1
 
+* IntuneDeviceCompliancePolicyWindows10
+  * Removed the App Secret and Application ID from the output
+  * Added DefenderEnabled to the Resource
 * DEPENDENCIES;
   * Updated Microsoft.Graph.Authentication to version 1.7.0;
   * Updated Microsoft.Graph.Planner to version 1.7.0;
