@@ -164,19 +164,33 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentconfigPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Intune App Configuration Policy {$DisplayName}"
-        $customSettingsValue = ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings -Settings $CustomSettings
-        New-IntuneAppConfigurationPolicyTargeted -displayName $DisplayName `
-            -customSettings $customSettingsValue -Description $Description
+        $creationParams = @{
+            displayName = $DisplayName
+            description = $Description
+        }
+        if ($null -ne $CustomSettings)
+        {
+            $customSettingsValue = ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings -Settings $CustomSettings
+            $creationParams.Add("customSettings", $customSettingsValue)
+        }
+        New-IntuneAppConfigurationPolicyTargeted @$creationParams
     }
     elseif ($Ensure -eq 'Present' -and $currentconfigPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Intune App Configuration Policy {$DisplayName}"
         $configPolicy = Get-IntuneAppConfigurationPolicyTargeted -Filter "displayName eq '$DisplayName'"
-        $customSettingsValue = ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings -Settings $CustomSettings
-        Update-IntuneAppConfigurationPolicyTargeted -targetedManagedAppConfigurationId $configPolicy.id `
-            -displayName $DisplayName `
-            -Description $Description `
-            -customSettings $customSettingsValue
+
+        $updateParams = @{
+            targetedManagedAppConfigurationId = $configPolicy.Id
+            displayName                       = $DisplayName
+            description                       = $Description
+        }
+        if ($null -ne $CustomSettings)
+        {
+            $customSettingsValue = ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings -Settings $CustomSettings
+            $updateParams.Add("customSettings", $customSettingsValue)
+        }
+        Update-IntuneAppConfigurationPolicyTargeted @updateParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentconfigPolicy.Ensure -eq 'Present')
     {
