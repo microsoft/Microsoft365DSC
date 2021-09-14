@@ -3674,19 +3674,7 @@ function New-HostedOutboundSpamFilterRule
     param(
         [Parameter()]
         [System.Object]
-        $ErrorAction,
-
-        [Parameter()]
-        [System.Object]
-        $PipelineVariable,
-
-        [Parameter()]
-        [System.Object]
         $RecommendedPolicyType,
-
-        [Parameter()]
-        [System.Object]
-        $Verbose,
 
         [Parameter()]
         [System.Object]
@@ -3698,15 +3686,7 @@ function New-HostedOutboundSpamFilterRule
 
         [Parameter()]
         [System.Object]
-        $InformationAction,
-
-        [Parameter()]
-        [System.Object]
         $BccSuspiciousOutboundAdditionalRecipients,
-
-        [Parameter()]
-        [System.Object]
-        $Debug,
 
         [Parameter()]
         [System.Object]
@@ -3726,23 +3706,7 @@ function New-HostedOutboundSpamFilterRule
 
         [Parameter()]
         [System.Object]
-        $ErrorVariable,
-
-        [Parameter()]
-        [System.Object]
-        $OutBuffer,
-
-        [Parameter()]
-        [System.Object]
         $AutoForwardingMode,
-
-        [Parameter()]
-        [System.Object]
-        $WarningAction,
-
-        [Parameter()]
-        [System.Object]
-        $OutVariable,
 
         [Parameter()]
         [System.Object]
@@ -3755,14 +3719,6 @@ function New-HostedOutboundSpamFilterRule
         [Parameter()]
         [System.Object]
         $RecipientLimitExternalPerHour,
-
-        [Parameter()]
-        [System.Object]
-        $WarningVariable,
-
-        [Parameter()]
-        [System.Object]
-        $InformationVariable,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
