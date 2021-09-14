@@ -241,10 +241,21 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $value = Test-M365DSCAppConfigurationPolicyCustomSetting -Current $CurrentValues.CustomSettings -Desired $CustomSettings
-    if ($value -eq $false)
+    if ($null -ne $CurrentValues.CustomSettings -and $null -ne $CustomSettings)
     {
-        return $false
+        $value = Test-M365DSCAppConfigurationPolicyCustomSetting -Current $CurrentValues.CustomSettings -Desired $CustomSettings
+        if ($value -eq $false)
+        {
+            return $false
+        }
+    }
+    else
+    {
+        if (($null -eq $CurrentValues.CustomSettings -and $null -ne $CustomSettings) -or
+            ($null -ne $CurrentValues.CustomSettings -and $null -eq $CustomSettings))
+        {
+            return $false
+        }
     }
 
     $ValuesToCheck = $PSBoundParameters
