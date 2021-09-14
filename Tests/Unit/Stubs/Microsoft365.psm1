@@ -3674,7 +3674,7 @@ function New-HostedOutboundSpamFilterRule
     param(
         [Parameter()]
         [System.Object]
-        $RecommendedPolicyType,
+        $Priority,
 
         [Parameter()]
         [System.Object]
@@ -3682,43 +3682,39 @@ function New-HostedOutboundSpamFilterRule
 
         [Parameter()]
         [System.Object]
-        $AdminDisplayName,
+        $ExceptIfFrom,
 
         [Parameter()]
         [System.Object]
-        $BccSuspiciousOutboundAdditionalRecipients,
+        $ExceptIfSenderDomainIs,
 
         [Parameter()]
         [System.Object]
-        $NotifyOutboundSpamRecipients,
+        $Comments,
 
         [Parameter()]
         [System.Object]
-        $RecipientLimitInternalPerHour,
+        $FromMemberOf,
 
         [Parameter()]
         [System.Object]
-        $RecipientLimitPerDay,
+        $SenderDomainIs,
 
         [Parameter()]
         [System.Object]
-        $ActionWhenThresholdReached,
+        $HostedOutboundSpamFilterPolicy,
 
         [Parameter()]
         [System.Object]
-        $AutoForwardingMode,
+        $ExceptIfFromMemberOf,
 
         [Parameter()]
         [System.Object]
-        $NotifyOutboundSpam,
+        $From,
 
         [Parameter()]
         [System.Object]
-        $BccSuspiciousOutboundMail,
-
-        [Parameter()]
-        [System.Object]
-        $RecipientLimitExternalPerHour,
+        $Enabled,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
