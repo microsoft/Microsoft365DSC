@@ -12,6 +12,10 @@ function Get-TargetResource
         [System.String]
         $Description,
 
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $CustomSettings,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -62,11 +66,11 @@ function Get-TargetResource
             Write-Verbose -Message "No App Configuration Policy with displayName {$DisplayName} was found"
             return $nullResult
         }
-
         Write-Verbose -Message "Found App Configuration Policy with displayName {$DisplayName}"
         return @{
             DisplayName        = $configPolicy.DisplayName
             Description        = $configPolicy.Description
+            CustomSettings     = $configPolicy.customSettings
             Ensure             = 'Present'
             GlobalAdminAccount = $GlobalAdminAccount
             ApplicationId      = $ApplicationId
@@ -113,6 +117,10 @@ function Set-TargetResource
         [System.String]
         $Description,
 
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $CustomSettings,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -156,15 +164,33 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentconfigPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Intune App Configuration Policy {$DisplayName}"
-        New-IntuneAppConfigurationPolicyTargeted -displayName $DisplayName `
-            -customSettings @() -Description $Description
+        $creationParams = @{
+            displayName = $DisplayName
+            description = $Description
+        }
+        if ($null -ne $CustomSettings)
+        {
+            $customSettingsValue = ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings -Settings $CustomSettings
+            $creationParams.Add("customSettings", $customSettingsValue)
+        }
+        New-IntuneAppConfigurationPolicyTargeted @$creationParams
     }
     elseif ($Ensure -eq 'Present' -and $currentconfigPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Intune App Configuration Policy {$DisplayName}"
         $configPolicy = Get-IntuneAppConfigurationPolicyTargeted -Filter "displayName eq '$DisplayName'"
-        Update-IntuneAppConfigurationPolicyTargeted -targetedManagedAppConfigurationId $configPolicy.id `
-            -displayName $DisplayName -Description $Description
+
+        $updateParams = @{
+            targetedManagedAppConfigurationId = $configPolicy.Id
+            displayName                       = $DisplayName
+            description                       = $Description
+        }
+        if ($null -ne $CustomSettings)
+        {
+            $customSettingsValue = ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings -Settings $CustomSettings
+            $updateParams.Add("customSettings", $customSettingsValue)
+        }
+        Update-IntuneAppConfigurationPolicyTargeted @updateParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentconfigPolicy.Ensure -eq 'Present')
     {
@@ -187,6 +213,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $CustomSettings,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -225,11 +255,29 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
+    if ($null -ne $CurrentValues.CustomSettings -and $null -ne $CustomSettings)
+    {
+        $value = Test-M365DSCAppConfigurationPolicyCustomSetting -Current $CurrentValues.CustomSettings -Desired $CustomSettings
+        if ($value -eq $false)
+        {
+            return $false
+        }
+    }
+    else
+    {
+        if (($null -eq $CurrentValues.CustomSettings -and $null -ne $CustomSettings) -or
+            ($null -ne $CurrentValues.CustomSettings -and $null -eq $CustomSettings))
+        {
+            return $false
+        }
+    }
+
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('CustomSettings') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
                                              -Source $($MyInvocation.MyCommand.Source) `
@@ -301,7 +349,11 @@ function Export-TargetResource
                 TenantId           = $TenantId
                 ApplicationSecret  = $ApplicationSecret
             }
-            $results = Get-TargetResource @params
+            $Results = Get-TargetResource @params
+            if ($Results.CustomSettings.Count -gt 0)
+            {
+                $Results.CustomSettings = Get-M365DSCIntuneAppConfigurationPolicyCustomSettingsAsString -Settings $Results.CustomSettings
+            }
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -309,6 +361,10 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+            if ($null -ne $Results.CustomSettings)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CustomSettings"
+            }
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -350,6 +406,90 @@ function Export-TargetResource
         }
         return ""
     }
+}
+
+function Test-M365DSCAppConfigurationPolicyCustomSetting
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param(
+        [parameter(Mandatory = $true)]
+        [System.Object[]]
+        $Current,
+
+        [parameter(Mandatory = $true)]
+        [System.Object[]]
+        $Desired
+    )
+    if ($Current.Length -ne $Desired.Length)
+    {
+        return $false
+    }
+
+    foreach ($desiredSetting in $Desired)
+    {
+        $found = $false
+        foreach ($currentSetting in $Current)
+        {
+            if ($currentSetting.Name -eq $desiredSetting.Name)
+            {
+                if ($currentSetting.Value -ne $desiredSetting.Value)
+                {
+                    return $false
+                }
+                $found = $true
+            }
+        }
+        if (-not $found)
+        {
+            return $false
+        }
+    }
+    return $true
+}
+
+function Get-M365DSCIntuneAppConfigurationPolicyCustomSettingsAsString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.ArrayList]
+        $Settings
+    )
+
+    $StringContent = "@("
+    foreach ($setting in $Settings)
+    {
+        $StringContent += "MSFT_IntuneAppConfigurationPolicyCustomSetting { `r`n"
+        $StringContent += "                name  = '" + $setting.name + "'`r`n"
+        $StringContent += "                value = '" + $setting.value + "'`r`n"
+        $StringContent += "            }`r`n"
+    }
+    $StringContent += "            )"
+    return $StringContent
+}
+
+function ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings
+{
+    [CmdletBinding()]
+    [OutputType([System.Object[]])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.ArrayList]
+        $Settings
+    )
+
+    $result = @()
+    foreach ($setting in $Settings)
+    {
+        $currentSetting = @{
+            name  = $setting.name
+            value = $setting.value
+        }
+        $result += $currentSetting
+    }
+    return $result
 }
 
 Export-ModuleMember -Function *-TargetResource
