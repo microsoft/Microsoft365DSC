@@ -3668,6 +3668,111 @@ function New-HostedContentFilterRule
         $AsJob
     )
 }
+function New-HostedOutboundSpamFilterRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $ErrorAction,
+
+        [Parameter()]
+        [System.Object]
+        $PipelineVariable,
+
+        [Parameter()]
+        [System.Object]
+        $RecommendedPolicyType,
+
+        [Parameter()]
+        [System.Object]
+        $Verbose,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Object]
+        $InformationAction,
+
+        [Parameter()]
+        [System.Object]
+        $BccSuspiciousOutboundAdditionalRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $Debug,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyOutboundSpamRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientLimitInternalPerHour,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientLimitPerDay,
+
+        [Parameter()]
+        [System.Object]
+        $ActionWhenThresholdReached,
+
+        [Parameter()]
+        [System.Object]
+        $ErrorVariable,
+
+        [Parameter()]
+        [System.Object]
+        $OutBuffer,
+
+        [Parameter()]
+        [System.Object]
+        $AutoForwardingMode,
+
+        [Parameter()]
+        [System.Object]
+        $WarningAction,
+
+        [Parameter()]
+        [System.Object]
+        $OutVariable,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyOutboundSpam,
+
+        [Parameter()]
+        [System.Object]
+        $BccSuspiciousOutboundMail,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientLimitExternalPerHour,
+
+        [Parameter()]
+        [System.Object]
+        $WarningVariable,
+
+        [Parameter()]
+        [System.Object]
+        $InformationVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function New-InboundConnector
 {
     [CmdletBinding()]
