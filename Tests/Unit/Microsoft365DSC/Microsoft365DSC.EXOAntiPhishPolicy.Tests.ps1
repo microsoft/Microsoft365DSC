@@ -2,14 +2,14 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath "..\..\Unit" `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath "\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
@@ -101,28 +101,30 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "AntiPhishPolicy update not required." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Ensure                                = 'Present'
-                    GlobalAdminAccount                    = $GlobalAdminAccount
-                    Identity                              = 'TestPolicy'
-                    PhishThresholdLevel                   = '2'
-                    AdminDisplayName                      = 'DSC Test Policy'
-                    Enabled                               = $true
-                    EnableAntispoofEnforcement            = $true
-                    EnableMailboxIntelligence             = $true
-                    EnableOrganizationDomainsProtection   = $false
-                    EnableSimilarDomainsSafetyTips        = $false
-                    EnableSimilarUsersSafetyTips          = $false
-                    EnableTargetedDomainsProtection       = $false
-                    EnableTargetedUserProtection          = $false
-                    EnableUnusualCharactersSafetyTips     = $false
-                    MakeDefault                           = $false
-                    AuthenticationFailAction              = 'Quarantine'
-                    TargetedDomainProtectionAction        = 'BccMessage'
-                    TargetedDomainActionRecipients        = @('test@contoso.com', 'test@fabrikam.com')
-                    TargetedUserProtectionAction          = 'BccMessage'
-                    TargetedUserActionRecipients          = @('test@contoso.com', 'test@fabrikam.com')
-                    TargetedDomainsToProtect              = @('fabrikam.com', 'contoso.com')
-                    TargetedUsersToProtect                = @('fabrikam.com', 'contoso.com')
+                    Ensure                              = 'Present'
+                    GlobalAdminAccount                  = $GlobalAdminAccount
+                    Identity                            = 'TestPolicy'
+                    PhishThresholdLevel                 = '2'
+                    AdminDisplayName                    = 'DSC Test Policy'
+                    Enabled                             = $true
+                    EnableFirstContactSafetyTips        = $false
+                    EnableAntispoofEnforcement          = $true
+                    EnableMailboxIntelligence           = $true
+                    EnableOrganizationDomainsProtection = $false
+                    EnableSimilarDomainsSafetyTips      = $false
+                    EnableSimilarUsersSafetyTips        = $false
+                    EnableTargetedDomainsProtection     = $false
+                    EnableTargetedUserProtection        = $false
+                    EnableUnusualCharactersSafetyTips   = $false
+                    EnableViaTag                        = $false
+                    MakeDefault                         = $false
+                    AuthenticationFailAction            = 'Quarantine'
+                    TargetedDomainProtectionAction      = 'BccMessage'
+                    TargetedDomainActionRecipients      = @('test@contoso.com', 'test@fabrikam.com')
+                    TargetedUserProtectionAction        = 'BccMessage'
+                    TargetedUserActionRecipients        = @('test@contoso.com', 'test@fabrikam.com')
+                    TargetedDomainsToProtect            = @('fabrikam.com', 'contoso.com')
+                    TargetedUsersToProtect              = @('fabrikam.com', 'contoso.com')
                 }
 
                 Mock -CommandName Get-AntiPhishPolicy -MockWith {
@@ -132,9 +134,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PhishThresholdLevel                   = '2'
                         AdminDisplayName                      = 'DSC Test Policy'
                         Enabled                               = $true
+                        EnableFirstContactSafetyTips          = $false
                         EnableAntispoofEnforcement            = $true
                         EnableAuthenticationSafetyTip         = $true
-                        EnableAuthenticationSoftPassSafetyTip = $false
                         EnableMailboxIntelligence             = $true
                         EnableOrganizationDomainsProtection   = $false
                         EnableSimilarDomainsSafetyTips        = $false
@@ -142,6 +144,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         EnableTargetedDomainsProtection       = $false
                         EnableTargetedUserProtection          = $false
                         EnableUnusualCharactersSafetyTips     = $false
+                        EnableViaTag                          = $false
                         MakeDefault                           = $false
                         TreatSoftPassAsAuthenticated          = $true
                         AuthenticationFailAction              = 'Quarantine'
@@ -163,52 +166,56 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "AntiPhishPolicy update needed." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Ensure                                = 'Present'
-                    GlobalAdminAccount                    = $GlobalAdminAccount
-                    Identity                              = 'TestPolicy'
-                    PhishThresholdLevel                   = '2'
-                    AdminDisplayName                      = 'DSC Test Policy'
-                    Enabled                               = $true
-                    EnableAntispoofEnforcement            = $true
-                    EnableMailboxIntelligence             = $true
-                    EnableOrganizationDomainsProtection   = $false
-                    EnableSimilarDomainsSafetyTips        = $false
-                    EnableSimilarUsersSafetyTips          = $false
-                    EnableTargetedDomainsProtection       = $false
-                    EnableTargetedUserProtection          = $false
-                    EnableUnusualCharactersSafetyTips     = $false
-                    MakeDefault                           = $false
-                    AuthenticationFailAction              = 'Quarantine'
-                    TargetedDomainProtectionAction        = 'BccMessage'
-                    TargetedDomainActionRecipients        = @('test@contoso.com', 'test@fabrikam.com')
-                    TargetedUserProtectionAction          = 'BccMessage'
-                    TargetedUserActionRecipients          = @('test@contoso.com', 'test@fabrikam.com')
-                    TargetedDomainsToProtect              = @('fabrikam.com', 'contoso.com')
-                    TargetedUsersToProtect                = @('fabrikam.com', 'contoso.com')
+                    Ensure                              = 'Present'
+                    GlobalAdminAccount                  = $GlobalAdminAccount
+                    Identity                            = 'TestPolicy'
+                    PhishThresholdLevel                 = '2'
+                    AdminDisplayName                    = 'DSC Test Policy'
+                    Enabled                             = $true
+                    EnableFirstContactSafetyTips        = $false
+                    EnableAntispoofEnforcement          = $true
+                    EnableMailboxIntelligence           = $true
+                    EnableOrganizationDomainsProtection = $false
+                    EnableSimilarDomainsSafetyTips      = $false
+                    EnableSimilarUsersSafetyTips        = $false
+                    EnableTargetedDomainsProtection     = $false
+                    EnableTargetedUserProtection        = $false
+                    EnableUnusualCharactersSafetyTips   = $false
+                    EnableViaTag                        = $false
+                    MakeDefault                         = $false
+                    AuthenticationFailAction            = 'Quarantine'
+                    TargetedDomainProtectionAction      = 'BccMessage'
+                    TargetedDomainActionRecipients      = @('test@contoso.com', 'test@fabrikam.com')
+                    TargetedUserProtectionAction        = 'BccMessage'
+                    TargetedUserActionRecipients        = @('test@contoso.com', 'test@fabrikam.com')
+                    TargetedDomainsToProtect            = @('fabrikam.com', 'contoso.com')
+                    TargetedUsersToProtect              = @('fabrikam.com', 'contoso.com')
                 }
 
                 Mock -CommandName Get-AntiPhishPolicy -MockWith {
                     return @{
-                        Identity                              = 'TestPolicy'
-                        PhishThresholdLevel                   = '2'
-                        AdminDisplayName                      = 'DSC Test Policy'
-                        Enabled                               = $false
-                        EnableAntispoofEnforcement            = $false
-                        EnableMailboxIntelligence             = $false
-                        EnableOrganizationDomainsProtection   = $true
-                        EnableSimilarDomainsSafetyTips        = $true
-                        EnableSimilarUsersSafetyTips          = $true
-                        EnableTargetedDomainsProtection       = $true
-                        EnableTargetedUserProtection          = $true
-                        EnableUnusualCharactersSafetyTips     = $true
-                        MakeDefault                           = $true
-                        AuthenticationFailAction              = 'MoveToJmf'
-                        TargetedDomainProtectionAction        = 'NoAction'
-                        TargetedDomainActionRecipients        = @()
-                        TargetedUserProtectionAction          = 'NoAction'
-                        TargetedUserActionRecipients          = @()
-                        TargetedDomainsToProtect              = @()
-                        TargetedUsersToProtect                = @()
+                        Identity                            = 'TestPolicy'
+                        PhishThresholdLevel                 = '2'
+                        AdminDisplayName                    = 'DSC Test Policy'
+                        Enabled                             = $false
+                        EnableFirstContactSafetyTips        = $true
+                        EnableAntispoofEnforcement          = $false
+                        EnableMailboxIntelligence           = $false
+                        EnableOrganizationDomainsProtection = $true
+                        EnableSimilarDomainsSafetyTips      = $true
+                        EnableSimilarUsersSafetyTips        = $true
+                        EnableTargetedDomainsProtection     = $true
+                        EnableTargetedUserProtection        = $true
+                        EnableUnusualCharactersSafetyTips   = $true
+                        EnableViaTag                        = $true
+                        MakeDefault                         = $true
+                        AuthenticationFailAction            = 'MoveToJmf'
+                        TargetedDomainProtectionAction      = 'NoAction'
+                        TargetedDomainActionRecipients      = @()
+                        TargetedUserProtectionAction        = 'NoAction'
+                        TargetedUserActionRecipients        = @()
+                        TargetedDomainsToProtect            = @()
+                        TargetedUsersToProtect              = @()
                     }
                 }
 
@@ -260,7 +267,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         Context -Name "ReverseDSC Tests" -Fixture {
-                BeforeAll {
+            BeforeAll {
                 $testParams = @{
                     GlobalAdminAccount = $GlobalAdminAccount
                 }
