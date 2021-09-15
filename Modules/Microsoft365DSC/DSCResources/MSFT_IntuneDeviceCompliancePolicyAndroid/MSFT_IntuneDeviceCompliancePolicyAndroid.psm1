@@ -150,7 +150,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Checking for the Intune Android Device Compliance Policy {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -168,9 +168,9 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $devicePolicy = Get-IntuneDeviceCompliancePolicy `
+        $devicePolicy = Get-MGDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidCompliancePolicy' -and `
+            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
 
         if ($null -eq $devicePolicy)
@@ -183,34 +183,34 @@ function Get-TargetResource
         $results = @{
             DisplayName                                        = $devicePolicy.DisplayName
             Description                                        = $devicePolicy.Description
-            PasswordRequired                                   = $devicePolicy.PasswordRequired
-            PasswordMinimumLength                              = $devicePolicy.PasswordMinimumLength
-            PasswordRequiredType                               = $devicePolicy.PasswordRequiredType
-            RequiredPasswordComplexity                         = $devicePolicy.RequiredPasswordComplexity
-            PasswordMinutesOfInactivityBeforeLock              = $devicePolicy.PasswordMinutesOfInactivityBeforeLock
-            PasswordExpirationDays                             = $devicePolicy.PasswordExpirationDays
-            PasswordPreviousPasswordBlockCount                 = $devicePolicy.PasswordPreviousPasswordBlockCount
-            PasswordSignInFailureCountBeforeFactoryReset       = $devicePolicy.PasswordSignInFailureCountBeforeFactoryReset
-            SecurityPreventInstallAppsFromUnknownSources       = $devicePolicy.SecurityPreventInstallAppsFromUnknownSources
-            SecurityDisableUsbDebugging                        = $devicePolicy.SecurityDisableUsbDebugging
-            SecurityRequireVerifyApps                          = $devicePolicy.SecurityRequireVerifyApps
-            DeviceThreatProtectionEnabled                      = $devicePolicy.DeviceThreatProtectionEnabled
-            DeviceThreatProtectionRequiredSecurityLevel        = $devicePolicy.DeviceThreatProtectionRequiredSecurityLevel
-            AdvancedThreatProtectionRequiredSecurityLevel      = $devicePolicy.AdvancedThreatProtectionRequiredSecurityLevel
-            SecurityBlockJailbrokenDevices                     = $devicePolicy.SecurityBlockJailbrokenDevices
-            SecurityBlockDeviceAdministratorManagedDevices     = $devicePolicy.SecurityBlockDeviceAdministratorManagedDevices
-            OsMinimumVersion                                   = $devicePolicy.OsMinimumVersion
-            OsMaximumVersion                                   = $devicePolicy.OsMaximumVersion
-            MinAndroidSecurityPatchLevel                       = $devicePolicy.MinAndroidSecurityPatchLevel
-            StorageRequireEncryption                           = $devicePolicy.StorageRequireEncryption
-            SecurityRequireSafetyNetAttestationBasicIntegrity  = $devicePolicy.SecurityRequireSafetyNetAttestationBasicIntegrity
-            SecurityRequireSafetyNetAttestationCertifiedDevice = $devicePolicy.SecurityRequireSafetyNetAttestationCertifiedDevice
-            SecurityRequireGooglePlayServices                  = $devicePolicy.SecurityRequireGooglePlayServices
-            SecurityRequireUpToDateSecurityProviders           = $devicePolicy.SecurityRequireUpToDateSecurityProviders
-            SecurityRequireCompanyPortalAppIntegrity           = $devicePolicy.SecurityRequireCompanyPortalAppIntegrity
-            ConditionStatementId                               = $devicePolicy.ConditionStatementId
-            RestrictedApps                                     = $devicePolicy.RestrictedApps
-            RoleScopeTagIds                                    = $devicePolicy.RoleScopeTagIds
+            PasswordRequired                                   = $devicePolicy.AdditionalProperties.passwordRequired
+            PasswordMinimumLength                              = $devicePolicy.AdditionalProperties.passwordMinimumLength
+            PasswordRequiredType                               = $devicePolicy.AdditionalProperties.passwordRequiredType
+            RequiredPasswordComplexity                         = $devicePolicy.AdditionalProperties.requiredPasswordComplexity
+            PasswordMinutesOfInactivityBeforeLock              = $devicePolicy.AdditionalProperties.passwordMinutesOfInactivityBeforeLock
+            PasswordExpirationDays                             = $devicePolicy.AdditionalProperties.passwordExpirationDays
+            PasswordPreviousPasswordBlockCount                 = $devicePolicy.AdditionalProperties.passwordPreviousPasswordBlockCount
+            PasswordSignInFailureCountBeforeFactoryReset       = $devicePolicy.AdditionalProperties.passwordSignInFailureCountBeforeFactoryReset
+            SecurityPreventInstallAppsFromUnknownSources       = $devicePolicy.AdditionalProperties.securityPreventInstallAppsFromUnknownSources
+            SecurityDisableUsbDebugging                        = $devicePolicy.AdditionalProperties.securityDisableUsbDebugging
+            SecurityRequireVerifyApps                          = $devicePolicy.AdditionalProperties.securityRequireVerifyApps
+            DeviceThreatProtectionEnabled                      = $devicePolicy.AdditionalProperties.deviceThreatProtectionEnabled
+            DeviceThreatProtectionRequiredSecurityLevel        = $devicePolicy.AdditionalProperties.deviceThreatProtectionRequiredSecurityLevel
+            AdvancedThreatProtectionRequiredSecurityLevel      = $devicePolicy.AdditionalProperties.advancedThreatProtectionRequiredSecurityLevel
+            SecurityBlockJailbrokenDevices                     = $devicePolicy.AdditionalProperties.securityBlockJailbrokenDevices
+            SecurityBlockDeviceAdministratorManagedDevices     = $devicePolicy.AdditionalProperties.securityBlockDeviceAdministratorManagedDevices
+            OsMinimumVersion                                   = $devicePolicy.AdditionalProperties.osMinimumVersion
+            OsMaximumVersion                                   = $devicePolicy.AdditionalProperties.osMaximumVersion
+            MinAndroidSecurityPatchLevel                       = $devicePolicy.AdditionalProperties.minAndroidSecurityPatchLevel
+            StorageRequireEncryption                           = $devicePolicy.AdditionalProperties.storageRequireEncryption
+            SecurityRequireSafetyNetAttestationBasicIntegrity  = $devicePolicy.AdditionalProperties.securityRequireSafetyNetAttestationBasicIntegrity
+            SecurityRequireSafetyNetAttestationCertifiedDevice = $devicePolicy.AdditionalProperties.securityRequireSafetyNetAttestationCertifiedDevice
+            SecurityRequireGooglePlayServices                  = $devicePolicy.AdditionalProperties.securityRequireGooglePlayServices
+            SecurityRequireUpToDateSecurityProviders           = $devicePolicy.AdditionalProperties.securityRequireUpToDateSecurityProviders
+            SecurityRequireCompanyPortalAppIntegrity           = $devicePolicy.AdditionalProperties.securityRequireCompanyPortalAppIntegrity
+            ConditionStatementId                               = $devicePolicy.AdditionalProperties.conditionStatementId
+            RestrictedApps                                     = $devicePolicy.AdditionalProperties.restrictedApps
+            RoleScopeTagIds                                    = $devicePolicy.AdditionalProperties.roleScopeTagIds
             Ensure                                             = 'Present'
             GlobalAdminAccount                                 = $GlobalAdminAccount
             ApplicationId                                      = $ApplicationId
@@ -396,7 +396,7 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Intune Device Owner Device Compliance Android Policy {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -413,43 +413,58 @@ function Set-TargetResource
     $currentDeviceAndroidPolicy = Get-TargetResource @PSBoundParameters
 
     $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('GlobalAdminAccount') | Out-Nul
+    $PSBoundParameters.Remove('GlobalAdminAccount') | Out-Null
+    $PSBoundParameters.Remove('ApplicationId') | Out-Null
+    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
+    $PSBoundParameters.Remove('TenantId') | Out-Null
 
-    $jsonParams = @"
-{
-    "@odata.type": "#microsoft.graph.deviceComplianceScheduledActionForRule",
-    "ruleName": "PasswordRequired",
-    "scheduledActionConfigurations":[
-        {"actionType": "block"}
-    ]
-}
-"@
-    $jsonObject = $jsonParams | ConvertFrom-Json
+    $scheduledActionsForRule = @{
+        '@odata.type'                 = "#microsoft.graph.deviceComplianceScheduledActionForRule"
+        ruleName                      = "PasswordRequired"
+        scheduledActionConfigurations = @(
+            @{
+                "@odata.type"= "#microsoft.graph.deviceComplianceActionItem"
+                actionType   =  "block"
+            }
+        )
+    }
 
     if ($Ensure -eq 'Present' -and $currentDeviceAndroidPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Intune Android Device Compliance Policy {$DisplayName}"
-        New-IntuneDeviceCompliancePolicy -ODataType 'microsoft.graph.androidCompliancePolicy' @PSBoundParameters -scheduledActionsForRule $jsonObject
+
+        $PSBoundParameters.Remove('DisplayName') | Out-Null
+        $PSBoundParameters.Remove('Description') | Out-Null
+        $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyAndroidAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        New-MGDeviceManagementDeviceCompliancePolicy -DisplayName $DisplayName `
+            -Description $Description `
+            -additionalProperties $AdditionalProperties `
+            -scheduledActionsForRule $scheduledActionsForRule
     }
     elseif ($Ensure -eq 'Present' -and $currentDeviceAndroidPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Intune Android Device Compliance Policy {$DisplayName}"
-        $configDeviceAndroidPolicy = Get-IntuneDeviceCompliancePolicy `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidCompliancePolicy' -and `
-                $_.displayName -eq $($DisplayName) }
-        Update-IntuneDeviceCompliancePolicy -ODataType 'microsoft.graph.androidCompliancePolicy' `
-            -deviceCompliancePolicyId $configDeviceAndroidPolicy.Id @PSBoundParameters
+        $configDeviceAndroidPolicy = Get-MGDeviceManagementDeviceCompliancePolicy `
+        -ErrorAction Stop | Where-Object `
+        -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidCompliancePolicy' -and `
+            $_.displayName -eq $($DisplayName) }
+
+        $PSBoundParameters.Remove('DisplayName') | Out-Null
+        $PSBoundParameters.Remove('Description') | Out-Null
+        $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyAndroidAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        Update-MGDeviceManagementDeviceCompliancePolicy -AdditionalProperties $AdditionalProperties `
+            -Description $Description `
+            -DeviceCompliancePolicyId $configDeviceAndroidPolicy.Id
     }
     elseif ($Ensure -eq 'Absent' -and $currentDeviceAndroidPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Intune Android Device Compliance Policy {$DisplayName}"
-        $configDeviceAndroidPolicy = Get-IntuneDeviceCompliancePolicy `
+        $configDeviceAndroidPolicy = Get-MGDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidCompliancePolicy' -and `
-                $_.displayName -eq $($DisplayName) }
+            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidCompliancePolicy' -and `
+            $_.displayName -eq $($DisplayName) }
 
-        Remove-IntuneDeviceCompliancePolicy -deviceCompliancePolicyId $configDeviceAndroidPolicy.Id
+        Remove-MGDeviceManagementDeviceCompliancePolicy -DeviceCompliancePolicyId $configDeviceAndroidPolicy.Id
     }
 }
 
@@ -660,7 +675,7 @@ function Export-TargetResource
         $ApplicationSecret
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -676,9 +691,9 @@ function Export-TargetResource
 
     try
     {
-        [array]$configDeviceAndroidPolicies = Get-IntuneDeviceCompliancePolicy `
+        [array]$configDeviceAndroidPolicies = Get-MGDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.androidCompliancePolicy' }
+            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidCompliancePolicy' }
         $i = 1
         $dscContent = ''
         if ($configDeviceAndroidPolicies.Length -eq 0)
@@ -741,6 +756,29 @@ function Export-TargetResource
         }
         return ""
     }
+}
+
+function Get-M365DSCIntuneDeviceCompliancePolicyAndroidAdditionalProperties
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = 'true')]
+        [System.Collections.Hashtable]
+        $Properties
+    )
+
+    $results = @{"@odata.type" = "#microsoft.graph.androidCompliancePolicy"}
+    foreach ($property in $properties.Keys)
+    {
+        if ($property -ne 'Verbose')
+        {
+            $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
+            $propertyValue = $properties.$property
+            $results.Add($propertyName, $propertyValue)
+        }
+    }
+    return $results
 }
 
 Export-ModuleMember -Function *-TargetResource

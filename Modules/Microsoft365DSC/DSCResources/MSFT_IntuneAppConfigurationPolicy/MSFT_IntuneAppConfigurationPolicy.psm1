@@ -40,7 +40,7 @@ function Get-TargetResource
 
     )
     Write-Verbose -Message "Checking for the Intune App Configuration Policy {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -58,7 +58,7 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $configPolicy = Get-IntuneAppConfigurationPolicyTargeted -Filter "displayName eq '$DisplayName'" `
+        $configPolicy = Get-MgDeviceAppManagementTargetedManagedAppConfiguration -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
 
         if ($null -eq $configPolicy)
@@ -145,7 +145,7 @@ function Set-TargetResource
 
     Write-Verbose -Message "Intune App Configuration Policy {$DisplayName}"
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -178,7 +178,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentconfigPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Intune App Configuration Policy {$DisplayName}"
-        $configPolicy = Get-IntuneAppConfigurationPolicyTargeted -Filter "displayName eq '$DisplayName'"
+        $configPolicy = Get-MgDeviceAppManagementTargetedManagedAppConfiguration -Filter "displayName eq '$DisplayName'"
 
         $updateParams = @{
             targetedManagedAppConfigurationId = $configPolicy.Id
@@ -190,13 +190,13 @@ function Set-TargetResource
             $customSettingsValue = ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings -Settings $CustomSettings
             $updateParams.Add("customSettings", $customSettingsValue)
         }
-        Update-IntuneAppConfigurationPolicyTargeted @updateParams
+        Update-MgDeviceAppManagementTargetedManagedAppConfiguration @updateParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentconfigPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Intune App Configuration Policy {$DisplayName}"
         $configPolicy = Get-IntuneAppConfigurationPolicyTargeted -Filter "displayName eq '$DisplayName'"
-        Remove-IntuneAppConfigurationPolicyTargeted -targetedManagedAppConfigurationId $configPolicy.id
+        Remove-MgDeviceAppManagementTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $configPolicy.id
     }
 }
 
@@ -311,7 +311,7 @@ function Export-TargetResource
         [System.String]
         $ApplicationSecret
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -327,7 +327,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$configPolicies = Get-IntuneAppConfigurationPolicyTargeted -ErrorAction Stop
+        [array]$configPolicies = Get-MgDeviceAppManagementTargetedManagedAppConfiguration -ErrorAction Stop
         $i = 1
         $dscContent = ''
         if ($configPolicies.Length -eq 0)

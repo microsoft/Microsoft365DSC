@@ -130,7 +130,7 @@ function Get-TargetResource
         $ApplicationSecret
     )
     Write-Verbose -Message "Checking for the Intune iOS App Protection Policy {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -149,8 +149,8 @@ function Get-TargetResource
 
     try
     {
-        $policyInfo = Get-IntuneAppProtectionPolicy -Filter "displayName eq '$DisplayName'" `
-            -ErrorAction Stop | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.iosManagedAppProtection' }
+        $policyInfo = Get-MgDeviceAppManagementiosManagedAppProtection -Filter "displayName eq '$DisplayName'" `
+            -ErrorAction Stop
 
         if ($null -eq $policyInfo)
         {
@@ -374,7 +374,7 @@ function Set-TargetResource
         $ApplicationSecret
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -399,8 +399,8 @@ function Set-TargetResource
         Write-Verbose -Message "JSON: $JsonContent"
         New-M365DSCIntuneAppProtectionPolicyiOS -JSONContent $JsonContent
 
-        $policyInfo = Get-IntuneAppProtectionPolicy -Filter "displayName eq '$DisplayName'" `
-            -ErrorAction Stop | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.iosManagedAppProtection' }
+        $policyInfo = Get-MgDeviceAppManagementiosManagedAppProtection -Filter "displayName eq '$DisplayName'" `
+            -ErrorAction Stop
         $assignmentJSON = Get-M365DSCIntuneAppProtectionPolicyiOSAssignmentJson -Assignments $Assignments `
             -Exclusions $ExcludedGroups
 
@@ -410,8 +410,8 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing iOS App Protection Policy {$DisplayName}"
-        $policyInfo = Get-IntuneAppProtectionPolicy -Filter "displayName eq '$DisplayName'" `
-            -ErrorAction Stop | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.iosManagedAppProtection' }
+        $policyInfo = Get-MgDeviceAppManagementiosManagedAppProtection -Filter "displayName eq '$DisplayName'" `
+            -ErrorAction Stop
 
         $JsonContent = Get-M365DSCIntuneAppProtectionPolicyiOSJSON -Parameters $PSBoundParameters `
             -IncludeApps $false
@@ -426,9 +426,9 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing iOS App Protection Policy {$DisplayName}"
-        $policyInfo = Get-IntuneAppProtectionPolicy -Filter "displayName eq '$DisplayName'" `
-            -ErrorAction Stop | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.iosManagedAppProtection' }
-        Remove-IntuneAppProtectionPolicy -managedAppPolicyId $policyInfo.id
+        $policyInfo = Get-MgDeviceAppManagementiosManagedAppProtection -Filter "displayName eq '$DisplayName'" `
+            -ErrorAction Stop
+        Remove-MgDeviceAppManagementiosManagedAppProtection -managedAppPolicyId $policyInfo.id
     }
 }
 
@@ -617,7 +617,7 @@ function Export-TargetResource
         [System.String]
         $ApplicationSecret
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -633,7 +633,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$policies = Get-IntuneAppProtectionPolicy -ErrorAction Stop | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.iosManagedAppProtection' }
+        [array]$policies = Get-MgDeviceAppManagementiosManagedAppProtection -ErrorAction Stop
         $i = 1
         $dscContent = ''
         if ($policies.Length -eq 0)

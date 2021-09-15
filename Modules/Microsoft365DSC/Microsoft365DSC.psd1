@@ -68,6 +68,30 @@
             RequiredVersion = "1.7.0"
         },
         @{
+            ModuleName      = "Microsoft.Graph.DeviceManagement"
+            RequiredVersion = "1.7.0"
+        },
+        @{
+            ModuleName      = "Microsoft.Graph.DeviceManagement.Actions"
+            RequiredVersion = "1.7.0"
+        },
+        @{
+            ModuleName      = "Microsoft.Graph.DeviceManagement.Administration"
+            RequiredVersion = "1.7.0"
+        },
+        @{
+            ModuleName      = "Microsoft.Graph.DeviceManagement.Enrolment"
+            RequiredVersion = "1.7.0"
+        },
+        @{
+            ModuleName      = "Microsoft.Graph.DeviceManagement.Functions"
+            RequiredVersion = "1.7.0"
+        },
+        @{
+            ModuleName      = "Microsoft.Graph.Devices.CorporateManagement"
+            RequiredVersion = "1.7.0"
+        }
+        @{
             ModuleName      = "Microsoft.Graph.Intune"
             RequiredVersion = "6.1907.1.0"
         },
@@ -81,7 +105,7 @@
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
-            RequiredVersion = "2.0.13"
+            RequiredVersion = "2.0.136"
         },
         @{
             ModuleName      = "MicrosoftTeams"

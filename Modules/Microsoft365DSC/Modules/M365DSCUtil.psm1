@@ -2485,9 +2485,9 @@ function Get-M365DSCWorkloadsListFromResourceNames
                 }
             }
             "In" {
-                if (-not $workloads.Contains("Intune"))
+                if (-not $workloads.Contains("MicrosoftGraph"))
                 {
-                    $workloads += "Intune"
+                    $workloads += "MicrosoftGraph"
                 }
             }
             "O3" {

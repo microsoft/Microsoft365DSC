@@ -35,7 +35,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Checking for the Intune Device Category {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -54,7 +54,7 @@ function Get-TargetResource
 
     try
     {
-        $category = Get-IntuneDeviceCategory -Filter "displayName eq '$DisplayName'"
+        $category = Get-MgDeviceManagementDeviceCategory -Filter "displayName eq '$DisplayName'"
 
         if ($null -eq $category)
         {
@@ -136,7 +136,7 @@ function Set-TargetResource
 
     Write-Verbose -Message "Updating Teams Upgrade Policy {$Identity}"
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -155,21 +155,21 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Device Category {$DisplayName}"
-        New-IntuneDeviceCategory -DisplayName $DisplayName `
+        New-MgDeviceManagementDeviceCategory -DisplayName $DisplayName `
             -Description $Description
     }
     elseif ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Device Category {$DisplayName}"
-        $category = Get-IntuneDeviceCategory -Filter "displayName eq '$DisplayName'"
-        Update-IntuneDeviceCategory -deviceCategoryId $category.id `
+        $category = Get-MgDeviceManagementDeviceCategory -Filter "displayName eq '$DisplayName'"
+        Update-MgDeviceManagementDeviceCategory -deviceCategoryId $category.id `
             -displayName $DisplayName -Description $Description
     }
     elseif ($Ensure -eq 'Absent' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Device Category {$DisplayName}"
-        $category = Get-IntuneDeviceCategory -Filter "displayName eq '$DisplayName'"
-        Remove-IntuneDeviceCategory -deviceCategoryId $category.id
+        $category = Get-MgDeviceManagementDeviceCategory -Filter "displayName eq '$DisplayName'"
+        Remove-MgDeviceManagementDeviceCategory -deviceCategoryId $category.id
     }
 }
 
@@ -278,7 +278,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$categories = Get-IntuneDeviceCategory -ErrorAction Stop
+        [array]$categories = Get-MgDeviceManagementDeviceCategory -ErrorAction Stop
         $i = 1
         $dscContent = ''
         if ($categories.Length -eq 0)
