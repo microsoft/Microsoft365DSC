@@ -36,6 +36,13 @@ AllowClickThrough
   users to click through to the original blocked URL in
   Office 365 ProPlus. The default value is $true
 
+AllowSafeDocsOpen
+
+- Required: No
+- Description: The AllowSafeDocsOpen parameter specifies whether users can
+  click through and bypass the Protected View container even when Safe Documents
+  identifies a file as malicious.
+
 BlockUrls
 
 - Required: No
@@ -79,6 +86,7 @@ TrackClicks
             Identity                        = 'Default'
             GlobalAdminAccount              = $GlobalAdminAccount
             AllowClickThrough               = $true
+            AllowSafeDocsOpen               = $true
             BlockUrls                       = @('test1.badurl.com','test2.badurl.com')
             EnableATPForSPOTeamsODB         = $true
             EnableSafeDocs                  = $false
