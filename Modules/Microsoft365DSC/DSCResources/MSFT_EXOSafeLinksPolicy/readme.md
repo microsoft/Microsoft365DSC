@@ -29,6 +29,12 @@ AdminDisplayName
 - Description: The AdminDisplayName parameter specifies a
     description for the policy.
 
+CustomNotificationText
+
+- Required: No
+- Description: The custom notification text specifies the customized
+  notification text to show to users
+
 DeliverMessageAfterScan
 
 - Required: No
@@ -69,6 +75,13 @@ EnableForInternalSenders
 - Description: This parameter specifies whether the policy is enabled
   for internal senders. $true or $false
 
+EnableOrganizationBranding
+
+- Required: No
+- Description: The EnableOrganizationBranding parameter specifies whether
+  your organization's logo is displayed on Safe Links warning and
+  notification pages.
+
 EnableSafeLinksForTeams
 
 - Required: No
@@ -93,6 +106,13 @@ ScanUrls
       $true: Scanning links in email messages is enabled.
       $false: Scanning links in email messages is disabled.
       This is the default value.
+
+UseTranslatedNotificationText
+
+- Required: No
+- Description: The UseTranslatedNotificationText specifies whether to use
+  Microsoft Translator to automatically localize the custom notification text
+  that you specified with the CustomNotificationText parameter.
 
 ## Example
 

@@ -61,16 +61,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "SafeLinksPolicy creation." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Ensure                   = 'Present'
-                    Identity                 = 'TestSafeLinksPolicy'
-                    GlobalAdminAccount       = $GlobalAdminAccount
-                    AdminDisplayName         = 'Test SafeLinks Policy'
-                    DoNotAllowClickThrough   = $true
-                    DoNotRewriteUrls         = @('test.contoso.com', 'test.fabrikam.org')
-                    DoNotTrackUserClicks     = $true
-                    EnableForInternalSenders = $false
-                    IsEnabled                = $false
-                    ScanUrls                 = $false
+                    Ensure                        = 'Present'
+                    Identity                      = 'TestSafeLinksPolicy'
+                    GlobalAdminAccount            = $GlobalAdminAccount
+                    AdminDisplayName              = 'Test SafeLinks Policy'
+                    CustomNotificationText        = ''
+                    DoNotAllowClickThrough        = $true
+                    DoNotRewriteUrls              = @('test.contoso.com', 'test.fabrikam.org')
+                    DoNotTrackUserClicks          = $true
+                    EnableForInternalSenders      = $false
+                    EnableOrganizationBranding    = $false
+                    IsEnabled                     = $false
+                    ScanUrls                      = $false
+                    UseTranslatedNotificationText = $false
                 }
 
                 Mock -CommandName Get-SafeLinksPolicy -MockWith {
@@ -92,28 +95,34 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "SafeLinksPolicy update not required." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Ensure                   = 'Present'
-                    Identity                 = 'TestSafeLinksPolicy'
-                    GlobalAdminAccount       = $GlobalAdminAccount
-                    AdminDisplayName         = 'Test SafeLinks Policy'
-                    DoNotAllowClickThrough   = $true
-                    DoNotRewriteUrls         = @('test.contoso.com', 'test.fabrikam.org')
-                    DoNotTrackUserClicks     = $true
-                    EnableForInternalSenders = $false
-                    IsEnabled                = $false
-                    ScanUrls                 = $false
+                    Ensure                        = 'Present'
+                    Identity                      = 'TestSafeLinksPolicy'
+                    GlobalAdminAccount            = $GlobalAdminAccount
+                    AdminDisplayName              = 'Test SafeLinks Policy'
+                    CustomNotificationText        = ''
+                    DoNotAllowClickThrough        = $true
+                    DoNotRewriteUrls              = @('test.contoso.com', 'test.fabrikam.org')
+                    DoNotTrackUserClicks          = $true
+                    EnableForInternalSenders      = $false
+                    EnableOrganizationBranding    = $false
+                    IsEnabled                     = $false
+                    ScanUrls                      = $false
+                    UseTranslatedNotificationText = $false
                 }
 
                 Mock -CommandName Get-SafeLinksPolicy -MockWith {
                     return @{
-                        Identity                 = 'TestSafeLinksPolicy'
-                        AdminDisplayName         = 'Test SafeLinks Policy'
-                        DoNotAllowClickThrough   = $true
-                        DoNotRewriteUrls         = @('test.contoso.com', 'test.fabrikam.org')
-                        DoNotTrackUserClicks     = $true
-                        EnableForInternalSenders = $false
-                        IsEnabled                = $false
-                        ScanUrls                 = $false
+                        Identity                      = 'TestSafeLinksPolicy'
+                        AdminDisplayName              = 'Test SafeLinks Policy'
+                        CustomNotificationText        = ''
+                        DoNotAllowClickThrough        = $true
+                        DoNotRewriteUrls              = @('test.contoso.com', 'test.fabrikam.org')
+                        DoNotTrackUserClicks          = $true
+                        EnableForInternalSenders      = $false
+                        EnableOrganizationBranding    = $false
+                        IsEnabled                     = $false
+                        ScanUrls                      = $false
+                        UseTranslatedNotificationText = $false
                     }
                 }
             }
@@ -126,30 +135,36 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "SafeLinksPolicy update needed." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Ensure                   = 'Present'
-                    Identity                 = 'TestSafeLinksPolicy'
-                    GlobalAdminAccount       = $GlobalAdminAccount
-                    AdminDisplayName         = 'Test SafeLinks Policy'
-                    DoNotAllowClickThrough   = $true
-                    DoNotRewriteUrls         = @('test.contoso.com', 'test.fabrikam.org')
-                    DoNotTrackUserClicks     = $true
-                    EnableForInternalSenders = $false
-                    IsEnabled                = $false
-                    ScanUrls                 = $false
+                    Ensure                        = 'Present'
+                    Identity                      = 'TestSafeLinksPolicy'
+                    GlobalAdminAccount            = $GlobalAdminAccount
+                    AdminDisplayName              = 'Test SafeLinks Policy'
+                    CustomNotificationText        = ''
+                    DoNotAllowClickThrough        = $true
+                    DoNotRewriteUrls              = @('test.contoso.com', 'test.fabrikam.org')
+                    DoNotTrackUserClicks          = $true
+                    EnableForInternalSenders      = $false
+                    EnableOrganizationBranding    = $false
+                    IsEnabled                     = $false
+                    ScanUrls                      = $false
+                    UseTranslatedNotificationText = $false
                 }
 
                 Mock -CommandName Get-SafeLinksPolicy -MockWith {
                     return @{
-                        Ensure                   = 'Present'
-                        Identity                 = 'TestSafeLinksPolicy'
-                        GlobalAdminAccount       = $GlobalAdminAccount
-                        AdminDisplayName         = 'Test SafeLinks Policy'
-                        DoNotAllowClickThrough   = $true
-                        DoNotRewriteUrls         = @('test1.contoso.com', 'test.fabrikam.org')
-                        DoNotTrackUserClicks     = $true
-                        EnableForInternalSenders = $true
-                        IsEnabled                = $true
-                        ScanUrls                 = $true
+                        Ensure                        = 'Present'
+                        Identity                      = 'TestSafeLinksPolicy'
+                        GlobalAdminAccount            = $GlobalAdminAccount
+                        AdminDisplayName              = 'Test SafeLinks Policy'
+                        CustomNotificationText        = 'This is a custom notification text'
+                        DoNotAllowClickThrough        = $true
+                        DoNotRewriteUrls              = @('test1.contoso.com', 'test.fabrikam.org')
+                        DoNotTrackUserClicks          = $true
+                        EnableForInternalSenders      = $true
+                        EnableOrganizationBranding    = $true
+                        IsEnabled                     = $true
+                        ScanUrls                      = $true
+                        UseTranslatedNotificationText = $true
                     }
                 }
 
@@ -171,16 +186,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "SafeLinksPolicy removal." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Ensure                   = 'Absent'
-                    Identity                 = 'TestSafeLinksPolicy'
-                    GlobalAdminAccount       = $GlobalAdminAccount
-                    AdminDisplayName         = 'Test SafeLinks Policy'
-                    DoNotAllowClickThrough   = $true
-                    DoNotRewriteUrls         = @('test.contoso.com', 'test.fabrikam.org')
-                    DoNotTrackUserClicks     = $true
-                    EnableForInternalSenders = $false
-                    IsEnabled                = $false
-                    ScanUrls                 = $false
+                    Ensure                        = 'Absent'
+                    Identity                      = 'TestSafeLinksPolicy'
+                    GlobalAdminAccount            = $GlobalAdminAccount
+                    AdminDisplayName              = 'Test SafeLinks Policy'
+                    CustomNotificationText        = ''
+                    DoNotAllowClickThrough        = $true
+                    DoNotRewriteUrls              = @('test.contoso.com', 'test.fabrikam.org')
+                    DoNotTrackUserClicks          = $true
+                    EnableForInternalSenders      = $false
+                    EnableOrganizationBranding    = $false
+                    IsEnabled                     = $false
+                    ScanUrls                      = $false
+                    UseTranslatedNotificationText = $false
                 }
 
                 Mock -CommandName Get-SafeLinksPolicy -MockWith {
@@ -213,14 +231,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-SafeLinksPolicy -MockWith {
                     return @{
-                        Identity                 = 'TestSafeLinksPolicy'
-                        AdminDisplayName         = 'Test SafeLinks Policy'
-                        DoNotAllowClickThrough   = $true
-                        DoNotRewriteUrls         = @('test.contoso.com', 'test.fabrikam.org')
-                        DoNotTrackUserClicks     = $true
-                        EnableForInternalSenders = $false
-                        IsEnabled                = $false
-                        ScanUrls                 = $false
+                        Identity                      = 'TestSafeLinksPolicy'
+                        AdminDisplayName              = 'Test SafeLinks Policy'
+                        CustomNotificationText        = ''
+                        DoNotAllowClickThrough        = $true
+                        DoNotRewriteUrls              = @('test.contoso.com', 'test.fabrikam.org')
+                        DoNotTrackUserClicks          = $true
+                        EnableForInternalSenders      = $false
+                        EnableOrganizationBranding    = $false
+                        IsEnabled                     = $false
+                        ScanUrls                      = $false
+                        UseTranslatedNotificationText = $false
                     }
                 }
             }
