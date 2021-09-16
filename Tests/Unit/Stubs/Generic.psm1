@@ -25,7 +25,7 @@ function Remove-AzureADDirectorySetting
         $Id
     )
 }
-
+#>
 function New-AzureADDirectorySetting
 {
     [CmdletBinding()]
@@ -49,7 +49,7 @@ function Set-AzureADDirectorySetting
         $DirectorySetting
     )
 }
-
+<#
 function Set-AzureADMSGroupLifecyclePolicy
 {
     [CmdletBinding()]
