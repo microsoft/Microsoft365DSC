@@ -63,6 +63,7 @@ EXOHostedContentFilterPolicy TestHostedContentFilterPolicy {
   LanguageBlockList                        = @('AF', 'SQ', 'AR', 'CY', 'YI')
   RegionBlockList                          = @('AF', 'AX', 'AL', 'DZ', 'ZW')
   HighConfidenceSpamAction                 = 'Quarantine'
+  HighConfidencePhishAction                = 'Quarantine'
   SpamAction                               = 'MoveToJmf'
   EnableEndUserSpamNotifications           = $true
   DownloadLink                             = $false
