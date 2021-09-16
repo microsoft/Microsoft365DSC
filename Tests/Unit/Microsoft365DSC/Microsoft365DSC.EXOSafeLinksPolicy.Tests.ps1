@@ -43,18 +43,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
 
             }
-
-            Mock -CommandName New-SafeLinksPolicy -MockWith {
-                return @{
-
-                }
-            }
-
-            Mock -CommandName Set-SafeLinksPolicy -MockWith {
-                return @{
-
-                }
-            }
         }
 
         # Test contexts
