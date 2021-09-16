@@ -31,11 +31,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Checking for the Intune Device Category {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -54,7 +58,7 @@ function Get-TargetResource
 
     try
     {
-        $category = Get-IntuneDeviceCategory -Filter "displayName eq '$DisplayName'"
+        $category = Get-MgDeviceManagementDeviceCategory -Filter "displayName eq '$DisplayName'"
 
         if ($null -eq $category)
         {
@@ -64,13 +68,14 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found Device Category with Identity {$Identity}"
         return @{
-            DisplayName        = $category.DisplayName
-            Description        = $category.Description
-            Ensure             = "Present"
-            GlobalAdminAccount = $GlobalAdminAccount
-            ApplicationId      = $ApplicationId
-            TenantId           = $TenantId
-            ApplicationSecret  = $ApplicationSecret
+            DisplayName           = $category.DisplayName
+            Description           = $category.Description
+            Ensure                = "Present"
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
     catch
@@ -131,12 +136,16 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Updating Teams Upgrade Policy {$Identity}"
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -155,21 +164,21 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Device Category {$DisplayName}"
-        New-IntuneDeviceCategory -DisplayName $DisplayName `
+        New-MgDeviceManagementDeviceCategory -DisplayName $DisplayName `
             -Description $Description
     }
     elseif ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Device Category {$DisplayName}"
-        $category = Get-IntuneDeviceCategory -Filter "displayName eq '$DisplayName'"
-        Update-IntuneDeviceCategory -deviceCategoryId $category.id `
+        $category = Get-MgDeviceManagementDeviceCategory -Filter "displayName eq '$DisplayName'"
+        Update-MgDeviceManagementDeviceCategory -deviceCategoryId $category.id `
             -displayName $DisplayName -Description $Description
     }
     elseif ($Ensure -eq 'Absent' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Device Category {$DisplayName}"
-        $category = Get-IntuneDeviceCategory -Filter "displayName eq '$DisplayName'"
-        Remove-IntuneDeviceCategory -deviceCategoryId $category.id
+        $category = Get-MgDeviceManagementDeviceCategory -Filter "displayName eq '$DisplayName'"
+        Remove-MgDeviceManagementDeviceCategory -deviceCategoryId $category.id
     }
 }
 
@@ -206,7 +215,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -260,9 +273,13 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -278,7 +295,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$categories = Get-IntuneDeviceCategory -ErrorAction Stop
+        [array]$categories = Get-MgDeviceManagementDeviceCategory -ErrorAction Stop
         $i = 1
         $dscContent = ''
         if ($categories.Length -eq 0)
@@ -294,12 +311,13 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($categories.Count)] $($category.displayName)" -NoNewLine
             $params = @{
-                DisplayName        = $category.displayName
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
-                ApplicationId      = $ApplicationId
-                ApplicationSecret  = $ApplicationSecret
-                TenantId           = $TenantId
+                DisplayName           = $category.displayName
+                Ensure                = 'Present'
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                ApplicationSecret     = $ApplicationSecret
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

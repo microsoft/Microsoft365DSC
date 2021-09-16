@@ -68,6 +68,30 @@
             RequiredVersion = "1.7.0"
         },
         @{
+            ModuleName      = "Microsoft.Graph.DeviceManagement"
+            RequiredVersion = "1.7.0"
+        },
+        @{
+            ModuleName      = "Microsoft.Graph.DeviceManagement.Actions"
+            RequiredVersion = "1.7.0"
+        },
+        @{
+            ModuleName      = "Microsoft.Graph.DeviceManagement.Administration"
+            RequiredVersion = "1.7.0"
+        },
+        @{
+            ModuleName      = "Microsoft.Graph.DeviceManagement.Enrolment"
+            RequiredVersion = "1.7.0"
+        },
+        @{
+            ModuleName      = "Microsoft.Graph.DeviceManagement.Functions"
+            RequiredVersion = "1.7.0"
+        },
+        @{
+            ModuleName      = "Microsoft.Graph.Devices.CorporateManagement"
+            RequiredVersion = "1.7.0"
+        }
+        @{
             ModuleName      = "Microsoft.Graph.Intune"
             RequiredVersion = "6.1907.1.0"
         },
@@ -89,7 +113,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.66"
+            RequiredVersion = "1.0.67"
         },
         @{
             ModuleName      = "PnP.PowerShell"

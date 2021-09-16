@@ -35,12 +35,14 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
 
-
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Write-Verbose -Message "Checking for the Intune App Configuration Policy {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -58,7 +60,7 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $configPolicy = Get-IntuneAppConfigurationPolicyTargeted -Filter "displayName eq '$DisplayName'" `
+        $configPolicy = Get-MgDeviceAppManagementTargetedManagedAppConfiguration -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
 
         if ($null -eq $configPolicy)
@@ -68,14 +70,15 @@ function Get-TargetResource
         }
         Write-Verbose -Message "Found App Configuration Policy with displayName {$DisplayName}"
         return @{
-            DisplayName        = $configPolicy.DisplayName
-            Description        = $configPolicy.Description
-            CustomSettings     = $configPolicy.customSettings
-            Ensure             = 'Present'
-            GlobalAdminAccount = $GlobalAdminAccount
-            ApplicationId      = $ApplicationId
-            TenantId           = $TenantId
-            ApplicationSecret  = $ApplicationSecret
+            DisplayName           = $configPolicy.DisplayName
+            Description           = $configPolicy.Description
+            CustomSettings        = $configPolicy.customSettings
+            Ensure                = 'Present'
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
     catch
@@ -140,12 +143,16 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Intune App Configuration Policy {$DisplayName}"
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -173,12 +180,12 @@ function Set-TargetResource
             $customSettingsValue = ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings -Settings $CustomSettings
             $creationParams.Add("customSettings", $customSettingsValue)
         }
-        New-IntuneAppConfigurationPolicyTargeted @$creationParams
+        New-MgDeviceAppManagementTargetedManagedAppConfiguration @$creationParams
     }
     elseif ($Ensure -eq 'Present' -and $currentconfigPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Intune App Configuration Policy {$DisplayName}"
-        $configPolicy = Get-IntuneAppConfigurationPolicyTargeted -Filter "displayName eq '$DisplayName'"
+        $configPolicy = Get-MgDeviceAppManagementTargetedManagedAppConfiguration -Filter "displayName eq '$DisplayName'"
 
         $updateParams = @{
             targetedManagedAppConfigurationId = $configPolicy.Id
@@ -190,13 +197,13 @@ function Set-TargetResource
             $customSettingsValue = ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings -Settings $CustomSettings
             $updateParams.Add("customSettings", $customSettingsValue)
         }
-        Update-IntuneAppConfigurationPolicyTargeted @updateParams
+        Update-MgDeviceAppManagementTargetedManagedAppConfiguration @updateParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentconfigPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Intune App Configuration Policy {$DisplayName}"
         $configPolicy = Get-IntuneAppConfigurationPolicyTargeted -Filter "displayName eq '$DisplayName'"
-        Remove-IntuneAppConfigurationPolicyTargeted -targetedManagedAppConfigurationId $configPolicy.id
+        Remove-MgDeviceAppManagementTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $configPolicy.id
     }
 }
 
@@ -237,7 +244,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -309,9 +320,13 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -327,7 +342,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$configPolicies = Get-IntuneAppConfigurationPolicyTargeted -ErrorAction Stop
+        [array]$configPolicies = Get-MgDeviceAppManagementTargetedManagedAppConfiguration -ErrorAction Stop
         $i = 1
         $dscContent = ''
         if ($configPolicies.Length -eq 0)
@@ -342,12 +357,13 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($configPolicies.Count)] $($configPolicy.displayName)" -NoNewLine
             $params = @{
-                DisplayName        = $configPolicy.displayName
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
-                ApplicationID      = $ApplicationId
-                TenantId           = $TenantId
-                ApplicationSecret  = $ApplicationSecret
+                DisplayName           = $configPolicy.displayName
+                Ensure                = 'Present'
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationID         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
             }
             $Results = Get-TargetResource @params
             if ($Results.CustomSettings.Count -gt 0)

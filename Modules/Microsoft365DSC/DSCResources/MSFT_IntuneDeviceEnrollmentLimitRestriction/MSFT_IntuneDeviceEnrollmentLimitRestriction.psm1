@@ -36,11 +36,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Checking for the Intune Device Enrollment Limit Restriction {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -59,7 +63,8 @@ function Get-TargetResource
 
     try
     {
-        $config = Get-IntuneDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
+        $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
+            | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
 
         if ($null -eq $config)
         {
@@ -69,14 +74,15 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found Device Enrollment Limit Restriction with Name {$DisplayName}"
         return @{
-            DisplayName        = $config.DisplayName
-            Description        = $config.Description
-            Limit              = $config.Limit
-            Ensure             = "Present"
-            GlobalAdminAccount = $GlobalAdminAccount
-            ApplicationId      = $ApplicationId
-            TenantId           = $TenantId
-            ApplicationSecret  = $ApplicationSecret
+            DisplayName           = $config.DisplayName
+            Description           = $config.Description
+            Limit                 = $config.AdditionalProperties.limit
+            Ensure                = "Present"
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
     catch
@@ -134,10 +140,14 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -156,23 +166,33 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Device Enrollment Limit Restriction {$DisplayName}"
-        $JsonContent = Get-M365DSCIntuneDeviceEnrollmentLimitRestrictionJSON -Parameters $PSBoundParameters
-        New-M365DSCIntuneDeviceEnrollmentLimitRestriction -JSONContent $JsonContent
+        New-MgDeviceManagementDeviceEnrollmentConfiguration -DisplayName $DisplayName `
+            -Description $Description `
+            -AdditionalProperties @{
+                '@odata.type' = '#microsoft.graph.deviceEnrollmentLimitConfiguration'
+                limit         = $Limit
+            }
     }
     elseif ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Device Enrollment Limit Restriction {$DisplayName}"
-        $config = Get-IntuneDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
-        $JsonContent = Get-M365DSCIntuneDeviceEnrollmentLimitRestrictionJSON -Parameters $PSBoundParameters
-        Set-M365DSCIntuneDeviceEnrollmentLimitRestriction -JSONContent $JsonContent `
-            -RestrictionId $config.id
+        $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
+            | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
+
+        Update-MgDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $config.id `
+            -Description $Description `
+            -AdditionalProperties @{
+                '@odata.type' = '#microsoft.graph.deviceEnrollmentLimitConfiguration'
+                limit         = $Limit
+            }
     }
     elseif ($Ensure -eq 'Absent' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Device Enrollment Limit Restriction {$DisplayName}"
-        $config = Get-IntuneDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
+        $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
+            | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
 
-        Remove-IntuneDeviceEnrollmentConfiguration -deviceEnrollmentConfigurationId $config.id
+        Remove-MgDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $config.id | Out-Null
     }
 }
 
@@ -214,7 +234,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -268,9 +292,13 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -286,7 +314,8 @@ function Export-TargetResource
 
     try
     {
-        [array]$configs = Get-IntuneDeviceEnrollmentConfiguration -ErrorAction Stop | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
+        [array]$configs = Get-MgDeviceManagementDeviceEnrollmentConfiguration `
+            | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
         $i = 1
         $dscContent = ''
         if ($configs.Length -eq 0)
@@ -301,12 +330,13 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($configs.Count)] $($config.displayName)" -NoNewline
             $params = @{
-                DisplayName        = $config.displayName
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
-                ApplicationId      = $ApplicationId
-                TenantId           = $TenantId
-                ApplicationSecret  = $ApplicationSecret
+                DisplayName           = $config.displayName
+                Ensure                = 'Present'
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -346,86 +376,5 @@ function Export-TargetResource
     }
 }
 
-function Get-M365DSCIntuneDeviceEnrollmentLimitRestrictionJSON
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.Collections.Hashtable]
-        $Parameters
-    )
-
-    $JsonContent = @"
-    {
-        "@odata.type":"#microsoft.graph.deviceEnrollmentLimitConfiguration",
-        "displayName":"$($Parameters.DisplayName)",
-        "description":"$($Parameters.Description)",
-        "limit":$($Parameters.Limit.TOString())
-    }
-"@
-    return $JsonContent
-}
-
-function New-M365DSCIntuneDeviceEnrollmentLimitRestriction
-{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $JsonContent
-    )
-
-    try
-    {
-        Write-Verbose -Message "Creating new Device Enrollment Limit Restriction with payload {$JsonContent}"
-        $Url = "https://graph.microsoft.com/Beta/deviceManagement/deviceEnrollmentConfigurations/"
-        Invoke-MSGraphRequest -Url $Url `
-            -HttpMethod POST `
-            -Headers @{'Content-Type' = 'application/json' } `
-            -Content $JsonContent
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $tenantIdValue
-    }
-}
-
-function Set-M365DSCIntuneDeviceEnrollmentLimitRestriction
-{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $JsonContent,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $RestrictionId
-    )
-
-    try
-    {
-        Write-Verbose -Message "Updating Device Enrollment Limit Restriction with payload {$JsonContent}"
-        $Url = "https://graph.microsoft.com/Beta/deviceManagement/deviceEnrollmentConfigurations/$RestrictionId"
-        Invoke-MSGraphRequest -Url $Url `
-            -HttpMethod PATCH `
-            -Headers @{'Content-Type' = 'application/json' } `
-            -Content $JsonContent
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $tenantIdValue
-    }
-}
 
 Export-ModuleMember -Function *-TargetResource

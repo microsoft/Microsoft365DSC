@@ -1019,8 +1019,7 @@ function New-M365DSCConnection
         [Parameter(Mandatory = $true)]
         [ValidateSet("Azure", "AzureAD", "ExchangeOnline", "Intune", `
                 "SecurityComplianceCenter", "PnP", "PowerPlatforms", `
-                "MicrosoftTeams", "MicrosoftGraph", `
-                "MicrosoftGraphBeta")]
+                "MicrosoftTeams", "MicrosoftGraph")]
         [System.String]
         $Workload,
 
@@ -1034,7 +1033,12 @@ function New-M365DSCConnection
 
         [Parameter()]
         [System.Boolean]
-        $SkipModuleReload = $false
+        $SkipModuleReload = $false,
+
+        [Parameter()]
+        [ValidateSet("Beta", "v1.0")]
+        [System.String]
+        $ProfileName = 'v1.0'
     )
 
     if ($Workload -eq "MicrosoftTeams")
@@ -1143,14 +1147,16 @@ function New-M365DSCConnection
         {
             Connect-M365Tenant -Workload $Workload `
                 -Credential $InboundParameters.GlobalAdminAccount `
-                -SkipModuleReload $Global:CurrentModeIsExport
+                -SkipModuleReload $Global:CurrentModeIsExport `
+                -ProfileName $ProfileName
         }
         else
         {
             Connect-M365Tenant -Workload $Workload `
                 -Credential $InboundParameters.GlobalAdminAccount `
                 -Url $Url `
-                -SkipModuleReload $Global:CurrentModeIsExport
+                -SkipModuleReload $Global:CurrentModeIsExport `
+                -ProfileName $ProfileName
         }
         $data.Add("ConnectionType", "Credential")
         Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
@@ -1166,7 +1172,8 @@ function New-M365DSCConnection
             Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -Credential $InboundParameters.GlobalAdminAccount `
-                -SkipModuleReload $Global:CurrentModeIsExport
+                -SkipModuleReload $Global:CurrentModeIsExport `
+                -ProfileName $ProfileName
         }
         else
         {
@@ -1174,7 +1181,8 @@ function New-M365DSCConnection
                 -ApplicationId $InboundParameters.ApplicationId `
                 -Credential $InboundParameters.GlobalAdminAccount `
                 -Url $Url `
-                -SkipModuleReload $Global:CurrentModeIsExport
+                -SkipModuleReload $Global:CurrentModeIsExport `
+                -ProfileName $ProfileName
         }
         $data.Add("ConnectionType", "ServicePrincipal")
         Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
@@ -1193,7 +1201,8 @@ function New-M365DSCConnection
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
                 -CertificateThumbprint $InboundParameters.CertificateThumbprint `
-                -SkipModuleReload $Global:CurrentModeIsExport
+                -SkipModuleReload $Global:CurrentModeIsExport `
+                -ProfileName $ProfileName
         }
         else
         {
@@ -1202,7 +1211,8 @@ function New-M365DSCConnection
                 -TenantId $InboundParameters.TenantId `
                 -CertificateThumbprint $InboundParameters.CertificateThumbprint `
                 -Url $Url `
-                -SkipModuleReload $Global:CurrentModeIsExport
+                -SkipModuleReload $Global:CurrentModeIsExport `
+                -ProfileName $ProfileName
         }
         $data.Add("ConnectionType", "ServicePrincipal")
         Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
@@ -1223,7 +1233,8 @@ function New-M365DSCConnection
                 -TenantId $InboundParameters.TenantId `
                 -CertificatePassword $InboundParameters.CertificatePassword.Password `
                 -CertificatePath $InboundParameters.CertificatePath `
-                -SkipModuleReload $Global:CurrentModeIsExport
+                -SkipModuleReload $Global:CurrentModeIsExport `
+                -ProfileName $ProfileName
         }
         else
         {
@@ -1233,7 +1244,8 @@ function New-M365DSCConnection
                 -CertificatePassword $InboundParameters.CertificatePassword.Password `
                 -CertificatePath $InboundParameters.CertificatePath `
                 -Url $Url `
-                -SkipModuleReload $Global:CurrentModeIsExport
+                -SkipModuleReload $Global:CurrentModeIsExport `
+                -ProfileName $ProfileName
         }
         $data.Add("ConnectionType", "ServicePrincipal")
         Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
@@ -1252,7 +1264,8 @@ function New-M365DSCConnection
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
                 -ApplicationSecret $InboundParameters.ApplicationSecret `
-                -SkipModuleReload $Global:CurrentModeIsExport
+                -SkipModuleReload $Global:CurrentModeIsExport `
+                -ProfileName $ProfileName
         }
         else
         {
@@ -1261,7 +1274,8 @@ function New-M365DSCConnection
                 -TenantId $InboundParameters.TenantId `
                 -ApplicationSecret $InboundParameters.ApplicationSecret `
                 -Url $Url `
-                -SkipModuleReload $Global:CurrentModeIsExport
+                -SkipModuleReload $Global:CurrentModeIsExport `
+                -ProfileName $ProfileName
         }
         $data.Add("ConnectionType", "ServicePrincipal")
         Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
@@ -2485,9 +2499,9 @@ function Get-M365DSCWorkloadsListFromResourceNames
                 }
             }
             "In" {
-                if (-not $workloads.Contains("Intune"))
+                if (-not $workloads.Contains("MicrosoftGraph"))
                 {
-                    $workloads += "Intune"
+                    $workloads += "MicrosoftGraph"
                 }
             }
             "O3" {
