@@ -65,6 +65,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     BccSuspiciousOutboundAdditionalRecipients = @()
                     NotifyOutboundSpam                        = $true
                     NotifyOutboundSpamRecipients              = @()
+                    RecipientLimitInternalPerHour             = '0'
+                    RecipientLimitPerDay                      = '0'
+                    RecipientLimitExternalPerHour             = '0'
+                    ActionWhenThresholdReached                = 'BlockUserForToday'
+                    AutoForwardingMode                        = 'Off'
                 }
 
                 Mock -CommandName Get-HostedOutboundSpamFilterPolicy -MockWith {
@@ -75,6 +80,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         BccSuspiciousOutboundAdditionalRecipients = @()
                         NotifyOutboundSpam                        = $true
                         NotifyOutboundSpamRecipients              = @()
+                        RecipientLimitInternalPerHour             = '0'
+                        RecipientLimitPerDay                      = '0'
+                        RecipientLimitExternalPerHour             = '0'
+                        ActionWhenThresholdReached                = 'BlockUserForToday'
+                        AutoForwardingMode                        = 'Off'
                     }
                 }
             }
@@ -103,6 +113,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     BccSuspiciousOutboundAdditionalRecipients = @('admin@contoso.com')
                     NotifyOutboundSpam                        = $true
                     NotifyOutboundSpamRecipients              = @('supervisor@contoso.com')
+                    RecipientLimitInternalPerHour             = '15'
+                    RecipientLimitPerDay                      = '100'
+                    RecipientLimitExternalPerHour             = '25'
+                    ActionWhenThresholdReached                = 'BlockUser'
+                    AutoForwardingMode                        = 'On'
                 }
                 Mock -CommandName Get-HostedOutboundSpamFilterPolicy -MockWith {
                     return @{
@@ -112,6 +127,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         BccSuspiciousOutboundAdditionalRecipients = @()
                         NotifyOutboundSpam                        = $false
                         NotifyOutboundSpamRecipients              = @()
+                        RecipientLimitInternalPerHour             = '0'
+                        RecipientLimitPerDay                      = '0'
+                        RecipientLimitExternalPerHour             = '0'
+                        ActionWhenThresholdReached                = 'BlockUserForToday'
+                        AutoForwardingMode                        = 'Off'
                     }
                 }
             }
@@ -139,6 +159,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         BccSuspiciousOutboundAdditionalRecipients = @()
                         NotifyOutboundSpam                        = $true
                         NotifyOutboundSpamRecipients              = @()
+                        RecipientLimitInternalPerHour             = '0'
+                        RecipientLimitPerDay                      = '0'
+                        RecipientLimitExternalPerHour             = '0'
+                        ActionWhenThresholdReached                = 'BlockUserForToday'
+                        AutoForwardingMode                        = 'Off'
                     }
                 }
             }

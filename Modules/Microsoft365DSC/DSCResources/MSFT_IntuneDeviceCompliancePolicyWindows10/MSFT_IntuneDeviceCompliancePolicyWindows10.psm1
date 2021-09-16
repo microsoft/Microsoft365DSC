@@ -50,7 +50,7 @@ function Get-TargetResource
         $PasswordRequiredType,
 
         [Parameter()]
-        [System.Int32]
+        [System.Boolean]
         $RequireHealthyDeviceReport,
 
         [Parameter()]
@@ -92,6 +92,10 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $ActiveFirewallRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $DefenderEnabled,
 
         [Parameter()]
         [System.String]
@@ -157,11 +161,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Checking for the Intune Device Compliance Windows 10 Policy {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -179,10 +187,10 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $devicePolicy = Get-IntuneDeviceCompliancePolicy `
+        $devicePolicy = Get-MGDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.windows10CompliancePolicy' -and `
-                $_.displayName -eq $($DisplayName) }
+            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' -and `
+            $_.displayName -eq $($DisplayName) }
 
         if ($null -eq $devicePolicy)
         {
@@ -194,42 +202,44 @@ function Get-TargetResource
         $results = @{
             DisplayName                                 = $devicePolicy.DisplayName
             Description                                 = $devicePolicy.Description
-            PasswordRequired                            = $devicePolicy.PasswordRequired
-            PasswordBlockSimple                         = $devicePolicy.PasswordBlockSimple
-            PasswordRequiredToUnlockFromIdle            = $devicePolicy.PasswordRequiredToUnlockFromIdle
-            PasswordMinutesOfInactivityBeforeLock       = $devicePolicy.PasswordMinutesOfInactivityBeforeLock
-            PasswordExpirationDays                      = $devicePolicy.PasswordExpirationDays
-            PasswordMinimumLength                       = $devicePolicy.PasswordMinimumLength
-            PasswordMinimumCharacterSetCount            = $devicePolicy.PasswordMinimumCharacterSetCount
-            PasswordRequiredType                        = $devicePolicy.PasswordRequiredType
-            PasswordPreviousPasswordBlockCount          = $devicePolicy.PasswordPreviousPasswordBlockCount
-            RequireHealthyDeviceReport                  = $devicePolicy.RequireHealthyDeviceReport
-            OsMinimumVersion                            = $devicePolicy.OsMinimumVersion
-            OsMaximumVersion                            = $devicePolicy.OsMaximumVersion
-            MobileOsMinimumVersion                      = $devicePolicy.MobileOsMinimumVersion
-            MobileOsMaximumVersion                      = $devicePolicy.MobileOsMaximumVersion
-            EarlyLaunchAntiMalwareDriverEnabled         = $devicePolicy.EarlyLaunchAntiMalwareDriverEnabled
-            BitLockerEnabled                            = $devicePolicy.BitLockerEnabled
-            SecureBootEnabled                           = $devicePolicy.SecureBootEnabled
-            CodeIntegrityEnabled                        = $devicePolicy.CodeIntegrityEnabled
-            StorageRequireEncryption                    = $devicePolicy.StorageRequireEncryption
-            ActiveFirewallRequired                      = $devicePolicy.ActiveFirewallRequired
-            DefenderEnabled                             = $devicePolicy.DefenderEnabled
-            DefenderVersion                             = $devicePolicy.DefenderVersion
-            SignatureOutOfDate                          = $devicePolicy.SignatureOutOfDate
-            RTPEnabled                                  = $devicePolicy.RTPEnabled
-            AntivirusRequired                           = $devicePolicy.AntivirusRequired
-            AntiSpywareRequired                         = $devicePolicy.AntiSpywareRequired
-            DeviceThreatProtectionEnabled               = $devicePolicy.DeviceThreatProtectionEnabled
-            DeviceThreatProtectionRequiredSecurityLevel = $devicePolicy.DeviceThreatProtectionRequiredSecurityLevel
-            ConfigurationManagerComplianceRequired      = $devicePolicy.ConfigurationManagerComplianceRequired
-            TPMRequired                                 = $devicePolicy.TPMRequired
-            DeviceCompliancePolicyScript                = $devicePolicy.DeviceCompliancePolicyScript
-            ValidOperatingSystemBuildRanges             = $devicePolicy.ValidOperatingSystemBuildRanges
+            PasswordRequired                            = $devicePolicy.AdditionalProperties.passwordRequired
+            PasswordBlockSimple                         = $devicePolicy.AdditionalProperties.passwordBlockSimple
+            PasswordRequiredToUnlockFromIdle            = $devicePolicy.AdditionalProperties.passwordRequiredToUnlockFromIdle
+            PasswordMinutesOfInactivityBeforeLock       = $devicePolicy.AdditionalProperties.passwordMinutesOfInactivityBeforeLock
+            PasswordExpirationDays                      = $devicePolicy.AdditionalProperties.passwordExpirationDays
+            PasswordMinimumLength                       = $devicePolicy.AdditionalProperties.passwordMinimumLength
+            PasswordMinimumCharacterSetCount            = $devicePolicy.AdditionalProperties.passwordMinimumCharacterSetCount
+            PasswordRequiredType                        = $devicePolicy.AdditionalProperties.passwordRequiredType
+            PasswordPreviousPasswordBlockCount          = $devicePolicy.AdditionalProperties.passwordPreviousPasswordBlockCount
+            RequireHealthyDeviceReport                  = $devicePolicy.AdditionalProperties.requireHealthyDeviceReport
+            OsMinimumVersion                            = $devicePolicy.AdditionalProperties.osMinimumVersion
+            OsMaximumVersion                            = $devicePolicy.AdditionalProperties.osMaximumVersion
+            MobileOsMinimumVersion                      = $devicePolicy.AdditionalProperties.mobileOsMinimumVersion
+            MobileOsMaximumVersion                      = $devicePolicy.AdditionalProperties.mobileOsMaximumVersion
+            EarlyLaunchAntiMalwareDriverEnabled         = $devicePolicy.AdditionalProperties.earlyLaunchAntiMalwareDriverEnabled
+            BitLockerEnabled                            = $devicePolicy.AdditionalProperties.bitLockerEnabled
+            SecureBootEnabled                           = $devicePolicy.AdditionalProperties.secureBootEnabled
+            CodeIntegrityEnabled                        = $devicePolicy.AdditionalProperties.codeIntegrityEnabled
+            StorageRequireEncryption                    = $devicePolicy.AdditionalProperties.storageRequireEncryption
+            ActiveFirewallRequired                      = $devicePolicy.AdditionalProperties.activeFirewallRequired
+            DefenderEnabled                             = $devicePolicy.AdditionalProperties.defenderEnabled
+            DefenderVersion                             = $devicePolicy.AdditionalProperties.defenderVersion
+            SignatureOutOfDate                          = $devicePolicy.AdditionalProperties.signatureOutOfDate
+            RTPEnabled                                  = $devicePolicy.AdditionalProperties.rtpEnabled
+            AntivirusRequired                           = $devicePolicy.AdditionalProperties.antivirusRequired
+            AntiSpywareRequired                         = $devicePolicy.AdditionalProperties.antiSpywareRequired
+            DeviceThreatProtectionEnabled               = $devicePolicy.AdditionalProperties.deviceThreatProtectionEnabled
+            DeviceThreatProtectionRequiredSecurityLevel = $devicePolicy.AdditionalProperties.deviceThreatProtectionRequiredSecurityLevel
+            ConfigurationManagerComplianceRequired      = $devicePolicy.AdditionalProperties.configurationManagerComplianceRequired
+            TPMRequired                                 = $devicePolicy.AdditionalProperties.tPMRequired
+            DeviceCompliancePolicyScript                = $devicePolicy.AdditionalProperties.deviceCompliancePolicyScript
+            ValidOperatingSystemBuildRanges             = $devicePolicy.AdditionalProperties.validOperatingSystemBuildRanges
+            Ensure                                      = 'Present'
             GlobalAdminAccount                          = $GlobalAdminAccount
             ApplicationId                               = $ApplicationId
             TenantId                                    = $TenantId
             ApplicationSecret                           = $ApplicationSecret
+            CertificateThumbprint                       = $CertificateThumbprint
         }
         return [System.Collections.Hashtable] $results
     }
@@ -310,7 +320,7 @@ function Set-TargetResource
         $PasswordRequiredType,
 
         [Parameter()]
-        [System.Int32]
+        [System.Boolean]
         $RequireHealthyDeviceReport,
 
         [Parameter()]
@@ -352,6 +362,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $ActiveFirewallRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $DefenderEnabled,
 
         [Parameter()]
         [System.String]
@@ -417,13 +431,15 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
-
     Write-Verbose -Message "Intune Device Compliance Windows 10 Policy {$DisplayName}"
-
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -441,42 +457,56 @@ function Set-TargetResource
 
     $PSBoundParameters.Remove('Ensure') | Out-Null
     $PSBoundParameters.Remove('GlobalAdminAccount') | Out-Null
+    $PSBoundParameters.Remove('ApplicationId') | Out-Null
+    $PSBoundParameters.Remove('TenantId') | Out-Null
+    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
 
-    $jsonParams = @"
-{
-    "@odata.type": "#microsoft.graph.deviceComplianceScheduledActionForRule",
-    "ruleName": "PasswordRequired",
-    "scheduledActionConfigurations":[
-        {"actionType": "block"}
-    ]
-}
-"@
-    $jsonObject = $jsonParams | ConvertFrom-Json
+    $scheduledActionsForRule = @{
+        '@odata.type'                 = "#microsoft.graph.deviceComplianceScheduledActionForRule"
+        ruleName                      = "PasswordRequired"
+        scheduledActionConfigurations = @(
+            @{
+                "@odata.type"= "#microsoft.graph.deviceComplianceActionItem"
+                actionType   =  "block"
+            }
+        )
+    }
 
     if ($Ensure -eq 'Present' -and $currentDeviceWindows10Policy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Intune Device Compliance Windows 10 Policy {$DisplayName}"
-        New-IntuneDeviceCompliancePolicy -ODataType 'microsoft.graph.windows10CompliancePolicy' @PSBoundParameters -scheduledActionsForRule $jsonObject
+        $PSBoundParameters.Remove('DisplayName') | Out-Null
+        $PSBoundParameters.Remove('Description') | Out-Null
+        $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyWindows10AdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        New-MGDeviceManagementDeviceCompliancePolicy -DisplayName $DisplayName `
+            -Description $Description `
+            -additionalProperties $AdditionalProperties `
+            -scheduledActionsForRule $scheduledActionsForRule
     }
     elseif ($Ensure -eq 'Present' -and $currentDeviceWindows10Policy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Intune Device Compliance Windows 10 Policy {$DisplayName}"
-        $configDeviceWindows10Policy = Get-IntuneDeviceCompliancePolicy `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.windows10CompliancePolicy' -and `
-                $_.displayName -eq $($DisplayName) }
-        Update-IntuneDeviceCompliancePolicy -ODataType 'microsoft.graph.windows10CompliancePolicy' `
-            -deviceCompliancePolicyId $configDeviceWindows10Policy.Id @PSBoundParameters
+        $configDevicePolicy = Get-MGDeviceManagementDeviceCompliancePolicy `
+        -ErrorAction Stop | Where-Object `
+        -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' -and `
+            $_.displayName -eq $($DisplayName) }
+
+        $PSBoundParameters.Remove('DisplayName') | Out-Null
+        $PSBoundParameters.Remove('Description') | Out-Null
+        $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyWindows10AdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        Update-MGDeviceManagementDeviceCompliancePolicy -AdditionalProperties $AdditionalProperties `
+            -Description $Description `
+            -DeviceCompliancePolicyId $configDevicePolicy.Id
     }
     elseif ($Ensure -eq 'Absent' -and $currentDeviceWindows10Policy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Intune Device Compliance Windows 10 Policy {$DisplayName}"
-        $configDeviceWindows10Policy = Get-IntuneDeviceCompliancePolicy `
+        $configDevicePolicy = Get-MGDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.windows10CompliancePolicy' -and `
+            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
 
-        Remove-IntuneDeviceCompliancePolicy -deviceCompliancePolicyId $configDeviceWindows10Policy.Id
+        Remove-MGDeviceManagementDeviceCompliancePolicy -DeviceCompliancePolicyId $configDevicePolicy.Id
     }
 }
 
@@ -532,7 +562,7 @@ function Test-TargetResource
         $PasswordRequiredType,
 
         [Parameter()]
-        [System.Int32]
+        [System.Boolean]
         $RequireHealthyDeviceReport,
 
         [Parameter()]
@@ -574,6 +604,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $ActiveFirewallRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $DefenderEnabled,
 
         [Parameter()]
         [System.String]
@@ -639,7 +673,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     #region Telemetry
@@ -695,10 +733,13 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
-    )
+        $ApplicationSecret,
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
+    )
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -714,11 +755,11 @@ function Export-TargetResource
 
     try
     {
-        [array]$configDeviceWindowsPolicies = Get-IntuneDeviceCompliancePolicy `
+        [array]$configDeviceWindowsPolicies = Get-MGDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { ($_.deviceCompliancePolicyODataType) -eq 'microsoft.graph.windows10CompliancePolicy' }
+            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' }
         $i = 1
-        $content = ''
+        $dscContent = ''
         if ($configDeviceWindowsPolicies.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
@@ -733,24 +774,29 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($configDeviceWindowsPolicies.Count)] $($configDeviceWindowsPolicy.displayName)" -NoNewline
             $params = @{
-                DisplayName        = $configDeviceWindowsPolicy.displayName
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
-                ApplicationId      = $ApplicationId
-                TenantId           = $TenantId
-                ApplicationSecret  = $ApplicationSecret
+                DisplayName           = $configDeviceWindowsPolicy.displayName
+                Ensure                = 'Present'
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
             }
-            $result = Get-TargetResource @params
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $content += "        IntuneDeviceCompliancePolicyWindows10 " + (New-Guid).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            $content += "        }`r`n"
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        return $content
+        return $dscContent
     }
     catch
     {
@@ -777,6 +823,31 @@ function Export-TargetResource
         }
         return ""
     }
+}
+
+
+function Get-M365DSCIntuneDeviceCompliancePolicyWindows10AdditionalProperties
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = 'true')]
+        [System.Collections.Hashtable]
+        $Properties
+    )
+
+    $results = @{"@odata.type" = "#microsoft.graph.windows10CompliancePolicy"}
+    foreach ($property in $properties.Keys)
+    {
+        if ($property -ne 'Verbose')
+        {
+            $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
+            $propertyValue = $properties.$property
+            $results.Add($propertyName, $propertyValue)
+        }
+    }
+    Write-Verbose -Message ($results | Out-String)
+    return $results
 }
 
 Export-ModuleMember -Function *-TargetResource
