@@ -2,17 +2,34 @@
 
 # 1.21.915.1
 
+* EXOAntiPhishPolicy
+  * Added support for EnableFirstContactSafetyTips & EnableViaTag;
+* EXOAtpPolicyForO365
+  * Added support for AllowSafeDocsOpen;
+* EXOHostedContentFilterPolicy
+  * Added support for HighConfidencePhishAction;
+* EXOHostedOutboundSpamFilterPolicy
+  Added support for RecipientLimitInternalPerHour, RecipientLimitPerDay,
+  RecipientLimitExternalPerHour, ActionWhenThresholdReached & AutoForwardingMode;
+* EXOHostedOutboundSpamFilterRule
+  Initial release;
 * IntuneAppConfigurationPolicy
   * Added support for the CustomSettings property;
 * IntuneDeviceCompliancePolicyWindows10
-  * Removed the App Secret and Application ID from the output
-  * Added DefenderEnabled to the Resource
+  * Removed the App Secret and Application ID from the output;
+  * Added DefenderEnabled to the Resource;
+* IntuneDeviceConfigurationWindows10
+  * Initial release;
 * DEPENDENCIES;
   * Updated Microsoft.Graph.Authentication to version 1.7.0;
+  * Added dependency on Microsoft.Graph.DeviceManagement;
+  * Added dependency on Microsoft.Graph.DeviceManagement.Administration;
+  * Added dependency on Microsoft.Graph.DeviceManagement.Enrolment;
+  * Added dependency on Microsoft.Graph.Devices.CorporateManagement;
   * Updated Microsoft.Graph.Planner to version 1.7.0;
   * Updated Microsoft.Graph.Teams to version 1.7.0;
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.136;
-  * Updated MSCloudLoginAssistant to version 1.0.66;
+  * Updated MSCloudLoginAssistant to version 1.0.67;
 
 # 1.21.908.1
 
