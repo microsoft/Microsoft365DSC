@@ -31,7 +31,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Checking for the Intune Device Category {$DisplayName}"
@@ -64,13 +68,14 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found Device Category with Identity {$Identity}"
         return @{
-            DisplayName        = $category.DisplayName
-            Description        = $category.Description
-            Ensure             = "Present"
-            GlobalAdminAccount = $GlobalAdminAccount
-            ApplicationId      = $ApplicationId
-            TenantId           = $TenantId
-            ApplicationSecret  = $ApplicationSecret
+            DisplayName           = $category.DisplayName
+            Description           = $category.Description
+            Ensure                = "Present"
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
     catch
@@ -131,7 +136,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Updating Teams Upgrade Policy {$Identity}"
@@ -206,7 +215,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -260,9 +273,13 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -294,12 +311,13 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($categories.Count)] $($category.displayName)" -NoNewLine
             $params = @{
-                DisplayName        = $category.displayName
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
-                ApplicationId      = $ApplicationId
-                ApplicationSecret  = $ApplicationSecret
-                TenantId           = $TenantId
+                DisplayName           = $category.displayName
+                Ensure                = 'Present'
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                ApplicationSecret     = $ApplicationSecret
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

@@ -146,7 +146,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Checking for the Intune Android Device Compliance Policy {$DisplayName}"
@@ -216,6 +220,7 @@ function Get-TargetResource
             ApplicationId                                      = $ApplicationId
             TenantId                                           = $TenantId
             ApplicationSecret                                  = $ApplicationSecret
+            CertificateThumbprint                              = $CertificateThumbprint
         }
         return [System.Collections.Hashtable] $results
     }
@@ -392,7 +397,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Intune Device Owner Device Compliance Android Policy {$DisplayName}"
@@ -616,7 +625,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     #region Telemetry
@@ -672,7 +685,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -708,12 +725,13 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($configDeviceAndroidPolicies.Count)] $($configDeviceAndroidPolicy.displayName)" -NoNewline
             $params = @{
-                DisplayName        = $configDeviceAndroidPolicy.displayName
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
-                ApplicationId      = $ApplicationId
-                TenantId           = $TenantId
-                ApplicationSecret  = $ApplicationSecret
+                DisplayName           = $configDeviceAndroidPolicy.displayName
+                Ensure                = 'Present'
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

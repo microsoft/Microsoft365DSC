@@ -523,12 +523,17 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Checking for the Intune Device Configuration Policy {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -545,148 +550,148 @@ function Get-TargetResource
 
     try
     {
-        $policyInfo = Get-IntuneDeviceConfigurationPolicy -Filter "displayName eq '$DisplayName'" `
-            -ErrorAction Stop | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration' }
+        $policy = Get-MgDeviceManagementDeviceConfiguration -Filter "displayName eq '$DisplayName'" `
+            -ErrorAction Stop | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration' }
 
-        if ($null -eq $policyInfo)
+        if ($null -eq $policy)
         {
             Write-Verbose -Message "No Device Configuration Policy {$DisplayName} was found"
             return $nullResult
         }
 
-        $policy = Get-M365DSCIntuneDeviceConfigurationPolicyiOS -PolicyId $policyInfo.Id
         Write-Verbose -Message "Found Device Configuration Policy {$DisplayName}"
         return @{
             DisplayName                                    = $policy.DisplayName
             Description                                    = $policy.Description
-            AccountBlockModification                       = $policy.AccountBlockModification
-            ActivationLockAllowWhenSupervised              = $policy.ActivationLockAllowWhenSupervised
-            AirDropBlocked                                 = $policy.AirDropBlocked
-            AirDropForceUnmanagedDropTarget                = $policy.AirDropForceUnmanagedDropTarget
-            AirPlayForcePairingPasswordForOutgoingRequests = $policy.AirPlayForcePairingPasswordForOutgoingRequests
-            AppleWatchBlockPairing                         = $policy.AppleWatchBlockPairing
-            AppleWatchForceWristDetection                  = $policy.AppleWatchForceWristDetection
-            AppleNewsBlocked                               = $policy.AppleNewsBlocked
-            AppsVisibilityList                             = $policy.AppsVisibilityList
-            AppsVisibilityListType                         = $policy.AppsVisibilityListType
-            AppStoreBlockAutomaticDownloads                = $policy.AppStoreBlockAutomaticDownloads
-            AppStoreBlocked                                = $policy.AppStoreBlocked
-            AppStoreBlockInAppPurchases                    = $policy.AppStoreBlockInAppPurchases
-            AppStoreBlockUIAppInstallation                 = $policy.AppStoreBlockUIAppInstallation
-            AppStoreRequirePassword                        = $policy.AppStoreRequirePassword
-            BluetoothBlockModification                     = $policy.BluetoothBlockModification
-            CameraBlocked                                  = $policy.CameraBlocked
-            CellularBlockDataRoaming                       = $policy.CellularBlockDataRoaming
-            CellularBlockGlobalBackgroundFetchWhileRoaming = $policy.CellularBlockGlobalBackgroundFetchWhileRoaming
-            CellularBlockPerAppDataModification            = $policy.CellularBlockPerAppDataModification
-            CellularBlockVoiceRoaming                      = $policy.CellularBlockVoiceRoaming
-            CertificatesBlockUntrustedTlsCertificates      = $policy.CertificatesBlockUntrustedTlsCertificates
-            ClassroomAppBlockRemoteScreenObservation       = $policy.ClassroomAppBlockRemoteScreenObservation
-            CompliantAppsList                              = $policy.CompliantAppsList
-            CompliantAppListType                           = $policy.CompliantAppListType
-            ConfigurationProfileBlockChanges               = $policy.ConfigurationProfileBlockChanges
-            DefinitionLookupBlocked                        = $policy.DefinitionLookupBlocked
-            DeviceBlockEnableRestrictions                  = $policy.DeviceBlockEnableRestrictions
-            DeviceBlockEraseContentAndSettings             = $policy.DeviceBlockEraseContentAndSettings
-            DeviceBlockNameModification                    = $policy.DeviceBlockNameModification
-            DiagnosticDataBlockSubmission                  = $policy.DiagnosticDataBlockSubmission
-            DiagnosticDataBlockSubmissionModification      = $policy.DiagnosticDataBlockSubmissionModification
-            DocumentsBlockManagedDocumentsInUnmanagedApps  = $policy.DocumentsBlockManagedDocumentsInUnmanagedApps
-            DocumentsBlockUnmanagedDocumentsInManagedApps  = $policy.DocumentsBlockUnmanagedDocumentsInManagedApps
-            EmailInDomainSuffixes                          = $policy.EmailInDomainSuffixes
-            EnterpriseAppBlockTrust                        = $policy.EnterpriseAppBlockTrust
-            EnterpriseAppBlockTrustModification            = $policy.EnterpriseAppBlockTrustModification
-            FaceTimeBlocked                                = $policy.FaceTimeBlocked
-            FindMyFriendsBlocked                           = $policy.FindMyFriendsBlocked
-            GamingBlockGameCenterFriends                   = $policy.GamingBlockGameCenterFriends
-            GamingBlockMultiplayer                         = $policy.GamingBlockMultiplayer
-            GameCenterBlocked                              = $policy.GameCenterBlocked
-            HostPairingBlocked                             = $policy.HostPairingBlocked
-            iBooksStoreBlocked                             = $policy.iBooksStoreBlocked
-            iBooksStoreBlockErotica                        = $policy.iBooksStoreBlockErotica
-            iCloudBlockActivityContinuation                = $policy.iCloudBlockActivityContinuation
-            iCloudBlockBackup                              = $policy.iCloudBlockBackup
-            iCloudBlockDocumentSync                        = $policy.iCloudBlockDocumentSync
-            iCloudBlockManagedAppsSync                     = $policy.iCloudBlockManagedAppsSync
-            iCloudBlockPhotoLibrary                        = $policy.iCloudBlockPhotoLibrary
-            iCloudBlockPhotoStreamSync                     = $policy.iCloudBlockPhotoStreamSync
-            iCloudBlockSharedPhotoStream                   = $policy.iCloudBlockSharedPhotoStream
-            iCloudRequireEncryptedBackup                   = $policy.iCloudRequireEncryptedBackup
-            iTunesBlockExplicitContent                     = $policy.iTunesBlockExplicitContent
-            iTunesBlockMusicService                        = $policy.iTunesBlockMusicService
-            iTunesBlockRadio                               = $policy.iTunesBlockRadio
-            KeyboardBlockAutoCorrect                       = $policy.KeyboardBlockAutoCorrect
-            KeyboardBlockPredictive                        = $policy.KeyboardBlockPredictive
-            KeyboardBlockShortcuts                         = $policy.KeyboardBlockShortcuts
-            KeyboardBlockSpellCheck                        = $policy.KeyboardBlockSpellCheck
-            KioskModeAllowAssistiveSpeak                   = $policy.KioskModeAllowAssistiveSpeak
-            KioskModeAllowAssistiveTouchSettings           = $policy.KioskModeAllowAssistiveTouchSettings
-            KioskModeAllowAutoLock                         = $policy.KioskModeAllowAutoLock
-            KioskModeAllowColorInversionSettings           = $policy.KioskModeAllowColorInversionSettings
-            KioskModeAllowRingerSwitch                     = $policy.KioskModeAllowRingerSwitch
-            KioskModeAllowScreenRotation                   = $policy.KioskModeAllowScreenRotation
-            KioskModeAllowSleepButton                      = $policy.KioskModeAllowSleepButton
-            KioskModeAllowTouchscreen                      = $policy.KioskModeAllowTouchscreen
-            KioskModeAllowVoiceOverSettings                = $policy.KioskModeAllowVoiceOverSettings
-            KioskModeAllowVolumeButtons                    = $policy.KioskModeAllowVolumeButtons
-            KioskModeAllowZoomSettings                     = $policy.KioskModeAllowZoomSettings
-            KioskModeAppStoreUrl                           = $policy.KioskModeAppStoreUrl
-            KioskModeRequireAssistiveTouch                 = $policy.KioskModeRequireAssistiveTouch
-            KioskModeRequireColorInversion                 = $policy.KioskModeRequireColorInversion
-            KioskModeRequireMonoAudio                      = $policy.KioskModeRequireMonoAudio
-            KioskModeRequireVoiceOver                      = $policy.KioskModeRequireVoiceOver
-            KioskModeRequireZoom                           = $policy.KioskModeRequireZoom
-            KioskModeManagedAppId                          = $policy.KioskModeManagedAppId
-            LockScreenBlockControlCenter                   = $policy.LockScreenBlockControlCenter
-            LockScreenBlockNotificationView                = $policy.LockScreenBlockNotificationView
-            LockScreenBlockPassbook                        = $policy.LockScreenBlockPassbook
-            LockScreenBlockTodayView                       = $policy.LockScreenBlockTodayView
-            MediaContentRatingAustralia                    = $policy.MediaContentRatingAustralia
-            MediaContentRatingCanada                       = $policy.MediaContentRatingCanada
-            MediaContentRatingFrance                       = $policy.MediaContentRatingFrance
-            MediaContentRatingGermany                      = $policy.MediaContentRatingGermany
-            MediaContentRatingIreland                      = $policy.MediaContentRatingIreland
-            MediaContentRatingJapan                        = $policy.MediaContentRatingJapan
-            MediaContentRatingNewZealand                   = $policy.MediaContentRatingNewZealand
-            MediaContentRatingUnitedKingdom                = $policy.MediaContentRatingUnitedKingdom
-            MediaContentRatingUnitedStates                 = $policy.MediaContentRatingUnitedStates
-            MediaContentRatingApps                         = $policy.MediaContentRatingApps
-            MessagesBlocked                                = $policy.MessagesBlocked
-            NotificationsBlockSettingsModification         = $policy.NotificationsBlockSettingsModification
-            PasscodeBlockFingerprintUnlock                 = $policy.PasscodeBlockFingerprintUnlock
-            PasscodeBlockModification                      = $policy.PasscodeBlockModification
-            PasscodeBlockSimple                            = $policy.PasscodeBlockSimple
-            PasscodeExpirationDays                         = $policy.PasscodeExpirationDays
-            PasscodeMinimumLength                          = $policy.PasscodeMinimumLength
-            PasscodeMinutesOfInactivityBeforeLock          = $policy.PasscodeMinutesOfInactivityBeforeLock
-            PasscodeMinutesOfInactivityBeforeScreenTimeout = $policy.PasscodeMinutesOfInactivityBeforeScreenTimeout
-            PasscodeMinimumCharacterSetCount               = $policy.PasscodeMinimumCharacterSetCount
-            PasscodePreviousPasscodeBlockCount             = $policy.PasscodePreviousPasscodeBlockCount
-            PasscodeSignInFailureCountBeforeWipe           = $policy.PasscodeSignInFailureCountBeforeWipe
-            PasscodeRequiredType                           = $policy.PasscodeRequiredType
-            PasscodeRequired                               = $policy.PasscodeRequired
-            PodcastsBlocked                                = $policy.PodcastsBlocked
-            SafariBlockAutofill                            = $policy.SafariBlockAutofill
-            SafariBlockJavaScript                          = $policy.SafariBlockJavaScript
-            SafariBlockPopups                              = $policy.SafariBlockPopups
-            SafariBlocked                                  = $policy.SafariBlocked
-            SafariCookieSettings                           = $policy.SafariCookieSettings
-            SafariManagedDomains                           = $policy.SafariManagedDomains
-            SafariPasswordAutoFillDomains                  = $policy.SafariPasswordAutoFillDomains
-            SafariRequireFraudWarning                      = $policy.SafariRequireFraudWarning
-            ScreenCaptureBlocked                           = $policy.ScreenCaptureBlocked
-            SiriBlocked                                    = $policy.SiriBlocked
-            SiriBlockedWhenLocked                          = $policy.SiriBlockedWhenLocked
-            SiriBlockUserGeneratedContent                  = $policy.SiriBlockUserGeneratedContent
-            SiriRequireProfanityFilter                     = $policy.SiriRequireProfanityFilter
-            SpotlightBlockInternetResults                  = $policy.SpotlightBlockInternetResults
-            VoiceDialingBlocked                            = $policy.VoiceDialingBlocked
-            WallpaperBlockModification                     = $policy.WallpaperBlockModification
+            AccountBlockModification                       = $policy.AdditionalProperties.accountBlockModification
+            ActivationLockAllowWhenSupervised              = $policy.AdditionalProperties.activationLockAllowWhenSupervised
+            AirDropBlocked                                 = $policy.AdditionalProperties.airDropBlocked
+            AirDropForceUnmanagedDropTarget                = $policy.AdditionalProperties.airDropForceUnmanagedDropTarget
+            AirPlayForcePairingPasswordForOutgoingRequests = $policy.AdditionalProperties.airPlayForcePairingPasswordForOutgoingRequests
+            AppleWatchBlockPairing                         = $policy.AdditionalProperties.appleWatchBlockPairing
+            AppleWatchForceWristDetection                  = $policy.AdditionalProperties.appleWatchForceWristDetection
+            AppleNewsBlocked                               = $policy.AdditionalProperties.appleNewsBlocked
+            AppsVisibilityList                             = $policy.AdditionalProperties.appsVisibilityList
+            AppsVisibilityListType                         = $policy.AdditionalProperties.appsVisibilityListType
+            AppStoreBlockAutomaticDownloads                = $policy.AdditionalProperties.appStoreBlockAutomaticDownloads
+            AppStoreBlocked                                = $policy.AdditionalProperties.appStoreBlocked
+            AppStoreBlockInAppPurchases                    = $policy.AdditionalProperties.appStoreBlockInAppPurchases
+            AppStoreBlockUIAppInstallation                 = $policy.AdditionalProperties.appStoreBlockUIAppInstallation
+            AppStoreRequirePassword                        = $policy.AdditionalProperties.appStoreRequirePassword
+            BluetoothBlockModification                     = $policy.AdditionalProperties.bluetoothBlockModification
+            CameraBlocked                                  = $policy.AdditionalProperties.cameraBlocked
+            CellularBlockDataRoaming                       = $policy.AdditionalProperties.cellularBlockDataRoaming
+            CellularBlockGlobalBackgroundFetchWhileRoaming = $policy.AdditionalProperties.cellularBlockGlobalBackgroundFetchWhileRoaming
+            CellularBlockPerAppDataModification            = $policy.AdditionalProperties.cellularBlockPerAppDataModification
+            CellularBlockVoiceRoaming                      = $policy.AdditionalProperties.cellularBlockVoiceRoaming
+            CertificatesBlockUntrustedTlsCertificates      = $policy.AdditionalProperties.certificatesBlockUntrustedTlsCertificates
+            ClassroomAppBlockRemoteScreenObservation       = $policy.AdditionalProperties.classroomAppBlockRemoteScreenObservation
+            CompliantAppsList                              = $policy.AdditionalProperties.compliantAppsList
+            CompliantAppListType                           = $policy.AdditionalProperties.compliantAppListType
+            ConfigurationProfileBlockChanges               = $policy.AdditionalProperties.configurationProfileBlockChanges
+            DefinitionLookupBlocked                        = $policy.AdditionalProperties.definitionLookupBlocked
+            DeviceBlockEnableRestrictions                  = $policy.AdditionalProperties.deviceBlockEnableRestrictions
+            DeviceBlockEraseContentAndSettings             = $policy.AdditionalProperties.deviceBlockEraseContentAndSettings
+            DeviceBlockNameModification                    = $policy.AdditionalProperties.deviceBlockNameModification
+            DiagnosticDataBlockSubmission                  = $policy.AdditionalProperties.diagnosticDataBlockSubmission
+            DiagnosticDataBlockSubmissionModification      = $policy.AdditionalProperties.diagnosticDataBlockSubmissionModification
+            DocumentsBlockManagedDocumentsInUnmanagedApps  = $policy.AdditionalProperties.documentsBlockManagedDocumentsInUnmanagedApps
+            DocumentsBlockUnmanagedDocumentsInManagedApps  = $policy.AdditionalProperties.documentsBlockUnmanagedDocumentsInManagedApps
+            EmailInDomainSuffixes                          = $policy.AdditionalProperties.emailInDomainSuffixes
+            EnterpriseAppBlockTrust                        = $policy.AdditionalProperties.enterpriseAppBlockTrust
+            EnterpriseAppBlockTrustModification            = $policy.AdditionalProperties.enterpriseAppBlockTrustModification
+            FaceTimeBlocked                                = $policy.AdditionalProperties.faceTimeBlocked
+            FindMyFriendsBlocked                           = $policy.AdditionalProperties.findMyFriendsBlocked
+            GamingBlockGameCenterFriends                   = $policy.AdditionalProperties.gamingBlockGameCenterFriends
+            GamingBlockMultiplayer                         = $policy.AdditionalProperties.gamingBlockMultiplayer
+            GameCenterBlocked                              = $policy.AdditionalProperties.gameCenterBlocked
+            HostPairingBlocked                             = $policy.AdditionalProperties.hostPairingBlocked
+            iBooksStoreBlocked                             = $policy.AdditionalProperties.iBooksStoreBlocked
+            iBooksStoreBlockErotica                        = $policy.AdditionalProperties.iBooksStoreBlockErotica
+            iCloudBlockActivityContinuation                = $policy.AdditionalProperties.iCloudBlockActivityContinuation
+            iCloudBlockBackup                              = $policy.AdditionalProperties.iCloudBlockBackup
+            iCloudBlockDocumentSync                        = $policy.AdditionalProperties.iCloudBlockDocumentSync
+            iCloudBlockManagedAppsSync                     = $policy.AdditionalProperties.iCloudBlockManagedAppsSync
+            iCloudBlockPhotoLibrary                        = $policy.AdditionalProperties.iCloudBlockPhotoLibrary
+            iCloudBlockPhotoStreamSync                     = $policy.AdditionalProperties.iCloudBlockPhotoStreamSync
+            iCloudBlockSharedPhotoStream                   = $policy.AdditionalProperties.iCloudBlockSharedPhotoStream
+            iCloudRequireEncryptedBackup                   = $policy.AdditionalProperties.iCloudRequireEncryptedBackup
+            iTunesBlockExplicitContent                     = $policy.AdditionalProperties.iTunesBlockExplicitContent
+            iTunesBlockMusicService                        = $policy.AdditionalProperties.iTunesBlockMusicService
+            iTunesBlockRadio                               = $policy.AdditionalProperties.iTunesBlockRadio
+            KeyboardBlockAutoCorrect                       = $policy.AdditionalProperties.keyboardBlockAutoCorrect
+            KeyboardBlockPredictive                        = $policy.AdditionalProperties.keyboardBlockPredictive
+            KeyboardBlockShortcuts                         = $policy.AdditionalProperties.keyboardBlockShortcuts
+            KeyboardBlockSpellCheck                        = $policy.AdditionalProperties.keyboardBlockSpellCheck
+            KioskModeAllowAssistiveSpeak                   = $policy.AdditionalProperties.kioskModeAllowAssistiveSpeak
+            KioskModeAllowAssistiveTouchSettings           = $policy.AdditionalProperties.kioskModeAllowAssistiveTouchSettings
+            KioskModeAllowAutoLock                         = $policy.AdditionalProperties.kioskModeAllowAutoLock
+            KioskModeAllowColorInversionSettings           = $policy.AdditionalProperties.kioskModeAllowColorInversionSettings
+            KioskModeAllowRingerSwitch                     = $policy.AdditionalProperties.kioskModeAllowRingerSwitch
+            KioskModeAllowScreenRotation                   = $policy.AdditionalProperties.kioskModeAllowScreenRotation
+            KioskModeAllowSleepButton                      = $policy.AdditionalProperties.kioskModeAllowSleepButton
+            KioskModeAllowTouchscreen                      = $policy.AdditionalProperties.kioskModeAllowTouchscreen
+            KioskModeAllowVoiceOverSettings                = $policy.AdditionalProperties.kioskModeAllowVoiceOverSettings
+            KioskModeAllowVolumeButtons                    = $policy.AdditionalProperties.kioskModeAllowVolumeButtons
+            KioskModeAllowZoomSettings                     = $policy.AdditionalProperties.kioskModeAllowZoomSettings
+            KioskModeAppStoreUrl                           = $policy.AdditionalProperties.kioskModeAppStoreUrl
+            KioskModeRequireAssistiveTouch                 = $policy.AdditionalProperties.kioskModeRequireAssistiveTouch
+            KioskModeRequireColorInversion                 = $policy.AdditionalProperties.kioskModeRequireColorInversion
+            KioskModeRequireMonoAudio                      = $policy.AdditionalProperties.kioskModeRequireMonoAudio
+            KioskModeRequireVoiceOver                      = $policy.AdditionalProperties.kioskModeRequireVoiceOver
+            KioskModeRequireZoom                           = $policy.AdditionalProperties.kioskModeRequireZoom
+            KioskModeManagedAppId                          = $policy.AdditionalProperties.kioskModeManagedAppId
+            LockScreenBlockControlCenter                   = $policy.AdditionalProperties.lockScreenBlockControlCenter
+            LockScreenBlockNotificationView                = $policy.AdditionalProperties.lockScreenBlockNotificationView
+            LockScreenBlockPassbook                        = $policy.AdditionalProperties.lockScreenBlockPassbook
+            LockScreenBlockTodayView                       = $policy.AdditionalProperties.lockScreenBlockTodayView
+            MediaContentRatingAustralia                    = $policy.AdditionalProperties.mediaContentRatingAustralia
+            MediaContentRatingCanada                       = $policy.AdditionalProperties.mediaContentRatingCanada
+            MediaContentRatingFrance                       = $policy.AdditionalProperties.mediaContentRatingFrance
+            MediaContentRatingGermany                      = $policy.AdditionalProperties.mediaContentRatingGermany
+            MediaContentRatingIreland                      = $policy.AdditionalProperties.mediaContentRatingIreland
+            MediaContentRatingJapan                        = $policy.AdditionalProperties.mediaContentRatingJapan
+            MediaContentRatingNewZealand                   = $policy.AdditionalProperties.mediaContentRatingNewZealand
+            MediaContentRatingUnitedKingdom                = $policy.AdditionalProperties.mediaContentRatingUnitedKingdom
+            MediaContentRatingUnitedStates                 = $policy.AdditionalProperties.mediaContentRatingUnitedStates
+            MediaContentRatingApps                         = $policy.AdditionalProperties.mediaContentRatingApps
+            MessagesBlocked                                = $policy.AdditionalProperties.messagesBlocked
+            NotificationsBlockSettingsModification         = $policy.AdditionalProperties.notificationsBlockSettingsModification
+            PasscodeBlockFingerprintUnlock                 = $policy.AdditionalProperties.passcodeBlockFingerprintUnlock
+            PasscodeBlockModification                      = $policy.AdditionalProperties.passcodeBlockModification
+            PasscodeBlockSimple                            = $policy.AdditionalProperties.passcodeBlockSimple
+            PasscodeExpirationDays                         = $policy.AdditionalProperties.passcodeExpirationDays
+            PasscodeMinimumLength                          = $policy.AdditionalProperties.passcodeMinimumLength
+            PasscodeMinutesOfInactivityBeforeLock          = $policy.AdditionalProperties.passcodeMinutesOfInactivityBeforeLock
+            PasscodeMinutesOfInactivityBeforeScreenTimeout = $policy.AdditionalProperties.passcodeMinutesOfInactivityBeforeScreenTimeout
+            PasscodeMinimumCharacterSetCount               = $policy.AdditionalProperties.passcodeMinimumCharacterSetCount
+            PasscodePreviousPasscodeBlockCount             = $policy.AdditionalProperties.passcodePreviousPasscodeBlockCount
+            PasscodeSignInFailureCountBeforeWipe           = $policy.AdditionalProperties.passcodeSignInFailureCountBeforeWipe
+            PasscodeRequiredType                           = $policy.AdditionalProperties.passcodeRequiredType
+            PasscodeRequired                               = $policy.AdditionalProperties.passcodeRequired
+            PodcastsBlocked                                = $policy.AdditionalProperties.podcastsBlocked
+            SafariBlockAutofill                            = $policy.AdditionalProperties.safariBlockAutofill
+            SafariBlockJavaScript                          = $policy.AdditionalProperties.safariBlockJavaScript
+            SafariBlockPopups                              = $policy.AdditionalProperties.safariBlockPopups
+            SafariBlocked                                  = $policy.AdditionalProperties.safariBlocked
+            SafariCookieSettings                           = $policy.AdditionalProperties.safariCookieSettings
+            SafariManagedDomains                           = $policy.AdditionalProperties.safariManagedDomains
+            SafariPasswordAutoFillDomains                  = $policy.AdditionalProperties.safariPasswordAutoFillDomains
+            SafariRequireFraudWarning                      = $policy.AdditionalProperties.safariRequireFraudWarning
+            ScreenCaptureBlocked                           = $policy.AdditionalProperties.screenCaptureBlocked
+            SiriBlocked                                    = $policy.AdditionalProperties.siriBlocked
+            SiriBlockedWhenLocked                          = $policy.AdditionalProperties.siriBlockedWhenLocked
+            SiriBlockUserGeneratedContent                  = $policy.AdditionalProperties.siriBlockUserGeneratedContent
+            SiriRequireProfanityFilter                     = $policy.AdditionalProperties.siriRequireProfanityFilter
+            SpotlightBlockInternetResults                  = $policy.AdditionalProperties.spotlightBlockInternetResults
+            VoiceDialingBlocked                            = $policy.AdditionalProperties.voiceDialingBlocked
+            WallpaperBlockModification                     = $policy.AdditionalProperties.wallpaperBlockModification
             Ensure                                         = "Present"
             GlobalAdminAccount                             = $GlobalAdminAccount
             ApplicationId                                  = $ApplicationId
             TenantId                                       = $TenantId
             ApplicationSecret                              = $ApplicationSecret
+            CertificateThumbprint                          = $CertificateThumbprint
         }
     }
     catch
@@ -1232,10 +1237,14 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -1250,28 +1259,46 @@ function Set-TargetResource
     #endregion
 
     $currentPolicy = Get-TargetResource @PSBoundParameters
-    $setParams = $PSBoundParameters
-    $setParams.Remove("Ensure") | Out-Null
-    $setParams.Remove("GlobalAdminAccount") | Out-Null
-    $setParams.Remove("ApplicationId") | Out-Null
-    $setParams.Remove("TenantId") | Out-Null
-    $setParams.Remove("ApplicationSecret") | Out-Null
+
+    $PSBoundParameters.Remove("Ensure") | Out-Null
+    $PSBoundParameters.Remove("GlobalAdminAccount") | Out-Null
+    $PSBoundParameters.Remove("ApplicationId") | Out-Null
+    $PSBoundParameters.Remove("TenantId") | Out-Null
+    $PSBoundParameters.Remove("ApplicationSecret") | Out-Null
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Device Configuration Policy {$DisplayName}"
-        New-M365DSCIntuneDeviceConfigurationPolicyiOS -Parameters $setParams
+        $PSBoundParameters.Remove('DisplayName') | Out-Null
+        $PSBoundParameters.Remove('Description') | Out-Null
+        $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationPolicyiOSAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        New-MGDeviceManagementDeviceConfiguration -DisplayName $DisplayName `
+            -Description $Description `
+            -AdditionalProperties $AdditionalProperties
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing Device Configuration Policy {$DisplayName}"
-        $policy = Get-IntuneDeviceConfigurationPolicy -Filter "displayName eq '$DisplayName'"
-        Set-M365DSCIntuneDeviceConfigurationPolicyiOS -Parameters $setParams -PolicyId ($policy.id)
+        $configDevicePolicy = Get-MGDeviceManagementDeviceConfiguration `
+            -ErrorAction Stop | Where-Object `
+            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration' -and `
+                $_.displayName -eq $($DisplayName) }
+
+        $PSBoundParameters.Remove('DisplayName') | Out-Null
+        $PSBoundParameters.Remove('Description') | Out-Null
+        $AdditionalProperties = Get-M365DSCIntuneDeviceConfigurationPolicyiOSAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        Update-MGDeviceManagementDeviceConfiguration -AdditionalProperties $AdditionalProperties `
+            -Description $Description `
+            -DeviceConfigurationId $configDevicePolicy.Id
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Device Configuration Policy {$DisplayName}"
-        $policy = Get-IntuneDeviceConfigurationPolicy -Filter "displayName eq '$DisplayName'"
-        Remove-IntuneDeviceConfigurationPolicy -deviceConfigurationId $policy.id
+        $configDevicePolicy = Get-MGDeviceManagementDeviceConfiguration `
+        -ErrorAction Stop | Where-Object `
+        -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration' -and `
+            $_.displayName -eq $($DisplayName) }
+
+    Remove-MGDeviceManagementDeviceConfiguration -DeviceConfigurationId $configDevicePolicy.Id
     }
 }
 
@@ -1800,7 +1827,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -1854,9 +1885,13 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -1872,7 +1907,9 @@ function Export-TargetResource
 
     try
     {
-        [array]$policies = Get-IntuneDeviceConfigurationPolicy -ErrorAction Stop | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration' }
+        [array]$policies = Get-MGDeviceManagementDeviceConfiguration `
+            -ErrorAction Stop | Where-Object `
+            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration' }
         $i = 1
         $dscContent = ''
         if ($policies.Length -eq 0)
@@ -1887,12 +1924,13 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($policies.Count)] $($policy.displayName)" -NoNewline
             $params = @{
-                DisplayName        = $policy.displayName
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
-                ApplicationId      = $ApplicationId
-                TenantId           = $TenantId
-                ApplicationSecret  = $ApplicationSecret
+                DisplayName           = $policy.displayName
+                Ensure                = 'Present'
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -1933,141 +1971,27 @@ function Export-TargetResource
     }
 }
 
-function Get-M365DSCIntuneDeviceConfigurationPolicyiOS
+function Get-M365DSCIntuneDeviceConfigurationPolicyiOSAdditionalProperties
 {
     [CmdletBinding()]
-    [OutputType([PSCustomObject])]
+    [OutputType([System.Collections.Hashtable])]
     param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $PolicyId
-    )
-    try
-    {
-        $Url = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations/$PolicyId"
-        $response = Invoke-MSGraphRequest -HttpMethod Get `
-            -Url $Url
-        return $response
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $tenantIdValue
-    }
-    return $null
-}
-
-function New-M365DSCIntuneDeviceConfigurationPolicyiOS
-{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = 'true')]
         [System.Collections.Hashtable]
-        $Parameters
+        $Properties
     )
-    try
-    {
-        if ($Parameters.ContainsKey("Verbose"))
-        {
-            $Parameters.Remove("Verbose") | Out-Null
-        }
-        # replace the first letter of each key by a lower case;
-        $jsonString = "{`r`n`"@odata.type`":`"#microsoft.graph.iosGeneralDeviceConfiguration`",`r`n"
-        foreach ($key in $Parameters.Keys)
-        {
-            $length = $key.Length
-            $fixedKeyName = $key[0].ToString().ToLower() + $key.Substring(1, $length - 1)
-            $jsonString += "`"$fixedKeyName`": "
-            if ($Parameters.$key.GetType().Name -eq "String")
-            {
-                $jsonString += "`"$($Parameters.$key)`",`r`n"
-            }
-            elseif ($Parameters.$key.GetType().Name -eq "Boolean")
-            {
-                $jsonString += "$(($Parameters.$key).ToString().ToLower()),`r`n"
-            }
-            else
-            {
-                $jsonString += "$($Parameters.$key),`r`n"
-            }
-        }
-        $jsonString = $jsonString.TrimEnd(",`r`n")
-        $jsonString += "`r`n}"
-        $Url = 'https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations/'
-        Write-Verbose -Message "Creating new Device config policy with JSON payload: `r`n$jsonString"
-        Invoke-MSGraphRequest -HttpMethod POST `
-            -Url $Url `
-            -Content $jsonString `
-            -Headers @{"Content-Type" = "application/json" } | Out-Null
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $tenantIdValue
-    }
-}
 
-function Set-M365DSCIntuneDeviceConfigurationPolicyiOS
-{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Collections.Hashtable]
-        $Parameters,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $PolicyId
-    )
-    try
+    $results = @{"@odata.type" = "#microsoft.graph.iosGeneralDeviceConfiguration"}
+    foreach ($property in $properties.Keys)
     {
-        if ($Parameters.ContainsKey("Verbose"))
+        if ($property -ne 'Verbose')
         {
-            $Parameters.Remove("Verbose") | Out-Null
+            $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
+            $propertyValue = $properties.$property
+            $results.Add($propertyName, $propertyValue)
         }
-        # replace the first letter of each key by a lower case;
-        $jsonString = "{`r`n`"@odata.type`":`"#microsoft.graph.iosGeneralDeviceConfiguration`",`r`n"
-        foreach ($key in $Parameters.Keys)
-        {
-            $length = $key.Length
-            $fixedKeyName = $key[0].ToString().ToLower() + $key.Substring(1, $length - 1)
-            $jsonString += "`"$fixedKeyName`": "
-            if ($Parameters.$key.GetType().Name -eq "String")
-            {
-                $jsonString += "`"$($Parameters.$key)`",`r`n"
-            }
-            elseif ($Parameters.$key.GetType().Name -eq "Boolean")
-            {
-                $jsonString += "$(($Parameters.$key).ToString().ToLower()),`r`n"
-            }
-            else
-            {
-                $jsonString += "$($Parameters.$key),`r`n"
-            }
-        }
-        $jsonString = $jsonString.TrimEnd(",`r`n")
-        $jsonString += "`r`n}"
-        $Url = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations/$PolicyId"
-        Write-Verbose -Message "Updating Device config policy with JSON payload: `r`n$jsonString"
-        Invoke-MSGraphRequest -HttpMethod PATCH `
-            -Url $Url `
-            -Content $jsonString `
-            -Headers @{"Content-Type" = "application/json" } | Out-Null
     }
-    catch
-    {
-        Write-Verbose -Message $_
-        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $tenantIdValue
-    }
+    return $results
 }
 
 Export-ModuleMember -Function *-TargetResource

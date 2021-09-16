@@ -111,10 +111,14 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Write-Verbose -Message "Checking for the Intune Device Enrollment Restriction {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -133,7 +137,7 @@ function Get-TargetResource
 
     try
     {
-        $config = Get-IntuneDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration' }
+        $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration' }
 
         if ($null -eq $config)
         {
@@ -145,31 +149,32 @@ function Get-TargetResource
         return @{
             DisplayName                                  = $config.DisplayName
             Description                                  = $config.Description
-            AndroidPlatformBlocked                       = $config.AndroidRestriction.PlatformBlocked
-            AndroidPersonalDeviceEnrollmentBlocked       = $config.AndroidRestriction.PersonalDeviceEnrollmentBlocked
-            AndroidOSMinimumVersion                      = $config.AndroidRestriction.OSMinimumVersion
-            AndroidOSMaximumVersion                      = $config.AndroidRestriction.OSMaximumVersion
-            iOSPlatformBlocked                           = $config.iOSRestriction.PlatformBlocked
-            iOSPersonalDeviceEnrollmentBlocked           = $config.iOSRestriction.PersonalDeviceEnrollmentBlocked
-            iOSOSMinimumVersion                          = $config.iOSRestriction.OSMinimumVersion
-            iOSOSMaximumVersion                          = $config.iOSRestriction.OSMaximumVersion
-            MacPlatformBlocked                           = $config.MacOSRestriction.PlatformBlocked
-            MacPersonalDeviceEnrollmentBlocked           = $config.MacOSRestriction.PersonalDeviceEnrollmentBlocked
-            MacOSMinimumVersion                          = $config.MacOSRestriction.OSMinimumVersion
-            MacOSMaximumVersion                          = $config.MacOSRestriction.OSMaximumVersion
-            WindowsPlatformBlocked                       = $config.WindowsRestriction.PlatformBlocked
-            WindowsPersonalDeviceEnrollmentBlocked       = $config.WindowsRestriction.PersonalDeviceEnrollmentBlocked
-            WindowsOSMinimumVersion                      = $config.WindowsRestriction.OSMinimumVersion
-            WindowsOSMaximumVersion                      = $config.WindowsRestriction.OSMaximumVersion
-            WindowsMobilePlatformBlocked                 = $config.WindowsMobileRestriction.PlatformBlocked
-            WindowsMobilePersonalDeviceEnrollmentBlocked = $config.WindowsMobileRestriction.PersonalDeviceEnrollmentBlocked
-            WindowsMobileOSMinimumVersion                = $config.WindowsMobileRestriction.OSMinimumVersion
-            WindowsMobileOSMaximumVersion                = $config.WindowsMobileRestriction.OSMaximumVersion
+            AndroidPlatformBlocked                       = $config.AdditionalProperties.androidRestriction.platformBlocked
+            AndroidPersonalDeviceEnrollmentBlocked       = $config.AdditionalProperties.androidRestriction.personalDeviceEnrollmentBlocked
+            AndroidOSMinimumVersion                      = $config.AdditionalProperties.androidRestriction.osMinimumVersion
+            AndroidOSMaximumVersion                      = $config.AdditionalProperties.androidRestriction.osMaximumVersion
+            iOSPlatformBlocked                           = $config.AdditionalProperties.iosRestriction.platformBlocked
+            iOSPersonalDeviceEnrollmentBlocked           = $config.AdditionalProperties.iosRestriction.personalDeviceEnrollmentBlocked
+            iOSOSMinimumVersion                          = $config.AdditionalProperties.iosRestriction.osMinimumVersion
+            iOSOSMaximumVersion                          = $config.AdditionalProperties.iosRestriction.osMaximumVersion
+            MacPlatformBlocked                           = $config.AdditionalProperties.macOSRestriction.platformBlocked
+            MacPersonalDeviceEnrollmentBlocked           = $config.AdditionalProperties.macOSRestriction.personalDeviceEnrollmentBlocked
+            MacOSMinimumVersion                          = $config.AdditionalProperties.macOSRestriction.minimumVersion
+            MacOSMaximumVersion                          = $config.AdditionalProperties.macOSRestriction.osMaximumVersion
+            WindowsPlatformBlocked                       = $config.AdditionalProperties.windowsRestriction.platformBlocked
+            WindowsPersonalDeviceEnrollmentBlocked       = $config.AdditionalProperties.windowsRestriction.personalDeviceEnrollmentBlocked
+            WindowsOSMinimumVersion                      = $config.AdditionalProperties.windowsRestriction.osMinimumVersion
+            WindowsOSMaximumVersion                      = $config.AdditionalProperties.windowsRestriction.osMaximumVersion
+            WindowsMobilePlatformBlocked                 = $config.AdditionalProperties.windowsMobileRestriction.platformBlocked
+            WindowsMobilePersonalDeviceEnrollmentBlocked = $config.AdditionalProperties.windowsMobileRestriction.personalDeviceEnrollmentBlocked
+            WindowsMobileOSMinimumVersion                = $config.AdditionalProperties.windowsMobileRestriction.osMinimumVersion
+            WindowsMobileOSMaximumVersion                = $config.AdditionalProperties.windowsMobileRestriction.osMaximumVersion
             Ensure                                       = "Present"
             GlobalAdminAccount                           = $GlobalAdminAccount
             ApplicationId                                = $ApplicationId
             TenantId                                     = $TenantId
             ApplicationSecret                            = $ApplicationSecret
+            CertificateThumbprint                        = $CertificateThumbprint
         }
     }
     catch
@@ -302,10 +307,14 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -320,27 +329,41 @@ function Set-TargetResource
     #endregion
 
     $currentCategory = Get-TargetResource @PSBoundParameters
+    $PSBoundParameters.Remove("GlobalAdminAccount") | Out-Null
+    $PSBoundParameters.Remove("ApplicationId") | Out-Null
+    $PSBoundParameters.Remove("TenantId") | Out-Null
+    $PSBoundParameters.Remove("ApplicationSecret") | Out-Null
+    $PSBoundParameters.Remove("DisplayName") | Out-Null
+    $PSBoundParameters.Remove("Description") | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Device Enrollment Platform Restriction {$DisplayName}"
-        $JsonContent = Get-M365DSCIntuneDeviceEnrollmentPlatformRestrictionJSON -Parameters $PSBoundParameters
-        New-M365DSCIntuneDeviceEnrollmentPlatformRestriction -JSONContent $JsonContent
+
+        $AdditionalProperties = Get-M365DSCIntuneDeviceEnrollmentPlatformRestrictionAdditionalProperties -Properties $PSBoundParameters
+
+        New-MgDeviceManagementDeviceEnrollmentCOnfiguration -DisplayName $DisplayName `
+            -Description $Description `
+            -AdditionalProperties $AdditionalProperties
     }
     elseif ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Device Enrollment Platform Restriction {$DisplayName}"
-        $config = Get-IntuneDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration' }
-        $JsonContent = Get-M365DSCIntuneDeviceEnrollmentPlatformRestrictionJSON -Parameters $PSBoundParameters
-        Set-M365DSCIntuneDeviceEnrollmentPlatformRestriction -JSONContent $JsonContent `
-            -RestrictionId $config.id
+        $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
+            | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration' }
+        $AdditionalProperties = Get-M365DSCIntuneDeviceEnrollmentPlatformRestrictionAdditionalProperties -Properties $PSBoundParameters
+        Update-MgDeviceManagementDeviceEnrollmentConfiguration -DisplayName $DisplayName `
+            -Description $Description `
+            -AdditionalProperties $AdditionalProperties `
+            -DeviceEnrollmentConfigurationId $config.id
     }
     elseif ($Ensure -eq 'Absent' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Device Enrollment Platform Restriction {$DisplayName}"
-        $config = Get-IntuneDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration' }
+        $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
+            | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration' }
 
-        Remove-IntuneDeviceEnrollmentConfiguration -deviceEnrollmentConfigurationId $config.id
+        Remove-MgDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $config.id
     }
 }
 
@@ -457,7 +480,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -511,9 +538,13 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -529,7 +560,8 @@ function Export-TargetResource
 
     try
     {
-        [array]$configs = Get-IntuneDeviceEnrollmentConfiguration -ErrorAction Stop | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration' }
+        [array]$configs = Get-MgDeviceManagementDeviceEnrollmentConfiguration -ErrorAction Stop `
+            | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration' }
         $i = 1
         $dscContent = ''
         if ($configs.Length -eq 0)
@@ -544,12 +576,13 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($configs.Count)] $($config.displayName)" -NoNewline
             $params = @{
-                DisplayName        = $config.displayName
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
-                ApplicationId      = $ApplicationId
-                TenantId           = $TenantId
-                ApplicationSecret  = $ApplicationSecret
+                DisplayName           = $config.displayName
+                Ensure                = 'Present'
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -589,115 +622,51 @@ function Export-TargetResource
     }
 }
 
-function Get-M365DSCIntuneDeviceEnrollmentPlatformRestrictionJSON
+
+function Get-M365DSCIntuneDeviceEnrollmentPlatformRestrictionAdditionalProperties
 {
     [CmdletBinding()]
-    [OutputType([System.String])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = 'true')]
         [System.Collections.Hashtable]
-        $Parameters
+        $Properties
     )
 
-    $JsonContent = @"
-    {
-        "@odata.type":"#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration",
-        "displayName":"$($Parameters.DisplayName)",
-        "description":"$($Parameters.Description)",
-        "androidRestriction":{
-            "platformBlocked":$($Parameters.AndroidPlatformBlocked.ToString().ToLower()),
-            "personalDeviceEnrollmentBlocked":$($Parameters.AndroidPersonalDeviceEnrollmentBlocked.ToString().ToLower()),
-            "osMinimumVersion":"$($Parameters.AndroidOSMinimumVersion)",
-            "osMaximumVersion":"$($Parameters.AndroidOSMaximumVersion)"
-        },
-        "iosRestriction":{
-            "platformBlocked":$($Parameters.iOSPlatformBlocked.ToString().ToLower()),
-            "personalDeviceEnrollmentBlocked":$($Parameters.iOSPersonalDeviceEnrollmentBlocked.ToString().ToLower()),
-            "osMinimumVersion":"$($Parameters.iOSOSMinimumVersion)",
-            "osMaximumVersion":"$($Parameters.iOSOSMaximumVersion)"
-        },
-        "macRestriction":{
-            "platformBlocked":$($Parameters.MacPlatformBlocked.ToString().ToLower()),
-            "personalDeviceEnrollmentBlocked":$($Parameters.MacPersonalDeviceEnrollmentBlocked.ToString().ToLower()),
-            "osMinimumVersion":"$($Parameters.MacOSMinimumVersion)",
-            "osMaximumVersion":"$($Parameters.MacOSMaximumVersion)"
-        },
-        "windowsRestriction":{
-            "platformBlocked":$($Parameters.WindowsPlatformBlocked.ToString().ToLower()),
-            "personalDeviceEnrollmentBlocked":$($Parameters.WindowsPersonalDeviceEnrollmentBlocked.ToString().ToLower()),
-            "osMinimumVersion":"$($Parameters.WindowsOSMinimumVersion)",
-            "osMaximumVersion":"$($Parameters.WindowsOSMaximumVersion)"
-        },
-        "windowsMobileRestriction":{
-            "platformBlocked":$($Parameters.WindowsMobilePlatformBlocked.ToString().ToLower()),
-            "personalDeviceEnrollmentBlocked":$($Parameters.WindowsMobilePersonalDeviceEnrollmentBlocked.ToString().ToLower()),
-            "osMinimumVersion":"$($Parameters.WindowsMobileOSMinimumVersion)",
-            "osMaximumVersion":"$($Parameters.WindowsMobileOSMaximumVersion)"
+    $results = @{
+        "@odata.type" = "#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration"
+        androidRestriction = @{
+            platformBlocked = $Properties.AndroidPlatformBlocked
+            personalDeviceEnrollmentBlocked = $Properties.AndroidPersonalDeviceEnrollmentBlocked
+            osMinimumVersion = $Properties.AndroidOSMinimumVersion
+            osMaximumVersion = $Properties.AndroidOSMaximumVersion
+        }
+        iosRestriction = @{
+            platformBlocked = $Properties.iOSPlatformBlocked
+            personalDeviceEnrollmentBlocked = $Properties.iOSPersonalDeviceEnrollmentBlocked
+            osMinimumVersion = $Properties.iOSOSMinimumVersion
+            osMaximumVersion = $Properties.iOSOSMaximumVersion
+        }
+        macOSRestriction = @{
+            platformBlocked = $Properties.MacPlatformBlocked
+            personalDeviceEnrollmentBlocked = $Properties.MacPersonalDeviceEnrollmentBlocked
+            osminimumVersion = $Properties.MacOSMinimumVersion
+            osMaximumVersion = $Properties.MacOSMaximumVersion
+        }
+        windowsRestriction = @{
+            platformBlocked = $Properties.WindowsPlatformBlocked
+            personalDeviceEnrollmentBlocked = $Properties.WindowsPersonalDeviceEnrollmentBlocked
+            osMinimumVersion = $Properties.WindowsOSMinimumVersion
+            osMaximumVersion = $Properties.WindowsOSMaximumVersion
+        }
+        windowsMobileRestriction = @{
+            platformBlocked = $Properties.WindowsMobilePlatformBlocked
+            personalDeviceEnrollmentBlocked = $Properties.WindowsMobilePersonalDeviceEnrollmentBlocked
+            osMinimumVersion = $Properties.WindowsMobileOSMinimumVersion
+            osMaximumVersion = $Properties.WindowsMobileOSMaximumVersion
         }
     }
-"@
-    return $JsonContent
-}
-
-function New-M365DSCIntuneDeviceEnrollmentPlatformRestriction
-{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $JsonContent
-    )
-
-    try
-    {
-        Write-Verbose -Message "Creating new Device Enrollment Platform Restriction with payload {$JsonContent}"
-        $Url = "https://graph.microsoft.com/Beta/deviceManagement/deviceEnrollmentConfigurations/"
-        Invoke-MSGraphRequest -Url $Url `
-            -HttpMethod POST `
-            -Headers @{'Content-Type' = 'application/json' } `
-            -Content $JsonContent
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $tenantIdValue
-    }
-}
-
-function Set-M365DSCIntuneDeviceEnrollmentPlatformRestriction
-{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $JsonContent,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $RestrictionId
-    )
-
-    try
-    {
-        Write-Verbose -Message "Updating Device Enrollment Platform Restriction with payload {$JsonContent}"
-        $Url = "https://graph.microsoft.com/Beta/deviceManagement/deviceEnrollmentConfigurations/$RestrictionId"
-        Invoke-MSGraphRequest -Url $Url `
-            -HttpMethod PATCH `
-            -Headers @{'Content-Type' = 'application/json' } `
-            -Content $JsonContent
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $tenantIdValue
-    }
+    return $results
 }
 
 Export-ModuleMember -Function *-TargetResource

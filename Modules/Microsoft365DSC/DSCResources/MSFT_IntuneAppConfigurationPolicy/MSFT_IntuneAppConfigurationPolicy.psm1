@@ -35,9 +35,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
 
-
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Write-Verbose -Message "Checking for the Intune App Configuration Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -68,14 +70,15 @@ function Get-TargetResource
         }
         Write-Verbose -Message "Found App Configuration Policy with displayName {$DisplayName}"
         return @{
-            DisplayName        = $configPolicy.DisplayName
-            Description        = $configPolicy.Description
-            CustomSettings     = $configPolicy.customSettings
-            Ensure             = 'Present'
-            GlobalAdminAccount = $GlobalAdminAccount
-            ApplicationId      = $ApplicationId
-            TenantId           = $TenantId
-            ApplicationSecret  = $ApplicationSecret
+            DisplayName           = $configPolicy.DisplayName
+            Description           = $configPolicy.Description
+            CustomSettings        = $configPolicy.customSettings
+            Ensure                = 'Present'
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
     catch
@@ -140,7 +143,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Intune App Configuration Policy {$DisplayName}"
@@ -173,7 +180,7 @@ function Set-TargetResource
             $customSettingsValue = ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings -Settings $CustomSettings
             $creationParams.Add("customSettings", $customSettingsValue)
         }
-        New-IntuneAppConfigurationPolicyTargeted @$creationParams
+        New-MgDeviceAppManagementTargetedManagedAppConfiguration @$creationParams
     }
     elseif ($Ensure -eq 'Present' -and $currentconfigPolicy.Ensure -eq 'Present')
     {
@@ -237,7 +244,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -309,7 +320,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -342,12 +357,13 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($configPolicies.Count)] $($configPolicy.displayName)" -NoNewLine
             $params = @{
-                DisplayName        = $configPolicy.displayName
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
-                ApplicationID      = $ApplicationId
-                TenantId           = $TenantId
-                ApplicationSecret  = $ApplicationSecret
+                DisplayName           = $configPolicy.displayName
+                Ensure                = 'Present'
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationID         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
             }
             $Results = Get-TargetResource @params
             if ($Results.CustomSettings.Count -gt 0)
