@@ -177,10 +177,10 @@ function Set-TargetResource
         }
         if ($null -ne $CustomSettings)
         {
-            $customSettingsValue = ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings -Settings $CustomSettings
+            [System.Object[]]$customSettingsValue = ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings -Settings $CustomSettings
             $creationParams.Add("customSettings", $customSettingsValue)
         }
-        New-MgDeviceAppManagementTargetedManagedAppConfiguration @$creationParams
+        New-MgDeviceAppManagementTargetedManagedAppConfiguration @creationParams
     }
     elseif ($Ensure -eq 'Present' -and $currentconfigPolicy.Ensure -eq 'Present')
     {
@@ -202,7 +202,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentconfigPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Intune App Configuration Policy {$DisplayName}"
-        $configPolicy = Get-IntuneAppConfigurationPolicyTargeted -Filter "displayName eq '$DisplayName'"
+        $configPolicy = Get-MgDeviceAppManagementTargetedManagedAppConfiguration -Filter "displayName eq '$DisplayName'"
         Remove-MgDeviceAppManagementTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $configPolicy.id
     }
 }
