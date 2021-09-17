@@ -37,11 +37,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credential"
             }
 
-            Mock -CommandName Update-IntuneDeviceCategory -MockWith {
+            Mock -CommandName Update-MGDeviceManagementDeviceCategory -MockWith {
             }
-            Mock -CommandName New-IntuneDeviceCategory -MockWith {
+            Mock -CommandName New-MGDeviceManagementDeviceCategory -MockWith {
             }
-            Mock -CommandName Remove-IntuneDeviceCategory -MockWith {
+            Mock -CommandName Remove-MGDeviceManagementDeviceCategory -MockWith {
             }
         }
 
@@ -55,7 +55,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount;
                 }
 
-                Mock -CommandName Get-IntuneDeviceCategory -MockWith {
+                Mock -CommandName Get-MgDeviceManagementDeviceCategory -MockWith {
                     return $null
                 }
             }
@@ -70,7 +70,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should create the category from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-IntuneDeviceCategory" -Exactly 1
+                Should -Invoke -CommandName "New-MgDeviceManagementDeviceCategory" -Exactly 1
             }
         }
 
@@ -83,10 +83,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount;
                 }
 
-                Mock -CommandName Get-IntuneDeviceCategory -MockWith {
+                Mock -CommandName Get-MgDeviceManagementDeviceCategory -MockWith {
                     return @{
                         DisplayName = 'Test Category'
                         Description = "Different Value"
+                        Id          = "12345-12345-12345-12345-12345"
                     }
                 }
             }
@@ -101,7 +102,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should update the category from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-IntuneDeviceCategory -Exactly 1
+                Should -Invoke -CommandName Update-MgDeviceManagementDeviceCategory -Exactly 1
             }
         }
 
@@ -114,10 +115,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount;
                 }
 
-                Mock -CommandName Get-IntuneDeviceCategory -MockWith {
+                Mock -CommandName Get-MgDeviceManagementDeviceCategory -MockWith {
                     return @{
                         DisplayName = 'Test Category'
                         Description = "Test Definition"
+                        Id          = "12345-12345-12345-12345-12345"
                     }
                 }
             }
@@ -136,10 +138,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount;
                 }
 
-                Mock -CommandName Get-IntuneDeviceCategory -MockWith {
+                Mock -CommandName Get-MgDeviceManagementDeviceCategory -MockWith {
                     return @{
                         DisplayName = 'Test Category'
                         Description = "Test Definition"
+                        Id          = "12345-12345-12345-12345-12345"
                     }
                 }
             }
@@ -154,7 +157,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should remove the category from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-IntuneDeviceCategory -Exactly 1
+                Should -Invoke -CommandName Remove-MgDeviceManagementDeviceCategory -Exactly 1
             }
         }
 
@@ -164,10 +167,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount     = $GlobalAdminAccount;
                 }
 
-                Mock -CommandName Get-IntuneDeviceCategory -MockWith {
+                Mock -CommandName Get-MgDeviceManagementDeviceCategory -MockWith {
                     return @{
                         DisplayName = 'Test Category'
                         Description = "Test Definition"
+                        Id          = "12345-12345-12345-12345-12345"
                     }
                 }
             }

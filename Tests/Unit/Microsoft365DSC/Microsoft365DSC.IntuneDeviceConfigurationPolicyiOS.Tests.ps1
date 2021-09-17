@@ -37,11 +37,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credential"
             }
 
-            Mock -CommandName New-M365DSCIntuneDeviceConfigurationPolicyiOS -MockWith {
+            Mock -CommandName New-MgDeviceManagementDeviceConfiguration -MockWith {
             }
-            Mock -CommandName Set-M365DSCIntuneDeviceConfigurationPolicyiOS -MockWith {
+            Mock -CommandName Update-MgDeviceManagementDeviceConfiguration -MockWith {
             }
-            Mock -CommandName Remove-IntuneDeviceConfigurationPolicy -MockWith {
+            Mock -CommandName Remove-MgDeviceManagementDeviceConfiguration -MockWith {
             }
         }
 
@@ -161,7 +161,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     WallpaperBlockModification                     = $False;
                 }
 
-                Mock -CommandName Get-M365DSCIntuneDeviceConfigurationPolicyiOS -MockWith {
+                Mock -CommandName Get-MGDeviceManagementDeviceConfiguration -MockWith {
                     return $null
                 }
             }
@@ -176,7 +176,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should create the policy from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-M365DSCIntuneDeviceConfigurationPolicyiOS" -Exactly 1
+                Should -Invoke -CommandName "New-MgDeviceManagementDeviceConfiguration" -Exactly 1
             }
         }
 
@@ -295,17 +295,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     WallpaperBlockModification                     = $False;
                 }
 
-                Mock -CommandName Get-IntuneDeviceConfigurationPolicy -MockWith {
+                Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
                     return @{
-                        '@odata.type' = "#microsoft.graph.iosGeneralDeviceConfiguration"
-                        displayName   = "iOS DSC Created"
-                        id            = "12345-12345-12345-12345-12345"
-                    }
-                }
-
-                Mock -CommandName Get-M365DSCIntuneDeviceConfigurationPolicyiOS -MockWith {
-                    return @{
-                        '@odata.type'                                  = "#microsoft.graph.iosGeneralDeviceConfiguration"
+                        id                                             = "12345-12345-12345-12345-12345"
+                        AdditionalProperties = @{'@odata.type'          = "#microsoft.graph.iosGeneralDeviceConfiguration"}
                         AccountBlockModification                       = $False;
                         ActivationLockAllowWhenSupervised              = $False;
                         AirDropBlocked                                 = $False;
@@ -420,13 +413,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-IntuneDeviceConfigurationPolicy -MockWith {
-                return @{
-                    displayName = "iOS DSC Created"
-                    id          = "12345-12345-12345-12345-12345"
-                }
-            }
-
             It "Should return Present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
@@ -437,20 +423,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should update the policy from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-M365DSCIntuneDeviceConfigurationPolicyiOS -Exactly 1
+                Should -Invoke -CommandName Update-MgDeviceManagementDeviceConfiguration -Exactly 1
             }
         }
 
         Context -Name "When the policy already exists and IS in the Desired State" -Fixture {
             BeforeAll {
 
-                Mock -CommandName Get-IntuneDeviceConfigurationPolicy -MockWith {
-                    return @{
-                        '@odata.type' = "#microsoft.graph.iosGeneralDeviceConfiguration"
-                        displayName   = "iOS DSC Created"
-                        id            = "12345-12345-12345-12345-12345"
-                    }
-                }
                 $testParams = @{
                     AccountBlockModification                       = $False;
                     ActivationLockAllowWhenSupervised              = $False;
@@ -564,119 +543,122 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     WallpaperBlockModification                     = $False;
                 }
 
-                Mock -CommandName Get-M365DSCIntuneDeviceConfigurationPolicyiOS -MockWith {
+                Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
                     return @{
-                        '@odata.type'                                  = "#microsoft.graph.iosGeneralDeviceConfiguration"
-                        AccountBlockModification                       = $False;
-                        ActivationLockAllowWhenSupervised              = $False;
-                        AirDropBlocked                                 = $False;
-                        AirDropForceUnmanagedDropTarget                = $False;
-                        AirPlayForcePairingPasswordForOutgoingRequests = $False;
-                        AppleNewsBlocked                               = $False;
-                        AppleWatchBlockPairing                         = $False;
-                        AppleWatchForceWristDetection                  = $False;
-                        AppStoreBlockAutomaticDownloads                = $False;
-                        AppStoreBlocked                                = $False;
-                        AppStoreBlockInAppPurchases                    = $False;
-                        AppStoreBlockUIAppInstallation                 = $False;
-                        AppStoreRequirePassword                        = $False;
-                        AppsVisibilityList                             = @();
-                        AppsVisibilityListType                         = "none";
-                        BluetoothBlockModification                     = $True;
-                        CameraBlocked                                  = $False;
-                        CellularBlockDataRoaming                       = $False;
-                        CellularBlockGlobalBackgroundFetchWhileRoaming = $False;
-                        CellularBlockPerAppDataModification            = $False;
-                        CellularBlockVoiceRoaming                      = $False;
-                        CertificatesBlockUntrustedTlsCertificates      = $False;
-                        ClassroomAppBlockRemoteScreenObservation       = $False;
-                        CompliantAppListType                           = "none";
-                        CompliantAppsList                              = @();
-                        ConfigurationProfileBlockChanges               = $False;
-                        DefinitionLookupBlocked                        = $False;
-                        Description                                    = "iOS Device Restriction Policy";
-                        DeviceBlockEnableRestrictions                  = $True;
-                        DeviceBlockEraseContentAndSettings             = $False;
-                        DeviceBlockNameModification                    = $False;
-                        DiagnosticDataBlockSubmission                  = $False;
-                        DiagnosticDataBlockSubmissionModification      = $False;
+                        id                                             = "12345-12345-12345-12345-12345"
                         DisplayName                                    = "iOS DSC Created";
-                        DocumentsBlockManagedDocumentsInUnmanagedApps  = $False;
-                        DocumentsBlockUnmanagedDocumentsInManagedApps  = $False;
-                        EmailInDomainSuffixes                          = @();
-                        Ensure                                         = "Present";
-                        EnterpriseAppBlockTrust                        = $False;
-                        EnterpriseAppBlockTrustModification            = $False;
-                        FaceTimeBlocked                                = $False;
-                        FindMyFriendsBlocked                           = $False;
-                        GameCenterBlocked                              = $False;
-                        GamingBlockGameCenterFriends                   = $True;
-                        GamingBlockMultiplayer                         = $False;
+                        Description                                    = "iOS Device Restriction Policy";
                         GlobalAdminAccount                             = $GlobalAdminAccount;
-                        HostPairingBlocked                             = $False;
-                        iBooksStoreBlocked                             = $False;
-                        iBooksStoreBlockErotica                        = $False;
-                        iCloudBlockActivityContinuation                = $False;
-                        iCloudBlockBackup                              = $True;
-                        iCloudBlockDocumentSync                        = $True;
-                        iCloudBlockManagedAppsSync                     = $False;
-                        iCloudBlockPhotoLibrary                        = $False;
-                        iCloudBlockPhotoStreamSync                     = $True;
-                        iCloudBlockSharedPhotoStream                   = $False;
-                        iCloudRequireEncryptedBackup                   = $False;
-                        iTunesBlockExplicitContent                     = $False;
-                        iTunesBlockMusicService                        = $False;
-                        iTunesBlockRadio                               = $False;
-                        KeyboardBlockAutoCorrect                       = $False;
-                        KeyboardBlockPredictive                        = $False;
-                        KeyboardBlockShortcuts                         = $False;
-                        KeyboardBlockSpellCheck                        = $False;
-                        KioskModeAllowAssistiveSpeak                   = $False;
-                        KioskModeAllowAssistiveTouchSettings           = $False;
-                        KioskModeAllowAutoLock                         = $False;
-                        KioskModeAllowColorInversionSettings           = $False;
-                        KioskModeAllowRingerSwitch                     = $False;
-                        KioskModeAllowScreenRotation                   = $False;
-                        KioskModeAllowSleepButton                      = $False;
-                        KioskModeAllowTouchscreen                      = $False;
-                        KioskModeAllowVoiceOverSettings                = $False;
-                        KioskModeAllowVolumeButtons                    = $False;
-                        KioskModeAllowZoomSettings                     = $False;
-                        KioskModeRequireAssistiveTouch                 = $False;
-                        KioskModeRequireColorInversion                 = $False;
-                        KioskModeRequireMonoAudio                      = $False;
-                        KioskModeRequireVoiceOver                      = $False;
-                        KioskModeRequireZoom                           = $False;
-                        LockScreenBlockControlCenter                   = $False;
-                        LockScreenBlockNotificationView                = $False;
-                        LockScreenBlockPassbook                        = $False;
-                        LockScreenBlockTodayView                       = $False;
-                        MediaContentRatingApps                         = "allAllowed";
-                        messagesBlocked                                = $False;
-                        NotificationsBlockSettingsModification         = $False;
-                        PasscodeBlockFingerprintUnlock                 = $False;
-                        PasscodeBlockModification                      = $False;
-                        PasscodeBlockSimple                            = $True;
-                        PasscodeMinimumLength                          = 4;
-                        PasscodeRequired                               = $True;
-                        PasscodeRequiredType                           = "deviceDefault";
-                        PodcastsBlocked                                = $False;
-                        SafariBlockAutofill                            = $False;
-                        SafariBlocked                                  = $False;
-                        SafariBlockJavaScript                          = $False;
-                        SafariBlockPopups                              = $False;
-                        SafariCookieSettings                           = "browserDefault";
-                        SafariManagedDomains                           = @();
-                        SafariPasswordAutoFillDomains                  = @();
-                        SafariRequireFraudWarning                      = $False;
-                        ScreenCaptureBlocked                           = $False;
-                        SiriBlocked                                    = $False;
-                        SiriBlockedWhenLocked                          = $False;
-                        SiriBlockUserGeneratedContent                  = $False;
-                        SiriRequireProfanityFilter                     = $False;
-                        SpotlightBlockInternetResults                  = $False;
-                        VoiceDialingBlocked                            = $False;
-                        WallpaperBlockModification                     = $False;
+                        Ensure                                         = "Present";
+                        AdditionalProperties = @{
+                            '@odata.type'                                  = "#microsoft.graph.iosGeneralDeviceConfiguration"
+                            AccountBlockModification                       = $False;
+                            ActivationLockAllowWhenSupervised              = $False;
+                            AirDropBlocked                                 = $False;
+                            AirDropForceUnmanagedDropTarget                = $False;
+                            AirPlayForcePairingPasswordForOutgoingRequests = $False;
+                            AppleNewsBlocked                               = $False;
+                            AppleWatchBlockPairing                         = $False;
+                            AppleWatchForceWristDetection                  = $False;
+                            AppStoreBlockAutomaticDownloads                = $False;
+                            AppStoreBlocked                                = $False;
+                            AppStoreBlockInAppPurchases                    = $False;
+                            AppStoreBlockUIAppInstallation                 = $False;
+                            AppStoreRequirePassword                        = $False;
+                            AppsVisibilityList                             = @();
+                            AppsVisibilityListType                         = "none";
+                            BluetoothBlockModification                     = $True;
+                            CameraBlocked                                  = $False;
+                            CellularBlockDataRoaming                       = $False;
+                            CellularBlockGlobalBackgroundFetchWhileRoaming = $False;
+                            CellularBlockPerAppDataModification            = $False;
+                            CellularBlockVoiceRoaming                      = $False;
+                            CertificatesBlockUntrustedTlsCertificates      = $False;
+                            ClassroomAppBlockRemoteScreenObservation       = $False;
+                            CompliantAppListType                           = "none";
+                            CompliantAppsList                              = @();
+                            ConfigurationProfileBlockChanges               = $False;
+                            DefinitionLookupBlocked                        = $False;
+                            DeviceBlockEnableRestrictions                  = $True;
+                            DeviceBlockEraseContentAndSettings             = $False;
+                            DeviceBlockNameModification                    = $False;
+                            DiagnosticDataBlockSubmission                  = $False;
+                            DiagnosticDataBlockSubmissionModification      = $False;
+                            DocumentsBlockManagedDocumentsInUnmanagedApps  = $False;
+                            DocumentsBlockUnmanagedDocumentsInManagedApps  = $False;
+                            EmailInDomainSuffixes                          = @();
+                            EnterpriseAppBlockTrust                        = $False;
+                            EnterpriseAppBlockTrustModification            = $False;
+                            FaceTimeBlocked                                = $False;
+                            FindMyFriendsBlocked                           = $False;
+                            GameCenterBlocked                              = $False;
+                            GamingBlockGameCenterFriends                   = $True;
+                            GamingBlockMultiplayer                         = $False;
+                            HostPairingBlocked                             = $False;
+                            iBooksStoreBlocked                             = $False;
+                            iBooksStoreBlockErotica                        = $False;
+                            iCloudBlockActivityContinuation                = $False;
+                            iCloudBlockBackup                              = $True;
+                            iCloudBlockDocumentSync                        = $True;
+                            iCloudBlockManagedAppsSync                     = $False;
+                            iCloudBlockPhotoLibrary                        = $False;
+                            iCloudBlockPhotoStreamSync                     = $True;
+                            iCloudBlockSharedPhotoStream                   = $False;
+                            iCloudRequireEncryptedBackup                   = $False;
+                            iTunesBlockExplicitContent                     = $False;
+                            iTunesBlockMusicService                        = $False;
+                            iTunesBlockRadio                               = $False;
+                            KeyboardBlockAutoCorrect                       = $False;
+                            KeyboardBlockPredictive                        = $False;
+                            KeyboardBlockShortcuts                         = $False;
+                            KeyboardBlockSpellCheck                        = $False;
+                            KioskModeAllowAssistiveSpeak                   = $False;
+                            KioskModeAllowAssistiveTouchSettings           = $False;
+                            KioskModeAllowAutoLock                         = $False;
+                            KioskModeAllowColorInversionSettings           = $False;
+                            KioskModeAllowRingerSwitch                     = $False;
+                            KioskModeAllowScreenRotation                   = $False;
+                            KioskModeAllowSleepButton                      = $False;
+                            KioskModeAllowTouchscreen                      = $False;
+                            KioskModeAllowVoiceOverSettings                = $False;
+                            KioskModeAllowVolumeButtons                    = $False;
+                            KioskModeAllowZoomSettings                     = $False;
+                            KioskModeRequireAssistiveTouch                 = $False;
+                            KioskModeRequireColorInversion                 = $False;
+                            KioskModeRequireMonoAudio                      = $False;
+                            KioskModeRequireVoiceOver                      = $False;
+                            KioskModeRequireZoom                           = $False;
+                            LockScreenBlockControlCenter                   = $False;
+                            LockScreenBlockNotificationView                = $False;
+                            LockScreenBlockPassbook                        = $False;
+                            LockScreenBlockTodayView                       = $False;
+                            MediaContentRatingApps                         = "allAllowed";
+                            messagesBlocked                                = $False;
+                            NotificationsBlockSettingsModification         = $False;
+                            PasscodeBlockFingerprintUnlock                 = $False;
+                            PasscodeBlockModification                      = $False;
+                            PasscodeBlockSimple                            = $True;
+                            PasscodeMinimumLength                          = 4;
+                            PasscodeRequired                               = $True;
+                            PasscodeRequiredType                           = "deviceDefault";
+                            PodcastsBlocked                                = $False;
+                            SafariBlockAutofill                            = $False;
+                            SafariBlocked                                  = $False;
+                            SafariBlockJavaScript                          = $False;
+                            SafariBlockPopups                              = $False;
+                            SafariCookieSettings                           = "browserDefault";
+                            SafariManagedDomains                           = @();
+                            SafariPasswordAutoFillDomains                  = @();
+                            SafariRequireFraudWarning                      = $False;
+                            ScreenCaptureBlocked                           = $False;
+                            SiriBlocked                                    = $False;
+                            SiriBlockedWhenLocked                          = $False;
+                            SiriBlockUserGeneratedContent                  = $False;
+                            SiriRequireProfanityFilter                     = $False;
+                            SpotlightBlockInternetResults                  = $False;
+                            VoiceDialingBlocked                            = $False;
+                            WallpaperBlockModification                     = $False;
+                        }
                     }
                 }
             }
@@ -694,17 +676,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount;
                 }
 
-                Mock -CommandName Get-IntuneDeviceConfigurationPolicy -MockWith {
+                Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
                     return @{
-                        '@odata.type' = "#microsoft.graph.iosGeneralDeviceConfiguration"
-                        displayName   = "iOS DSC Created"
-                        id            = "12345-12345-12345-12345-12345"
-                    }
-                }
-
-                Mock -CommandName Get-M365DSCIntuneDeviceConfigurationPolicyiOS -MockWith {
-                    return @{
-                        '@odata.type'                                  = "#microsoft.graph.iosGeneralDeviceConfiguration"
+                        AdditionalProperties = @{'@odata.type'                                  = "#microsoft.graph.iosGeneralDeviceConfiguration"}
+                        id                                             = "12345-12345-12345-12345-12345"
                         AccountBlockModification                       = $False;
                         ActivationLockAllowWhenSupervised              = $False;
                         AirDropBlocked                                 = $False;
@@ -829,7 +804,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should remove the policy from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-IntuneDeviceConfigurationPolicy -Exactly 1
+                Should -Invoke -CommandName Remove-MgDeviceManagementDeviceConfiguration -Exactly 1
             }
         }
 
@@ -839,15 +814,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount;
                 }
 
-                Mock -CommandName Get-IntuneDeviceConfigurationPolicy -MockWith {
+                Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
                     return @{
-                        displayName = "iOS DSC Created"
-                        id          = "12345-12345-12345-12345-12345"
-                    }
-                }
-
-                Mock -CommandName Get-M365DSCIntuneDeviceConfigurationPolicyiOS -MockWith {
-                    return @{
+                        AdditionalProperties = @{'@odata.type'                                  = "#microsoft.graph.iosGeneralDeviceConfiguration"}
+                        id                                             = "12345-12345-12345-12345-12345"
                         AccountBlockModification                       = $False;
                         ActivationLockAllowWhenSupervised              = $False;
                         AirDropBlocked                                 = $False;

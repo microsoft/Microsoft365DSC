@@ -437,7 +437,7 @@ function Set-TargetResource
         Write-Verbose -Message "Removing iOS App Protection Policy {$DisplayName}"
         $policyInfo = Get-MgDeviceAppManagementiosManagedAppProtection -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
-        Remove-MgDeviceAppManagementiosManagedAppProtection -managedAppPolicyId $policyInfo.id
+        Remove-MgDeviceAppManagementiosManagedAppProtection -IosManagedAppProtectionId $policyInfo.id
     }
 }
 
