@@ -89,8 +89,8 @@ function Get-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
 
     Write-Verbose -Message "Getting configuration of Azure AD Application"
     #region Telemetry

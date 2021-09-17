@@ -65,6 +65,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                      = 'Default'
                     GlobalAdminAccount            = $GlobalAdminAccount
                     AllowClickThrough             = $false
+                    AllowSafeDocsOpen             = $false
                     BlockUrls                     = @()
                     EnableATPForSPOTeamsODB       = $true
                     EnableSafeLinksForO365Clients = $true
@@ -78,6 +79,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Identity                      = 'Default'
                         GlobalAdminAccount            = $GlobalAdminAccount
                         AllowClickThrough             = $false
+                        AllowSafeDocsOpen             = $false
                         BlockUrls                     = @()
                         EnableATPForSPOTeamsODB       = $true
                         EnableSafeLinksForO365Clients = $true
@@ -99,6 +101,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                      = 'Default'
                     GlobalAdminAccount            = $GlobalAdminAccount
                     AllowClickThrough             = $false
+                    AllowSafeDocsOpen             = $false
                     BlockUrls                     = @()
                     EnableATPForSPOTeamsODB       = $true
                     EnableSafeLinksForO365Clients = $true
@@ -110,7 +113,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Ensure                        = 'Present'
                         Identity                      = 'Default'
                         GlobalAdminAccount            = $GlobalAdminAccount
-                        AllowClickThrough             = $false
+                        AllowClickThrough             = $true
+                        AllowSafeDocsOpen             = $true
                         BlockUrls                     = @()
                         EnableATPForSPOTeamsODB       = $false
                         EnableSafeLinksForO365Clients = $false
@@ -136,6 +140,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                      = 'Invalid'
                     GlobalAdminAccount            = $GlobalAdminAccount
                     AllowClickThrough             = $false
+                    AllowSafeDocsOpen             = $false
                     BlockUrls                     = @()
                     EnableATPForSPOTeamsODB       = $true
                     EnableSafeLinksForO365Clients = $true
@@ -146,6 +151,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Ensure                        = 'Present'
                         Identity                      = 'Default2' # Drift
                         AllowClickThrough             = $false
+                        AllowSafeDocsOpen             = $false
                         BlockUrls                     = @()
                         EnableATPForSPOTeamsODB       = $false
                         EnableSafeLinksForO365Clients = $false
@@ -177,6 +183,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Identity                      = 'Default'
                         AllowClickThrough             = $false
+                        AllowSafeDocsOpen             = $false
                         BlockUrls                     = @()
                         EnableATPForSPOTeamsODB       = $false
                         EnableSafeLinksForO365Clients = $false

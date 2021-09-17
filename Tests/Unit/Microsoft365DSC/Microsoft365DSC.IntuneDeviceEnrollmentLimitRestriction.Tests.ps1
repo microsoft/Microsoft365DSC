@@ -37,11 +37,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credential"
             }
 
-            Mock -CommandName Set-M365DSCIntuneDeviceEnrollmentLimitRestriction -MockWith {
+            Mock -CommandName Update-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
             }
-            Mock -CommandName New-M365DSCIntuneDeviceEnrollmentLimitRestriction -MockWith {
+            Mock -CommandName New-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
             }
-            Mock -CommandName Remove-IntuneDeviceEnrollmentConfiguration -MockWith {
+            Mock -CommandName Remove-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
             }
         }
 
@@ -55,7 +55,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Limit              = 15
                 }
 
-                Mock -CommandName Get-IntuneDeviceEnrollmentConfiguration -MockWith {
+                Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return $null
                 }
             }
@@ -70,7 +70,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should create the restriction from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-M365DSCIntuneDeviceEnrollmentLimitRestriction" -Exactly 1
+                Should -Invoke -CommandName "New-MgDeviceManagementDeviceEnrollmentConfiguration" -Exactly 1
             }
         }
 
@@ -83,12 +83,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Limit              = 15
                 }
 
-                Mock -CommandName Get-IntuneDeviceEnrollmentConfiguration -MockWith {
+                Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
-                        '@odata.type' = '#microsoft.graph.deviceEnrollmentLimitConfiguration'
+                        AdditionalProperties = @{
+                            '@odata.type' = '#microsoft.graph.deviceEnrollmentLimitConfiguration'
+                            Limit         = 12
+                        }
                         id            = "12345-12345-12345-12345-12345"
-                        DisplayName   = "My DSC Restriction";
-                        Limit         = 12 #Drift
+                        DisplayName   = "My DSC Restriction"; #Drift
                     }
                 }
             }
@@ -103,7 +105,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should update the restriction from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-M365DSCIntuneDeviceEnrollmentLimitRestriction -Exactly 1
+                Should -Invoke -CommandName Update-MgDeviceManagementDeviceEnrollmentConfiguration -Exactly 1
             }
         }
 
@@ -116,12 +118,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Limit              = 15
                 }
 
-                Mock -CommandName Get-IntuneDeviceEnrollmentConfiguration -MockWith {
+                Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
-                        '@odata.type' = '#microsoft.graph.deviceEnrollmentLimitConfiguration'
+                        AdditionalProperties = @{
+                            '@odata.type' = '#microsoft.graph.deviceEnrollmentLimitConfiguration'
+                            Limit         = 15
+                        }
                         id            = "12345-12345-12345-12345-12345"
                         DisplayName   = "My DSC Restriction";
-                        Limit         = 15
                     }
                 }
             }
@@ -140,12 +144,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Limit              = 15
                 }
 
-                Mock -CommandName Get-IntuneDeviceEnrollmentConfiguration -MockWith {
+                Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
-                        '@odata.type' = '#microsoft.graph.deviceEnrollmentLimitConfiguration'
+                        AdditionalProperties = @{
+                            '@odata.type' = '#microsoft.graph.deviceEnrollmentLimitConfiguration'
+                            Limit         = 12
+                        }
                         id            = "12345-12345-12345-12345-12345"
                         DisplayName   = "My DSC Restriction";
-                        Limit         = 15
                     }
                 }
             }
@@ -160,7 +166,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should remove the restriction from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-IntuneDeviceEnrollmentConfiguration -Exactly 1
+                Should -Invoke -CommandName Remove-MgDeviceManagementDeviceEnrollmentConfiguration -Exactly 1
             }
         }
 
@@ -170,12 +176,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount;
                 }
 
-                Mock -CommandName Get-IntuneDeviceEnrollmentConfiguration -MockWith {
-                    return @{
-                        '@odata.type' = '#microsoft.graph.deviceEnrollmentLimitConfiguration'
+                Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
+                    return @{AdditionalProperties = @{
+                            '@odata.type' = '#microsoft.graph.deviceEnrollmentLimitConfiguration'
+                            Limit         = 12
+                        }
                         id            = "12345-12345-12345-12345-12345"
                         DisplayName   = "My DSC Restriction";
-                        Limit         = 15
                     }
                 }
             }

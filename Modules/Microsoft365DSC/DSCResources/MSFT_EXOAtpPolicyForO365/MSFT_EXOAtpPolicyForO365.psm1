@@ -18,6 +18,10 @@ function Get-TargetResource
         $AllowClickThrough = $true,
 
         [Parameter()]
+        [Boolean]
+        $AllowSafeDocsOpen = $false,
+
+        [Parameter()]
         [System.String[]]
         $BlockUrls = @(),
 
@@ -110,6 +114,7 @@ function Get-TargetResource
                 IsSingleInstance              = "Yes"
                 Identity                      = $AtpPolicyForO365.Identity
                 AllowClickThrough             = $AtpPolicyForO365.AllowClickThrough
+                AllowSafeDocsOpen             = $AtpPolicyForO365.AllowSafeDocsOpen
                 BlockUrls                     = $AtpPolicyForO365.BlockUrls
                 EnableATPForSPOTeamsODB       = $AtpPolicyForO365.EnableATPForSPOTeamsODB
                 EnableSafeDocs                = $AtpPolicyForO365.EnableSafeDocs
@@ -171,6 +176,10 @@ function Set-TargetResource
         [Parameter()]
         [Boolean]
         $AllowClickThrough = $true,
+
+        [Parameter()]
+        [Boolean]
+        $AllowSafeDocsOpen = $false,
 
         [Parameter()]
         [System.String[]]
@@ -272,6 +281,10 @@ function Test-TargetResource
         [Parameter()]
         [Boolean]
         $AllowClickThrough = $true,
+
+        [Parameter()]
+        [Boolean]
+        $AllowSafeDocsOpen = $false,
 
         [Parameter()]
         [System.String[]]

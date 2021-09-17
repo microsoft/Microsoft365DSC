@@ -332,6 +332,9 @@ function Export-TargetResource
             SecurityComplianceNotificationPhones = $AADTenantDetails.SecurityComplianceNotificationPhones
             TechnicalNotificationMails           = $AADTenantDetails.TechnicalNotificationMails
             GlobalAdminAccount                   = $GlobalAdminAccount
+            ApplicationId                        = $ApplicationId
+            TenantId                             = $TenantId
+            CertificateThumbprint                = $CertificateThumbprint
             IsSingleInstance                     = 'Yes'
         }
         $Results = Get-TargetResource @Params
@@ -350,6 +353,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

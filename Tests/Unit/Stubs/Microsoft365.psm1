@@ -2254,6 +2254,23 @@ function Get-HostedOutboundSpamFilterPolicy
         $AsJob
     )
 }
+function Get-HostedOutboundSpamFilterRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $State,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Get-InboundConnector
 {
     [CmdletBinding()]
@@ -3645,6 +3662,63 @@ function New-HostedContentFilterRule
         [Parameter()]
         [System.Object]
         $Enabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function New-HostedOutboundSpamFilterRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFrom,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $Comments,
+
+        [Parameter()]
+        [System.Object]
+        $FromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $SenderDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $HostedOutboundSpamFilterPolicy,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $From,
+
+        [Parameter()]
+        [System.Object]
+        $Enabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -6100,6 +6174,23 @@ function Remove-HostedContentFilterRule
         $AsJob
     )
 }
+function Remove-HostedOutboundSpamFilterRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Remove-InboundConnector
 {
     [CmdletBinding()]
@@ -7669,6 +7760,63 @@ function Set-HostedOutboundSpamFilterPolicy
         [Parameter()]
         [System.Object]
         $RecipientLimitExternalPerHour,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-HostedOutboundSpamFilterRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $HostedOutboundSpamFilterPolicy,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $Comments,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentToMemberOf,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]

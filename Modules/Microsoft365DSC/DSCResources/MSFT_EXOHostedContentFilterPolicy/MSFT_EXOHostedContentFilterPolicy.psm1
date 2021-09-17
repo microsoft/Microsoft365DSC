@@ -82,6 +82,11 @@ function Get-TargetResource
         $EndUserSpamNotificationLanguage = 'Default',
 
         [Parameter()]
+        [ValidateSet('MoveToJmf', 'Redirect', 'Quarantine')]
+        [System.String]
+        $HighConfidencePhishAction = 'Quarantine',
+
+        [Parameter()]
         [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $HighConfidenceSpamAction = 'MoveToJmf',
@@ -311,6 +316,7 @@ function Get-TargetResource
                 EndUserSpamNotificationCustomSubject = $HostedContentFilterPolicy.EndUserSpamNotificationCustomSubject
                 EndUserSpamNotificationFrequency     = $HostedContentFilterPolicy.EndUserSpamNotificationFrequency
                 EndUserSpamNotificationLanguage      = $HostedContentFilterPolicy.EndUserSpamNotificationLanguage
+                HighConfidencePhishAction            = $HostedContentFilterPolicy.HighConfidencePhishAction
                 HighConfidenceSpamAction             = $HostedContentFilterPolicy.HighConfidenceSpamAction
                 InlineSafetyTipsEnabled              = $HostedContentFilterPolicy.InlineSafetyTipsEnabled
                 IncreaseScoreWithBizOrInfoUrls       = $HostedContentFilterPolicy.IncreaseScoreWithBizOrInfoUrls
@@ -466,6 +472,11 @@ function Set-TargetResource
         [ValidateSet('Default', 'English', 'French', 'German', 'Italian', 'Japanese', 'Spanish', 'Korean', 'Portuguese', 'Russian', 'ChineseSimplified', 'ChineseTraditional', 'Amharic', 'Arabic', 'Bulgarian', 'BengaliIndia', 'Catalan', 'Czech', 'Cyrillic', 'Danish', 'Greek', 'Estonian', 'Basque', 'Farsi', 'Finnish', 'Filipino', 'Galician', 'Gujarati', 'Hebrew', 'Hindi', 'Croatian', 'Hungarian', 'Indonesian', 'Icelandic', 'Kazakh', 'Kannada', 'Lithuanian', 'Latvian', 'Malayalam', 'Marathi', 'Malay', 'Dutch', 'NorwegianNynorsk', 'Norwegian', 'Oriya', 'Polish', 'PortuguesePortugal', 'Romanian', 'Slovak', 'Slovenian', 'SerbianCyrillic', 'Serbian', 'Swedish', 'Swahili', 'Tamil', 'Telugu', 'Thai', 'Turkish', 'Ukrainian', 'Urdu', 'Vietnamese')]
         [System.String]
         $EndUserSpamNotificationLanguage = 'Default',
+
+        [Parameter()]
+        [ValidateSet('MoveToJmf', 'Redirect', 'Quarantine')]
+        [System.String]
+        $HighConfidencePhishAction = 'Quarantine',
 
         [Parameter()]
         [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
@@ -652,6 +663,7 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
+    Write-Verbose (Get-HostedContentFilterPolicy | Out-String)
     $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
 
     $HostedContentFilterPolicy = $HostedContentFilterPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
@@ -786,6 +798,11 @@ function Test-TargetResource
         [ValidateSet('Default', 'English', 'French', 'German', 'Italian', 'Japanese', 'Spanish', 'Korean', 'Portuguese', 'Russian', 'ChineseSimplified', 'ChineseTraditional', 'Amharic', 'Arabic', 'Bulgarian', 'BengaliIndia', 'Catalan', 'Czech', 'Cyrillic', 'Danish', 'Greek', 'Estonian', 'Basque', 'Farsi', 'Finnish', 'Filipino', 'Galician', 'Gujarati', 'Hebrew', 'Hindi', 'Croatian', 'Hungarian', 'Indonesian', 'Icelandic', 'Kazakh', 'Kannada', 'Lithuanian', 'Latvian', 'Malayalam', 'Marathi', 'Malay', 'Dutch', 'NorwegianNynorsk', 'Norwegian', 'Oriya', 'Polish', 'PortuguesePortugal', 'Romanian', 'Slovak', 'Slovenian', 'SerbianCyrillic', 'Serbian', 'Swedish', 'Swahili', 'Tamil', 'Telugu', 'Thai', 'Turkish', 'Ukrainian', 'Urdu', 'Vietnamese')]
         [System.String]
         $EndUserSpamNotificationLanguage = 'Default',
+
+        [Parameter()]
+        [ValidateSet('MoveToJmf', 'Redirect', 'Quarantine')]
+        [System.String]
+        $HighConfidencePhishAction = 'Quarantine',
 
         [Parameter()]
         [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]

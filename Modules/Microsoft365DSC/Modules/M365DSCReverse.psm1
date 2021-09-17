@@ -120,7 +120,7 @@ function Start-M365DSCConfigurationExtract
         # Check to validate that based on the received authentication parameters
         # we are allowed to export the selected components.
         $AuthMethods = @()
-        $controlCredentials = @()
+
         if ($null -ne $GlobalAdminAccount)
         {
             $AuthMethods += "Credentials"
@@ -132,7 +132,7 @@ function Start-M365DSCConfigurationExtract
         {
             $AuthMethods += "Certificate"
         }
-        if (-not [System.String]::IsNullOrEmpty($ApplicationId))
+        if (-not [System.String]::IsNullOrEmpty($ApplicationSecret))
         {
             $AuthMethods += "Application"
         }
@@ -459,6 +459,33 @@ function Start-M365DSCConfigurationExtract
             }
         }
 
+        # Retrieve the list of Workloads represented by the resources to export and pre-authenticate to each one;
+        $WorkloadsToConnectTo = Get-M365DSCWorkloadsListFromResourceNames -ResourceNames $ResourcesToExport
+        foreach ($Workload in $WorkloadsToConnectTo)
+        {
+            Write-Host "Connecting to {$Workload}..." -NoNewline
+            $ConnectionParams = @{
+                Workload              = $Workload
+                ApplicationId         = $ApplicationId
+                ApplicationSecret     = $ApplicationSecret
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                Credential            = $GlobalAdminAccount
+            }
+            try
+            {
+                Connect-M365Tenant @ConnectionParams | Out-Null
+                Write-Host $Global:M365DSCEmojiGreenCheckmark
+            }
+            catch
+            {
+                Write-Host $Global:M365DSCEmojiRedX
+                throw $_
+            }
+        }
+
         foreach ($resource in $ResourcesToExport)
         {
             Import-Module $resource.FullName | Out-Null
@@ -707,7 +734,7 @@ function Start-M365DSCConfigurationExtract
     catch
     {
         Write-Host $_
-        $partialPath = Join-Path $env:TEMP -ChildPath "$($Global:PartialExportFileName).ps1.partial"
+        $partialPath = Join-Path $env:TEMP -ChildPath "$($Global:PartialExportFileName)"
         Write-Host "Partial Export file was saved at: $partialPath"
     }
 }
@@ -734,7 +761,7 @@ function Get-M365DSCResourcesByWorkloads
         $ResourceName = $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
         foreach ($Workload in $Workloads)
         {
-            if ($ResourceName.StartsWith($Workload) -and
+            if ($ResourceName.StartsWith($Workload,'CurrentCultureIgnoreCase') -and
                 ($Mode -eq "Full" -or `
                     ($Mode -eq "Default" -and -not $Global:FullComponents.Contains($ResourceName)) -or `
                     ($Mode -eq "Lite" -and -not $Global:FullComponents.Contains($ResourceName) -and -not $Global:DefaultComponents.Contains($ResourceName))))

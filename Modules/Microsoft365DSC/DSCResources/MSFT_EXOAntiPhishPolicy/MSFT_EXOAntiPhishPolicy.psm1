@@ -27,6 +27,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $EnableFirstContactSafetyTips = $true,
+
+        [Parameter()]
+        [System.Boolean]
         $EnableMailboxIntelligence = $true,
 
         [Parameter()]
@@ -64,6 +68,10 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $EnableUnusualCharactersSafetyTips = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableViaTag = $false,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -208,6 +216,7 @@ function Get-TargetResource
                 AdminDisplayName                              = $AntiPhishPolicy.AdminDisplayName
                 AuthenticationFailAction                      = $AntiPhishPolicy.AuthenticationFailAction
                 Enabled                                       = $AntiPhishPolicy.Enabled
+                EnableFirstContactSafetyTips                  = $AntiPhishPolicy.EnableFirstContactSafetyTips
                 EnableAntispoofEnforcement                    = $AntiPhishPolicy.EnableAntispoofEnforcement
                 EnableMailboxIntelligence                     = $AntiPhishPolicy.EnableMailboxIntelligence
                 EnableMailboxIntelligenceProtection           = $AntiPhishPolicy.EnableMailboxIntelligenceProtection
@@ -219,6 +228,7 @@ function Get-TargetResource
                 EnableTargetedUserProtection                  = $AntiPhishPolicy.EnableTargetedUserProtection
                 EnableUnauthenticatedSender                   = $AntiPhishPolicy.EnableUnauthenticatedSender
                 EnableUnusualCharactersSafetyTips             = $AntiPhishPolicy.EnableUnusualCharactersSafetyTips
+                EnableViaTag                                  = $AntiPhishPolicy.EnableViaTag
                 ExcludedDomains                               = $AntiPhishPolicy.ExcludedDomains
                 ExcludedSenders                               = $AntiPhishPolicy.ExcludedSenders
                 ImpersonationProtectionState                  = $AntiPhishPolicy.ImpersonationProtectionState
@@ -300,6 +310,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $EnableFirstContactSafetyTips = $true,
+
+        [Parameter()]
+        [System.Boolean]
         $EnableMailboxIntelligence = $true,
 
         [Parameter()]
@@ -337,6 +351,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $EnableUnusualCharactersSafetyTips = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableViaTag = $false,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -494,6 +512,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $EnableFirstContactSafetyTips = $true,
+
+        [Parameter()]
+        [System.Boolean]
         $EnableMailboxIntelligence = $true,
 
         [Parameter()]
@@ -531,6 +553,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $EnableUnusualCharactersSafetyTips = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableViaTag = $false,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]

@@ -70,6 +70,46 @@ NotifyOutboundSpamRecipients
   spam. Valid input for this parameter is an email address.
   Separate multiple email addresses with commas.
 
+RecipientLimitInternalPerHour
+
+- Required: No
+- Description: The RecipientLimitInternalPerHour parameter specifies the
+  maximum number of internal recipients that a user can send to within
+  an hour. A valid value is 0 to 10000. The default value is 0, which
+  means the service defaults are used.
+
+RecipientLimitPerDay
+
+- Required: No
+- Description: The RecipientLimitPerDay parameter specifies the maximum
+  number of recipients that a user can send to within a day. A valid
+  value is 0 to 10000. The default value is 0, which means the service
+  defaults are used.
+
+RecipientLimitExternalPerHour
+
+- Required: No
+- Description: The RecipientLimitExternalPerHour parameter specifies the
+  maximum number of external recipients that a user can send to within
+  an hour. A valid value is 0 to 10000. The default value is 0, which
+  means the service defaults are used.
+
+ActionWhenThresholdReached
+
+- Required: No
+- Description: The ActionWhenThresholdReached parameter specifies the
+  action to take when any of the limits specified in the policy are
+  reached. Valid values are: Alert, BlockUser, BlockUserForToday.
+  BlockUserForToday is the default value.
+
+AutoForwardingMode
+
+- Required: No
+- Description: The AutoForwardingMode specifies how the policy controls
+  automatic email forwarding to outbound recipients. Valid values are:
+  Automatic, On, Off.
+
+
 ## Example
 
 ```PowerShell
@@ -83,5 +123,10 @@ EXOHostedOutboundSpamFilterPolicy HostedOutboundSpamFilterPolicyExample {
   BccSuspiciousOutboundAdditionalRecipients = @('admin@contoso.com')
   NotifyOutboundSpam                        = $true
   NotifyOutboundSpamRecipients              = @('supervisor@contoso.com')
+  RecipientLimitInternalPerHour             = '0'
+  RecipientLimitPerDay                      = '0'
+  RecipientLimitExternalPerHour             = '0'
+  ActionWhenThresholdReached                = 'BlockUserForToday'
+  AutoForwardingMode                        = 'Automatic'
 }
 ```

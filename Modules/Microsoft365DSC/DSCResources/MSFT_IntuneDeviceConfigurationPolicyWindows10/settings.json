@@ -1,0 +1,18 @@
+{
+    "resourceName": "IntuneDeviceConfigurationPolicyWindows10",
+    "description": "This resource configures an Intune device configuration profile for an Windows 10 Device.",
+    "permissions": [
+        {
+            "read": [
+                {
+                    "name": "DeviceManagementConfiguration.Read.All"
+                }
+            ],
+            "update": [
+                {
+                    "name": "DeviceManagementConfiguration.ReadWrite.All"
+                }
+            ]
+        }
+    ]
+}

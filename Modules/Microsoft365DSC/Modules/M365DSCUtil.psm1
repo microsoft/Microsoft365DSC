@@ -1019,8 +1019,7 @@ function New-M365DSCConnection
         [Parameter(Mandatory = $true)]
         [ValidateSet("Azure", "AzureAD", "ExchangeOnline", "Intune", `
                 "SecurityComplianceCenter", "PnP", "PowerPlatforms", `
-                "MicrosoftTeams", "MicrosoftGraph", `
-                "MicrosoftGraphBeta")]
+                "MicrosoftTeams", "MicrosoftGraph")]
         [System.String]
         $Workload,
 
@@ -1110,7 +1109,8 @@ function New-M365DSCConnection
         {
             Connect-M365Tenant -Workload $Workload `
                 -Credential $InboundParameters.GlobalAdminAccount `
-                -SkipModuleReload $Global:CurrentModeIsExport
+                -SkipModuleReload $Global:CurrentModeIsExport `
+                -ProfileName $ProfileName
         }
         if ($InboundParameters.ContainsKey("GlobalAdminAccount") -and
             $null -ne $InboundParameters.GlobalAdminAccount)
@@ -1118,7 +1118,8 @@ function New-M365DSCConnection
             Connect-M365Tenant -Workload $Workload `
                 -Credential $InboundParameters.GlobalAdminAccount `
                 -Url $Url `
-                -SkipModuleReload $Global:CurrentModeIsExport
+                -SkipModuleReload $Global:CurrentModeIsExport `
+                -ProfileName $ProfileName
         }
         if ($InboundParameters.ContainsKey("ApplicationId") -and
             -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
@@ -1126,7 +1127,8 @@ function New-M365DSCConnection
             Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -Credential $InboundParameters.GlobalAdminAccount `
-                -SkipModuleReload $Global:CurrentModeIsExport
+                -SkipModuleReload $Global:CurrentModeIsExport `
+                -ProfileName $ProfileName
         }
         if ($InboundParameters.ContainsKey("ApplicationSecret") -and
             -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationSecret))
@@ -1135,7 +1137,8 @@ function New-M365DSCConnection
                 -ApplicationId $InboundParameters.ApplicationId `
                 -Credential $InboundParameters.GlobalAdminAccount `
                 -Url $Url `
-                -SkipModuleReload $Global:CurrentModeIsExport
+                -SkipModuleReload $Global:CurrentModeIsExport `
+                -ProfileName $ProfileName
         }
         if ($InboundParameters.ContainsKey("CertificatePath") -and
             -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePath))
@@ -1150,7 +1153,8 @@ function New-M365DSCConnection
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
                 -CertificateThumbprint $InboundParameters.CertificateThumbprint `
-                -SkipModuleReload $Global:CurrentModeIsExport
+                -SkipModuleReload $Global:CurrentModeIsExport `
+                -ProfileName $ProfileName
         }
         if ($InboundParameters.ContainsKey("CertificatePassword") -and
             -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePassword))
@@ -1160,7 +1164,8 @@ function New-M365DSCConnection
                 -TenantId $InboundParameters.TenantId `
                 -CertificateThumbprint $InboundParameters.CertificateThumbprint `
                 -Url $Url `
-                -SkipModuleReload $Global:CurrentModeIsExport
+                -SkipModuleReload $Global:CurrentModeIsExport `
+                -ProfileName $ProfileName
         }
         $data.Add("ConnectionType", "ServicePrincipal")
         Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
@@ -1181,7 +1186,8 @@ function New-M365DSCConnection
                 -TenantId $InboundParameters.TenantId `
                 -CertificatePassword $InboundParameters.CertificatePassword.Password `
                 -CertificatePath $InboundParameters.CertificatePath `
-                -SkipModuleReload $Global:CurrentModeIsExport
+                -SkipModuleReload $Global:CurrentModeIsExport `
+                -ProfileName $ProfileName
         }
         #endregion
 
@@ -1250,7 +1256,8 @@ function New-M365DSCConnection
                 -CertificatePassword $InboundParameters.CertificatePassword.Password `
                 -CertificatePath $InboundParameters.CertificatePath `
                 -Url $Url `
-                -SkipModuleReload $Global:CurrentModeIsExport
+                -SkipModuleReload $Global:CurrentModeIsExport `
+                -ProfileName $ProfileName
         }
         $data.Add("ConnectionType", "ServicePrincipal")
         Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
@@ -1269,7 +1276,8 @@ function New-M365DSCConnection
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
                 -ApplicationSecret $InboundParameters.ApplicationSecret `
-                -SkipModuleReload $Global:CurrentModeIsExport
+                -SkipModuleReload $Global:CurrentModeIsExport `
+                -ProfileName $ProfileName
         }
         else
         {
@@ -1278,7 +1286,8 @@ function New-M365DSCConnection
                 -TenantId $InboundParameters.TenantId `
                 -ApplicationSecret $InboundParameters.ApplicationSecret `
                 -Url $Url `
-                -SkipModuleReload $Global:CurrentModeIsExport
+                -SkipModuleReload $Global:CurrentModeIsExport `
+                -ProfileName $ProfileName
         }
     }
     catch
@@ -1327,7 +1336,7 @@ function Get-SPOAdministrationUrl
     $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
         -InboundParameters $PSBoundParameters
     Write-Verbose -Message "Getting SharePoint Online admin URL..."
-    $defaultDomain = Get-AzureADDomain | Where-Object { ($_.Name -like "*.onmicrosoft.com" -or $_.Name -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
+    $defaultDomain = Get-AzureADDomain | Where-Object { ($_.Name -like "*.onmicrosoft.com" -or $_.Name -like "*.onmicrosoft.de" -or $_.Name -like "*.onmicrosoft.us") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
 
     if ($defaultDomain[0].Name -like '*.onmicrosoft.com*')
     {
@@ -2479,4 +2488,79 @@ function Test-M365DSCObjectHasProperty
         }
     }
     return $false
+}
+
+function Get-M365DSCWorkloadsListFromResourceNames
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true, Position = 1)]
+        [String[]]
+        $ResourceNames
+    )
+
+    [Array] $workloads = @()
+    foreach ($resource in $ResourceNames)
+    {
+        switch ($resource.Substring(5,2))
+        {
+            "AA" {
+                if (-not $workloads.Contains("AzureAD"))
+                {
+                    $workloads += "AzureAD"
+                }
+            }
+            "EX" {
+                if (-not $workloads.Contains("ExchangeOnline"))
+                {
+                    $workloads += "ExchangeOnline"
+                }
+            }
+            "In" {
+                if (-not $workloads.Contains("MicrosoftGraph"))
+                {
+                    $workloads += "MicrosoftGraph"
+                }
+            }
+            "O3" {
+                if (-not $workloads.Contains("AzureAD"))
+                {
+                    $workloads += "AzureAD"
+                }
+            }
+            "OD" {
+                if (-not $workloads.Contains("PnP"))
+                {
+                    $workloads += "PnP"
+                }
+            }
+            "Pl" {
+                if (-not $workloads.Contains("MicrosoftGraph"))
+                {
+                    $workloads += "MicrosoftGraph"
+                }
+            }
+            "SP" {
+                if (-not $workloads.Contains("PnP"))
+                {
+                    $workloads += "PnP"
+                }
+            }
+            "SC" {
+                if (-not $workloads.Contains("SecurityComplianceCenter"))
+                {
+                    $workloads += "SecurityComplianceCenter"
+                }
+            }
+            "Te" {
+                if (-not $workloads.Contains("MicrosoftTeams"))
+                {
+                    $workloads += "MicrosoftTeams"
+                }
+            }
+        }
+    }
+    return $workloads
 }

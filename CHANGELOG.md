@@ -1,10 +1,63 @@
 # Change log for Microsoft365DSC
 
-# 1.21.811.1
+# 1.21.915.1
+
+* EXOAntiPhishPolicy
+  * Added support for EnableFirstContactSafetyTips & EnableViaTag;
+* EXOAtpPolicyForO365
+  * Added support for AllowSafeDocsOpen;
+* EXOHostedContentFilterPolicy
+  * Added support for HighConfidencePhishAction;
+* EXOHostedOutboundSpamFilterPolicy
+  Added support for RecipientLimitInternalPerHour, RecipientLimitPerDay,
+  RecipientLimitExternalPerHour, ActionWhenThresholdReached & AutoForwardingMode;
+* EXOHostedOutboundSpamFilterRule
+  Initial release;
+* IntuneAppConfigurationPolicy
+  * Added support for the CustomSettings property;
+* IntuneDeviceCompliancePolicyWindows10
+  * Removed the App Secret and Application ID from the output;
+  * Added DefenderEnabled to the Resource;
+* IntuneDeviceConfigurationWindows10
+  * Initial release;
+* DEPENDENCIES;
+  * Updated Microsoft.Graph.Authentication to version 1.7.0;
+  * Added dependency on Microsoft.Graph.DeviceManagement;
+  * Added dependency on Microsoft.Graph.DeviceManagement.Administration;
+  * Added dependency on Microsoft.Graph.DeviceManagement.Enrolment;
+  * Added dependency on Microsoft.Graph.Devices.CorporateManagement;
+  * Updated Microsoft.Graph.Planner to version 1.7.0;
+  * Updated Microsoft.Graph.Teams to version 1.7.0;
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.136;
+  * Updated MSCloudLoginAssistant to version 1.0.67;
+
+# 1.21.908.1
+
+* PPTenantSettings
+  * Initial Release;
+* DEPENDENCIES;
+  * Updated MSCloudLoginAssistant to version 1.0.64;
+* MISC
+  * Fixing duplicate teams names in reports;
+
+# 1.21.901.1
 
 * DEPENDENCIES;
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.133;
+  * Updated MicrosoftTeams to version 2.5.1;
+* MISC
+  * Additional display alignment fixes for Export;
+
+# 1.21.825.1
+
+* SPOTenantSettings
+  * Added the DisabledWebpartIds & ConditionalAccessPolicy properties;
+* DEPENDENCIES;
   * Updated AzureADPreview to version 2.0.2.138;
-  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.128;
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.131;
+  * Updated Microsoft.Teams to version 2.5.0;
+* MISC
+  * Additional display alignment fixes for Export;
 
 # 1.21.804.1
 
