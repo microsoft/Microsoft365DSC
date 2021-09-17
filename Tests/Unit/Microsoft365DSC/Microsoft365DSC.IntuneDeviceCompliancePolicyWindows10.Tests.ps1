@@ -37,11 +37,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credential"
             }
 
-            Mock -CommandName Update-IntuneDeviceCompliancePolicy -MockWith {
+            Mock -CommandName Update-MgDeviceManagementDeviceCompliancePolicy -MockWith {
             }
-            Mock -CommandName New-IntuneDeviceCompliancePolicy -MockWith {
+            Mock -CommandName New-MgDeviceManagementDeviceCompliancePolicy -MockWith {
             }
-            Mock -CommandName Remove-IntuneDeviceCompliancePolicy -MockWith {
+            Mock -CommandName Remove-MgDeviceManagementDeviceCompliancePolicy -MockWith {
             }
 
             # Test contexts
@@ -87,7 +87,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GlobalAdminAccount                          = $GlobalAdminAccount;
                     }
 
-                    Mock -CommandName Get-IntuneDeviceCompliancePolicy -MockWith {
+                    Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
                         return $null
                     }
                 }
@@ -102,7 +102,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 It "Should create the Windows 10 Device Compliance Policy from the Set method" {
                     Set-TargetResource @testParams
-                    Should -Invoke -CommandName "New-IntuneDeviceCompliancePolicy" -Exactly 1
+                    Should -Invoke -CommandName "New-MgDeviceManagementDeviceCompliancePolicy" -Exactly 1
                 }
             }
 
@@ -148,7 +148,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GlobalAdminAccount                          = $GlobalAdminAccount;
                     }
 
-                    Mock -CommandName Get-IntuneDeviceCompliancePolicy -MockWith {
+                    Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
                         return @{
                             DisplayName                                 = "Windows 10 DSC Policy";
                             Description                                 = "Test policy";
@@ -200,7 +200,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 It "Should update the iOS Device Compliance Policy from the Set method" {
                     Set-TargetResource @testParams
-                    Should -Invoke -CommandName Update-IntuneDeviceCompliancePolicy -Exactly 1
+                    Should -Invoke -CommandName Update-MgDeviceManagementDeviceCompliancePolicy -Exactly 1
                 }
             }
 
@@ -246,7 +246,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GlobalAdminAccount                          = $GlobalAdminAccount;
                     }
 
-                    Mock -CommandName Get-IntuneDeviceCompliancePolicy -MockWith {
+                    Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
                         return @{
                             DisplayName                                 = "Windows 10 DSC Policy";
                             Description                                 = "Test policy";
@@ -335,7 +335,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GlobalAdminAccount                          = $GlobalAdminAccount;
                     }
 
-                    Mock -CommandName Get-IntuneDeviceCompliancePolicy -MockWith {
+                    Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
                         return @{
                             DisplayName                                 = "Windows 10 DSC Policy";
                             Description                                 = "Test policy";
@@ -387,7 +387,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 It "Should remove the iOS Device Compliance Policy from the Set method" {
                     Set-TargetResource @testParams
-                    Should -Invoke -CommandName Remove-IntuneDeviceCompliancePolicy -Exactly 1
+                    Should -Invoke -CommandName Remove-MgDeviceManagementDeviceCompliancePolicy -Exactly 1
                 }
             }
 
@@ -397,7 +397,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GlobalAdminAccount = $GlobalAdminAccount;
                     }
 
-                    Mock -CommandName Get-IntuneDeviceCompliancePolicy -MockWith {
+                    Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
                         return @{
                             DisplayName                                 = "Windows 10 DSC Policy";
                             Description                                 = "Test policy";

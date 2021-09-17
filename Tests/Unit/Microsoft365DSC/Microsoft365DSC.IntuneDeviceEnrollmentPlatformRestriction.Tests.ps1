@@ -37,11 +37,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credential"
             }
 
-            Mock -CommandName Set-M365DSCIntuneDeviceEnrollmentPlatformRestriction -MockWith {
+            Mock -CommandName Update-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
             }
-            Mock -CommandName New-M365DSCIntuneDeviceEnrollmentPlatformRestriction -MockWith {
+            Mock -CommandName New-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
             }
-            Mock -CommandName Remove-IntuneDeviceEnrollmentConfiguration -MockWith {
+            Mock -CommandName Remove-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
             }
         }
 
@@ -67,7 +67,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     WindowsPlatformBlocked                       = $False;
                 }
 
-                Mock -CommandName Get-IntuneDeviceEnrollmentConfiguration -MockWith {
+                Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return $null
                 }
             }
@@ -82,7 +82,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should create the restriction from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-M365DSCIntuneDeviceEnrollmentPlatformRestriction" -Exactly 1
+                Should -Invoke -CommandName "New-MgDeviceManagementDeviceEnrollmentConfiguration" -Exactly 1
             }
         }
 
@@ -107,9 +107,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     WindowsPlatformBlocked                       = $False;
                 }
 
-                Mock -CommandName Get-IntuneDeviceEnrollmentConfiguration -MockWith {
+                Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
-                        '@odata.type'            = '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration'
+                        AdditionalProperties = @{
+                            '@odata.type'            = '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration'
+                        }
                         id                       = "12345-12345-12345-12345-12345"
                         AndroidRestriction       = @{
                             PersonalDeviceEnrollmentBlocked = $True; #Drift
@@ -151,7 +153,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should update the restriction from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-M365DSCIntuneDeviceEnrollmentPlatformRestriction -Exactly 1
+                Should -Invoke -CommandName Update-MgDeviceManagementDeviceEnrollmentConfiguration -Exactly 1
             }
         }
 
@@ -176,43 +178,44 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     WindowsPlatformBlocked                       = $False;
                 }
 
-                Mock -CommandName Get-IntuneDeviceEnrollmentConfiguration -MockWith {
+                Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
-                        '@odata.type'            = '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration'
                         id                       = "12345-12345-12345-12345-12345"
-                        AndroidRestriction       = @{
-                            PersonalDeviceEnrollmentBlocked = $False;
-                            PlatformBlocked                 = $False;
-                            OSMinimumVersion                = ""
-                            OSMaximumVersion                = ""
-                        }
                         Description              = "";
                         DisplayName              = "My DSC Restriction";
-                        Ensure                   = "Present"
-                        GlobalAdminAccount       = $GlobalAdminAccount;
-                        iOSRestriction           = @{
-                            OSMaximumVersion                = "11.0";
-                            OSMinimumVersion                = "9.0";
-                            PersonalDeviceEnrollmentBlocked = $False;
-                            PlatformBlocked                 = $False;
-                        }
-                        macOSRestriction         = @{
-                            PersonalDeviceEnrollmentBlocked = $False;
-                            PlatformBlocked                 = $True;
-                            OSMinimumVersion                = ""
-                            OSMaximumVersion                = ""
-                        }
-                        windowsMobileRestriction = @{
-                            PersonalDeviceEnrollmentBlocked = $False;
-                            PlatformBlocked                 = $True;
-                            OSMinimumVersion                = ""
-                            OSMaximumVersion                = ""
-                        }
-                        WindowsRestriction       = @{
-                            PersonalDeviceEnrollmentBlocked = $True;
-                            PlatformBlocked                 = $False;
-                            OSMinimumVersion                = ""
-                            OSMaximumVersion                = ""
+                        AdditionalProperties = @{
+                            '@odata.type'            = '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration'
+
+                            AndroidRestriction       = @{
+                                PersonalDeviceEnrollmentBlocked = $False;
+                                PlatformBlocked                 = $False;
+                                OSMinimumVersion                = ""
+                                OSMaximumVersion                = ""
+                            }
+                            iOSRestriction           = @{
+                                OSMaximumVersion                = "11.0";
+                                OSMinimumVersion                = "9.0";
+                                PersonalDeviceEnrollmentBlocked = $False;
+                                PlatformBlocked                 = $False;
+                            }
+                            macOSRestriction         = @{
+                                PersonalDeviceEnrollmentBlocked = $False;
+                                PlatformBlocked                 = $True;
+                                OSMinimumVersion                = ""
+                                OSMaximumVersion                = ""
+                            }
+                            windowsMobileRestriction = @{
+                                PersonalDeviceEnrollmentBlocked = $False;
+                                PlatformBlocked                 = $True;
+                                OSMinimumVersion                = ""
+                                OSMaximumVersion                = ""
+                            }
+                            WindowsRestriction       = @{
+                                PersonalDeviceEnrollmentBlocked = $True;
+                                PlatformBlocked                 = $False;
+                                OSMinimumVersion                = ""
+                                OSMaximumVersion                = ""
+                            }
                         }
                     }
                 }
@@ -244,35 +247,34 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     WindowsPlatformBlocked                       = $False;
                 }
 
-                Mock -CommandName Get-IntuneDeviceEnrollmentConfiguration -MockWith {
+                Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
-                        '@odata.type'            = '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration'
                         id                       = "12345-12345-12345-12345-12345"
-                        AndroidRestriction       = @{
-                            PersonalDeviceEnrollmentBlocked = $False;
-                            PlatformBlocked                 = $False;
-                        }
                         Description              = "";
-                        DisplayName              = "My DSC Restriction";
-                        Ensure                   = "Present"
-                        GlobalAdminAccount       = $GlobalAdminAccount;
-                        iOSRestriction           = @{
-                            OSMaximumVersion                = "11.0";
-                            OSMinimumVersion                = "9.0";
-                            PersonalDeviceEnrollmentBlocked = $False;
-                            PlatformBlocked                 = $False;
-                        }
-                        macOSRestriction         = @{
-                            PersonalDeviceEnrollmentBlocked = $False;
-                            PlatformBlocked                 = $True;
-                        }
-                        windowsMobileRestriction = @{
-                            PersonalDeviceEnrollmentBlocked = $False;
-                            PlatformBlocked                 = $True;
-                        }
-                        WindowsRestriction       = @{
-                            PersonalDeviceEnrollmentBlocked = $True;
-                            PlatformBlocked                 = $False;
+                        AdditionalProperties = @{
+                            '@odata.type'            = '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration'
+                            AndroidRestriction       = @{
+                                PersonalDeviceEnrollmentBlocked = $False;
+                                PlatformBlocked                 = $False;
+                            }
+                            iOSRestriction           = @{
+                                OSMaximumVersion                = "11.0";
+                                OSMinimumVersion                = "9.0";
+                                PersonalDeviceEnrollmentBlocked = $False;
+                                PlatformBlocked                 = $False;
+                            }
+                            macOSRestriction         = @{
+                                PersonalDeviceEnrollmentBlocked = $False;
+                                PlatformBlocked                 = $True;
+                            }
+                            windowsMobileRestriction = @{
+                                PersonalDeviceEnrollmentBlocked = $False;
+                                PlatformBlocked                 = $True;
+                            }
+                            WindowsRestriction       = @{
+                                PersonalDeviceEnrollmentBlocked = $True;
+                                PlatformBlocked                 = $False;
+                            }
                         }
                     }
                 }
@@ -288,7 +290,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should remove the restriction from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-IntuneDeviceEnrollmentConfiguration -Exactly 1
+                Should -Invoke -CommandName Remove-MgDeviceManagementDeviceEnrollmentConfiguration -Exactly 1
             }
         }
 
@@ -298,35 +300,37 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount;
                 }
 
-                Mock -CommandName Get-IntuneDeviceEnrollmentConfiguration -MockWith {
+                Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
-                        '@odata.type'            = '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration'
                         id                       = "12345-12345-12345-12345-12345"
-                        AndroidRestriction       = @{
-                            PersonalDeviceEnrollmentBlocked = $False;
-                            PlatformBlocked                 = $False;
-                        }
                         Description              = "";
-                        DisplayName              = "My DSC Restriction";
-                        Ensure                   = "Present"
-                        GlobalAdminAccount       = $GlobalAdminAccount;
-                        iOSRestriction           = @{
-                            OSMaximumVersion                = "11.0";
-                            OSMinimumVersion                = "9.0";
-                            PersonalDeviceEnrollmentBlocked = $False;
-                            PlatformBlocked                 = $False;
-                        }
-                        macOSRestriction         = @{
-                            PersonalDeviceEnrollmentBlocked = $False;
-                            PlatformBlocked                 = $True;
-                        }
-                        windowsMobileRestriction = @{
-                            PersonalDeviceEnrollmentBlocked = $False;
-                            PlatformBlocked                 = $True;
-                        }
-                        WindowsRestriction       = @{
-                            PersonalDeviceEnrollmentBlocked = $True;
-                            PlatformBlocked                 = $False;
+                        AdditionalProperties = @{
+                            '@odata.type'            = '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration'
+                            AndroidRestriction       = @{
+                                PersonalDeviceEnrollmentBlocked = $False;
+                                PlatformBlocked                 = $False;
+                            }
+                            DisplayName              = "My DSC Restriction";
+                            Ensure                   = "Present"
+                            GlobalAdminAccount       = $GlobalAdminAccount;
+                            iOSRestriction           = @{
+                                OSMaximumVersion                = "11.0";
+                                OSMinimumVersion                = "9.0";
+                                PersonalDeviceEnrollmentBlocked = $False;
+                                PlatformBlocked                 = $False;
+                            }
+                            macOSRestriction         = @{
+                                PersonalDeviceEnrollmentBlocked = $False;
+                                PlatformBlocked                 = $True;
+                            }
+                            windowsMobileRestriction = @{
+                                PersonalDeviceEnrollmentBlocked = $False;
+                                PlatformBlocked                 = $True;
+                            }
+                            WindowsRestriction       = @{
+                                PersonalDeviceEnrollmentBlocked = $True;
+                                PlatformBlocked                 = $False;
+                            }
                         }
                     }
                 }

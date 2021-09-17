@@ -47,6 +47,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Remove-IntuneAppProtectionPolicy -MockWith {
             }
+            Mock -CommandName Remove-MgDeviceAppManagementiosManagedAppProtection -MockWith {
+            }
         }
 
         # Test contexts
@@ -82,11 +84,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SaveAsBlocked                           = $True;
                     SimplePinBlocked                        = $False;
                 }
-                $Global:count = 0
-                Mock -CommandName Get-IntuneAppProtectionPolicy -MockWith {
-                    if ($Global:count -lt 3)
+                $Global:Count = 0
+                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtection -MockWith {
+                    if ($Global:Count -eq 0)
                     {
-                        $Global:count++
+                        $Global:Count++
                         return $null
                     }
                     else
@@ -97,10 +99,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             '@odata.type' = "#microsoft.graph.iosManagedAppProtection"
                         }
                     }
-                }
-
-                Mock -CommandName Get-M365DSCIntuneAppProtectionPolicyiOS -MockWith {
-                    return $null
                 }
             }
 
@@ -113,6 +111,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should create the Policy from the Set method" {
+                $Global:Count = 0
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName "New-M365DSCIntuneAppProtectionPolicyiOS" -Exactly 1
             }
@@ -151,7 +150,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SimplePinBlocked                        = $False;
                 }
 
-                Mock -CommandName Get-IntuneAppProtectionPolicy -MockWith {
+                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtection -MockWith {
                     return @{
                         displayName   = "DSC Policy"
                         id            = "12345-12345-12345-12345-12345"
@@ -274,7 +273,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SimplePinBlocked                        = $False;
                 }
 
-                Mock -CommandName Get-IntuneAppProtectionPolicy -MockWith {
+                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtection -MockWith {
                     return @{
                         displayName   = "DSC Policy"
                         id            = "12345-12345-12345-12345-12345"
@@ -388,7 +387,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SimplePinBlocked                        = $False;
                 }
 
-                Mock -CommandName Get-IntuneAppProtectionPolicy -MockWith {
+                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtection -MockWith {
                     return @{
                         displayName   = "DSC Policy"
                         id            = "12345-12345-12345-12345-12345"
@@ -474,7 +473,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should remove the App Configuration Policy from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-IntuneAppProtectionPolicy -Exactly 1
+                Should -Invoke -CommandName Remove-MgDeviceAppManagementiosManagedAppProtection -Exactly 1
             }
         }
 
@@ -484,7 +483,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount;
                 }
 
-                Mock -CommandName Get-IntuneAppProtectionPolicy -MockWith {
+                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtection -MockWith {
                     return @{
                         displayName   = "DSC Policy"
                         id            = "12345-12345-12345-12345-12345"
