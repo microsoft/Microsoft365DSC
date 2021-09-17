@@ -46,7 +46,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of AzureAD Tenant Details"
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -67,7 +67,7 @@ function Get-TargetResource
     {
         $CurrentParameters = $PSBoundParameters
 
-        $AADTenantDetails = Get-AzureADTenantDetail -ErrorAction 'SilentlyContinue'
+        $AADTenantDetails = Get-MgOrganization -ErrorAction 'SilentlyContinue'
 
         if ($null -eq $AADTenantDetails)
         {
@@ -197,7 +197,7 @@ function Set-TargetResource
     }
     try
     {
-        Set-AzureADTenantDetail @currentParameters
+        Update-MgOrganization @currentParameters
     }
     catch
     {
@@ -308,7 +308,7 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -324,7 +324,7 @@ function Export-TargetResource
     $dscContent = ''
     try
     {
-        $AADTenantDetails = Get-AzureADTenantDetail -ErrorAction Stop
+        $AADTenantDetails = Get-MgOrganization -ErrorAction Stop
 
         $Params = @{
             MarketingNotificationEmails          = $AADTenantDetails.MarketingNotificationEmails

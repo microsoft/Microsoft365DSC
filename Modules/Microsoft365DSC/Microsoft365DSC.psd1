@@ -52,10 +52,6 @@
     # Modules that must be imported into the global environment prior to importing this module
     RequiredModules   = @(
         @{
-            ModuleName      = "AzureADPreview"
-            RequiredVersion = "2.0.2.138"
-        },
-        @{
             ModuleName      = "DSCParser"
             RequiredVersion = "1.3.0.0"
         },
@@ -65,7 +61,7 @@
         },
         @{
             ModuleName      = "Microsoft.Graph.Applications"
-            RequiredVersion = "1.6.1"
+            RequiredVersion = "1.7.0"
         },
         @{
             ModuleName      = "Microsoft.Graph.Authentication"
@@ -109,7 +105,7 @@
         },
         @{
             ModuleName      = "Microsoft.Graph.Users"
-            RequiredVersion = "1.6.1"
+            RequiredVersion = "1.7.0"
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"

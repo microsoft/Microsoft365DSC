@@ -39,6 +39,10 @@ function Get-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -117,6 +121,7 @@ function Get-TargetResource
                 ApplicationId                     = $ApplicationId
                 TenantId                          = $TenantId
                 CertificateThumbprint             = $CertificateThumbprint
+                GlobalAdminAccount                = $GlobalAdminAccount
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -172,6 +177,10 @@ function Set-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -206,6 +215,7 @@ function Set-TargetResource
     $currentParameters.Remove("CertificateThumbprint")  | Out-Null
     $currentParameters.Remove("ApplicationSecret")  | Out-Null
     $currentParameters.Remove("Ensure")  | Out-Null
+    $currentParameters.Remove("GlobalAdminAccount")  | Out-Null
 
     # Named Location should exist but it doesn't
     if ($Ensure -eq 'Present' -and $currentAADNamedLocation.Ensure -eq "Absent")
@@ -274,6 +284,10 @@ function Test-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -320,6 +334,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -335,7 +353,7 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -354,7 +372,7 @@ function Export-TargetResource
     try
     {
 
-        $AADNamedLocations = Get-AzureADMSNamedLocationPolicy -ErrorAction Stop
+        $AADNamedLocations = Get-MgIdentityConditionalAccessNamedLocation -ErrorAction Stop
         if ($AADNamedLocations.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
@@ -373,6 +391,7 @@ function Export-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
                 DisplayName           = $AADNamedLocation.DisplayName
                 ID                    = $AADNamedLocation.ID
+                GlobalAdminAccount    = $GlobalAdminAccount
             }
             $Results = Get-TargetResource @Params
 
@@ -383,7 +402,8 @@ function Export-TargetResource
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
-                    -Results $Results
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
@@ -396,6 +416,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         Write-Verbose -Message $_
         Add-M365DSCEvent -Message $_ -EntryType 'Error' `
             -EventID 1 -Source $($MyInvocation.MyCommand.Source)

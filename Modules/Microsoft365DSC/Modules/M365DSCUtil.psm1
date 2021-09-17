@@ -1111,6 +1111,9 @@ function New-M365DSCConnection
                 -Credential $InboundParameters.GlobalAdminAccount `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
+            $data.Add("ConnectionType", "Credential")
+            Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
+            return 'Credential'
         }
         if ($InboundParameters.ContainsKey("GlobalAdminAccount") -and
             $null -ne $InboundParameters.GlobalAdminAccount)
@@ -1120,6 +1123,9 @@ function New-M365DSCConnection
                 -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
+            $data.Add("ConnectionType", "Credential")
+            Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
+            return 'Credential'
         }
         if ($InboundParameters.ContainsKey("ApplicationId") -and
             -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
@@ -2507,9 +2513,9 @@ function Get-M365DSCWorkloadsListFromResourceNames
         switch ($resource.Substring(5,2))
         {
             "AA" {
-                if (-not $workloads.Contains("AzureAD"))
+                if (-not $workloads.Contains("MicrosoftGraph"))
                 {
-                    $workloads += "AzureAD"
+                    $workloads += "MicrosoftGraph"
                 }
             }
             "EX" {

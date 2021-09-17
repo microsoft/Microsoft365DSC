@@ -74,6 +74,10 @@ function Get-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -161,6 +165,7 @@ function Get-TargetResource
                 AppId                      = $AADApp.AppId
                 Permissions                = $permissionsObj
                 Ensure                     = "Present"
+                GlobalAdminAccount         = $GlobalAdminAccount
                 ApplicationId              = $ApplicationId
                 TenantId                   = $TenantId
                 ApplicationSecret          = $ApplicationSecret
@@ -265,6 +270,10 @@ function Set-TargetResource
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
 
         [Parameter()]
         [System.String]
@@ -485,6 +494,10 @@ function Test-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -577,6 +590,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -624,6 +641,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 DisplayName           = $AADApp.DisplayName
                 ObjectID              = $AADApp.Id
+                GlobalAdminAccount    = $GlobalAdminAccount
             }
             $Results = Get-TargetResource @Params
 
@@ -638,7 +656,8 @@ function Export-TargetResource
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
-                    -Results $Results
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
 
                 if ($null -ne $Results.Permissions)
                 {
@@ -657,6 +676,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

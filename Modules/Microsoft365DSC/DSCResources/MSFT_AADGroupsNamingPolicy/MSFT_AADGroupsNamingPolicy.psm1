@@ -23,6 +23,10 @@ function Get-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -130,6 +134,10 @@ function Set-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -226,6 +234,10 @@ function Test-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -278,6 +290,9 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
 
         [Parameter()]
         [System.String]
@@ -321,6 +336,7 @@ function Export-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             IsSingleInstance      = 'Yes'
             ApplicationSecret     = $ApplicationSecret
+            GlobalAdminAccount    = $GlobalAdminAccount
         }
 
         $Results = Get-TargetResource @Params
@@ -332,7 +348,8 @@ function Export-TargetResource
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
-                -Results $Results
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
             $dscContent += $currentDSCBlock
         }
 
@@ -344,6 +361,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

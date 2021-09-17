@@ -147,6 +147,10 @@ function Get-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -661,6 +665,7 @@ function Get-TargetResource
             #no translation needed
             #Standard part
             Ensure                                   = "Present"
+            GlobalAdminAccount                       = $GlobalAdminAccount
             ApplicationSecret                        = $ApplicationSecret
             ApplicationId                            = $ApplicationId
             TenantId                                 = $TenantId
@@ -817,6 +822,10 @@ function Set-TargetResource
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
 
         [Parameter()]
         [System.String]
@@ -1733,6 +1742,10 @@ function Test-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -1777,6 +1790,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
         [Parameter()]
         [System.String]
         $ApplicationId,
@@ -1831,6 +1848,7 @@ function Export-TargetResource
                     TenantId              = $TenantId
                     ApplicationSecret     = $ApplicationSecret
                     CertificateThumbprint = $CertificateThumbprint
+                    GlobalAdminAccount    = $GlobalAdminAccount
                 }
                 $Results = Get-TargetResource @Params
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -1838,7 +1856,8 @@ function Export-TargetResource
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
-                    -Results $Results
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
 
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -1852,6 +1871,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

@@ -63,7 +63,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of Azure AD role definition"
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -368,7 +368,7 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -383,7 +383,6 @@ function Export-TargetResource
 
     $dscContent = ''
     $i = 1
-    Write-Host "`r`n" -NoNewline
     try
     {
         [array]$AADRoleDefinitions = Get-AzureADMSRoleDefinition -ErrorAction Stop
@@ -423,7 +422,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $_
+        Write-Host $Global:M365DSCEmojiRedX
         Write-Verbose -Message $_
         Add-M365DSCEvent -Message $_ -EntryType 'Error' `
             -EventID 1 -Source $($MyInvocation.MyCommand.Source)

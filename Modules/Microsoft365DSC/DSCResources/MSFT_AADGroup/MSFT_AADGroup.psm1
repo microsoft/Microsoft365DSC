@@ -56,6 +56,10 @@ function Get-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -146,6 +150,7 @@ function Get-TargetResource
                 TenantId                      = $TenantId
                 CertificateThumbprint         = $CertificateThumbprint
                 ApplicationSecret             = $ApplicationSecret
+                GlobalAdminAccount            = $GlobalAdminAccount
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
@@ -228,6 +233,10 @@ function Set-TargetResource
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
 
         [Parameter()]
         [System.String]
@@ -384,6 +393,10 @@ function Test-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -439,6 +452,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -485,6 +502,7 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                GlobalAdminAccount    = $GlobalAdminAccount
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -492,7 +510,8 @@ function Export-TargetResource
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
-                -Results $Results
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -504,6 +523,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

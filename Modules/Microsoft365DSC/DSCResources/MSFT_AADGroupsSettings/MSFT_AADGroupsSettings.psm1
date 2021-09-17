@@ -43,6 +43,10 @@ function Get-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -117,6 +121,7 @@ function Get-TargetResource
                 TenantId                      = $TenantId
                 ApplicationSecret             = $ApplicationSecret
                 CertificateThumbprint         = $CertificateThumbprint
+                GlobalAdminAccount            = $GlobalAdminAccount
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -187,6 +192,10 @@ function Set-TargetResource
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
 
         [Parameter()]
         [System.String]
@@ -328,6 +337,10 @@ function Test-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -380,6 +393,9 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
 
         [Parameter()]
         [System.String]
@@ -421,6 +437,7 @@ function Export-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             IsSingleInstance      = 'Yes'
             ApplicationSecret     = $ApplicationSecret
+            GlobalAdminAccount    = $GlobalAdminAccount
         }
         $dscContent = ''
         $Results = Get-TargetResource @Params
@@ -438,6 +455,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

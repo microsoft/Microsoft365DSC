@@ -203,7 +203,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
     try
     {
@@ -235,7 +235,7 @@ function Set-TargetResource
         }
         $emails = $emails.TrimEnd(';')
         $creationParams.AlternateNotificationEmails = $emails
-        New-AzureADMSGroupLifecyclePolicy @creationParams
+        New-MgGroupLifecyclePolicy @creationParams
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
@@ -254,15 +254,15 @@ function Set-TargetResource
         }
         $emails = $emails.TrimEnd(';')
         $updateParams.AlternateNotificationEmails = $emails
-        $updateParams.Add("Id", (Get-AzureADMSGroupLifecyclePolicy).Id)
+        $updateParams.Add("Id", (Get-MgGroupLifecyclePolicy).Id)
 
         Write-Verbose -Message "The Group Lifecycle Policy exists but it's not in the Desired State. Updating it."
-        Set-AzureADMSGroupLifecyclePolicy @updateParams
+        Update-MgGroupLifecyclePolicy @updateParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "The Group Lifecycle Policy should NOT exist but it DOES. Removing it."
-        Remove-AzureADMSGroupLifecyclePolicy -Id (Get-AzureADMSGroupLifecyclePolicy).Id
+        Remove-MgGroupLifecyclePolicy -Id (Get-MgGroupLifecyclePolicy).Id
     }
 }
 
@@ -369,7 +369,7 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -405,7 +405,7 @@ function Export-TargetResource
 
         try
         {
-            $Policy = Get-AzureADMSGroupLifecyclePolicy -ErrorAction SilentlyContinue
+            $Policy = Get-MgGroupLifecyclePolicy -ErrorAction SilentlyContinue
         }
         catch
         {
@@ -446,6 +446,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_
