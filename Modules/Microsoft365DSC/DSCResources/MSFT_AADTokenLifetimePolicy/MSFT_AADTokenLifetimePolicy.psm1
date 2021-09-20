@@ -347,7 +347,7 @@ function Export-TargetResource
     $i = 1
     try
     {
-        [array]$AADPolicies = Get-AzureADPolicy -ErrorAction Stop
+        [array]$AADPolicies = Get-MgPolicyTokenLifetimePolicy -ErrorAction Stop
 
         if ($AADPolicies.Length -eq 0)
         {

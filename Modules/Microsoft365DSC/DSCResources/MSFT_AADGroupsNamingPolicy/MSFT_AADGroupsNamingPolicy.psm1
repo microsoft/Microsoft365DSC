@@ -56,6 +56,7 @@ function Get-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters -ProfileName "beta"
+    Select-MgProfile -Name Beta | Out-Null
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
@@ -171,7 +172,7 @@ function Set-TargetResource
     $needToUpdate = $false
     if ($Ensure -eq "Present" -and $currentPolicy.Ensure -eq "Absent")
     {
-        $Policy = New-AzureADDirectorySetting -TemplateId '62375ab9-6b52-47ed-826b-58e47e0e304b' | Out-Null
+        $Policy = New-MgDirectorySetting -TemplateId '62375ab9-6b52-47ed-826b-58e47e0e304b' | Out-Null
         $needToUpdate = $true
     }
 

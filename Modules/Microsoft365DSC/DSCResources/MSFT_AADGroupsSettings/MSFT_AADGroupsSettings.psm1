@@ -446,7 +446,8 @@ function Export-TargetResource
         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
             -ConnectionMode $ConnectionMode `
             -ModulePath $PSScriptRoot `
-            -Results $Results
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
         $dscContent += $currentDSCBlock
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName

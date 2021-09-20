@@ -76,7 +76,6 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
     try
@@ -85,7 +84,7 @@ function Get-TargetResource
         {
             if ($null -ne $Id -or $Id -ne "")
             {
-                $AADRoleDefinition = Get-AzureADMSRoleDefinition -Id $Id
+                $AADRoleDefinition = Get-MgDirectoryRoleTemplate -Id $Id
             }
         }
         catch
@@ -94,7 +93,7 @@ function Get-TargetResource
         }
         if ($null -eq $AADRoleDefinition)
         {
-            $AADRoleDefinition = Get-AzureADMSRoleDefinition -Filter "DisplayName eq '$($DisplayName)'"
+            $AADRoleDefinition = Get-MgDirectoryRoleTemplate -Filter "DisplayName eq '$($DisplayName)'"
         }
         if ($null -eq $AADRoleDefinition)
         {
@@ -227,20 +226,20 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating New AzureAD role defition {$DisplayName}"
         $currentParameters.Remove("Id") | Out-Null
-        New-AzureADMSRoleDefinition @currentParameters
+        New-MgDirectoryRoleTemplate @currentParameters
     }
     # Role definition should exist and will be configured to desired state
     if ($Ensure -eq 'Present' -and $currentAADRoleDef.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing AzureAD role definition {$DisplayName}"
         $currentParameters.Id = $currentAADRoleDef.Id
-        Set-AzureADMSRoleDefinition @currentParameters
+        Update-MgDirectoryRoleTemplate @currentParameters
     }
     # Role definition exists but should not
     elseif ($Ensure -eq 'Absent' -and $currentAADRoleDef.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing AzureAD role definition {$DisplayName}"
-        Remove-AzureADMSRoleDefinition -Id $currentAADRoleDef.Id
+        Remove-MgDirectoryRoleTemplate -Id $currentAADRoleDef.Id
     }
 }
 
@@ -385,7 +384,11 @@ function Export-TargetResource
     $i = 1
     try
     {
-        [array]$AADRoleDefinitions = Get-AzureADMSRoleDefinition -ErrorAction Stop
+        [array]$AADRoleDefinitions = Get-MgDirectoryRoleTemplate -ErrorAction Stop
+        if ($AADRoleDefinitions.Length -gt 0)
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
         foreach ($AADRoleDefinition in $AADRoleDefinitions)
         {
             Write-Host "    |---[$i/$($AADRoleDefinitions.Count)] $($AADRoleDefinition.DisplayName)" -NoNewline

@@ -48,7 +48,7 @@ function Get-TargetResource
         $CertificateThumbprint
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
     Write-Verbose -Message "Getting configuration of AzureAD Groups Lifecycle Policy"
     #region Telemetry
@@ -68,7 +68,7 @@ function Get-TargetResource
         $nullReturn.Ensure = "Absent"
         try
         {
-            $Policy = Get-AzureADMSGroupLifecyclePolicy -ErrorAction SilentlyContinue
+            $Policy = Get-MgGroupLifecyclePolicy -ErrorAction SilentlyContinue
         }
         catch
         {
@@ -207,7 +207,7 @@ function Set-TargetResource
 
     try
     {
-        $policy = Get-AzureADMSGroupLifecyclePolicy -ErrorAction SilentlyContinue
+        $policy = Get-MgGroupLifecyclePolicy -ErrorAction SilentlyContinue
     }
     catch
     {
