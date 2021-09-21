@@ -1,5 +1,8 @@
 # Change log for Microsoft365DSC
 
+* SPOSite
+  * Fixed issue when deleting site and confirm parameter
+
 # 1.21.915.1
 
 * EXOAntiPhishPolicy
