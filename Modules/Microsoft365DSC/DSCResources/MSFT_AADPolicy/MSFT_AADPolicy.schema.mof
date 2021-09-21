@@ -1,5 +1,5 @@
-[ClassVersion("1.0.0.0"), FriendlyName("AADTokenLifetimePolicy")]
-class MSFT_AADTokenLifetimePolicy : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("AADPolicy")]
+class MSFT_AADPolicy : OMI_BaseResource
 {
     [Key, Description("DisplayName of the Policy")] string DisplayName;
     [Write, Description("ObjectID of the Policy.")] String Id;

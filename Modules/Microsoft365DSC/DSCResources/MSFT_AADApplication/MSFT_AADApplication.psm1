@@ -147,21 +147,26 @@ function Get-TargetResource
             {
                 $isPublicClient = $true
             }
+            $AvailableToOtherTenantsValue = $false
+            if ($AADApp.SignInAudience -ne 'AzureADMyOrg')
+            {
+                $AvailableToOtherTenantsValue = $true
+            }
             $result = @{
                 DisplayName                = $AADApp.DisplayName
-                AvailableToOtherTenants    = $AADApp.AvailableToOtherTenants
+                AvailableToOtherTenants    = $AvailableToOtherTenantsValue
                 GroupMembershipClaims      = $AADApp.GroupMembershipClaims
-                Homepage                   = $AADApp.Homepage
+                Homepage                   = $AADApp.web.HomepageUrl
                 IdentifierUris             = $AADApp.IdentifierUris
-                KnownClientApplications    = $AADApp.KnownClientApplications
-                LogoutURL                  = $AADApp.LogoutURL
+                KnownClientApplications    = $AADApp.Api.KnownClientApplications
+                LogoutURL                  = $AADApp.web.LogoutURL
                 Oauth2AllowImplicitFlow    = $AADApp.Oauth2AllowImplicitFlow
                 Oauth2AllowUrlPathMatching = $AADApp.Oauth2AllowUrlPathMatching
                 Oauth2RequirePostResponse  = $AADApp.Oauth2RequirePostResponse
                 PublicClient               = $isPublicClient
-                ReplyURLs                  = $AADApp.ReplyURLs
+                ReplyURLs                  = $AADApp.web.RedirectUris
                 SamlMetadataUrl            = $AADApp.SamlMetadataUrl
-                ObjectId                   = $AADApp.ObjectID
+                ObjectId                   = $AADApp.Id
                 AppId                      = $AADApp.AppId
                 Permissions                = $permissionsObj
                 Ensure                     = "Present"
@@ -322,6 +327,7 @@ function Set-TargetResource
     $currentParameters.Remove("CertificateThumbprint")  | Out-Null
     $currentParameters.Remove("ApplicationSecret")  | Out-Null
     $currentParameters.Remove("Ensure")  | Out-Null
+    $currentParameters.Remove("GlobalAdminAccount")  | Out-Null
 
     if ($null -ne $KnownClientApplications)
     {
@@ -349,6 +355,35 @@ function Set-TargetResource
     $currentParameters.Remove("AppId") | Out-Null
     $currentParameters.Remove("Permissions") | Out-Null
 
+    if ($currentParameters.AvailableToOtherTenants)
+    {
+        $currentParameters.Add("SignInAudience",'AzureADMultipleOrgs')
+    }
+    else
+    {
+        $currentParameters.Add("SignInAudience",'AzureADMyOrg')
+    }
+    $currentParameters.Remove("AvailableToOtherTenants") | Out-Null
+    $currentParameters.Remove("PublicClient") | Out-Null
+
+    if ($null -ne $currentParameters.KnownClientApplications)
+    {
+        $apiValue = @{
+            KnownClientApplications = $currentParameters.KnownClientApplications
+        }
+        $currentParameters.Add("Api", $apiValue)
+        $currentParameters.Remove("KnownClientApplications") | Out-Null
+    }
+
+    if ($null -ne $ReplyUrls)
+    {
+        $webValue = @{
+            RedirectUris = $currentParameters.ReplyURLs
+        }
+        $currentParameters.Add("web", $webValue)
+        $currentParameters.Remove("ReplyURLs") | Out-Null
+    }
+
     if ($Ensure -eq "Present" -and $currentAADApp.Ensure -eq "Absent")
     {
         Write-Verbose -Message "Creating New AzureAD Application {$DisplayName} with values:`r`n$($currentParameters | Out-String)"
@@ -356,14 +391,25 @@ function Set-TargetResource
         $currentAADApp = New-MgApplication @currentParameters
         Write-Verbose -Message "Azure AD Application {$DisplayName} was successfully created"
         $needToUpdatePermissions = $true
-        Start-Sleep 5
+
+        $tries = 1
+        $appEntity = $null
+        do {
+            Write-Verbose -Message "Waiting for 10 seconds"
+            Start-Sleep -Seconds 10
+            $appEntity = Get-MgApplication -ApplicationId $currentAADApp.AppId -ErrorAction SilentlyContinue
+            $tries++
+        } until ($null -eq $appEntity -or $tries -le 12)
+
     }
     # App should exist and will be configured to desired state
     if ($Ensure -eq 'Present' -and $currentAADApp.Ensure -eq 'Present')
     {
+        $currentParameters.Remove("ObjectId") | Out-Null
+        $currentParameters.Add("ApplicationId", $currentAADApp.ObjectId)
         Write-Verbose -Message "Updating existing AzureAD Application {$DisplayName} with values:`r`n$($currentParameters | Out-String)"
-        $currentParameters.ObjectId = $currentAADApp.ObjectId
-        Set-MgApplication @currentParameters
+        Update-MgApplication @currentParameters
+        $currentAADApp.Add("ID", $currentAADApp.ObjectId)
         $needToUpdatePermissions = $true
     }
     # App exists but should not
@@ -377,43 +423,50 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Will update permissions for Azure AD Application {$($currentAADApp.DisplayName)}"
         $allSourceAPIs = $Permissions.SourceAPI | Get-Unique
-        $allRequiredAccess = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.RequiredResourceAccess]
+        $allRequiredAccess = @()
 
         foreach ($sourceAPI in $allSourceAPIs)
         {
             Write-Verbose -Message "Adding permissions for API {$($sourceAPI)}"
             $permissionsForcurrentAPI = $Permissions | Where-Object -FilterScript { $_.SourceAPI -eq $sourceAPI }
             $apiPrincipal = Get-MgServicePrincipal -Filter "DisplayName eq '$($sourceAPI)'"
-            $currentAPIAccess = New-Object -TypeName "Microsoft.Open.AzureAD.Model.RequiredResourceAccess"
-            $currentAPIAccess.ResourceAppId = $apiPrincipal.AppId
+            $currentAPIAccess = @{
+                ResourceAppId        = $apiPrincipal.AppId
+                ResourceAccess       = @()
+            }
             foreach ($permission in $permissionsForcurrentAPI)
             {
                 if ($permission.Type -eq 'Delegated')
                 {
-                    $scope = $apiPrincipal.Oauth2Permissions | Where-Object -FilterScript { $_.Value -eq $permission.Name }
-                    $delPermission = New-Object -TypeName "Microsoft.Open.AzureAD.Model.ResourceAccess" `
-                        -ArgumentList $scope.Id, "Scope"
-
-                    Write-Verbose -Message "Adding Permission:`r`n$($delPermission | Format-List *)"
+                    $scope = $apiPrincipal.Oauth2PermissionScopes | Where-Object -FilterScript { $_.Value -eq $permission.Name }
+                    Write-Verbose -Message "Adding Delegated Permission {$($scope.Id)}"
+                    $delPermission = @{
+                        Id   = $scope.Id
+                        Type = 'Scope'
+                    }
                     $currentAPIAccess.ResourceAccess += $delPermission
                 }
                 elseif ($permission.Type -eq "AppOnly")
                 {
                     $role = $apiPrincipal.AppRoles | Where-Object -FilterScript { $_.Value -eq $permission.Name }
-                    $appPermission = New-Object -TypeName "Microsoft.Open.AzureAD.Model.ResourceAccess"
-                    $appPermission.Id = $role.Id
-                    $appPermission.Type = "Role"
+                    $appPermission = @{
+                        Id   = $role.Id
+                        Type = 'Role'
+                    }
                     $currentAPIAccess.ResourceAccess += $appPermission
                 }
             }
-            if ($null -ne $currentAPIAccess.ResourceAccess)
+            if ($null -ne $currentAPIAccess)
             {
-                $allRequiredAccess.Add($currentAPIAccess)
+                $allRequiredAccess += $currentAPIAccess
             }
         }
 
-        Write-Verbose -Message "Updating permissions for Azure AD Application {$($currentAADApp.DisplayName)} with RequiredResourceAccess:`r`n$($allRequiredAccess.ResourceAccess | Out-String)"
-        Set-MgApplication -ObjectId ($currentAADApp.ObjectId) `
+        Write-Verbose -Message "Updating permissions for Azure AD Application {$($currentAADApp.DisplayName)} with RequiredResourceAccess:`r`n$($allRequiredAccess | Out-String)"
+        Write-Verbose -Message "Current App Id: $($currentAADApp.AppId)"
+
+        # Even if the property is named ApplicationId, we need to pass in the ObjectId
+        Update-MgApplication -ApplicationId ($currentAADApp.Id) `
             -RequiredResourceAccess $allRequiredAccess | Out-Null
     }
 }
@@ -629,7 +682,7 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewline
     try
     {
-        $AADApplications = Get-MgApplication -ErrorAction Stop
+        $AADApplications = Get-MgApplication -All -ErrorAction Stop
         foreach ($AADApp in $AADApplications)
         {
             Write-Host "    |---[$i/$($AADApplications.Count)] $($AADApp.DisplayName)" -NoNewline
@@ -707,72 +760,68 @@ function Get-M365DSCAzureADAppPermissions
         $App
     )
     Write-Verbose -Message "Retrieving permissions for Azure AD Application {$($App.DisplayName)}"
-    [array]$requiredAccess = $App.RequiredResourceAccess.ResourceAccess
-    $servicePrincipal = Get-MgServicePrincipal -Filter "AppId eq '$($App.AppId)'" -All:$true
+    [array]$requiredAccesses = $App.RequiredResourceAccess
 
     $permissions = @()
     $i = 1
-    foreach ($apiPermission in $requiredAccess)
+    foreach ($requiredAccess in $requiredAccesses)
     {
-        Write-Verbose -Message "[$i/$($requiredAccess.Length)]Obtaining information for App's Permission for {$($apiPermission.Id)}"
-        if ($apiPermission.Type -eq 'Role')
+        Write-Verbose -Message "[$i/$($requiredAccesses.Length)]Obtaining information for App's Permission for {$($requiredAccess.ResourceAppId)}"
+        $SourceAPI = Get-MGServicePrincipal -Filter "AppId eq '$($requiredAccess.ResourceAppId)'"
+
+        foreach ($resourceAccess in $requiredAccess.ResourceAccess)
         {
-            Write-Verbose -Message "    App's permission is {AppOnly}"
             $currentPermission = @{}
-            $currentPermission.Add("Type", "AppOnly")
-            $foundPermission = $null
-            $AppRoleAssignments = Get-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $ServicePrincipal.Id
-            foreach ($oAuth2Grant in $AppRoleAssignments)
+            $currentPermission.Add("SourceAPI", $SourceAPI.DisplayName)
+            if ($resourceAccess.Type -eq 'Scope')
             {
-                $apiPrincipal = Get-MgServicePrincipal -ServicePrincipalId $oAuth2Grant.ResourceId
-                Write-Verbose -Message "    Obtained service principal for {$($apiPrincipal.DisplayName)}"
-                $foundPermission = $AppRoleAssignments | Where-Object -FilterScript { $_.AppRoleId -eq $apiPermission.Id }
+                $scopeInfo = $SourceAPI.Oauth2PermissionScopes | Where-Object -FilterScript {$_.Id -eq $resourceAccess.Id}
+                $currentPermission.Add("Type", "Delegated")
+                $currentPermission.Add("Name", $scopeInfo.Value)
 
-                $role = $apiPrincipal.AppRoles | Where-Object { $_.Id -eq $apiPermission.Id }
-
-                if ($null -ne $role)
+                $appServicePrincipal = Get-MgServicePrincipal -Filter "AppId eq '$($app.AppId)'" -All:$true
+                if ($null -ne $appServicePrincipal)
                 {
-                    Write-Verbose -Message "    Found permission in {$($apiPrincipal.DisplayName)} and the name is {$($role.Value)}"
-                    $currentPermission.Add("Name", $role.Value)
-                    $currentPermission.Add("SourceAPI", $apiPrincipal.DisplayName)
-                    Write-Verbose -Message "    Found permission {$($role.Value)}"
-                    break
+                    $oAuth2grant = Get-MgOauth2PermissionGrant -Filter "ClientId eq '$($appServicePrincipal.Id)'"
+                    $scopes = $oAuth2grant.Scope.Split(' ')
+                    if ($scopes.Contains($scopeInfo.Value))
+                    {
+                        $currentPermission.Add("AdminConsentGranted", $true)
+                    }
+                    else
+                    {
+                        $currentPermission.Add("AdminConsentGranted", $false)
+                    }
                 }
             }
-            if ($null -ne $foundPermission)
+            elseif ($resourceAccess.Type -eq 'Role')
             {
-                $currentPermission.Add("AdminConsentGranted", $true)
-            }
-            else
-            {
-                $currentPermission.Add("AdminConsentGranted", $false)
-            }
-        }
-        elseif ($apiPermission.Type -eq 'Scope')
-        {
-            $oAuth2Grants = Get-MgServicePrincipalOauth2PermissionGrant -ServicePrincipalId $servicePrincipal.Id
-            Write-Verbose -Message "    App's permission is {Delegated}"
-            $currentPermission = @{}
-            $currentPermission.Add("Type", "Delegated")
-            $foundPermission = $false
+                $currentPermission.Add("Type", "AppOnly")
+                $role = $SourceAPI.AppRoles | Where-Object -FilterScript {$_.Id -eq $resourceAccess.Id}
+                $currentPermission.Add("Name", $role.Value)
 
-            foreach ($oAuth2Grant in $oAuth2Grants)
-            {
-                $apiPrincipal = Get-MgServicePrincipal -ServicePrincipalId $oAuth2Grant.ResourceId
-                $scope = $apiPrincipal.Oauth2PermissionScopes | Where-Object { $_.Id -eq $apiPermission.Id }
-                $foundPermission = $oAuth2Grant.Scope.Split(" ") -contains $scope.Value
-
-                if ($scope)
+                $appServicePrincipal = Get-MgServicePrincipal -Filter "AppId eq '$($app.AppId)'" -All:$true
+                if ($null -ne $appServicePrincipal)
                 {
-                    $currentPermission.Add("SourceAPI", $apiPrincipal.DisplayName)
-                    $currentPermission.Add("Name", $scope.Value)
-                    Write-Verbose -Message "    Found permission {$($scope.Value)}"
-                    break
+                    $roleAssignments = Get-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $appServicePrincipal.Id | Sort-Object ResourceDisplayName -Unique
+                    foreach ($oAuth2Grant in $roleAssignments)
+                    {
+                        $foundPermission = $oAuth2Grant | Where-Object -FilterScript { $_.AppRoleId -eq '134fd756-38ce-4afd-ba33-e9623dbe66c2'}
+                        break
+                    }
+
+                    if ($null -eq $foundPermission)
+                    {
+                        $currentPermission.Add("AdminConsentGranted", $false)
+                    }
+                    else
+                    {
+                        $currentPermission.Add("AdminConsentGranted", $true)
+                    }
                 }
             }
-            $currentPermission.Add("AdminConsentGranted", $foundPermission)
+            $permissions += $currentPermission
         }
-        $permissions += $currentPermission
         $i++
     }
 

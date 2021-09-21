@@ -36,19 +36,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
-            Mock -CommandName Set-AzureADApplication -MockWith {
+            Mock -CommandName Update-MgApplication -MockWith {
 
             }
 
-            Mock -CommandName Remove-AzureADApplication -MockWith {
+            Mock -CommandName Remove-MgApplication -MockWith {
 
             }
 
-            Mock -CommandName New-AzureADApplication -MockWith {
+            Mock -CommandName New-MgApplication -MockWith {
 
             }
 
-            Mock -CommandName Get-AzureADServicePrincipal -MockWith {
+            Mock -CommandName Get-MgServicePrincipal -MockWith {
                 $servicePrincipal = New-Object PSCustomObject
                 $servicePrincipal | Add-Member -MemberType NoteProperty -Name DisplayName -Value "Microsoft Graph"
                 $servicePrincipal | Add-Member -MemberType NoteProperty -Name ObjectID -Value "12345-12345-12345-12345-12345"
@@ -81,21 +81,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount         = $GlobalAdminAccount
                 }
 
-                Mock -CommandName Get-AzureADApplication -MockWith {
+                Mock -CommandName Get-MgApplication -MockWith {
                     return $null
                 }
             }
 
             It "Should return values from the get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-                Should -Invoke -CommandName "Get-AzureADApplication" -Exactly 2
+                Should -Invoke -CommandName "Get-MgApplication" -Exactly 1
             }
             It 'Should return false from the test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
             It 'Should create the application from the set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-AzureADApplication" -Exactly 1
+                Should -Invoke -CommandName "New-MgApplication" -Exactly 1
             }
         }
 
@@ -119,11 +119,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount         = $GlobalAdminAccount
                 }
 
-                Mock -CommandName New-M365DSCConnection -MockWith {
-                    return "Credential"
-                }
-
-                Mock -CommandName Get-AzureADApplication -MockWith {
+                Mock -CommandName Get-MgApplication -MockWith {
                     $AADApp = New-Object PSCustomObject
                     $AADApp | Add-Member -MemberType NoteProperty -Name DisplayName -Value "App1"
                     $AADApp | Add-Member -MemberType NoteProperty -Name ObjectID -Value "5dcb2237-c61b-4258-9c85-eae2aaeba9d6"
@@ -145,7 +141,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return values from the get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-                Should -Invoke -CommandName "Get-AzureADApplication" -Exactly 1
+                Should -Invoke -CommandName "Get-MgApplication" -Exactly 1
             }
 
             It 'Should return false from the test method' {
@@ -154,7 +150,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the app from the set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "Remove-AzureADApplication" -Exactly 1
+                Should -Invoke -CommandName "Remove-MgApplication" -Exactly 1
             }
         }
         Context -Name "The app exists and values are already in the desired state" -Fixture {
@@ -177,11 +173,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount         = $GlobalAdminAccount
                 }
 
-                Mock -CommandName New-M365DSCConnection -MockWith {
-                    return "Credential"
-                }
-
-                Mock -CommandName Get-AzureADApplication -MockWith {
+                Mock -CommandName Get-MgApplication -MockWith {
                     $AADApp = New-Object PSCustomObject
                     $AADApp | Add-Member -MemberType NoteProperty -Name DisplayName -Value "App1"
                     $AADApp | Add-Member -MemberType NoteProperty -Name ObjectID -Value "5dcb2237-c61b-4258-9c85-eae2aaeba9d6"
@@ -203,7 +195,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return Values from the get method" {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-AzureADApplication" -Exactly 1
+                Should -Invoke -CommandName "Get-MgApplication" -Exactly 1
             }
 
             It 'Should return true from the test method' {
@@ -231,11 +223,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount         = $GlobalAdminAccount
                 }
 
-                Mock -CommandName New-M365DSCConnection -MockWith {
-                    return "Credential"
-                }
-
-                Mock -CommandName Get-AzureADApplication -MockWith {
+                Mock -CommandName Get-MgApplication -MockWith {
                     $AADApp = New-Object PSCustomObject
                     $AADApp | Add-Member -MemberType NoteProperty -Name DisplayName -Value "App1"
                     $AADApp | Add-Member -MemberType NoteProperty -Name ObjectID -Value "5dcb2237-c61b-4258-9c85-eae2aaeba9d6"
@@ -257,7 +245,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return values from the get method" {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-AzureADApplication" -Exactly 1
+                Should -Invoke -CommandName "Get-MgApplication" -Exactly 1
             }
 
             It 'Should return false from the test method' {
@@ -266,7 +254,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Set-AzureADApplication' -Exactly 1
+                Should -Invoke -CommandName 'Set-MgApplication' -Exactly 1
             }
         }
 
@@ -308,18 +296,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount         = $GlobalAdminAccount
                 }
 
-                Mock -CommandName New-M365DSCConnection -MockWith {
-                    return "Credential"
-                }
-
-                Mock -CommandName Get-AzureADApplication -MockWith {
+                Mock -CommandName Get-MgApplication -MockWith {
                     return $null
                 }
             }
 
             It "Should return values from the get method" {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-AzureADApplication" -Exactly 2
+                Should -Invoke -CommandName "Get-MgApplication" -Exactly 2
             }
 
             It 'Should return false from the test method' {
@@ -328,7 +312,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the new method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'New-AzureADApplication' -Exactly 1
+                Should -Invoke -CommandName 'New-MgApplication' -Exactly 1
             }
         }
 
@@ -338,11 +322,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount
                 }
 
-                Mock -CommandName New-M365DSCConnection -MockWith {
-                    return "Credential"
-                }
-
-                Mock -CommandName Get-AzureADApplication -MockWith {
+                Mock -CommandName Get-MgApplication -MockWith {
                     $AADApp = New-Object PSCustomObject
                     $AADApp | Add-Member -MemberType NoteProperty -Name DisplayName -Value "App1"
                     $AADApp | Add-Member -MemberType NoteProperty -Name ObjectID -Value "5dcb2237-c61b-4258-9c85-eae2aaeba9d6"

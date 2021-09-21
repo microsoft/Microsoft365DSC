@@ -1,5 +1,5 @@
-[ClassVersion("1.0.0.0"), FriendlyName("AADNamedLocation")]
-class MSFT_AADNamedLocation : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("AADNamedLocationPolicy")]
+class MSFT_AADNamedLocationPolicy : OMI_BaseResource
 {
     [Write, Description("Specifies the Odata Type of a Named Location  object in Azure Active Directory"), ValueMap{"#microsoft.graph.countryNamedLocation","#microsoft.graph.ipNamedLocation"}, Values{"#microsoft.graph.countryNamedLocation","#microsoft.graph.ipNamedLocation"}] string OdataType;
     [Write, Description("Specifies the ID of a Named Location in Azure Active Directory.")] String Id;

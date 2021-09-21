@@ -1,4 +1,4 @@
-# AAD Policy
+# AADPolicy
 
 ## Description
 
