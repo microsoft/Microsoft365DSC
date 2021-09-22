@@ -2,6 +2,8 @@
 
 * SPOSite
   * Fixed issue when deleting site and confirm parameter
+* AADApplication
+  * Fix issue where export will only export 100 apps
 
 # 1.21.915.1
 
