@@ -1,3 +1,4 @@
+<#
 function Get-AzureADDirectorySetting
 {
     [CmdletBinding()]
@@ -24,7 +25,7 @@ function Remove-AzureADDirectorySetting
         $Id
     )
 }
-
+#>
 function New-AzureADDirectorySetting
 {
     [CmdletBinding()]
@@ -48,7 +49,7 @@ function Set-AzureADDirectorySetting
         $DirectorySetting
     )
 }
-
+<#
 function Set-AzureADMSGroupLifecyclePolicy
 {
     [CmdletBinding()]
@@ -71,6 +72,7 @@ function Set-AzureADMSGroupLifecyclePolicy
         $AlternateNotificationEmails
     )
 }
+#>
 function Get-PSSession
 {
     [CmdletBinding()]
@@ -85,6 +87,7 @@ function Remove-PSSession
     )
 }
 
+<#
 function New-AzureADMSGroup
 {
     [CmdletBinding()]
@@ -176,7 +179,7 @@ function Set-AzureADMSGroup
         $Visibility
     )
 }
-
+#>
 
 function Get-SPOAdministrationUrl
 {
@@ -244,6 +247,7 @@ function Get-Job
 }
 
 #region Specific to tenants
+<#
 function Get-AtpPolicyForO365
 {
     [CmdletBinding()]
@@ -253,7 +257,7 @@ function Get-AtpPolicyForO365
 
     )
 }
-
+#>
 
 function Set-AddressBookPolicy
 {
@@ -331,6 +335,7 @@ function Remove-DkimSigningConfig
     )
 }
 
+<#
 function New-SafeAttachmentPolicy
 {
     [CmdletBinding()]
@@ -843,7 +848,7 @@ function Remove-SafeLinksRule
     )
 }
 #endregion
-
+#>
 function New-M365DSCLogEntry
 {
     [CmdletBinding()]
@@ -968,6 +973,7 @@ function Set-OfflineAddressBook
     )
 }
 
+<#
 function add-AvailabilityAddressSpace
 {
     [CmdletBinding()]
@@ -1039,7 +1045,7 @@ function remove-AvailabilityAddressSpace
         $Confirm
     )
 }
-
+#>
 function New-OfflineAddressBook
 {
     [CmdletBinding()]
@@ -1072,7 +1078,7 @@ function New-OfflineAddressBook
         $Confirm
     )
 }
-
+<#
 # EXOAddressBookPolicy cmdlets
 function Get-AddressBookPolicy
 {
@@ -1083,7 +1089,7 @@ function Get-AddressBookPolicy
 
     )
 }
-
+#>
 function Set-AddressBookPolicy
 {
     [CmdletBinding()]

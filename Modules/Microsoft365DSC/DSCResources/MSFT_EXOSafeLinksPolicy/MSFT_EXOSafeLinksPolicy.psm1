@@ -13,6 +13,10 @@ function Get-TargetResource
         $AdminDisplayName,
 
         [Parameter()]
+        [System.String]
+        $CustomNotificationText,
+
+        [Parameter()]
         [Boolean]
         $DeliverMessageAfterScan = $false,
 
@@ -34,6 +38,10 @@ function Get-TargetResource
 
         [Parameter()]
         [Boolean]
+        $EnableOrganizationBranding = $false,
+
+        [Parameter()]
+        [Boolean]
         $EnableSafeLinksForTeams = $false,
 
         [Parameter()]
@@ -43,6 +51,10 @@ function Get-TargetResource
         [Parameter()]
         [Boolean]
         $ScanUrls = $false,
+
+        [Parameter()]
+        [Boolean]
+        $UseTranslatedNotificationText = $false,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -126,23 +138,26 @@ function Get-TargetResource
         else
         {
             $result = @{
-                Identity                 = $SafeLinksPolicy.Identity
-                AdminDisplayName         = $SafeLinksPolicy.AdminDisplayName
-                DeliverMessageAfterScan  = $SafeLinksPolicy.DeliverMessageAfterScan
-                DoNotAllowClickThrough   = $SafeLinksPolicy.DoNotAllowClickThrough
-                DoNotRewriteUrls         = $SafeLinksPolicy.DoNotRewriteUrls
-                DoNotTrackUserClicks     = $SafeLinksPolicy.DoNotTrackUserClicks
-                EnableForInternalSenders = $SafeLinksPolicy.EnableForInternalSenders
-                EnableSafeLinksForTeams  = $SafeLinksPolicy.EnableSafeLinksForTeams
-                IsEnabled                = $SafeLinksPolicy.IsEnabled
-                ScanUrls                 = $SafeLinksPolicy.ScanUrls
-                Ensure                   = 'Present'
-                GlobalAdminAccount       = $GlobalAdminAccount
-                ApplicationId            = $ApplicationId
-                CertificateThumbprint    = $CertificateThumbprint
-                CertificatePath          = $CertificatePath
-                CertificatePassword      = $CertificatePassword
-                TenantId                 = $TenantId
+                Identity                      = $SafeLinksPolicy.Identity
+                AdminDisplayName              = $SafeLinksPolicy.AdminDisplayName
+                CustomNotificationText        = $SafeLinksPolicy.CustomNotificationText
+                DeliverMessageAfterScan       = $SafeLinksPolicy.DeliverMessageAfterScan
+                DoNotAllowClickThrough        = $SafeLinksPolicy.DoNotAllowClickThrough
+                DoNotRewriteUrls              = $SafeLinksPolicy.DoNotRewriteUrls
+                DoNotTrackUserClicks          = $SafeLinksPolicy.DoNotTrackUserClicks
+                EnableForInternalSenders      = $SafeLinksPolicy.EnableForInternalSenders
+                EnableOrganizationBranding    = $SafeLinksPolicy.EnableOrganizationBranding
+                EnableSafeLinksForTeams       = $SafeLinksPolicy.EnableSafeLinksForTeams
+                IsEnabled                     = $SafeLinksPolicy.IsEnabled
+                ScanUrls                      = $SafeLinksPolicy.ScanUrls
+                UseTranslatedNotificationText = $SafeLinksPolicy.UseTranslatedNotificationText
+                Ensure                        = 'Present'
+                GlobalAdminAccount            = $GlobalAdminAccount
+                ApplicationId                 = $ApplicationId
+                CertificateThumbprint         = $CertificateThumbprint
+                CertificatePath               = $CertificatePath
+                CertificatePassword           = $CertificatePassword
+                TenantId                      = $TenantId
             }
 
             Write-Verbose -Message "Found SafeLinksPolicy $($Identity)"
@@ -190,6 +205,10 @@ function Set-TargetResource
         $AdminDisplayName,
 
         [Parameter()]
+        [System.String]
+        $CustomNotificationText,
+
+        [Parameter()]
         [Boolean]
         $DeliverMessageAfterScan = $false,
 
@@ -211,6 +230,10 @@ function Set-TargetResource
 
         [Parameter()]
         [Boolean]
+        $EnableOrganizationBranding = $false,
+
+        [Parameter()]
+        [Boolean]
         $EnableSafeLinksForTeams = $false,
 
         [Parameter()]
@@ -220,6 +243,10 @@ function Set-TargetResource
         [Parameter()]
         [Boolean]
         $ScanUrls = $false,
+
+        [Parameter()]
+        [Boolean]
+        $UseTranslatedNotificationText = $false,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -313,6 +340,10 @@ function Test-TargetResource
         $AdminDisplayName,
 
         [Parameter()]
+        [System.String]
+        $CustomNotificationText,
+
+        [Parameter()]
         [Boolean]
         $DeliverMessageAfterScan = $false,
 
@@ -334,6 +365,10 @@ function Test-TargetResource
 
         [Parameter()]
         [Boolean]
+        $EnableOrganizationBranding = $false,
+
+        [Parameter()]
+        [Boolean]
         $EnableSafeLinksForTeams = $false,
 
         [Parameter()]
@@ -343,6 +378,10 @@ function Test-TargetResource
         [Parameter()]
         [Boolean]
         $ScanUrls = $false,
+
+        [Parameter()]
+        [Boolean]
+        $UseTranslatedNotificationText = $false,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
