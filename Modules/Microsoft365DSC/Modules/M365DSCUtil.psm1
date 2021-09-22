@@ -6,7 +6,7 @@ $Global:SessionSecurityCompliance = $null
 #region Extraction Modes
 $Global:DefaultComponents = @("SPOApp", "SPOSiteDesign")
 $Global:FullComponents = @("AADMSGroup", "AADServicePrincipal", "EXOMailboxSettings", "EXOManagementRole", "O365Group", "O365User", `
-        "PlannerPlan", "PlannerBucket", "PlannerTask", "PPPowerAppsEnvironment", `
+        "PlannerPlan", "PlannerBucket", "PlannerTask", "PPPowerAppsEnvironment", "PPTenantSettings", `
         "SPOSiteAuditSettings", "SPOSiteGroup", "SPOSite", "SPOUserProfileProperty", "SPOPropertyBag", "TeamsTeam", "TeamsChannel", `
         "TeamsUser", "TeamsChannelTab")
 #endregion
