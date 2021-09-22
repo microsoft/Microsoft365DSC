@@ -1,9 +1,16 @@
 # Change log for Microsoft365DSC
 
-* SPOSite
-  * Fixed issue when deleting site and confirm parameter
+# 1.21.922.1
+
 * AADApplication
   * Fix issue where export will only export 100 apps
+* EXOSafeLinksPolicy
+  * Added support for CustomNotificationText, EnableOrganizationBranding, and
+    UseTranslatedNotificationText properties;
+* SPOSite
+  * Fixed issue when deleting site and confirm parameter
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.68;
 
 # 1.21.915.1
 
