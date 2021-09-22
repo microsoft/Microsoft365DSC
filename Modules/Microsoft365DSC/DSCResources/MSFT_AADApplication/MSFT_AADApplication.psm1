@@ -611,7 +611,7 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewline
     try
     {
-        $AADApplications = Get-AzureADApplication -ErrorAction Stop
+        $AADApplications = Get-AzureADApplication -all:$True  -ErrorAction Stop
         foreach ($AADApp in $AADApplications)
         {
             Write-Host "    |---[$i/$($AADApplications.Count)] $($AADApp.DisplayName)" -NoNewline
