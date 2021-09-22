@@ -526,13 +526,19 @@ function Set-TargetResource
         Write-Verbose -Message "Removing site {$Url}"
         try
         {
-            Remove-PnPTenantSite -Url $Url -Confirm:$false -SkipRecycleBin -Force
+            Remove-PnPTenantSite -Url $Url -SkipRecycleBin -Force
         }
         catch
         {
             if ($Error[0].Exception.Message -eq "File Not Found")
             {
                 $Message = "The site $($Url) does not exist."
+                New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+                throw $Message
+            }
+            if ($Error[0].Exception.Message -eq "This site belongs to a Microsoft 365 group. To delete the site, you must delete the group.")
+            {
+                $Message = "This site $($Url) belongs to a Microsoft 365 group. To delete the site, you must delete the group."
                 New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
                 throw $Message
             }
