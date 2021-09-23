@@ -1,3 +1,20 @@
+[ClassVersion("1.0.0")]
+class MSFT_ManagedApps
+{
+    [Write, Description("The application name.")] String Name;
+    [Write, Description("The publisher of the application.")] String Publisher;
+    [Write, Description("The Store URL of the application")] String AppStoreUrl;
+    [Write, Description("The application or bundle identifier of the application.")] String AppId;
+};
+
+[ClassVersion("1.0.0")]
+class MSFT_networkUsageRules
+{
+    [Write, Description("Information about the managed apps that this rule is going to apply to. This collection can contain a maximum of 500 elements."),EmbeddedInstance("MSFT_ManagedApps] String ManagedApps;
+    [Write, Description("If set to true, corresponding managed apps will not be allowed to use cellular data when roaming.")] Boolean cellularDataBlockWhenRoaming;
+    [Write, Description("If set to true, corresponding managed apps will not be allowed to use cellular data at any time")] Boolean cellularDataBlocked;
+};
+
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceConfigurationPolicyiOS")]
 class MSFT_IntuneDeviceConfigurationPolicyiOS : OMI_BaseResource
 {
