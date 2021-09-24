@@ -187,7 +187,7 @@ function Get-TargetResource
         Write-Verbose -Message "PolicyID was specified"
         try
         {
-            $Policy = Get-MgIdentityConditionalAccessPolicy -ConditionalAccessPolicyId $Id
+            $Policy = Get-MgIdentityConditionalAccessPolicy -ConditionalAccessPolicyId $Id -ErrorAction Stop
         }
         catch
         {
@@ -643,7 +643,7 @@ function Get-TargetResource
             #no translation needed, return empty string array if undefined
             ClientAppTypes                           = [System.String[]](@() + $Policy.Conditions.ClientAppTypes)
             #no translation needed, return empty string array if undefined
-            GrantControlOperator                     = $Policy.GrantControls._Operator
+            GrantControlOperator                     = $Policy.GrantControls.Operator
             #no translation or conversion needed
             BuiltInControls                          = [System.String[]](@() + $Policy.GrantControls.BuiltInControls)
             #no translation needed, return empty string array if undefined
@@ -872,18 +872,33 @@ function Set-TargetResource
         $NewParameters.Add("State", $State)
         #create Conditions object
         Write-Verbose -Message "Set-Targetresource: create Conditions object"
-        $conditions = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessConditionSet
+        $conditions = @{
+            Applications = @{
+            }
+            Users = @{
+            }
+        }
         #create and provision Application Condition object
         Write-Verbose -Message "Set-Targetresource: create Application Condition object"
-        $conditions.Applications = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessApplicationCondition
-        $conditions.Applications.IncludeApplications = $IncludeApplications
-        $conditions.Applications.ExcludeApplications = $ExcludeApplications
-        $conditions.Applications.IncludeUserActions = $IncludeUserActions
+        if ($IncludeApplications)
+        {
+            $conditions.Applications.Add("IncludeApplications", $IncludeApplications)
+        }
+        if ($ExcludeApplications)
+        {
+            $conditions.Applications.Add("ExcludeApplications", $ExcludeApplications)
+        }
+        if ($IncludeUserActions)
+        {
+            $conditions.Applications.Add("IncludeUserActions",  $IncludeUserActions)
+        }
+
         #create and provision User Condition object
-        Write-Verbose -Message "Set-Targetresource: create and provision User Condition object"
-        $conditions.Users = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessUserCondition
         Write-Verbose -Message "Set-Targetresource: process includeusers"
-        $conditions.Users.IncludeUsers = @()
+        if ($IncludeUsers)
+        {
+            $conditions.Users.Add("IncludeUsers", @())
+        }
         foreach ($includeuser in $IncludeUsers)
         {
             #translate user UPNs to GUID, except id value is GuestsOrExternalUsers or All
@@ -893,7 +908,8 @@ function Set-TargetResource
                 {
                     $userguid = $null
                     try
-                    { $userguid = (Get-MgUser -UserId $includeuser).ObjectId
+                    {
+                        $userguid = (Get-MgUser -UserId $includeuser).ObjectId
                     }
                     catch
                     {
@@ -955,7 +971,11 @@ function Set-TargetResource
             }
         }
         Write-Verbose -Message "Set-Targetresource: process excludeusers"
-        $conditions.Users.ExcludeUsers = @()
+
+        if ($ExcludeUsers.Length -gt 0 -and -not ($ExcludeUsers.Length -eq 1 -and [System.String]::IsNullOrEmpty($ExcludeUsers[0])))
+        {
+            $conditions.Users.Add("ExcludeUsers", @())
+        }
         foreach ($excludeuser in $ExcludeUsers)
         {
             #translate user UPNs to GUID, except id value is GuestsOrExternalUsers or All
@@ -1027,7 +1047,10 @@ function Set-TargetResource
             }
         }
         Write-Verbose -Message "Set-Targetresource: process includegroups"
-        $conditions.Users.IncludeGroups = @()
+        if ($IncludeGroups.Length -gt 0 -and -not ($IncludeGroups.Length -eq 1 -and [System.String]::IsNullOrEmpty($IncludeGroups[0])))
+        {
+            $conditions.Users.Add("IncludeGroups", @())
+        }
         foreach ($includegroup in $IncludeGroups)
         {
             #translate user Group names to GUID
@@ -1116,11 +1139,14 @@ function Set-TargetResource
                 else
                 {
                     Write-Verbose -Message "adding group to includegroups"
-                    $conditions.Users.IncludeGroups += $GroupLookup.ObjectId
+                    $conditions.Users.IncludeGroups += $GroupLookup.Id
                 }
             }
         }
-        $conditions.Users.ExcludeGroups = @()
+        if ($ExcludeGroups.Length -gt 0 -and -not ($ExcludeGroups.Length -eq 1 -and [System.String]::IsNullOrEmpty($ExcludeGroups[0])))
+        {
+            $conditions.Users.Add("ExcludeGroups", @())
+        }
         Write-Verbose -Message "Set-Targetresource: process excludegroups"
         foreach ($ExcludeGroup in $ExcludeGroups)
         {
@@ -1210,12 +1236,15 @@ function Set-TargetResource
                 else
                 {
                     Write-Verbose -Message "adding group to ExcludeGroups"
-                    $conditions.Users.ExcludeGroups += $GroupLookup.ObjectId
+                    $conditions.Users.ExcludeGroups += $GroupLookup.Id
                 }
             }
         }
         Write-Verbose -Message "Set-Targetresource: process includeroles"
-        $conditions.Users.IncludeRoles = @()
+        if ($IncludeRoles.Length -gt 0 -and -not ($IncludeRoles.Length -eq 1 -and [System.String]::IsNullOrEmpty($IncludeRoles[0])))
+        {
+            $conditions.Users.Add("IncludeRoles", @())
+        }
         if ($IncludeRoles)
         {
             #translate role names to template guid if defined
@@ -1259,7 +1288,10 @@ function Set-TargetResource
             }
         }
         Write-Verbose -Message "Set-Targetresource: process excluderoles"
-        $conditions.Users.ExcludeRoles = @()
+        if ($ExcludeRoles.Length -gt 0 -and -not ($ExcludeRoles.Length -eq 1 -and [System.String]::IsNullOrEmpty($ExcludeGroups[0])))
+        {
+            $conditions.Users.Add("ExcludeRoles", @())
+        }
         if ($ExcludeRoles)
         {
             #translate role names to template guid if defined
@@ -1307,7 +1339,10 @@ function Set-TargetResource
         if ($IncludePlatforms -or $ExcludePlatforms)
         {
             #create and provision Platform condition object if used
-            $conditions.Platforms = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessPlatformCondition
+            $conditions.Add("Platforms", @{
+                ExcludePlatforms = @()
+                IncludePlatforms = @()
+            })
             Write-Verbose -Message "Set-Targetresource: IncludePlatforms: $IncludePlatforms"
             $conditions.Platforms.IncludePlatforms = @() + $IncludePlatforms
             #no translation or conversion needed
@@ -1323,7 +1358,10 @@ function Set-TargetResource
         Write-Verbose -Message "Set-Targetresource: process include and exclude locations"
         if ($IncludeLocations -or $ExcludeLocations)
         {
-            $conditions.Locations = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessLocationCondition
+            $conditions.Add("Locations", @{
+                ExcludeLocations = @()
+                IncludeLocations = @()
+            })
             $conditions.Locations.IncludeLocations = @()
             $conditions.Locations.ExcludeLocations = @()
             Write-Verbose -Message "Set-Targetresource: locations specified"
@@ -1415,68 +1453,95 @@ function Set-TargetResource
         if ($IncludeDevices -or $ExcludeDevices)
         {
             #create and provision Device condition object if used
-            $conditions.Devices = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessDevicesCondition
-            $conditions.Devices.IncludeDevices = $IncludeDevices
+            $conditions.Add("Platforms", @{
+                ExcludePlatforms = @()
+                IncludePlatforms = @()
+            })
+            $conditions.Platforms.IncludeDevices = $IncludeDevices
             #no translation or conversion needed
-            $conditions.Devices.ExcludeDevices = $ExcludeDevices
+            $conditions.Platforms.ExcludeDevices = $ExcludeDevices
             #no translation or conversion needed
         }
         Write-Verbose -Message "Set-Targetresource: process risk levels and app types"
         Write-Verbose -Message "Set-Targetresource: UserRiskLevels: $UserRiskLevels"
-        $Conditions.UserRiskLevels = $UserRiskLevels
+        $Conditions.Add("UserRiskLevels", $UserRiskLevels)
         #no translation or conversion needed
         Write-Verbose -Message "Set-Targetresource: SignInRiskLevels: $SignInRiskLevels"
-        $Conditions.SignInRiskLevels = $SignInRiskLevels
+        $Conditions.Add("SignInRiskLevels", $SignInRiskLevels)
         #no translation or conversion needed
         Write-Verbose -Message "Set-Targetresource: ClientAppTypes: $ClientAppTypes"
-        $Conditions.ClientAppTypes = $ClientAppTypes
+        $Conditions.Add("ClientAppTypes",  $ClientAppTypes)
         #no translation or conversion needed
         Write-Verbose -Message "Set-Targetresource: Adding processed conditions"
         #add all conditions to the parameter list
         $NewParameters.Add("Conditions", $Conditions)
         #create and provision Grant Control object
         Write-Verbose -Message "Set-Targetresource: create and provision Grant Control object"
-        $GrantControls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessGrantControls
-        $GrantControls._Operator = $GrantControlOperator
-        $GrantControls.BuiltInControls = $BuiltInControls
-        #no translation or conversion needed
-        Write-Verbose -Message "Set-Targetresource: Adding processed grant controls"
-        $NewParameters.Add("GrantControls", $GrantControls)
-        #add GrantControls to the parameter list
+
+        if ($GrantControlOperator -and $BuiltInControls)
+        {
+            $GrantControls = @{
+                Operator        = $GrantControlOperator
+                BuiltInControls = $BuiltInControls
+            }
+
+            #no translation or conversion needed
+            Write-Verbose -Message "Set-Targetresource: Adding processed grant controls"
+            $NewParameters.Add("GrantControls", $GrantControls)
+        }
+
         Write-Verbose -Message "Set-Targetresource: process session controls"
 
         $sessioncontrols = $null
         if ($ApplicationEnforcedRestrictionsIsEnabled -or $CloudAppSecurityIsEnabled -or $SignInFrequencyIsEnabled -or $PersistentBrowserIsEnabled)
         {
             Write-Verbose -Message "Set-Targetresource: create provision Session Control object"
-            $sessioncontrols = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessSessionControls
+            $sessioncontrols = @{
+                ApplicationEnforcedRestrictions = @{
+                    IsEnabled = $false
+                }
+            }
 
             if ($ApplicationEnforcedRestrictionsIsEnabled)
             {
                 #create and provision ApplicationEnforcedRestrictions object if used
-                $sessioncontrols.ApplicationEnforcedRestrictions = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessApplicationEnforcedRestrictions
                 $sessioncontrols.ApplicationEnforcedRestrictions.IsEnabled = $true
             }
             if ($CloudAppSecurityIsEnabled)
             {
+                $CloudAppSecurityValue = @{
+                    IsEnabled            = $false
+                    CloudAppSecurityType = $null
+                }
+
+                $sessioncontrols.Add("CloudAppSecurity", $CloudAppSecurityValue)
                 #create and provision CloudAppSecurity object if used
-                $sessioncontrols.CloudAppSecurity = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessCloudAppSecurity
                 $sessioncontrols.CloudAppSecurity.IsEnabled = $true
                 $sessioncontrols.CloudAppSecurity.CloudAppSecurityType = $CloudAppSecurityType
             }
             if ($SignInFrequencyIsEnabled)
             {
+                $SigninFrequencyValue = @{
+                    IsEnabled = $false
+                    Type      = $null
+                    Value     = $null
+                }
+
+                $sessioncontrols.Add("SignInFrequency", $SignInFrequencyValue)
                 #create and provision SignInFrequency object if used
-                $sessioncontrols.SignInFrequency = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessSignInFrequency
                 $sessioncontrols.SignInFrequency.IsEnabled = $true
                 $sessioncontrols.SignInFrequency.Type = $SignInFrequencyType
                 $sessioncontrols.SignInFrequency.Value = $SignInFrequencyValue
             }
             if ($PersistentBrowserIsEnabled)
             {
+                $PersistentBrowserValue = @{
+                    IsEnabled = $false
+                    Mode      = $false
+                }
+                $sessioncontrols.Add("PersistentBrowser", $PersistentBrowserValue)
                 Write-Verbose -Message "Set-Targetresource: Persistent Browser settings defined: PersistentBrowserIsEnabled:$PersistentBrowserIsEnabled, PersistentBrowserMode:$PersistentBrowserMode"
                 #create and provision PersistentBrowser object if used
-                $sessioncontrols.PersistentBrowser = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessPersistentBrowser
                 $sessioncontrols.PersistentBrowser.IsEnabled = $true
                 $sessioncontrols.PersistentBrowser.Mode = $PersistentBrowserMode
             }
@@ -1487,10 +1552,11 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Set-Targetresource: Change policy $DisplayName"
-        $NewParameters.Add("PolicyId", $currentPolicy.Id)
+        $NewParameters.Add("ConditionalAccessPolicyId", $currentPolicy.Id)
         try
         {
-            Set-MgIdentityConditionalAccessPolicy @NewParameters
+            Write-Verbose -Message "Updating existing policy with values: $(Convert-M365DscHashtableToString -Hashtable $NewParameters)"
+            Update-MgIdentityConditionalAccessPolicy @NewParameters
         }
         catch
         {

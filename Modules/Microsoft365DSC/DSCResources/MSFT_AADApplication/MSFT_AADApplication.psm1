@@ -783,14 +783,17 @@ function Get-M365DSCAzureADAppPermissions
                 if ($null -ne $appServicePrincipal)
                 {
                     $oAuth2grant = Get-MgOauth2PermissionGrant -Filter "ClientId eq '$($appServicePrincipal.Id)'"
-                    $scopes = $oAuth2grant.Scope.Split(' ')
-                    if ($scopes.Contains($scopeInfo.Value))
+                    if ($null -ne $oAuth2grant)
                     {
-                        $currentPermission.Add("AdminConsentGranted", $true)
-                    }
-                    else
-                    {
-                        $currentPermission.Add("AdminConsentGranted", $false)
+                        $scopes = $oAuth2grant.Scope.Split(' ')
+                        if ($scopes.Contains($scopeInfo.Value))
+                        {
+                            $currentPermission.Add("AdminConsentGranted", $true)
+                        }
+                        else
+                        {
+                            $currentPermission.Add("AdminConsentGranted", $false)
+                        }
                     }
                 }
             }
