@@ -1,5 +1,5 @@
-[ClassVersion("1.0.0.0"), FriendlyName("AADMSGroup")]
-class MSFT_AADMSGroup : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("AADGroup")]
+class MSFT_AADGroup : OMI_BaseResource
 {
     [Key, Description("DisplayName of the Azure Active Directory Group")] String DisplayName;
     [Key, Description("Specifies a mail nickname for the group.")] String MailNickname;

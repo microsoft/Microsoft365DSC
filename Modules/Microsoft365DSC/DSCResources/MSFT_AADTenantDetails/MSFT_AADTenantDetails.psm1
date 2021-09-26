@@ -195,6 +195,7 @@ function Set-TargetResource
     {
         $currentParameters.Remove("CertificateThumbprint") | Out-Null
     }
+    $currentParameters.Add("OrganizationId", $(Get-MgOrganization).Id)
     try
     {
         Update-MgOrganization @currentParameters

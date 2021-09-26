@@ -79,7 +79,7 @@ function Get-TargetResource
         $nullReturn.Ensure = "Absent"
         try
         {
-            if ($null -ne $Id)
+            if ($Id)
             {
                 $NamedLocation = Get-MgIdentityConditionalAccessNamedLocation -NamedLocationId $Id
             }
@@ -109,13 +109,13 @@ function Get-TargetResource
         {
             Write-Verbose "Found existing AAD Named Location {$($NamedLocation.DisplayName)}"
             $Result = @{
-                OdataType                         = $NamedLocation.OdataType
+                OdataType                         = $NamedLocation.AdditionalProperties.'@odata.type'
                 Id                                = $NamedLocation.Id
                 DisplayName                       = $NamedLocation.DisplayName
-                IpRanges                          = $NamedLocation.IpRanges.CidrAddress
-                IsTrusted                         = $NamedLocation.IsTrusted
-                CountriesAndRegions               = [String[]]$NamedLocation.CountriesAndRegions
-                IncludeUnknownCountriesAndRegions = $NamedLocation.IncludeUnknownCountriesAndRegions
+                IpRanges                          = $NamedLocation.AdditionalProperties.ipRanges.cidrAddress
+                IsTrusted                         = $NamedLocation.AdditionalProperties.isTrusted
+                CountriesAndRegions               = [String[]]$NamedLocation.AdditionalProperties.countriesAndRegions
+                IncludeUnknownCountriesAndRegions = $NamedLocation.AdditionalProperties.includeUnknownCountriesAndRegions
                 Ensure                            = "Present"
                 ApplicationSecret                 = $ApplicationSecret
                 ApplicationId                     = $ApplicationId
@@ -209,31 +209,33 @@ function Set-TargetResource
     #endregion
 
     $currentAADNamedLocation = Get-TargetResource @PSBoundParameters
-    $currentParameters = $PSBoundParameters
-    $currentParameters.Remove("ApplicationId")  | Out-Null
-    $currentParameters.Remove("TenantId")  | Out-Null
-    $currentParameters.Remove("CertificateThumbprint")  | Out-Null
-    $currentParameters.Remove("ApplicationSecret")  | Out-Null
-    $currentParameters.Remove("Ensure")  | Out-Null
-    $currentParameters.Remove("GlobalAdminAccount")  | Out-Null
+
+    $desiredValues = @{
+        DisplayName = $DisplayName
+        AdditionalProperties = @{
+            IsTrusted = $IsTrusted
+            IPRanges = @{
+                CidrAddress = $IPRanges
+            }
+            CountriesAndRegions               = $CountriesAndRegions
+            IncludeUnknownCountriesAndRegions = $IncludeUnknownCountriesAndRegions
+        }
+    }
 
     # Named Location should exist but it doesn't
     if ($Ensure -eq 'Present' -and $currentAADNamedLocation.Ensure -eq "Absent")
     {
-        $currentParameters.Remove("Id") | Out-Null
-        $VerboseAttributes = ($currentParameters | Out-String)
+        $VerboseAttributes = ($desiredValues | Out-String)
         Write-Verbose -Message "Creating New AAD Named Location {$Displayname)} with attributes: $VerboseAttributes"
-        New-MgIdentityConditionalAccessNamedLocation @currentParameters
+        New-MgIdentityConditionalAccessNamedLocation @desiredValues
     }
     # Named Location should exist and will be configured to desired state
     elseif ($Ensure -eq 'Present' -and $CurrentAADNamedLocation.Ensure -eq 'Present')
     {
-        $currentParameters["PolicyId"] = $currentAADNamedLocation.ID
-        $currentParameters.Add("NamedLocationId", $currentAADNamedLocation.Id) | Out-Null
-        $currentParameters.Remove("Id") | Out-Null
-        $VerboseAttributes = ($currentParameters | Out-String)
+        $desiredValues.Add("NamedLocationId", $currentAADNamedLocation.Id) | Out-Null
+        $VerboseAttributes = ($desiredValues | Out-String)
         Write-Verbose -Message "Updating existing AAD Named Location {$Displayname)} with attributes: $VerboseAttributes"
-        Update-MgIdentityConditionalAccessNamedLocation @currentParameters
+        Update-MgIdentityConditionalAccessNamedLocation @desiredValues
     }
     # Named Location exist but should not
     elseif ($Ensure -eq 'Absent' -and $CurrentAADNamedLocation.Ensure -eq 'Present')

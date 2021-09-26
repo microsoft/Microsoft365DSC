@@ -42,14 +42,6 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $Oauth2AllowImplicitFlow,
-
-        [Parameter()]
-        [System.Boolean]
-        $Oauth2AllowUrlPathMatching,
-
-        [Parameter()]
-        [System.Boolean]
         $Oauth2RequirePostResponse,
 
         [Parameter()]
@@ -59,10 +51,6 @@ function Get-TargetResource
         [Parameter()]
         [System.String[]]
         $ReplyURLs,
-
-        [Parameter()]
-        [System.String]
-        $SamlMetadataUrl,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -160,12 +148,9 @@ function Get-TargetResource
                 IdentifierUris             = $AADApp.IdentifierUris
                 KnownClientApplications    = $AADApp.Api.KnownClientApplications
                 LogoutURL                  = $AADApp.web.LogoutURL
-                Oauth2AllowImplicitFlow    = $AADApp.Oauth2AllowImplicitFlow
-                Oauth2AllowUrlPathMatching = $AADApp.Oauth2AllowUrlPathMatching
                 Oauth2RequirePostResponse  = $AADApp.Oauth2RequirePostResponse
                 PublicClient               = $isPublicClient
                 ReplyURLs                  = $AADApp.web.RedirectUris
-                SamlMetadataUrl            = $AADApp.SamlMetadataUrl
                 ObjectId                   = $AADApp.Id
                 AppId                      = $AADApp.AppId
                 Permissions                = $permissionsObj
@@ -245,14 +230,6 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $Oauth2AllowImplicitFlow,
-
-        [Parameter()]
-        [System.Boolean]
-        $Oauth2AllowUrlPathMatching,
-
-        [Parameter()]
-        [System.Boolean]
         $Oauth2RequirePostResponse,
 
         [Parameter()]
@@ -262,10 +239,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $ReplyURLs,
-
-        [Parameter()]
-        [System.String]
-        $SamlMetadataUrl,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -375,13 +348,17 @@ function Set-TargetResource
         $currentParameters.Remove("KnownClientApplications") | Out-Null
     }
 
-    if ($null -ne $ReplyUrls)
+    if ($null -ne $ReplyUrls -or $null -ne $LogoutURL)
     {
         $webValue = @{
             RedirectUris = $currentParameters.ReplyURLs
+            LogoutUrl    = $currentParameters.LogoutURL
+            HomePageUrl  = $currentParameters.Homepage
         }
         $currentParameters.Add("web", $webValue)
         $currentParameters.Remove("ReplyURLs") | Out-Null
+        $currentParameters.Remove("LogoutURL") | Out-Null
+        $currentParameters.Remove("Homepage") | Out-Null
     }
 
     if ($Ensure -eq "Present" -and $currentAADApp.Ensure -eq "Absent")
@@ -416,7 +393,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentAADApp.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing AzureAD Application {$DisplayName} by ObjectID {$($currentAADApp.ObjectID)}"
-        Remove-MgApplication -ObjectId $currentAADApp.ObjectID
+        Remove-MgApplication -ApplicationId $currentAADApp.ObjectID
     }
 
     if ($needToUpdatePermissions -and -not [System.String]::IsNullOrEmpty($Permissions) -and $Permissions.Length -gt 0)
@@ -515,14 +492,6 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $Oauth2AllowImplicitFlow,
-
-        [Parameter()]
-        [System.Boolean]
-        $Oauth2AllowUrlPathMatching,
-
-        [Parameter()]
-        [System.Boolean]
         $Oauth2RequirePostResponse,
 
         [Parameter()]
@@ -532,10 +501,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $ReplyURLs,
-
-        [Parameter()]
-        [System.String]
-        $SamlMetadataUrl,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]

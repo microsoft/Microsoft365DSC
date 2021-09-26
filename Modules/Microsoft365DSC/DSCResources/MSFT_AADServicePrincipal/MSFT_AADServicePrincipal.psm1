@@ -113,7 +113,7 @@ function Get-TargetResource
         {
             if (-not [System.String]::IsNullOrEmpty($ObjectID))
             {
-                $AADServicePrincipal = Get-MgServicePrincipal -ObjectId $ObjectId `
+                $AADServicePrincipal = Get-MgServicePrincipal -ServicePrincipalId $ObjectId `
                     -ErrorAction Stop
             }
         }
@@ -134,7 +134,7 @@ function Get-TargetResource
         {
             $result = @{
                 AppId                     = $AADServicePrincipal.AppId
-                ObjectID                  = $AADServicePrincipal.ObjectId
+                ObjectID                  = $AADServicePrincipal.Id
                 DisplayName               = $AADServicePrincipal.DisplayName
                 AlternativeNames          = $AADServicePrincipal.AlternativeNames
                 AccountEnabled            = [boolean]$AADServicePrincipal.AccountEnabled
@@ -306,13 +306,13 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing Service Principal"
-        Update-MgServicePrincipal -ObjectId $currentAADServicePrincipal.ObjectID @currentParameters
+        Update-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID @currentParameters
     }
     # ServicePrincipal exists but should not
     elseif ($Ensure -eq 'Absent' -and $currentAADServicePrincipal.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Service Principal"
-        Remove-MgServicePrincipal -ObjectId $currentAADServicePrincipal.ObjectID
+        Remove-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID
     }
 }
 

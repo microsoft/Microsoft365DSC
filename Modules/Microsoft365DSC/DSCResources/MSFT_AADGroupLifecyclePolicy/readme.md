@@ -1,15 +1,15 @@
-# AADPolicy
+# AADGroupLifecyclePolicy
 
 ## Description
 
-This resource configures the Azure AD Policies
+This resource configures an Azure Active Directory Group Lifecycle Policy (e.g. Expiration).
 
 ## Azure AD Permissions
 
 To authenticate via Azure Active Directory, this resource required the following Application permissions:
 
 * **Automate**
-  * Policy.Read.All,Policy.ReadWrite.ApplicationConfiguration
+  * None
 * **Export**
   * None
 

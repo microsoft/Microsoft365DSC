@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "AADMSGroup" -GenericStubModule $GenericStubPath
+    -DscResource "AADGroup" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -37,15 +37,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
-            Mock -CommandName Set-AzureADMSGroup -MockWith {
+            Mock -CommandName Update-MgGroup -MockWith {
 
             }
 
-            Mock -CommandName Remove-AzureADMSGroup -MockWith {
+            Mock -CommandName Remove-MgGroup -MockWith {
 
             }
 
-            Mock -CommandName New-AzureADMSGroup -MockWith {
+            Mock -CommandName New-MgGroup -MockWith {
 
             }
         }
@@ -68,20 +68,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADMSGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return $null
                 }
             }
             It "Should return Values from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-                Should -Invoke -CommandName "Get-AzureADMSGroup" -Exactly 1
+                Should -Invoke -CommandName "Get-MgGroup" -Exactly 1
             }
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
             It 'Should Create the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-AzureADMSGroup" -Exactly 1
+                Should -Invoke -CommandName "New-MgGroup" -Exactly 1
             }
         }
 
@@ -93,7 +93,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SecurityEnabled               = $True
                     MailEnabled                   = $True
                     MailNickname                  = "M365DSC"
-                    GroupTypes         = @("Unified")
+                    GroupTypes                    = @("Unified")
                     Visibility                    = "Private"
                     Ensure                        = "Absent"
                     GlobalAdminAccount            = $GlobalAdminAccount;
@@ -103,15 +103,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADMSGroup -MockWith {
-                    return @{DisplayName = "DSCGroup"
-                            ID = "12345-12345-12345-12345"    }
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        DisplayName = "DSCGroup"
+                        ID = "12345-12345-12345-12345-12345"
+                    }
                 }
             }
 
             It "Should return Values from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-                Should -Invoke -CommandName "Get-AzureADMSGroup" -Exactly 1
+                Should -Invoke -CommandName "Get-MgGroup" -Exactly 1
             }
 
             It 'Should return true from the Test method' {
@@ -120,7 +122,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "Remove-AzureADMSGroup" -Exactly 1
+                Should -Invoke -CommandName "Remove-MgGroup" -Exactly 1
             }
         }
         Context -Name "The Group Exists and Values are already in the desired state" -Fixture {
@@ -138,11 +140,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount            = $GlobalAdminAccount;
                 }
 
+
                 Mock -CommandName New-M365DSCConnection -MockWith {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADMSGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         DisplayName                   = "DSCGroup"
                         ID                            = "12345-12345-12345-12345"
@@ -159,7 +162,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return Values from the Get method" {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-AzureADMSGroup" -Exactly 1
+                Should -Invoke -CommandName "Get-MgGroup" -Exactly 1
             }
 
             It 'Should return true from the Test method' {
@@ -185,7 +188,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADMSGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         DisplayName                   = "DSCGroup"
                         Description                   = "Microsoft DSC" #Drift
@@ -194,13 +197,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         MailEnabled                   = $True
                         MailNickname                  = "M365DSC"
                         Visibility                    = "Private"
+                        Id                            = "12345-12345-12345-12345-12345"
                     }
                 }
             }
 
             It "Should return Values from the Get method" {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-AzureADMSGroup" -Exactly 1
+                Should -Invoke -CommandName "Get-MgGroup" -Exactly 1
             }
 
             It 'Should return false from the Test method' {
@@ -209,7 +213,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Set-AzureADMSGroup' -Exactly 1
+                Should -Invoke -CommandName 'Update-MgGroup' -Exactly 1
             }
         }
 
@@ -223,7 +227,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADMSGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         DisplayName = "Test Team"
                         ID = "12345-12345-12345-12345"

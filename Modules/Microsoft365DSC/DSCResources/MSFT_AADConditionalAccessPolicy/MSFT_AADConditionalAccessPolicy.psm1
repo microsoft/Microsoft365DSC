@@ -372,7 +372,7 @@ function Get-TargetResource
                 $ExcludeGroup = $null
                 try
                 {
-                    $ExcludeGroup = (Get-MgGroup GroupId $ExcludeGroupGUID).displayname
+                    $ExcludeGroup = (Get-MgGroup -GroupId $ExcludeGroupGUID).displayname
                 }
                 catch
                 {
@@ -416,7 +416,7 @@ function Get-TargetResource
             $rolelookup = @{}
             foreach ($role in Get-MgDirectoryRoleTemplate)
             {
-                $rolelookup[$role.ObjectId] = $role.DisplayName
+                $rolelookup[$role.Id] = $role.DisplayName
             }
 
             Write-Verbose -Message "Get-TargetResource: Processing IncludeRoles"
@@ -1288,7 +1288,7 @@ function Set-TargetResource
             }
         }
         Write-Verbose -Message "Set-Targetresource: process excluderoles"
-        if ($ExcludeRoles.Length -gt 0 -and -not ($ExcludeRoles.Length -eq 1 -and [System.String]::IsNullOrEmpty($ExcludeGroups[0])))
+        if ($ExcludeRoles.Length -gt 0 -and -not ($ExcludeRoles.Length -eq 1 -and [System.String]::IsNullOrEmpty($ExcludeRoles[0])))
         {
             $conditions.Users.Add("ExcludeRoles", @())
         }
@@ -1297,7 +1297,8 @@ function Set-TargetResource
             #translate role names to template guid if defined
             $rolelookup = @{}
             foreach ($role in Get-MgDirectoryRoleTemplate)
-            { $rolelookup[$role.DisplayName] = $role.ObjectId
+            {
+                $rolelookup[$role.DisplayName] = $role.Id
             }
             foreach ($ExcludeRole in $ExcludeRoles)
             {
@@ -1339,10 +1340,18 @@ function Set-TargetResource
         if ($IncludePlatforms -or $ExcludePlatforms)
         {
             #create and provision Platform condition object if used
-            $conditions.Add("Platforms", @{
-                ExcludePlatforms = @()
-                IncludePlatforms = @()
-            })
+            if (-not $conditions.Contains("Platforms"))
+            {
+                $conditions.Add("Platforms", @{
+                    ExcludePlatforms = @()
+                    IncludePlatforms = @()
+                })
+            }
+            else
+            {
+                $conditions.Platforms.Add("ExcludePlatforms", @())
+                $conditions.Platforms.Add("IncludePlatform", @())
+            }
             Write-Verbose -Message "Set-Targetresource: IncludePlatforms: $IncludePlatforms"
             $conditions.Platforms.IncludePlatforms = @() + $IncludePlatforms
             #no translation or conversion needed
@@ -1453,10 +1462,18 @@ function Set-TargetResource
         if ($IncludeDevices -or $ExcludeDevices)
         {
             #create and provision Device condition object if used
-            $conditions.Add("Platforms", @{
-                ExcludePlatforms = @()
-                IncludePlatforms = @()
-            })
+            if (-not $conditions.Contains("Platforms"))
+            {
+                $conditions.Add("Platforms", @{
+                    ExcludePlatforms = @()
+                    IncludePlatforms = @()
+                })
+            }
+            else
+            {
+                $conditions.Platforms.Add("ExcludeDevices", @())
+                $conditions.Platforms.Add("IndludeDevices", @())
+            }
             $conditions.Platforms.IncludeDevices = $IncludeDevices
             #no translation or conversion needed
             $conditions.Platforms.ExcludeDevices = $ExcludeDevices
@@ -1521,13 +1538,13 @@ function Set-TargetResource
             }
             if ($SignInFrequencyIsEnabled)
             {
-                $SigninFrequencyValue = @{
-                    IsEnabled = $false
+                $SigninFrequencyProp = @{
+                    IsEnabled = $true
                     Type      = $null
                     Value     = $null
                 }
 
-                $sessioncontrols.Add("SignInFrequency", $SignInFrequencyValue)
+                $sessioncontrols.Add("SignInFrequency", $SigninFrequencyProp)
                 #create and provision SignInFrequency object if used
                 $sessioncontrols.SignInFrequency.IsEnabled = $true
                 $sessioncontrols.SignInFrequency.Type = $SignInFrequencyType

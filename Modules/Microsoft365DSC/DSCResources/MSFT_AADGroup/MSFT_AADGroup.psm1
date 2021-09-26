@@ -273,6 +273,7 @@ function Set-TargetResource
     $currentParameters.Remove("CertificateThumbprint") | Out-Null
     $currentParameters.Remove("ApplicationSecret") | Out-Null
     $currentParameters.Remove("Ensure") | Out-Null
+    $currentParameters.Remove("GlobalAdminAccount") | Out-Null
 
     if ($Ensure -eq 'Present' -and `
         ($null -ne $GroupTypes -and $GroupTypes.Contains("Unified")) -and `
@@ -295,12 +296,12 @@ function Set-TargetResource
             }
             if ($false -eq $currentParameters.ContainsKey("Id"))
             {
-                Set-MgGroup @currentParameters -GroupId $currentGroup.Id | Out-Null
+                Update-MgGroup @currentParameters -GroupId $currentGroup.Id | Out-Null
             }
             else
             {
                 Write-Verbose -Message "Updating settings for group {$DisplayName}"
-                Set-MgGroup @currentParameters | Out-Null
+                Update-MgGroup @currentParameters | Out-Null
             }
         }
         catch
@@ -326,7 +327,7 @@ function Set-TargetResource
     {
         try
         {
-            Remove-MgGroup -GroupdId $currentGroup.ID | Out-Null
+            Remove-MgGroup -GroupId $currentGroup.ID | Out-Null
         }
         catch
         {

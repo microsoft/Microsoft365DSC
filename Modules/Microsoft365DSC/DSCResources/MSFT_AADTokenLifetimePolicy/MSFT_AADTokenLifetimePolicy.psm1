@@ -14,7 +14,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $AlternativeIdentifier,
+        $Description,
 
         [Parameter()]
         [System.String[]]
@@ -25,13 +25,13 @@ function Get-TargetResource
         $IsOrganizationDefault,
 
         [Parameter()]
-        [System.String]
-        $Type,
-
-        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
 
         [Parameter()]
         [System.String]
@@ -84,7 +84,7 @@ function Get-TargetResource
         {
             try
             {
-                $Policy = Get-AzureADPolicy -Filter "DisplayName eq '$DisplayName'"
+                $Policy = Get-MgPolicyTokenLifetimePolicy -Filter "DisplayName eq '$DisplayName'"
             }
             catch
             {
@@ -102,12 +102,10 @@ function Get-TargetResource
             Write-Verbose "Found existing AzureAD Policy {$($Policy.DisplayName)}"
             $Result = @{
                 Id                    = $Policy.Id
-                OdataType             = $Policy.OdataType
-                AlternativeIdentifier = $Policy.AlternativeIdentifier
+                Description           = $Policy.Description
                 Definition            = $Policy.Definition
                 DisplayName           = $Policy.DisplayName
                 IsOrganizationDefault = $Policy.IsOrganizationDefault
-                Type                  = $Policy.Type
                 Ensure                = "Present"
                 GlobalAdminAccount    = $GlobalAdminAccount
                 ApplicationId         = $ApplicationId
@@ -143,7 +141,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $AlternativeIdentifier,
+        $Description,
 
         [Parameter()]
         [System.String[]]
@@ -152,10 +150,6 @@ function Set-TargetResource
         [Parameter()]
         [Boolean]
         $IsOrganizationDefault,
-
-        [Parameter()]
-        [System.String]
-        $Type,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -208,20 +202,21 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating New AzureAD Policy {$Displayname)}"
         $currentParameters.Remove("Id") | Out-Null
-        New-AzureADPolicy @currentParameters
+        New-MgPolicyTokenLifetimePolicy @currentParameters
     }
     # Policy should exist and will be configured to desire state
     elseif ($Ensure -eq 'Present' -and $CurrentAADPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating exisitng AzureAD Policy {$Displayname)}"
-        $currentParameters.Id = $currentAADPolicy.ID
-        Set-AzureADPolicy @currentParameters
+        $currentParameters.Add("TokenLifetimePolicyId", $currentAADPolicy.ID)
+        $currentParameters.Remove("Id") | Out-Null
+        Update-MgPolicyTokenLifetimePolicy @currentParameters
     }
     # Policy exist but should not
     elseif ($Ensure -eq 'Absent' -and $CurrentAADPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing AzureAD Policy {$Displayname)}"
-        Remove-AzureADPolicy -ID $currentAADPolicy.ID
+        Remove-MgPolicyTokenLifetimePolicy -TokenLifetimePolicyId $currentAADPolicy.ID
     }
 }
 
@@ -241,7 +236,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $AlternativeIdentifier,
+        $Description,
 
         [Parameter()]
         [System.String[]]
@@ -250,10 +245,6 @@ function Test-TargetResource
         [Parameter()]
         [Boolean]
         $IsOrganizationDefault,
-
-        [Parameter()]
-        [System.String]
-        $Type,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]

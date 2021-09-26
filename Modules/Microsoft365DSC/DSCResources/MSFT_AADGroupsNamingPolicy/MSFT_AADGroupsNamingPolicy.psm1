@@ -206,7 +206,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         $Policy = Get-MgDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq "Group.Unified" }
-        Remove-MgDDirectorySetting -DirectorySettingId $policy.Id | Out-Null
+        Remove-MgDirectorySetting -DirectorySettingId $policy.Id | Out-Null
     }
 }
 

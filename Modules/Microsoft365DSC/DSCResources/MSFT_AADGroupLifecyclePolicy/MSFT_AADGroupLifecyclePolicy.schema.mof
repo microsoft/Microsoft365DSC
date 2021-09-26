@@ -1,5 +1,5 @@
-[ClassVersion("1.0.0.0"), FriendlyName("AADMSGroupLifecyclePolicy")]
-class MSFT_AADMSGroupLifecyclePolicy : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("AADGroupLifecyclePolicy")]
+class MSFT_AADGroupLifecyclePolicy : OMI_BaseResource
 {
     [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
     [Required, Description("The number of days a group can exist before it needs to be renewed.")] UInt32 GroupLifetimeInDays;

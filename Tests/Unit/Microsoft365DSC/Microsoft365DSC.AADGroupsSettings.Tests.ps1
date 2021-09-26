@@ -36,86 +36,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
-            Mock -CommandName Set-AzureADDirectorySetting -MockWith {
+            Mock -CommandName Update-MgDirectorySetting -MockWith {
 
             }
 
-            Mock -CommandName Remove-AzureADDirectorySetting -MockWith {
+            Mock -CommandName Remove-MgDirectorySetting -MockWith {
 
             }
 
-            Mock -CommandName New-AzureADDirectorySetting -MockWith {
+            Mock -CommandName New-MgDirectorySetting -MockWith {
 
             }
 
-            Mock -CommandName Get-AzureADDirectorySettingTemplate -MockWith {
-                $object = [PSCustomObject]::new()
-                $object | Add-Member -MemberType ScriptMethod -Name "CreateDirectorySetting" -Value {return [PSCustomObject]::new()} -PassThru
-                return $object
-            }
-
-            try
-            {
-                Add-Type -PassThru -TypeDefinition @"
-                    namespace Contoso.Model.AADGroupsSettings {
-                        public class SettingValue {
-                            public string Name {get; set;}
-                            public string Value {get; set;}
-                        }
-
-                        public class DirectorySetting {
-
-                            public System.Collections.Generic.List<SettingValue> Values {get; set;}
-                            public System.Collections.Generic.List<SettingValue> _values = new System.Collections.Generic.List<SettingValue>();
-                            public string this[string keyName]
-                            {
-                                get {
-                                    if (keyName == "UsageGuidelinesUrl")
-                                    {
-                                        return "https://contoso.com/usage";
-                                    }
-                                    else if (keyName == "AllowToAddGuests")
-                                    {
-                                        return "true";
-                                    }
-                                    else if (keyName == "GroupCreationAllowedGroupId")
-                                    {
-                                        return "12345-12345-12345-12345-12345";
-                                    }
-                                    else if (keyName == "GuestUsageGuidelinesUrl")
-                                    {
-                                        return "https://contoso.com/guestusage";
-                                    }
-                                    else if (keyName == "AllowGuestsToAccessGroups")
-                                    {
-                                        return "true";
-                                    }
-                                    else if (keyName == "AllowGuestsToBeGroupOwner")
-                                    {
-                                        return "true";
-                                    }
-                                    else if (keyName == "EnableGroupCreation")
-                                    {
-                                        return "true";
-                                    }
-                                    return "";
-                                }
-                                set {}
-                            }
-                            public string DisplayName {get {return "Group.Unified";}}
-                            public string Id {get {return "12345-12345-12345-12345-12345";}}
-
-                            public DirectorySetting (){}
-                        }
-                    }
-"@
-            }
-            catch
-            {
-                Write-Verbose -Message "Type already loaded"
-            }
-
-            Mock -CommandName "Get-AzureADGroup" -MockWith {
+            Mock -CommandName "Get-MgGroup" -MockWith {
                 return @{
                     ObjectId = "12345-12345-12345-12345-12345"
                     DisplayName = "All Company"
@@ -146,7 +79,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             BeforeEach {
-                Mock -CommandName Get-AzureADDirectorySetting -MockWith {
+                Mock -CommandName Get-MgDirectorySetting -MockWith {
                     if (-not $Script:calledOnceAlready)
                     {
                         $Script:calledOnceAlready = $true
@@ -154,14 +87,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                     else
                     {
-                        $setting = New-Object 'Contoso.Model.AADGroupsSettings.DirectorySetting'
-                        return $setting
+                        return @{
+                            DisplayName = "Group.Unified"
+                            Values = @{
+                                PrefixSuffixNamingRequirement = '[Title]Bob[Company][GroupName][Office]Nik'
+                                CustomBlockedWordsList = @("CEO", "Test")
+                            }
+                        }
                     }
                 }
             }
             It "Should return Values from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-                Should -Invoke -CommandName "Get-AzureADDirectorySetting" -Exactly 1
+                Should -Invoke -CommandName "Get-MgDirectorySetting" -Exactly 1
             }
 
             It 'Should return true from the Test method' {
@@ -169,7 +107,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $false
             }
             BeforeEach {
-                Mock -CommandName Get-AzureADDirectorySetting -MockWith {
+                Mock -CommandName Get-MgDirectorySetting -MockWith {
                     if (-not $Script:calledOnceAlready)
                     {
                         $Script:calledOnceAlready = $true
@@ -177,16 +115,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                     else
                     {
-                        $setting = New-Object 'Contoso.Model.AADGroupsSettings.DirectorySetting'
-                        return $setting
+                        return @{
+                            DisplayName = "Group.Unified"
+                            Values = @{
+                                PrefixSuffixNamingRequirement = '[Title]Bob[Company][GroupName][Office]Nik'
+                                CustomBlockedWordsList = @("CEO", "Test")
+                            }
+                        }
                     }
                 }
             }
             It 'Should create and set the settings the Set method' {
                 $Script:calledOnceAlready = $false
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-AzureADDirectorySetting" -Exactly 1
-                Should -Invoke -CommandName "Set-AzureADDirectorySetting" -Exactly 1
+                Should -Invoke -CommandName "New-MgDirectorySetting" -Exactly 1
+                Should -Invoke -CommandName "Update-MgDirectorySetting" -Exactly 1
             }
         }
 
@@ -202,15 +145,46 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADDirectorySetting -MockWith {
-                    $setting = New-Object 'Contoso.Model.AADGroupsSettings.DirectorySetting'
-                    return $setting
+                Mock -CommandName Get-MgDirectorySetting -MockWith {
+                    return @{
+                        DisplayName = "Group.Unified"
+                        Values = @(
+                            @{
+                                Name = 'GroupCreationAllowedGroupId'
+                                Value = ''
+                            },
+                            @{
+                                Name = 'EnableGroupCreation'
+                                Value = $true
+                            },
+                            @{
+                                Name = 'AllowGuestsToBeGroupOwner'
+                                Value = $false
+                            },
+                            @{
+                                Name = 'AllowGuestsToAccessGroups'
+                                Value = $false
+                            },
+                            @{
+                                Name = 'GuestUsageGuidelinesUrl'
+                                Value = ''
+                            },
+                            @{
+                                Name = 'AllowToAddGuests'
+                                Value = $false
+                            },
+                            @{
+                                Name = 'UsageGuidelinesUrl'
+                                Value = ''
+                            }
+                        )
+                    }
                 }
             }
 
             It "Should return Values from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-                Should -Invoke -CommandName "Get-AzureADDirectorySetting" -Exactly 1
+                Should -Invoke -CommandName "Get-MgDirectorySetting" -Exactly 1
             }
 
             It 'Should return true from the Test method' {
@@ -240,15 +214,53 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADDirectorySetting -MockWith {
-                    $setting = New-Object 'Contoso.Model.AADGroupsSettings.DirectorySetting'
-                    return $setting
+                Mock -CommandName Get-MgDirectorySetting -MockWith {
+                    return @{
+                        DisplayName = "Group.Unified"
+                        Values = @(
+                            @{
+                                Name = 'GroupCreationAllowedGroupId'
+                                Value = '12345-12345-12345-12345-12345'
+                            },
+                            @{
+                                Name = 'EnableGroupCreation'
+                                Value = $true
+                            },
+                            @{
+                                Name = 'AllowGuestsToBeGroupOwner'
+                                Value = $true
+                            },
+                            @{
+                                Name = 'AllowGuestsToAccessGroups'
+                                Value = $true
+                            },
+                            @{
+                                Name = 'GuestUsageGuidelinesUrl'
+                                Value = 'https://contoso.com/guestusage'
+                            },
+                            @{
+                                Name = 'AllowToAddGuests'
+                                Value = $true
+                            },
+                            @{
+                                Name = 'UsageGuidelinesUrl'
+                                Value = 'https://contoso.com/usage'
+                            }
+                        )
+                    }
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        Id = '12345-12345-12345-12345-12345'
+                        DisplayName = 'All Company'
+                    }
                 }
             }
 
             It "Should return Values from the Get method" {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-AzureADDirectorySetting" -Exactly 1
+                Should -Invoke -CommandName "Get-MgDirectorySetting" -Exactly 1
             }
 
             It 'Should return true from the Test method' {
@@ -275,15 +287,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADDirectorySetting -MockWith {
-                    $setting = New-Object 'Contoso.Model.AADGroupsSettings.DirectorySetting'
-                    return $setting
+                Mock -CommandName Get-MgDirectorySetting -MockWith {
+                    return @{
+                        DisplayName = "Group.Unified"
+                        Values = @{
+                            PrefixSuffixNamingRequirement = '[Title]Bob[Company][GroupName][Office]Nik'
+                            CustomBlockedWordsList = @("CEO", "Test")
+                        }
+                    }
                 }
             }
 
             It "Should return Values from the Get method" {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-AzureADDirectorySetting" -Exactly 1
+                Should -Invoke -CommandName "Get-MgDirectorySetting" -Exactly 1
             }
 
             It 'Should return false from the Test method' {
@@ -292,7 +309,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Set-AzureADDirectorySetting' -Exactly 1
+                Should -Invoke -CommandName 'Update-MgDirectorySetting' -Exactly 1
             }
         }
 
@@ -302,9 +319,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount
                 }
 
-                Mock -CommandName Get-AzureADDirectorySetting -MockWith {
-                    $setting = New-Object 'Contoso.Model.AADGroupsSettings.DirectorySetting'
-                    return $setting
+                Mock -CommandName Get-MgDirectorySetting -MockWith {
+                    return @{
+                        DisplayName = "Group.Unified"
+                        Values = @{
+                            PrefixSuffixNamingRequirement = '[Title]Bob[Company][GroupName][Office]Nik'
+                            CustomBlockedWordsList = @("CEO", "Test")
+                        }
+                    }
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {

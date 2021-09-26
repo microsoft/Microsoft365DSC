@@ -64,7 +64,10 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Azure AD role definition"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'beta'
+    Select-MgProfile -Name 'Beta'
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -84,7 +87,7 @@ function Get-TargetResource
         {
             if ($null -ne $Id -or $Id -ne "")
             {
-                $AADRoleDefinition = Get-MgDirectoryRoleTemplate -Id $Id
+                $AADRoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -Id $Id
             }
         }
         catch
@@ -93,7 +96,7 @@ function Get-TargetResource
         }
         if ($null -eq $AADRoleDefinition)
         {
-            $AADRoleDefinition = Get-MgDirectoryRoleTemplate -Filter "DisplayName eq '$($DisplayName)'"
+            $AADRoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($DisplayName)'"
         }
         if ($null -eq $AADRoleDefinition)
         {
@@ -226,20 +229,21 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating New AzureAD role defition {$DisplayName}"
         $currentParameters.Remove("Id") | Out-Null
-        New-MgDirectoryRoleTemplate @currentParameters
+        New-MgRoleManagementDirectoryRoleDefinition @currentParameters
     }
     # Role definition should exist and will be configured to desired state
     if ($Ensure -eq 'Present' -and $currentAADRoleDef.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing AzureAD role definition {$DisplayName}"
-        $currentParameters.Id = $currentAADRoleDef.Id
-        Update-MgDirectoryRoleTemplate @currentParameters
+        $currentParameters.Add("UnifiedRoleDefinitionId", $currentAADRoleDef.Id)
+        $currentParameters.Remove("Id") | Out-Null
+        Update-MgRoleManagementDirectoryRoleDefinition @currentParameters
     }
     # Role definition exists but should not
     elseif ($Ensure -eq 'Absent' -and $currentAADRoleDef.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing AzureAD role definition {$DisplayName}"
-        Remove-MgDirectoryRoleTemplate -Id $currentAADRoleDef.Id
+        Remove-MgRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $currentAADRoleDef.Id
     }
 }
 
@@ -384,7 +388,7 @@ function Export-TargetResource
     $i = 1
     try
     {
-        [array]$AADRoleDefinitions = Get-MgDirectoryRoleTemplate -ErrorAction Stop
+        [array]$AADRoleDefinitions = Get-MgRoleManagementDirectoryRoleDefinition -ErrorAction Stop
         if ($AADRoleDefinitions.Length -gt 0)
         {
             Write-Host "`r`n" -NoNewLine

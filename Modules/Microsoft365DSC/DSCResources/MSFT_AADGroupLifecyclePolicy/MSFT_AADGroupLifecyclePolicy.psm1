@@ -254,7 +254,7 @@ function Set-TargetResource
         }
         $emails = $emails.TrimEnd(';')
         $updateParams.AlternateNotificationEmails = $emails
-        $updateParams.Add("Id", (Get-MgGroupLifecyclePolicy).Id)
+        $updateParams.Add("GroupLifecyclePolicyId", (Get-MgGroupLifecyclePolicy).Id)
 
         Write-Verbose -Message "The Group Lifecycle Policy exists but it's not in the Desired State. Updating it."
         Update-MgGroupLifecyclePolicy @updateParams
@@ -262,7 +262,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "The Group Lifecycle Policy should NOT exist but it DOES. Removing it."
-        Remove-MgGroupLifecyclePolicy -Id (Get-MgGroupLifecyclePolicy).Id
+        Remove-MgGroupLifecyclePolicy -GroupLifecyclePolicyId (Get-MgGroupLifecyclePolicy).Id
     }
 }
 
