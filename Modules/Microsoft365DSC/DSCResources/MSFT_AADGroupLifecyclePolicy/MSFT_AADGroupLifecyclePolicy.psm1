@@ -41,10 +41,14 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
     Write-Verbose -Message "Getting configuration of AzureAD Groups Lifecycle Policy"
     #region Telemetry
@@ -64,7 +68,7 @@ function Get-TargetResource
         $nullReturn.Ensure = "Absent"
         try
         {
-            $Policy = Get-AzureADMSGroupLifecyclePolicy -ErrorAction SilentlyContinue
+            $Policy = Get-MgGroupLifecyclePolicy -ErrorAction SilentlyContinue
         }
         catch
         {
@@ -181,6 +185,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
 
@@ -195,11 +203,11 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
     try
     {
-        $policy = Get-AzureADMSGroupLifecyclePolicy -ErrorAction SilentlyContinue
+        $policy = Get-MgGroupLifecyclePolicy -ErrorAction SilentlyContinue
     }
     catch
     {
@@ -227,7 +235,7 @@ function Set-TargetResource
         }
         $emails = $emails.TrimEnd(';')
         $creationParams.AlternateNotificationEmails = $emails
-        New-AzureADMSGroupLifecyclePolicy @creationParams
+        New-MgGroupLifecyclePolicy @creationParams
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
@@ -246,15 +254,15 @@ function Set-TargetResource
         }
         $emails = $emails.TrimEnd(';')
         $updateParams.AlternateNotificationEmails = $emails
-        $updateParams.Add("Id", (Get-AzureADMSGroupLifecyclePolicy).Id)
+        $updateParams.Add("GroupLifecyclePolicyId", (Get-MgGroupLifecyclePolicy).Id)
 
         Write-Verbose -Message "The Group Lifecycle Policy exists but it's not in the Desired State. Updating it."
-        Set-AzureADMSGroupLifecyclePolicy @updateParams
+        Update-MgGroupLifecyclePolicy @updateParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "The Group Lifecycle Policy should NOT exist but it DOES. Removing it."
-        Remove-AzureADMSGroupLifecyclePolicy -Id (Get-AzureADMSGroupLifecyclePolicy).Id
+        Remove-MgGroupLifecyclePolicy -GroupLifecyclePolicyId (Get-MgGroupLifecyclePolicy).Id
     }
 }
 
@@ -298,6 +306,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
@@ -351,9 +363,13 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -389,7 +405,7 @@ function Export-TargetResource
 
         try
         {
-            $Policy = Get-AzureADMSGroupLifecyclePolicy -ErrorAction SilentlyContinue
+            $Policy = Get-MgGroupLifecyclePolicy -ErrorAction SilentlyContinue
         }
         catch
         {
@@ -430,6 +446,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

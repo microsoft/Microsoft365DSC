@@ -32,6 +32,8 @@ Configuration Master
     $Domain = $GlobalAdmin.Username.Split('@')[1]
     Node Localhost
     {
+
+#region AAD
         AADApplication DSCApp1
         {
             DisplayName                = "App1"
@@ -85,6 +87,7 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin;
             Ensure             = "Present"
         }
+#endregion
 
         EXOAcceptedDomain O365DSCDomain
         {

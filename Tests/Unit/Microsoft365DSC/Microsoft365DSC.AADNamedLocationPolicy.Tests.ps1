@@ -35,15 +35,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
-            Mock -CommandName Set-AzureADMSNamedLocationPolicy -MockWith {
+            Mock -CommandName Update-MgIdentityConditionalAccessNamedLocation -MockWith {
 
             }
 
-            Mock -CommandName Remove-AzureADMSNamedLocationPolicy -MockWith {
+            Mock -CommandName Remove-MgIdentityConditionalAccessNamedLocation -MockWith {
 
             }
 
-            Mock -CommandName New-AzureADMSNamedLocationPolicy -MockWith {
+            Mock -CommandName New-MgIdentityConditionalAccessNamedLocation -MockWith {
 
             }
 
@@ -64,21 +64,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $credsGlobalAdmin
                 }
 
-                Mock -CommandName Get-AzureADMSNamedLocationPolicy -MockWith {
+                Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
                     return $null
                 }
             }
 
             It "Should return values from the get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-                Should -Invoke -CommandName "Get-AzureADMSNamedLocationPolicy" -Exactly 2
+                Should -Invoke -CommandName "Get-MgIdentityConditionalAccessNamedLocation" -Exactly 1
             }
             It 'Should return false from the test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
             It 'Should create the Policy from the set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-AzureADMSNamedLocationPolicy" -Exactly 1
+                Should -Invoke -CommandName "New-MgIdentityConditionalAccessNamedLocation" -Exactly 1
             }
         }
         Context -Name "The Policy exists but it should not" -Fixture {
@@ -92,22 +92,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $credsGlobalAdmin
                 }
 
-                Mock -CommandName Get-AzureADMSNamedLocationPolicy -MockWith {
+                Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
                     return @{
                         DisplayName                       = "Company Network"
                         Id                                = "046956df-2367-4dd4-b7fd-c6175ec11cd5"
-                        IpRanges                          = @(@{CidrAddress = "2.1.1.1/32" }, @{CidrAddress = "1.2.2.2/32" })
-                        IsTrusted                         = $True
-                        OdataType                         = "#microsoft.graph.ipNamedLocation"
-                        CountriesAndRegions               = $null
-                        IncludeUnknownCountriesAndRegions = $null
+                        AdditionalProperties = @{
+                            ipRanges                          = @(@{cidrAddress = "2.1.1.1/32" }, @{cidrAddress = "1.2.2.2/32" })
+                            isTrusted                         = $True
+                            '@odata.type'                     = "#microsoft.graph.ipNamedLocation"
+                            countriesAndRegions               = $null
+                            includeUnknownCountriesAndRegions = $null
+                        }                        
                     }
                 }
             }
 
             It "Should return values from the get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-                Should -Invoke -CommandName "Get-AzureADMSNamedLocationPolicy" -Exactly 1
+                Should -Invoke -CommandName "Get-MgIdentityConditionalAccessNamedLocation" -Exactly 1
             }
 
             It 'Should return false from the test method' {
@@ -116,7 +118,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the app from the set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "Remove-AzureADMSNamedLocationPolicy" -Exactly 1
+                Should -Invoke -CommandName "Remove-MgIdentityConditionalAccessNamedLocation" -Exactly 1
             }
         }
 
@@ -131,22 +133,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $credsGlobalAdmin
                 }
 
-                Mock -CommandName Get-AzureADMSNamedLocationPolicy -MockWith {
+                Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
                     return @{
                         DisplayName                       = "Company Network"
                         Id                                = "046956df-2367-4dd4-b7fd-c6175ec11cd5"
-                        IpRanges                          = @(@{CidrAddress = "2.1.1.1/32" }, @{CidrAddress = "1.2.2.2/32" })
-                        IsTrusted                         = $True
-                        OdataType                         = "#microsoft.graph.ipNamedLocation"
-                        CountriesAndRegions               = $null
-                        IncludeUnknownCountriesAndRegions = $null
+                        AdditionalProperties = @{
+                            ipRanges                          = @(@{cidrAddress = "2.1.1.1/32" }, @{cidrAddress = "1.2.2.2/32" })
+                            isTrusted                         = $True
+                            '@odata.type'                     = "#microsoft.graph.ipNamedLocation"
+                            countriesAndRegions               = $null
+                            includeUnknownCountriesAndRegions = $null
+                        }                        
                     }
                 }
             }
 
             It "Should return Values from the get method" {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-AzureADMSNamedLocationPolicy" -Exactly 1
+                Should -Invoke -CommandName "Get-MgIdentityConditionalAccessNamedLocation" -Exactly 1
             }
 
             It 'Should return true from the test method' {
@@ -165,22 +169,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $credsGlobalAdmin
                 }
 
-                Mock -CommandName Get-AzureADMSNamedLocationPolicy -MockWith {
+                Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
                     return @{
                         DisplayName                       = "Company Network"
                         Id                                = "046956df-2367-4dd4-b7fd-c6175ec11cd5"
-                        IpRanges                          = @(@{CidrAddress = "1.1.1.1/32" }, @{CidrAddress = "2.2.2.2/32" })
-                        IsTrusted                         = $True
-                        OdataType                         = "#microsoft.graph.ipNamedLocation"
-                        CountriesAndRegions               = $null
-                        IncludeUnknownCountriesAndRegions = $null
+                        AdditionalProperties = @{
+                            ipRanges                          = @(@{cidrAddress = "2.1.1.1/32" }, @{cidrAddress = "1.2.2.2/32" })
+                            isTrusted                         = $False
+                            '@odata.type'                     = "#microsoft.graph.ipNamedLocation"
+                        }                        
                     }
                 }
             }
 
             It "Should return values from the get method" {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-AzureADMSNamedLocationPolicy" -Exactly 1
+                Should -Invoke -CommandName "Get-MgIdentityConditionalAccessNamedLocation" -Exactly 1
             }
 
             It 'Should return false from the test method' {
@@ -189,7 +193,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "Set-AzureADMSNamedLocationPolicy" -Exactly 1
+                Should -Invoke -CommandName "Update-MgIdentityConditionalAccessNamedLocation" -Exactly 1
             }
         }
 
@@ -199,15 +203,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount
                 }
 
-                Mock -CommandName Get-AzureADMSNamedLocationPolicy -MockWith {
+                Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
                     return @{
                         DisplayName                       = "Company Network"
                         Id                                = "046956df-2367-4dd4-b7fd-c6175ec11cd5"
-                        IpRanges                          = @(@{CidrAddress = "2.1.1.1/32" }, @{CidrAddress = "1.2.2.2/32" })
-                        IsTrusted                         = $True
-                        OdataType                         = "#microsoft.graph.ipNamedLocation"
-                        CountriesAndRegions               = $null
-                        IncludeUnknownCountriesAndRegions = $null
+                        AdditionalProperties = @{
+                            ipRanges                          = @(@{cidrAddress = "2.1.1.1/32" }, @{cidrAddress = "1.2.2.2/32" })
+                            isTrusted                         = $True
+                            '@odata.type'                     = "#microsoft.graph.ipNamedLocation"
+                            countriesAndRegions               = $null
+                            includeUnknownCountriesAndRegions = $null
+                        }                        
                     }
                 }
             }

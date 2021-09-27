@@ -35,59 +35,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
-            Mock -CommandName Set-AzureADDirectorySetting -MockWith {
+            Mock -CommandName Update-MgDirectorySetting -MockWith {
 
             }
 
-            Mock -CommandName Remove-AzureADDirectorySetting -MockWith {
+            Mock -CommandName Remove-MgDirectorySetting -MockWith {
 
             }
 
-            Mock -CommandName New-AzureADDirectorySetting -MockWith {
+            Mock -CommandName New-MGDirectorySetting -MockWith {
 
             }
-
-            Mock -CommandName Get-AzureADDirectorySettingTemplate -MockWith {
-                $object = [PSCustomObject]::new()
-                $object | Add-Member -MemberType ScriptMethod -Name "CreateDirectorySetting" -Value {return [PSCustomObject]::new()} -PassThru
-                return $object
-            }
-
-            Add-Type -PassThru -TypeDefinition @"
-                namespace Contoso.Model {
-                    public class SettingValue {
-                        public string Name {get; set;}
-                        public string Value {get; set;}
-                    }
-
-                    public class DirectorySetting {
-
-                        public System.Collections.Generic.List<SettingValue> Values {get; set;}
-                        public System.Collections.Generic.List<SettingValue> _values = new System.Collections.Generic.List<SettingValue>();
-                        public string this[string keyName]
-                        {
-                            get {
-                                if (keyName == "CustomBlockedWordsList")
-                                {
-                                    return "CEO,Test";
-                                }
-                                else if (keyName == "PrefixSuffixNamingRequirement")
-                                {
-                                    return "[Title]Bob[Company][GroupName][Office]Nik";
-                                }
-                                return "";
-                            }
-                            set {}
-                        }
-                        public string DisplayName {get {return "Group.Unified";}}
-                        public string Id {get {return "12345-12345-12345-12345-12345";}}
-
-                        public DirectorySetting (){}
-                    }
-                }
-"@
-    }
-
+        }
         # Test contexts
         Context -Name "The Policy should exist but it DOES NOT" -Fixture {
             BeforeAll {
@@ -107,12 +66,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return Values from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-                Should -Invoke -CommandName "Get-AzureADDirectorySetting" -Exactly 1
+                Should -Invoke -CommandName "Get-MgDirectorySetting" -Exactly 1
             }
 
 
             BeforeEach {
-                Mock -CommandName Get-AzureADDirectorySetting -MockWith {
+                Mock -CommandName Get-MgDirectorySetting -MockWith {
                     if (-not $Script:calledOnceAlready)
                     {
                         $Script:calledOnceAlready = $true
@@ -120,8 +79,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                     else
                     {
-                        $setting = New-Object 'Contoso.Model.DirectorySetting'
-                        return $setting
+                        Mock -CommandName Get-MgDirectorySetting -MockWith {
+                            return @{
+                                DisplayName = "Group.Unified"
+                                Values = @(
+                                    @{
+                                        Name  = 'PrefixSuffixNamingRequirement'
+                                        Value = '[Title]Bob[Company][GroupName][Office]Nik'
+                                    },
+                                    @{
+                                        Name  = 'CustomBlockedWordsList'
+                                        Value = @("CEO", "Test")
+                                    }
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -131,7 +103,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             BeforeEach {
-                Mock -CommandName Get-AzureADDirectorySetting -MockWith {
+                Mock -CommandName Get-MgDirectorySetting -MockWith {
                     if (-not $Script:calledOnceAlready)
                     {
                         $Script:calledOnceAlready = $true
@@ -139,16 +111,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                     else
                     {
-                        $setting = New-Object 'Contoso.Model.DirectorySetting'
-                        return $setting
+                        Mock -CommandName Get-MgDirectorySetting -MockWith {
+                            return @{
+                                DisplayName = "Group.Unified"
+                                Values = @(
+                                    @{
+                                        Name  = 'PrefixSuffixNamingRequirement'
+                                        Value = '[Title]Bob[Company][GroupName][Office]Nik'
+                                    },
+                                    @{
+                                        Name  = 'CustomBlockedWordsList'
+                                        Value = @("CEO", "Test")
+                                    }
+                                )
+                            }
+                        }
                     }
                 }
             }
             It 'Should Create the Policy from the Set method' {
                 $Script:calledOnceAlready = $false
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-AzureADDirectorySetting" -Exactly 1
-                Should -Invoke -CommandName "Set-AzureADDirectorySetting" -Exactly 1
+                Should -Invoke -CommandName "New-MgDirectorySetting" -Exactly 1
+                Should -Invoke -CommandName "Update-MgDirectorySetting" -Exactly 1
             }
         }
 
@@ -166,15 +151,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADDirectorySetting -MockWith {
-                    $setting = New-Object 'Contoso.Model.DirectorySetting'
-                    return $setting
+                Mock -CommandName Get-MgDirectorySetting -MockWith {
+                    return @{
+                        DisplayName = "Group.Unified"
+                        Values = @(
+                            @{
+                                Name  = 'PrefixSuffixNamingRequirement'
+                                Value = '[Title]Bob[Company][GroupName][Office]Nik'
+                            },
+                            @{
+                                Name  = 'CustomBlockedWordsList'
+                                Value = @("CEO", "Test")
+                            }
+                        )
+                    }
                 }
             }
 
             It "Should return Values from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-                Should -Invoke -CommandName "Get-AzureADDirectorySetting" -Exactly 1
+                Should -Invoke -CommandName "Get-MgDirectorySetting" -Exactly 1
             }
 
             It 'Should return true from the Test method' {
@@ -183,7 +179,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the Policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "Remove-AzureADDirectorySetting" -Exactly 1
+                Should -Invoke -CommandName "Remove-MgDirectorySetting" -Exactly 1
             }
         }
         Context -Name "The Policy Exists and Values are already in the desired state" -Fixture {
@@ -200,15 +196,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADDirectorySetting -MockWith {
-                    $setting = New-Object 'Contoso.Model.DirectorySetting'
-                    return $setting
+                Mock -CommandName Get-MgDirectorySetting -MockWith {
+                    return @{
+                        DisplayName = "Group.Unified"
+                        Values = @(
+                            @{
+                                Name  = 'PrefixSuffixNamingRequirement'
+                                Value = '[Title]Bob[Company][GroupName][Office]Nik'
+                            },
+                            @{
+                                Name  = 'CustomBlockedWordsList'
+                                Value = @("CEO", "Test")
+                            }
+                        )
+                    }
                 }
             }
 
             It "Should return Values from the Get method" {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-AzureADDirectorySetting" -Exactly 1
+                Should -Invoke -CommandName "Get-MgDirectorySetting" -Exactly 1
             }
 
             It 'Should return true from the Test method' {
@@ -230,15 +237,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADDirectorySetting -MockWith {
-                    $setting = New-Object 'Contoso.Model.DirectorySetting'
-                    return $setting
+                Mock -CommandName Get-MgDirectorySetting -MockWith {
+                    return @{
+                        DisplayName = "Group.Unified"
+                        Values = @{
+                            PrefixSuffixNamingRequirement = '[Title]Bob[Company][GroupName][Office]Nik'
+                            CustomBlockedWordsList = @("CEO", "Test")
+                        }
+                    }
                 }
             }
 
             It "Should return Values from the Get method" {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-AzureADDirectorySetting" -Exactly 1
+                Should -Invoke -CommandName "Get-MgDirectorySetting" -Exactly 1
             }
 
             It 'Should return false from the Test method' {
@@ -247,7 +259,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Set-AzureADDirectorySetting' -Exactly 1
+                Should -Invoke -CommandName 'Update-MgDirectorySetting' -Exactly 1
             }
         }
 
@@ -261,9 +273,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADDirectorySetting -MockWith {
-                    $setting = New-Object 'Contoso.Model.DirectorySetting'
-                    return $setting
+                Mock -CommandName Get-MgDirectorySetting -MockWith {
+                    return @{
+                        DisplayName = "Group.Unified"
+                        Values = @(
+                            @{
+                                Name  = 'PrefixSuffixNamingRequirement'
+                                Value = '[Title]Bob[Company][GroupName][Office]Nik'
+                            },
+                            @{
+                                Name  = 'CustomBlockedWordsList'
+                                Value = @("CEO", "Test")
+                            }
+                        )
+                    }
                 }
             }
 
