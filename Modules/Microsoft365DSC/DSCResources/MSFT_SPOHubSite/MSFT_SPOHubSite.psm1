@@ -111,7 +111,7 @@ function Get-TargetResource
                 if ($result[0].StartsWith("c") -eq $true)
                 {
                     # Group permissions
-                    $group = Get-MgGroup -UserId $result[2]
+                    $group = Get-MgGroup -GroupId $result[2]
 
                     if ($null -eq $group.EmailAddress)
                     {

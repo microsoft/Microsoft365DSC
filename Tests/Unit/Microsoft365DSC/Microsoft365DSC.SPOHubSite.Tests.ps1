@@ -352,6 +352,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Register-PnPHubSite -MockWith { }
                 Mock -CommandName Set-PnPHubSite -MockWith { }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @(
+                        @{
+                            EmailAddress = "group@contoso.onmicrosoft.com"
+                        }
+                    )
+                }
             }
 
             It "Should throw exception the Set method" {
@@ -390,6 +398,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SiteUrl              = 'https://contoso.hub.sharepoint.com'
                     }
                     return $returnVal
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @(
+                        @{
+                            EmailAddress = "group@contoso.onmicrosoft.com"
+                        }
+                    )
                 }
             }
 

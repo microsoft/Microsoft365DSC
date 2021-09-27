@@ -49,7 +49,7 @@ function Get-TargetResource
     try
     {
         $UsedID = $false
-        $AllGroups = Get-MgGroup GroupId $OwnerGroup -ErrorAction 'SilentlyContinue'
+        $AllGroups = Get-MgGroup -GroupId $OwnerGroup -ErrorAction 'SilentlyContinue'
         if ($AllGroups -eq $null)
         {
             Write-Verbose -Message "Could not get Azure AD Group {$OwnerGroup} by ID. `
