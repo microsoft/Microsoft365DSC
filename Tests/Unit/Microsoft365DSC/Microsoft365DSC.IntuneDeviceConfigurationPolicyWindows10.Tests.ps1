@@ -23,7 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -221,7 +221,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     enterpriseCloudPrintResourceIdentifier = "http://cloudenterpriseprint/cloudPrint"
                     networkProxyServer = @("address=proxy.contoso.com:8080","exceptions=*.contoso.com`r`n*.internal.local","useForLocalAddresses=false")
                     Ensure = 'Present'
-                    GlobalAdminAccount = $GlobalAdminAccount;
+                    Credential = $Credential;
                 }
 
                 Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
@@ -417,7 +417,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     enterpriseCloudPrintResourceIdentifier = "http://cloudenterpriseprint/cloudPrint"
                     networkProxyServer = @("address=proxy.contoso.com:8080","exceptions=*.contoso.com`r`n*.internal.local","useForLocalAddresses=false")
                     Ensure = 'Present'
-                    GlobalAdminAccount = $GlobalAdminAccount;
+                    Credential = $Credential;
                 }
 
                 Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
@@ -789,7 +789,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     enterpriseCloudPrintResourceIdentifier = "http://cloudenterpriseprint/cloudPrint"
                     networkProxyServer = @("address=proxy.contoso.com:8080","exceptions=*.contoso.com`r`n*.internal.local","useForLocalAddresses=false")
                     Ensure = 'Present'
-                    GlobalAdminAccount = $GlobalAdminAccount;
+                    Credential = $Credential;
                 }
 
                 Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
@@ -982,7 +982,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName        = "CONTOSO | W10 | Device Restriction";
                     Ensure             = 'Absent'
-                    GlobalAdminAccount = $GlobalAdminAccount;
+                    Credential = $Credential;
                 }
 
                 Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
@@ -1180,7 +1180,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount;
+                    Credential = $Credential;
                 }
 
                 Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {

@@ -12,7 +12,7 @@ Ensure
 - Required: No (Defaults to 'Present')
 - Description: Specifies if the configuration should exist or not
 
-GlobalAdminAccount
+Credential
 
 - Required: Yes
 - Description: Credentials of the Office 365 Global Admin
@@ -120,7 +120,7 @@ UseTranslatedNotificationText
     EXOSafeLinksPolicy SafeLinksPolicyExample {
         Ensure                   = 'Present'
         Identity                 = 'TestSafeLinksPolicy'
-        GlobalAdminAccount       = $GlobalAdminAccount
+        Credential       = $Credential
         AdminDisplayName         = 'Test SafeLinks Policy'
         DoNotAllowClickThrough   = $true
         DoNotRewriteUrls         = @('test.contoso.com', 'test.fabrikam.com')

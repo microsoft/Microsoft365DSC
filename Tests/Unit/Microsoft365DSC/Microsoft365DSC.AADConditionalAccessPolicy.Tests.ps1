@@ -23,7 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "Pass@word1)" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
@@ -61,7 +61,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExcludePlatforms           = @("Windows", "WindowsPhone", "MacOS")
                     ExcludeRoles               = @("Compliance Administrator")
                     ExcludeUsers               = "alexw@contoso.com"
-                    GlobalAdminAccount         = $Credsglobaladmin
+                    Credential                 = $Credsglobaladmin
                     GrantControlOperator       = "AND"
                     Id                         = "bcc0cf19-ee89-46f0-8e12-4b89123ee6f9"
                     IncludeApplications        = @("All")
@@ -142,7 +142,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExcludePlatforms                         = @("Windows", "WindowsPhone", "MacOS")
                     ExcludeRoles                             = @("Compliance Administrator")
                     ExcludeUsers                             = "alexw@contoso.com"
-                    GlobalAdminAccount                       = $Credsglobaladmin
+                    Credential                               = $Credsglobaladmin
                     GrantControlOperator                     = "AND"
                     Id                                       = "bcc0cf19-ee89-46f0-8e12-4b89123ee6f9"
                     IncludeApplications                      = @("All")
@@ -279,7 +279,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExcludePlatforms                         = @("Windows", "WindowsPhone", "MacOS")
                     ExcludeRoles                             = @("Compliance Administrator")
                     ExcludeUsers                             = "alexw@contoso.com"
-                    GlobalAdminAccount                       = $Credsglobaladmin
+                    Credential                               = $Credsglobaladmin
                     GrantControlOperator                     = "AND"
                     Id                                       = "bcc0cf19-ee89-46f0-8e12-4b89123ee6f9"
                     IncludeApplications                      = @("All")
@@ -411,7 +411,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExcludePlatforms                         = @("Windows", "WindowsPhone", "MacOS")
                     ExcludeRoles                             = @("Compliance Administrator")
                     ExcludeUsers                             = "alexw@contoso.com"
-                    GlobalAdminAccount                       = $Credsglobaladmin
+                    Credential                       = $Credsglobaladmin
                     GrantControlOperator                     = "AND"
                     Id                                       = "bcc0cf19-ee89-46f0-8e12-4b89123ee6f9"
                     IncludeApplications                      = @("All")
@@ -534,7 +534,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-MgIdentityConditionalAccessPolicy -MockWith {

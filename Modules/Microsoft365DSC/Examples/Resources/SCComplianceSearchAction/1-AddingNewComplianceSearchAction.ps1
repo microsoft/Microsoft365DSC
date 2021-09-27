@@ -17,7 +17,7 @@ Configuration Example
         SCComplianceSearchAction DemoPurge
         {
             Action             = "Purge";
-            GlobalAdminAccount = $credsGlobalAdmin;
+            Credential = $credsGlobalAdmin;
             PurgeType          = "SoftDelete";
             IncludeCredential  = $True;
             Ensure             = "Present";
@@ -29,7 +29,7 @@ Configuration Example
             IncludeSharePointDocumentVersions   = $False;
             Action                              = "Export";
             SearchName                          = "Demo Search";
-            GlobalAdminAccount                  = $credsGlobalAdmin;
+            Credential                  = $credsGlobalAdmin;
             FileTypeExclusionsForUnindexedItems = $null;
             IncludeCredential                   = $False;
             RetryOnError                        = $False;
@@ -42,7 +42,7 @@ Configuration Example
             IncludeSharePointDocumentVersions   = $False;
             Action                              = "Retention";
             SearchName                          = "Demo Search";
-            GlobalAdminAccount                  = $credsGlobalAdmin;
+            Credential                  = $credsGlobalAdmin;
             FileTypeExclusionsForUnindexedItems = $null;
             IncludeCredential                   = $False;
             RetryOnError                        = $False;

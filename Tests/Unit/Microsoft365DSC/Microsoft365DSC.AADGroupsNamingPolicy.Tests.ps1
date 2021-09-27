@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
 
@@ -56,7 +56,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrefixSuffixNamingRequirement = "[Title]Bob[Company][GroupName][Office]Nik"
                     CustomBlockedWordsList        = @("CEO", "Test")
                     Ensure                        = "Present"
-                    GlobalAdminAccount            = $GlobalAdminAccount;
+                    Credential            = $Credential;
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -144,7 +144,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrefixSuffixNamingRequirement = "[Title]Bob[Company][GroupName][Office]Nik"
                     CustomBlockedWordsList        = @("CEO", "Test")
                     Ensure                        = "Absent"
-                    GlobalAdminAccount            = $GlobalAdminAccount;
+                    Credential            = $Credential;
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -189,7 +189,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrefixSuffixNamingRequirement = "[Title]Bob[Company][GroupName][Office]Nik"
                     CustomBlockedWordsList        = @("CEO", "Test")
                     Ensure                        = "Present"
-                    GlobalAdminAccount            = $GlobalAdminAccount;
+                    Credential            = $Credential;
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -230,7 +230,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrefixSuffixNamingRequirement = "[GroupName]Drift" #Drift
                     CustomBlockedWordsList        = @("CEO", "Test")
                     Ensure                        = "Present"
-                    GlobalAdminAccount            = $GlobalAdminAccount;
+                    Credential            = $Credential;
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -266,7 +266,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {

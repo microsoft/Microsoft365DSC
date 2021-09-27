@@ -22,7 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -62,7 +62,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Ensure                        = 'Present'
-                    GlobalAdminAccount            = $GlobalAdminAccount
+                    Credential            = $Credential
                     Identity                      = 'TestOutboundConnector'
                     CloudServicesMailEnabled      = $false
                     Comment                       = 'Test outbound connector'
@@ -104,7 +104,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Ensure                        = 'Present'
-                    GlobalAdminAccount            = $GlobalAdminAccount
+                    Credential            = $Credential
                     Identity                      = 'TestOutboundConnector'
                     CloudServicesMailEnabled      = $false
                     Comment                       = 'Test outbound connector'
@@ -153,7 +153,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Ensure                        = 'Present'
-                    GlobalAdminAccount            = $GlobalAdminAccount
+                    Credential            = $Credential
                     Identity                      = 'TestOutboundConnector'
                     CloudServicesMailEnabled      = $false
                     Comment                       = 'Test outbound connector'
@@ -211,7 +211,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Ensure             = 'Absent'
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Identity           = 'TestOutboundConnector'
                 }
 
@@ -241,7 +241,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Ensure                        = 'Present'
-                    GlobalAdminAccount            = $GlobalAdminAccount
+                    Credential            = $Credential
                     Identity                      = 'TestOutboundConnector'
                     CloudServicesMailEnabled      = $false
                     Comment                       = 'Test outbound connector'
@@ -293,7 +293,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
             }
 

@@ -51,7 +51,7 @@ class MSFT_EXOHostedContentFilterPolicy : OMI_BaseResource
     [Write, Description("The PhishZapEnabled parameter enables or disables zero-hour auto purge (ZAP) to detect phishing messages in delivered messages in Exchange Online mailboxes.")] Boolean PhishZapEnabled;
     [Write, Description("The SpamZapEnabled parameter enables or disables zero-hour auto purge (ZAP) to detect spam in delivered messages in Exchange Online mailboxes.")] Boolean SpamZapEnabled;
     [Write, Description("Specify if this policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;

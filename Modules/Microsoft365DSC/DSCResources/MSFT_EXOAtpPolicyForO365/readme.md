@@ -18,7 +18,7 @@ IsSingleInstance
 - Required: Yes
 - Description: Single instance resource, the value must be 'Yes'
 
-GlobalAdminAccount
+Credential
 
 - Required: Yes
 - Description: Credentials of the Office 365 Global Admin
@@ -84,7 +84,7 @@ TrackClicks
             IsSingleInstance                = 'Yes'
             Ensure                          = 'Present'
             Identity                        = 'Default'
-            GlobalAdminAccount              = $GlobalAdminAccount
+            Credential                      = $Credential
             AllowClickThrough               = $true
             AllowSafeDocsOpen               = $true
             BlockUrls                       = @('test1.badurl.com','test2.badurl.com')

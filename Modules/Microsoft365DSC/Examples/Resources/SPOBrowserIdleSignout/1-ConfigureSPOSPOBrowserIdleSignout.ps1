@@ -17,7 +17,7 @@ Configuration Example
         SPOBrowserIdleSignout MyTenant
         {
             Enabled            = $True;
-            GlobalAdminAccount = $Credsglobaladmin;
+            Credential = $Credsglobaladmin;
             IsSingleInstance   = "Yes";
             SignOutAfter       = "04:00:00";
             WarnAfter          = "03:30:00";

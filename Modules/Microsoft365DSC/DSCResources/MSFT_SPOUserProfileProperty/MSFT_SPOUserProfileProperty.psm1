@@ -18,7 +18,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -46,7 +46,7 @@ function Get-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -75,7 +75,7 @@ function Get-TargetResource
         $result = @{
             UserName              = $UserName
             Properties            = $propertiesValue
-            GlobalAdminAccount    = $GlobalAdminAccount
+            Credential    = $Credential
             Ensure                = "Present"
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -97,9 +97,9 @@ function Get-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -131,7 +131,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -157,7 +157,7 @@ function Set-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -203,7 +203,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -226,7 +226,7 @@ function Test-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -258,7 +258,7 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -279,7 +279,7 @@ function Export-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
 
         #region Telemetry
@@ -287,7 +287,7 @@ function Export-TargetResource
         $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
         $data.Add("Resource", $ResourceName)
         $data.Add("Method", $MyInvocation.MyCommand)
-        $data.Add("Principal", $GlobalAdminAccount.UserName)
+        $data.Add("Principal", $Credential.UserName)
         $data.Add("TenantId", $TenantId)
         $data.Add("ConnectionMode", $ConnectionMode)
         Add-M365DSCTelemetryEvent -Data $data
@@ -296,7 +296,7 @@ function Export-TargetResource
         $result = ""
 
         # Get all instances;
-        $instances = Get-AzureADUser
+        $instances = Get-MgUser -All:$true
 
         # Split the complete list of instances into batches;
         if ($instances.Length -ge $MaxProcesses)
@@ -327,7 +327,7 @@ function Export-TargetResource
 
                     [Parameter()]
                     [System.Management.Automation.PSCredential]
-                    $GlobalAdminAccount,
+                    $Credential,
 
                     [Parameter()]
                     [System.String]
@@ -369,7 +369,7 @@ function Export-TargetResource
                                 TenantId              = $TenantId
                                 ApplicationSecret     = $ApplicationSecret
                                 CertificateThumbprint = $CertificateThumbprint
-                                GlobalAdminAccount    = $GlobalAdminAccount
+                                Credential    = $Credential
                             }
                             $CurrentModulePath = $params.ScriptRoot + "\MSFT_SPOUserProfileProperty.psm1"
                             Import-Module $CurrentModulePath -Force | Out-Null
@@ -388,7 +388,7 @@ function Export-TargetResource
                                     -ConnectionMode $ConnectionMode `
                                     -ModulePath $PSScriptRoot `
                                     -Results $Results `
-                                    -GlobalAdminAccount $GlobalAdminAccount
+                                    -Credential $Credential
                                 $dscContent += $currentDSCBlock
                                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                                     -FileName $Global:PartialExportFileName
@@ -399,7 +399,7 @@ function Export-TargetResource
                     return $dscContent
                 }
                 return $returnValue
-            } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount, $ApplicationId, $TenantId, $ApplicationSecret, $CertificateThumbprint) | Out-Null
+            } -ArgumentList @($batch, $PSScriptRoot, $Credential, $ApplicationId, $TenantId, $ApplicationSecret, $CertificateThumbprint) | Out-Null
             $i++
         }
 
@@ -438,7 +438,7 @@ function Export-TargetResource
         Write-Progress -Activity "SPOUserProfileProperty Extraction" -PercentComplete 100 -Status "Completed" -Completed
         $organization = ""
         $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-        $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
+        $organization = Get-M365DSCOrganization -Credential $Credential -TenantId $Tenantid
         if ($organization.IndexOf(".") -gt 0)
         {
             $principal = $organization.Split(".")[0]
@@ -463,9 +463,9 @@ function Export-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `

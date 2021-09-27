@@ -32,7 +32,7 @@ Configuration Example
             DeviceThreatProtectionRequiredSecurityLevel = 'medium'
             ManagedEmailProfileRequired                 = $True
             Ensure                                      = 'Present'
-            GlobalAdminAccount                          = $GlobalAdminAccount
+            Credential                          = $Credential
 
         }
     }

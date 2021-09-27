@@ -20,7 +20,7 @@ Configuration Example
             Key                = "MyKey"
             Value              = "MyValue"
             Ensure             = "Present"
-            GlobalAdminAccount = $credsGlobalAdmin
+            Credential = $credsGlobalAdmin
         }
     }
 }

@@ -23,5 +23,5 @@ class MSFT_SCComplianceTag : OMI_BaseResource
     [Write, Description("The RetentionDuration parameter specifies the hold duration for the retention rule. Valid values are: An integer - The hold duration in days, Unlimited - The content is held indefinitely.")] String RetentionDuration;
     [Write, Description("The RetentionAction parameter specifies the action for the label. Valid values are: Delete, Keep or KeepAndDelete."), ValueMap{"Delete","Keep","KeepAndDelete"}, Values{"Delete","Keep","KeepAndDelete"}] String RetentionAction;
     [Write, Description("The RetentionType parameter specifies whether the retention duration is calculated from the content creation date, tagged date, or last modification date. Valid values are: CreationAgeInDays, EventAgeInDays,ModificationAgeInDays, or TaggedAgeInDays."), ValueMap{"CreationAgeInDays","EventAgeInDays","ModificationAgeInDays","TaggedAgeInDays"}, Values{"CreationAgeInDays","EventAgeInDays","ModificationAgeInDays","TaggedAgeInDays"}] String RetentionType;
-    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
 };

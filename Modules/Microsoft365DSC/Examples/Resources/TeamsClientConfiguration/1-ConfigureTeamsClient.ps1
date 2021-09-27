@@ -27,7 +27,7 @@ Configuration Example
             AllowShareFile                   = $True;
             AllowSkypeBusinessInterop        = $True;
             ContentPin                       = "RequiredOutsideScheduleMeeting";
-            GlobalAdminAccount               = $credsGlobalAdmin;
+            Credential               = $credsGlobalAdmin;
             Identity                         = "Global";
             ResourceAccountContentAccess     = "NoAccess";
         }

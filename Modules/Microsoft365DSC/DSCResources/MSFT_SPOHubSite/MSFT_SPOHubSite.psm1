@@ -39,7 +39,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -75,7 +75,7 @@ function Get-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -102,7 +102,7 @@ function Get-TargetResource
         else
         {
             $hubSite = Get-PnPHubSite -Identity $Url
-            $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
             $principals = @()
             foreach ($permission in $hubSite.Permissions.PrincipalName)
@@ -111,7 +111,7 @@ function Get-TargetResource
                 if ($result[0].StartsWith("c") -eq $true)
                 {
                     # Group permissions
-                    $group = Get-AzureADGroup -ObjectId $result[2]
+                    $group = Get-MgGroup -GroupId $result[2]
 
                     if ($null -eq $group.EmailAddress)
                     {
@@ -148,7 +148,7 @@ function Get-TargetResource
                 AllowedToJoin         = $principals
                 SiteDesignId          = $hubSite.SiteDesignId
                 Ensure                = "Present"
-                GlobalAdminAccount    = $GlobalAdminAccount
+                Credential    = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
@@ -167,9 +167,9 @@ function Get-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -223,7 +223,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -256,7 +256,7 @@ function Set-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -264,7 +264,7 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     try
@@ -323,7 +323,7 @@ function Set-TargetResource
 
         if ($PSBoundParameters.ContainsKey("AllowedToJoin") -eq $true)
         {
-            $groups = Get-AzureADGroup
+            $groups = Get-MgGroup -All:$true
             $regex = "^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
 
             Write-Verbose -Message "Validating AllowedToJoin principals"
@@ -402,7 +402,7 @@ function Set-TargetResource
 
             if ($null -ne $differences)
             {
-                $groups = Get-AzureADGroup
+                $groups = Get-MgGroup -All:$true
                 $regex = "^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
 
                 Write-Verbose -Message "Updating Hub Site permissions"
@@ -487,7 +487,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -518,7 +518,7 @@ function Test-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -555,7 +555,7 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -592,7 +592,7 @@ function Export-TargetResource
         $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
         $data.Add("Resource", $ResourceName)
         $data.Add("Method", $MyInvocation.MyCommand)
-        $data.Add("Principal", $GlobalAdminAccount.UserName)
+        $data.Add("Principal", $Credential.UserName)
         $data.Add("TenantId", $TenantId)
         $data.Add("ConnectionMode", $ConnectionMode)
         Add-M365DSCTelemetryEvent -Data $data
@@ -611,9 +611,9 @@ function Export-TargetResource
         }
 
         $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-        if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
+        if ($null -ne $Credential -and $Credential.UserName.Contains("@"))
         {
-            $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+            $organization = $Credential.UserName.Split("@")[1]
 
             if ($organization.IndexOf(".") -gt 0)
             {
@@ -636,7 +636,7 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
-                GlobalAdminAccount    = $GlobalAdminAccount
+                Credential    = $Credential
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 ApplicationSecret     = $ApplicationSecret
@@ -649,7 +649,7 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
+                -Credential $Credential
 
             # Make the Url parameterized
             if ($currentDSCBlock.ToLower().Contains($organization.ToLower()) -or `
@@ -677,9 +677,9 @@ function Export-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `

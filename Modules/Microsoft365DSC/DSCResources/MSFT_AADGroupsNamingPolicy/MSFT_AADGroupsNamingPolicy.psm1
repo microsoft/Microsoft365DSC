@@ -24,7 +24,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -78,7 +78,7 @@ function Get-TargetResource
                 PrefixSuffixNamingRequirement = $valuePrefix.Value
                 CustomBlockedWordsList        = $valueBlockedWords.Value.Split(',')
                 Ensure                        = "Present"
-                GlobalAdminAccount            = $GlobalAdminAccount
+                Credential                    = $Credential
                 ApplicationId                 = $ApplicationId
                 TenantId                      = $TenantId
                 ApplicationSecret             = $ApplicationSecret
@@ -136,7 +136,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -236,7 +236,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -293,7 +293,7 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -322,7 +322,7 @@ function Export-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -337,7 +337,7 @@ function Export-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             IsSingleInstance      = 'Yes'
             ApplicationSecret     = $ApplicationSecret
-            GlobalAdminAccount    = $GlobalAdminAccount
+            Credential            = $Credential
         }
 
         $Results = Get-TargetResource @Params
@@ -350,12 +350,15 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
+                -Credential $Credential
             $dscContent += $currentDSCBlock
         }
 
-        Save-M365DSCPartialExport -Content $currentDSCBlock `
-            -FileName $Global:PartialExportFileName
+        if ($currentDSCBlock)
+        {
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+        }
 
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         return $dscContent
@@ -371,9 +374,9 @@ function Export-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `

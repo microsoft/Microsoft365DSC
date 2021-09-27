@@ -21,7 +21,7 @@ Configuration Example
             AllowToAddGuests              = $True;
             EnableGroupCreation           = $True;
             Ensure                        = "Present";
-            GlobalAdminAccount            = $credsGlobalAdmin;
+            Credential            = $credsGlobalAdmin;
             GroupCreationAllowedGroupName = "All Company";
             GuestUsageGuidelinesUrl       = "https://contoso.com/guestusage";
             IsSingleInstance              = "Yes";

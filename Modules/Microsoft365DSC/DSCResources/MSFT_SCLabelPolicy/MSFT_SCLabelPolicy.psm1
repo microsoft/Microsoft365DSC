@@ -83,7 +83,7 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
 
     Write-Verbose -Message "Getting configuration of Sensitivity Label Policy for $Name"
@@ -104,7 +104,7 @@ function Get-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -140,7 +140,7 @@ function Get-TargetResource
                 Name                         = $policy.Name
                 Comment                      = $policy.Comment
                 AdvancedSettings             = $advancedSettingsValue
-                GlobalAdminAccount           = $GlobalAdminAccount
+                Credential           = $Credential
                 Ensure                       = 'Present'
                 Labels                       = $policy.Labels
                 ExchangeLocation             = Convert-ArrayList -CurrentProperty $policy.ExchangeLocation
@@ -163,9 +163,9 @@ function Get-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -263,7 +263,7 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
 
     Write-Verbose -Message "Setting configuration of Sensitivity label policy for $Name"
@@ -272,7 +272,7 @@ function Set-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -291,7 +291,7 @@ function Set-TargetResource
             $CreationParams["AdvancedSettings"] = $advanced
         }
         #Remove parameters not used in New-LabelPolicy
-        $CreationParams.Remove("GlobalAdminAccount") | Out-Null
+        $CreationParams.Remove("Credential") | Out-Null
         $CreationParams.Remove("Ensure") | Out-Null
         $CreationParams.Remove("AddLabels") | Out-Null
         $CreationParams.Remove("AddExchangeLocation") | Out-Null
@@ -311,7 +311,7 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Warning "New-LabelPolicy is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
+            Write-Warning "New-LabelPolicy is not available in tenant $($Credential.UserName.Split('@')[0])"
         }
         try
         {
@@ -324,7 +324,7 @@ function Set-TargetResource
                 $SetParams["AdvancedSettings"] = $advanced
             }
             #Remove unused parameters for Set-Label cmdlet
-            $SetParams.Remove("GlobalAdminAccount") | Out-Null
+            $SetParams.Remove("Credential") | Out-Null
             $SetParams.Remove("Ensure") | Out-Null
             $SetParams.Remove("Name") | Out-Null
             $SetParams.Remove("ExchangeLocationException") | Out-Null
@@ -337,7 +337,7 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Warning "Set-LabelPolicy is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
+            Write-Warning "Set-LabelPolicy is not available in tenant $($Credential.UserName.Split('@')[0])"
         }
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
@@ -350,7 +350,7 @@ function Set-TargetResource
             $SetParams["AdvancedSettings"] = $advanced
         }
         #Remove unused parameters for Set-Label cmdlet
-        $SetParams.Remove("GlobalAdminAccount") | Out-Null
+        $SetParams.Remove("Credential") | Out-Null
         $SetParams.Remove("Ensure") | Out-Null
         $SetParams.Remove("Name") | Out-Null
         $SetParams.Remove("ExchangeLocationException") | Out-Null
@@ -365,7 +365,7 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Warning "Set-LabelPolicy is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
+            Write-Warning "Set-LabelPolicy is not available in tenant $($Credential.UserName.Split('@')[0])"
         }
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
@@ -379,7 +379,7 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Warning "Remove-LabelPolicy is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
+            Write-Warning "Remove-LabelPolicy is not available in tenant $($Credential.UserName.Split('@')[0])"
         }
     }
 }
@@ -468,14 +468,14 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -484,7 +484,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove("AddLabels") | Out-Null
     $ValuesToCheck.Remove("AddExchangeLocation") | Out-Null
     $ValuesToCheck.Remove("AddExchangeLocationException") | Out-Null
@@ -611,7 +611,7 @@ function Export-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters `
@@ -622,7 +622,7 @@ function Export-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -648,7 +648,7 @@ function Export-TargetResource
 
             $Params = @{
                 Name               = $policy.Name
-                GlobalAdminAccount = $GlobalAdminAccount
+                Credential = $Credential
             }
             $Results = Get-TargetResource @Params
 
@@ -663,7 +663,7 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
+                -Credential $Credential
             if ($null -ne $Results.AdvancedSettings)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AdvancedSettings"
@@ -687,9 +687,9 @@ function Export-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `

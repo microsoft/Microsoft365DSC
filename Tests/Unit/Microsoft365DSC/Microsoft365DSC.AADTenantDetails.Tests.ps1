@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.onmicrosoft.com", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.onmicrosoft.com", $secpasswd)
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
 
@@ -52,7 +52,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SecurityComplianceNotificationPhones   = "+1123456789"
                     SecurityComplianceNotificationMails    = "exapmle@contoso.com"
                     MarketingNotificationEmails            = "exapmle@contoso.com"
-                    GlobalAdminAccount                     = $GlobalAdminAccount
+                    Credential                     = $Credential
                     IsSingleInstance                       = 'Yes'
                 }
 
@@ -78,7 +78,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     TechnicalNotificationMails             = "exapmle@contoso.com"
                     SecurityComplianceNotificationPhones   = "+1123456789"
                     SecurityComplianceNotificationMails    = "exapmle@contoso.com"
-                    GlobalAdminAccount                     = $GlobalAdminAccount
+                    Credential                     = $Credential
                     IsSingleInstance                       = 'Yes'
                 }
 
@@ -104,7 +104,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SecurityComplianceNotificationPhones   = "+1123456789"
                     SecurityComplianceNotificationMails    = "exapmle@contoso.com"
                     MarketingNotificationEmails            = "exapmle@contoso.com"
-                    GlobalAdminAccount                     = $GlobalAdminAccount
+                    Credential                     = $Credential
                     IsSingleInstance                       = 'Yes'
                 }
 
@@ -135,7 +135,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SecurityComplianceNotificationPhones   = "+1123456789"
                     SecurityComplianceNotificationMails    = "exapmle@contoso.com"
                     MarketingNotificationEmails            = "NOTexapmle@contoso.com" #Drift
-                    GlobalAdminAccount                     = $GlobalAdminAccount
+                    Credential                     = $Credential
                     IsSingleInstance                       = 'Yes'
                 }
 
@@ -168,7 +168,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-MgOrganization -MockWith {

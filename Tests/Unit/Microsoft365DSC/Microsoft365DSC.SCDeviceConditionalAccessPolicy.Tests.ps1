@@ -22,7 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
@@ -67,7 +67,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name               = 'TestPolicy'
                     Comment            = 'This is a test comment'
                     Ensure             = 'Present'
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-DeviceConditionalAccessPolicy -MockWith {
@@ -98,7 +98,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name               = 'TestPolicy'
                     Comment            = 'This is a test comment'
                     Ensure             = 'Present'
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-DeviceConditionalAccessPolicy -MockWith {
@@ -124,7 +124,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name               = 'TestPolicy'
                     Comment            = 'This is a test comment'
                     Ensure             = 'Present'
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-DeviceConditionalAccessPolicy -MockWith {
@@ -155,7 +155,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name               = 'TestPolicy'
                     Comment            = 'This is a test comment'
                     Ensure             = 'Absent'
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-DeviceConditionalAccessPolicy -MockWith {
@@ -186,7 +186,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-DeviceConditionalAccessPolicy -MockWith {

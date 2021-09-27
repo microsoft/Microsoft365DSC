@@ -35,7 +35,7 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
 
     switch(authenticationType) {
       case AuthenticationType.Credentials :
-        parameters.push({ name: 'GlobalAdminAccount', value: '$Credentials'});
+        parameters.push({ name: 'Credential', value: '$Credentials'});
         break;
       case AuthenticationType.Application :
         parameters.push({ name: 'ApplicationId', value: '$ApplicationId'});

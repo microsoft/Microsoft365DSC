@@ -22,7 +22,7 @@ Configuration Example
             ConditionalStateOrProvince = "US"
             IncludedRecipients         = "AllRecipients"
             Ensure                     = "Present"
-            GlobalAdminAccount         = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
         }
     }
 }

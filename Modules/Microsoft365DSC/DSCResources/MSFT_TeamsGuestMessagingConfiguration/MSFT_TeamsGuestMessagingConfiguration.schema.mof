@@ -10,6 +10,6 @@ class MSFT_TeamsGuestMessagingConfiguration : OMI_BaseResource
     [Write, Description("Determines if stickers are available for use.")] Boolean AllowStickers;
     [Write, Description("Determines if Giphy are available for use.")] Boolean AllowGiphy;
     [Write, Description("Determines if Immersive Reader is enabled.")] Boolean AllowImmersiveReader;
-    [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+    [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
 };
 

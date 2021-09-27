@@ -323,7 +323,7 @@ function Get-SPOAdministrationUrl
     param(
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
 }
 
@@ -511,7 +511,7 @@ function Get-AllSPOPackages
     param(
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]

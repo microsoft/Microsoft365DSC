@@ -17,7 +17,7 @@ Configuration Example
         AADGroupsNamingPolicy GroupsNamingPolicy
         {
             CustomBlockedWordsList        = @("CEO", "President");
-            GlobalAdminAccount            = $credsGlobalAdmin;
+            Credential            = $credsGlobalAdmin;
             IsSingleInstance              = "Yes";
             PrefixSuffixNamingRequirement = "[Title]Test[Company][GroupName][Office]Redmond";
             Ensure                        = "Present";

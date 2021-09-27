@@ -22,7 +22,7 @@ Configuration Example
             IsTrusted          = $True;
             OdataType          = "#microsoft.graph.ipNamedLocation";
             TenantId           = $ConfigurationData.NonNodeData.TenantId;
-            GlobalAdminAccount = $credsGlobalAdmin;
+            Credential = $credsGlobalAdmin;
         }
         AADNamedLocationPolicy AllowedCountries
         {
@@ -32,7 +32,7 @@ Configuration Example
             IncludeUnknownCountriesAndRegions = $False;
             OdataType                         = "#microsoft.graph.countryNamedLocation";
             TenantId                          = $ConfigurationData.NonNodeData.TenantId;
-            GlobalAdminAccount                = $credsGlobalAdmin;
+            Credential                = $credsGlobalAdmin;
         }
     }
 }

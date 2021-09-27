@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
 
@@ -61,7 +61,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IpRanges           = @("2.1.1.1/32", "1.2.2.2/32")
                     IsTrusted          = $True
                     OdataType          = "#microsoft.graph.ipNamedLocation"
-                    GlobalAdminAccount = $credsGlobalAdmin
+                    Credential = $credsGlobalAdmin
                 }
 
                 Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
@@ -89,7 +89,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IpRanges           = @("2.1.1.1/32", "1.2.2.2/32")
                     IsTrusted          = $True
                     OdataType          = "#microsoft.graph.ipNamedLocation"
-                    GlobalAdminAccount = $credsGlobalAdmin
+                    Credential = $credsGlobalAdmin
                 }
 
                 Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
@@ -102,7 +102,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             '@odata.type'                     = "#microsoft.graph.ipNamedLocation"
                             countriesAndRegions               = $null
                             includeUnknownCountriesAndRegions = $null
-                        }                        
+                        }
                     }
                 }
             }
@@ -130,7 +130,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IpRanges           = @("2.1.1.1/32", "1.2.2.2/32")
                     IsTrusted          = $True
                     OdataType          = "#microsoft.graph.ipNamedLocation"
-                    GlobalAdminAccount = $credsGlobalAdmin
+                    Credential = $credsGlobalAdmin
                 }
 
                 Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
@@ -143,7 +143,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             '@odata.type'                     = "#microsoft.graph.ipNamedLocation"
                             countriesAndRegions               = $null
                             includeUnknownCountriesAndRegions = $null
-                        }                        
+                        }
                     }
                 }
             }
@@ -166,7 +166,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IpRanges           = @("2.1.1.1/32", "1.2.2.2/32")
                     IsTrusted          = $True
                     OdataType          = "#microsoft.graph.ipNamedLocation"
-                    GlobalAdminAccount = $credsGlobalAdmin
+                    Credential = $credsGlobalAdmin
                 }
 
                 Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
@@ -177,7 +177,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             ipRanges                          = @(@{cidrAddress = "2.1.1.1/32" }, @{cidrAddress = "1.2.2.2/32" })
                             isTrusted                         = $False
                             '@odata.type'                     = "#microsoft.graph.ipNamedLocation"
-                        }                        
+                        }
                     }
                 }
             }
@@ -200,7 +200,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
@@ -213,7 +213,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             '@odata.type'                     = "#microsoft.graph.ipNamedLocation"
                             countriesAndRegions               = $null
                             includeUnknownCountriesAndRegions = $null
-                        }                        
+                        }
                     }
                 }
             }

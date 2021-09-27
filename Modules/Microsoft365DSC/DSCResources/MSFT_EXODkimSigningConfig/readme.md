@@ -13,7 +13,7 @@ Ensure
 - Description: Specifies whether the configured Dkim Signing Config
   should be Present or Absent.
 
-GlobalAdminAccount
+Credential
 
 - Required: Yes
 - Description: Credentials of the Office 365 Global Admin
@@ -74,7 +74,7 @@ KeySize
         EXODkimSigningConfig DkimSigningConfigExample {
                 Ensure                 = 'Present'
                 Identity               = 'contoso.com'
-                GlobalAdminAccount     = $GlobalAdminAccount
+                Credential             = $Credential
                 AdminDisplayName       = 'contoso.com DKIM Config'
                 BodyCanonicalization   = 'Relaxed'
                 Enabled                = $false

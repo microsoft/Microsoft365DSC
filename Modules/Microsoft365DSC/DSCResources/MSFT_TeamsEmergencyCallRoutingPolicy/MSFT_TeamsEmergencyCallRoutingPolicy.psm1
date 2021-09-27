@@ -27,7 +27,7 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
 
     Write-Verbose -Message "Getting the Teams Emergency Call Routing Policy $Identity"
@@ -40,7 +40,7 @@ function Get-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -65,7 +65,7 @@ function Get-TargetResource
             Description                    = $policy.Description
             AllowEnhancedEmergencyServices = $policy.AllowEnhancedEmergencyServices
             Ensure                         = "Present"
-            GlobalAdminAccount             = $GlobalAdminAccount
+            Credential             = $Credential
         }
 
         if ($policy.EmergencyNumbers.Count -gt 0)
@@ -85,9 +85,9 @@ function Get-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -129,7 +129,7 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
 
     Write-Verbose -Message "Setting Teams Emergency Call Routing Policy {$Identity}"
@@ -138,7 +138,7 @@ function Set-TargetResource
     $inputValues = @()
     foreach ($item in $PSBoundParameters.Keys)
     {
-        if (-not [System.String]::IsNullOrEmpty($PSBoundParameters.$item) -and $item -ne 'GlobalAdminAccount' `
+        if (-not [System.String]::IsNullOrEmpty($PSBoundParameters.$item) -and $item -ne 'Credential' `
                 -and $item -ne 'Identity' -and $item -ne 'Ensure')
         {
             $inputValues += $item
@@ -156,7 +156,7 @@ function Set-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -167,7 +167,7 @@ function Set-TargetResource
 
     $SetParameters = $PSBoundParameters
     $SetParameters.Remove("Ensure") | Out-Null
-    $SetParameters.Remove("GlobalAdminAccount") | Out-Null
+    $SetParameters.Remove("Credential") | Out-Null
 
     if ($PSBoundParameters.ContainsKey("EmergencyNumbers"))
     {
@@ -243,14 +243,14 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -270,7 +270,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $DesiredValues)"
 
     $ValuesToCheck = $DesiredValues
-    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('Credential') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -290,7 +290,7 @@ function Export-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -300,7 +300,7 @@ function Export-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -317,10 +317,11 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewline
             $params = @{
                 Identity           = $policy.Identity
-                GlobalAdminAccount = $GlobalAdminAccount
+                Credential = $Credential
             }
             $result = Get-TargetResource @params
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $result = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Result
             $currentDSCBlock = "        TeamsEmergencyCallRoutingPolicy " + (New-Guid).ToString() + "`r`n"
             $currentDSCBlock += "        {`r`n"
 
@@ -336,7 +337,7 @@ function Export-TargetResource
                 $content = Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "EmergencyNumbers"
             }
 
-            $currentDSCBlock += Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "GlobalAdminAccount"
+            $currentDSCBlock += Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "Credential"
             $currentDSCBlock += "        }`r`n"
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -357,9 +358,9 @@ function Export-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `

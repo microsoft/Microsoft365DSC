@@ -35,7 +35,7 @@ Configuration Example
             FirewallBlockAllIncoming                    = $False;
             FirewallEnableStealthMode                   = $False;
             Ensure                                      = 'Present';
-            GlobalAdminAccount                          = $GlobalAdminAccount;
+            Credential                          = $Credential;
         }
     }
 }

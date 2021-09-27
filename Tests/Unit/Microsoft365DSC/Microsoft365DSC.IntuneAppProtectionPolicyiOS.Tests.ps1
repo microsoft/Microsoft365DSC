@@ -23,7 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -70,7 +70,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                                  = "Present"
                     ExcludedGroups                          = @("3eacc231-d77b-4efb-bb5f-310f68bd6198");
                     FingerprintBlocked                      = $False;
-                    GlobalAdminAccount                      = $GlobalAdminAccount;
+                    Credential                      = $Credential;
                     ManagedBrowserToOpenLinksRequired       = $True;
                     MaximumPinRetries                       = 5;
                     MinimumPinLength                        = 4;
@@ -135,7 +135,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                                  = "Present"
                     ExcludedGroups                          = @("3eacc231-d77b-4efb-bb5f-310f68bd6198");
                     FingerprintBlocked                      = $False;
-                    GlobalAdminAccount                      = $GlobalAdminAccount;
+                    Credential                      = $Credential;
                     ManagedBrowserToOpenLinksRequired       = $False; #Drift
                     MaximumPinRetries                       = 5;
                     MinimumPinLength                        = 4;
@@ -258,7 +258,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                                  = "Present"
                     ExcludedGroups                          = @("3eacc231-d77b-4efb-bb5f-310f68bd6198");
                     FingerprintBlocked                      = $False;
-                    GlobalAdminAccount                      = $GLobalAdminAccount;
+                    Credential                      = $Credential;
                     ManagedBrowserToOpenLinksRequired       = $True;
                     MaximumPinRetries                       = 5;
                     MinimumPinLength                        = 4;
@@ -372,7 +372,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                                  = "Absent"
                     ExcludedGroups                          = @("3eacc231-d77b-4efb-bb5f-310f68bd6198");
                     FingerprintBlocked                      = $False;
-                    GlobalAdminAccount                      = $GLobalAdminAccount;
+                    Credential                      = $Credential;
                     ManagedBrowserToOpenLinksRequired       = $True;
                     MaximumPinRetries                       = 5;
                     MinimumPinLength                        = 4;
@@ -480,7 +480,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount;
+                    Credential = $Credential;
                 }
 
                 Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtection -MockWith {

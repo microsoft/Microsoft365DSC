@@ -243,7 +243,7 @@ Surface Hubs that run Windows 10 Team OS do not support the Microsoft Defender f
             deviceCompliancePolicyScript                = $null;
             ValidOperatingSystemBuildRanges             = [];
             Ensure                                      = 'Present';
-            GlobalAdminAccount                          = $GlobalAdminAccount;
+            Credential                          = $Credential;
         }
 
 ```

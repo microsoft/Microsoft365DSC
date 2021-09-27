@@ -17,7 +17,7 @@ Configuration Example
         {
             DisplayName          = 'Demo MacOS Device Compliance Policy';
             Ensure               = 'Absent';
-            GlobalAdminAccount   = $credsGlobalAdmin;
+            Credential   = $credsGlobalAdmin;
         }
     }
 }

@@ -18,7 +18,7 @@ Configuration Example
             Identity               = 'Islands'
             Users                  = @("John.Smith@contoso.com", "Nik.Charlebois@contoso.com")
             MigrateMeetingsToTeams = $true
-            GlobalAdminAccount     = $credsGlobalAdmin
+            Credential     = $credsGlobalAdmin
         }
     }
 }

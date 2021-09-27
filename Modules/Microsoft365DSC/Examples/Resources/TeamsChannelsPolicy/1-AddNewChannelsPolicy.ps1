@@ -21,7 +21,7 @@ Configuration Example
             AllowPrivateTeamDiscovery   = $True;
             Description                 = 'This is an example';
             Ensure                     = 'Present'
-            GlobalAdminAccount         = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
         }
     }
 }

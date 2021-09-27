@@ -5,5 +5,5 @@ class MSFT_SCDeviceConditionalAccessPolicy : OMI_BaseResource
     [Write, Description("Specify if this policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("The Comment parameter specifies an optional comment.")] String Comment;
     [Write, Description("The Enabled parameter specifies whether the policy is enabled.")] Boolean Enabled;
-    [Required, Description("Credentials of Security and Compliance Center Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+    [Required, Description("Credentials of Security and Compliance Center Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
 };

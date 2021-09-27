@@ -23,7 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Connect-Graph -MockWith {
             }
@@ -50,7 +50,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                = 'Present'
                 }
 
-                Mock -CommandName Get-AzureADGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @(
                         @{
                             DisplayName ="Contoso Group"
@@ -89,7 +89,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                = 'Present'
                 }
 
-                Mock -CommandName Get-AzureADGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @(
                         @{
                             DisplayName ="Contoso Group"
@@ -128,7 +128,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                = 'Present'
                 }
 
-                Mock -CommandName Get-AzureADGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @(
                         @{
                             DisplayName ="Contoso Group"
@@ -165,7 +165,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                = 'Absent'
                 }
 
-                Mock -CommandName Get-AzureADGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @(
                         @{
                             DisplayName ="Contoso Group"
@@ -200,7 +200,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     TenantId              = "12345"
                 }
 
-                Mock -CommandName Get-AzureADGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @(
                         @{
                             DisplayName ="Contoso Group"

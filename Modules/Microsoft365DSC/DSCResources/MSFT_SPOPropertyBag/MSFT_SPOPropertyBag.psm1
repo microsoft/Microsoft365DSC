@@ -23,7 +23,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -62,7 +62,7 @@ function Get-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -81,7 +81,7 @@ function Get-TargetResource
         }
         catch
         {
-            Write-Verbose "GlobalAdminAccount or service principal specified does not have admin access to site {$Url}"
+            Write-Verbose "Credential or service principal specified does not have admin access to site {$Url}"
             if ($_.Exception -like "*Unable to cast object of type*")
             {
                 [array]$property = Get-PnPPropertyBag | Where-Object -FilterScript { $_.Key -ceq $Key }
@@ -98,7 +98,7 @@ function Get-TargetResource
             else
             {
                 New-M365DSCLogEntry -Error $_ -Message "Couldn't get Property Bag for {$Url}" -Source $MyInvocation.MyCommand.ModuleName
-                Write-Verbose "GlobalAdminAccount specified does not have admin access to site {$Url}"
+                Write-Verbose "Credential specified does not have admin access to site {$Url}"
             }
         }
         if ($property.Length -ne 1)
@@ -118,7 +118,7 @@ function Get-TargetResource
                 Url                   = $Url
                 Key                   = $Key
                 Value                 = $property[0]
-                GlobalAdminAccount    = $GlobalAdminAccount
+                Credential    = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
@@ -141,9 +141,9 @@ function Get-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -181,7 +181,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -214,7 +214,7 @@ function Set-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -264,7 +264,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -295,7 +295,7 @@ function Test-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -306,7 +306,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove("ApplicationId") | Out-Null
     $ValuesToCheck.Remove("TenantId") | Out-Null
     $ValuesToCheck.Remove("CertificatePath") | Out-Null
@@ -336,7 +336,7 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -373,7 +373,7 @@ function Export-TargetResource
         $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
         $data.Add("Resource", $ResourceName)
         $data.Add("Method", $MyInvocation.MyCommand)
-        $data.Add("Principal", $GlobalAdminAccount.UserName)
+        $data.Add("Principal", $Credential.UserName)
         $data.Add("TenantId", $TenantId)
         $data.Add("ConnectionMode", $ConnectionMode)
         Add-M365DSCTelemetryEvent -Data $data
@@ -410,7 +410,7 @@ function Export-TargetResource
 
                     [Parameter()]
                     [System.Management.Automation.PSCredential]
-                    $GlobalAdminAccount,
+                    $Credential,
 
                     [Parameter()]
                     [System.String]
@@ -480,7 +480,7 @@ function Export-TargetResource
                                         CertificatePassword   = $CertificatePassword
                                         CertificatePath       = $CertificatePath
                                         CertificateThumbprint = $CertificateThumbprint
-                                        GlobalAdminAccount    = $GlobalAdminAccount
+                                        Credential    = $Credential
                                     }
 
                                     $Results = Get-TargetResource @Params
@@ -490,7 +490,7 @@ function Export-TargetResource
                                         -ConnectionMode $ConnectionMode `
                                         -ModulePath $PSScriptRoot `
                                         -Results $Results `
-                                        -GlobalAdminAccount $GlobalAdminAccount
+                                        -Credential $Credential
                                     $dscContent += $currentDSCBlock
                                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                                         -FileName $Global:PartialExportFileName
@@ -505,7 +505,7 @@ function Export-TargetResource
                     return $dscContent
                 }
                 return $returnValue
-            } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount, $ApplicationId, $TenantId, $ApplicationSecret, $CertificateThumbprint, $CertificatePassword, $CertificatePath) | Out-Null
+            } -ArgumentList @($batch, $PSScriptRoot, $Credential, $ApplicationId, $TenantId, $ApplicationSecret, $CertificateThumbprint, $CertificatePassword, $CertificatePath) | Out-Null
             $i++
         }
 
@@ -543,9 +543,9 @@ function Export-TargetResource
         Write-Progress -Activity "SPOPropertyBag Extraction" -PercentComplete 100 -Status "Completed" -Completed
         $organization = ""
         $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-        if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
+        if ($null -ne $Credential -and $Credential.UserName.Contains("@"))
         {
-            $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+            $organization = $Credential.UserName.Split("@")[1]
 
             if ($organization.IndexOf(".") -gt 0)
             {
@@ -577,9 +577,9 @@ function Export-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `

@@ -21,7 +21,7 @@ Configuration Example
             IsOrganizationDefault         = $false
             Type                          = "TokenIssuancePolicy"
             Ensure                        = "Present"
-            GlobalAdminAccount            = $credsGlobalAdmin
+            Credential            = $credsGlobalAdmin
         }
     }
 }

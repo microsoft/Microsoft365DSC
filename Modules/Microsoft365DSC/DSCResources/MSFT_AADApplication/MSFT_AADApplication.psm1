@@ -63,7 +63,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -155,7 +155,7 @@ function Get-TargetResource
                 AppId                      = $AADApp.AppId
                 Permissions                = $permissionsObj
                 Ensure                     = "Present"
-                GlobalAdminAccount         = $GlobalAdminAccount
+                Credential                 = $Credential
                 ApplicationId              = $ApplicationId
                 TenantId                   = $TenantId
                 ApplicationSecret          = $ApplicationSecret
@@ -251,7 +251,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -300,7 +300,7 @@ function Set-TargetResource
     $currentParameters.Remove("CertificateThumbprint")  | Out-Null
     $currentParameters.Remove("ApplicationSecret")  | Out-Null
     $currentParameters.Remove("Ensure")  | Out-Null
-    $currentParameters.Remove("GlobalAdminAccount")  | Out-Null
+    $currentParameters.Remove("Credential")  | Out-Null
 
     if ($null -ne $KnownClientApplications)
     {
@@ -513,7 +513,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -609,7 +609,7 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -659,7 +659,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 DisplayName           = $AADApp.DisplayName
                 ObjectID              = $AADApp.Id
-                GlobalAdminAccount    = $GlobalAdminAccount
+                Credential            = $Credential
             }
             $Results = Get-TargetResource @Params
 
@@ -675,7 +675,7 @@ function Export-TargetResource
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
-                    -GlobalAdminAccount $GlobalAdminAccount
+                    -Credential $Credential
 
                 if ($null -ne $Results.Permissions)
                 {

@@ -22,7 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         BeforeAll {
 
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
 
@@ -66,7 +66,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowToAddGuests              = $True;
                     EnableGroupCreation           = $True;
                     Ensure                        = "Present";
-                    GlobalAdminAccount            = $GlobalAdminAccount;
+                    Credential            = $Credential;
                     GroupCreationAllowedGroupName = "All Company";
                     GuestUsageGuidelinesUrl       = "https://contoso.com/guestusage";
                     IsSingleInstance              = "Yes";
@@ -138,7 +138,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     IsSingleInstance              = "Yes";
                     Ensure                        = "Absent"
-                    GlobalAdminAccount            = $GlobalAdminAccount;
+                    Credential            = $Credential;
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -203,7 +203,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowToAddGuests              = $True;
                     EnableGroupCreation           = $True;
                     Ensure                        = "Present";
-                    GlobalAdminAccount            = $GlobalAdminAccount;
+                    Credential            = $Credential;
                     GroupCreationAllowedGroupName = "All Company";
                     GuestUsageGuidelinesUrl       = "https://contoso.com/guestusage";
                     IsSingleInstance              = "Yes";
@@ -276,7 +276,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowToAddGuests              = $True;
                     EnableGroupCreation           = $False; #Drift
                     Ensure                        = "Present";
-                    GlobalAdminAccount            = $GlobalAdminAccount;
+                    Credential            = $Credential;
                     GroupCreationAllowedGroupName = "All Company";
                     GuestUsageGuidelinesUrl       = "https://contoso.com/guestusage";
                     IsSingleInstance              = "Yes";
@@ -316,7 +316,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-MgDirectorySetting -MockWith {

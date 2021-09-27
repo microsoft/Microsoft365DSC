@@ -149,7 +149,6 @@
         'modules\M365DSCPermissions.psm1',
         'modules\M365DSCReport.psm1',
         'modules\M365DSCReverse.psm1',
-        'modules\M365DSCReverseGUI.psm1',
         'modules\M365DSCStubsUtility.psm1',
         'modules\M365DSCTelemetryEngine.psm1',
         'modules\M365DSCUtil.psm1',

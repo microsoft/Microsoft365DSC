@@ -53,7 +53,7 @@ Configuration Example
                 }
             )
             Ensure                     = "Present"
-            GlobalAdminAccount         = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
         }
     }
 }

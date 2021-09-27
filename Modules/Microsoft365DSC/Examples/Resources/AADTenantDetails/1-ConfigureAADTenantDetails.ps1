@@ -19,7 +19,7 @@ Configuration Example {
             SecurityComplianceNotificationPhones   = "+1123456789"
             SecurityComplianceNotificationMails    = "exapmle@contoso.com"
             MarketingNotificationEmails            = "exapmle@contoso.com"
-            GlobalAdminAccount                     = $GlobalAdmin
+            Credential                     = $GlobalAdmin
             IsSingleInstance                       = 'Yes'
         }
     }

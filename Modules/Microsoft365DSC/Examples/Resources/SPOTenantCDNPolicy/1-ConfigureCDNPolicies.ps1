@@ -17,14 +17,14 @@ Configuration Example
         SPOTenantCDNPolicy PublicCDNPolicy
         {
             IncludeFileExtensions                = @('.jpg', '.png');
-            GlobalAdminAccount                   = $credsGlobalAdmin
+            Credential                   = $credsGlobalAdmin
             CDNType                              = "Public";
             ExcludeRestrictedSiteClassifications = @();
         }
         SPOTenantCDNPolicy PrivateCDNPolicy
         {
             IncludeFileExtensions                = @('.gif');
-            GlobalAdminAccount                   = $credsGlobalAdmin
+            Credential                   = $credsGlobalAdmin
             CDNType                              = "Private";
             ExcludeRestrictedSiteClassifications = @();
         }

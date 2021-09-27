@@ -22,7 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
@@ -73,7 +73,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Comment            = "This is a test Rule"
                     Disabled           = $false
                     ContentMatchQuery  = "filename:2016 budget filetype:xlsx"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Ensure             = "Present"
                 }
 
@@ -103,7 +103,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Comment            = "This is a test Rule"
                     Disabled           = $false
                     ContentMatchQuery  = "filename:2016 budget filetype:xlsx"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Ensure             = "Present"
                 }
 
@@ -146,7 +146,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Comment            = "This is a test Rule"
                     Disabled           = $false
                     ContentMatchQuery  = "filename:2016 budget filetype:xlsx"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Ensure             = "Absent"
                 }
 
@@ -184,7 +184,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 $testRule1 = @{

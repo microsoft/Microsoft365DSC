@@ -148,7 +148,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -244,9 +244,9 @@ function Get-TargetResource
                             {
                                 $tenantIdValue = $TenantId
                             }
-                            elseif ($null -ne $GlobalAdminAccount)
+                            elseif ($null -ne $Credential)
                             {
-                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                $tenantIdValue = $Credential.UserName.Split('@')[1]
                             }
                             Add-M365DSCEvent -Message "Couldn't find user $IncludeUserGUID , that is defined in policy $PolicyDisplayName" -EntryType 'Error' `
                                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -294,9 +294,9 @@ function Get-TargetResource
                             {
                                 $tenantIdValue = $TenantId
                             }
-                            elseif ($null -ne $GlobalAdminAccount)
+                            elseif ($null -ne $Credential)
                             {
-                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                $tenantIdValue = $Credential.UserName.Split('@')[1]
                             }
                             Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -342,9 +342,9 @@ function Get-TargetResource
                         {
                             $tenantIdValue = $TenantId
                         }
-                        elseif ($null -ne $GlobalAdminAccount)
+                        elseif ($null -ne $Credential)
                         {
-                            $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                            $tenantIdValue = $Credential.UserName.Split('@')[1]
                         }
                         Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                             -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -385,9 +385,9 @@ function Get-TargetResource
                         {
                             $tenantIdValue = $TenantId
                         }
-                        elseif ($null -ne $GlobalAdminAccount)
+                        elseif ($null -ne $Credential)
                         {
-                            $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                            $tenantIdValue = $Credential.UserName.Split('@')[1]
                         }
                         Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                             -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -435,9 +435,9 @@ function Get-TargetResource
                             {
                                 $tenantIdValue = $TenantId
                             }
-                            elseif ($null -ne $GlobalAdminAccount)
+                            elseif ($null -ne $Credential)
                             {
-                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                $tenantIdValue = $Credential.UserName.Split('@')[1]
                             }
                             Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -471,9 +471,9 @@ function Get-TargetResource
                             {
                                 $tenantIdValue = $TenantId
                             }
-                            elseif ($null -ne $GlobalAdminAccount)
+                            elseif ($null -ne $Credential)
                             {
-                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                $tenantIdValue = $Credential.UserName.Split('@')[1]
                             }
                             Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -526,9 +526,9 @@ function Get-TargetResource
                             {
                                 $tenantIdValue = $TenantId
                             }
-                            elseif ($null -ne $GlobalAdminAccount)
+                            elseif ($null -ne $Credential)
                             {
-                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                $tenantIdValue = $Credential.UserName.Split('@')[1]
                             }
                             Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -566,9 +566,9 @@ function Get-TargetResource
                             {
                                 $tenantIdValue = $TenantId
                             }
-                            elseif ($null -ne $GlobalAdminAccount)
+                            elseif ($null -ne $Credential)
                             {
-                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                $tenantIdValue = $Credential.UserName.Split('@')[1]
                             }
                             Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -665,7 +665,7 @@ function Get-TargetResource
             #no translation needed
             #Standard part
             Ensure                                   = "Present"
-            GlobalAdminAccount                       = $GlobalAdminAccount
+            Credential                               = $Credential
             ApplicationSecret                        = $ApplicationSecret
             ApplicationId                            = $ApplicationId
             TenantId                                 = $TenantId
@@ -825,7 +825,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -922,9 +922,9 @@ function Set-TargetResource
                             {
                                 $tenantIdValue = $TenantId
                             }
-                            elseif ($null -ne $GlobalAdminAccount)
+                            elseif ($null -ne $Credential)
                             {
-                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                $tenantIdValue = $Credential.UserName.Split('@')[1]
                             }
                             Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -946,9 +946,9 @@ function Set-TargetResource
                             {
                                 $tenantIdValue = $TenantId
                             }
-                            elseif ($null -ne $GlobalAdminAccount)
+                            elseif ($null -ne $Credential)
                             {
-                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                $tenantIdValue = $Credential.UserName.Split('@')[1]
                             }
                             Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -998,9 +998,9 @@ function Set-TargetResource
                             {
                                 $tenantIdValue = $TenantId
                             }
-                            elseif ($null -ne $GlobalAdminAccount)
+                            elseif ($null -ne $Credential)
                             {
-                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                $tenantIdValue = $Credential.UserName.Split('@')[1]
                             }
                             Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -1022,9 +1022,9 @@ function Set-TargetResource
                             {
                                 $tenantIdValue = $TenantId
                             }
-                            elseif ($null -ne $GlobalAdminAccount)
+                            elseif ($null -ne $Credential)
                             {
-                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                $tenantIdValue = $Credential.UserName.Split('@')[1]
                             }
                             Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -1072,9 +1072,9 @@ function Set-TargetResource
                         {
                             $tenantIdValue = $TenantId
                         }
-                        elseif ($null -ne $GlobalAdminAccount)
+                        elseif ($null -ne $Credential)
                         {
-                            $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                            $tenantIdValue = $Credential.UserName.Split('@')[1]
                         }
                         Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                             -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -1098,9 +1098,9 @@ function Set-TargetResource
                         {
                             $tenantIdValue = $TenantId
                         }
-                        elseif ($null -ne $GlobalAdminAccount)
+                        elseif ($null -ne $Credential)
                         {
-                            $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                            $tenantIdValue = $Credential.UserName.Split('@')[1]
                         }
                         Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                             -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -1122,9 +1122,9 @@ function Set-TargetResource
                         {
                             $tenantIdValue = $TenantId
                         }
-                        elseif ($null -ne $GlobalAdminAccount)
+                        elseif ($null -ne $Credential)
                         {
-                            $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                            $tenantIdValue = $Credential.UserName.Split('@')[1]
                         }
                         Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                             -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -1169,9 +1169,9 @@ function Set-TargetResource
                         {
                             $tenantIdValue = $TenantId
                         }
-                        elseif ($null -ne $GlobalAdminAccount)
+                        elseif ($null -ne $Credential)
                         {
-                            $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                            $tenantIdValue = $Credential.UserName.Split('@')[1]
                         }
                         Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                             -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -1194,9 +1194,9 @@ function Set-TargetResource
                         {
                             $tenantIdValue = $TenantId
                         }
-                        elseif ($null -ne $GlobalAdminAccount)
+                        elseif ($null -ne $Credential)
                         {
-                            $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                            $tenantIdValue = $Credential.UserName.Split('@')[1]
                         }
                         Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                             -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -1219,9 +1219,9 @@ function Set-TargetResource
                         {
                             $tenantIdValue = $TenantId
                         }
-                        elseif ($null -ne $GlobalAdminAccount)
+                        elseif ($null -ne $Credential)
                         {
-                            $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                            $tenantIdValue = $Credential.UserName.Split('@')[1]
                         }
                         Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                             -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -1267,9 +1267,9 @@ function Set-TargetResource
                             {
                                 $tenantIdValue = $TenantId
                             }
-                            elseif ($null -ne $GlobalAdminAccount)
+                            elseif ($null -ne $Credential)
                             {
-                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                $tenantIdValue = $Credential.UserName.Split('@')[1]
                             }
                             Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -1315,9 +1315,9 @@ function Set-TargetResource
                             {
                                 $tenantIdValue = $TenantId
                             }
-                            elseif ($null -ne $GlobalAdminAccount)
+                            elseif ($null -ne $Credential)
                             {
-                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                $tenantIdValue = $Credential.UserName.Split('@')[1]
                             }
                             Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -1399,9 +1399,9 @@ function Set-TargetResource
                             {
                                 $tenantIdValue = $TenantId
                             }
-                            elseif ($null -ne $GlobalAdminAccount)
+                            elseif ($null -ne $Credential)
                             {
-                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                $tenantIdValue = $Credential.UserName.Split('@')[1]
                             }
                             Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -1437,9 +1437,9 @@ function Set-TargetResource
                             {
                                 $tenantIdValue = $TenantId
                             }
-                            elseif ($null -ne $GlobalAdminAccount)
+                            elseif ($null -ne $Credential)
                             {
-                                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                                $tenantIdValue = $Credential.UserName.Split('@')[1]
                             }
                             Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -1586,9 +1586,9 @@ function Set-TargetResource
                 {
                     $tenantIdValue = $TenantId
                 }
-                elseif ($null -ne $GlobalAdminAccount)
+                elseif ($null -ne $Credential)
                 {
-                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                    $tenantIdValue = $Credential.UserName.Split('@')[1]
                 }
                 Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                     -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -1621,9 +1621,9 @@ function Set-TargetResource
                 {
                     $tenantIdValue = $TenantId
                 }
-                elseif ($null -ne $GlobalAdminAccount)
+                elseif ($null -ne $Credential)
                 {
-                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                    $tenantIdValue = $Credential.UserName.Split('@')[1]
                 }
                 Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                     -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -1656,9 +1656,9 @@ function Set-TargetResource
                 {
                     $tenantIdValue = $TenantId
                 }
-                elseif ($null -ne $GlobalAdminAccount)
+                elseif ($null -ne $Credential)
                 {
-                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                    $tenantIdValue = $Credential.UserName.Split('@')[1]
                 }
                 Add-M365DSCEvent -Message $Message -EntryType 'Error' `
                     -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -1826,7 +1826,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -1875,7 +1875,7 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -1931,7 +1931,7 @@ function Export-TargetResource
                     TenantId              = $TenantId
                     ApplicationSecret     = $ApplicationSecret
                     CertificateThumbprint = $CertificateThumbprint
-                    GlobalAdminAccount    = $GlobalAdminAccount
+                    Credential            = $Credential
                 }
                 $Results = Get-TargetResource @Params
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -1940,7 +1940,7 @@ function Export-TargetResource
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
-                    -GlobalAdminAccount $GlobalAdminAccount
+                    -Credential $Credential
 
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -1963,9 +1963,9 @@ function Export-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
