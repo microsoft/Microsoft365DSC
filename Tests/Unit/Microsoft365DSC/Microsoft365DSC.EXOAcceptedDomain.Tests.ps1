@@ -54,7 +54,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity           = 'contoso.com'
                 }
 
-                Mock -CommandName Get-AzureADDomain -MockWith {
+                Mock -CommandName Get-MgDomain -MockWith {
                     return @{
                         Name       = 'different.contoso.com'
                         IsVerified = $true
@@ -112,7 +112,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-AzureADDomain -MockWith {
+                Mock -CommandName Get-MgDomain -MockWith {
                     return @{
                         Name       = 'contoso.com'
                         IsVerified = $true
@@ -136,7 +136,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity           = 'contoso.com'
                 }
 
-                Mock -CommandName Get-AzureADDomain -MockWith {
+                Mock -CommandName Get-MgDomain -MockWith {
                     return @{
                         Name       = 'contoso.com'
                         IsVerified = $true

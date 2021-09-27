@@ -55,7 +55,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Group $DisplayName"
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -75,11 +75,11 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Retrieving AzureADGroup by MailNickName {$MailNickName}"
-        [array]$ADGroup = Get-AzureADGroup -All:$true | Where-Object -FilterScript { $_.MailNickName -eq $MailNickName }
+        [array]$ADGroup = Get-MgGroup -All:$true | Where-Object -FilterScript { $_.MailNickName -eq $MailNickName }
         if ($null -eq $ADGroup)
         {
             Write-Verbose -Message "Retrieving AzureADGroup by DisplayName {$DisplayName}"
-            [array]$ADGroup = Get-AzureADGroup -All:$true | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
+            [array]$ADGroup = Get-MgGroup -All:$true | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
             if ($null -eq $ADGroup)
             {
                 Write-Verbose -Message "Office 365 Group {$DisplayName} was not found."
@@ -95,9 +95,9 @@ function Get-TargetResource
 
         try
         {
-            $membersList = Get-AzureADGroupMember -ObjectId $ADGroup[0].ObjectId
+            $membersList = Get-MgGroupMember -GroupId $ADGroup[0].ObjectId
             Write-Verbose -Message "Found Members for Group {$($ADGroup[0].DisplayName)}"
-            $owners = Get-AzureADGroupOwner -ObjectId $ADGroup[0].ObjectId
+            $owners = Get-MgGroupOwner -GroupId $ADGroup[0].ObjectId
             Write-Verbose -Message "Found Owners for Group {$($ADGroup[0].DisplayName)}"
             $ownersUPN = @()
             if ($null -ne $owners)
@@ -491,7 +491,7 @@ function Export-TargetResource
         $CertificatePassword
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -507,7 +507,7 @@ function Export-TargetResource
     try
     {
         $dscContent = ''
-        $groups = Get-AzureADGroup -All $true | Where-Object -FilterScript {
+        $groups = Get-MgGroup -All $true | Where-Object -FilterScript {
             $_.MailNickName -ne "00000000-0000-0000-0000-000000000000"
         }
 
