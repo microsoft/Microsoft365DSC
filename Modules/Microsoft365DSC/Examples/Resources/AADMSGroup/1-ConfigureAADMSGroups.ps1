@@ -23,7 +23,7 @@ Configuration Example
             GroupTypes                    = @("Unified")
             MailNickname                  = "M365DSC"
             Visibility                    = "Private"
-            GlobalAdminAccount            = $credsGlobalAdmin
+            Credential            = $credsGlobalAdmin
             Ensure                        = "Present"
         }
     }

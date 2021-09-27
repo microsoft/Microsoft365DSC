@@ -36,7 +36,7 @@ function Get-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", "ServicePrincipal")
     Add-M365DSCTelemetryEvent -Data $data
@@ -105,9 +105,9 @@ function Get-TargetResource
                     {
                         $tenantIdValue = $TenantId
                     }
-                    elseif ($null -ne $GlobalAdminAccount)
+                    elseif ($null -ne $Credential)
                     {
-                        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                        $tenantIdValue = $Credential.UserName.Split('@')[1]
                     }
                     Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                         -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -150,9 +150,9 @@ function Get-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -203,7 +203,7 @@ function Set-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -280,7 +280,7 @@ function Test-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -327,7 +327,7 @@ function Export-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", "ServicePrincipal")
     Add-M365DSCTelemetryEvent -Data $data
@@ -368,7 +368,7 @@ function Export-TargetResource
                         -ConnectionMode $ConnectionMode `
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
-                        -GlobalAdminAccount $GlobalAdminAccount
+                        -Credential $Credential
                     $dscContent += $currentDSCBlock
 
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -387,9 +387,9 @@ function Export-TargetResource
                     {
                         $tenantIdValue = $TenantId
                     }
-                    elseif ($null -ne $GlobalAdminAccount)
+                    elseif ($null -ne $Credential)
                     {
-                        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                        $tenantIdValue = $Credential.UserName.Split('@')[1]
                     }
                     Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                         -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -413,9 +413,9 @@ function Export-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `

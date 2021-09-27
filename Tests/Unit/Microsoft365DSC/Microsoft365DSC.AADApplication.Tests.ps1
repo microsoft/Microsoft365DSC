@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
@@ -78,7 +78,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PublicClient               = $false
                     ReplyURLs                  = @("https://app.contoso.com")
                     Ensure                     = "Present"
-                    GlobalAdminAccount         = $GlobalAdminAccount
+                    Credential         = $Credential
                 }
 
                 Mock -CommandName Get-MgApplication -MockWith {
@@ -114,7 +114,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PublicClient               = $false
                     ReplyURLs                  = "https://app.contoso.com"
                     Ensure                     = "Absent"
-                    GlobalAdminAccount         = $GlobalAdminAccount
+                    Credential         = $Credential
                 }
 
                 Mock -CommandName Get-MgApplication -MockWith {
@@ -163,7 +163,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PublicClient               = $false
                     ReplyURLs                  = "https://app.contoso.com"
                     Ensure                     = "Present"
-                    GlobalAdminAccount         = $GlobalAdminAccount
+                    Credential         = $Credential
                 }
 
                 Mock -CommandName Get-MgApplication -MockWith {
@@ -211,7 +211,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PublicClient               = $false
                     ReplyURLs                  = "https://app.contoso.com"
                     Ensure                     = "Present"
-                    GlobalAdminAccount         = $GlobalAdminAccount
+                    Credential         = $Credential
                 }
 
                 Mock -CommandName Get-MgApplication -MockWith {
@@ -278,7 +278,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         } -ClientOnly;
                     )
                     Ensure                     = "Present"
-                    GlobalAdminAccount         = $GlobalAdminAccount
+                    Credential         = $Credential
                 }
 
                 Mock -CommandName Get-MgApplication -MockWith {
@@ -304,7 +304,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-MgApplication -MockWith {

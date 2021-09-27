@@ -22,7 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -53,7 +53,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RequiresJoinApproval = $true
                     AllowedToJoin        = @("admin@contoso.onmicrosoft.com", "superuser@contoso.onmicrosoft.com")
                     SiteDesignId         = "f7eba920-9cca-4de8-b5aa-1da75a2a893c"
-                    GlobalAdminAccount   = $GlobalAdminAccount
+                    Credential   = $Credential
                     Ensure               = "Present"
                 }
 
@@ -79,7 +79,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Url                = "https://contoso.sharepoint.com/sites/Marketing"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Ensure             = "Absent"
                 }
 
@@ -104,7 +104,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Url                = "https://contoso.sharepoint.com/sites/Marketing"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Ensure             = "Absent"
                 }
 
@@ -169,7 +169,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RequiresJoinApproval = $true
                     AllowedToJoin        = @("admin@contoso.onmicrosoft.com", "group@contoso.onmicrosoft.com")
                     SiteDesignId         = "f7eba920-9cca-4de8-b5aa-1da75a2a893c"
-                    GlobalAdminAccount   = $GlobalAdminAccount
+                    Credential   = $Credential
                     Ensure               = "Present"
                 }
 
@@ -227,7 +227,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RequiresJoinApproval = $true
                     AllowedToJoin        = @("admin@contoso.onmicrosoft.com", "group@contoso.onmicrosoft.com")
                     SiteDesignId         = "f7eba920-9cca-4de8-b5aa-1da75a2a893c"
-                    GlobalAdminAccount   = $GlobalAdminAccount
+                    Credential   = $Credential
                     Ensure               = "Present"
                 }
 
@@ -293,7 +293,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RequiresJoinApproval = $true
                     AllowedToJoin        = @("admin@contoso.onmicrosoft.com", "group@contoso.onmicrosoft.com", "SecurityGroup")
                     SiteDesignId         = "f7eba920-9cca-4de8-b5aa-1da75a2a893c"
-                    GlobalAdminAccount   = $GlobalAdminAccount
+                    Credential   = $Credential
                     Ensure               = "Present"
                 }
 
@@ -339,7 +339,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RequiresJoinApproval = $true
                     AllowedToJoin        = @("admin@contoso.onmicrosoft.com", "group@contoso.onmicrosoft.com", "SecurityGroup")
                     SiteDesignId         = "f7eba920-9cca-4de8-b5aa-1da75a2a893c"
-                    GlobalAdminAccount   = $GlobalAdminAccount
+                    Credential   = $Credential
                     Ensure               = "Present"
                 }
 
@@ -362,7 +362,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-PnPTenantSite -MockWith {

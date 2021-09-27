@@ -38,7 +38,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -79,7 +79,7 @@ function Get-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -116,7 +116,7 @@ function Get-TargetResource
             Enabled                = $DkimSigningConfig.Enabled
             HeaderCanonicalization = $DkimSigningConfig.HeaderCanonicalization
             KeySize                = 1024
-            GlobalAdminAccount     = $GlobalAdminAccount
+            Credential             = $Credential
             ApplicationId          = $ApplicationId
             CertificateThumbprint  = $CertificateThumbprint
             CertificatePath        = $CertificatePath
@@ -169,7 +169,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -198,7 +198,7 @@ function Set-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -214,7 +214,7 @@ function Set-TargetResource
     {
         $DkimSigningConfigParams = [System.Collections.Hashtable]($PSBoundParameters)
         $DkimSigningConfigParams.Remove('Ensure') | Out-Null
-        $DkimSigningConfigParams.Remove('GlobalAdminAccount') | Out-Null
+        $DkimSigningConfigParams.Remove('Credential') | Out-Null
         $DkimSigningConfigParams.Remove('ApplicationId') | Out-Null
         $DkimSigningConfigParams.Remove('TenantId') | Out-Null
         $DkimSigningConfigParams.Remove('CertificateThumbprint') | Out-Null
@@ -231,7 +231,7 @@ function Set-TargetResource
     {
         $DkimSigningConfigParams = $PSBoundParameters
         $DkimSigningConfigParams.Remove('Ensure') | Out-Null
-        $DkimSigningConfigParams.Remove('GlobalAdminAccount') | Out-Null
+        $DkimSigningConfigParams.Remove('Credential') | Out-Null
         $DkimSigningConfigParams.Remove('KeySize') | Out-Null
         Write-Verbose -Message "Setting DkimSigningConfig $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $DkimSigningConfigParams)"
         Set-DkimSigningConfig @DkimSigningConfigParams -Confirm:$false
@@ -284,7 +284,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -311,7 +311,7 @@ function Test-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -324,7 +324,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
@@ -350,7 +350,7 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -381,7 +381,7 @@ function Export-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -406,7 +406,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)" -NoNewline
             $Params = @{
                 Identity              = $DkimSigningConfig.Identity
-                GlobalAdminAccount    = $GlobalAdminAccount
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
@@ -420,7 +420,7 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
+                -Credential $Credential
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

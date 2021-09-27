@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -60,7 +60,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "AvailabilityAddressSpace creation." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount    = $GlobalAdminAccount
+                    Credential    = $Credential
                     Ensure                = "Present"
                     Identity              = "contoso.com"
                     AccessMethod          = "OrgWideFB"
@@ -92,7 +92,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "AvailabilityAddressSpace update not required." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount    = $GlobalAdminAccount
+                    Credential    = $Credential
                     Ensure                = "Present"
                     Identity              = "contoso.com"
                     AccessMethod          = "OrgWideFB"
@@ -103,7 +103,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-AvailabilityAddressSpace -MockWith {
                     return @{
-                        GlobalAdminAccount    = $GlobalAdminAccount
+                        Credential    = $Credential
                         Ensure                = "Present"
                         Identity              = "contoso.com"
                         AccessMethod          = "OrgWideFB"
@@ -122,7 +122,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "AvailabilityAddressSpace update needed." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount    = $GlobalAdminAccount
+                    Credential    = $Credential
                     Ensure                = "Present"
                     Identity              = "contoso.com"
                     AccessMethod          = "OrgWideFB"
@@ -133,7 +133,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-AvailabilityAddressSpace -MockWith {
                     return @{
-                        GlobalAdminAccount    = $GlobalAdminAccount
+                        Credential    = $Credential
                         Ensure                = "Present"
                         Identity              = "contoso.com"
                         AccessMethod          = "PerUserFB"
@@ -163,7 +163,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Ensure             = 'Absent'
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Identity           = 'TestAvailabilityAddressSpace'
                 }
 
@@ -192,7 +192,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
             }
 

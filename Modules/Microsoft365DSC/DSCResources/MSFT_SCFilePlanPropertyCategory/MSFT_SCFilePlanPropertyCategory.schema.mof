@@ -3,5 +3,5 @@ class MSFT_SCFilePlanPropertyCategory : OMI_BaseResource
 {
     [Key, Description("The Name parameter specifies the unique name of the category.")] String Name;
     [Write, Description("Specify if this category should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
 };

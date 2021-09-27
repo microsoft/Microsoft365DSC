@@ -18,7 +18,7 @@ Ensure
 - Required: No (Defaults to 'Present')
 - Description: Specifies if the configuration should be `Present` or `Absent`
 
-GlobalAdminAccount
+Credential
 
 - Required: Yes
 - Description: Credentials of an Office365 Global Admin
@@ -34,7 +34,7 @@ Identity
         EXOAntiPhishRule TestPhishRule {
             Ensure = 'Present'
             Identity = 'TestRule'
-            GlobalAdminAccount = $GlobalAdminAccount
+            Credential = $Credential
             AntiPhishPolicy = 'TestPolicy'
             Enabled = $true
             Priority = 0

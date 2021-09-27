@@ -100,7 +100,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -132,7 +132,7 @@ function Get-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -146,7 +146,7 @@ function Get-TargetResource
         UsageLocation      = $null
         LicenseAssignment  = $null
         Password           = $null
-        GlobalAdminAccount = $GlobalAdminAccount
+        Credential = $Credential
         Ensure             = "Absent"
     }
 
@@ -195,7 +195,7 @@ function Get-TargetResource
             StreetAddress        = $user.StreetAddress
             Title                = $user.JobTitle
             UserType             = $user.UserType
-            GlobalAdminAccount   = $GlobalAdminAccount
+            Credential   = $Credential
             Ensure               = "Present"
         }
         return [System.Collections.Hashtable] $results
@@ -210,9 +210,9 @@ function Get-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -327,7 +327,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -362,7 +362,7 @@ function Set-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -592,7 +592,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -619,7 +619,7 @@ function Test-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -670,7 +670,7 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -700,7 +700,7 @@ function Export-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -720,8 +720,8 @@ function Export-TargetResource
             {
                 $Params = @{
                     UserPrincipalName     = $userUPN
-                    GlobalAdminAccount    = $GlobalAdminAccount
-                    Password              = $GlobalAdminAccount
+                    Credential    = $Credential
+                    Password              = $Credential
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
@@ -732,14 +732,15 @@ function Export-TargetResource
                 $Results = Get-TargetResource @Params
                 if ($null -ne $Results.UserPrincipalName)
                 {
-                    $Results.Password = Resolve-Credentials -UserName "globaladmin"
+                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                        -Results $Results
                     $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                         -Results $Results
                     $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                         -ConnectionMode $ConnectionMode `
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
-                        -GlobalAdminAccount $GlobalAdminAccount
+                        -Credential $Credential
                     $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Password"
                     $dscContent += $currentDSCBlock
 
@@ -762,9 +763,9 @@ function Export-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `

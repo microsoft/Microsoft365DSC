@@ -28,7 +28,7 @@ Configuration Example
             TimeZone           = "Eastern Standard Time"
             Locale             = "fr-CA"
             Ensure             = "Present"
-            GlobalAdminAccount = $credsGlobalAdmin
+            Credential = $credsGlobalAdmin
         }
     }
 }

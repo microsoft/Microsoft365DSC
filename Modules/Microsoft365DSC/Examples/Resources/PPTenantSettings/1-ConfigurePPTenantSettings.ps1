@@ -31,7 +31,7 @@ Configuration Example
       DisableShareWithEveryone                       = $false
       EnableGuestsToMake                             = $false
       ShareWithColleaguesUserLimit                   = 10000
-      GlobalAdminAccount                             = $GlobalAdminAccount
+      Credential                             = $Credential
     }
   }
 }

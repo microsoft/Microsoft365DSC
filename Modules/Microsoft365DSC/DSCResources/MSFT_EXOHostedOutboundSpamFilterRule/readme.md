@@ -19,7 +19,7 @@ Ensure
 - Description: `Present` is the only value accepted.
     Configurations using `Ensure = 'Absent'` will throw an Error!
 
-GlobalAdminAccount
+Credential
 
 - Required: Yes
 - Description: Credentials of an Office365 Global Admin
@@ -35,7 +35,7 @@ Identity
         EXOHostedOutboundSpamFilterRule TestHostedOutboundSpamFilterRule {
             Ensure = 'Present'
             Identity = 'TestRule'
-            GlobalAdminAccount = $GlobalAdminAccount
+            Credential = $Credential
             HostedOutboundSpamFilterPolicy = 'TestPolicy'
             Enabled = $true
             Priority = 0

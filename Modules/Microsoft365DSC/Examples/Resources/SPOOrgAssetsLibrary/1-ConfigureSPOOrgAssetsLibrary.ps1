@@ -19,7 +19,7 @@ Configuration Example
             LibraryUrl         = "https://contoso.sharepoint.com/sites/org/Branding"
             ThumbnailUrl       = "https://contoso.sharepoint.com/sites/org/Branding/Logo/Owagroup.png"
             CdnType            = "Public"
-            GlobalAdminAccount = $credsGlobalAdmin;
+            Credential = $credsGlobalAdmin;
             Ensure             = "Present"
         }
     }

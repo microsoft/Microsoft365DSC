@@ -803,7 +803,7 @@ function Show-M365DSCGUI
                 {
                     if ($txtPassword.Text.Length -gt 0)
                     {
-                        $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force))
+                        $Credential = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force))
                     }
                     $CertPasswordcreds = $null
                     if (-not [System.String]::IsNullOrEmpty($txtCertPassword.Text))
@@ -834,7 +834,7 @@ function Show-M365DSCGUI
                     else
                     {
                         $form.Hide()
-                        Start-M365DSCConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
+                        Start-M365DSCConfigurationExtract -Credential $Credential `
                             -ApplicationId $txtApplicationId.Text `
                             -TenantId $txtTenantId.Text `
                             -CertificateThumbprint $txtCertThumb.Text `
@@ -856,10 +856,10 @@ function Show-M365DSCGUI
                         {
                             $tenantId = $txtTenantId.Text
                         }
-                        elseif ($null -ne $GlobalAdminAccount -and
-                            $GlobalAdminAccount.UserName -contains '@')
+                        elseif ($null -ne $Credential -and
+                            $Credential.UserName -contains '@')
                         {
-                            $tenantId = $GlobalAdminAccount.UserName.Split('@')[1]
+                            $tenantId = $Credential.UserName.Split('@')[1]
                         }
                     }
                     catch

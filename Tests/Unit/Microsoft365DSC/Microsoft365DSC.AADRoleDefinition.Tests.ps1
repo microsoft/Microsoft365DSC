@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             $Global:PartialExportFileName = "c:\TestPath"
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
@@ -70,7 +70,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RolePermissions               = "microsoft.directory/applicationPolicies/allProperties/read","microsoft.directory/applicationPolicies/allProperties/update","microsoft.directory/applicationPolicies/basic/update"
                     Version                       = "1.0"
                     Ensure                        = "Present"
-                    GlobalAdminAccount            = $GlobalAdminAccount
+                    Credential            = $Credential
                 }
 
                 Mock -CommandName Get-MgRoleManagementDirectoryRoleDefinition -MockWith {
@@ -101,7 +101,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RolePermissions               = "microsoft.directory/applicationPolicies/allProperties/read","microsoft.directory/applicationPolicies/allProperties/update","microsoft.directory/applicationPolicies/basic/update"
                     Version                       = "1.0"
                     Ensure                        = "Absent"
-                    GlobalAdminAccount            = $GlobalAdminAccount
+                    Credential            = $Credential
                     Id                            = "12345-12345-12345-12345-12345"
                 }
 
@@ -146,7 +146,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RolePermissions               = "microsoft.directory/applicationPolicies/allProperties/read"
                     Version                       = "1.0"
                     Ensure                        = "Present"
-                    GlobalAdminAccount            = $GlobalAdminAccount
+                    Credential            = $Credential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -185,7 +185,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RolePermissions               = "microsoft.directory/applicationPolicies/allProperties/read","microsoft.directory/applicationPolicies/allProperties/update","microsoft.directory/applicationPolicies/basic/update"
                     Version                       = "1.0"
                     Ensure                        = "Present"
-                    GlobalAdminAccount            = $GlobalAdminAccount
+                    Credential            = $Credential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -222,7 +222,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {

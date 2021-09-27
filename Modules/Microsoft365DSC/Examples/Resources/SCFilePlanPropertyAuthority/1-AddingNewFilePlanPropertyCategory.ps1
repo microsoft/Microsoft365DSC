@@ -18,7 +18,7 @@ Configuration Example
         {
             Name               = "My Authority"
             Ensure             = "Present"
-            GlobalAdminAccount = $credsGlobalAdmin
+            Credential = $credsGlobalAdmin
         }
     }
 }

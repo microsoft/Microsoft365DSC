@@ -17,7 +17,7 @@ Configuration Example
         SPOSharingSettings MyTenant
         {
             IsSingleInstance                           = "Yes"
-            GlobalAdminAccount                         = $credsGlobalAdmin
+            Credential                         = $credsGlobalAdmin
             SharingCapability                          = 'ExternalUserSharingOnly'
             ShowEveryoneClaim                          = $false
             ShowAllUsersClaim                          = $false

@@ -51,7 +51,7 @@ Configuration Example
             deviceCompliancePolicyScript                = $null;
             ValidOperatingSystemBuildRanges             = [];
             Ensure                                      = 'Present';
-            GlobalAdminAccount                          = $GlobalAdminAccount;
+            Credential                          = $Credential;
         }
     }
 }

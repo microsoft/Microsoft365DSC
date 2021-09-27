@@ -57,7 +57,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -150,7 +150,7 @@ function Get-TargetResource
                 TenantId                      = $TenantId
                 CertificateThumbprint         = $CertificateThumbprint
                 ApplicationSecret             = $ApplicationSecret
-                GlobalAdminAccount            = $GlobalAdminAccount
+                Credential                    = $Credential
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
@@ -236,7 +236,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -273,7 +273,7 @@ function Set-TargetResource
     $currentParameters.Remove("CertificateThumbprint") | Out-Null
     $currentParameters.Remove("ApplicationSecret") | Out-Null
     $currentParameters.Remove("Ensure") | Out-Null
-    $currentParameters.Remove("GlobalAdminAccount") | Out-Null
+    $currentParameters.Remove("Credential") | Out-Null
 
     if ($Ensure -eq 'Present' -and `
         ($null -ne $GroupTypes -and $GroupTypes.Contains("Unified")) -and `
@@ -395,7 +395,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -454,7 +454,7 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -503,7 +503,7 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
-                GlobalAdminAccount    = $GlobalAdminAccount
+                Credential            = $Credential
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -512,7 +512,7 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
+                -Credential $Credential
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

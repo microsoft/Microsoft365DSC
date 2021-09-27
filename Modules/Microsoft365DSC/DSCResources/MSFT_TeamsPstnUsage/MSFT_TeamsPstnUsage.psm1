@@ -15,7 +15,7 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
 
     Write-Verbose -Message 'Getting Global PSTN Usage(s)'
@@ -28,7 +28,7 @@ function Get-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -60,7 +60,7 @@ function Get-TargetResource
         return @{
             Usage              = $Usage
             Ensure             = 'Present'
-            GlobalAdminAccount = $GlobalAdminAccount
+            Credential = $Credential
         }
     }
     catch
@@ -73,9 +73,9 @@ function Get-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -105,7 +105,7 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
 
     Write-Verbose -Message 'Setting PSTN Usage'
@@ -115,7 +115,7 @@ function Set-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -127,7 +127,7 @@ function Set-TargetResource
 
     $SetParameters = $PSBoundParameters
     $SetParameters.Remove('Ensure') | Out-Null
-    $SetParameters.Remove('GlobalAdminAccount') | Out-Null
+    $SetParameters.Remove('Credential') | Out-Null
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
@@ -158,14 +158,14 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -178,7 +178,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('Credential') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -198,7 +198,7 @@ function Export-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -208,7 +208,7 @@ function Export-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -233,7 +233,7 @@ function Export-TargetResource
             $params = @{
                 Usage              = $usage
                 Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
+                Credential = $Credential
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -242,7 +242,7 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
+                -Credential $Credential
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -262,9 +262,9 @@ function Export-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `

@@ -22,7 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -46,7 +46,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description        = "This is a test"
                     ManagedBy          = "JohnSmith@contoso.onmicrosoft.com"
                     Ensure             = "Present"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-MgGroup -MockWith {
@@ -71,7 +71,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ManagedBy          = "Bob.Houle@contoso.onmicrosoft.com"
                     Description        = "This is a test"
                     Ensure             = "Present"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-MgGroup -MockWith {
@@ -120,7 +120,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Members            = @("GoodUser1", "GoodUser2")
                     ManagedBy          = @("JohnSmith@contoso.onmicrosoft.com", "Bob.Houle@contoso.onmicrosoft.com")
                     Ensure             = "Present"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-UnifiedGroupLinks
@@ -196,7 +196,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-MgGroup -MockWith {

@@ -21,7 +21,7 @@ Configuration Example
             NotificationGroup         = 'john.smith@contoso.com';
             NotificationMode          = "NotificationOnly";
             Ensure                    = 'Present'
-            GlobalAdminAccount        = $credsGlobalAdmin
+            Credential        = $credsGlobalAdmin
         }
     }
 }

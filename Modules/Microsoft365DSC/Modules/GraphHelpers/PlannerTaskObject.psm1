@@ -46,14 +46,14 @@ class PlannerTaskObject
         return $null
     }
 
-    [void]PopulateById([System.Management.Automation.PSCredential]$GlobalAdminAccount, [String]$ApplicationId, [string]$TaskId)
+    [void]PopulateById([System.Management.Automation.PSCredential]$Credential, [String]$ApplicationId, [string]$TaskId)
     {
         $uri = "https://graph.microsoft.com/beta/planner/tasks/$TaskId"
-        $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $GlobalAdminAccount `
+        $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $Credential `
             -ApplicationId $ApplicationId `
             -Uri $uri `
             -Method Get
-        $taskDetailsResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $GlobalAdminAccount `
+        $taskDetailsResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $Credential `
             -ApplicationId $ApplicationId `
             -Uri ($uri + "/details") `
             -Method Get
@@ -247,27 +247,27 @@ class PlannerTaskObject
         return $sb.ToString()
     }
 
-    [void]Create([System.Management.Automation.PSCredential]$GlobalAdminAccount, [String]$ApplicationId)
+    [void]Create([System.Management.Automation.PSCredential]$Credential, [String]$ApplicationId)
     {
         $uri = "https://graph.microsoft.com/v1.0/planner/tasks"
         $body = $this.ConvertToJSONTask()
-        $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $GlobalAdminAccount `
+        $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $Credential `
             -ApplicationId $ApplicationId `
             -Uri $uri `
             -Method "POST" `
             -Body $body
         $this.TaskId = $taskResponse.id
         Write-Verbose -Message "New Planner Task created with Id {$($taskResponse.id)}"
-        $this.UpdateDetails($GlobalAdminAccount)
+        $this.UpdateDetails($Credential)
     }
 
-    [void]Update([System.Management.Automation.PSCredential]$GlobalAdminAccount, [String]$ApplicationId)
+    [void]Update([System.Management.Automation.PSCredential]$Credential, [String]$ApplicationId)
     {
         $uri = "https://graph.microsoft.com/beta/planner/tasks/$($this.TaskId)"
         $body = $this.ConvertToJSONTask()
         $Headers = @{}
         $Headers.Add("If-Match", $this.ETag)
-        $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $GlobalAdminAccount `
+        $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $Credential `
             -ApplicationId $ApplicationId `
             -Uri $uri `
             -Method "PATCH" `
@@ -275,19 +275,19 @@ class PlannerTaskObject
             -Headers $Headers
     }
 
-    [void]UpdateDetails([System.Management.Automation.PSCredential]$GlobalAdminAccount, [String]$ApplicationId)
+    [void]UpdateDetails([System.Management.Automation.PSCredential]$Credential, [String]$ApplicationId)
     {
         $uri = "https://graph.microsoft.com/v1.0/planner/tasks/$($this.TaskId)/details"
         $body = $this.ConvertToJSONTaskDetails()
 
         # Get ETag for the details
-        $currentTaskDetails = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $GlobalAdminAccount `
+        $currentTaskDetails = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $Credential `
             -ApplicationId $ApplicationId `
             -Uri $uri `
             -Method "GET"
         $Headers = @{}
         $Headers.Add("If-Match", $currentTaskDetails.'@odata.etag')
-        $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $GlobalAdminAccount `
+        $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $Credential `
             -ApplicationId $ApplicationId `
             -Uri $uri `
             -Method "PATCH" `
@@ -295,21 +295,21 @@ class PlannerTaskObject
             -Headers $Headers
     }
 
-    [void]Delete([System.Management.Automation.PSCredential]$GlobalAdminAccount, [string]$ApplicationId, [string]$TaskId)
+    [void]Delete([System.Management.Automation.PSCredential]$Credential, [string]$ApplicationId, [string]$TaskId)
     {
         $VerbosePreference = 'Continue'
         Write-Verbose -Message "Initiating the Deletion of Task {$TaskId}"
         $uri = "https://graph.microsoft.com/v1.0/planner/tasks/$TaskId"
 
         # Get ETag for the details
-        $currentTaskDetails = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $GlobalAdminAccount `
+        $currentTaskDetails = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $Credential `
             -ApplicationId $ApplicationId `
             -Uri $uri `
             -Method "GET"
         $Headers = @{}
         $Headers.Add("If-Match", $currentTaskDetails.'@odata.etag')
         Write-Verbose -Message "Retrieved Task's ETag {$($currentTaskDetails.'@odata.etag')}"
-        $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $GlobalAdminAccount `
+        $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $Credential `
             -ApplicationId $ApplicationId `
             -Uri $uri `
             -Method "DELETE" `

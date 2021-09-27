@@ -18,7 +18,7 @@ Ensure
 - Description: Specifies if the configuration should be
   `Present` or `Absent`
 
-GlobalAdminAccount
+Credential
 
 - Required: Yes
 - Description: Credentials of an Office365 Global Admin
@@ -34,7 +34,7 @@ Identity
         EXOSafeAttachmentRule TestSafeAttachmentRule {
             Ensure = 'Present'
             Identity = 'TestRule'
-            GlobalAdminAccount = $GlobalAdminAccount
+            Credential = $Credential
             SafeAttachmentPolicy = 'TestPolicy'
             Enabled = $true
             Priority = 0

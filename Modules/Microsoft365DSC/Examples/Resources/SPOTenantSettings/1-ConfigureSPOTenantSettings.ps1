@@ -17,7 +17,7 @@ Configuration Example
         SPOTenantSettings MyTenantSettings
         {
             IsSingleInstance                              = "Yes"
-            GlobalAdminAccount                            = $credsGlobalAdmin
+            Credential                            = $credsGlobalAdmin
             MinCompatibilityLevel                         = 16
             MaxCompatibilityLevel                         = 16
             SearchResolveExactEmailOrUPN                  = $false

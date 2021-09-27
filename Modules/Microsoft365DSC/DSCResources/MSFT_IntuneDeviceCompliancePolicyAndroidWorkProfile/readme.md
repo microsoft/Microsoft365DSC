@@ -145,7 +145,7 @@ IntuneDeviceCompliancePolicyAndroidDeviceOwner f7d82525-b7c0-475c-9d5e-16fafdfa4
             DeviceThreatProtectionRequiredSecurityLevel        = "unavailable";
             DisplayName                                        = "DeviceOwner";
             Ensure                                             = "Present";
-            GlobalAdminAccount                                 = $Credsglobaladmin;
+            Credential                                         = $Credsglobaladmin;
             PasswordExpirationDays                             = 90;
             PasswordMinimumLength                              = 6;
             PasswordMinutesOfInactivityBeforeLock              = 5;

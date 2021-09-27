@@ -25,7 +25,7 @@ Configuration Example
             PreventTollBypass          = $true
             BusyOnBusyEnabledType      = 'Enabled'
             Ensure                     = 'Present'
-            GlobalAdminAccount         = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
         }
     }
 }

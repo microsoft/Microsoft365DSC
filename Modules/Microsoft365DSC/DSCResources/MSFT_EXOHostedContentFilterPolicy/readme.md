@@ -13,7 +13,7 @@ Ensure
 - Description: `Present` is the only value accepted.
   Configurations using `Ensure = 'Absent'` will throw an Error!
 
-GlobalAdminAccount
+Credential
 
 - Required: Yes
 - Description: Credentials of an Office365 Global Admin
@@ -35,7 +35,7 @@ AdminDisplayName
 EXOHostedContentFilterPolicy TestHostedContentFilterPolicy {
   Ensure                                   = 'Present'
   Identity                                 = 'TestPolicy'
-  GlobalAdminAccount                       = $GlobalAdminAccount
+  Credential                               = $Credential
   AdminDisplayName                         = 'This policiy is a test'
   AddXHeaderValue                          = 'MyCustomSpamHeader'
   ModifySubjectValue                       = 'SPAM!'

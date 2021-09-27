@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.com", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.com", $secpasswd)
 
 
             Mock -CommandName Get-PSSession -MockWith {
@@ -68,7 +68,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ServicePrincipalType          = "Application"
                     Tags                          = "{WindowsAzureActiveDirectoryIntegratedApp}"
                     Ensure                        = "Present"
-                    GlobalAdminAccount            = $credsGlobalAdmin
+                    Credential            = $credsGlobalAdmin
                 }
 
                 Mock -CommandName Get-MgServicePrincipal -MockWith {
@@ -107,7 +107,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ServicePrincipalType          = "Application"
                     Tags                          = "{WindowsAzureActiveDirectoryIntegratedApp}"
                     Ensure                        = "Absent"
-                    GlobalAdminAccount            = $credsGlobalAdmin
+                    Credential            = $credsGlobalAdmin
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -167,7 +167,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ServicePrincipalType          = "Application"
                     Tags                          = "{WindowsAzureActiveDirectoryIntegratedApp}"
                     Ensure                        = "Present"
-                    GlobalAdminAccount            = $credsGlobalAdmin
+                    Credential            = $credsGlobalAdmin
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -223,7 +223,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ServicePrincipalType          = "Application"
                     Tags                          = "{WindowsAzureActiveDirectoryIntegratedApp}"
                     Ensure                        = "Present"
-                    GlobalAdminAccount            = $credsGlobalAdmin
+                    Credential            = $credsGlobalAdmin
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -268,7 +268,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {

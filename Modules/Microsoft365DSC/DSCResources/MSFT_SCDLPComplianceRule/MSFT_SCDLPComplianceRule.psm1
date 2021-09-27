@@ -149,7 +149,7 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
 
     Write-Verbose -Message "Getting configuration of DLPCompliancePolicy for $Name"
@@ -170,7 +170,7 @@ function Get-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -290,9 +290,9 @@ function Get-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -456,7 +456,7 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
 
     Write-Verbose -Message "Setting configuration of DLPComplianceRule for $Name"
@@ -465,7 +465,7 @@ function Set-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -512,7 +512,7 @@ function Set-TargetResource
             $CreationParams.ExceptIfContentContainsSensitiveInformation = $value
         }
 
-        $CreationParams.Remove("GlobalAdminAccount")
+        $CreationParams.Remove("Credential")
         $CreationParams.Remove("Ensure")
 
         Write-Verbose -Message "Calling New-DLPComplianceRule with Values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
@@ -557,7 +557,7 @@ function Set-TargetResource
             $UpdateParams.ExceptIfContentContainsSensitiveInformation = $value
         }
 
-        $UpdateParams.Remove("GlobalAdminAccount") | Out-Null
+        $UpdateParams.Remove("Credential") | Out-Null
         $UpdateParams.Remove("Ensure") | Out-Null
         $UpdateParams.Remove("Name") | Out-Null
         $UpdateParams.Remove("Policy") | Out-Null
@@ -724,14 +724,14 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -743,7 +743,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('Credential') | Out-Null
 
     #region Test Sensitive Information Type
     # For each Desired SIT check to see if there is an existing rule with the same name
@@ -810,7 +810,7 @@ function Export-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
@@ -822,7 +822,7 @@ function Export-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -848,7 +848,7 @@ function Export-TargetResource
             $Params = @{
                 Name               = $rule.name
                 Policy             = $rule.ParentPolicyName
-                GlobalAdminAccount = $GlobalAdminAccount
+                Credential = $Credential
             }
             $Results = Get-TargetResource @Params
 
@@ -895,7 +895,7 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
+                -Credential $Credential
 
             if ($null -ne $Results.ContentContainsSensitiveInformation )
             {
@@ -925,9 +925,9 @@ function Export-TargetResource
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             { $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `

@@ -70,7 +70,7 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -83,7 +83,7 @@ function Get-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", "ServicePrincipal")
     Add-M365DSCTelemetryEvent -Data $data
@@ -114,7 +114,7 @@ function Get-TargetResource
         }
         $task = [PlannerTaskObject]::new()
         Write-Verbose -Message "Populating task {$taskId} from the Get method"
-        $task.PopulateById($GlobalAdminAccount, $ApplicationId, $TaskId)
+        $task.PopulateById($Credential, $ApplicationId, $TaskId)
 
         if ($null -eq $task)
         {
@@ -173,7 +173,7 @@ function Get-TargetResource
                 Notes                = $NotesValue
                 Ensure               = "Present"
                 ApplicationId        = $ApplicationId
-                GlobalAdminAccount   = $GlobalAdminAccount
+                Credential   = $Credential
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $results)"
             return $results
@@ -189,9 +189,9 @@ function Get-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -276,7 +276,7 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -289,7 +289,7 @@ function Set-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -315,7 +315,7 @@ function Set-TargetResource
     if (-not [System.String]::IsNullOrEmpty($TaskId))
     {
         Write-Verbose -Message "Populating Task {$TaskId} from the Set method"
-        $task.PopulateById($GlobalAdminAccount, $ApplicationId, $TaskId)
+        $task.PopulateById($Credential, $ApplicationId, $TaskId)
     }
 
     $task.BucketId = $Bucket
@@ -393,20 +393,20 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Planner Task {$Title} doesn't already exist. Creating it."
-        $task.Create($GlobalAdminAccount, $ApplicationId)
+        $task.Create($Credential, $ApplicationId)
     }
     elseif ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Planner Task {$Title} already exists, but is not in the `
             Desired State. Updating it."
-        $task.Update($GlobalAdminAccount, $ApplicationId)
+        $task.Update($Credential, $ApplicationId)
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Planner Task {$Title} exists, but is should not. `
             Removing it."
-        $task.Delete($GlobalAdminAccount, $ApplicationId, $TaskId)
+        $task.Delete($Credential, $ApplicationId, $TaskId)
     }
 }
 
@@ -482,7 +482,7 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -493,7 +493,7 @@ function Test-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -505,7 +505,7 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('Credential') | Out-Null
 
     # If the Task is currently assigned to a bucket and the Bucket property is null,
     # assume that we are trying to remove the given task from the bucket and therefore
@@ -542,7 +542,7 @@ function Export-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -553,7 +553,7 @@ function Export-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", "ServicePrincipal")
     Add-M365DSCTelemetryEvent -Data $data
@@ -574,7 +574,7 @@ function Export-TargetResource
             try
             {
                 [Array]$plans = Get-M365DSCPlannerPlansFromGroup -GroupId $group.ObjectId `
-                    -GlobalAdminAccount $GlobalAdminAccount `
+                    -Credential $Credential `
                     -ApplicationId $ApplicationId
 
                 $j = 1
@@ -583,7 +583,7 @@ function Export-TargetResource
                     Write-Host "        |---[$j/$($plans.Length)] $($plan.Title)"
 
                     [Array]$tasks = Get-M365DSCPlannerTasksFromPlan -PlanId $plan.Id `
-                        -GlobalAdminAccount $GlobalAdminAccount `
+                        -Credential $Credential `
                         -ApplicationId $ApplicationId
                     $k = 1
                     foreach ($task in $tasks)
@@ -594,7 +594,7 @@ function Export-TargetResource
                             PlanId             = $plan.Id
                             Title              = $task.Title
                             ApplicationId      = $ApplicationId
-                            GlobalAdminAccount = $GlobalAdminAccount
+                            Credential = $Credential
                         }
 
                         $result = Get-TargetResource @params
@@ -607,7 +607,8 @@ function Export-TargetResource
                         {
                             $result.Remove("AssignedUsers") | Out-Null
                         }
-                        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                        $result = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                            -Results $Result
                         if ($result.Attachments.Length -gt 0)
                         {
                             $result.Attachments = [Array](Convert-M365DSCPlannerTaskAssignmentToCIMArray `
@@ -636,7 +637,7 @@ function Export-TargetResource
                         $currentDSCBlock += "        {`r`n"
                         $content = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
                         $content = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                            -ParameterName "GlobalAdminAccount"
+                            -ParameterName "Credential"
                         if ($result.Attachments.Length -gt 0)
                         {
                             $content = Convert-DSCStringParamToVariable -DSCBlock $content `
@@ -658,7 +659,7 @@ function Export-TargetResource
                             -ConnectionMode $ConnectionMode `
                             -ModulePath $PSScriptRoot `
                             -Results $Results `
-                            -GlobalAdminAccount $GlobalAdminAccount
+                            -Credential $Credential
                         $dscContent += $currentDSCBlock
 
                         Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -679,9 +680,9 @@ function Export-TargetResource
                     {
                         $tenantIdValue = $TenantId
                     }
-                    elseif ($null -ne $GlobalAdminAccount)
+                    elseif ($null -ne $Credential)
                     {
-                        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                        $tenantIdValue = $Credential.UserName.Split('@')[1]
                     }
                     Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                         -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -706,9 +707,9 @@ function Export-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -818,7 +819,7 @@ function Get-M365DSCPlannerPlansFromGroup
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -826,7 +827,7 @@ function Get-M365DSCPlannerPlansFromGroup
     )
     $results = @()
     $uri = "https://graph.microsoft.com/v1.0/groups/$GroupId/planner/plans"
-    $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $GlobalAdminAccount `
+    $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $Credential `
         -ApplicationId $ApplicationId `
         -Uri $uri `
         -Method Get
@@ -851,7 +852,7 @@ function Get-M365DSCPlannerTasksFromPlan
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -859,7 +860,7 @@ function Get-M365DSCPlannerTasksFromPlan
     )
     $results = @()
     $uri = "https://graph.microsoft.com/v1.0/planner/plans/$PlanId/tasks"
-    $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $GlobalAdminAccount `
+    $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $Credential `
         -ApplicationId $ApplicationId `
         -Uri $uri `
         -Method Get

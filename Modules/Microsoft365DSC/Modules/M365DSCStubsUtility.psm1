@@ -8,13 +8,13 @@ function New-M365DSCStubFiles
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
 
-    if ($null -eq $GlobalAdminAccount)
+    if ($null -eq $Credential)
     {
-        $GlobalAdminAccount = Get-Credential
-        $PSBoundParameters.Add("GlobalAdminAccount", $GlobalAdminAccount)
+        $Credential = Get-Credential
+        $PSBoundParameters.Add("Credential", $Credential)
     }
 
     if (Test-Path $DestinationFilePath)

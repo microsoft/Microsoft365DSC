@@ -31,7 +31,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -107,7 +107,7 @@ function Get-TargetResource
                 DisplayName           = $Policy.DisplayName
                 IsOrganizationDefault = $Policy.IsOrganizationDefault
                 Ensure                = "Present"
-                GlobalAdminAccount    = $GlobalAdminAccount
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
@@ -158,7 +158,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -183,7 +183,7 @@ function Set-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -194,7 +194,7 @@ function Set-TargetResource
     $currentParameters.Remove("ApplicationId")  | Out-Null
     $currentParameters.Remove("TenantId")  | Out-Null
     $currentParameters.Remove("CertificateThumbprint")  | Out-Null
-    $currentParameters.Remove("GlobalAdminAccount")  | Out-Null
+    $currentParameters.Remove("Credential")  | Out-Null
     $currentParameters.Remove("Ensure")  | Out-Null
 
     # Policy should exist but it doesn't
@@ -253,7 +253,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -279,7 +279,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove("Id") | Out-Null
     $ValuesToCheck.Remove("ApplicationId") | Out-Null
     $ValuesToCheck.Remove("TenantId") | Out-Null
@@ -303,7 +303,7 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -328,7 +328,7 @@ function Export-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -352,7 +352,7 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($AADPolicies.Count)] $($AADPolicy.DisplayName)" -NoNewline
             $Params = @{
-                GlobalAdminAccount    = $GlobalAdminAccount
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
@@ -378,7 +378,7 @@ function Export-TargetResource
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
-                    -GlobalAdminAccount $GlobalAdminAccount
+                    -Credential $Credential
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName

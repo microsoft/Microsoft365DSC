@@ -21,7 +21,7 @@ Configuration Example
             Owner                                       = "admin@Office365DSC.onmicrosoft.com"
             PermissionLevels                            = @("Edit", "Read")
             Ensure                                      = "Present"
-            GlobalAdminAccount                          = $credsGlobalAdmin
+            Credential                          = $credsGlobalAdmin
         }
 
         SPOSiteGroup adfd6217-29de-4297-95d4-7004455d3daa
@@ -31,7 +31,7 @@ Configuration Example
             Owner                                       = "admin@Office365DSC.onmicrosoft.com"
             PermissionLevels                            = @("Edit", "Read")
             Ensure                                      = "Present"
-            GlobalAdminAccount                          = $credsGlobalAdmin
+            Credential                          = $credsGlobalAdmin
         }
     }
 }

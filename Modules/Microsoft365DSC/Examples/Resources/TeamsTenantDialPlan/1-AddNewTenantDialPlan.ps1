@@ -17,7 +17,7 @@ Configuration Example
         {
             Description           = 'This is a demo dial plan';
             Ensure                = "Present";
-            GlobalAdminAccount    = $Credsglobaladmin;
+            Credential    = $Credsglobaladmin;
             Identity              = "DemoPlan";
             NormalizationRules    = MSFT_TeamsVoiceNormalizationRule{
                 Pattern = '^00(\d+)$'

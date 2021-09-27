@@ -18,21 +18,21 @@ Configuration Example
         {
             Workload           = "Exchange"
             Ensure             = "Present"
-            GlobalAdminAccount = $credsGlobalAdmin
+            Credential = $credsGlobalAdmin
         }
 
         SCAuditConfigurationPolicy OneDriveAuditPolicy
         {
             Workload           = "OneDriveForBusiness"
             Ensure             = "Present"
-            GlobalAdminAccount = $credsGlobalAdmin
+            Credential = $credsGlobalAdmin
         }
 
         SCAuditConfigurationPolicy SharePointAuditPolicy
         {
             Workload           = "SharePoint"
             Ensure             = "Present"
-            GlobalAdminAccount = $credsGlobalAdmin
+            Credential = $credsGlobalAdmin
         }
     }
 }

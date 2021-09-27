@@ -19,7 +19,7 @@ Configuration Example
             Searchable                  = $True
             FullTextIndex               = ""
             MappedCrawledProperties     = @()
-            GlobalAdminAccount          = $credsGlobalAdmin
+            Credential          = $credsGlobalAdmin
             LanguageNeutralTokenization = $True
             CompanyNameExtraction       = $False
             AllowMultipleValues         = $True

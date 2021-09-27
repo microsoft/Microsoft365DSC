@@ -20,7 +20,7 @@ Configuration Example
             BroadcastAttendeeVisibilityMode = "EveryoneInCompany";
             BroadcastRecordingMode          = "AlwaysEnabled";
             Ensure                          = "Present";
-            GlobalAdminAccount              = $Credsglobaladmin;
+            Credential              = $Credsglobaladmin;
             Identity                        = "MyDemoPolicy";
         }
     }

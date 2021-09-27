@@ -18,7 +18,7 @@ Configuration Example
             Name               = "My Sub-Category"
             Category           = "My Category"
             Ensure             = "Present"
-            GlobalAdminAccount = $credsGlobalAdmin
+            Credential = $credsGlobalAdmin
         }
     }
 }

@@ -20,7 +20,7 @@ Configuration Example
             Comment            = "Test Policy"
             SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
             Ensure             = "Present"
-            GlobalAdminAccount = $credsGlobalAdmin
+            Credential = $credsGlobalAdmin
         }
     }
 }

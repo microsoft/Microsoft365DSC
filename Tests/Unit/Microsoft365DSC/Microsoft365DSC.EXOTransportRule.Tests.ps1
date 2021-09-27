@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             $Global:PartialExportFileName = "c:\TestPath"
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
@@ -57,7 +57,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExceptIfSubjectContainsWords = 'Press Release'
                     RejectMessageReasonText      = 'Messages sent between the Sales and Brokerage departments are strictly prohibited.'
                     Ensure                       = 'Present'
-                    GlobalAdminAccount           = $GlobalAdminAccount
+                    Credential           = $Credential
                 }
 
                 Mock -CommandName Get-TransportRule -MockWith {
@@ -85,7 +85,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RejectMessageReasonText      = 'Messages sent between the Sales and Marketing departments are strictly prohibited.'
                     FreeBusyAccessLevel          = 'AvailabilityOnly'
                     Ensure                       = 'Present'
-                    GlobalAdminAccount           = $GlobalAdminAccount
+                    Credential           = $Credential
                 }
             }
 
@@ -106,7 +106,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     BetweenMemberOf2             = 'Brokerage Department'
                     ExceptIfSubjectContainsWords = 'Press Release'
                     RejectMessageReasonText      = 'Messages sent between the Sales and Brokerage departments are strictly prohibited.'
-                    GlobalAdminAccount           = $GlobalAdminAccount
+                    Credential           = $Credential
                 }
 
                 Mock -CommandName Get-TransportRule -MockWith {
@@ -138,7 +138,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExceptIfSubjectContainsWords = 'Press Release'
                     RejectMessageReasonText      = 'Messages sent between the Sales and Brokerage departments are strictly prohibited.'
                     Ensure                       = 'Present'
-                    GlobalAdminAccount           = $GlobalAdminAccount
+                    Credential           = $Credential
                 }
 
                 Mock -CommandName Get-TransportRule -MockWith {
@@ -164,7 +164,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExceptIfSubjectContainsWords = 'Press Release'
                     RejectMessageReasonText      = 'Messages sent between the Sales and Brokerage departments are strictly prohibited.'
                     Ensure                       = 'Present'
-                    GlobalAdminAccount           = $GlobalAdminAccount
+                    Credential           = $Credential
                 }
             }
 
@@ -176,7 +176,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 $TransportRule = @{

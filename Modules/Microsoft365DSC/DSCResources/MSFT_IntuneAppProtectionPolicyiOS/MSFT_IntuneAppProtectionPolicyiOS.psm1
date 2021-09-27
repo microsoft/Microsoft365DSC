@@ -115,7 +115,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -142,7 +142,7 @@ function Get-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -196,7 +196,7 @@ function Get-TargetResource
             }
         }
         return @{
-            DisplayName                             = $policy.DisplayName
+            DisplayName                             = $policyInfo.DisplayName
             Description                             = $policy.Description
             PeriodOfflineBeforeAccessCheck          = $policy.PeriodOfflineBeforeAccessCheck
             PeriodOnlineBeforeAccessCheck           = $policy.PeriodOnlineBeforeAccessCheck
@@ -223,7 +223,7 @@ function Get-TargetResource
             ExcludedGroups                          = $exclusionArray
             Apps                                    = $appsArray
             Ensure                                  = "Present"
-            GlobalAdminAccount                      = $GlobalAdminAccount
+            Credential                              = $Credential
             ApplicationId                           = $ApplicationId
             ApplicationSecret                       = $ApplicationSecret
             TenantId                                = $TenantId
@@ -235,7 +235,7 @@ function Get-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            $tenantIdValue = $Credential.UserName.Split('@')[1]
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
                 -TenantId $tenantIdValue
@@ -364,7 +364,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -391,7 +391,7 @@ function Set-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -400,7 +400,7 @@ function Set-TargetResource
     $currentPolicy = Get-TargetResource @PSBoundParameters
     $setParams = $PSBoundParameters
     $setParams.Remove("Ensure") | Out-Null
-    $setParams.Remove("GlobalAdminAccount") | Out-Null
+    $setParams.Remove("Credential") | Out-Null
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new iOS App Protection Policy {$DisplayName}"
@@ -558,7 +558,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -581,7 +581,7 @@ function Test-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -593,7 +593,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
@@ -616,7 +616,7 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -642,7 +642,7 @@ function Export-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $Credential.UserName)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -667,7 +667,7 @@ function Export-TargetResource
             $params = @{
                 DisplayName           = $policy.displayName
                 Ensure                = 'Present'
-                GlobalAdminAccount    = $GlobalAdminAccount
+                Credential    = $Credential
                 ApplicationID         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
@@ -680,7 +680,7 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
+                -Credential $Credential
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -702,7 +702,7 @@ function Export-TargetResource
         try
         {
             Write-Verbose -Message $_
-            $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+            $tenantIdValue = $Credential.UserName.Split('@')[1]
 
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -735,7 +735,7 @@ function Get-M365DSCIntuneAppProtectionPolicyiOS
     catch
     {
         Write-Verbose -Message $_
-        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+        $tenantIdValue = $Credential.UserName.Split('@')[1]
         Add-M365DSCEvent -Message $_ -EntryType 'Error' `
             -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $tenantIdValue
@@ -930,7 +930,7 @@ function New-M365DSCIntuneAppProtectionPolicyiOS
     catch
     {
         Write-Verbose -Message $_
-        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+        $tenantIdValue = $Credential.UserName.Split('@')[1]
         Add-M365DSCEvent -Message $_ -EntryType 'Error' `
             -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $tenantIdValue
@@ -961,7 +961,7 @@ function Set-M365DSCIntuneAppProtectionPolicyiOS
     catch
     {
         Write-Verbose -Message $_
-        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+        $tenantIdValue = $Credential.UserName.Split('@')[1]
         Add-M365DSCEvent -Message $_ -EntryType 'Error' `
             -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $tenantIdValue
@@ -992,7 +992,7 @@ function Set-M365DSCIntuneAppProtectionPolicyiOSApps
     catch
     {
         Write-Verbose -Message $_
-        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+        $tenantIdValue = $Credential.UserName.Split('@')[1]
         Add-M365DSCEvent -Message $_ -EntryType 'Error' `
             -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $tenantIdValue
@@ -1023,7 +1023,7 @@ function Set-M365DSCIntuneAppProtectionPolicyiOSAssignment
     catch
     {
         Write-Verbose -Message $_
-        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+        $tenantIdValue = $Credential.UserName.Split('@')[1]
         Add-M365DSCEvent -Message $_ -EntryType 'Error' `
             -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $tenantIdValue

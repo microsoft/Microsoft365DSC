@@ -188,7 +188,7 @@ Configuration Example
             enterpriseCloudPrintResourceIdentifier = "http://cloudenterpriseprint/cloudPrint"
             networkProxyServer = @("address=proxy.contoso.com:8080","exceptions=*.contoso.com`r`n*.internal.local","useForLocalAddresses=false")
             Ensure = 'Present'
-            GlobalAdminAccount = $credsGlobalAdmin;
+            Credential = $credsGlobalAdmin;
         }
     }
 }
