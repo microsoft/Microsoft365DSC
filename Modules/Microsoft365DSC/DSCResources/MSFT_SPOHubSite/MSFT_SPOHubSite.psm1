@@ -102,7 +102,7 @@ function Get-TargetResource
         else
         {
             $hubSite = Get-PnPHubSite -Identity $Url
-            $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
             $principals = @()
             foreach ($permission in $hubSite.Permissions.PrincipalName)
@@ -111,7 +111,7 @@ function Get-TargetResource
                 if ($result[0].StartsWith("c") -eq $true)
                 {
                     # Group permissions
-                    $group = Get-AzureADGroup -ObjectId $result[2]
+                    $group = Get-MgGroup -UserId $result[2]
 
                     if ($null -eq $group.EmailAddress)
                     {
@@ -264,7 +264,7 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     try
@@ -323,7 +323,7 @@ function Set-TargetResource
 
         if ($PSBoundParameters.ContainsKey("AllowedToJoin") -eq $true)
         {
-            $groups = Get-AzureADGroup
+            $groups = Get-MgGroup -All:$true
             $regex = "^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
 
             Write-Verbose -Message "Validating AllowedToJoin principals"
@@ -402,7 +402,7 @@ function Set-TargetResource
 
             if ($null -ne $differences)
             {
-                $groups = Get-AzureADGroup
+                $groups = Get-MgGroup -All:$true
                 $regex = "^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
 
                 Write-Verbose -Message "Updating Hub Site permissions"

@@ -56,4 +56,4 @@ jobs:
           Write-Verbose -Message "Trying to connect to SC"
           Connect-M365Tenant -Workload SecurityComplianceCenter -Credential $Credential
           Write-Verbose -Message "Connected to SC"
-          Export-M365DSCConfiguration -Quiet -Credential $Credential -Path "." -FileName 'ExtractedSPO.ps1' -Workload 'SC' -Verbose
+          Export-M365DSCConfiguration -Credential $Credential -Path "." -FileName 'ExtractedSPO.ps1' -Workload 'SC' -Verbose

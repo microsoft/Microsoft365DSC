@@ -134,7 +134,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return $returnVal
                 }
 
-                Mock -CommandName Get-AzureADGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @(
                         @{
                             EmailAddress = "group@contoso.onmicrosoft.com"
@@ -199,7 +199,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return $returnVal
                 }
 
-                Mock -CommandName Get-AzureADGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         EmailAddress = "group@contoso.onmicrosoft.com"
                     }
@@ -258,7 +258,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return $returnVal
                 }
 
-                Mock -CommandName Get-AzureADGroup -MockWith {
+                Mock -CommandName Get-MGGroup -MockWith {
                     return @{
                         EmailAddress = "wronggroup@contoso.onmicrosoft.com"
                     }
@@ -304,7 +304,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-AzureADGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         DisplayName = "SecurityGroup"
                     }

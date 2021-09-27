@@ -42,19 +42,19 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
     try
     {
         $UsedID = $false
-        $AllGroups = Get-AzureADGroup -ObjectId $OwnerGroup -ErrorAction 'SilentlyContinue'
+        $AllGroups = Get-MgGroup GroupId $OwnerGroup -ErrorAction 'SilentlyContinue'
         if ($AllGroups -eq $null)
         {
             Write-Verbose -Message "Could not get Azure AD Group {$OwnerGroup} by ID. `
                 Trying by Name."
-            [Array]$AllGroups = Get-AzureADGroup -SearchString $OwnerGroup
+            [Array]$AllGroups = Get-MgGroup -Search $OwnerGroup
         }
         else
         {
@@ -226,11 +226,11 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Planner Plan {$Title} already exists, but is not in the `
             Desired State. Updating it."
-        [Array]$AllGroups = Get-AzureADGroup -ObjectId $OwnerGroup -ErrorAction 'SilentlyContinue'
+        [Array]$AllGroups = Get-MgGroup -GroupId $OwnerGroup -ErrorAction 'SilentlyContinue'
         Write-Verbose -Message $AllGroups[0]
         if ($AllGroups -eq $null)
         {
-            [Array]$AllGroups = Get-AzureADGroup -SearchString $OwnerGroup
+            [Array]$AllGroups = Get-MgGroup -Search $OwnerGroup
         }
         $plan = Get-MgGroupPlannerPlan -GroupId $AllGroups[0].ObjectId | Where-Object -FilterScript { $_.Title -eq $Title }
         $SetParams.Add("PlannerPlanId", $plan.Id)
@@ -333,12 +333,12 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     try
     {
-        [array]$groups = Get-AzureADGroup -All:$true -ErrorAction Stop
+        [array]$groups = Get-MgGroup -All:$true -ErrorAction Stop
 
         $ConnectionMode = Connect-Graph -Scopes "Group.ReadWrite.All"
         $i = 1

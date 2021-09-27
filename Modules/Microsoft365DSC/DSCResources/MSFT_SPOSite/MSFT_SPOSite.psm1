@@ -219,10 +219,10 @@ function Get-TargetResource
             {
                 try
                 {
-                    New-M365DSCConnection -Workload "AzureAD" `
+                    New-M365DSCConnection -Workload "MicrosoftGraph" `
                         -InboundParameters $PSBoundParameters | Out-Null
-                    $app = Get-AzureADApplication -Filter "AppId eq '$ApplicationID'"
-                    $owner = (Get-AzureADApplicationOwner -ObjectId $app.ObjectId)
+                    $app = Get-MgApplication -Filter "AppId eq '$ApplicationID'"
+                    $owner = (Get-MgApplicationOwner -ApplicationId $app.ObjectId)
                     $siteOwnerEmail = $owner.UserPrincipalName
                 }
                 catch

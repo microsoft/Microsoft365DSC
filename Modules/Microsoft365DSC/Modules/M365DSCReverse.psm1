@@ -4,16 +4,12 @@ function Start-M365DSCConfigurationExtract
     [OutputType([System.Collections.Hashtable])]
     param(
         [Parameter()]
-        [Switch]
-        $Quiet,
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
         [Parameter()]
         [System.String[]]
-        $ComponentsToExtract,
+        $Components,
 
         [Parameter()]
         [Switch]
@@ -94,25 +90,25 @@ function Start-M365DSCConfigurationExtract
 
         if ($null -ne $Workloads)
         {
-            $ComponentsToExtract = Get-M365DSCResourcesByWorkloads -Workloads $Workloads `
+            $Components = Get-M365DSCResourcesByWorkloads -Workloads $Workloads `
                 -Mode $Mode
         }
 
-        if ($null -eq $ComponentsToExtract -or $ComponentsToExtract.Length -eq 0)
+        if ($null -eq $Components -or $Components.Length -eq 0)
         {
-            $ComponentsToExtractSpecified = $false
+            $ComponentsSpecified = $false
         }
         else
         {
-            $ComponentsToExtractSpecified = $true
+            $ComponentsSpecified = $true
         }
 
         $ComponentsToSkip = @()
-        if ($Mode -eq 'Default' -and $null -eq $ComponentsToExtract)
+        if ($Mode -eq 'Default' -and $null -eq $Components)
         {
             $ComponentsToSkip = $Global:FullComponents
         }
-        elseif ($Mode -eq 'Lite' -and $null -eq $ComponentsToExtract)
+        elseif ($Mode -eq 'Lite' -and $null -eq $Components)
         {
             $ComponentsToSkip = $Global:DefaultComponents + $Global:FullComponents
         }
@@ -140,7 +136,7 @@ function Start-M365DSCConfigurationExtract
 
         # If some resources are not supported based on the Authentication parameters
         # received, write a warning.
-        if ($ComponentsToExtract.Length -eq 0)
+        if ($Components.Length -eq 0)
         {
             $allResourcesInModule = Get-M365DSCAllResources
             $selectedItems = Compare-Object -ReferenceObject $allResourcesInModule `
@@ -153,7 +149,7 @@ function Start-M365DSCConfigurationExtract
         }
         else
         {
-            $selectedResources = $ComponentsToExtract
+            $selectedResources = $Components
         }
 
         try
@@ -182,28 +178,6 @@ function Start-M365DSCConfigurationExtract
             Write-Host "[WARNING]" -NoNewline -ForegroundColor Yellow
             Write-Host " Based on the provided Authentication parameters, the following resources cannot be extracted: " -ForegroundColor Gray
             Write-Host "$resourcesNotSupported" -ForegroundColor Gray
-        }
-
-        if (-not $PSBoundParameters.ContainsKey('Quiet'))
-        {
-            $unattendedCommand = "Export-M365DSCConfiguration -Quiet -ComponentsToExtract @("
-            $Components = ""
-            foreach ($resource in $ComponentsToExtract)
-            {
-                if ($resource -ne 'Credential' -and $resource -ne 'Application' -and `
-                        $resource -ne 'Certificate')
-                {
-                    $Components += "'$resource',"
-                }
-            }
-            if (-not [System.String]::IsNullOrEmpty($Components))
-            {
-                $Components = $Components.Substring(0, $Components.Length - 1)
-            }
-            $unattendedCommand += $Components + ") -Credential (Get-Credential)"
-            Write-Host "[INFO]" -NoNewline -ForegroundColor Cyan
-            Write-Host " You can perform an equivalent unattended Export operation by running the following command:" -ForegroundColor Gray
-            Write-Host $unattendedCommand -ForegroundColor Blue
         }
 
         # Get Tenant Info
@@ -443,11 +417,11 @@ function Start-M365DSCConfigurationExtract
                         break
                     }
                 }
-                if (($null -ne $ComponentsToExtract -and
-                        ($ComponentsToExtract -contains $resourceName -or $ComponentsToExtract -contains ("chck" + $resourceName))) -or
+                if (($null -ne $Components -and
+                        ($Components -contains $resourceName -or $Components -contains ("chck" + $resourceName))) -or
                     $AllComponents -or `
-                    ($null -eq $ComponentsToExtract -and $null -eq $Workloads) -and `
-                    ($ComponentsToExtractSpecified -or -not $ComponentsToSkip.Contains($resourceName)) -and `
+                    ($null -eq $Components -and $null -eq $Workloads) -and `
+                    ($ComponentsSpecified -or -not $ComponentsToSkip.Contains($resourceName)) -and `
                     $resourcesNotSupported -notcontains $ResourceModule.Name.Split('.')[0].Replace('MSFT_', ''))
                 {
                     $ResourcesToExport += $ResourceModule
@@ -619,7 +593,7 @@ function Start-M365DSCConfigurationExtract
             }
         }
 
-        $shouldOpenOutputDirectory = !$Quiet
+        $shouldOpenOutputDirectory = $false
         #region Prompt the user for a location to save the extract and generate the files
         if ([System.String]::IsNullOrEmpty($Path))
         {
@@ -662,8 +636,8 @@ function Start-M365DSCConfigurationExtract
         #endregion
 
         #region Copy Downloaded files back into output folder
-        if (($null -ne $ComponentsToExtract -and
-                $ComponentsToExtract.Contains("chckSPOApp")) -or
+        if (($null -ne $Components -and
+                $Components.Contains("SPOApp")) -or
             $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains('SPO')))
         {
             if ($ConnectionMode -eq 'credential')

@@ -116,7 +116,6 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Id was NOT specified"
             ## Can retreive multiple AAD Groups since displayname is not unique
-            ## Get-AzureADMSGroup is required for the visibility param to be returned. Get-AzureADGroup won't work.
             $Group = Get-MgGroup -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
             if ($Group.Length -gt 1)
             {

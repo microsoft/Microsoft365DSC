@@ -276,12 +276,12 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     try
     {
-        [array]$groups = Get-AzureADGroup -All:$true -ErrorAction Stop
+        [array]$groups = Get-MgGroup -All:$true -ErrorAction Stop
 
         $ConnectionMode = Connect-Graph -Scopes "Group.ReadWrite.All"
         $i = 1

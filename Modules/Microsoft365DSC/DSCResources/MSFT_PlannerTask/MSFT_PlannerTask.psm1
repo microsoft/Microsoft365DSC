@@ -127,12 +127,12 @@ function Get-TargetResource
             #region Task Assignment
             if ($task.Assignments.Length -gt 0)
             {
-                $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+                $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                     -InboundParameters $PSBoundParameters
                 $assignedValues = @()
                 foreach ($assignee in $task.Assignments)
                 {
-                    $user = Get-AzureADUser -ObjectId $assignee
+                    $user = Get-MgUser -UserId $assignee
                     $assignedValues += $user.UserPrincipalName
                 }
             }
@@ -330,12 +330,12 @@ function Set-TargetResource
     #region Assignments
     if ($AssignedUsers.Length -gt 0)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
         $AssignmentsValue = @()
         foreach ($userName in $AssignedUsers)
         {
-            $user = Get-AzureADUser -SearchString $userName
+            $user = Get-MgUser -Search $userName
             if ($null -ne $user)
             {
                 $AssignmentsValue += $user.ObjectId
@@ -561,10 +561,10 @@ function Export-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
 
-        [array]$groups = Get-AzureADGroup -All:$true
+        [array]$groups = Get-MgGroup -All:$true
 
         $i = 1
         $dscContent = ''

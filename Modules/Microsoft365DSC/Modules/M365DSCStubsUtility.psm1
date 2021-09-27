@@ -33,11 +33,6 @@ function New-M365DSCStubFiles
 
     $Modules = @(
         @{
-            Platform     = 'AzureAD'
-            ModuleName   = 'AzureADPreview'
-            RandomCmdlet = 'Get-AzureADDirectorySetting'
-        },
-        @{
             Platform     = 'ExchangeOnline'
             ModuleName   = $null
             RandomCmdlet = 'Add-AvailabilityAddressSpace'

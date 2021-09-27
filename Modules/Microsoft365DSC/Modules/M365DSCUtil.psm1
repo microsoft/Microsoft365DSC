@@ -794,7 +794,7 @@ function Export-M365DSCConfiguration
     param(
         [Parameter()]
         [Switch]
-        $Quiet,
+        $LaunchWebUI,
 
         [Parameter()]
         [System.String]
@@ -810,7 +810,7 @@ function Export-M365DSCConfiguration
 
         [Parameter()]
         [System.String[]]
-        $ComponentsToExtract,
+        $Components,
 
         [Parameter()]
         [ValidateSet('AAD', 'SPO', 'EXO', 'INTUNE', 'SC', 'OD', 'O365', 'PLANNER', 'PP', 'TEAMS')]
@@ -867,10 +867,9 @@ function Export-M365DSCConfiguration
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Event", "Extraction")
-    $data.Add("Quiet", $Quiet)
     $data.Add("Path", [System.String]::IsNullOrEmpty($Path))
     $data.Add("FileName", $null -ne [System.String]::IsNullOrEmpty($FileName))
-    $data.Add("ComponentsToExtract", $null -ne $ComponentsToExtract)
+    $data.Add("Components", $null -ne $Components)
     $data.Add("Workloads", $null -ne $Workloads)
     $data.Add("MaxProcesses", $null -ne $MaxProcesses)
     Add-M365DSCTelemetryEvent -Data $data
@@ -881,12 +880,9 @@ function Export-M365DSCConfiguration
         $MaxProcesses = 16
     }
 
-    if (-not $Quiet)
+    if ($LaunchWebUI)
     {
-        Write-Host "THIS GRAPHICAL USER INTERFACE IS DEPRECATED. STARTING OCTOBER 6TH 2021, IT WILL BE DISABLED AND REPLACED BY AN ONLINE VERSION. TRY IT OUT NOW AT https://export-preview.Microsoft365DSC.com" -ForegroundColor Black -BackgroundColor Yellow
         explorer "https://export-preview.Microsoft365dsc.com"
-        Show-M365DSCGUI -Path $Path -FileName $FileName `
-            -GenerateInfo $GenerateInfo
     }
     else
     {
@@ -904,13 +900,12 @@ function Export-M365DSCConfiguration
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
-                -GenerateInfo $GenerateInfo `
-                -Quiet
+                -GenerateInfo $GenerateInfo
         }
-        elseif ($null -ne $ComponentsToExtract)
+        elseif ($null -ne $Components)
         {
             Start-M365DSCConfigurationExtract -Credential $Credential `
-                -ComponentsToExtract $ComponentsToExtract `
+                -Components $Components `
                 -Path $Path -FileName $FileName `
                 -MaxProcesses $MaxProcesses `
                 -ConfigurationName $ConfigurationName `
@@ -920,8 +915,7 @@ function Export-M365DSCConfiguration
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
-                -GenerateInfo $GenerateInfo `
-                -Quiet
+                -GenerateInfo $GenerateInfo
         }
         elseif ($null -ne $Mode)
         {
@@ -936,8 +930,7 @@ function Export-M365DSCConfiguration
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
-                -GenerateInfo $GenerateInfo `
-                -Quiet
+                -GenerateInfo $GenerateInfo
         }
     }
 }
@@ -964,9 +957,9 @@ function Get-M365DSCTenantDomain
 
     if ($null -eq $CertificatePath)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
-        $tenantDetails = Get-AzureADTenantDetail
+        $tenantDetails = Get-MgOrganization
         $defaultDomain = $tenantDetails.VerifiedDomains | Where-Object -FilterScript { $_.Initial }
         return $defaultDomain.Name
     }
@@ -1339,18 +1332,18 @@ function Get-SPOAdministrationUrl
         $UseMFASwitch = @{ }
     }
     Write-Verbose -Message "Connection to Azure AD is required to automatically determine SharePoint Online admin URL..."
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
     Write-Verbose -Message "Getting SharePoint Online admin URL..."
-    $defaultDomain = Get-AzureADDomain | Where-Object { ($_.Name -like "*.onmicrosoft.com" -or $_.Name -like "*.onmicrosoft.de" -or $_.Name -like "*.onmicrosoft.us") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
+    $defaultDomain = Get-MgDomain | Where-Object { ($_.Id -like "*.onmicrosoft.com" -or $_.Id -like "*.onmicrosoft.de" -or $_.Id -like "*.onmicrosoft.us") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
 
-    if ($defaultDomain[0].Name -like '*.onmicrosoft.com*')
+    if ($defaultDomain[0].Id -like '*.onmicrosoft.com*')
     {
-        $global:tenantName = $defaultDomain[0].Name -replace ".onmicrosoft.com", ""
+        $global:tenantName = $defaultDomain[0].Id -replace ".onmicrosoft.com", ""
     }
-    elseif ($defaultDomain[0].Name -like '*.onmicrosoft.de*')
+    elseif ($defaultDomain[0].Id -like '*.onmicrosoft.de*')
     {
-        $global:tenantName = $defaultDomain[0].Name -replace ".onmicrosoft.de", ""
+        $global:tenantName = $defaultDomain[0].Id -replace ".onmicrosoft.de", ""
     }
     $global:AdminUrl = "https://$global:tenantName-admin.sharepoint.com"
     Write-Verbose -Message "SharePoint Online admin URL is $global:AdminUrl"
@@ -1379,18 +1372,18 @@ function Get-M365TenantName
         $UseMFASwitch = @{ }
     }
     Write-Verbose -Message "Connection to Azure AD is required to automatically determine SharePoint Online admin URL..."
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
     Write-Verbose -Message "Getting SharePoint Online admin URL..."
-    $defaultDomain = Get-AzureADDomain | Where-Object { ($_.Name -like "*.onmicrosoft.com" -or $_.Name -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
+    $defaultDomain = Get-MgDomain | Where-Object { ($_.Id -like "*.onmicrosoft.com" -or $_.Id -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
 
-    if ($defaultDomain[0].Name -like '*.onmicrosoft.com*')
+    if ($defaultDomain[0].Id -like '*.onmicrosoft.com*')
     {
-        $tenantName = $defaultDomain[0].Name -replace ".onmicrosoft.com", ""
+        $tenantName = $defaultDomain[0].Id -replace ".onmicrosoft.com", ""
     }
-    elseif ($defaultDomain[0].Name -like '*.onmicrosoft.de*')
+    elseif ($defaultDomain[0].Id -like '*.onmicrosoft.de*')
     {
-        $tenantName = $defaultDomain[0].Name -replace ".onmicrosoft.de", ""
+        $tenantName = $defaultDomain[0].Id -replace ".onmicrosoft.de", ""
     }
 
     Write-Verbose -Message "M365 tenant name is $tenantName"
@@ -1808,7 +1801,7 @@ function Assert-M365DSCBlueprint
         Write-Host "Initiating the Export of those ($($ResourcesInBluePrint.Length)) components from the tenant..."
         $TempExportName = (New-Guid).ToString() + ".ps1"
         Export-M365DSCConfiguration -Quiet `
-            -ComponentsToExtract $ResourcesInBluePrint `
+            -Components $ResourcesInBluePrint `
             -Path $env:temp `
             -FileName $TempExportName `
             -Credential $Credentials

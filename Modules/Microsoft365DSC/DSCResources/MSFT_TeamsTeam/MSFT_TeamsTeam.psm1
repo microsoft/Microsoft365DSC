@@ -421,24 +421,24 @@ function Set-TargetResource
 
         if ($ConnectionMode -eq "ServicePrincipal")
         {
-            $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
-            $group = New-AzureADMSGroup -DisplayName $DisplayName -GroupTypes "Unified" -MailEnabled $true -SecurityEnabled $true -MailNickname $MailNickName
+            $group = New-MgSGroup -DisplayName $DisplayName -GroupTypes "Unified" -MailEnabled $true -SecurityEnabled $true -MailNickname $MailNickName
             $currentOwner = (($CurrentParameters.Owner)[0])
 
             Write-Verbose -Message "Retrieving Group Owner {$currentOwner}"
-            $ownerUser = Get-AzureADUser -SearchString $currentOwner
+            $ownerUser = Get-MgUser -Search $currentOwner
 
             Write-Verbose -Message "Adding Owner {$($ownerUser.ObjectId)} to Group {$($group.Id)}"
             try
             {
-                Add-AzureADGroupOwner -ObjectId $group.Id -RefObjectId $ownerUser.ObjectId -ErrorAction Stop
+                New-MgGroupOwnerByRef -GroupId $group.Id -RefObjectId $ownerUser.ObjectId -ErrorAction Stop
             }
             catch
             {
                 Write-Verbose -Message "Adding Owner - Sleeping for 15 seconds"
                 Start-Sleep -Seconds 15
-                Add-AzureADGroupOwner -ObjectId $group.Id -RefObjectId $ownerUser.ObjectId
+                New-MgGroupOwnerByRef -GroupId $group.Id -RefObjectId $ownerUser.ObjectId
             }
 
             try

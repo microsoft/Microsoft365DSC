@@ -279,7 +279,7 @@ function Export-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
 
         #region Telemetry
@@ -296,7 +296,7 @@ function Export-TargetResource
         $result = ""
 
         # Get all instances;
-        $instances = Get-AzureADUser
+        $instances = Get-MgUser -All:$true
 
         # Split the complete list of instances into batches;
         if ($instances.Length -ge $MaxProcesses)

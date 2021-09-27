@@ -52,4 +52,4 @@ jobs:
           $CredPassword = ConvertTo-SecureString $env:PUBLIC_PASSWORD -AsPlainText -Force
           $Credential = New-Object System.Management.Automation.PSCredential ($env:PUBLIC_USERNAME, $CredPassword)
           Set-M365DSCTelemetryOption -Enabled $false
-          Export-M365DSCConfiguration -Quiet -Credential $Credential -Path "." -FileName 'ExtractedSPO.ps1' -Workload 'PP' -Verbose
+          Export-M365DSCConfiguration -Credential $Credential -Path "." -FileName 'ExtractedSPO.ps1' -Workload 'PP' -Verbose

@@ -23,6 +23,11 @@
 * MISC
   * Renamed the GlobalAdminAccount parameter to Credential across all resources;
   * Revamped entire Azure AD Workload to leverage Microsoft Graph;
+  * Doing an unattended export (without the -Quiet) will always launch the
+    new web-based UI. The old one has been removed.
+  * Removal of the -Quiet switch for the Export-M365DSCConfiguration cmdlet;
+  * Renaming the ComponentsToExtract property from the Export-M365DSCConfiguration
+    cmdlet to Components;
 
 # 1.21.922.1
 
