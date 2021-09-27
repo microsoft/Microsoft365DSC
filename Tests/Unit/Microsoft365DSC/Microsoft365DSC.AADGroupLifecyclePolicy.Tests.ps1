@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "AADMSGroupLifecyclePolicy" -GenericStubModule $GenericStubPath
+    -DscResource "AADGroupLifecyclePolicy" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -36,15 +36,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
-            Mock -CommandName Set-AzureADMSGroupLifecyclePolicy -MockWith {
+            Mock -CommandName Update-MgGroupLifecyclePolicy -MockWith {
 
             }
 
-            Mock -CommandName Remove-AzureADMSGroupLifecyclePolicy -MockWith {
+            Mock -CommandName Remove-MgGroupLifecyclePolicy -MockWith {
 
             }
 
-            Mock -CommandName New-AzureADMSGroupLifecyclePolicy -MockWith {
+            Mock -CommandName New-MgGroupLifecyclePolicy -MockWith {
 
             }
         }
@@ -65,14 +65,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADMSGroupLifecyclePolicy -MockWith {
+                Mock -CommandName Get-MgGroupLifecyclePolicy -MockWith {
                     return $null
                 }
             }
 
             It "Should return Values from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-                Should -Invoke -CommandName "Get-AzureADMSGroupLifecyclePolicy" -Exactly 1
+                Should -Invoke -CommandName "Get-MgGroupLifecyclePolicy" -Exactly 1
             }
 
             It 'Should return false from the Test method' {
@@ -81,9 +81,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $Script:calledOnceAlready = $false
             It 'Should Create the Policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-AzureADMSGroupLifecyclePolicy" -Exactly 1
-                Should -Invoke -CommandName "Set-AzureADMSGroupLifecyclePolicy" -Exactly 0
-                Should -Invoke -CommandName "Remove-AzureADMSGroupLifecyclePolicy" -Exactly 0
+                Should -Invoke -CommandName "New-MgGroupLifecyclePolicy" -Exactly 1
+                Should -Invoke -CommandName "Update-MgGroupLifecyclePolicy" -Exactly 0
+                Should -Invoke -CommandName "Remove-MgGroupLifecyclePolicy" -Exactly 0
             }
         }
 
@@ -102,7 +102,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADMSGroupLifecyclePolicy -MockWith {
+                Mock -CommandName Get-MgGroupLifecyclePolicy -MockWith {
                     return @{
                         AlternateNotificationEmails = @("john.smith@contoso.com", 'bob.houle@contoso.com');
                         GroupLifetimeInDays         = 99;
@@ -114,7 +114,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return Values from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-                Should -Invoke  -CommandName "Get-AzureADMSGroupLifecyclePolicy" -Exactly 1
+                Should -Invoke  -CommandName "Get-MgGroupLifecyclePolicy" -Exactly 1
             }
 
             It 'Should return false from the Test method' {
@@ -123,9 +123,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the Policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-AzureADMSGroupLifecyclePolicy" -Exactly 0
-                Should -Invoke -CommandName "Set-AzureADMSGroupLifecyclePolicy" -Exactly 0
-                Should -Invoke -CommandName "Remove-AzureADMSGroupLifecyclePolicy" -Exactly 1
+                Should -Invoke -CommandName "New-MgGroupLifecyclePolicy" -Exactly 0
+                Should -Invoke -CommandName "Update-MgGroupLifecyclePolicy" -Exactly 0
+                Should -Invoke -CommandName "Remove-MgGroupLifecyclePolicy" -Exactly 1
             }
         }
 
@@ -144,7 +144,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADMSGroupLifecyclePolicy -MockWith {
+                Mock -CommandName Get-MgGroupLifecyclePolicy -MockWith {
                     return @{
                         AlternateNotificationEmails = @("john.smith@contoso.com", 'bob.houle@contoso.com');
                         GroupLifetimeInDays         = 99;
@@ -156,7 +156,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return Values from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-                Should -Invoke -CommandName "Get-AzureADMSGroupLifecyclePolicy" -Exactly 1
+                Should -Invoke -CommandName "Get-MgGroupLifecyclePolicy" -Exactly 1
             }
 
             It 'Should return true from the Test method' {
@@ -179,7 +179,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADMSGroupLifecyclePolicy -MockWith {
+                Mock -CommandName Get-MgGroupLifecyclePolicy -MockWith {
                     return @{
                         AlternateNotificationEmails = @("john.smith@contoso.com", 'bob.houle@contoso.com');
                         GroupLifetimeInDays         = 99;
@@ -191,7 +191,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return Values from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-                Should -Invoke -CommandName "Get-AzureADMSGroupLifecyclePolicy" -Exactly 1
+                Should -Invoke -CommandName "Get-MgGroupLifecyclePolicy" -Exactly 1
             }
 
             It 'Should return false from the Test method' {
@@ -200,9 +200,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Update the Policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-AzureADMSGroupLifecyclePolicy" -Exactly 0
-                Should -Invoke -CommandName "Set-AzureADMSGroupLifecyclePolicy" -Exactly 1
-                Should -Invoke -CommandName "Remove-AzureADMSGroupLifecyclePolicy" -Exactly 0
+                Should -Invoke -CommandName "New-MgGroupLifecyclePolicy" -Exactly 0
+                Should -Invoke -CommandName "Update-MgGroupLifecyclePolicy" -Exactly 1
+                Should -Invoke -CommandName "Remove-MgGroupLifecyclePolicy" -Exactly 0
             }
         }
 
@@ -216,7 +216,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADMSGroupLifecyclePolicy -MockWith {
+                Mock -CommandName Get-MgGroupLifecyclePolicy -MockWith {
                     return @{
                         AlternateNotificationEmails = @("john.smith@contoso.com", 'bob.houle@contoso.com');
                         GroupLifetimeInDays         = 99;

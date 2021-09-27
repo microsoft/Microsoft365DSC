@@ -83,11 +83,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration of Azure AD ServicePrincipal"
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
@@ -109,7 +113,7 @@ function Get-TargetResource
         {
             if (-not [System.String]::IsNullOrEmpty($ObjectID))
             {
-                $AADServicePrincipal = Get-AzureADServicePrincipal -ObjectId $ObjectId `
+                $AADServicePrincipal = Get-MgServicePrincipal -ServicePrincipalId $ObjectId `
                     -ErrorAction Stop
             }
         }
@@ -120,7 +124,7 @@ function Get-TargetResource
 
         if ($null -eq $AADServicePrincipal)
         {
-            $AADServicePrincipal = Get-AzureADServicePrincipal -Filter "AppID eq '$($AppId)'"
+            $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($AppId)'"
         }
         if ($null -eq $AADServicePrincipal)
         {
@@ -130,7 +134,7 @@ function Get-TargetResource
         {
             $result = @{
                 AppId                     = $AADServicePrincipal.AppId
-                ObjectID                  = $AADServicePrincipal.ObjectId
+                ObjectID                  = $AADServicePrincipal.Id
                 DisplayName               = $AADServicePrincipal.DisplayName
                 AlternativeNames          = $AADServicePrincipal.AlternativeNames
                 AccountEnabled            = [boolean]$AADServicePrincipal.AccountEnabled
@@ -264,6 +268,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
 
@@ -292,19 +300,19 @@ function Set-TargetResource
     if ($Ensure -eq "Present" -and $currentAADServicePrincipal.Ensure -eq "Absent")
     {
         Write-Verbose -Message "Creating new Service Principal"
-        New-AzureADServicePrincipal @currentParameters
+        New-MgServicePrincipal @currentParameters
     }
     # ServicePrincipal should exist and will be configured to desired state
     if ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing Service Principal"
-        Set-AzureADServicePrincipal -ObjectId $currentAADServicePrincipal.ObjectID @currentParameters
+        Update-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID @currentParameters
     }
     # ServicePrincipal exists but should not
     elseif ($Ensure -eq 'Absent' -and $currentAADServicePrincipal.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Service Principal"
-        Remove-AzureADServicePrincipal -ObjectId $currentAADServicePrincipal.ObjectID
+        Remove-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID
     }
 }
 
@@ -393,6 +401,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
     #region Telemetry
@@ -447,9 +459,13 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -467,7 +483,7 @@ function Export-TargetResource
     {
         $i = 1
         Write-Host "`r`n" -NoNewline
-        $AADServicePrincipals = Get-AzureADServicePrincipal -All:$true
+        $AADServicePrincipals = Get-MgServicePrincipal -All:$true
         foreach ($AADServicePrincipal in $AADServicePrincipals)
         {
             Write-Host "    |---[$i/$($AADServicePrincipals.Count)] $($AADServicePrincipal.DisplayName)" -NoNewline
@@ -501,6 +517,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

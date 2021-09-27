@@ -33,8 +33,9 @@ class MSFT_AADConditionalAccessPolicy : OMI_BaseResource
     [Write, Description("Specifies, whether Browser Persistence is controlled by the Policy.")] Boolean PersistentBrowserIsEnabled;
     [Write, Description("Specifies, what Browser Persistence control is enforced by the Policy."), ValueMap{"Always","Never",""}, Values{"Always","Never",""}] String PersistentBrowserMode;
     [Write, Description("Specify if the Azure AD CA Policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Write, Description("Credentials of the Azure Active Directory Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+    [Write, Description("Credentials for the Microsoft Graph delegated permissions."), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Secret of the Azure Active Directory application to authenticate with.")] String ApplicationSecret;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
 };

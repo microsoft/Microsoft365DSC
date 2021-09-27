@@ -1,9 +1,34 @@
 # Change log for Microsoft365DSC
 
+1.21.1006.1
+
+* BREAKING CHANGES
+
+* AADApplication
+  * Removed support for the Oauth2AllowImplicitFlow, SamlMetadataUrl and
+    Oauth2AllowUrlPathMatching properties;
+* AADMSGroup
+  * Renamed resource to AADGroup;
+* AADMSGroupLifecyclePolicy
+  * Renamed resource to AADGroupLifecyclePolicy;
+* AADPolicy
+  * Replaced resource by the new AADTokenLifetimePolicy one;
+* DEPENDENCIES
+  * Added dependency on Microsoft.Graph.Applications;
+  * Added dependency on Microsoft.Graph.Groups;
+  * Added dependency on Microsoft.Graph.Identity.DirectoryManagement;
+  * Added dependency on Microsoft.Graph.Identity.SignIns;
+  * Removing dependency on AzureADPreview;
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.137
+* MISC
+  * Renamed the GlobalAdminAccount parameter to Credential across all resources;
+  * Revamped entire Azure AD Workload to leverage Microsoft Graph;
+
 # 1.21.922.1
 
 * AADApplication
   * Fix issue where export will only export 100 apps
+
 * EXOSafeLinksPolicy
   * Added support for CustomNotificationText, EnableOrganizationBranding, and
     UseTranslatedNotificationText properties;

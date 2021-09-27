@@ -1,5 +1,5 @@
 {
-    "resourceName": "AADMSGroup",
+    "resourceName": "AADGroup",
     "description": "This resource configures an Azure Active Directory group.",
     "permissions": [
         {

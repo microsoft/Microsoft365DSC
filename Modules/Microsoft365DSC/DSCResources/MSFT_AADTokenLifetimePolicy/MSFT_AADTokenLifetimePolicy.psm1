@@ -14,7 +14,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $AlternativeIdentifier,
+        $Description,
 
         [Parameter()]
         [System.String[]]
@@ -23,10 +23,6 @@ function Get-TargetResource
         [Parameter()]
         [Boolean]
         $IsOrganizationDefault,
-
-        [Parameter()]
-        [System.String]
-        $Type,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -47,18 +43,23 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Getting configuration of AzureAD Policy"
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
+    Write-Verbose -Message "Getting configuration of AzureAD Token Lifetime Policy"
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("Principal", $ApplicationId)
     $data.Add("TenantId", $TenantId)
     $data.Add("ConnectionMode", $ConnectionMode)
     Add-M365DSCTelemetryEvent -Data $data
@@ -72,18 +73,18 @@ function Get-TargetResource
         {
             if ($null -ne $Id)
             {
-                $Policy = Get-AzureADPolicy -ID $Id
+                $Policy = Get-MgPolicyTokenLifetimePolicy -TokenLifetimePolicyId $Id
             }
         }
         catch
         {
-            Write-Verbose -Message "Could not retrieve AzureAD Policy by ID {$Id}"
+            Write-Verbose -Message "Could not retrieve AzureAD Token Lifetime Policy by ID {$Id}"
         }
         if ($null -eq $Policy)
         {
             try
             {
-                $Policy = Get-AzureADPolicy -All $True -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -like $DisplayName }
+                $Policy = Get-MgPolicyTokenLifetimePolicy -Filter "DisplayName eq '$DisplayName'"
             }
             catch
             {
@@ -101,12 +102,10 @@ function Get-TargetResource
             Write-Verbose "Found existing AzureAD Policy {$($Policy.DisplayName)}"
             $Result = @{
                 Id                    = $Policy.Id
-                OdataType             = $Policy.OdataType
-                AlternativeIdentifier = $Policy.AlternativeIdentifier
+                Description           = $Policy.Description
                 Definition            = $Policy.Definition
                 DisplayName           = $Policy.DisplayName
                 IsOrganizationDefault = $Policy.IsOrganizationDefault
-                Type                  = $Policy.Type
                 Ensure                = "Present"
                 GlobalAdminAccount    = $GlobalAdminAccount
                 ApplicationId         = $ApplicationId
@@ -142,7 +141,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $AlternativeIdentifier,
+        $Description,
 
         [Parameter()]
         [System.String[]]
@@ -151,10 +150,6 @@ function Set-TargetResource
         [Parameter()]
         [Boolean]
         $IsOrganizationDefault,
-
-        [Parameter()]
-        [System.String]
-        $Type,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -172,6 +167,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
@@ -203,20 +202,21 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating New AzureAD Policy {$Displayname)}"
         $currentParameters.Remove("Id") | Out-Null
-        New-AzureADPolicy @currentParameters
+        New-MgPolicyTokenLifetimePolicy @currentParameters
     }
     # Policy should exist and will be configured to desire state
     elseif ($Ensure -eq 'Present' -and $CurrentAADPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating exisitng AzureAD Policy {$Displayname)}"
-        $currentParameters.Id = $currentAADPolicy.ID
-        Set-AzureADPolicy @currentParameters
+        $currentParameters.Add("TokenLifetimePolicyId", $currentAADPolicy.ID)
+        $currentParameters.Remove("Id") | Out-Null
+        Update-MgPolicyTokenLifetimePolicy @currentParameters
     }
     # Policy exist but should not
     elseif ($Ensure -eq 'Absent' -and $CurrentAADPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing AzureAD Policy {$Displayname)}"
-        Remove-AzureADPolicy -ID $currentAADPolicy.ID
+        Remove-MgPolicyTokenLifetimePolicy -TokenLifetimePolicyId $currentAADPolicy.ID
     }
 }
 
@@ -236,7 +236,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $AlternativeIdentifier,
+        $Description,
 
         [Parameter()]
         [System.String[]]
@@ -245,10 +245,6 @@ function Test-TargetResource
         [Parameter()]
         [Boolean]
         $IsOrganizationDefault,
-
-        [Parameter()]
-        [System.String]
-        $Type,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -266,6 +262,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
@@ -315,9 +315,13 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -334,7 +338,7 @@ function Export-TargetResource
     $i = 1
     try
     {
-        [array]$AADPolicies = Get-AzureADPolicy -ErrorAction Stop
+        [array]$AADPolicies = Get-MgPolicyTokenLifetimePolicy -ErrorAction Stop
 
         if ($AADPolicies.Length -eq 0)
         {
@@ -387,6 +391,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         Write-Verbose -Message $_
         Add-M365DSCEvent -Message $_ -EntryType 'Error' `
             -EventID 1 -Source $($MyInvocation.MyCommand.Source)

@@ -32,15 +32,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
-            Mock -CommandName Set-AzureADServicePrincipal -MockWith {
+            Mock -CommandName Update-MgServicePrincipal -MockWith {
 
             }
 
-            Mock -CommandName Remove-AzureADServicePrincipal -MockWith {
+            Mock -CommandName Remove-MgServicePrincipal -MockWith {
 
             }
 
-            Mock -CommandName New-AzureADServicePrincipal -MockWith {
+            Mock -CommandName New-MgServicePrincipal -MockWith {
 
             }
 
@@ -71,21 +71,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount            = $credsGlobalAdmin
                 }
 
-                Mock -CommandName Get-AzureADServicePrincipal -MockWith {
+                Mock -CommandName Get-MgServicePrincipal -MockWith {
                     return $null
                 }
             }
 
             It "Should return values from the get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-                Should -Invoke -CommandName "Get-AzureADServicePrincipal" -Exactly 1
+                Should -Invoke -CommandName "Get-MgServicePrincipal" -Exactly 1
             }
             It 'Should return false from the test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
             It 'Should create the application from the set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-AzureADServicePrincipal" -Exactly 1
+                Should -Invoke -CommandName "New-MgServicePrincipal" -Exactly 1
             }
         }
 
@@ -114,10 +114,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADServicePrincipal -MockWith {
+                Mock -CommandName Get-MgServicePrincipal -MockWith {
                     $AADSP = New-Object PSCustomObject
                     $AADSP | Add-Member -MemberType NoteProperty -Name AppId -Value "b4f08c68-7276-4cb8-b9ae-e75fca5ff834"
-                    $AADSP | Add-Member -MemberType NoteProperty -Name ObjectID -Value "5dcb2237-c61b-4258-9c85-eae2aaeba9d6"
+                    $AADSP | Add-Member -MemberType NoteProperty -Name Id -Value "5dcb2237-c61b-4258-9c85-eae2aaeba9d6"
                     $AADSP | Add-Member -MemberType NoteProperty -Name DisplayName -Value "App1"
                     $AADSP | Add-Member -MemberType NoteProperty -Name AlternativeNames -Value "AlternativeName1","AlternativeName2"
                     $AADSP | Add-Member -MemberType NoteProperty -Name AccountEnabled -Value $true
@@ -137,7 +137,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return values from the get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-                Should -Invoke -CommandName "Get-AzureADServicePrincipal" -Exactly 1
+                Should -Invoke -CommandName "Get-MgServicePrincipal" -Exactly 1
             }
 
             It 'Should return false from the test method' {
@@ -146,7 +146,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the app from the set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "Remove-AzureADServicePrincipal" -Exactly 1
+                Should -Invoke -CommandName "Remove-MgServicePrincipal" -Exactly 1
             }
         }
         Context -Name "The app exists and values are already in the desired state" -Fixture {
@@ -174,10 +174,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADServicePrincipal -MockWith {
+                Mock -CommandName Get-MgServicePrincipal -MockWith {
                     $AADSP = New-Object PSCustomObject
                     $AADSP | Add-Member -MemberType NoteProperty -Name AppId -Value "b4f08c68-7276-4cb8-b9ae-e75fca5ff834"
-                    $AADSP | Add-Member -MemberType NoteProperty -Name ObjectID -Value "5dcb2237-c61b-4258-9c85-eae2aaeba9d6"
+                    $AADSP | Add-Member -MemberType NoteProperty -Name Id -Value "5dcb2237-c61b-4258-9c85-eae2aaeba9d6"
                     $AADSP | Add-Member -MemberType NoteProperty -Name DisplayName -Value "App1"
                     $AADSP | Add-Member -MemberType NoteProperty -Name AlternativeNames -Value "AlternativeName1","AlternativeName2"
                     $AADSP | Add-Member -MemberType NoteProperty -Name AccountEnabled -Value $true
@@ -197,7 +197,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return Values from the get method" {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-AzureADServicePrincipal" -Exactly 1
+                Should -Invoke -CommandName "Get-MgServicePrincipal" -Exactly 1
             }
 
             It 'Should return true from the test method' {
@@ -230,10 +230,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADServicePrincipal -MockWith {
+                Mock -CommandName Get-MgServicePrincipal -MockWith {
                     $AADSP = New-Object PSCustomObject
                     $AADSP | Add-Member -MemberType NoteProperty -Name AppId -Value "b4f08c68-7276-4cb8-b9ae-e75fca5ff834"
-                    $AADSP | Add-Member -MemberType NoteProperty -Name ObjectID -Value "5dcb2237-c61b-4258-9c85-eae2aaeba9d6"
+                    $AADSP | Add-Member -MemberType NoteProperty -Name Id -Value "5dcb2237-c61b-4258-9c85-eae2aaeba9d6"
                     $AADSP | Add-Member -MemberType NoteProperty -Name AlternativeNames -Value "AlternativeName1","AlternativeName2"
                     $AADSP | Add-Member -MemberType NoteProperty -Name AccountEnabled -Value $true
                     $AADSP | Add-Member -MemberType NoteProperty -Name AppRoleAssignmentRequired -Value $false
@@ -252,7 +252,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return values from the get method" {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-AzureADServicePrincipal" -Exactly 1
+                Should -Invoke -CommandName "Get-MgServicePrincipal" -Exactly 1
             }
 
             It 'Should return false from the test method' {
@@ -261,7 +261,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Set-AzureADServicePrincipal' -Exactly 1
+                Should -Invoke -CommandName 'Update-MgServicePrincipal' -Exactly 1
             }
         }
 
@@ -275,10 +275,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADServicePrincipal -MockWith {
+                Mock -CommandName Get-MgServicePrincipal -MockWith {
                     $AADSP = New-Object PSCustomObject
                     $AADSP | Add-Member -MemberType NoteProperty -Name AppId -Value "b4f08c68-7276-4cb8-b9ae-e75fca5ff834"
-                    $AADSP | Add-Member -MemberType NoteProperty -Name ObjectID -Value "5dcb2237-c61b-4258-9c85-eae2aaeba9d6"
+                    $AADSP | Add-Member -MemberType NoteProperty -Name Id -Value "5dcb2237-c61b-4258-9c85-eae2aaeba9d6"
                     $AADSP | Add-Member -MemberType NoteProperty -Name DisplayName -Value "App1"
                     $AADSP | Add-Member -MemberType NoteProperty -Name AlternativeNames -Value "AlternativeName1","AlternativeName2"
                     $AADSP | Add-Member -MemberType NoteProperty -Name AccountEnabled -Value $true
