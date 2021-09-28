@@ -48,7 +48,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "When the policy doesn't already exist" -Fixture {
             BeforeAll {
-                $testParams = @{
+                $TestParams = @{
                     description                                                 = "Android device configuration policy";
                     displayName                                                 = "Android Work Profile - Device Restrictions - Standard";
                     passwordBlockFingerprintUnlock                              = $False;
@@ -95,1143 +95,341 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
+                (Get-TargetResource @TestParams).Ensure | Should -Be 'Absent'
             }
 
             It "Should return false from the Test method" {
-                Test-TargetResource @testParams | Should -Be $false
+                Test-TargetResource @TestParams | Should -Be $false
             }
 
             It "Should create the policy from the Set method" {
-                Set-TargetResource @testParams -verbose
+                Set-TargetResource @TestParams -verbose
                 Should -Invoke -CommandName "New-MgDeviceManagementDeviceConfiguration" -Exactly 1
             }
         }
 
-        # Context -Name "When the policy already exists and is NOT in the Desired State" -Fixture {
-        #     BeforeAll {
-        #         $testParams = @{
-        #             displayName = "CONTOSO | W10 | Device Restriction"
-        #             description = "Default device restriction settings"
-        #             defenderBlockEndUserAccess = $true
-        #             defenderRequireRealTimeMonitoring = $true
-        #             defenderRequireBehaviorMonitoring = $true
-        #             defenderRequireNetworkInspectionSystem = $true
-        #             defenderScanDownloads = $true
-        #             defenderScanScriptsLoadedInInternetExplorer = $true
-        #             defenderSignatureUpdateIntervalInHours = 8
-        #             defenderMonitorFileActivity = 'monitorIncomingFilesOnly'  # userDefined,monitorAllFiles,monitorIncomingFilesOnly,monitorOutgoingFilesOnly
-        #             defenderDaysBeforeDeletingQuarantinedMalware = 3
-        #             defenderScanMaxCpu = 2
-        #             defenderScanArchiveFiles = $true
-        #             defenderScanIncomingMail = $true
-        #             defenderScanRemovableDrivesDuringFullScan = $true
-        #             defenderScanMappedNetworkDrivesDuringFullScan = $false
-        #             defenderScanNetworkFiles = $false
-        #             defenderRequireCloudProtection = $true
-        #             defenderCloudBlockLevel = 'high'
-        #             defenderPromptForSampleSubmission = 'alwaysPrompt'
-        #             defenderScheduledQuickScanTime = '13:00:00.0000000'
-        #             defenderScanType = 'quick'   #quick,full,userDefined
-        #             defenderSystemScanSchedule  = 'monday'  #days of week
-        #             defenderScheduledScanTime =  '11:00:00.0000000'
-        #             defenderDetectedMalwareActions = @("lowSeverity=clean","moderateSeverity=quarantine","highSeverity=remove","severeSeverity=block")
-        #             defenderFileExtensionsToExclude = "[`"csv,jpg,docx`"]"
-        #             defenderFilesAndFoldersToExclude = "[`"c:\\2,C:\\1`"]"
-        #             defenderProcessesToExclude = "[`"notepad.exe,c:\\Windows\\myprocess.exe`"]"
-        #             lockScreenAllowTimeoutConfiguration = $true
-        #             lockScreenBlockActionCenterNotifications = $true
-        #             lockScreenBlockCortana = $true
-        #             lockScreenBlockToastNotifications = $false
-        #             lockScreenTimeoutInSeconds = 90
-        #             passwordBlockSimple = $true
-        #             passwordExpirationDays = 6
-        #             passwordMinimumLength = 5
-        #             passwordMinutesOfInactivityBeforeScreenTimeout = 15
-        #             passwordMinimumCharacterSetCount = 1
-        #             passwordPreviousPasswordBlockCount = 2
-        #             passwordRequired = $true
-        #             passwordRequireWhenResumeFromIdleState = $true
-        #             passwordRequiredType = "alphanumeric"
-        #             passwordSignInFailureCountBeforeFactoryReset = 12
-        #             privacyAdvertisingId = "blocked"
-        #             privacyAutoAcceptPairingAndConsentPrompts = $true
-        #             privacyBlockInputPersonalization = $true
-        #             startBlockUnpinningAppsFromTaskbar = $true
-        #             startMenuAppListVisibility = "collapse"
-        #             startMenuHideChangeAccountSettings = $true
-        #             startMenuHideFrequentlyUsedApps = $true
-        #             startMenuHideHibernate = $true
-        #             startMenuHideLock = $true
-        #             startMenuHidePowerButton = $true
-        #             startMenuHideRecentJumpLists = $true
-        #             startMenuHideRecentlyAddedApps = $true
-        #             startMenuHideRestartOptions = $true
-        #             startMenuHideShutDown = $true
-        #             startMenuHideSignOut = $true
-        #             startMenuHideSleep = $true
-        #             startMenuHideSwitchAccount = $true
-        #             startMenuHideUserTile = $true
-        #             startMenuLayoutXml = "+DQogICAGlmaWNhdGlvblRlbXBsYXRlPg=="
-        #             startMenuMode = "fullScreen"
-        #             startMenuPinnedFolderDocuments = "hide"
-        #             startMenuPinnedFolderDownloads = "hide"
-        #             startMenuPinnedFolderFileExplorer = "hide"
-        #             startMenuPinnedFolderHomeGroup = "hide"
-        #             startMenuPinnedFolderMusic = "hide"
-        #             startMenuPinnedFolderNetwork = "hide"
-        #             startMenuPinnedFolderPersonalFolder = "hide"
-        #             startMenuPinnedFolderPictures = "hide"
-        #             startMenuPinnedFolderSettings = "hide"
-        #             startMenuPinnedFolderVideos = "hide"
-        #             settingsBlockSettingsApp = $true
-        #             settingsBlockSystemPage = $true
-        #             settingsBlockDevicesPage = $true
-        #             settingsBlockNetworkInternetPage = $true
-        #             settingsBlockPersonalizationPage = $true
-        #             settingsBlockAccountsPage = $true
-        #             settingsBlockTimeLanguagePage = $true
-        #             settingsBlockEaseOfAccessPage = $true
-        #             settingsBlockPrivacyPage = $true
-        #             settingsBlockUpdateSecurityPage = $true
-        #             settingsBlockAppsPage = $true
-        #             settingsBlockGamingPage = $true
-        #             windowsSpotlightBlockConsumerSpecificFeatures = $true
-        #             windowsSpotlightBlocked = $true
-        #             windowsSpotlightBlockOnActionCenter = $true
-        #             windowsSpotlightBlockTailoredExperiences = $true
-        #             windowsSpotlightBlockThirdPartyNotifications = $true
-        #             windowsSpotlightBlockWelcomeExperience = $true
-        #             windowsSpotlightBlockWindowsTips = $true
-        #             windowsSpotlightConfigureOnLockScreen = "disabled"
-        #             networkProxyApplySettingsDeviceWide = $true
-        #             networkProxyDisableAutoDetect = $true
-        #             networkProxyAutomaticConfigurationUrl = "https://example.com/networkProxyAutomaticConfigurationUrl/"
-        #             accountsBlockAddingNonMicrosoftAccountEmail = $true
-        #             antiTheftModeBlocked = $true
-        #             bluetoothBlocked = $true
-        #             bluetoothAllowedServices = "[`"8e473eaa-ead4-4c60-ba9c-2c5696d71492`",`"21913f2d-a803-4f36-8039-669fd94ce5b3`"]"
-        #             bluetoothBlockAdvertising = $true
-        #             bluetoothBlockDiscoverableMode = $true
-        #             bluetoothBlockPrePairing = $true
-        #             cameraBlocked = $true
-        #             connectedDevicesServiceBlocked = $true
-        #             certificatesBlockManualRootCertificateInstallation = $true
-        #             copyPasteBlocked = $true
-        #             cortanaBlocked = $true
-        #             deviceManagementBlockFactoryResetOnMobile = $true
-        #             deviceManagementBlockManualUnenroll = $true
-        #             safeSearchFilter = "strict"
-        #             edgeBlockPopups = $true
-        #             edgeBlockSearchSuggestions = $true
-        #             edgeBlockSendingIntranetTrafficToInternetExplorer = $true
-        #             edgeSendIntranetTrafficToInternetExplorer = $true
-        #             edgeRequireSmartScreen = $true
-        #             edgeFirstRunUrl = "https://contoso.com/"
-        #             edgeBlockAccessToAboutFlags = $true
-        #             edgeHomepageUrls = "[`"https://microsoft.com`"]"
-        #             smartScreenBlockPromptOverride = $true
-        #             smartScreenBlockPromptOverrideForFiles = $true
-        #             webRtcBlockLocalhostIpAddress = $true
-        #             internetSharingBlocked = $true
-        #             settingsBlockAddProvisioningPackage = $true
-        #             settingsBlockRemoveProvisioningPackage = $true
-        #             settingsBlockChangeSystemTime = $true
-        #             settingsBlockEditDeviceName = $true
-        #             settingsBlockChangeRegion = $true
-        #             settingsBlockChangeLanguage = $true
-        #             settingsBlockChangePowerSleep = $true
-        #             locationServicesBlocked = $true
-        #             microsoftAccountBlocked = $true
-        #             microsoftAccountBlockSettingsSync = $true
-        #             nfcBlocked = $true
-        #             resetProtectionModeBlocked = $true
-        #             screenCaptureBlocked = $true
-        #             storageBlockRemovableStorage = $true
-        #             storageRequireMobileDeviceEncryption = $true
-        #             usbBlocked = $true
-        #             voiceRecordingBlocked = $true
-        #             wiFiBlockAutomaticConnectHotspots = $true
-        #             wiFiBlocked = $true
-        #             wiFiBlockManualConfiguration = $true
-        #             wiFiScanInterval = 1
-        #             wirelessDisplayBlockProjectionToThisDevice = $true
-        #             wirelessDisplayBlockUserInputFromReceiver = $true
-        #             wirelessDisplayRequirePinForPairing = $true
-        #             windowsStoreBlocked = $true
-        #             appsAllowTrustedAppsSideloading = "blocked"
-        #             windowsStoreBlockAutoUpdate = $true
-        #             developerUnlockSetting = "blocked"
-        #             sharedUserAppDataAllowed = $true
-        #             appsBlockWindowsStoreOriginatedApps = $true
-        #             windowsStoreEnablePrivateStoreOnly = $true
-        #             storageRestrictAppDataToSystemVolume = $true
-        #             storageRestrictAppInstallToSystemVolume = $true
-        #             gameDvrBlocked = $true
-        #             edgeSearchEngine = "bing"
-        #             experienceBlockDeviceDiscovery = $true
-        #             experienceBlockErrorDialogWhenNoSIM = $true
-        #             experienceBlockTaskSwitcher = $true
-        #             logonBlockFastUserSwitching = $true
-        #             tenantLockdownRequireNetworkDuringOutOfBoxExperience = $true
-        #             enterpriseCloudPrintDiscoveryEndPoint = "https://cloudprinterdiscovery.contoso.com"
-        #             enterpriseCloudPrintDiscoveryMaxLimit = 4
-        #             enterpriseCloudPrintMopriaDiscoveryResourceIdentifier = "http://mopriadiscoveryservice/cloudprint"
-        #             enterpriseCloudPrintOAuthClientIdentifier = "30fbf7e8-321c-40ce-8b9f-160b6b049257"
-        #             enterpriseCloudPrintOAuthAuthority = "https:/tenant.contoso.com/adfs"
-        #             enterpriseCloudPrintResourceIdentifier = "http://cloudenterpriseprint/cloudPrint"
-        #             networkProxyServer = @("address=proxy.contoso.com:8080","exceptions=*.contoso.com`r`n*.internal.local","useForLocalAddresses=false")
-        #             Ensure = 'Present'
-        #             GlobalAdminAccount = $GlobalAdminAccount;
-        #         }
+        Context -Name "When the policy already exists and is NOT in the Desired State" -Fixture {
+            BeforeAll {
+                $TestParams = @{
+                    description                                                 = "Android device configuration policy";
+                    displayName                                                 = "Android Work Profile - Device Restrictions - Standard";
+                    passwordBlockFingerprintUnlock                              = $False;
+                    passwordBlockTrustAgents                                    = $False;
+                    passwordExpirationDays                                      = 10;
+                    passwordMinimumLength                                       = 8;
+                    passwordMinutesOfInactivityBeforeScreenTimeout              = 3;
+                    passwordPreviousPasswordBlockCount                          = 3;
+                    passwordSignInFailureCountBeforeFactoryReset                = 10;
+                    passwordRequiredType                                        = "deviceDefault";
+                    workProfileDataSharingType                                  = "deviceDefault";
+                    workProfileBlockNotificationsWhileDeviceLocked              = $False;
+                    workProfileBlockAddingAccounts                              = $False;
+                    workProfileBluetoothEnableContactSharing                    = $False;
+                    workProfileBlockScreenCapture                               = $False;
+                    workProfileBlockCrossProfileCallerId                        = $False;
+                    workProfileBlockCamera                                      = $False;
+                    workProfileBlockCrossProfileContactsSearch                  = $False;
+                    workProfileBlockCrossProfileCopyPaste                       = $False;
+                    workProfileDefaultAppPermissionPolicy                       = "deviceDefault";
+                    workProfilePasswordBlockFingerprintUnlock                   = $False;
+                    workProfilePasswordBlockTrustAgents                         = $False;
+                    workProfilePasswordExpirationDays                           = 90;
+                    workProfilePasswordMinimumLength                            = 4;
+                    workProfilePasswordMinNumericCharacters                     = 3;
+                    workProfilePasswordMinNonLetterCharacters                   = 3;
+                    workProfilePasswordMinLetterCharacters                      = 3;
+                    workProfilePasswordMinLowerCaseCharacters                   = 3;
+                    workProfilePasswordMinUpperCaseCharacters                   = 3;
+                    workProfilePasswordMinSymbolCharacters                      = 3;
+                    workProfilePasswordMinutesOfInactivityBeforeScreenTimeout   = 3;
+                    workProfilePasswordPreviousPasswordBlockCount               = 3;
+                    workProfilePasswordSignInFailureCountBeforeFactoryReset     = 3;
+                    workProfilePasswordRequiredType                             = "deviceDefault";
+                    workProfileRequirePassword                                  = $False;
+                    securityRequireVerifyApps                                   = $False;
+                    Ensure                                                      = "Present";
+                    GlobalAdminAccount                                          = $GlobalAdminAccount;
+                }
 
-        #         Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
-        #             return @{
-        #                 id            = "12345-12345-12345-12345-12345"
-        #                 AdditionalProperties = @{
-        #                     '@odata.type'                                  = "#microsoft.graph.windows10GeneralConfiguration"
-        #                 }
-        #                 displayName = "CONTOSO | W10 | Device Restriction"
-        #                 description = "Default device restriction settings"
-        #                 defenderBlockEndUserAccess = $true
-        #                 defenderRequireRealTimeMonitoring = $true
-        #                 defenderRequireBehaviorMonitoring = $true
-        #                 defenderRequireNetworkInspectionSystem = $true
-        #                 defenderScanDownloads = $true
-        #                 defenderScanScriptsLoadedInInternetExplorer = $true
-        #                 defenderSignatureUpdateIntervalInHours = 8
-        #                 defenderMonitorFileActivity = 'monitorIncomingFilesOnly'  # userDefined,monitorAllFiles,monitorIncomingFilesOnly,monitorOutgoingFilesOnly
-        #                 defenderDaysBeforeDeletingQuarantinedMalware = 3
-        #                 defenderScanMaxCpu = 2
-        #                 defenderScanArchiveFiles = $true
-        #                 defenderScanIncomingMail = $false # Drift
-        #                 defenderScanRemovableDrivesDuringFullScan = $true
-        #                 defenderScanMappedNetworkDrivesDuringFullScan = $false
-        #                 defenderScanNetworkFiles = $false
-        #                 defenderRequireCloudProtection = $true
-        #                 defenderCloudBlockLevel = 'high'
-        #                 defenderPromptForSampleSubmission = 'alwaysPrompt'
-        #                 defenderScheduledQuickScanTime = '13:00:00.0000000'
-        #                 defenderScanType = 'quick'   #quick,full,userDefined
-        #                 defenderSystemScanSchedule  = 'monday'  #days of week
-        #                 defenderScheduledScanTime =  '11:00:00.0000000'
-        #                 defenderDetectedMalwareActions = @("lowSeverity=clean","moderateSeverity=quarantine","highSeverity=remove","severeSeverity=block")
-        #                 defenderFileExtensionsToExclude = "[`"csv,jpg,docx`"]"
-        #                 defenderFilesAndFoldersToExclude = "[`"c:\\2,C:\\1`"]"
-        #                 defenderProcessesToExclude = "[`"notepad.exe,c:\\Windows\\myprocess.exe`"]"
-        #                 lockScreenAllowTimeoutConfiguration = $true
-        #                 lockScreenBlockActionCenterNotifications = $true
-        #                 lockScreenBlockCortana = $true
-        #                 lockScreenBlockToastNotifications = $false
-        #                 lockScreenTimeoutInSeconds = 90
-        #                 passwordBlockSimple = $true
-        #                 passwordExpirationDays = 6
-        #                 passwordMinimumLength = 5
-        #                 passwordMinutesOfInactivityBeforeScreenTimeout = 15
-        #                 passwordMinimumCharacterSetCount = 1
-        #                 passwordPreviousPasswordBlockCount = 2
-        #                 passwordRequired = $true
-        #                 passwordRequireWhenResumeFromIdleState = $true
-        #                 passwordRequiredType = "alphanumeric"
-        #                 passwordSignInFailureCountBeforeFactoryReset = 12
-        #                 privacyAdvertisingId = "blocked"
-        #                 privacyAutoAcceptPairingAndConsentPrompts = $true
-        #                 privacyBlockInputPersonalization = $true
-        #                 startBlockUnpinningAppsFromTaskbar = $true
-        #                 startMenuAppListVisibility = "collapse"
-        #                 startMenuHideChangeAccountSettings = $true
-        #                 startMenuHideFrequentlyUsedApps = $true
-        #                 startMenuHideHibernate = $true
-        #                 startMenuHideLock = $true
-        #                 startMenuHidePowerButton = $true
-        #                 startMenuHideRecentJumpLists = $true
-        #                 startMenuHideRecentlyAddedApps = $true
-        #                 startMenuHideRestartOptions = $true
-        #                 startMenuHideShutDown = $true
-        #                 startMenuHideSignOut = $true
-        #                 startMenuHideSleep = $true
-        #                 startMenuHideSwitchAccount = $true
-        #                 startMenuHideUserTile = $true
-        #                 startMenuLayoutXml = "+DQogICAGlmaWNhdGlvblRlbXBsYXRlPg=="
-        #                 startMenuMode = "fullScreen"
-        #                 startMenuPinnedFolderDocuments = "hide"
-        #                 startMenuPinnedFolderDownloads = "hide"
-        #                 startMenuPinnedFolderFileExplorer = "hide"
-        #                 startMenuPinnedFolderHomeGroup = "hide"
-        #                 startMenuPinnedFolderMusic = "hide"
-        #                 startMenuPinnedFolderNetwork = "hide"
-        #                 startMenuPinnedFolderPersonalFolder = "hide"
-        #                 startMenuPinnedFolderPictures = "hide"
-        #                 startMenuPinnedFolderSettings = "hide"
-        #                 startMenuPinnedFolderVideos = "hide"
-        #                 settingsBlockSettingsApp = $true
-        #                 settingsBlockSystemPage = $true
-        #                 settingsBlockDevicesPage = $true
-        #                 settingsBlockNetworkInternetPage = $true
-        #                 settingsBlockPersonalizationPage = $true
-        #                 settingsBlockAccountsPage = $true
-        #                 settingsBlockTimeLanguagePage = $true
-        #                 settingsBlockEaseOfAccessPage = $true
-        #                 settingsBlockPrivacyPage = $true
-        #                 settingsBlockUpdateSecurityPage = $true
-        #                 settingsBlockAppsPage = $true
-        #                 settingsBlockGamingPage = $true
-        #                 windowsSpotlightBlockConsumerSpecificFeatures = $true
-        #                 windowsSpotlightBlocked = $true
-        #                 windowsSpotlightBlockOnActionCenter = $true
-        #                 windowsSpotlightBlockTailoredExperiences = $true
-        #                 windowsSpotlightBlockThirdPartyNotifications = $true
-        #                 windowsSpotlightBlockWelcomeExperience = $true
-        #                 windowsSpotlightBlockWindowsTips = $true
-        #                 windowsSpotlightConfigureOnLockScreen = "disabled"
-        #                 networkProxyApplySettingsDeviceWide = $true
-        #                 networkProxyDisableAutoDetect = $true
-        #                 networkProxyAutomaticConfigurationUrl = "https://example.com/networkProxyAutomaticConfigurationUrl/"
-        #                 accountsBlockAddingNonMicrosoftAccountEmail = $true
-        #                 antiTheftModeBlocked = $true
-        #                 bluetoothBlocked = $true
-        #                 bluetoothAllowedServices = "[`"8e473eaa-ead4-4c60-ba9c-2c5696d71492`",`"21913f2d-a803-4f36-8039-669fd94ce5b3`"]"
-        #                 bluetoothBlockAdvertising = $true
-        #                 bluetoothBlockDiscoverableMode = $true
-        #                 bluetoothBlockPrePairing = $true
-        #                 cameraBlocked = $true
-        #                 connectedDevicesServiceBlocked = $true
-        #                 certificatesBlockManualRootCertificateInstallation = $true
-        #                 copyPasteBlocked = $true
-        #                 cortanaBlocked = $true
-        #                 deviceManagementBlockFactoryResetOnMobile = $true
-        #                 deviceManagementBlockManualUnenroll = $true
-        #                 safeSearchFilter = "strict"
-        #                 edgeBlockPopups = $true
-        #                 edgeBlockSearchSuggestions = $true
-        #                 edgeBlockSendingIntranetTrafficToInternetExplorer = $true
-        #                 edgeSendIntranetTrafficToInternetExplorer = $true
-        #                 edgeRequireSmartScreen = $true
-        #                 edgeFirstRunUrl = "https://contoso.com/"
-        #                 edgeBlockAccessToAboutFlags = $true
-        #                 edgeHomepageUrls = "[`"https://microsoft.com`"]"
-        #                 smartScreenBlockPromptOverride = $true
-        #                 smartScreenBlockPromptOverrideForFiles = $true
-        #                 webRtcBlockLocalhostIpAddress = $true
-        #                 internetSharingBlocked = $true
-        #                 settingsBlockAddProvisioningPackage = $true
-        #                 settingsBlockRemoveProvisioningPackage = $true
-        #                 settingsBlockChangeSystemTime = $true
-        #                 settingsBlockEditDeviceName = $true
-        #                 settingsBlockChangeRegion = $true
-        #                 settingsBlockChangeLanguage = $true
-        #                 settingsBlockChangePowerSleep = $true
-        #                 locationServicesBlocked = $true
-        #                 microsoftAccountBlocked = $true
-        #                 microsoftAccountBlockSettingsSync = $true
-        #                 nfcBlocked = $true
-        #                 resetProtectionModeBlocked = $true
-        #                 screenCaptureBlocked = $true
-        #                 storageBlockRemovableStorage = $true
-        #                 storageRequireMobileDeviceEncryption = $true
-        #                 usbBlocked = $true
-        #                 voiceRecordingBlocked = $true
-        #                 wiFiBlockAutomaticConnectHotspots = $true
-        #                 wiFiBlocked = $true
-        #                 wiFiBlockManualConfiguration = $true
-        #                 wiFiScanInterval = 1
-        #                 wirelessDisplayBlockProjectionToThisDevice = $true
-        #                 wirelessDisplayBlockUserInputFromReceiver = $true
-        #                 wirelessDisplayRequirePinForPairing = $true
-        #                 windowsStoreBlocked = $true
-        #                 appsAllowTrustedAppsSideloading = "blocked"
-        #                 windowsStoreBlockAutoUpdate = $true
-        #                 developerUnlockSetting = "blocked"
-        #                 sharedUserAppDataAllowed = $true
-        #                 appsBlockWindowsStoreOriginatedApps = $true
-        #                 windowsStoreEnablePrivateStoreOnly = $true
-        #                 storageRestrictAppDataToSystemVolume = $true
-        #                 storageRestrictAppInstallToSystemVolume = $true
-        #                 gameDvrBlocked = $true
-        #                 edgeSearchEngine = "bing"
-        #                 experienceBlockDeviceDiscovery = $true
-        #                 experienceBlockErrorDialogWhenNoSIM = $true
-        #                 experienceBlockTaskSwitcher = $true
-        #                 logonBlockFastUserSwitching = $true
-        #                 tenantLockdownRequireNetworkDuringOutOfBoxExperience = $true
-        #                 enterpriseCloudPrintDiscoveryEndPoint = "https://cloudprinterdiscovery.contoso.com"
-        #                 enterpriseCloudPrintDiscoveryMaxLimit = 4
-        #                 enterpriseCloudPrintMopriaDiscoveryResourceIdentifier = "http://mopriadiscoveryservice/cloudprint"
-        #                 enterpriseCloudPrintOAuthClientIdentifier = "30fbf7e8-321c-40ce-8b9f-160b6b049257"
-        #                 enterpriseCloudPrintOAuthAuthority = "https:/tenant.contoso.com/adfs"
-        #                 enterpriseCloudPrintResourceIdentifier = "http://cloudenterpriseprint/cloudPrint"
-        #                 networkProxyServer = @("address=proxy.contoso.com:8080","exceptions=*.contoso.com`r`n*.internal.local","useForLocalAddresses=false")
-        #             }
-        #         }
-        #     }
+                Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
+                    return @{
+                        id            = "12345-12345-12345-12345-12345"
+                        AdditionalProperties = @{
+                            '@odata.type'                                           = "#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration"
+                        }
+                        description                                                 = "Android device configuration policy";
+                        displayName                                                 = "Android Work Profile - Device Restrictions - Standard";
+                        passwordBlockFingerprintUnlock                              = $False;
+                        passwordBlockTrustAgents                                    = $True; #drift
+                        passwordExpirationDays                                      = 10;
+                        passwordMinimumLength                                       = 8;
+                        passwordMinutesOfInactivityBeforeScreenTimeout              = 3;
+                        passwordPreviousPasswordBlockCount                          = 3;
+                        passwordSignInFailureCountBeforeFactoryReset                = 10;
+                        passwordRequiredType                                        = "deviceDefault";
+                        workProfileDataSharingType                                  = "deviceDefault";
+                        workProfileBlockNotificationsWhileDeviceLocked              = $False;
+                        workProfileBlockAddingAccounts                              = $False;
+                        workProfileBluetoothEnableContactSharing                    = $False;
+                        workProfileBlockScreenCapture                               = $False;
+                        workProfileBlockCrossProfileCallerId                        = $False;
+                        workProfileBlockCamera                                      = $False;
+                        workProfileBlockCrossProfileContactsSearch                  = $False;
+                        workProfileBlockCrossProfileCopyPaste                       = $False;
+                        workProfileDefaultAppPermissionPolicy                       = "deviceDefault";
+                        workProfilePasswordBlockFingerprintUnlock                   = $False;
+                        workProfilePasswordBlockTrustAgents                         = $False;
+                        workProfilePasswordExpirationDays                           = 90;
+                        workProfilePasswordMinimumLength                            = 4;
+                        workProfilePasswordMinNumericCharacters                     = 3;
+                        workProfilePasswordMinNonLetterCharacters                   = 3;
+                        workProfilePasswordMinLetterCharacters                      = 3;
+                        workProfilePasswordMinLowerCaseCharacters                   = 3;
+                        workProfilePasswordMinUpperCaseCharacters                   = 3;
+                        workProfilePasswordMinSymbolCharacters                      = 3;
+                        workProfilePasswordMinutesOfInactivityBeforeScreenTimeout   = 3;
+                        workProfilePasswordPreviousPasswordBlockCount               = 3;
+                        workProfilePasswordSignInFailureCountBeforeFactoryReset     = 3;
+                        workProfilePasswordRequiredType                             = "deviceDefault";
+                        workProfileRequirePassword                                  = $False;
+                        securityRequireVerifyApps                                   = $False;
+                    }
+                }
+            }
 
-        #     It "Should return Present from the Get method" {
-        #         (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-        #     }
+            It "Should return Present from the Get method" {
+                (Get-TargetResource @TestParams).Ensure | Should -Be 'Present'
+            }
 
-        #     It "Should return false from the Test method" {
-        #         Test-TargetResource @testParams | Should -Be $false
-        #     }
+            It "Should return false from the Test method" {
+                Test-TargetResource @TestParams | Should -Be $false
+            }
 
-        #     It "Should update the policy from the Set method" {
-        #         Set-TargetResource @testParams
-        #         Should -Invoke -CommandName Update-MgDeviceManagementDeviceConfiguration -Exactly 1
-        #     }
-        # }
+            It "Should update the policy from the Set method" {
+                Set-TargetResource @TestParams
+                Should -Invoke -CommandName Update-MgDeviceManagementDeviceConfiguration -Exactly 1
+            }
+        }
 
-        # Context -Name "When the policy already exists and IS in the Desired State" -Fixture {
-        #     BeforeAll {
+        Context -Name "When the policy already exists and IS in the Desired State" -Fixture {
+            BeforeAll {
 
-        #         $testParams = @{
-        #             displayName = "CONTOSO | W10 | Device Restriction"
-        #             description = "Default device restriction settings"
-        #             defenderBlockEndUserAccess = $true
-        #             defenderRequireRealTimeMonitoring = $true
-        #             defenderRequireBehaviorMonitoring = $true
-        #             defenderRequireNetworkInspectionSystem = $true
-        #             defenderScanDownloads = $true
-        #             defenderScanScriptsLoadedInInternetExplorer = $true
-        #             defenderSignatureUpdateIntervalInHours = 8
-        #             defenderMonitorFileActivity = 'monitorIncomingFilesOnly'  # userDefined,monitorAllFiles,monitorIncomingFilesOnly,monitorOutgoingFilesOnly
-        #             defenderDaysBeforeDeletingQuarantinedMalware = 3
-        #             defenderScanMaxCpu = 2
-        #             defenderScanArchiveFiles = $true
-        #             defenderScanIncomingMail = $true
-        #             defenderScanRemovableDrivesDuringFullScan = $true
-        #             defenderScanMappedNetworkDrivesDuringFullScan = $false
-        #             defenderScanNetworkFiles = $false
-        #             defenderRequireCloudProtection = $true
-        #             defenderCloudBlockLevel = 'high'
-        #             defenderPromptForSampleSubmission = 'alwaysPrompt'
-        #             defenderScheduledQuickScanTime = '13:00:00.0000000'
-        #             defenderScanType = 'quick'   #quick,full,userDefined
-        #             defenderSystemScanSchedule  = 'monday'  #days of week
-        #             defenderScheduledScanTime =  '11:00:00.0000000'
-        #             defenderDetectedMalwareActions = @("lowSeverity=clean","moderateSeverity=quarantine","highSeverity=remove","severeSeverity=block")
-        #             defenderFileExtensionsToExclude = "[`"csv,jpg,docx`"]"
-        #             defenderFilesAndFoldersToExclude = "[`"c:\\2,C:\\1`"]"
-        #             defenderProcessesToExclude = "[`"notepad.exe,c:\\Windows\\myprocess.exe`"]"
-        #             lockScreenAllowTimeoutConfiguration = $true
-        #             lockScreenBlockActionCenterNotifications = $true
-        #             lockScreenBlockCortana = $true
-        #             lockScreenBlockToastNotifications = $false
-        #             lockScreenTimeoutInSeconds = 90
-        #             passwordBlockSimple = $true
-        #             passwordExpirationDays = 6
-        #             passwordMinimumLength = 5
-        #             passwordMinutesOfInactivityBeforeScreenTimeout = 15
-        #             passwordMinimumCharacterSetCount = 1
-        #             passwordPreviousPasswordBlockCount = 2
-        #             passwordRequired = $true
-        #             passwordRequireWhenResumeFromIdleState = $true
-        #             passwordRequiredType = "alphanumeric"
-        #             passwordSignInFailureCountBeforeFactoryReset = 12
-        #             privacyAdvertisingId = "blocked"
-        #             privacyAutoAcceptPairingAndConsentPrompts = $true
-        #             privacyBlockInputPersonalization = $true
-        #             startBlockUnpinningAppsFromTaskbar = $true
-        #             startMenuAppListVisibility = "collapse"
-        #             startMenuHideChangeAccountSettings = $true
-        #             startMenuHideFrequentlyUsedApps = $true
-        #             startMenuHideHibernate = $true
-        #             startMenuHideLock = $true
-        #             startMenuHidePowerButton = $true
-        #             startMenuHideRecentJumpLists = $true
-        #             startMenuHideRecentlyAddedApps = $true
-        #             startMenuHideRestartOptions = $true
-        #             startMenuHideShutDown = $true
-        #             startMenuHideSignOut = $true
-        #             startMenuHideSleep = $true
-        #             startMenuHideSwitchAccount = $true
-        #             startMenuHideUserTile = $true
-        #             startMenuLayoutXml = "+DQogICAGlmaWNhdGlvblRlbXBsYXRlPg=="
-        #             startMenuMode = "fullScreen"
-        #             startMenuPinnedFolderDocuments = "hide"
-        #             startMenuPinnedFolderDownloads = "hide"
-        #             startMenuPinnedFolderFileExplorer = "hide"
-        #             startMenuPinnedFolderHomeGroup = "hide"
-        #             startMenuPinnedFolderMusic = "hide"
-        #             startMenuPinnedFolderNetwork = "hide"
-        #             startMenuPinnedFolderPersonalFolder = "hide"
-        #             startMenuPinnedFolderPictures = "hide"
-        #             startMenuPinnedFolderSettings = "hide"
-        #             startMenuPinnedFolderVideos = "hide"
-        #             settingsBlockSettingsApp = $true
-        #             settingsBlockSystemPage = $true
-        #             settingsBlockDevicesPage = $true
-        #             settingsBlockNetworkInternetPage = $true
-        #             settingsBlockPersonalizationPage = $true
-        #             settingsBlockAccountsPage = $true
-        #             settingsBlockTimeLanguagePage = $true
-        #             settingsBlockEaseOfAccessPage = $true
-        #             settingsBlockPrivacyPage = $true
-        #             settingsBlockUpdateSecurityPage = $true
-        #             settingsBlockAppsPage = $true
-        #             settingsBlockGamingPage = $true
-        #             windowsSpotlightBlockConsumerSpecificFeatures = $true
-        #             windowsSpotlightBlocked = $true
-        #             windowsSpotlightBlockOnActionCenter = $true
-        #             windowsSpotlightBlockTailoredExperiences = $true
-        #             windowsSpotlightBlockThirdPartyNotifications = $true
-        #             windowsSpotlightBlockWelcomeExperience = $true
-        #             windowsSpotlightBlockWindowsTips = $true
-        #             windowsSpotlightConfigureOnLockScreen = "disabled"
-        #             networkProxyApplySettingsDeviceWide = $true
-        #             networkProxyDisableAutoDetect = $true
-        #             networkProxyAutomaticConfigurationUrl = "https://example.com/networkProxyAutomaticConfigurationUrl/"
-        #             accountsBlockAddingNonMicrosoftAccountEmail = $true
-        #             antiTheftModeBlocked = $true
-        #             bluetoothBlocked = $true
-        #             bluetoothAllowedServices = "[`"8e473eaa-ead4-4c60-ba9c-2c5696d71492`",`"21913f2d-a803-4f36-8039-669fd94ce5b3`"]"
-        #             bluetoothBlockAdvertising = $true
-        #             bluetoothBlockDiscoverableMode = $true
-        #             bluetoothBlockPrePairing = $true
-        #             cameraBlocked = $true
-        #             connectedDevicesServiceBlocked = $true
-        #             certificatesBlockManualRootCertificateInstallation = $true
-        #             copyPasteBlocked = $true
-        #             cortanaBlocked = $true
-        #             deviceManagementBlockFactoryResetOnMobile = $true
-        #             deviceManagementBlockManualUnenroll = $true
-        #             safeSearchFilter = "strict"
-        #             edgeBlockPopups = $true
-        #             edgeBlockSearchSuggestions = $true
-        #             edgeBlockSendingIntranetTrafficToInternetExplorer = $true
-        #             edgeSendIntranetTrafficToInternetExplorer = $true
-        #             edgeRequireSmartScreen = $true
-        #             edgeFirstRunUrl = "https://contoso.com/"
-        #             edgeBlockAccessToAboutFlags = $true
-        #             edgeHomepageUrls = "[`"https://microsoft.com`"]"
-        #             smartScreenBlockPromptOverride = $true
-        #             smartScreenBlockPromptOverrideForFiles = $true
-        #             webRtcBlockLocalhostIpAddress = $true
-        #             internetSharingBlocked = $true
-        #             settingsBlockAddProvisioningPackage = $true
-        #             settingsBlockRemoveProvisioningPackage = $true
-        #             settingsBlockChangeSystemTime = $true
-        #             settingsBlockEditDeviceName = $true
-        #             settingsBlockChangeRegion = $true
-        #             settingsBlockChangeLanguage = $true
-        #             settingsBlockChangePowerSleep = $true
-        #             locationServicesBlocked = $true
-        #             microsoftAccountBlocked = $true
-        #             microsoftAccountBlockSettingsSync = $true
-        #             nfcBlocked = $true
-        #             resetProtectionModeBlocked = $true
-        #             screenCaptureBlocked = $true
-        #             storageBlockRemovableStorage = $true
-        #             storageRequireMobileDeviceEncryption = $true
-        #             usbBlocked = $true
-        #             voiceRecordingBlocked = $true
-        #             wiFiBlockAutomaticConnectHotspots = $true
-        #             wiFiBlocked = $true
-        #             wiFiBlockManualConfiguration = $true
-        #             wiFiScanInterval = 1
-        #             wirelessDisplayBlockProjectionToThisDevice = $true
-        #             wirelessDisplayBlockUserInputFromReceiver = $true
-        #             wirelessDisplayRequirePinForPairing = $true
-        #             windowsStoreBlocked = $true
-        #             appsAllowTrustedAppsSideloading = "blocked"
-        #             windowsStoreBlockAutoUpdate = $true
-        #             developerUnlockSetting = "blocked"
-        #             sharedUserAppDataAllowed = $true
-        #             appsBlockWindowsStoreOriginatedApps = $true
-        #             windowsStoreEnablePrivateStoreOnly = $true
-        #             storageRestrictAppDataToSystemVolume = $true
-        #             storageRestrictAppInstallToSystemVolume = $true
-        #             gameDvrBlocked = $true
-        #             edgeSearchEngine = "bing"
-        #             experienceBlockDeviceDiscovery = $true
-        #             experienceBlockErrorDialogWhenNoSIM = $true
-        #             experienceBlockTaskSwitcher = $true
-        #             logonBlockFastUserSwitching = $true
-        #             tenantLockdownRequireNetworkDuringOutOfBoxExperience = $true
-        #             enterpriseCloudPrintDiscoveryEndPoint = "https://cloudprinterdiscovery.contoso.com"
-        #             enterpriseCloudPrintDiscoveryMaxLimit = 4
-        #             enterpriseCloudPrintMopriaDiscoveryResourceIdentifier = "http://mopriadiscoveryservice/cloudprint"
-        #             enterpriseCloudPrintOAuthClientIdentifier = "30fbf7e8-321c-40ce-8b9f-160b6b049257"
-        #             enterpriseCloudPrintOAuthAuthority = "https:/tenant.contoso.com/adfs"
-        #             enterpriseCloudPrintResourceIdentifier = "http://cloudenterpriseprint/cloudPrint"
-        #             networkProxyServer = @("address=proxy.contoso.com:8080","exceptions=*.contoso.com`r`n*.internal.local","useForLocalAddresses=false")
-        #             Ensure = 'Present'
-        #             GlobalAdminAccount = $GlobalAdminAccount;
-        #         }
+                $TestParams = @{
+                    description                                                 = "Android device configuration policy";
+                    displayName                                                 = "Android Work Profile - Device Restrictions - Standard";
+                    passwordBlockFingerprintUnlock                              = $False;
+                    passwordBlockTrustAgents                                    = $False;
+                    passwordExpirationDays                                      = 10;
+                    passwordMinimumLength                                       = 8;
+                    passwordMinutesOfInactivityBeforeScreenTimeout              = 3;
+                    passwordPreviousPasswordBlockCount                          = 3;
+                    passwordSignInFailureCountBeforeFactoryReset                = 10;
+                    passwordRequiredType                                        = "deviceDefault";
+                    workProfileDataSharingType                                  = "deviceDefault";
+                    workProfileBlockNotificationsWhileDeviceLocked              = $False;
+                    workProfileBlockAddingAccounts                              = $False;
+                    workProfileBluetoothEnableContactSharing                    = $False;
+                    workProfileBlockScreenCapture                               = $False;
+                    workProfileBlockCrossProfileCallerId                        = $False;
+                    workProfileBlockCamera                                      = $False;
+                    workProfileBlockCrossProfileContactsSearch                  = $False;
+                    workProfileBlockCrossProfileCopyPaste                       = $False;
+                    workProfileDefaultAppPermissionPolicy                       = "deviceDefault";
+                    workProfilePasswordBlockFingerprintUnlock                   = $False;
+                    workProfilePasswordBlockTrustAgents                         = $False;
+                    workProfilePasswordExpirationDays                           = 90;
+                    workProfilePasswordMinimumLength                            = 4;
+                    workProfilePasswordMinNumericCharacters                     = 3;
+                    workProfilePasswordMinNonLetterCharacters                   = 3;
+                    workProfilePasswordMinLetterCharacters                      = 3;
+                    workProfilePasswordMinLowerCaseCharacters                   = 3;
+                    workProfilePasswordMinUpperCaseCharacters                   = 3;
+                    workProfilePasswordMinSymbolCharacters                      = 3;
+                    workProfilePasswordMinutesOfInactivityBeforeScreenTimeout   = 3;
+                    workProfilePasswordPreviousPasswordBlockCount               = 3;
+                    workProfilePasswordSignInFailureCountBeforeFactoryReset     = 3;
+                    workProfilePasswordRequiredType                             = "deviceDefault";
+                    workProfileRequirePassword                                  = $False;
+                    securityRequireVerifyApps                                   = $False;
+                    Ensure                                                      = "Present";
+                    GlobalAdminAccount                                          = $GlobalAdminAccount;
+                }
 
-        #         Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
-        #             return @{
-        #                 id = "12345-12345-12345-12345-12345"
-        #                 displayName = "CONTOSO | W10 | Device Restriction"
-        #                 description = "Default device restriction settings"
-        #                 AdditionalProperties = @{
-        #                     '@odata.type'                                  = "#microsoft.graph.windows10GeneralConfiguration"
-        #                     defenderBlockEndUserAccess = $true
-        #                     defenderRequireRealTimeMonitoring = $true
-        #                     defenderRequireBehaviorMonitoring = $true
-        #                     defenderRequireNetworkInspectionSystem = $true
-        #                     defenderScanDownloads = $true
-        #                     defenderScanScriptsLoadedInInternetExplorer = $true
-        #                     defenderSignatureUpdateIntervalInHours = 8
-        #                     defenderMonitorFileActivity = 'monitorIncomingFilesOnly'  # userDefined,monitorAllFiles,monitorIncomingFilesOnly,monitorOutgoingFilesOnly
-        #                     defenderDaysBeforeDeletingQuarantinedMalware = 3
-        #                     defenderScanMaxCpu = 2
-        #                     defenderScanArchiveFiles = $true
-        #                     defenderScanIncomingMail = $true
-        #                     defenderScanRemovableDrivesDuringFullScan = $true
-        #                     defenderScanMappedNetworkDrivesDuringFullScan = $false
-        #                     defenderScanNetworkFiles = $false
-        #                     defenderRequireCloudProtection = $true
-        #                     defenderCloudBlockLevel = 'high'
-        #                     defenderPromptForSampleSubmission = 'alwaysPrompt'
-        #                     defenderScheduledQuickScanTime = '13:00:00.0000000'
-        #                     defenderScanType = 'quick'   #quick,full,userDefined
-        #                     defenderSystemScanSchedule  = 'monday'  #days of week
-        #                     defenderScheduledScanTime =  '11:00:00.0000000'
-        #                     defenderDetectedMalwareActions = @("lowSeverity=clean","moderateSeverity=quarantine","highSeverity=remove","severeSeverity=block")
-        #                     defenderFileExtensionsToExclude = "[`"csv,jpg,docx`"]"
-        #                     defenderFilesAndFoldersToExclude = "[`"c:\\2,C:\\1`"]"
-        #                     defenderProcessesToExclude = "[`"notepad.exe,c:\\Windows\\myprocess.exe`"]"
-        #                     lockScreenAllowTimeoutConfiguration = $true
-        #                     lockScreenBlockActionCenterNotifications = $true
-        #                     lockScreenBlockCortana = $true
-        #                     lockScreenBlockToastNotifications = $false
-        #                     lockScreenTimeoutInSeconds = 90
-        #                     passwordBlockSimple = $true
-        #                     passwordExpirationDays = 6
-        #                     passwordMinimumLength = 5
-        #                     passwordMinutesOfInactivityBeforeScreenTimeout = 15
-        #                     passwordMinimumCharacterSetCount = 1
-        #                     passwordPreviousPasswordBlockCount = 2
-        #                     passwordRequired = $true
-        #                     passwordRequireWhenResumeFromIdleState = $true
-        #                     passwordRequiredType = "alphanumeric"
-        #                     passwordSignInFailureCountBeforeFactoryReset = 12
-        #                     privacyAdvertisingId = "blocked"
-        #                     privacyAutoAcceptPairingAndConsentPrompts = $true
-        #                     privacyBlockInputPersonalization = $true
-        #                     startBlockUnpinningAppsFromTaskbar = $true
-        #                     startMenuAppListVisibility = "collapse"
-        #                     startMenuHideChangeAccountSettings = $true
-        #                     startMenuHideFrequentlyUsedApps = $true
-        #                     startMenuHideHibernate = $true
-        #                     startMenuHideLock = $true
-        #                     startMenuHidePowerButton = $true
-        #                     startMenuHideRecentJumpLists = $true
-        #                     startMenuHideRecentlyAddedApps = $true
-        #                     startMenuHideRestartOptions = $true
-        #                     startMenuHideShutDown = $true
-        #                     startMenuHideSignOut = $true
-        #                     startMenuHideSleep = $true
-        #                     startMenuHideSwitchAccount = $true
-        #                     startMenuHideUserTile = $true
-        #                     startMenuLayoutXml = "+DQogICAGlmaWNhdGlvblRlbXBsYXRlPg=="
-        #                     startMenuMode = "fullScreen"
-        #                     startMenuPinnedFolderDocuments = "hide"
-        #                     startMenuPinnedFolderDownloads = "hide"
-        #                     startMenuPinnedFolderFileExplorer = "hide"
-        #                     startMenuPinnedFolderHomeGroup = "hide"
-        #                     startMenuPinnedFolderMusic = "hide"
-        #                     startMenuPinnedFolderNetwork = "hide"
-        #                     startMenuPinnedFolderPersonalFolder = "hide"
-        #                     startMenuPinnedFolderPictures = "hide"
-        #                     startMenuPinnedFolderSettings = "hide"
-        #                     startMenuPinnedFolderVideos = "hide"
-        #                     settingsBlockSettingsApp = $true
-        #                     settingsBlockSystemPage = $true
-        #                     settingsBlockDevicesPage = $true
-        #                     settingsBlockNetworkInternetPage = $true
-        #                     settingsBlockPersonalizationPage = $true
-        #                     settingsBlockAccountsPage = $true
-        #                     settingsBlockTimeLanguagePage = $true
-        #                     settingsBlockEaseOfAccessPage = $true
-        #                     settingsBlockPrivacyPage = $true
-        #                     settingsBlockUpdateSecurityPage = $true
-        #                     settingsBlockAppsPage = $true
-        #                     settingsBlockGamingPage = $true
-        #                     windowsSpotlightBlockConsumerSpecificFeatures = $true
-        #                     windowsSpotlightBlocked = $true
-        #                     windowsSpotlightBlockOnActionCenter = $true
-        #                     windowsSpotlightBlockTailoredExperiences = $true
-        #                     windowsSpotlightBlockThirdPartyNotifications = $true
-        #                     windowsSpotlightBlockWelcomeExperience = $true
-        #                     windowsSpotlightBlockWindowsTips = $true
-        #                     windowsSpotlightConfigureOnLockScreen = "disabled"
-        #                     networkProxyApplySettingsDeviceWide = $true
-        #                     networkProxyDisableAutoDetect = $true
-        #                     networkProxyAutomaticConfigurationUrl = "https://example.com/networkProxyAutomaticConfigurationUrl/"
-        #                     accountsBlockAddingNonMicrosoftAccountEmail = $true
-        #                     antiTheftModeBlocked = $true
-        #                     bluetoothBlocked = $true
-        #                     bluetoothAllowedServices = "[`"8e473eaa-ead4-4c60-ba9c-2c5696d71492`",`"21913f2d-a803-4f36-8039-669fd94ce5b3`"]"
-        #                     bluetoothBlockAdvertising = $true
-        #                     bluetoothBlockDiscoverableMode = $true
-        #                     bluetoothBlockPrePairing = $true
-        #                     cameraBlocked = $true
-        #                     connectedDevicesServiceBlocked = $true
-        #                     certificatesBlockManualRootCertificateInstallation = $true
-        #                     copyPasteBlocked = $true
-        #                     cortanaBlocked = $true
-        #                     deviceManagementBlockFactoryResetOnMobile = $true
-        #                     deviceManagementBlockManualUnenroll = $true
-        #                     safeSearchFilter = "strict"
-        #                     edgeBlockPopups = $true
-        #                     edgeBlockSearchSuggestions = $true
-        #                     edgeBlockSendingIntranetTrafficToInternetExplorer = $true
-        #                     edgeSendIntranetTrafficToInternetExplorer = $true
-        #                     edgeRequireSmartScreen = $true
-        #                     edgeFirstRunUrl = "https://contoso.com/"
-        #                     edgeBlockAccessToAboutFlags = $true
-        #                     edgeHomepageUrls = "[`"https://microsoft.com`"]"
-        #                     smartScreenBlockPromptOverride = $true
-        #                     smartScreenBlockPromptOverrideForFiles = $true
-        #                     webRtcBlockLocalhostIpAddress = $true
-        #                     internetSharingBlocked = $true
-        #                     settingsBlockAddProvisioningPackage = $true
-        #                     settingsBlockRemoveProvisioningPackage = $true
-        #                     settingsBlockChangeSystemTime = $true
-        #                     settingsBlockEditDeviceName = $true
-        #                     settingsBlockChangeRegion = $true
-        #                     settingsBlockChangeLanguage = $true
-        #                     settingsBlockChangePowerSleep = $true
-        #                     locationServicesBlocked = $true
-        #                     microsoftAccountBlocked = $true
-        #                     microsoftAccountBlockSettingsSync = $true
-        #                     nfcBlocked = $true
-        #                     resetProtectionModeBlocked = $true
-        #                     screenCaptureBlocked = $true
-        #                     storageBlockRemovableStorage = $true
-        #                     storageRequireMobileDeviceEncryption = $true
-        #                     usbBlocked = $true
-        #                     voiceRecordingBlocked = $true
-        #                     wiFiBlockAutomaticConnectHotspots = $true
-        #                     wiFiBlocked = $true
-        #                     wiFiBlockManualConfiguration = $true
-        #                     wiFiScanInterval = 1
-        #                     wirelessDisplayBlockProjectionToThisDevice = $true
-        #                     wirelessDisplayBlockUserInputFromReceiver = $true
-        #                     wirelessDisplayRequirePinForPairing = $true
-        #                     windowsStoreBlocked = $true
-        #                     appsAllowTrustedAppsSideloading = "blocked"
-        #                     windowsStoreBlockAutoUpdate = $true
-        #                     developerUnlockSetting = "blocked"
-        #                     sharedUserAppDataAllowed = $true
-        #                     appsBlockWindowsStoreOriginatedApps = $true
-        #                     windowsStoreEnablePrivateStoreOnly = $true
-        #                     storageRestrictAppDataToSystemVolume = $true
-        #                     storageRestrictAppInstallToSystemVolume = $true
-        #                     gameDvrBlocked = $true
-        #                     edgeSearchEngine = "bing"
-        #                     experienceBlockDeviceDiscovery = $true
-        #                     experienceBlockErrorDialogWhenNoSIM = $true
-        #                     experienceBlockTaskSwitcher = $true
-        #                     logonBlockFastUserSwitching = $true
-        #                     tenantLockdownRequireNetworkDuringOutOfBoxExperience = $true
-        #                     enterpriseCloudPrintDiscoveryEndPoint = "https://cloudprinterdiscovery.contoso.com"
-        #                     enterpriseCloudPrintDiscoveryMaxLimit = 4
-        #                     enterpriseCloudPrintMopriaDiscoveryResourceIdentifier = "http://mopriadiscoveryservice/cloudprint"
-        #                     enterpriseCloudPrintOAuthClientIdentifier = "30fbf7e8-321c-40ce-8b9f-160b6b049257"
-        #                     enterpriseCloudPrintOAuthAuthority = "https:/tenant.contoso.com/adfs"
-        #                     enterpriseCloudPrintResourceIdentifier = "http://cloudenterpriseprint/cloudPrint"
-        #                     networkProxyServer = @("address=proxy.contoso.com:8080","exceptions=*.contoso.com`r`n*.internal.local","useForLocalAddresses=false")
-        #                 }
-        #             }
-        #         }
-        #     }
+                Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
+                    return @{
+                        id = "12345-12345-12345-12345-12345"
+                        displayName = "Android Work Profile - Device Restrictions - Standard"
+                        description = "Android device configuration policy"
+                        AdditionalProperties = @{
+                            '@odata.type'                                  = "#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration"
+                            passwordBlockFingerprintUnlock                              = $False;
+                            passwordBlockTrustAgents                                    = $False;
+                            passwordExpirationDays                                      = 10;
+                            passwordMinimumLength                                       = 8;
+                            passwordMinutesOfInactivityBeforeScreenTimeout              = 3;
+                            passwordPreviousPasswordBlockCount                          = 3;
+                            passwordSignInFailureCountBeforeFactoryReset                = 10;
+                            passwordRequiredType                                        = "deviceDefault";
+                            workProfileDataSharingType                                  = "deviceDefault";
+                            workProfileBlockNotificationsWhileDeviceLocked              = $False;
+                            workProfileBlockAddingAccounts                              = $False;
+                            workProfileBluetoothEnableContactSharing                    = $False;
+                            workProfileBlockScreenCapture                               = $False;
+                            workProfileBlockCrossProfileCallerId                        = $False;
+                            workProfileBlockCamera                                      = $False;
+                            workProfileBlockCrossProfileContactsSearch                  = $False;
+                            workProfileBlockCrossProfileCopyPaste                       = $False;
+                            workProfileDefaultAppPermissionPolicy                       = "deviceDefault";
+                            workProfilePasswordBlockFingerprintUnlock                   = $False;
+                            workProfilePasswordBlockTrustAgents                         = $False;
+                            workProfilePasswordExpirationDays                           = 90;
+                            workProfilePasswordMinimumLength                            = 4;
+                            workProfilePasswordMinNumericCharacters                     = 3;
+                            workProfilePasswordMinNonLetterCharacters                   = 3;
+                            workProfilePasswordMinLetterCharacters                      = 3;
+                            workProfilePasswordMinLowerCaseCharacters                   = 3;
+                            workProfilePasswordMinUpperCaseCharacters                   = 3;
+                            workProfilePasswordMinSymbolCharacters                      = 3;
+                            workProfilePasswordMinutesOfInactivityBeforeScreenTimeout   = 3;
+                            workProfilePasswordPreviousPasswordBlockCount               = 3;
+                            workProfilePasswordSignInFailureCountBeforeFactoryReset     = 3;
+                            workProfilePasswordRequiredType                             = "deviceDefault";
+                            workProfileRequirePassword                                  = $False;
+                            securityRequireVerifyApps                                   = $False;
+                        }
+                    }
+                }
+            }
 
-        #     It "Should return true from the Test method" {
-        #         Test-TargetResource @testParams | Should -Be $true
-        #     }
-        # }
+            It "Should return true from the Test method" {
+                Test-TargetResource @TestParams | Should -Be $true
+            }
+        }
 
-        # Context -Name "When the policy exists and it SHOULD NOT" -Fixture {
-        #     BeforeAll {
-        #         $testParams = @{
-        #             DisplayName        = "CONTOSO | W10 | Device Restriction";
-        #             Ensure             = 'Absent'
-        #             GlobalAdminAccount = $GlobalAdminAccount;
-        #         }
+        Context -Name "When the policy exists and it SHOULD NOT" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName        = "Android Work Profile - Device Restrictions - Standard"
+                    Ensure             = 'Absent'
+                    GlobalAdminAccount = $GlobalAdminAccount;
+                }
 
-        #         Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
-        #             return @{
-        #                 id            = "12345-12345-12345-12345-12345"
-        #                 AdditionalProperties = @{'@odata.type'                                  = "#microsoft.graph.windows10GeneralConfiguration"}
-        #                 displayName = "CONTOSO | W10 | Device Restriction"
-        #                 description = "Default device restriction settings"
-        #                 defenderBlockEndUserAccess = $true
-        #                 defenderRequireRealTimeMonitoring = $true
-        #                 defenderRequireBehaviorMonitoring = $true
-        #                 defenderRequireNetworkInspectionSystem = $true
-        #                 defenderScanDownloads = $true
-        #                 defenderScanScriptsLoadedInInternetExplorer = $true
-        #                 defenderSignatureUpdateIntervalInHours = 8
-        #                 defenderMonitorFileActivity = 'monitorIncomingFilesOnly'  # userDefined,monitorAllFiles,monitorIncomingFilesOnly,monitorOutgoingFilesOnly
-        #                 defenderDaysBeforeDeletingQuarantinedMalware = 3
-        #                 defenderScanMaxCpu = 2
-        #                 defenderScanArchiveFiles = $true
-        #                 defenderScanIncomingMail = $true
-        #                 defenderScanRemovableDrivesDuringFullScan = $true
-        #                 defenderScanMappedNetworkDrivesDuringFullScan = $false
-        #                 defenderScanNetworkFiles = $false
-        #                 defenderRequireCloudProtection = $true
-        #                 defenderCloudBlockLevel = 'high'
-        #                 defenderPromptForSampleSubmission = 'alwaysPrompt'
-        #                 defenderScheduledQuickScanTime = '13:00:00.0000000'
-        #                 defenderScanType = 'quick'   #quick,full,userDefined
-        #                 defenderSystemScanSchedule  = 'monday'  #days of week
-        #                 defenderScheduledScanTime =  '11:00:00.0000000'
-        #                 defenderDetectedMalwareActions = @("lowSeverity=clean","moderateSeverity=quarantine","highSeverity=remove","severeSeverity=block")
-        #                 defenderFileExtensionsToExclude = "[`"csv,jpg,docx`"]"
-        #                 defenderFilesAndFoldersToExclude = "[`"c:\\2,C:\\1`"]"
-        #                 defenderProcessesToExclude = "[`"notepad.exe,c:\\Windows\\myprocess.exe`"]"
-        #                 lockScreenAllowTimeoutConfiguration = $true
-        #                 lockScreenBlockActionCenterNotifications = $true
-        #                 lockScreenBlockCortana = $true
-        #                 lockScreenBlockToastNotifications = $false
-        #                 lockScreenTimeoutInSeconds = 90
-        #                 passwordBlockSimple = $true
-        #                 passwordExpirationDays = 6
-        #                 passwordMinimumLength = 5
-        #                 passwordMinutesOfInactivityBeforeScreenTimeout = 15
-        #                 passwordMinimumCharacterSetCount = 1
-        #                 passwordPreviousPasswordBlockCount = 2
-        #                 passwordRequired = $true
-        #                 passwordRequireWhenResumeFromIdleState = $true
-        #                 passwordRequiredType = "alphanumeric"
-        #                 passwordSignInFailureCountBeforeFactoryReset = 12
-        #                 privacyAdvertisingId = "blocked"
-        #                 privacyAutoAcceptPairingAndConsentPrompts = $true
-        #                 privacyBlockInputPersonalization = $true
-        #                 startBlockUnpinningAppsFromTaskbar = $true
-        #                 startMenuAppListVisibility = "collapse"
-        #                 startMenuHideChangeAccountSettings = $true
-        #                 startMenuHideFrequentlyUsedApps = $true
-        #                 startMenuHideHibernate = $true
-        #                 startMenuHideLock = $true
-        #                 startMenuHidePowerButton = $true
-        #                 startMenuHideRecentJumpLists = $true
-        #                 startMenuHideRecentlyAddedApps = $true
-        #                 startMenuHideRestartOptions = $true
-        #                 startMenuHideShutDown = $true
-        #                 startMenuHideSignOut = $true
-        #                 startMenuHideSleep = $true
-        #                 startMenuHideSwitchAccount = $true
-        #                 startMenuHideUserTile = $true
-        #                 startMenuLayoutXml = "+DQogICAGlmaWNhdGlvblRlbXBsYXRlPg=="
-        #                 startMenuMode = "fullScreen"
-        #                 startMenuPinnedFolderDocuments = "hide"
-        #                 startMenuPinnedFolderDownloads = "hide"
-        #                 startMenuPinnedFolderFileExplorer = "hide"
-        #                 startMenuPinnedFolderHomeGroup = "hide"
-        #                 startMenuPinnedFolderMusic = "hide"
-        #                 startMenuPinnedFolderNetwork = "hide"
-        #                 startMenuPinnedFolderPersonalFolder = "hide"
-        #                 startMenuPinnedFolderPictures = "hide"
-        #                 startMenuPinnedFolderSettings = "hide"
-        #                 startMenuPinnedFolderVideos = "hide"
-        #                 settingsBlockSettingsApp = $true
-        #                 settingsBlockSystemPage = $true
-        #                 settingsBlockDevicesPage = $true
-        #                 settingsBlockNetworkInternetPage = $true
-        #                 settingsBlockPersonalizationPage = $true
-        #                 settingsBlockAccountsPage = $true
-        #                 settingsBlockTimeLanguagePage = $true
-        #                 settingsBlockEaseOfAccessPage = $true
-        #                 settingsBlockPrivacyPage = $true
-        #                 settingsBlockUpdateSecurityPage = $true
-        #                 settingsBlockAppsPage = $true
-        #                 settingsBlockGamingPage = $true
-        #                 windowsSpotlightBlockConsumerSpecificFeatures = $true
-        #                 windowsSpotlightBlocked = $true
-        #                 windowsSpotlightBlockOnActionCenter = $true
-        #                 windowsSpotlightBlockTailoredExperiences = $true
-        #                 windowsSpotlightBlockThirdPartyNotifications = $true
-        #                 windowsSpotlightBlockWelcomeExperience = $true
-        #                 windowsSpotlightBlockWindowsTips = $true
-        #                 windowsSpotlightConfigureOnLockScreen = "disabled"
-        #                 networkProxyApplySettingsDeviceWide = $true
-        #                 networkProxyDisableAutoDetect = $true
-        #                 networkProxyAutomaticConfigurationUrl = "https://example.com/networkProxyAutomaticConfigurationUrl/"
-        #                 accountsBlockAddingNonMicrosoftAccountEmail = $true
-        #                 antiTheftModeBlocked = $true
-        #                 bluetoothBlocked = $true
-        #                 bluetoothAllowedServices = "[`"8e473eaa-ead4-4c60-ba9c-2c5696d71492`",`"21913f2d-a803-4f36-8039-669fd94ce5b3`"]"
-        #                 bluetoothBlockAdvertising = $true
-        #                 bluetoothBlockDiscoverableMode = $true
-        #                 bluetoothBlockPrePairing = $true
-        #                 cameraBlocked = $true
-        #                 connectedDevicesServiceBlocked = $true
-        #                 certificatesBlockManualRootCertificateInstallation = $true
-        #                 copyPasteBlocked = $true
-        #                 cortanaBlocked = $true
-        #                 deviceManagementBlockFactoryResetOnMobile = $true
-        #                 deviceManagementBlockManualUnenroll = $true
-        #                 safeSearchFilter = "strict"
-        #                 edgeBlockPopups = $true
-        #                 edgeBlockSearchSuggestions = $true
-        #                 edgeBlockSendingIntranetTrafficToInternetExplorer = $true
-        #                 edgeSendIntranetTrafficToInternetExplorer = $true
-        #                 edgeRequireSmartScreen = $true
-        #                 edgeFirstRunUrl = "https://contoso.com/"
-        #                 edgeBlockAccessToAboutFlags = $true
-        #                 edgeHomepageUrls = "[`"https://microsoft.com`"]"
-        #                 smartScreenBlockPromptOverride = $true
-        #                 smartScreenBlockPromptOverrideForFiles = $true
-        #                 webRtcBlockLocalhostIpAddress = $true
-        #                 internetSharingBlocked = $true
-        #                 settingsBlockAddProvisioningPackage = $true
-        #                 settingsBlockRemoveProvisioningPackage = $true
-        #                 settingsBlockChangeSystemTime = $true
-        #                 settingsBlockEditDeviceName = $true
-        #                 settingsBlockChangeRegion = $true
-        #                 settingsBlockChangeLanguage = $true
-        #                 settingsBlockChangePowerSleep = $true
-        #                 locationServicesBlocked = $true
-        #                 microsoftAccountBlocked = $true
-        #                 microsoftAccountBlockSettingsSync = $true
-        #                 nfcBlocked = $true
-        #                 resetProtectionModeBlocked = $true
-        #                 screenCaptureBlocked = $true
-        #                 storageBlockRemovableStorage = $true
-        #                 storageRequireMobileDeviceEncryption = $true
-        #                 usbBlocked = $true
-        #                 voiceRecordingBlocked = $true
-        #                 wiFiBlockAutomaticConnectHotspots = $true
-        #                 wiFiBlocked = $true
-        #                 wiFiBlockManualConfiguration = $true
-        #                 wiFiScanInterval = 1
-        #                 wirelessDisplayBlockProjectionToThisDevice = $true
-        #                 wirelessDisplayBlockUserInputFromReceiver = $true
-        #                 wirelessDisplayRequirePinForPairing = $true
-        #                 windowsStoreBlocked = $true
-        #                 appsAllowTrustedAppsSideloading = "blocked"
-        #                 windowsStoreBlockAutoUpdate = $true
-        #                 developerUnlockSetting = "blocked"
-        #                 sharedUserAppDataAllowed = $true
-        #                 appsBlockWindowsStoreOriginatedApps = $true
-        #                 windowsStoreEnablePrivateStoreOnly = $true
-        #                 storageRestrictAppDataToSystemVolume = $true
-        #                 storageRestrictAppInstallToSystemVolume = $true
-        #                 gameDvrBlocked = $true
-        #                 edgeSearchEngine = "bing"
-        #                 experienceBlockDeviceDiscovery = $true
-        #                 experienceBlockErrorDialogWhenNoSIM = $true
-        #                 experienceBlockTaskSwitcher = $true
-        #                 logonBlockFastUserSwitching = $true
-        #                 tenantLockdownRequireNetworkDuringOutOfBoxExperience = $true
-        #                 enterpriseCloudPrintDiscoveryEndPoint = "https://cloudprinterdiscovery.contoso.com"
-        #                 enterpriseCloudPrintDiscoveryMaxLimit = 4
-        #                 enterpriseCloudPrintMopriaDiscoveryResourceIdentifier = "http://mopriadiscoveryservice/cloudprint"
-        #                 enterpriseCloudPrintOAuthClientIdentifier = "30fbf7e8-321c-40ce-8b9f-160b6b049257"
-        #                 enterpriseCloudPrintOAuthAuthority = "https:/tenant.contoso.com/adfs"
-        #                 enterpriseCloudPrintResourceIdentifier = "http://cloudenterpriseprint/cloudPrint"
-        #                 networkProxyServer = @("address=proxy.contoso.com:8080","exceptions=*.contoso.com`r`n*.internal.local","useForLocalAddresses=false")
-        #             }
-        #         }
-        #     }
+                Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
+                    return @{
+                        id = "12345-12345-12345-12345-12345"
+                        displayName = "Android Work Profile - Device Restrictions - Standard"
+                        description = "Android device configuration policy"
+                        AdditionalProperties = @{
+                            '@odata.type'                                               = "#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration"
+                            passwordBlockFingerprintUnlock                              = $False;
+                            passwordBlockTrustAgents                                    = $False;
+                            passwordExpirationDays                                      = 10;
+                            passwordMinimumLength                                       = 8;
+                            passwordMinutesOfInactivityBeforeScreenTimeout              = 3;
+                            passwordPreviousPasswordBlockCount                          = 3;
+                            passwordSignInFailureCountBeforeFactoryReset                = 10;
+                            passwordRequiredType                                        = "deviceDefault";
+                            workProfileDataSharingType                                  = "deviceDefault";
+                            workProfileBlockNotificationsWhileDeviceLocked              = $False;
+                            workProfileBlockAddingAccounts                              = $False;
+                            workProfileBluetoothEnableContactSharing                    = $False;
+                            workProfileBlockScreenCapture                               = $False;
+                            workProfileBlockCrossProfileCallerId                        = $False;
+                            workProfileBlockCamera                                      = $False;
+                            workProfileBlockCrossProfileContactsSearch                  = $False;
+                            workProfileBlockCrossProfileCopyPaste                       = $False;
+                            workProfileDefaultAppPermissionPolicy                       = "deviceDefault";
+                            workProfilePasswordBlockFingerprintUnlock                   = $False;
+                            workProfilePasswordBlockTrustAgents                         = $False;
+                            workProfilePasswordExpirationDays                           = 90;
+                            workProfilePasswordMinimumLength                            = 4;
+                            workProfilePasswordMinNumericCharacters                     = 3;
+                            workProfilePasswordMinNonLetterCharacters                   = 3;
+                            workProfilePasswordMinLetterCharacters                      = 3;
+                            workProfilePasswordMinLowerCaseCharacters                   = 3;
+                            workProfilePasswordMinUpperCaseCharacters                   = 3;
+                            workProfilePasswordMinSymbolCharacters                      = 3;
+                            workProfilePasswordMinutesOfInactivityBeforeScreenTimeout   = 3;
+                            workProfilePasswordPreviousPasswordBlockCount               = 3;
+                            workProfilePasswordSignInFailureCountBeforeFactoryReset     = 3;
+                            workProfilePasswordRequiredType                             = "deviceDefault";
+                            workProfileRequirePassword                                  = $False;
+                            securityRequireVerifyApps                                   = $False;
+                        }
+                    }
+                }
+            }
 
-        #     It "Should return Present from the Get method" {
-        #         (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-        #     }
+            It "Should return Present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
 
-        #     It "Should return true from the Test method" {
-        #         Test-TargetResource @testParams | Should -Be $false
-        #     }
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should -Be $false
+            }
 
-        #     It "Should remove the policy from the Set method" {
-        #         Set-TargetResource @testParams
-        #         Should -Invoke -CommandName Remove-MgDeviceManagementDeviceConfiguration -Exactly 1
-        #     }
-        # }
+            It "Should remove the policy from the Set method" {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Remove-MgDeviceManagementDeviceConfiguration -Exactly 1
+            }
+        }
 
-        # Context -Name "ReverseDSC Tests" -Fixture {
-        #     BeforeAll {
-        #         $testParams = @{
-        #             GlobalAdminAccount = $GlobalAdminAccount;
-        #         }
+        Context -Name "ReverseDSC Tests" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    GlobalAdminAccount = $GlobalAdminAccount;
+                }
 
-        #         Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
-        #             return @{
-        #                 id            = "12345-12345-12345-12345-12345"
-        #                 AdditionalProperties = @{
-        #                     '@odata.type'                                  = "#microsoft.graph.windows10GeneralConfiguration"
-        #                 }
-        #                 displayName = "CONTOSO | W10 | Device Restriction"
-        #                 description = "Default device restriction settings"
-        #                 defenderBlockEndUserAccess = $true
-        #                 defenderRequireRealTimeMonitoring = $true
-        #                 defenderRequireBehaviorMonitoring = $true
-        #                 defenderRequireNetworkInspectionSystem = $true
-        #                 defenderScanDownloads = $true
-        #                 defenderScanScriptsLoadedInInternetExplorer = $true
-        #                 defenderSignatureUpdateIntervalInHours = 8
-        #                 defenderMonitorFileActivity = 'monitorIncomingFilesOnly'  # userDefined,monitorAllFiles,monitorIncomingFilesOnly,monitorOutgoingFilesOnly
-        #                 defenderDaysBeforeDeletingQuarantinedMalware = 3
-        #                 defenderScanMaxCpu = 2
-        #                 defenderScanArchiveFiles = $true
-        #                 defenderScanIncomingMail = $true
-        #                 defenderScanRemovableDrivesDuringFullScan = $true
-        #                 defenderScanMappedNetworkDrivesDuringFullScan = $false
-        #                 defenderScanNetworkFiles = $false
-        #                 defenderRequireCloudProtection = $true
-        #                 defenderCloudBlockLevel = 'high'
-        #                 defenderPromptForSampleSubmission = 'alwaysPrompt'
-        #                 defenderScheduledQuickScanTime = '13:00:00.0000000'
-        #                 defenderScanType = 'quick'   #quick,full,userDefined
-        #                 defenderSystemScanSchedule  = 'monday'  #days of week
-        #                 defenderScheduledScanTime =  '11:00:00.0000000'
-        #                 defenderDetectedMalwareActions = @("lowSeverity=clean","moderateSeverity=quarantine","highSeverity=remove","severeSeverity=block")
-        #                 defenderFileExtensionsToExclude = "[`"csv,jpg,docx`"]"
-        #                 defenderFilesAndFoldersToExclude = "[`"c:\\2,C:\\1`"]"
-        #                 defenderProcessesToExclude = "[`"notepad.exe,c:\\Windows\\myprocess.exe`"]"
-        #                 lockScreenAllowTimeoutConfiguration = $true
-        #                 lockScreenBlockActionCenterNotifications = $true
-        #                 lockScreenBlockCortana = $true
-        #                 lockScreenBlockToastNotifications = $false
-        #                 lockScreenTimeoutInSeconds = 90
-        #                 passwordBlockSimple = $true
-        #                 passwordExpirationDays = 6
-        #                 passwordMinimumLength = 5
-        #                 passwordMinutesOfInactivityBeforeScreenTimeout = 15
-        #                 passwordMinimumCharacterSetCount = 1
-        #                 passwordPreviousPasswordBlockCount = 2
-        #                 passwordRequired = $true
-        #                 passwordRequireWhenResumeFromIdleState = $true
-        #                 passwordRequiredType = "alphanumeric"
-        #                 passwordSignInFailureCountBeforeFactoryReset = 12
-        #                 privacyAdvertisingId = "blocked"
-        #                 privacyAutoAcceptPairingAndConsentPrompts = $true
-        #                 privacyBlockInputPersonalization = $true
-        #                 startBlockUnpinningAppsFromTaskbar = $true
-        #                 startMenuAppListVisibility = "collapse"
-        #                 startMenuHideChangeAccountSettings = $true
-        #                 startMenuHideFrequentlyUsedApps = $true
-        #                 startMenuHideHibernate = $true
-        #                 startMenuHideLock = $true
-        #                 startMenuHidePowerButton = $true
-        #                 startMenuHideRecentJumpLists = $true
-        #                 startMenuHideRecentlyAddedApps = $true
-        #                 startMenuHideRestartOptions = $true
-        #                 startMenuHideShutDown = $true
-        #                 startMenuHideSignOut = $true
-        #                 startMenuHideSleep = $true
-        #                 startMenuHideSwitchAccount = $true
-        #                 startMenuHideUserTile = $true
-        #                 startMenuLayoutXml = "+DQogICAGlmaWNhdGlvblRlbXBsYXRlPg=="
-        #                 startMenuMode = "fullScreen"
-        #                 startMenuPinnedFolderDocuments = "hide"
-        #                 startMenuPinnedFolderDownloads = "hide"
-        #                 startMenuPinnedFolderFileExplorer = "hide"
-        #                 startMenuPinnedFolderHomeGroup = "hide"
-        #                 startMenuPinnedFolderMusic = "hide"
-        #                 startMenuPinnedFolderNetwork = "hide"
-        #                 startMenuPinnedFolderPersonalFolder = "hide"
-        #                 startMenuPinnedFolderPictures = "hide"
-        #                 startMenuPinnedFolderSettings = "hide"
-        #                 startMenuPinnedFolderVideos = "hide"
-        #                 settingsBlockSettingsApp = $true
-        #                 settingsBlockSystemPage = $true
-        #                 settingsBlockDevicesPage = $true
-        #                 settingsBlockNetworkInternetPage = $true
-        #                 settingsBlockPersonalizationPage = $true
-        #                 settingsBlockAccountsPage = $true
-        #                 settingsBlockTimeLanguagePage = $true
-        #                 settingsBlockEaseOfAccessPage = $true
-        #                 settingsBlockPrivacyPage = $true
-        #                 settingsBlockUpdateSecurityPage = $true
-        #                 settingsBlockAppsPage = $true
-        #                 settingsBlockGamingPage = $true
-        #                 windowsSpotlightBlockConsumerSpecificFeatures = $true
-        #                 windowsSpotlightBlocked = $true
-        #                 windowsSpotlightBlockOnActionCenter = $true
-        #                 windowsSpotlightBlockTailoredExperiences = $true
-        #                 windowsSpotlightBlockThirdPartyNotifications = $true
-        #                 windowsSpotlightBlockWelcomeExperience = $true
-        #                 windowsSpotlightBlockWindowsTips = $true
-        #                 windowsSpotlightConfigureOnLockScreen = "disabled"
-        #                 networkProxyApplySettingsDeviceWide = $true
-        #                 networkProxyDisableAutoDetect = $true
-        #                 networkProxyAutomaticConfigurationUrl = "https://example.com/networkProxyAutomaticConfigurationUrl/"
-        #                 accountsBlockAddingNonMicrosoftAccountEmail = $true
-        #                 antiTheftModeBlocked = $true
-        #                 bluetoothBlocked = $true
-        #                 bluetoothAllowedServices = "[`"8e473eaa-ead4-4c60-ba9c-2c5696d71492`",`"21913f2d-a803-4f36-8039-669fd94ce5b3`"]"
-        #                 bluetoothBlockAdvertising = $true
-        #                 bluetoothBlockDiscoverableMode = $true
-        #                 bluetoothBlockPrePairing = $true
-        #                 cameraBlocked = $true
-        #                 connectedDevicesServiceBlocked = $true
-        #                 certificatesBlockManualRootCertificateInstallation = $true
-        #                 copyPasteBlocked = $true
-        #                 cortanaBlocked = $true
-        #                 deviceManagementBlockFactoryResetOnMobile = $true
-        #                 deviceManagementBlockManualUnenroll = $true
-        #                 safeSearchFilter = "strict"
-        #                 edgeBlockPopups = $true
-        #                 edgeBlockSearchSuggestions = $true
-        #                 edgeBlockSendingIntranetTrafficToInternetExplorer = $true
-        #                 edgeSendIntranetTrafficToInternetExplorer = $true
-        #                 edgeRequireSmartScreen = $true
-        #                 edgeFirstRunUrl = "https://contoso.com/"
-        #                 edgeBlockAccessToAboutFlags = $true
-        #                 edgeHomepageUrls = "[`"https://microsoft.com`"]"
-        #                 smartScreenBlockPromptOverride = $true
-        #                 smartScreenBlockPromptOverrideForFiles = $true
-        #                 webRtcBlockLocalhostIpAddress = $true
-        #                 internetSharingBlocked = $true
-        #                 settingsBlockAddProvisioningPackage = $true
-        #                 settingsBlockRemoveProvisioningPackage = $true
-        #                 settingsBlockChangeSystemTime = $true
-        #                 settingsBlockEditDeviceName = $true
-        #                 settingsBlockChangeRegion = $true
-        #                 settingsBlockChangeLanguage = $true
-        #                 settingsBlockChangePowerSleep = $true
-        #                 locationServicesBlocked = $true
-        #                 microsoftAccountBlocked = $true
-        #                 microsoftAccountBlockSettingsSync = $true
-        #                 nfcBlocked = $true
-        #                 resetProtectionModeBlocked = $true
-        #                 screenCaptureBlocked = $true
-        #                 storageBlockRemovableStorage = $true
-        #                 storageRequireMobileDeviceEncryption = $true
-        #                 usbBlocked = $true
-        #                 voiceRecordingBlocked = $true
-        #                 wiFiBlockAutomaticConnectHotspots = $true
-        #                 wiFiBlocked = $true
-        #                 wiFiBlockManualConfiguration = $true
-        #                 wiFiScanInterval = 1
-        #                 wirelessDisplayBlockProjectionToThisDevice = $true
-        #                 wirelessDisplayBlockUserInputFromReceiver = $true
-        #                 wirelessDisplayRequirePinForPairing = $true
-        #                 windowsStoreBlocked = $true
-        #                 appsAllowTrustedAppsSideloading = "blocked"
-        #                 windowsStoreBlockAutoUpdate = $true
-        #                 developerUnlockSetting = "blocked"
-        #                 sharedUserAppDataAllowed = $true
-        #                 appsBlockWindowsStoreOriginatedApps = $true
-        #                 windowsStoreEnablePrivateStoreOnly = $true
-        #                 storageRestrictAppDataToSystemVolume = $true
-        #                 storageRestrictAppInstallToSystemVolume = $true
-        #                 gameDvrBlocked = $true
-        #                 edgeSearchEngine = "bing"
-        #                 experienceBlockDeviceDiscovery = $true
-        #                 experienceBlockErrorDialogWhenNoSIM = $true
-        #                 experienceBlockTaskSwitcher = $true
-        #                 logonBlockFastUserSwitching = $true
-        #                 tenantLockdownRequireNetworkDuringOutOfBoxExperience = $true
-        #                 enterpriseCloudPrintDiscoveryEndPoint = "https://cloudprinterdiscovery.contoso.com"
-        #                 enterpriseCloudPrintDiscoveryMaxLimit = 4
-        #                 enterpriseCloudPrintMopriaDiscoveryResourceIdentifier = "http://mopriadiscoveryservice/cloudprint"
-        #                 enterpriseCloudPrintOAuthClientIdentifier = "30fbf7e8-321c-40ce-8b9f-160b6b049257"
-        #                 enterpriseCloudPrintOAuthAuthority = "https:/tenant.contoso.com/adfs"
-        #                 enterpriseCloudPrintResourceIdentifier = "http://cloudenterpriseprint/cloudPrint"
-        #                 networkProxyServer = @("address=proxy.contoso.com:8080","exceptions=*.contoso.com`r`n*.internal.local","useForLocalAddresses=false")
-        #             }
-        #         }
-        #     }
+                Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
+                    return @{
+                        id = "12345-12345-12345-12345-12345"
+                        displayName = "Android Work Profile - Device Restrictions - Standard"
+                        description = "Android device configuration policy"
+                        AdditionalProperties = @{
+                            '@odata.type'                                               = "#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration"
+                            passwordBlockFingerprintUnlock                              = $False;
+                            passwordBlockTrustAgents                                    = $False;
+                            passwordExpirationDays                                      = 10;
+                            passwordMinimumLength                                       = 8;
+                            passwordMinutesOfInactivityBeforeScreenTimeout              = 3;
+                            passwordPreviousPasswordBlockCount                          = 3;
+                            passwordSignInFailureCountBeforeFactoryReset                = 10;
+                            passwordRequiredType                                        = "deviceDefault";
+                            workProfileDataSharingType                                  = "deviceDefault";
+                            workProfileBlockNotificationsWhileDeviceLocked              = $False;
+                            workProfileBlockAddingAccounts                              = $False;
+                            workProfileBluetoothEnableContactSharing                    = $False;
+                            workProfileBlockScreenCapture                               = $False;
+                            workProfileBlockCrossProfileCallerId                        = $False;
+                            workProfileBlockCamera                                      = $False;
+                            workProfileBlockCrossProfileContactsSearch                  = $False;
+                            workProfileBlockCrossProfileCopyPaste                       = $False;
+                            workProfileDefaultAppPermissionPolicy                       = "deviceDefault";
+                            workProfilePasswordBlockFingerprintUnlock                   = $False;
+                            workProfilePasswordBlockTrustAgents                         = $False;
+                            workProfilePasswordExpirationDays                           = 90;
+                            workProfilePasswordMinimumLength                            = 4;
+                            workProfilePasswordMinNumericCharacters                     = 3;
+                            workProfilePasswordMinNonLetterCharacters                   = 3;
+                            workProfilePasswordMinLetterCharacters                      = 3;
+                            workProfilePasswordMinLowerCaseCharacters                   = 3;
+                            workProfilePasswordMinUpperCaseCharacters                   = 3;
+                            workProfilePasswordMinSymbolCharacters                      = 3;
+                            workProfilePasswordMinutesOfInactivityBeforeScreenTimeout   = 3;
+                            workProfilePasswordPreviousPasswordBlockCount               = 3;
+                            workProfilePasswordSignInFailureCountBeforeFactoryReset     = 3;
+                            workProfilePasswordRequiredType                             = "deviceDefault";
+                            workProfileRequirePassword                                  = $False;
+                            securityRequireVerifyApps                                   = $False;
+                        }
+                    }
+                }
+            }
 
-        #     It "Should Reverse Engineer resource from the Export method" {
-        #         Export-TargetResource @testParams
-        #     }
-        # }
+            It "Should Reverse Engineer resource from the Export method" {
+                Export-TargetResource @testParams
+            }
+        }
     }
 }
 
