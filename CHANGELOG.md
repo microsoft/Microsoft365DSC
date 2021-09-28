@@ -1232,3 +1232,7 @@
 * SPOSite
   * Added default value for Storage Quota;
   * Fixed an issue with site creation that could result in infinite loops;
+
+## UNRELEASED
+* IntuneDeviceConfigurationPolicyAndroidWorkProfile
+  * Initial release;
