@@ -444,7 +444,7 @@ function Export-TargetResource
         foreach ($storageEntity in $storageEntities)
         {
             $Params = @{
-                Credential    = $Credential
+                Credential            = $Credential
                 Key                   = $storageEntity.Key
                 SiteUrl               = $centralAdminUrl
                 ApplicationId         = $ApplicationId

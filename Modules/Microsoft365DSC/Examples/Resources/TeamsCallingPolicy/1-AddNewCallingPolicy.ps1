@@ -7,7 +7,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $credsAdmin
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -25,7 +25,7 @@ Configuration Example
             PreventTollBypass          = $true
             BusyOnBusyEnabledType      = 'Enabled'
             Ensure                     = 'Present'
-            Credential         = $credsGlobalAdmin
+            Credential                 = $credsAdmin
         }
     }
 }

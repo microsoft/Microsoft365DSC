@@ -50,6 +50,6 @@ jobs:
           Set-ExecutionPolicy Unrestricted -Force
           Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
           $CredPassword = ConvertTo-SecureString $env:PUBLIC_PASSWORD -AsPlainText -Force
-          $Credential = New-Object System.Management.Automation.PSCredential ($env:PUBLIC_USERNAME, $CreatePassword)
+          $Credential = New-Object System.Management.Automation.PSCredential ($env:PUBLIC_USERNAME, $CredPassword)
           Set-M365DSCTelemetryOption -Enabled $false
           Export-M365DSCConfiguration -Credential $Credential -Path "." -FileName 'ExtractedSPO.ps1' -Workload 'OD' -Verbose

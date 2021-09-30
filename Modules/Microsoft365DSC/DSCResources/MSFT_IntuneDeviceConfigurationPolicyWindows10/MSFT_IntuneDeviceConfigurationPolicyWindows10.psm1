@@ -2993,7 +2993,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$policies = Get-MGDeviceManagementDeviceConfiguration -ErrorAction Stop `
+        [array]$policies = Get-MGDeviceManagementDeviceConfiguration `
             -ErrorAction Stop | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10GeneralConfiguration' }
         $i = 1

@@ -743,6 +743,7 @@ function Get-M365DSCAzureADAppPermissions
                 $scopeInfo = $SourceAPI.Oauth2PermissionScopes | Where-Object -FilterScript {$_.Id -eq $resourceAccess.Id}
                 $currentPermission.Add("Type", "Delegated")
                 $currentPermission.Add("Name", $scopeInfo.Value)
+                $currentPermission.Add("AdminConsentGranted", $false)
 
                 $appServicePrincipal = Get-MgServicePrincipal -Filter "AppId eq '$($app.AppId)'" -All:$true
                 if ($null -ne $appServicePrincipal)
@@ -753,11 +754,7 @@ function Get-M365DSCAzureADAppPermissions
                         $scopes = $oAuth2grant.Scope.Split(' ')
                         if ($scopes.Contains($scopeInfo.Value))
                         {
-                            $currentPermission.Add("AdminConsentGranted", $true)
-                        }
-                        else
-                        {
-                            $currentPermission.Add("AdminConsentGranted", $false)
+                            $currentPermission.AdminConsentGranted = $true
                         }
                     }
                 }
@@ -767,6 +764,7 @@ function Get-M365DSCAzureADAppPermissions
                 $currentPermission.Add("Type", "AppOnly")
                 $role = $SourceAPI.AppRoles | Where-Object -FilterScript {$_.Id -eq $resourceAccess.Id}
                 $currentPermission.Add("Name", $role.Value)
+                $currentPermission.Add("AdminConsentGranted", $false)
 
                 $appServicePrincipal = Get-MgServicePrincipal -Filter "AppId eq '$($app.AppId)'" -All:$true
                 if ($null -ne $appServicePrincipal)
@@ -778,13 +776,9 @@ function Get-M365DSCAzureADAppPermissions
                         break
                     }
 
-                    if ($null -eq $foundPermission)
+                    if ($foundPermission)
                     {
-                        $currentPermission.Add("AdminConsentGranted", $false)
-                    }
-                    else
-                    {
-                        $currentPermission.Add("AdminConsentGranted", $true)
+                        $currentPermission.AdminConsentGranted = $true
                     }
                 }
             }
