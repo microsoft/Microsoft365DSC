@@ -30,7 +30,7 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
 
   const _getParameters = () => {
     var parameters: ScriptParameter[] = [];
-    parameters.push({ name: 'ComponentsToExtract', value: selectedResources.filter((r) => r.checked === true).map((r) => r.name)});
+    parameters.push({ name: 'Components', value: selectedResources.filter((r) => r.checked === true).map((r) => r.name)});
 
     switch(authenticationType) {
       case AuthenticationType.Credentials :
@@ -56,7 +56,7 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
 
     switch(authenticationType) {
       case AuthenticationType.Credentials :
-        scriptPrompts =   `# Getting client credentials\n`;
+        scriptPrompts =   `# Getting client credential\n`;
         scriptPrompts +=  `$Credential = Get-Credential\n`
         break;
       case AuthenticationType.Application :
@@ -66,11 +66,11 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
         scriptPrompts +=  `$TenantId = Read-Host -Prompt 'Tenant Id'\n`
         break;
       case AuthenticationType.Certificate :
-          scriptPrompts =   `# Getting application information for Application + Certificate authentication\n`;
-          scriptPrompts +=  `$ApplicationId = Read-Host -Prompt 'Application Id'\n`
-          scriptPrompts +=  `$CertificateThumbprint = Read-Host -Prompt 'Certificate Thumbprint'\n`
-          scriptPrompts +=  `$TenantId = Read-Host -Prompt 'Tenant Id'\n`
-          break;
+        scriptPrompts =   `# Getting application information for Application + Certificate authentication\n`;
+        scriptPrompts +=  `$ApplicationId = Read-Host -Prompt 'Application Id'\n`
+        scriptPrompts +=  `$CertificateThumbprint = Read-Host -Prompt 'Certificate Thumbprint'\n`
+        scriptPrompts +=  `$TenantId = Read-Host -Prompt 'Tenant Id'\n`
+        break;
     }
     return scriptPrompts += "\n";
   }
