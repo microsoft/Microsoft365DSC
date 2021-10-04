@@ -40,6 +40,9 @@ jobs:
     name: Deploy to Production
     needs: build
     steps:
+      - uses: actions/download-artifact@master
+        with:
+          name: website-build
       - name: Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
