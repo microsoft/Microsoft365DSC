@@ -179,8 +179,14 @@ function Get-TargetResource {
     )
 
     Write-Verbose -Message "Checking for the Intune Device Configuration Policy {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+
+    $M365DSCConnectionSplat = @{
+        Workload = 'MicrosoftGraph'
+        InboundParameters = $PSBoundParameters
+        ProfileName = 'Beta'
+    }
+    $ConnectionMode = New-M365DSCConnection @M365DSCConnectionSplat
+    Select-MGProfile -Name 'Beta' | Out-Null
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -452,8 +458,13 @@ function Set-TargetResource
         $CertificateThumbprint
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+    $M365DSCConnectionSplat = @{
+        Workload = 'MicrosoftGraph'
+        InboundParameters = $PSBoundParameters
+        ProfileName = 'Beta'
+    }
+    $ConnectionMode = New-M365DSCConnection @M365DSCConnectionSplat
+    Select-MGProfile -Name 'Beta' | Out-Null
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -748,8 +759,13 @@ function Export-TargetResource
         $CertificateThumbprint
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+    $M365DSCConnectionSplat = @{
+        Workload = 'MicrosoftGraph'
+        InboundParameters = $PSBoundParameters
+        ProfileName = 'Beta'
+    }
+    $ConnectionMode = New-M365DSCConnection @M365DSCConnectionSplat
+    Select-MGProfile -Name 'Beta' | Out-Null
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
