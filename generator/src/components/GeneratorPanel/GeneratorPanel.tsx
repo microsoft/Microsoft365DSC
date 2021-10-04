@@ -30,12 +30,11 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
 
   const _getParameters = () => {
     var parameters: ScriptParameter[] = [];
-    parameters.push({ name: 'Quiet'});
     parameters.push({ name: 'ComponentsToExtract', value: selectedResources.filter((r) => r.checked === true).map((r) => r.name)});
 
     switch(authenticationType) {
       case AuthenticationType.Credentials :
-        parameters.push({ name: 'GlobalAdminAccount', value: '$Credentials'});
+        parameters.push({ name: 'Credential', value: '$Credential'});
         break;
       case AuthenticationType.Application :
         parameters.push({ name: 'ApplicationId', value: '$ApplicationId'});
@@ -58,7 +57,7 @@ export const GeneratorPanel: React.FunctionComponent<IGeneratorPanelProps> = (pr
     switch(authenticationType) {
       case AuthenticationType.Credentials :
         scriptPrompts =   `# Getting client credentials\n`;
-        scriptPrompts +=  `$Credentials = Get-Credential\n`
+        scriptPrompts +=  `$Credential = Get-Credential\n`
         break;
       case AuthenticationType.Application :
         scriptPrompts =   `# Getting application information for Application + Secret authentication\n`;
