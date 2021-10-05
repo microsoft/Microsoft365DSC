@@ -1010,7 +1010,7 @@ function New-M365DSCConnection
 {
     param(
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Azure", "AzureAD", "ExchangeOnline", "Intune", `
+        [ValidateSet("ExchangeOnline", "Intune", `
                 "SecurityComplianceCenter", "PnP", "PowerPlatforms", `
                 "MicrosoftTeams", "MicrosoftGraph")]
         [System.String]
@@ -2562,4 +2562,40 @@ function Get-M365DSCWorkloadsListFromResourceNames
         }
     }
     return ($workloads | Sort-Object)
+}
+
+function Get-M365DSCAuthenticationMode
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $Parameters
+    )
+
+    if ($Parameters.ApplicationId -and $Parameters.TenantId -and $Parameters.CertificateThumbprint)
+    {
+        $AuthenticationType = "ServicePrincipalWithThumbprint"
+    }
+    elseif ($Parameters.ApplicationId -and $Parameters.TenantId -and $Parameters.ApplicationSecret)
+    {
+        $AuthenticationType = "ServicePrincipalWithSecret"
+    }
+    elseif ($Parameters.ApplicationId -and $Parameters.TenantId -and $Parameters.CertificatePath -and $Parameters.CertificatePassword)
+    {
+        $AuthenticationType = "ServicePrincipalWithPAth"
+    }
+    elseif ($Parameters.Credentials -and $Parameters.ApplicationId)
+    {
+        $AuthenticationType = 'CredentialsWithApplicationId'
+    }
+    elseif ($Parameters.Credentials)
+    {
+        $AuthenticationType = 'Credentials'
+    }
+    else
+    {
+        $AuthenticationType = 'Interactive'
+    }
+    return $AuthenticationType
 }

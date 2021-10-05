@@ -78,16 +78,14 @@ function Get-TargetResource
   $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatforms' `
     -InboundParameters $PSBoundParameters
 
-  #region Telemetry
-  $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-  $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-  $data.Add('Resource', $ResourceName)
-  $data.Add('Method', $MyInvocation.MyCommand)
-  $data.Add('Principal', $Credential.UserName)
-  $data.Add('TenantId', $TenantId)
-  $data.Add('ConnectionMode', $ConnectionMode)
-  Add-M365DSCTelemetryEvent -Data $data
-  #endregion
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
   $nullReturn = $PSBoundParameters
   $nullReturn.Ensure = 'Absent'
@@ -218,15 +216,14 @@ function Set-TargetResource
 
   Write-Verbose -Message 'Setting Power Platform Tenant Settings configuration'
 
-  #region Telemetry
-  $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-  $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-  $data.Add('Resource', $ResourceName)
-  $data.Add('Method', $MyInvocation.MyCommand)
-  $data.Add('Principal', $Credential.UserName)
-  $data.Add('TenantId', $TenantId)
-  Add-M365DSCTelemetryEvent -Data $data
-  #endregion
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
   $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatforms' `
     -InboundParameters $PSBoundParameters
@@ -313,12 +310,11 @@ function Test-TargetResource
     $Credential
   )
   #region Telemetry
-  $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-  $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-  $data.Add('Resource', $ResourceName)
-  $data.Add('Method', $MyInvocation.MyCommand)
-  $data.Add('Principal', $Credential.UserName)
-  $data.Add('TenantId', $TenantId)
+  $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+  $CommandName  = $MyInvocation.MyCommand
+  $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+      -CommandName $CommandName `
+      -Parameters $PSBoundParameters
   Add-M365DSCTelemetryEvent -Data $data
   #endregion
 
@@ -365,16 +361,14 @@ function Export-TargetResource
   $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatforms' `
     -InboundParameters $PSBoundParameters
 
-  #region Telemetry
-  $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-  $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-  $data.Add('Resource', $ResourceName)
-  $data.Add('Method', $MyInvocation.MyCommand)
-  $data.Add('Principal', $Credential.UserName)
-  $data.Add('TenantId', $TenantId)
-  $data.Add('ConnectionMode', $ConnectionMode)
-  Add-M365DSCTelemetryEvent -Data $data
-  #endregion
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
   try
   {

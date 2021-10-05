@@ -19,7 +19,8 @@
   * Added dependency on Microsoft.Graph.Identity.DirectoryManagement;
   * Added dependency on Microsoft.Graph.Identity.SignIns;
   * Removing dependency on AzureADPreview;
-  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.137
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.137;
+  * Updated MicrosoftTeams to version 2.6.0;
 * MISC
   * Renamed the GlobalAdminAccount parameter to Credential across all resources;
   * Revamped entire Azure AD Workload to leverage Microsoft Graph;
