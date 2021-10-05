@@ -263,6 +263,7 @@ function Get-M365DSCTelemetryOption
 function Format-M365DSCTelemetryParameters
 {
     [CmdletBinding()]
+    [OutputType([System.Collections.Generic.Dictionary[[String], [String]]])]
     param(
         [parameter(Mandatory = $true)]
         [System.String]
@@ -277,18 +278,26 @@ function Format-M365DSCTelemetryParameters
         $Parameters
     )
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $CommandName)
-    if (-not $ApplicationId)
+
+    try
     {
-        $data.Add("Principal", $Parameters.Credential.UserName)
-        $data.Add("TenantId", $Parameters.Credential.UserName.Split('@')[1])
+        $data.Add("Resource", $ResourceName)
+        $data.Add("Method", $CommandName)
+        if (-not $ApplicationId)
+        {
+            $data.Add("Principal", $Parameters.Credential.UserName)
+            $data.Add("TenantId", $Parameters.Credential.UserName.Split('@')[1])
+        }
+        else
+        {
+            $data.Add("Principal", $Parameter.ApplicationId)
+            $data.Add("TenantId", $TenantId)
+        }
+        $data.Add("ConnectionMode", (Get-M365DSCAuthenticationMode -Parameters $Parameters))
     }
-    else
+    catch
     {
-        $data.Add("Principal", $Parameter.ApplicationId)
-        $data.Add("TenantId", $TenantId)
+        Write-Verbose -Message $_
     }
-    $data.Add("ConnectionMode", (Get-M365DSCAuthenticationMode -Parameters $Parameters))
     return $data
 }
