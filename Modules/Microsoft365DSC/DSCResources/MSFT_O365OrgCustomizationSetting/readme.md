@@ -26,7 +26,7 @@ Ensure
 Credential
 
 - Required: Yes
-- Description: Credentials of the Office 365 Global Admin
+- Description: Credentials of the account to authenticate with
 
 ## Example
 

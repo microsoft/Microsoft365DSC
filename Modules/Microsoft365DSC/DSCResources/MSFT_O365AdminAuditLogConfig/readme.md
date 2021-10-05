@@ -20,7 +20,7 @@ IsSingleInstance
 Credential
 
 - Required: Yes
-- Description: Credentials of the SharePoint Global Admin
+- Description: Credentials of the account to authenticate with
 
 UnifiedAuditLogIngestionEnabled
 
