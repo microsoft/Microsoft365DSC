@@ -33,18 +33,18 @@ function New-M365DSCConfigurationToHTML
         $partHTML += "<strong>" + $resource.ResourceName + "</strong>"
         $partHTML += "</th></tr>"
 
-        if ($SortProperties) 
+        if ($SortProperties)
         {
             $properties = $resource.Keys | Sort-Object
         }
-        else 
+        else
         {
             $properties = $resource.Keys
         }
 
         foreach ($property in $properties)
         {
-            if ($property -ne "ResourceName" -and $property -ne "GlobalAdminAccount")
+            if ($property -ne "ResourceName" -and $property -ne "Credential")
             {
                 $partHTML += "<tr><td width='40%' style='padding:5px;text-align:right;border:1px solid black;'><strong>" + $property + "</strong></td>"
                 $value = "`$Null"
@@ -54,7 +54,7 @@ function New-M365DSCConfigurationToHTML
                     {
                         $temp = $resource.$property -join ','
                         [array]$components = $temp.Split(',')
-                        if ($components.Length -gt 0 -and 
+                        if ($components.Length -gt 0 -and
                             -not [System.String]::IsNullOrEmpty($temp))
                         {
                             $Value = "<ul>"
@@ -166,7 +166,7 @@ function New-M365DSCConfigurationToExcel
         $beginRow = $row
         foreach ($property in $resource.Keys)
         {
-            if ($property -ne "ResourceName" -and $property -ne "GlobalAdminAccount")
+            if ($property -ne "ResourceName" -and $property -ne "Credential")
             {
                 $report.Cells.Item($row,1) = $resource.ResourceName
                 $report.Cells.Item($row,2) = $property
@@ -180,7 +180,7 @@ function New-M365DSCConfigurationToExcel
                     {
                         if ($resource.$property.GetType().Name -eq 'Object[]')
                         {
-                            $value = $resource.$property -join ','                            
+                            $value = $resource.$property -join ','
                             $report.Cells.Item($row,3) = $value
                         }
                         else

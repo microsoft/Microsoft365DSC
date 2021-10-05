@@ -17,10 +17,10 @@ DomainType
 - Required: No (Defaults to 'Authoritative')
 - Description: The DomainType parameter specifies the accepted domain type.
 
-GlobalAdminAccount
+Credential
 
 - Required: Yes
-- Description: Credentials of an Office365 Global Admin
+- Description: Credentials of a Microsoft 365 Admin
 
 Identity
 
@@ -52,6 +52,6 @@ OutboundOnly
 EXOAcceptedDomain ExampleEmailDomain {
     Ensure              = 'Present'
     Identity            = 'example.contoso.com'
-    GlobalAdminAccount  = $GlobalAdminAccount
+    Credential          = $Credential
 }
 ```

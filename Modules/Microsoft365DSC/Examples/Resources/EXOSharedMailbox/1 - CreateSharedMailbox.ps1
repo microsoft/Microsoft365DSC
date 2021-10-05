@@ -20,7 +20,7 @@ Configuration Example
             PrimarySMTPAddress = "Test@O365DSC1.onmicrosoft.com"
             Aliases            = @("Joufflu@o365dsc1.onmicrosoft.com", "Gilles@O365dsc1.onmicrosoft.com")
             Ensure             = "Present"
-            GlobalAdminAccount = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
         }
     }
 }

@@ -25,7 +25,7 @@ Configuration Example
             CustomFooterText            = "This is some custom footer text";
             DisableAnonymousJoin        = $False;
             EnableQoS                   = $False;
-            GlobalAdminAccount          = $credsglobaladmin;
+            Credential                  = $credsglobaladmin;
             HelpURL                     = "https://github.com/Microsoft/Office365DSC/Help";
             Identity                    = "Global";
             LegalURL                    = "https://github.com/Microsoft/Office365DSC/Legal";

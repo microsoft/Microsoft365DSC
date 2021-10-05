@@ -22,7 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
@@ -75,7 +75,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     FilePlanProperty   = (New-CimInstance -ClassName MSFT_SCFilePlanProperty -Property @{
                             FilePlanPropertyDepartment = "Legal"
                         } -ClientOnly)
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     RetentionType      = "ModificationAgeInDays"
                     Ensure             = "Present"
                 }
@@ -113,7 +113,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             FilePlanPropertyCategory    = "DemoCat"
                             FilePlanPropertySubcategory = "DemoSub"
                         } -ClientOnly)
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     RetentionType      = "ModificationAgeInDays"
                     Ensure             = "Present"
                 }
@@ -160,7 +160,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             FilePlanPropertyDepartment = "Legal"
                         } -ClientOnly)
                     RetentionDuration  = "1025"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     RetentionType      = "ModificationAgeInDays"
                 }
 
@@ -199,7 +199,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
             }
 

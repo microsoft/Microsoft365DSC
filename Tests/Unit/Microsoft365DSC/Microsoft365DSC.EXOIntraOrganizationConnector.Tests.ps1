@@ -22,7 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -62,7 +62,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Ensure               = 'Present'
-                    GlobalAdminAccount   = $GlobalAdminAccount
+                    Credential   = $Credential
                     Identity             = 'TestIntraOrganizationConnector'
                     DiscoveryEndpoint    = 'https://ExternalDiscovery.Contoso.com/autodiscover/autodiscover.svc'
                     Enabled              = $true
@@ -93,7 +93,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Ensure               = 'Present'
-                    GlobalAdminAccount   = $GlobalAdminAccount
+                    Credential   = $Credential
                     Identity             = 'TestIntraOrganizationConnector'
                     DiscoveryEndpoint    = 'https://ExternalDiscovery.Contoso.com/autodiscover/autodiscover.svc'
                     Enabled              = $true
@@ -103,7 +103,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-IntraOrganizationConnector -MockWith {
                     return @{
                         Ensure               = 'Present'
-                        GlobalAdminAccount   = $GlobalAdminAccount
+                        Credential   = $Credential
                         Identity             = 'TestIntraOrganizationConnector'
                         DiscoveryEndpoint    = 'https://ExternalDiscovery.Contoso.com/autodiscover/autodiscover.svc'
                         Enabled              = $true
@@ -121,7 +121,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Ensure               = 'Present'
-                    GlobalAdminAccount   = $GlobalAdminAccount
+                    Credential   = $Credential
                     Identity             = 'TestIntraOrganizationConnector'
                     DiscoveryEndpoint    = 'https://ExternalDiscovery.Contoso.com/autodiscover/autodiscover.svc'
                     Enabled              = $true
@@ -131,7 +131,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-IntraOrganizationConnector -MockWith {
                     return @{
                         Ensure               = 'Present'
-                        GlobalAdminAccount   = $GlobalAdminAccount
+                        Credential   = $Credential
                         Identity             = 'TestIntraOrganizationConnector'
                         Name                 = 'TestIntraOrganizationConnector'
                         DiscoveryEndpoint    = 'https://Discovery.Contoso.org/autodiscover/autodiscover.svc'
@@ -143,7 +143,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Set-IntraOrganizationConnector -MockWith {
                     return @{
                         Ensure               = 'Present'
-                        GlobalAdminAccount   = $GlobalAdminAccount
+                        Credential   = $Credential
                         Identity             = 'TestIntraOrganizationConnector'
                         Name                 = 'TestIntraOrganizationConnector'
                         DiscoveryEndpoint    = 'https://ExternalDiscovery.Contoso.com/autodiscover/autodiscover.svc'
@@ -166,7 +166,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Ensure             = 'Present'
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Identity           = 'TestIntraOrganizationConnector'
                     DiscoveryEndpoint  = 'https://ExternalDiscovery.Contoso.com/autodiscover/autodiscover.svc'
                 }
@@ -192,7 +192,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
             }
 

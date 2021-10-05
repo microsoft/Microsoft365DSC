@@ -1,6 +1,6 @@
 {
-    "resourceName": "AADPolicy",
-    "description": "This resource configures the Azure AD Policies.",
+    "resourceName": "AADTokenLifetimePolicy",
+    "description": "This resource configures the Azure AD Token Lifetime Policies.",
     "permissions": [
         {
             "read": [

@@ -13,7 +13,7 @@ class MSFT_EXOHostedOutboundSpamFilterRule : OMI_BaseResource
     [Write, Description("The From parameter specifies a condition that looks for messages from specific senders. You can use any value that uniquely identifies the sender.")] String From[];
     [Write, Description("The FromMemberOf parameter specifies a condition that looks for messages sent by group members. You can use any value that uniquely identifies the group.")] String FromMemberOf[];
     [Write, Description("Specify if this rule should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;

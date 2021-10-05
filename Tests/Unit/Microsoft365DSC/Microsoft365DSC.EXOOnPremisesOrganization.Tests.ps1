@@ -22,7 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -58,7 +58,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     OrganizationRelationship = ""
                     OutboundConnector        = "Outbound to ExchangeMail"
                     Ensure                   = 'Present'
-                    GlobalAdminAccount       = $GlobalAdminAccount
+                    Credential       = $Credential
                 }
 
                 Mock -CommandName Get-OnPremisesOrganization -MockWith {
@@ -85,7 +85,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         OrganizationGuid         = "a1bc23cb-3456-bcde-abcd-feb363cacc88"
                         OrganizationRelationship = ""
                         OutboundConnector        = "Outbound to ExchangeMail"
-                        GlobalAdminAccount       = $GlobalAdminAccount
+                        Credential       = $Credential
                     }
                 }
 
@@ -116,7 +116,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     OrganizationRelationship = ""
                     OutboundConnector        = "Outbound to ExchangeMail"
                     Ensure                   = 'Present'
-                    GlobalAdminAccount       = $GlobalAdminAccount
+                    Credential       = $Credential
                 }
 
                 Mock -CommandName Get-OnPremisesOrganization -MockWith {
@@ -154,7 +154,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     OrganizationRelationship = ""
                     OutboundConnector        = "Outbound to ExchangeMail"
                     Ensure                   = 'Present'
-                    GlobalAdminAccount       = $GlobalAdminAccount
+                    Credential       = $Credential
                 }
 
                 Mock -CommandName Get-OnPremisesOrganization -MockWith {
@@ -196,7 +196,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 $OnPremisesOrganization = @{

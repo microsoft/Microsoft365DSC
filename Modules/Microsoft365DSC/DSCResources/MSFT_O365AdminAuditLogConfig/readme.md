@@ -17,10 +17,10 @@ IsSingleInstance
 - Required: Yes
 - Description: Single instance resource, the value must be 'Yes'
 
-GlobalAdminAccount
+Credential
 
 - Required: Yes
-- Description: Credentials of the SharePoint Global Admin
+- Description: Credentials of the account to authenticate with
 
 UnifiedAuditLogIngestionEnabled
 
@@ -34,6 +34,6 @@ UnifiedAuditLogIngestionEnabled
             IsSingleInstance                = 'Yes'
             Ensure                          = 'Present'
             UnifiedAuditLogIngestionEnabled = 'Enabled'
-            GlobalAdminAccount              = $GlobalAdminAccount
+            Credential              = $Credential
         }
 ```

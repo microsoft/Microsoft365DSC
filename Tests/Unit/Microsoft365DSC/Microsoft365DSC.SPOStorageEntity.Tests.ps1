@@ -23,7 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "Pass@word1)" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credential"
@@ -60,7 +60,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description        = "Description created by DSC"
                     Comment            = "Comment from DSC"
                     Ensure             = "Present"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     SiteUrl            = "https://contoso-admin.sharepoint.com"
                 }
 
@@ -92,7 +92,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Comment            = "Comment from DSC"
                     Ensure             = "Present"
                     SiteUrl            = "https://contoso-admin.sharepoint.com"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -129,7 +129,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Comment            = "Comment from DSC"
                     Ensure             = "Present"
                     SiteUrl            = "https://contoso-admin.sharepoint.com"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
                 Mock -CommandName New-M365DSCConnection -MockWith {
                     return "Credential"
@@ -179,7 +179,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Comment            = "Comment from DSC"
                     Ensure             = "Absent"
                     SiteUrl            = "https://contoso-admin.sharepoint.com"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -217,7 +217,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -233,7 +233,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Comment            = "Comment from DSC"
                         Ensure             = "Present"
                         SiteUrl            = "https://contoso-admin.sharepoint.com"
-                        GlobalAdminAccount = $GlobalAdminAccount
+                        Credential = $Credential
                     }
                 }
             }

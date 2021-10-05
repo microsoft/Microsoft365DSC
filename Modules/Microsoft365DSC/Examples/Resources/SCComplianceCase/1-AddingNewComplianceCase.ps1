@@ -20,7 +20,7 @@ Configuration Example
             Description        = "MyPolicy"
             Status             = "Active"
             Ensure             = "Present"
-            GlobalAdminAccount = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
         }
     }
 }

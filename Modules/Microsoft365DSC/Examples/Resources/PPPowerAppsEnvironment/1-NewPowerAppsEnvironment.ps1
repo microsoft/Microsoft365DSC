@@ -18,7 +18,7 @@ Configuration Example
             DisplayName        = "My Demo Environment"
             Ensure             = "Present"
             EnvironmentSKU     = "Production"
-            GlobalAdminAccount = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
             Location           = "canada"
         }
     }

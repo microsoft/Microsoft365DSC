@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -50,11 +50,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DomainType         = 'Authoritative'
                     Ensure             = 'Present'
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Identity           = 'contoso.com'
                 }
 
-                Mock -CommandName Get-AzureADDomain -MockWith {
+                Mock -CommandName Get-MgDomain -MockWith {
                     return @{
                         Name       = 'different.contoso.com'
                         IsVerified = $true
@@ -73,7 +73,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         DomainType         = 'Authoritative'
                         Ensure             = 'Present'
-                        GlobalAdminAccount = $GlobalAdminAccount
+                        Credential = $Credential
                         Identity           = 'contoso.com'
                     }
                 }
@@ -99,7 +99,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure             = 'Absent'
                     MatchSubDomain     = $false
                     OutboundOnly       = $false
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Identity           = 'contoso.com'
                 }
 
@@ -112,7 +112,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-AzureADDomain -MockWith {
+                Mock -CommandName Get-MgDomain -MockWith {
                     return @{
                         Name       = 'contoso.com'
                         IsVerified = $true
@@ -132,11 +132,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure             = 'Present'
                     MatchSubDomain     = $false
                     OutboundOnly       = $false
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Identity           = 'contoso.com'
                 }
 
-                Mock -CommandName Get-AzureADDomain -MockWith {
+                Mock -CommandName Get-MgDomain -MockWith {
                     return @{
                         Name       = 'contoso.com'
                         IsVerified = $true
@@ -168,11 +168,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DomainType         = 'Authoritative'
                     Ensure             = 'Present'
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Identity           = 'contoso.com'
                 }
 
-                Mock -CommandName Get-AzureADDomain -MockWith {
+                Mock -CommandName Get-MgDomain -MockWith {
                     return @{
                         Name       = 'contoso.com'
                         IsVerified = $true
@@ -192,7 +192,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         DomainType         = 'Authoritative'
                         Ensure             = 'Present'
-                        GlobalAdminAccount = $GlobalAdminAccount
+                        Credential = $Credential
                         Identity           = 'contoso.com'
                     }
                 }
@@ -210,7 +210,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 $acceptedDomain1 = @{

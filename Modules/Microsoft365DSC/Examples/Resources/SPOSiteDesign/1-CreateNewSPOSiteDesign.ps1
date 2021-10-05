@@ -23,7 +23,7 @@ Configuration Example
             Description         = "Created by DSC"
             PreviewImageAltText = "Office 365"
             Ensure              = "Present"
-            GlobalAdminAccount  = $credsGlobalAdmin
+            Credential          = $credsGlobalAdmin
         }
     }
 }

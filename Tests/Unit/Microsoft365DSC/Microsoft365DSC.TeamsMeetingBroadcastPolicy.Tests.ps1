@@ -23,7 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             $Global:PartialExportFileName = "c:\TestPath"
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
@@ -67,7 +67,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     BroadcastAttendeeVisibilityMode = "EveryoneInCompany";
                     BroadcastRecordingMode          = "AlwaysEnabled";
                     Ensure                          = "Present";
-                    GlobalAdminAccount              = $GlobalAdminAccount;
+                    Credential              = $Credential;
                     Identity                        = "MyDemoPolicy";
                 }
             }
@@ -96,7 +96,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     BroadcastAttendeeVisibilityMode = "EveryoneInCompany";
                     BroadcastRecordingMode          = "AlwaysDisabled"; #Drifted
                     Ensure                          = "Present";
-                    GlobalAdminAccount              = $GlobalAdminAccount;
+                    Credential              = $Credential;
                     Identity                        = "MyDemoPolicy";
                 }
             }
@@ -123,7 +123,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     BroadcastAttendeeVisibilityMode = "EveryoneInCompany";
                     BroadcastRecordingMode          = "AlwaysDisabled"; #Drifted
                     Ensure                          = "Present";
-                    GlobalAdminAccount              = $GlobalAdminAccount;
+                    Credential              = $Credential;
                     Identity                        = "MyDemoPolicy";
                 }
 
@@ -153,7 +153,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     BroadcastAttendeeVisibilityMode = "EveryoneInCompany";
                     BroadcastRecordingMode          = "AlwaysDisabled"; #Drifted
                     Ensure                          = "Absent";
-                    GlobalAdminAccount              = $GlobalAdminAccount;
+                    Credential              = $Credential;
                     Identity                        = "MyDemoPolicy";
                 }
             }
@@ -175,7 +175,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When the No Optional Parameters are Specified" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount              = $GlobalAdminAccount;
+                    Credential              = $Credential;
                     Identity                        = "MyDemoPolicy";
                 }
             }
@@ -188,7 +188,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
             }
 

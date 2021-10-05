@@ -31,7 +31,7 @@ Configuration Example
             AutoAdmittedUsers                          = "Everyone";
             Description                                = "My Demo Meeting Policy";
             Ensure                                     = "Present";
-            GlobalAdminAccount                         = $credsglobaladmin;
+            Credential                                 = $credsglobaladmin;
             Identity                                   = "Demo Policy";
             MediaBitRateKb                             = 50000;
             ScreenSharingMode                          = "EntireScreen";

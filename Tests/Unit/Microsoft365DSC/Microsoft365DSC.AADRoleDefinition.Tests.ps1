@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             $Global:PartialExportFileName = "c:\TestPath"
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
@@ -42,15 +42,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
-            Mock -CommandName Set-AzureADMSRoleDefinition -MockWith {
+            Mock -CommandName Update-MgRoleManagementDirectoryRoleDefinition -MockWith {
 
             }
 
-            Mock -CommandName Remove-AzureADMSRoleDefinition -MockWith {
+            Mock -CommandName Remove-MgRoleManagementDirectoryRoleDefinition -MockWith {
 
             }
 
-            Mock -CommandName New-AzureADMSRoleDefinition -MockWith {
+            Mock -CommandName New-MgRoleManagementDirectoryRoleDefinition -MockWith {
 
             }
 
@@ -70,24 +70,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RolePermissions               = "microsoft.directory/applicationPolicies/allProperties/read","microsoft.directory/applicationPolicies/allProperties/update","microsoft.directory/applicationPolicies/basic/update"
                     Version                       = "1.0"
                     Ensure                        = "Present"
-                    GlobalAdminAccount            = $GlobalAdminAccount
+                    Credential            = $Credential
                 }
 
-                Mock -CommandName Get-AzureADMSRoleDefinition -MockWith {
+                Mock -CommandName Get-MgRoleManagementDirectoryRoleDefinition -MockWith {
                     return $null
                 }
             }
 
             It "Should return values from the get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-                Should -Invoke -CommandName "Get-AzureADMSRoleDefinition" -Exactly 2
+                Should -Invoke -CommandName "Get-MgRoleManagementDirectoryRoleDefinition" -Exactly 1
             }
             It 'Should return false from the test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
             It 'Should create the role definition from the set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-AzureADMSRoleDefinition" -Exactly 1
+                Should -Invoke -CommandName "New-MgRoleManagementDirectoryRoleDefinition" -Exactly 1
             }
         }
 
@@ -101,14 +101,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RolePermissions               = "microsoft.directory/applicationPolicies/allProperties/read","microsoft.directory/applicationPolicies/allProperties/update","microsoft.directory/applicationPolicies/basic/update"
                     Version                       = "1.0"
                     Ensure                        = "Absent"
-                    GlobalAdminAccount            = $GlobalAdminAccount
+                    Credential            = $Credential
+                    Id                            = "12345-12345-12345-12345-12345"
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADMSRoleDefinition -MockWith {
+                Mock -CommandName Get-MgRoleManagementDirectoryRoleDefinition -MockWith {
                     $AADRoleDef = New-Object PSCustomObject
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name DisplayName -Value "Role1"
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name Description -Value "Role description"
@@ -116,13 +117,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name IsEnabled -Value "True"
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name RolePermissions -Value @{AllowedResourceActions = "microsoft.directory/applicationPolicies/allProperties/read","microsoft.directory/applicationPolicies/allProperties/update","microsoft.directory/applicationPolicies/basic/update"}
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name Version -Value "1.0"
+                    $AADRoleDef | Add-Member -MemberType NoteProperty -Name Id -Value "12345-12345-12345-12345-12345"
                     return $AADRoleDef
                 }
             }
 
             It "Should return values from the get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-                Should -Invoke -CommandName "Get-AzureADMSRoleDefinition" -Exactly 1
+                Should -Invoke -CommandName "Get-MgRoleManagementDirectoryRoleDefinition" -Exactly 1
             }
 
             It 'Should return false from the test method' {
@@ -131,7 +133,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the app from the set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "Remove-AzureADMSRoleDefinition" -Exactly 1
+                Should -Invoke -CommandName "Remove-MgRoleManagementDirectoryRoleDefinition" -Exactly 1
             }
         }
         Context -Name "The role definition exists and values are already in the desired state" -Fixture {
@@ -144,14 +146,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RolePermissions               = "microsoft.directory/applicationPolicies/allProperties/read"
                     Version                       = "1.0"
                     Ensure                        = "Present"
-                    GlobalAdminAccount            = $GlobalAdminAccount
+                    Credential            = $Credential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADMSRoleDefinition -MockWith {
+                Mock -CommandName Get-MgRoleManagementDirectoryRoleDefinition -MockWith {
                     $AADRoleDef = New-Object PSCustomObject
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name DisplayName -Value "Role1"
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name Description -Value "This is a custom role"
@@ -165,7 +167,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return Values from the get method" {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-AzureADMSRoleDefinition" -Exactly 1
+                Should -Invoke -CommandName "Get-MgRoleManagementDirectoryRoleDefinition" -Exactly 1
             }
 
             It 'Should return true from the test method' {
@@ -183,14 +185,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RolePermissions               = "microsoft.directory/applicationPolicies/allProperties/read","microsoft.directory/applicationPolicies/allProperties/update","microsoft.directory/applicationPolicies/basic/update"
                     Version                       = "1.0"
                     Ensure                        = "Present"
-                    GlobalAdminAccount            = $GlobalAdminAccount
+                    Credential            = $Credential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADMSRoleDefinition -MockWith {
+                Mock -CommandName Get-MgRoleManagementDirectoryRoleDefinition -MockWith {
                     $AADRoleDef = New-Object PSCustomObject
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name DisplayName -Value "Role1"
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name Description -Value "This is a custom role"
@@ -204,7 +206,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return values from the get method" {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-AzureADMSRoleDefinition" -Exactly 1
+                Should -Invoke -CommandName "Get-MgRoleManagementDirectoryRoleDefinition" -Exactly 1
             }
 
             It 'Should return false from the test method' {
@@ -213,21 +215,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Set-AzureADMSRoleDefinition' -Exactly 1
+                Should -Invoke -CommandName 'Update-MgRoleManagementDirectoryRoleDefinition' -Exactly 1
             }
         }
 
         Context -Name "ReverseDSC tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-AzureADMSRoleDefinition -MockWith {
+                Mock -CommandName Get-MgRoleManagementDirectoryRoleDefinition -MockWith {
                     $AADRoleDef = New-Object PSCustomObject
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name DisplayName -Value "Role1"
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name Description -Value "This is a custom role"

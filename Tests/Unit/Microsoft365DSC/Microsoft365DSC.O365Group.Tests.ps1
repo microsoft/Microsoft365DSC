@@ -22,7 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -46,10 +46,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description        = "This is a test"
                     ManagedBy          = "JohnSmith@contoso.onmicrosoft.com"
                     Ensure             = "Present"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
-                Mock -CommandName Get-AzureADGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return $null
                 }
             }
@@ -71,10 +71,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ManagedBy          = "Bob.Houle@contoso.onmicrosoft.com"
                     Description        = "This is a test"
                     Ensure             = "Present"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
-                Mock -CommandName Get-AzureADGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         DisplayName  = "Test Group"
                         ObjectId     = "a53dbbd6-7e9b-4df9-841a-a2c3071a1770"
@@ -85,13 +85,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-AzureADGroupMember -MockWith {
+                Mock -CommandName Get-MgGroupMember -MockWith {
                     return @{
                         UserPrincipalName = "John.smith@contoso.onmicrosoft.com"
                     }
                 }
 
-                Mock -CommandName Get-AzureADGroupOwner -MockWith {
+                Mock -CommandName Get-MgGroupOwner -MockWith {
                     return @{
                         UserPrincipalName = "Bob.Houle@contoso.onmicrosoft.com"
                     }
@@ -120,7 +120,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Members            = @("GoodUser1", "GoodUser2")
                     ManagedBy          = @("JohnSmith@contoso.onmicrosoft.com", "Bob.Houle@contoso.onmicrosoft.com")
                     Ensure             = "Present"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-UnifiedGroupLinks
@@ -142,7 +142,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         })
                 }
 
-                Mock -CommandName Get-AzureADGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         DisplayName  = "Test Group"
                         MailNickName = "TestGroup"
@@ -163,7 +163,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 }
 
-                Mock -CommandName Get-AzureADGroupMember -MockWith {
+                Mock -CommandName Get-MgGroupMember -MockWith {
                     return @(
                         @{
                             UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
@@ -172,6 +172,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             UserPrincipalName = "SecondUser@contoso.onmicrosoft.com"
                         }
                     )
+                }
+
+                Mock -CommandName Get-MgGroupOwner -MockWith {
+                    return @{
+                        UserPrincipalName = "Bob.Houle@contoso.onmicrosoft.com"
+                    }
                 }
             }
 
@@ -190,10 +196,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
-                Mock -CommandName Get-AzureADGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         DisplayName  = "Test Group"
                         MailNickName = "TestGroup"
@@ -202,7 +208,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-AzureADGroupMember -MockWith {
+                Mock -CommandName Get-MgGroupMember -MockWith {
                     return @(
                         @{
                             UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
@@ -211,6 +217,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             UserPrincipalName = "SecondUser@contoso.onmicrosoft.com"
                         }
                     )
+                }
+
+                Mock -CommandName Get-MgGroupOwner -MockWith {
+                    return @{
+                        UserPrincipalName = "Bob.Houle@contoso.onmicrosoft.com"
+                    }
                 }
             }
 

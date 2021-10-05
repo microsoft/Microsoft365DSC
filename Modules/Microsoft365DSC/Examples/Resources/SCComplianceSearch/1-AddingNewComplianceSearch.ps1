@@ -21,7 +21,7 @@ Configuration Example
             Name                                  = "Demo Compliance Search";
             Ensure                                = "Present";
             Language                              = "iv";
-            GlobalAdminAccount                    = $credsGlobalAdmin;
+            Credential                            = $credsGlobalAdmin;
             AllowNotFoundExchangeLocationsEnabled = $False;
             SharePointLocation                    = @("All");
         }

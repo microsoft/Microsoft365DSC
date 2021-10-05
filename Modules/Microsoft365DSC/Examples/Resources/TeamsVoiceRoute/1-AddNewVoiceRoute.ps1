@@ -22,7 +22,7 @@ Configuration Example
             OnlinePstnUsages      = @('Long Distance','Local','Internal')
             Priority              = 10
             Ensure                = 'Present'
-            GlobalAdminAccount    = $credsGlobalAdmin
+            Credential            = $credsGlobalAdmin
         }
     }
 }

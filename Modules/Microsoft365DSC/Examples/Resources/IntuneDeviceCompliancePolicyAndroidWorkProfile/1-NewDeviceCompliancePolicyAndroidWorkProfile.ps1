@@ -20,7 +20,7 @@ Configuration Example
             DeviceThreatProtectionRequiredSecurityLevel        = "unavailable";
             DisplayName                                        = "Test Policy";
             Ensure                                             = "Present";
-            GlobalAdminAccount                                 = $Credsglobaladmin;
+            Credential                                         = $Credsglobaladmin;
             PasswordExpirationDays                             = 90;
             PasswordMinimumLength                              = 6;
             PasswordMinutesOfInactivityBeforeLock              = 5;

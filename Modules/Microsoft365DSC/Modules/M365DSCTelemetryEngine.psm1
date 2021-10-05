@@ -76,8 +76,16 @@ function Add-M365DSCTelemetryEvent
             $Data.Add("PSMainVersion", $PSVersionTable.PSVersion.Major.ToString() + "." + $PSVersionTable.PSVersion.Minor.ToString())
             $Data.Add("PSVersion", $PSVersionTable.PSVersion.ToString())
             $Data.Add("PSEdition", $PSVersionTable.PSEdition.ToString())
-            $Data.Add("PSBuildVersion", $PSVersionTable.BuildVersion.ToString())
-            $Data.Add("PSCLRVersion", $PSVersionTable.CLRVersion.ToString())
+
+            if ($null -ne $PSVersionTable.BuildVersion)
+            {
+                $Data.Add("PSBuildVersion", $PSVersionTable.BuildVersion.ToString())
+            }
+
+            if ($null -ne $PSVersionTable.CLRVersion)
+            {
+                $Data.Add("PSCLRVersion", $PSVersionTable.CLRVersion.ToString())
+            }
 
             # Capture Console/Host Information
             if ($host.Name -eq "ConsoleHost" -and $null -eq $env:WT_SESSION)
@@ -250,4 +258,37 @@ function Get-M365DSCTelemetryOption
     {
         throw $_
     }
+}
+
+function Format-M365DSCTelemetryParameters
+{
+    [CmdletBinding()]
+    param(
+        [parameter(Mandatory = $true)]
+        [System.String]
+        $ResourceName,
+
+        [parameter(Mandatory = $true)]
+        [System.String]
+        $CommandName,
+
+        [parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $Parameters
+    )
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $CommandName)
+    if (-not $ApplicationId)
+    {
+        $data.Add("Principal", $Parameters.Credential.UserName)
+        $data.Add("TenantId", $Parameters.Credential.UserName.Split('@')[1])
+    }
+    else
+    {
+        $data.Add("Principal", $Parameter.ApplicationId)
+        $data.Add("TenantId", $TenantId)
+    }
+    $data.Add("ConnectionMode", (Get-M365DSCAuthenticationMode -Parameters $Parameters))
+    return $data
 }

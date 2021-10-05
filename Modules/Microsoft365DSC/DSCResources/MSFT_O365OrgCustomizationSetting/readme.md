@@ -23,10 +23,10 @@ Ensure
 - Description: `Present` is the only value accepted.
   Configurations using `Ensure = 'Absent'` will throw an Error!
 
-GlobalAdminAccount
+Credential
 
 - Required: Yes
-- Description: Credentials of the Office 365 Global Admin
+- Description: Credentials of the account to authenticate with
 
 ## Example
 
@@ -34,6 +34,6 @@ GlobalAdminAccount
         O365OrgCustomizationSettting EnableOgranizationCustomization {
             IsSingleInstance    = 'Yes'
             Ensure              = 'Present'
-            GlobalAdminAccount  = $GlobalAdminAccount
+            Credential  = $Credential
         }
 ```

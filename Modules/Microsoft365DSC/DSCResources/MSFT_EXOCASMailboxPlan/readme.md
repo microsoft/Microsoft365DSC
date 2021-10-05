@@ -13,7 +13,7 @@ Ensure
 - Description: `Present` is the only value accepted.
   Configurations using `Ensure = 'Absent'` will throw an Error!
 
-GlobalAdminAccount
+Credential
 
 - Required: Yes
 - Description: Credentials of the Office 365 Global Admin
@@ -58,7 +58,7 @@ PopEnabled
         EXOCASMailboxPlan CASMBPExampleConfig {
             Ensure              = 'Present'
             Identity            = 'ExchangeOnlineEnterprise-6f6c267b-f8db-4020-b441-f7bd966a0ca0'
-            GlobalAdminAccount  = $GlobalAdminAccount
+            Credential          = $Credential
             ActiveSyncEnabled   = $true
             ImapEnabled         = $true
             OwaMailboxPolicy    = 'OwaMailboxPolicy-Default'

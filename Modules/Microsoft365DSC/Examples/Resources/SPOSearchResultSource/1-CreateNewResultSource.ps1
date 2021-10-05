@@ -20,7 +20,7 @@ Configuration Example
             Description        = "Description of item"
             Protocol           = "Local"
             Type               = "SharePoint"
-            GlobalAdminAccount = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
             Ensure             = "Present"
         }
     }

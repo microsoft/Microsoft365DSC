@@ -44,7 +44,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -56,20 +56,25 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Getting configuration of AzureAD Groups Naming Policy"
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
+    Write-Verbose -Message "Getting configuration of AzureAD Groups Settings"
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'beta'
+    Select-MgProfile -Name 'beta'
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -77,7 +82,7 @@ function Get-TargetResource
     $nullReturn.Ensure = "Absent"
     try
     {
-        $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq "Group.Unified" }
+        $Policy = Get-MgDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq "Group.Unified" }
 
         if ($null -eq $Policy)
         {
@@ -87,25 +92,35 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Found existing AzureAD Groups Settings"
             $AllowedGroupName = $null
-            if (-not [System.String]::IsNullOrEmpty($Policy["GroupCreationAllowedGroupId"]))
+            $GroupCreationValue = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'GroupCreationAllowedGroupId'}
+            if (-not [System.String]::IsNullOrEmpty($GroupCreationValue.Value))
             {
-                $groupObject = Get-AzureADGroup -ObjectId $Policy["GroupCreationAllowedGroupId"]
+                $groupObject = Get-MgGroup -GroupId $GroupCreationValue.Value
                 $AllowedGroupName = $groupObject.DisplayName
             }
+
+            $valueEnableGroupCreation = $Policy.Values | Where-Object -FilterScript {$_.Name -eq "EnableGroupCreation"}
+            $valueAllowGuestsToBeGroupOwner = $Policy.Values | Where-Object -FilterScript {$_.Name -eq "AllowGuestsToBeGroupOwner"}
+            $valueAllowGuestsToAccessGroups = $Policy.Values | Where-Object -FilterScript {$_.Name -eq "AllowGuestsToAccessGroups"}
+            $valueGuestUsageGuidelinesUrl = $Policy.Values | Where-Object -FilterScript {$_.Name -eq "GuestUsageGuidelinesUrl"}
+            $valueAllowToAddGuests = $Policy.Values | Where-Object -FilterScript {$_.Name -eq "AllowToAddGuests"}
+            $valueUsageGuidelinesUrl = $Policy.Values | Where-Object -FilterScript {$_.Name -eq "UsageGuidelinesUrl"}
+
             $result = @{
                 IsSingleInstance              = 'Yes'
-                EnableGroupCreation           = [Boolean]::Parse($Policy["EnableGroupCreation"])
-                AllowGuestsToBeGroupOwner     = [Boolean]::Parse($Policy["AllowGuestsToBeGroupOwner"])
-                AllowGuestsToAccessGroups     = [Boolean]::Parse($Policy["AllowGuestsToAccessGroups"])
-                GuestUsageGuidelinesUrl       = $Policy["GuestUsageGuidelinesUrl"]
+                EnableGroupCreation           = [Boolean]::Parse($valueEnableGroupCreation.Value)
+                AllowGuestsToBeGroupOwner     = [Boolean]::Parse($valueAllowGuestsToBeGroupOwner.Value)
+                AllowGuestsToAccessGroups     = [Boolean]::Parse($valueAllowGuestsToAccessGroups.Value)
+                GuestUsageGuidelinesUrl       = $valueGuestUsageGuidelinesUrl.Value
                 GroupCreationAllowedGroupName = $AllowedGroupName
-                AllowToAddGuests              = [Boolean]::Parse($Policy["AllowToAddGuests"])
-                UsageGuidelinesUrl            = $Policy["UsageGuidelinesUrl"]
+                AllowToAddGuests              = [Boolean]::Parse($valueAllowToAddGuests.Value)
+                UsageGuidelinesUrl            = $valueUsageGuidelinesUrl.Value
                 Ensure                        = "Present"
-                GlobalAdminAccount            = $GlobalAdminAccount
                 ApplicationId                 = $ApplicationId
                 TenantId                      = $TenantId
+                ApplicationSecret             = $ApplicationSecret
                 CertificateThumbprint         = $CertificateThumbprint
+                Credential                    = $Credential
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -121,10 +136,6 @@ function Get-TargetResource
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $GlobalAdminAccount)
-            {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -183,7 +194,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -195,17 +206,21 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration of Azure AD Groups Settings"
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -215,30 +230,59 @@ function Set-TargetResource
     $needToUpdate = $false
     if ($Ensure -eq "Present" -and $currentPolicy.Ensure -eq "Absent")
     {
-        $ds = (Get-AzureADDirectorySettingTemplate -id 62375ab9-6b52-47ed-826b-58e47e0e304b).CreateDirectorySetting()
-        New-AzureADDirectorySetting -DirectorySetting $ds
+        $Policy = New-MgDirectorySetting -TemplateId '62375ab9-6b52-47ed-826b-58e47e0e304b' | Out-Null
         $needToUpdate = $true
     }
 
-    $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq "Group.Unified" }
+    $Policy = Get-MgDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq "Group.Unified" }
 
     if (($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present') -or $needToUpdate)
     {
-        $groupObject = Get-AzureADGroup -SearchString $GroupCreationAllowedGroupName
+        $groupObject = $null
+        if (-not [System.String]::IsNullOrEmpty($GroupCreationAllowedGroupName))
+        {
+            $groupObject = Get-MgGroup -Filter "DisplayName eq '$GroupCreationAllowedGroupName'"
+        }
         $groupId = $null
         if ($null -ne $groupObject)
         {
             $groupId = $groupObject.ObjectId
         }
-        $Policy["EnableGroupCreation"] = [System.Boolean]$EnableGroupCreation
-        $Policy["AllowGuestsToBeGroupOwner"] = [System.Boolean]$AllowGuestsToBeGroupOwner
-        $Policy["AllowGuestsToAccessGroups"] = [System.Boolean]$AllowGuestsToAccessGroups
-        $Policy["GuestUsageGuidelinesUrl"] = $GuestUsageGuidelinesUrl
-        $Policy["GroupCreationAllowedGroupId"] = $groupId
-        $Policy["AllowToAddGuests"] = [System.Boolean]$AllowToAddGuests
-        $Policy["UsageGuidelinesUrl"] = $UsageGuidelinesUrl
+        $index = 0
+        foreach ($property in $Policy.Values)
+        {
+            if ($property.Name -eq 'EnableGroupCreation')
+            {
+                $Policy.Values[$index].Value = [System.Boolean]$EnableGroupCreation
+            }
+            elseif ($property.Name -eq 'AllowGuestsToBeGroupOwner')
+            {
+                $Policy.Values[$index].Value = [System.Boolean]$AllowGuestsToBeGroupOwner
+            }
+            elseif ($property.Name -eq 'AllowGuestsToAccessGroups')
+            {
+                $Policy.Values[$index].Value = [System.Boolean]$AllowGuestsToAccessGroups
+            }
+            elseif ($property.Name -eq 'GuestUsageGuidelinesUrl')
+            {
+                $Policy.Values[$index].Value = $GuestUsageGuidelinesUrl
+            }
+            elseif ($property.Name -eq 'GroupCreationAllowedGroupId')
+            {
+                $Policy.Values[$index].Value = $groupId
+            }
+            elseif ($property.Name -eq 'AllowToAddGuests')
+            {
+                $Policy.Values[$index].Value = [System.Boolean]$AllowToAddGuests
+            }
+            elseif ($property.Name -eq 'UsageGuidelinesUrl')
+            {
+                $Policy.Values[$index].Value = $UsageGuidelinesUrl
+            }
+            $index++;
+        }
 
-        Set-AzureADDirectorySetting -Id $Policy.id -DirectorySetting $Policy
+        Update-MgDirectorySetting -DirectorySettingId $Policy.id -Values $Policy.Values | Out-Null
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
@@ -293,7 +337,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -305,18 +349,23 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
 
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
+
     Write-Verbose -Message "Testing configuration of AzureAD Groups Settings"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -324,7 +373,9 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -344,7 +395,7 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -356,30 +407,36 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'beta'
+    Select-MgProfile -Name 'beta'
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
         $Params = @{
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             IsSingleInstance      = 'Yes'
-            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationSecret     = $ApplicationSecret
+            Credential            = $Credential
         }
         $dscContent = ''
         $Results = Get-TargetResource @Params
@@ -389,7 +446,7 @@ function Export-TargetResource
             -ConnectionMode $ConnectionMode `
             -ModulePath $PSScriptRoot `
             -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
+            -Credential $Credential
         $dscContent += $currentDSCBlock
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
@@ -398,6 +455,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_
@@ -405,10 +463,6 @@ function Export-TargetResource
             if (-not [System.String]::IsNullOrEmpty($TenantId))
             {
                 $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $GlobalAdminAccount)
-            {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `

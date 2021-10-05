@@ -19,7 +19,7 @@ Configuration Example
             Identity           = "DemoApp"
             Path               = "C:\Demo\DemoApp.sppkg"
             Publish            = $true
-            GlobalAdminAccount = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
             Ensure             = "Present"
         }
 
@@ -28,7 +28,7 @@ Configuration Example
             Identity           = "DemoApp2"
             Path               = "C:\Demo\DemoApp2.app"
             Publish            = $true
-            GlobalAdminAccount = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
             Ensure             = "Present"
         }
     }

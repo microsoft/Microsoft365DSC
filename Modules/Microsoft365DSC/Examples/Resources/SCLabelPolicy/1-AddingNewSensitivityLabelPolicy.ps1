@@ -32,7 +32,7 @@ Configuration Example
                     Value = "Enabled"
                 }
             )
-            GlobalAdminAccount = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
             Ensure             = "Present"
         }
     }
