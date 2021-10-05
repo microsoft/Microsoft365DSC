@@ -70,7 +70,7 @@ function Get-TargetResource
             $result = @{
                 Ensure             = 'Present'
                 Workload           = $Workload
-                Credential = $Credential
+                Credential         = $Credential
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"

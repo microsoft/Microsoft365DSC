@@ -23,7 +23,7 @@ Configuration Example
             Comment              = "This is a demo";
             Ensure               = "Present";
             Enabled              = $True;
-            Credential   = $Credsglobaladmin;
+            Credential           = $Credsglobaladmin;
         }
     }
 }

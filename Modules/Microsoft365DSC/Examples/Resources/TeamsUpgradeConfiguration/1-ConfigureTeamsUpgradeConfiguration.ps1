@@ -17,7 +17,7 @@ Configuration Example
         TeamsUpgradeConfiguration UpgradeConfig
         {
             DownloadTeams        = $True;
-            Credential   = $credsGlobalAdmin
+            Credential           = $credsGlobalAdmin
             IsSingleInstance     = "Yes"
             SfBMeetingJoinUx     = "NativeLimitedClient"
         }

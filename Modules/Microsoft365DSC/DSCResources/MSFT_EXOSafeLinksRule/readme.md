@@ -20,7 +20,7 @@ Ensure
 Credential
 
 - Required: Yes
-- Description: Credentials of an Office365 Global Admin
+- Description: Credentials of the account to authenticate with
 
 Identity
 

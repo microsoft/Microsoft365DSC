@@ -17,7 +17,7 @@ Configuration Example
         SPOAccessControlSettings MyTenantAccessControlSettings
         {
             IsSingleInstance             = "Yes"
-            Credential           = $credsGlobalAdmin
+            Credential                   = $credsGlobalAdmin
             DisplayStartASiteOption      = $false
             StartASiteFormUrl            = "https://o365dsc1.sharepoint.com"
             IPAddressEnforcement         = $false

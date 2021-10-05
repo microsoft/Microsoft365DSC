@@ -20,7 +20,7 @@ Configuration Example
             UserPrincipals     = "jdoe@O365DSC1.onmicrosoft.com"
             Rights             = "View"
             Ensure             = "Present"
-            Credential = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
         }
     }
 }

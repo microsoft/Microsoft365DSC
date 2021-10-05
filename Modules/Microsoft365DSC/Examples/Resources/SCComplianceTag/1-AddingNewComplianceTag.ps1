@@ -30,7 +30,7 @@ Configuration Example
                 FilePlanPropertySubcategory = "DemoSub"
             }
             Ensure             = "Present"
-            Credential = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
         }
     }
 }

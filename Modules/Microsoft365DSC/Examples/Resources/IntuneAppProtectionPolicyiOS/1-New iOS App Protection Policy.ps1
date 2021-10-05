@@ -42,7 +42,7 @@ Configuration Example
             SaveAsBlocked                           = $True;
             SimplePinBlocked                        = $False;
             Ensure                                  = 'Present'
-            Credential                      = $credsGlobalAdmin;
+            Credential                              = $credsGlobalAdmin;
         }
     }
 }

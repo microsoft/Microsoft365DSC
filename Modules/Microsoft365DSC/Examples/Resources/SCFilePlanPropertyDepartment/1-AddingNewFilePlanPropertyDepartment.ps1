@@ -18,7 +18,7 @@ Configuration Example
         {
             Name               = "Demo Department"
             Ensure             = "Present"
-            Credential = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
         }
     }
 }

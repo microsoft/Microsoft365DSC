@@ -17,7 +17,7 @@ Configuration Example
         {
             DisplayName          = 'Demo Windows 10 Device Compliance Policy';
             Ensure               = 'Absent';
-            Credential   = $credsGlobalAdmin;
+            Credential           = $credsGlobalAdmin;
         }
     }
 }

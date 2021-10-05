@@ -20,7 +20,7 @@ Configuration Example
             DeviceThreatProtectionRequiredSecurityLevel        = "unavailable";
             DisplayName                                        = "Test Policy";
             Ensure                                             = "Present";
-            Credential                                 = $Credsglobaladmin;
+            Credential                                         = $Credsglobaladmin;
             osMinimumVersion                                   = "7";
             PasswordExpirationDays                             = 90;
             PasswordMinimumLength                              = 6;

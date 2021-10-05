@@ -14,7 +14,7 @@ Configuration Example
 
     node localhost
     {
-        AADMSGroup MyGroups
+        AADGroup MyGroups
         {
             DisplayName                   = "DSCGroup"
             Description                   = "Microsoft DSC Group"
@@ -23,7 +23,7 @@ Configuration Example
             GroupTypes                    = @("Unified")
             MailNickname                  = "M365DSC"
             Visibility                    = "Private"
-            Credential            = $credsGlobalAdmin
+            Credential                    = $credsGlobalAdmin
             Ensure                        = "Present"
         }
     }

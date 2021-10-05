@@ -21,7 +21,7 @@ Configuration Example
             Comment                   = "This is a Demo Rule"
             RetentionComplianceAction = "Keep"
             RetentionDuration         = "Unlimited"
-            Credential        = $credsGlobalAdmin
+            Credential                = $credsGlobalAdmin
             Ensure                    = "Present"
         }
     }

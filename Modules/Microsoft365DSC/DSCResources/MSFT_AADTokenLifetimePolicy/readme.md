@@ -2,7 +2,7 @@
 
 ## Description
 
-This resource configures the Azure AD TOken Lifetime Policies
+This resource configures the Azure AD Token Lifetime Policies
 
 ## Azure AD Permissions
 

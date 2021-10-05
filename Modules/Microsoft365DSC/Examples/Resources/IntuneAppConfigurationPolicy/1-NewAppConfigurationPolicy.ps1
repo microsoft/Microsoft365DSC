@@ -18,7 +18,7 @@ Configuration Example
             DisplayName          = 'Contoso'
             Description          = 'Contoso Policy'
             Ensure               = 'Present'
-            Credential   = $credsGlobalAdmin;
+            Credential           = $credsGlobalAdmin;
         }
     }
 }

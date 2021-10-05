@@ -24,7 +24,7 @@ Configuration Example
                     Value = "MyValue"
                 }
             )
-            Credential = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
             Ensure             = "Present"
         }
     }

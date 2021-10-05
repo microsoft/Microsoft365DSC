@@ -31,7 +31,7 @@ Configuration Example
             ServicePrincipalType          = "Application"
             Tags                          = "{WindowsAzureActiveDirectoryIntegratedApp}"
             Ensure                        = "Present"
-            Credential            = $credsGlobalAdmin
+            Credential                    = $credsGlobalAdmin
         }
     }
 }

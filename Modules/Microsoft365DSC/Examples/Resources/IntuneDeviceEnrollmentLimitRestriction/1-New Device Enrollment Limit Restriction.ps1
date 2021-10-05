@@ -18,7 +18,7 @@ Configuration Example
             Description          = "My Restriction";
             DisplayName          = "My DSC Limit";
             Ensure               = "Present"
-            Credential   = $Credsglobaladmin;
+            Credential           = $Credsglobaladmin;
             Limit                = 12;
         }
     }

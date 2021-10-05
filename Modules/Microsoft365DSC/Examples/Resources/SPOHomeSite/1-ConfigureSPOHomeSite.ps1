@@ -19,7 +19,7 @@ Configuration Example
             IsSingleInstance     = "Yes"
             Url                  = "https://office365dsc.sharepoint.com/sites/Marketing"
             Ensure               = "Present"
-            Credential   = $credsGlobalAdmin
+            Credential           = $credsGlobalAdmin
         }
     }
 }

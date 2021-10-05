@@ -17,7 +17,7 @@ Configuration Example
         {
             DisplayName          = "DeviceOwner"
             Ensure               = "Absent"
-            Credential   = $credsGlobalAdmin;
+            Credential           = $credsGlobalAdmin;
         }
     }
 }

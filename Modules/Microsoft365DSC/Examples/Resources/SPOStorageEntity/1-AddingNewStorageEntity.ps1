@@ -23,7 +23,7 @@ Configuration Example
             Comment            = "Comment from DSC"
             Ensure             = "Present"
             SiteUrl            = "https://o365dsc1-admin.sharepoint.com"
-            Credential = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
         }
     }
 }

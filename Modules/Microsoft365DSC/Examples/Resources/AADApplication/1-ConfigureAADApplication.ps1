@@ -23,12 +23,9 @@ Configuration Example
             IdentifierUris             = "https://app.contoso.com"
             KnownClientApplications    = ""
             LogoutURL                  = "https://app.contoso.com/logout"
-            Oauth2AllowImplicitFlow    = $false
-            Oauth2AllowUrlPathMatching = $false
             Oauth2RequirePostResponse  = $false
             PublicClient               = $false
             ReplyURLs                  = "https://app.contoso.com"
-            SamlMetadataUrl            = ""
             Permissions                = @(
                 MSFT_AADApplicationPermission
                 {
@@ -53,7 +50,7 @@ Configuration Example
                 }
             )
             Ensure                     = "Present"
-            Credential         = $credsGlobalAdmin
+            Credential                 = $credsGlobalAdmin
         }
     }
 }

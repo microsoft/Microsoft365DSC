@@ -21,7 +21,7 @@ Configuration Example
             NewDisplayName     = "SP2016 Review teams group"
             Description        = "SP2016 Code reviews for SPFX"
             Ensure             = "Present"
-            Credential = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
         }
     }
 }

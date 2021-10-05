@@ -32,7 +32,7 @@ Configuration Example
             DeviceThreatProtectionRequiredSecurityLevel = 'medium'
             ManagedEmailProfileRequired                 = $True
             Ensure                                      = 'Present'
-            Credential                          = $Credential
+            Credential                                  = $Credential
 
         }
     }

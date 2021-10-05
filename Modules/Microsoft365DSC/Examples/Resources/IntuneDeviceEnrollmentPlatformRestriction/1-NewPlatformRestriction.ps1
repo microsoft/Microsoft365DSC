@@ -20,7 +20,7 @@ Configuration Example
             Description                                  = "";
             DisplayName                                  = "My DSC Restriction";
             Ensure                                       = "Present"
-            Credential                           = $Credential;
+            Credential                                   = $Credential;
             iOSOSMaximumVersion                          = "11.0";
             iOSOSMinimumVersion                          = "9.0";
             iOSPersonalDeviceEnrollmentBlocked           = $False;

@@ -17,7 +17,7 @@ Configuration Example
         ODSettings OneDriveSettings
         {
             IsSingleInstance                          = "Yes"
-            Credential                        = $credsGlobalAdmin
+            Credential                                = $credsGlobalAdmin
             OneDriveStorageQuota                      = "1024"
             ExcludedFileExtensions                    = @("pst")
             DomainGuids                               = "786548dd-877b-4760-a749-6b1efbc1190a"

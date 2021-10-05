@@ -26,7 +26,7 @@ Configuration Example
             LicenseAssignment  = @("O365dsc1:ENTERPRISEPREMIUM")
             UsageLocation      = "US"
             Ensure             = "Present"
-            Credential = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
         }
     }
 }

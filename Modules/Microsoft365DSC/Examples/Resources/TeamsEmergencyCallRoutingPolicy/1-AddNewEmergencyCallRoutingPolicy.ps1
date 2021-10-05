@@ -26,7 +26,7 @@ Configuration Example
                 }
             );
             Ensure                         = "Present";
-            Credential             = $credsGlobalAdmin;
+            Credential                     = $credsGlobalAdmin;
             Identity                       = "Unit Test";
         }
     }

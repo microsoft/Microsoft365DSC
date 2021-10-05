@@ -19,7 +19,7 @@ Configuration Example
         {
             IsSingleInstance   = "Yes"
             Ensure             = "Present"
-            Credential = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
         }
     }
 }

@@ -20,7 +20,7 @@ DomainType
 Credential
 
 - Required: Yes
-- Description: Credentials of an Office 365 Admin
+- Description: Credentials of a Microsoft 365 Admin
 
 Identity
 

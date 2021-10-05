@@ -17,7 +17,7 @@ Configuration Example
         {
             DisplayName          = 'Demo iOS Device Compliance Policy'
             Ensure               = 'Absent'
-            Credential   = $credsGlobalAdmin;
+            Credential           = $credsGlobalAdmin;
         }
     }
 }

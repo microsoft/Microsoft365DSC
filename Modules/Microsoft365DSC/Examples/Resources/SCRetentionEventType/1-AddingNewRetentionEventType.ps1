@@ -19,7 +19,7 @@ Configuration Example
             Name               = "DemoEventType"
             Comment            = "Demo event comment"
             Ensure             = "Present"
-            Credential = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
         }
     }
 }

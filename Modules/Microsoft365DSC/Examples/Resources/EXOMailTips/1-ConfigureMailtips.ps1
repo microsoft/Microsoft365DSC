@@ -23,7 +23,7 @@ Configuration Example
             MailTipsMailboxSourcedTipsEnabled     = $True
             MailTipsExternalRecipientsTipsEnabled = $True
             Ensure                                = "Present"
-            Credential                    = $credsGlobalAdmin
+            Credential                            = $credsGlobalAdmin
         }
     }
 }

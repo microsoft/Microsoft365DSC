@@ -15,13 +15,13 @@ Configuration Example
     {
         TeamsChannelsPolicy ChannelsPolicy
         {
-            Identity                   = 'New Channels Policy'
+            Identity                    = 'New Channels Policy'
             AllowOrgWideTeamCreation    = $True;
             AllowPrivateChannelCreation = $True;
             AllowPrivateTeamDiscovery   = $True;
             Description                 = 'This is an example';
-            Ensure                     = 'Present'
-            Credential         = $credsGlobalAdmin
+            Ensure                      = 'Present'
+            Credential                  = $credsGlobalAdmin
         }
     }
 }

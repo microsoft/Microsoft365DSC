@@ -19,7 +19,7 @@ Configuration Example
             IsSingleInstance                = "Yes"
             UnifiedAuditLogIngestionEnabled = "Enabled"
             Ensure                          = "Present"
-            Credential              = $credsGlobalAdmin
+            Credential                      = $credsGlobalAdmin
         }
     }
 }

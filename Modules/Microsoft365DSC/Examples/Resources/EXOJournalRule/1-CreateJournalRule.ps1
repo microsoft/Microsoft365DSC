@@ -18,7 +18,7 @@ Configuration Example
         {
             Enabled              = $True;
             Ensure               = "Present";
-            Credential   = $credsGlobalAdmin;
+            Credential           = $credsGlobalAdmin;
             JournalEmailAddress  = "John.Smith@contoso.com";
             Name                 = "Send to John"
             RuleScope            = "Global";

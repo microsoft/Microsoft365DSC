@@ -18,7 +18,7 @@ Configuration Example
         {
             Url                = "https://contoso.sharepoint.com/sites/DemoSite"
             AuditFlags         = "All"
-            Credential = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
         }
     }
 }

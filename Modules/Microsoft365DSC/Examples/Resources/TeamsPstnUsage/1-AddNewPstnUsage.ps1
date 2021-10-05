@@ -17,7 +17,7 @@ Configuration Example
         {
             Usage              = 'Long Distance'
             Ensure             = 'Present'
-            Credential = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
         }
     }
 }

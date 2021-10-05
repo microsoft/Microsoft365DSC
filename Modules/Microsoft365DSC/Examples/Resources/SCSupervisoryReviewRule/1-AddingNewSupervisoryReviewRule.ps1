@@ -21,7 +21,7 @@ Configuration Example
             SamplingRate       = 100
             Policy             = 'TestPolicy'
             Ensure             = "Present"
-            Credential = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
         }
     }
 }

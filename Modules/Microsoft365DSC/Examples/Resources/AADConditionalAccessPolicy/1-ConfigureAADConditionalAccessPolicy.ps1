@@ -16,7 +16,7 @@ Configuration Example
     {
         AADConditionalAccessPolicy Allin-example
         {
-            Credential         = $credsGlobalAdmin;
+            Credential                 = $credsGlobalAdmin;
             BuiltInControls            = @("Mfa", "CompliantDevice", "DomainJoinedDevice", "ApprovedApplication", "CompliantApplication");
             ClientAppTypes             = @("ExchangeActiveSync", "Browser", "MobileAppsAndDesktopClients", "Other");
             CloudAppSecurityIsEnabled  = $True;

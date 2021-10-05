@@ -43,7 +43,7 @@ Configuration Example
             DefaultPublicFolderAgeLimit                               = $null;
             OutlookMobileGCCRestrictionsEnabled                       = $False;
             ActivityBasedAuthenticationTimeoutEnabled                 = $True;
-            Credential                                        = $credsGlobalAdmin;
+            Credential                                                = $credsGlobalAdmin;
             ConnectorsEnabledForYammer                                = $True;
             HierarchicalAddressBookRoot                               = $null;
             DefaultPublicFolderMaxItemSize                            = "13 KB (13,312 bytes)";

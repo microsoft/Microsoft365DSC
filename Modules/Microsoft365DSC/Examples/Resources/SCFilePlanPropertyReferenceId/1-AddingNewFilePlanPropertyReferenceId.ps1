@@ -18,7 +18,7 @@ Configuration Example
         {
             Name               = "My Reference ID"
             Ensure             = "Present"
-            Credential = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
         }
     }
 }

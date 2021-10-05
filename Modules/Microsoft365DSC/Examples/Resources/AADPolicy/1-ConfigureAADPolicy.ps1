@@ -14,14 +14,13 @@ Configuration Example
 
     node localhost
     {
-        AADPolicy DSCPolicy1
+        AADTokenLifetimePolicy DSCPolicy1
         {
             DisplayName                   = "PolicyDisplayName"
             Definition                    = @('{"TokenIssuancePolicy":{"Version": 1,"SigningAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1","TokenResponseSigningPolicy": "TokenOnly","SamlTokenVersion": "2.0"}}')
             IsOrganizationDefault         = $false
-            Type                          = "TokenIssuancePolicy"
             Ensure                        = "Present"
-            Credential            = $credsGlobalAdmin
+            Credential                    = $credsGlobalAdmin
         }
     }
 }

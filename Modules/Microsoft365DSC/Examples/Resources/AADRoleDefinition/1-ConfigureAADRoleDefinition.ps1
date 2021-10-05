@@ -23,7 +23,7 @@ Configuration Example
             RolePermissions               = "microsoft.directory/applicationPolicies/allProperties/read","microsoft.directory/applicationPolicies/allProperties/update","microsoft.directory/applicationPolicies/basic/update"
             Version                       = "1.0"
             Ensure                        = "Present"
-            Credential            = $credsGlobalAdmin
+            Credential                    = $credsGlobalAdmin
         }
     }
 }

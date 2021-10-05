@@ -20,7 +20,7 @@ Configuration Example
             Comment            = "Test Policy"
             Reviewers          = @("admin@contoso.com")
             Ensure             = "Present"
-            Credential = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
         }
     }
 }

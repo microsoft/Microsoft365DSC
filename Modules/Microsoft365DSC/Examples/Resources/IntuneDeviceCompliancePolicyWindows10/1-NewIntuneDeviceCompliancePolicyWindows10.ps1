@@ -49,9 +49,9 @@ Configuration Example
             ConfigurationManagerComplianceRequired      = $False;
             TPMRequired                                 = $False;
             deviceCompliancePolicyScript                = $null;
-            ValidOperatingSystemBuildRanges             = [];
+            ValidOperatingSystemBuildRanges             = @();
             Ensure                                      = 'Present';
-            Credential                          = $Credential;
+            Credential                                  = $Credential;
         }
     }
 }
