@@ -882,7 +882,7 @@ function Export-M365DSCConfiguration
 
     if ($LaunchWebUI)
     {
-        explorer "https://export-preview.Microsoft365dsc.com"
+        explorer "https://export.microsoft365dsc.com"
     }
     else
     {
