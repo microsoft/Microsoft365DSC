@@ -11,7 +11,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion     = '1.21.1006.2'
+    ModuleVersion     = '1.21.1006.3'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -117,7 +117,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.71"
+            RequiredVersion = "1.0.72"
         },
         @{
             ModuleName      = "PnP.PowerShell"
@@ -201,10 +201,10 @@
             IconUri      = 'https://github.com/microsoft/Microsoft365DSC/blob/Dev/Modules/Microsoft365DSC/Dependencies/Images/Logo.png?raw=true'
 
             # ReleaseNotes of this module
-            ReleaseNotes = "1.21.1006.2
+            ReleaseNotes = "1.21.1006.3
 
             * DEPENDENCIES
-              * Updated MSCloudLoginAssistant to version 1.0.71;
+              * Updated MSCloudLoginAssistant to version 1.0.72;
 
             * BREAKING CHANGES
             * AADApplication
