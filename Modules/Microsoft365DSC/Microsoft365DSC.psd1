@@ -201,15 +201,33 @@
             IconUri      = 'https://github.com/microsoft/Microsoft365DSC/blob/Dev/Modules/Microsoft365DSC/Dependencies/Images/Logo.png?raw=true'
 
             # ReleaseNotes of this module
-            ReleaseNotes = "* AADApplication
-            * Fix issue where export will only export 100 apps
-          * EXOSafeLinksPolicy
-            * Added support for CustomNotificationText, EnableOrganizationBranding, and
-              UseTranslatedNotificationText properties;
-          * SPOSite
-            * Fixed issue when deleting site and confirm parameter
-          * DEPENDENCIES
-            * Updated MSCloudLoginAssistant to version 1.0.68;"
+            ReleaseNotes = "* BREAKING CHANGES
+            * AADApplication
+              * Removed support for the Oauth2AllowImplicitFlow, SamlMetadataUrl and
+                Oauth2AllowUrlPathMatching properties;
+            * AADMSGroup
+              * Renamed resource to AADGroup;
+            * AADMSGroupLifecyclePolicy
+              * Renamed resource to AADGroupLifecyclePolicy;
+            * AADPolicy
+              * Replaced resource by the new AADTokenLifetimePolicy one;
+            * DEPENDENCIES
+              * Added dependency on Microsoft.Graph.Applications;
+              * Added dependency on Microsoft.Graph.Groups;
+              * Added dependency on Microsoft.Graph.Identity.DirectoryManagement;
+              * Added dependency on Microsoft.Graph.Identity.SignIns;
+              * Removing dependency on AzureADPreview;
+              * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.137;
+              * Updated MicrosoftTeams to version 2.6.0;
+              * Updated MSCloudLoginAssistant to version 1.0.69;
+            * MISC
+              * Renamed the GlobalAdminAccount parameter to Credential across all resources;
+              * Revamped entire Azure AD Workload to leverage Microsoft Graph;
+              * New -LaunchWebUI switch for Export-M365DSCConfiguration will launch the
+                new web-based UI. The old GUI has been removed.
+              * Removal of the -Quiet switch for the Export-M365DSCConfiguration cmdlet;
+              * Renaming the ComponentsToExtract property from the Export-M365DSCConfiguration
+                cmdlet to Components;"
 
             # Flag to indicate whether the module requires explicit user acceptance for install/update
             # RequireLicenseAcceptance = $false
