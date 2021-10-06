@@ -14,11 +14,11 @@ Configuration Example
 
     node localhost
     {
-        AADMSGroupLifecyclePolicy GroupLifecyclePolicy
+        AADGroupLifecyclePolicy GroupLifecyclePolicy
         {
             AlternateNotificationEmails = @("john.smith@contoso.com");
             Ensure                      = "Present";
-            GlobalAdminAccount          = $credsGlobalAdmin;
+            Credential                  = $credsGlobalAdmin;
             GroupLifetimeInDays         = 99;
             IsSingleInstance            = "Yes";
             ManagedGroupTypes           = "Selected";

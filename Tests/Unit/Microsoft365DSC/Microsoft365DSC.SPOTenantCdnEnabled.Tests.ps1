@@ -22,8 +22,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.com", $secpasswd)
-            $global:tenantName = $GlobalAdminAccount.UserName.Split('@')[1].Split('.')[0]
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.com", $secpasswd)
+            $global:tenantName = $Credential.UserName.Split('@')[1].Split('.')[0]
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -59,7 +59,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Enable             = $false
                     CdnType            = "Public"
-                    GlobalAdminAccount = $GlobalAdminAccount;
+                    Credential = $Credential;
                     Ensure             = "Present"
                 }
 
@@ -87,7 +87,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Enable             = $True
                     CdnType            = "Public"
-                    GlobalAdminAccount = $GlobalAdminAccount;
+                    Credential = $Credential;
                     Ensure             = "Present"
                 }
 
@@ -109,7 +109,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {

@@ -29,7 +29,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -41,20 +41,23 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
     Write-Verbose -Message "Getting configuration of AzureAD Groups Lifecycle Policy"
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -64,7 +67,7 @@ function Get-TargetResource
         $nullReturn.Ensure = "Absent"
         try
         {
-            $Policy = Get-AzureADMSGroupLifecyclePolicy -ErrorAction SilentlyContinue
+            $Policy = Get-MgGroupLifecyclePolicy -ErrorAction SilentlyContinue
         }
         catch
         {
@@ -76,9 +79,9 @@ function Get-TargetResource
                 {
                     $tenantIdValue = $TenantId
                 }
-                elseif ($null -ne $GlobalAdminAccount)
+                elseif ($null -ne $Credential)
                 {
-                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                    $tenantIdValue = $Credential.UserName.Split('@')[1]
                 }
                 Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                     -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -103,7 +106,7 @@ function Get-TargetResource
                 ManagedGroupTypes           = $Policy.ManagedGroupTypes
                 AlternateNotificationEmails = $Policy.AlternateNotificationEmails.Split(';')
                 Ensure                      = "Present"
-                GlobalAdminAccount          = $GlobalAdminAccount
+                Credential                  = $Credential
                 ApplicationId               = $ApplicationId
                 TenantId                    = $TenantId
                 CertificateThumbprint       = $CertificateThumbprint
@@ -123,9 +126,9 @@ function Get-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -169,7 +172,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -181,25 +184,29 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration of Azure AD Groups Lifecycle Policy"
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
     try
     {
-        $policy = Get-AzureADMSGroupLifecyclePolicy -ErrorAction SilentlyContinue
+        $policy = Get-MgGroupLifecyclePolicy -ErrorAction SilentlyContinue
     }
     catch
     {
@@ -214,7 +221,7 @@ function Set-TargetResource
         Write-Verbose -Message "The Group Lifecycle Policy should exist but it doesn't. Creating it."
         $creationParams = $PSBoundParameters
         $creationParams.Remove("IsSingleInstance")
-        $creationParams.Remove("GlobalAdminAccount")
+        $creationParams.Remove("Credential")
         $creationParams.Remove("ApplicationId")
         $creationParams.Remove("TenantId")
         $creationParams.Remove("CertificateThumbprint")
@@ -227,13 +234,13 @@ function Set-TargetResource
         }
         $emails = $emails.TrimEnd(';')
         $creationParams.AlternateNotificationEmails = $emails
-        New-AzureADMSGroupLifecyclePolicy @creationParams
+        New-MgGroupLifecyclePolicy @creationParams
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         $updateParams = $PSBoundParameters
         $updateParams.Remove("IsSingleInstance")
-        $updateParams.Remove("GlobalAdminAccount")
+        $updateParams.Remove("Credential")
         $updateParams.Remove("ApplicationId")
         $updateParams.Remove("TenantId")
         $updateParams.Remove("CertificateThumbprint")
@@ -246,15 +253,15 @@ function Set-TargetResource
         }
         $emails = $emails.TrimEnd(';')
         $updateParams.AlternateNotificationEmails = $emails
-        $updateParams.Add("Id", (Get-AzureADMSGroupLifecyclePolicy).Id)
+        $updateParams.Add("GroupLifecyclePolicyId", (Get-MgGroupLifecyclePolicy).Id)
 
         Write-Verbose -Message "The Group Lifecycle Policy exists but it's not in the Desired State. Updating it."
-        Set-AzureADMSGroupLifecyclePolicy @updateParams
+        Update-MgGroupLifecyclePolicy @updateParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "The Group Lifecycle Policy should NOT exist but it DOES. Removing it."
-        Remove-AzureADMSGroupLifecyclePolicy -Id (Get-AzureADMSGroupLifecyclePolicy).Id
+        Remove-MgGroupLifecyclePolicy -GroupLifecyclePolicyId (Get-MgGroupLifecyclePolicy).Id
     }
 }
 
@@ -289,7 +296,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -301,15 +308,19 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -319,7 +330,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('Credential') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -339,7 +350,7 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -351,18 +362,20 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -377,9 +390,9 @@ function Export-TargetResource
         }
         else
         {
-            if ($GlobalAdminAccount.UserName.Contains("@"))
+            if ($Credential.UserName.Contains("@"))
             {
-                $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+                $organization = $Credential.UserName.Split("@")[1]
             }
         }
         if ($organization.IndexOf(".") -gt 0)
@@ -389,7 +402,7 @@ function Export-TargetResource
 
         try
         {
-            $Policy = Get-AzureADMSGroupLifecyclePolicy -ErrorAction SilentlyContinue
+            $Policy = Get-MgGroupLifecyclePolicy -ErrorAction SilentlyContinue
         }
         catch
         {
@@ -400,7 +413,7 @@ function Export-TargetResource
         $dscContent = ''
 
         $Params = @{
-            GlobalAdminAccount          = $GlobalAdminAccount
+            Credential                  = $Credential
             IsSingleInstance            = 'Yes'
             GroupLifetimeInDays         = 1
             ManagedGroupTypes           = 'All'
@@ -418,7 +431,7 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
+                -Credential $Credential
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -430,6 +443,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_
@@ -438,9 +452,9 @@ function Export-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `

@@ -1,82 +1,310 @@
-<#
-function Get-AzureADDirectorySetting
-{
-    [CmdletBinding()]
-    param(
-    )
-}
 
-function Get-AzureADDirectorySettingTemplate
+
+
+function Get-MgServicePrincipal
 {
     [CmdletBinding()]
     param(
         [Parameter()]
         [System.String]
-        $Id
-    )
-}
+        $ServicePrincipalId,
 
-function Remove-AzureADDirectorySetting
-{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
-        $Id
-    )
-}
-#>
-function New-AzureADDirectorySetting
-{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [PSCustomObject]
-        $DirectorySetting
+        $Filter
     )
 }
 
-function Set-AzureADDirectorySetting
-{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Id,
-
-        [Parameter(Mandatory = $true)]
-        [PSObject]
-        $DirectorySetting
-    )
-}
-<#
-function Set-AzureADMSGroupLifecyclePolicy
+function Update-MgServicePrincipal
 {
     [CmdletBinding()]
     param(
         [Parameter()]
         [System.String]
-        ${Id},
+        $ServicePrincipalId,
 
-        [Parameter(Mandatory = $true)]
-        [System.UInt32]
-        $GroupLifetimeInDays,
-
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
-        [ValidateSet('All', 'Selected', 'None')]
-        $ManagedGroupTypes,
+        $AppId,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
         [System.String[]]
-        $AlternateNotificationEmails
+        $AlternativeNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $AccountEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AppRoleAssignmentRequired,
+
+        [Parameter()]
+        [System.String]
+        $ErrorUrl,
+
+        [Parameter()]
+        [System.String]
+        $Homepage,
+
+        [Parameter()]
+        [System.String]
+        $LogoutUrl,
+
+        [Parameter()]
+        [System.String]
+        $PublisherName,
+
+        [Parameter()]
+        [System.String[]]
+        $ReplyURLs,
+
+        [Parameter()]
+        [System.String]
+        $SamlMetadataURL,
+
+        [Parameter()]
+        [System.String[]]
+        $ServicePrincipalNames,
+
+        [Parameter()]
+        [System.String]
+        $ServicePrincipalType,
+
+        [Parameter()]
+        [System.String[]]
+        $Tags
     )
 }
-#>
+
+function Remove-MGServicePrincipal
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ServicePrincipalId
+    )
+}
+
+function New-MGServicePrincipal
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $AppId,
+
+        [Parameter()]
+        [System.String[]]
+        $AlternativeNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $AccountEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AppRoleAssignmentRequired,
+
+        [Parameter()]
+        [System.String]
+        $Homepage,
+
+        [Parameter()]
+        [System.String]
+        $LogoutUrl,
+
+        [Parameter()]
+        [System.String]
+        $ErrorUrl,
+
+        [Parameter()]
+        [System.String]
+        $PublisherName,
+
+        [Parameter()]
+        [System.String[]]
+        $ReplyURLs,
+
+        [Parameter()]
+        [System.String]
+        $SamlMetadataURL,
+
+        [Parameter()]
+        [System.String[]]
+        $ServicePrincipalNames,
+
+        [Parameter()]
+        [System.String]
+        $ServicePrincipalType,
+
+        [Parameter()]
+        [System.String[]]
+        $Tags
+    )
+}
+
+function New-MgRoleManagementDirectoryRoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $ResourceScopes,
+
+        [Parameter()]
+        [System.String[]]
+        $RolePermissions,
+
+        [Parameter()]
+        [System.String]
+        $TemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $Version,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties
+    )
+}
+
+function Update-MgRoleManagementDirectoryRoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $ResourceScopes,
+
+        [Parameter()]
+        [System.String[]]
+        $RolePermissions,
+
+        [Parameter()]
+        [System.String]
+        $TemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $Version,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $UnifiedRoleDefinitionId
+    )
+}
+
+function Get-MgRoleManagementDirectoryRoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $UnifiedRoleDefinitionId,
+
+        [Parameter()]
+        [System.String]
+        $Filter
+    )
+}
+
+function Remove-MgRoleManagementDirectoryRoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $UnifiedRoleDefinitionId
+    )
+}
+
 function Get-PSSession
 {
     [CmdletBinding()]
     param(
+    )
+}
+
+function Update-MgDirectorySetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DirectorySettingId,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Values
+    )
+}
+
+function Get-MGDirectorySetting
+{
+    [CmdletBinding()]
+    param(
+    )
+}
+
+function New-MGDirectorySetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TemplateId,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Values
+    )
+}
+function Remove-MgDirectorySetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DirectorySettingId
     )
 }
 
@@ -87,99 +315,6 @@ function Remove-PSSession
     )
 }
 
-<#
-function New-AzureADMSGroup
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String[]]
-        $GroupTypes,
-
-        [Parameter()]
-        [System.String]
-        $MembershipRule,
-
-        [Parameter()]
-        [ValidateSet('On', 'Paused')]
-        [System.String]
-        $MembershipRuleProcessingState,
-
-        [Parameter()]
-        [System.Boolean]
-        $SecurityEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $MailEnabled,
-
-        [Parameter()]
-        [System.String]
-        $MailNickname,
-
-        [Parameter()]
-        [ValidateSet('Public', 'Private', 'HiddenMembership')]
-        [System.String]
-        $Visibility
-    )
-}
-
-function Set-AzureADMSGroup
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $ID,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String[]]
-        $GroupTypes,
-
-        [Parameter()]
-        [System.String]
-        $MembershipRule,
-
-        [Parameter()]
-        [ValidateSet('On', 'Paused')]
-        [System.String]
-        $MembershipRuleProcessingState,
-
-        [Parameter()]
-        [System.Boolean]
-        $SecurityEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $MailEnabled,
-
-        [Parameter()]
-        [System.String]
-        $MailNickname,
-
-        [Parameter()]
-        [ValidateSet('Public', 'Private', 'HiddenMembership')]
-        [System.String]
-        $Visibility
-    )
-}
-#>
 
 function Get-SPOAdministrationUrl
 {
@@ -188,7 +323,7 @@ function Get-SPOAdministrationUrl
     param(
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
 }
 
@@ -197,7 +332,7 @@ function New-M365DSCConnection
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Azure", "AzureAD", "SharePointOnline", "ExchangeOnline", 'Intune', `
+        [ValidateSet("ExchangeOnline", 'Intune', `
                 "SecurityComplianceCenter", "MSOnline", "PnP", "PowerPlatforms", `
                 "MicrosoftTeams", "MicrosoftGraph")]
         [System.String]
@@ -213,7 +348,12 @@ function New-M365DSCConnection
 
         [Parameter()]
         [System.Boolean]
-        $SkipModuleReload
+        $SkipModuleReload,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("v1.0", "beta")]
+        $ProfileName = "v1.0"
     )
 }
 
@@ -330,520 +470,6 @@ function Remove-DkimSigningConfig
     )
 }
 
-<#
-function New-SafeAttachmentPolicy
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Name,
-
-        [Parameter()]
-        [ValidateSet('Block', 'Replace', 'Allow', 'DynamicDelivery')]
-        [System.String]
-        $Action = 'Block',
-
-        [Parameter()]
-        [Boolean]
-        $ActionOnError = $false,
-
-        [Parameter()]
-        [System.String]
-        $AdminDisplayName,
-
-        [Parameter()]
-        [Boolean]
-        $Enable = $false,
-
-        [Parameter()]
-        [Boolean]
-        $Redirect = $false,
-
-        [Parameter()]
-        [System.String]
-        $RedirectAddress
-    )
-}
-
-
-
-function New-SafeAttachmentRule
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Name,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $SafeAttachmentPolicy,
-
-        [Parameter()]
-        [System.String]
-        $Comments,
-
-        [Parameter()]
-        [System.Boolean]
-        $Enabled = $true,
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfRecipientDomainIs = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentTo = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentToMemberOf = @(),
-
-        [Parameter()]
-        [uint32]
-        $Priority,
-
-        [Parameter()]
-        [System.String[]]
-        $RecipientDomainIs = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $SentTo = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $SentToMemberOf = @()
-    )
-}
-
-function New-SafeLinksPolicy
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Name,
-
-        [Parameter()]
-        [System.String]
-        $AdminDisplayName,
-
-        [Parameter()]
-        [Boolean]
-        $DoNotAllowClickThrough = $true,
-
-        [Parameter()]
-        [System.String[]]
-        $DoNotRewriteUrls = @(),
-
-        [Parameter()]
-        [Boolean]
-        $DoNotTrackUserClicks = $true,
-
-        [Parameter()]
-        [Boolean]
-        $EnableForInternalSenders,
-
-        [Parameter()]
-        [Boolean]
-        $IsEnabled,
-
-        [Parameter()]
-        [Boolean]
-        $ScanUrls = $false
-    )
-}
-
-function New-SafeLinksRule
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Name,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $SafeLinksPolicy,
-
-        [Parameter()]
-        [System.String]
-        $Comments,
-
-        [Parameter()]
-        [System.Boolean]
-        $Enabled = $true,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfRecipientDomainIs = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentTo = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentToMemberOf = @(),
-
-        [Parameter()]
-        [uint32]
-        $Priority,
-
-        [Parameter()]
-        [System.String[]]
-        $RecipientDomainIs = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $SentTo = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $SentToMemberOf = @()
-    )
-}
-function Set-SafeAttachmentPolicy
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [ValidateSet('Block', 'Replace', 'Allow', 'DynamicDelivery')]
-        [System.String]
-        $Action = 'Block',
-
-        [Parameter()]
-        [Boolean]
-        $ActionOnError = $false,
-
-        [Parameter()]
-        [System.String]
-        $AdminDisplayName,
-
-        [Parameter()]
-        [Boolean]
-        $Enable = $false,
-
-        [Parameter()]
-        [Boolean]
-        $Redirect = $false,
-
-        [Parameter()]
-        [System.String]
-        $RedirectAddress,
-
-        [Parameter()]
-        [System.Boolean]
-        $Confirm = $false
-    )
-}
-
-function Set-SafeAttachmentRule
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $SafeAttachmentPolicy,
-
-        [Parameter()]
-        [System.String]
-        $Comments,
-
-        [Parameter()]
-        [System.Boolean]
-        $Enabled = $true,
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfRecipientDomainIs = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentTo = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentToMemberOf = @(),
-
-        [Parameter()]
-        [uint32]
-        $Priority,
-
-        [Parameter()]
-        [System.String[]]
-        $RecipientDomainIs = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $SentTo = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $SentToMemberOf = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $Confirm = $false
-    )
-}
-
-function Set-SafeLinksPolicy
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $AdminDisplayName,
-
-        [Parameter()]
-        [Boolean]
-        $DoNotAllowClickThrough = $true,
-
-        [Parameter()]
-        [System.String[]]
-        $DoNotRewriteUrls = @(),
-
-        [Parameter()]
-        [Boolean]
-        $DoNotTrackUserClicks = $true,
-
-        [Parameter()]
-        [Boolean]
-        $EnableForInternalSenders,
-
-        [Parameter()]
-        [Boolean]
-        $IsEnabled,
-
-        [Parameter()]
-        [Boolean]
-        $ScanUrls = $false,
-
-        [Parameter()]
-        [System.Boolean]
-        $Confirm = $false
-    )
-}
-
-function Set-SafeLinksRule
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $SafeLinksPolicy,
-
-        [Parameter()]
-        [System.String]
-        $Comments,
-
-        [Parameter()]
-        [System.Boolean]
-        $Enabled = $true,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfRecipientDomainIs = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentTo = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentToMemberOf = @(),
-
-        [Parameter()]
-        [uint32]
-        $Priority,
-
-        [Parameter()]
-        [System.String[]]
-        $RecipientDomainIs = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $SentTo = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $SentToMemberOf = @(),
-
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.Boolean]
-        $Confirm = $false
-    )
-}
-
-function Get-SafeAttachmentPolicy
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-
-    )
-}
-
-function Get-SafeAttachmentRule
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-
-    )
-}
-
-function Get-SafeLinksPolicy
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-
-    )
-}
-
-function Get-SafeLinksRule
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-
-    )
-}
-
-
-function get-MalwareFilterRule
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-
-    )
-}
-
-function Remove-SafeAttachmentPolicy
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $Confirm = $false,
-
-        [Parameter()]
-        [Switch]
-        $Force = $true
-    )
-}
-
-function Remove-SafeAttachmentRule
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $Confirm = $false
-    )
-}
-
-function Remove-SafeLinksPolicy
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $Confirm = $false
-    )
-}
-
-function Remove-SafeLinksRule
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $Confirm = $false
-    )
-}
-#endregion
-#>
 function New-M365DSCLogEntry
 {
     [CmdletBinding()]
@@ -885,7 +511,7 @@ function Get-AllSPOPackages
     param(
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -968,79 +594,6 @@ function Set-OfflineAddressBook
     )
 }
 
-<#
-function add-AvailabilityAddressSpace
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [ValidateSet('PerUserFB', 'OrgWideFB', 'OrgWideFBBasic', 'InternalProxy')]
-        [System.String]
-        $AccessMethod,
-
-        [Parameter()]
-        [System.String]
-        $Credentials,
-
-        [Parameter()]
-        [System.String]
-        $ForestName,
-
-        [Parameter()]
-        [System.String]
-        $TargetAutodiscoverEpr
-    )
-}
-
-function get-AvailabilityAddressSpace
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-
-    )
-}
-
-function remove-AvailabilityAddressSpace
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [ValidateSet('PerUserFB', 'OrgWideFB', 'OrgWideFBBasic', 'InternalProxy')]
-        [System.String]
-        $AccessMethod,
-
-        [Parameter()]
-        [System.String]
-        $Credentials,
-
-        [Parameter()]
-        [System.String]
-        $ForestName,
-
-        [Parameter()]
-        [System.String]
-        $TargetAutodiscoverEpr,
-
-        [Parameter()]
-        [System.Boolean]
-        $Confirm
-    )
-}
-#>
 function New-OfflineAddressBook
 {
     [CmdletBinding()]
@@ -1073,18 +626,6 @@ function New-OfflineAddressBook
         $Confirm
     )
 }
-<#
-# EXOAddressBookPolicy cmdlets
-function Get-AddressBookPolicy
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-
-    )
-}
-#>
 function Set-AddressBookPolicy
 {
     [CmdletBinding()]

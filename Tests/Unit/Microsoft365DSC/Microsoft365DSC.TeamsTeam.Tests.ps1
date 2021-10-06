@@ -23,7 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "Pass@word1)" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.com", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.com", $secpasswd)
 
             $Global:PartialExportFileName = "c:\TestPath"
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
@@ -67,7 +67,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowGuestCreateUpdateChannels    = $false
                     AllowGuestDeleteChannels          = $false
                     Owner                             = @("JohnDoe@contoso.com")
-                    GlobalAdminAccount                = $GlobalAdminAccount
+                    Credential                = $Credential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -103,7 +103,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure             = "Present"
                     Visibility         = "Private"
                     Owner              = @("owner@contoso.com")
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -Command Get-TeamUser -MockWith {
@@ -241,7 +241,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description        = "Test Team"
                     Visibility         = "Private"
                     Owner              = @("owner@contoso.com")
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -293,7 +293,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MailNickName       = "testteam"
                     Visibility         = "Public"
                     Description        = "Update description"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -341,7 +341,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName        = "Test Team"
                     Ensure             = "Absent"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -385,7 +385,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {

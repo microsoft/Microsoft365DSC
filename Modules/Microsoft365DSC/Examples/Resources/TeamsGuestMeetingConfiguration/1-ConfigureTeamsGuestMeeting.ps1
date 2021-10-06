@@ -18,7 +18,7 @@ Configuration Example
         {
             AllowIPVideo       = $True;
             AllowMeetNow       = $True;
-            GlobalAdminAccount = $credsGlobalAdmin;
+            Credential         = $credsGlobalAdmin;
             Identity           = "Global";
             ScreenSharingMode  = "EntireScreen";
         }

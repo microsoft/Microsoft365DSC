@@ -23,7 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             $Global:PartialExportFileName = "c:\TestPath"
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
@@ -63,7 +63,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SdnApiToken                         = $ConfigurationData.Settings.SdnApiToken;
                     SdnLicenseId                        = "123456-123456-123456-123456";
                     SdnProviderName                     = "ContosoProvider";
-                    GlobalAdminAccount                  = $GlobalAdminAccount;
+                    Credential                  = $Credential;
                 }
             }
 
@@ -85,7 +85,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SdnApiToken                         = $ConfigurationData.Settings.SdnApiToken;
                     SdnLicenseId                        = "123456-111111-111111-123456"; #Variant
                     SdnProviderName                     = "ContosoProvider";
-                    GlobalAdminAccount                  = $GlobalAdminAccount;
+                    Credential                  = $Credential;
                 }
             }
 
@@ -102,7 +102,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
             }
 

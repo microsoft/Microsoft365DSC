@@ -22,7 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -36,14 +36,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credential"
             }
 
-            Mock -CommandName Set-AzureADUser -MockWith {
+            Mock -CommandName Update-MgUser -MockWith {
             }
 
-            Mock -CommandName Set-AzureADUserLicense -MockWith {
+            Mock -CommandName Update-MgUserLicenseDetail -MockWith {
             }
 
-            Mock -CommandName Set-AzureADUserPassword -MockWith {
-            }
         }
         # Test contexts
         Context -Name "When the user doesn't already exist" -Fixture {
@@ -55,17 +53,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     LastName           = "Smith"
                     UsageLocation      = "US"
                     LicenseAssignment  = @("ENTERPRISE_PREMIUM")
-                    Password           = $GlobalAdminAccount
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Password           = $Credential
+                    Credential = $Credential
                 }
 
-                Mock -CommandName New-AzureADUser -MockWith {
+                Mock -CommandName New-MgUser -MockWith {
                     return @{
                         UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
                     }
                 }
 
-                Mock -CommandName Get-AzureADSubscribedSku -MockWith {
+                Mock -CommandName Get-MgSubscribedSku -MockWith {
                     return @{
                         SkuPartNumber = "ENTERPRISE_PREMIUM"
                         SkuID = '12345-12345-12345-12345-12345'
@@ -95,12 +93,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     LastName           = "Smith"
                     UsageLocation      = "US"
                     LicenseAssignment  = @("ENTERPRISE_PREMIUM")
-                    Password           = $GlobalAdminAccount
+                    Password           = $Credential
                     Ensure             = "Present"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
-                Mock -CommandName Get-AzureADUser -MockWith {
+                Mock -CommandName Get-MgUser -MockWith {
                     return @{
                         UserPrincipalName    = "JohnSmith@contoso.onmicrosoft.com"
                         DisplayName          = "John Smith"
@@ -112,10 +110,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-AzureADUserLicenseDetail -MockWith {
+                Mock -CommandName Get-MgUserLicenseDetail -MockWith {
                     return @(@{
                         SkuPartNumber = 'ENTERPRISE_PREMIUM'
                     })
+                }
+
+                Mock -CommandName Get-MgSubscribedSku -MockWith {
+                    return @{
+                        SkuPartNumber = "ENTERPRISE_PREMIUM"
+                        SkuID = '12345-12345-12345-12345-12345'
+                    }
                 }
             }
 
@@ -137,13 +142,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     LastName             = "Smith"
                     UsageLocation        = "US"
                     LicenseAssignment    = @()
-                    Password             = $GlobalAdminAccount
+                    Password             = $Credential
                     PasswordNeverExpires = $false
                     Ensure               = "Present"
-                    GlobalAdminAccount   = $GlobalAdminAccount
+                    Credential   = $Credential
                 }
 
-                Mock -CommandName Get-AzureADUser -MockWith {
+                Mock -CommandName Get-MgUser -MockWith {
                     return @{
                         UserPrincipalName    = "JohnSmith@contoso.onmicrosoft.com"
                         DisplayName          = "John Smith"
@@ -155,10 +160,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-AzureADUserLicenseDetail -MockWith {
+                Mock -CommandName Get-MgUserLicenseDetail -MockWith {
                     return @(@{
                         SkuPartNumber = 'ENTERPRISE_PREMIUM'
                     })
+                }
+
+                Mock -CommandName Get-MgSubscribedSku -MockWith {
+                    return @{
+                        SkuPartNumber = "ENTERPRISE_PREMIUM"
+                        SkuID = '12345-12345-12345-12345-12345'
+                    }
                 }
             }
 
@@ -178,10 +190,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
-                Mock -CommandName Get-AzureADUser -MockWith {
+                Mock -CommandName Get-MgUser -MockWith {
                     return @{
                         UserPrincipalName    = "JohnSmith@contoso.onmicrosoft.com"
                         DisplayName          = "John Smith"
@@ -194,6 +206,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
                 Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
                     return "O365User Test{Password = `"`$test`"}"
+                }
+
+                Mock -CommandName Get-MgSubscribedSku -MockWith {
+                    return @{
+                        SkuPartNumber = "ENTERPRISE_PREMIUM"
+                        SkuID = '12345-12345-12345-12345-12345'
+                    }
                 }
             }
 

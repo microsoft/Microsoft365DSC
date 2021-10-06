@@ -22,7 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -53,7 +53,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DomainNames         = 'contoso.com'
                     FreeBusyAccessLevel = 'AvailabilityOnly'
                     Ensure              = 'Present'
-                    GlobalAdminAccount  = $GlobalAdminAccount
+                    Credential  = $Credential
                 }
 
                 Mock -CommandName Get-OrganizationRelationship -MockWith {
@@ -68,7 +68,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         FreeBusyAccessLevel = 'AvailabilityOnly'
                         Ensure              = 'Present'
-                        GlobalAdminAccount  = $GlobalAdminAccount
+                        Credential  = $Credential
                         Name                = 'Contoso'
                         DomainNames         = 'contoso.com'
                     }
@@ -95,7 +95,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DomainNames         = 'contoso.com'
                     FreeBusyAccessLevel = 'AvailabilityOnly'
                     Ensure              = 'Present'
-                    GlobalAdminAccount  = $GlobalAdminAccount
+                    Credential  = $Credential
                 }
 
                 Mock -CommandName Get-OrganizationRelationship -MockWith {
@@ -123,7 +123,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DomainNames         = 'contoso.com'
                     FreeBusyAccessLevel = 'AvailabilityOnly'
                     Ensure              = 'Present'
-                    GlobalAdminAccount  = $GlobalAdminAccount
+                    Credential  = $Credential
                 }
 
                 Mock -CommandName Get-OrganizationRelationship -MockWith {
@@ -140,7 +140,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DomainNames         = 'contoso.com'
                         FreeBusyAccessLevel = 'AvailabilityOnly'
                         Ensure              = 'Present'
-                        GlobalAdminAccount  = $GlobalAdminAccount
+                        Credential  = $Credential
                     }
                 }
             }
@@ -157,7 +157,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 $OrgRelationship = @{

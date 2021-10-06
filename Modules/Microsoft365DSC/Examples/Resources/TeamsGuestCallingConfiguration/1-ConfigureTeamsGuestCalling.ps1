@@ -17,7 +17,7 @@ Configuration Example
         {
             Identity            = "Global";
             AllowPrivateCalling = $True;
-            GlobalAdminAccount  = $credsGlobalAdmin;
+            Credential          = $credsGlobalAdmin;
         }
     }
 }

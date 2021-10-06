@@ -22,7 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.com", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.com", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -44,7 +44,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName        = "Test Shared Mailbox"
                     PrimarySMTPAddress = "Testh@contoso.onmicrosoft.com"
                     Ensure             = "Present"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-Mailbox -MockWith {
@@ -75,7 +75,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName        = "Test Shared Mailbox"
                     PrimarySMTPAddress = "Test@contoso.onmicrosoft.com"
                     Ensure             = "Present"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-Mailbox -MockWith {
@@ -104,7 +104,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrimarySMTPAddress = "Test@contoso.onmicrosoft.com"
                     Aliases            = @("Test@contoso.onmicrosoft.com")
                     Ensure             = "Present"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 It "Should throw an error from the Set method" {
@@ -120,7 +120,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrimarySMTPAddress = "Test@contoso.onmicrosoft.com"
                     Aliases            = @("User1@contoso.onmicrosoft.com")
                     Ensure             = "Absent"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-Mailbox -MockWith {
@@ -150,7 +150,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrimarySMTPAddress = "Test@contoso.onmicrosoft.com"
                     Aliases            = @("User1@contoso.onmicrosoft.com")
                     Ensure             = "Present"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-Mailbox -MockWith {
@@ -171,7 +171,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-Mailbox -MockWith {

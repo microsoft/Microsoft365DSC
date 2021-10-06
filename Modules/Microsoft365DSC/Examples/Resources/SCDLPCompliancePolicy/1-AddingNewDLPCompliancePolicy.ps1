@@ -21,7 +21,7 @@ Configuration Example
             Priority           = 1
             SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
             Ensure             = "Present"
-            GlobalAdminAccount = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
         }
     }
 }

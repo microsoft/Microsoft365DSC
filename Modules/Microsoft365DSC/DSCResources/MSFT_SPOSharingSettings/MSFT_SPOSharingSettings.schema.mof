@@ -23,7 +23,7 @@ class MSFT_SPOSharingSettings : OMI_BaseResource
     [Write, Description("Specifies the link permission on the tenant level."),ValueMap{"None","View","Edit"},Values{"None","View","Edit"}] string DefaultLinkPermission;
     [Write, Description("Ensures that an external user can only accept an external sharing invitation with an account matching the invited email address.Administrators who desire increased control over external collaborators should consider enabling this feature. False (default) - When a document is shared with an external user, bob@contoso.com, it can be accepted by any user with access to the invitation link in the original e-mail.True - User must accept this invitation with bob@contoso.com.")] boolean RequireAcceptingAccountMatchInvitedAccount;
     [Write, Description("Only accepted value is 'Present'."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Write, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+    [Write, Description("Credentials of the account to authenticate with."), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Secret of the Azure Active Directory application to authenticate with.")] String ApplicationSecret;
     [Write, Description("Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com")] String TenantId;

@@ -23,7 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "Pass@word1)" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             $Global:PartialExportFileName = "c:\TestPath"
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
@@ -49,7 +49,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     DownloadTeams      = $True;
-                    GlobalAdminAccount = $GlobalAdminAccount;
+                    Credential = $Credential;
                     IsSingleInstance   = "Yes";
                     SfBMeetingJoinUx   = "NativeLimitedClient";
                 }
@@ -76,7 +76,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     DownloadTeams      = $False;
-                    GlobalAdminAccount = $GlobalAdminAccount;
+                    Credential = $Credential;
                     IsSingleInstance   = "Yes";
                     SfBMeetingJoinUx   = "NativeLimitedClient";
                 }
@@ -106,7 +106,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-CsTeamsUpgradeConfiguration -MockWith {

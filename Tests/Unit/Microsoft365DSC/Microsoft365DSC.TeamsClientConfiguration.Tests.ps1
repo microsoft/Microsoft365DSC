@@ -23,7 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "Pass@word1)" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             $Global:PartialExportFileName = "c:\TestPath"
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
@@ -76,7 +76,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowShareFile                   = $True;
                     AllowSkypeBusinessInterop        = $True;
                     ContentPin                       = "RequiredOutsideScheduleMeeting";
-                    GlobalAdminAccount               = $GlobalAdminAccount;
+                    Credential               = $Credential;
                     Identity                         = "Global";
                     ResourceAccountContentAccess     = "NoAccess";
                     RestrictedSenderList             = @("john.smith@contoso.com")
@@ -110,7 +110,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowShareFile                   = $True;
                     AllowSkypeBusinessInterop        = $True;
                     ContentPin                       = "RequiredOutsideScheduleMeeting";
-                    GlobalAdminAccount               = $GlobalAdminAccount;
+                    Credential               = $Credential;
                     Identity                         = "Global";
                     ResourceAccountContentAccess     = "NoAccess";
                     RestrictedSenderList             = @("john.smith@contoso.com", "test@contoso.com")
@@ -135,7 +135,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 It "Should Reverse Engineer resource from the Export method" {

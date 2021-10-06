@@ -18,7 +18,7 @@ Configuration Example
             DisplayName          = "Contoso"
             Description          = "Contoso Category"
             Ensure               = "Present"
-            GlobalAdminAccount   = $credsGlobalAdmin;
+            Credential           = $credsGlobalAdmin;
         }
     }
 }

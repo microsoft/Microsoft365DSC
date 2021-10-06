@@ -1,8 +1,8 @@
-# AADMSGroupLifecyclePolicy
+# AADGroup
 
 ## Description
 
-This resource configures an Azure Active Directory Group Lifecycle Policy (e.g. Expiration).
+This resource configures an Azure Active Directory group.
 
 ## Azure AD Permissions
 

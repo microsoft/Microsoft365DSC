@@ -40,7 +40,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -68,7 +68,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Title               = "Title One"
                     Content             = $script
                     Description         = "This is the description for the Site Script: 'Test Title'"
-                    GlobalAdminAccount  = $GlobalAdminAccount
+                    Credential  = $Credential
                     Ensure              = "Present"
                 }
 
@@ -103,7 +103,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Title               = "Title One"
                     Content             = $script
                     Description         = "This is the description for the Site Script: 'Test Title'"
-                    GlobalAdminAccount  = $GlobalAdminAccount
+                    Credential  = $Credential
                     Ensure              = "Present"
                 }
 
@@ -143,7 +143,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Title               = "Title One"
                     Content             = $script
                     Description         = "This is the description for the Site Script: 'Test Title'"
-                    GlobalAdminAccount  = $GlobalAdminAccount
+                    Credential  = $Credential
                     Ensure              = "Present"
                 }
 
@@ -169,7 +169,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-PnPSiteScript -MockWith {
@@ -209,7 +209,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             "bodyBackground"       = "#0078d4";
                             "bodyText"             = "#fff";
                         }
-                        GlobalAdminAccount = $GlobalAdminAccount
+                        Credential = $Credential
                         Ensure             = "Present"
                     }
                 }

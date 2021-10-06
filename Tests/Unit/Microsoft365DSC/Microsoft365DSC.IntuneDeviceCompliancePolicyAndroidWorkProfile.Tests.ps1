@@ -23,7 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -75,7 +75,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SecurityRequireCompanyPortalAppIntegrity           = $True
                         RoleScopeTagIds                                    = "0"
                         Ensure                                             = 'Present'
-                        GlobalAdminAccount                                 = $GlobalAdminAccount
+                        Credential                                 = $Credential
                     }
 
                     Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
@@ -127,7 +127,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SecurityRequireCompanyPortalAppIntegrity           = $True
                         RoleScopeTagIds                                    = "0"
                         Ensure                                             = 'Present'
-                        GlobalAdminAccount                                 = $GlobalAdminAccount
+                        Credential                                 = $Credential
                     }
 
                     Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
@@ -207,7 +207,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SecurityRequireCompanyPortalAppIntegrity           = $True
                         RoleScopeTagIds                                    = "0"
                         Ensure                                             = 'Present'
-                        GlobalAdminAccount                                 = $GlobalAdminAccount
+                        Credential                                 = $Credential
                     }
 
                     Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
@@ -278,7 +278,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SecurityRequireCompanyPortalAppIntegrity           = $True
                         RoleScopeTagIds                                    = "0"
                         Ensure                                             = 'Present'
-                        GlobalAdminAccount                                 = $GlobalAdminAccount
+                        Credential                                 = $Credential
                     }
 
                     Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {
@@ -331,7 +331,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Context -Name "ReverseDSC Tests" -Fixture {
                 BeforeAll {
                     $testParams = @{
-                        GlobalAdminAccount = $GlobalAdminAccount;
+                        Credential = $Credential;
                     }
 
                     Mock -CommandName Get-MgDeviceManagementDeviceCompliancePolicy -MockWith {

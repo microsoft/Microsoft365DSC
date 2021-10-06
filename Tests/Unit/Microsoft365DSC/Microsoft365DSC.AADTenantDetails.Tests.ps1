@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.onmicrosoft.com", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.onmicrosoft.com", $secpasswd)
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
 
@@ -31,15 +31,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
-            Mock -CommandName Get-AzureADTenantDetail -MockWith {
-
-            }
-
             Mock -CommandName Remove-PSSession -MockWith {
 
             }
 
-            Mock -CommandName Set-AzureADTenantDetail -MockWith {
+            Mock -CommandName Update-MgOrganization -MockWith {
 
             }
 
@@ -56,11 +52,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SecurityComplianceNotificationPhones   = "+1123456789"
                     SecurityComplianceNotificationMails    = "exapmle@contoso.com"
                     MarketingNotificationEmails            = "exapmle@contoso.com"
-                    GlobalAdminAccount                     = $GlobalAdminAccount
+                    Credential                     = $Credential
                     IsSingleInstance                       = 'Yes'
                 }
 
-                Mock -CommandName Get-AzureADTenantDetail -MockWith {
+                Mock -CommandName Get-MgOrganization -MockWith {
                     $result = @{
                         MarketingNotificationEmails             = ""
                         SecurityComplianceNotificationMails     = ""
@@ -82,11 +78,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     TechnicalNotificationMails             = "exapmle@contoso.com"
                     SecurityComplianceNotificationPhones   = "+1123456789"
                     SecurityComplianceNotificationMails    = "exapmle@contoso.com"
-                    GlobalAdminAccount                     = $GlobalAdminAccount
+                    Credential                     = $Credential
                     IsSingleInstance                       = 'Yes'
                 }
 
-                Mock -CommandName Get-AzureADTenantDetail -MockWith {
+                Mock -CommandName Get-MgOrganization -MockWith {
                     $AADTenantDetails = New-Object PSCustomObject
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name MarketingNotificationEmails -Value "" #should not be
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name SecurityComplianceNotificationMails -Value ""
@@ -108,11 +104,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SecurityComplianceNotificationPhones   = "+1123456789"
                     SecurityComplianceNotificationMails    = "exapmle@contoso.com"
                     MarketingNotificationEmails            = "exapmle@contoso.com"
-                    GlobalAdminAccount                     = $GlobalAdminAccount
+                    Credential                     = $Credential
                     IsSingleInstance                       = 'Yes'
                 }
 
-                Mock -CommandName Get-AzureADTenantDetail -MockWith {
+                Mock -CommandName Get-MgOrganization -MockWith {
                     $AADTenantDetails = New-Object PSCustomObject
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name MarketingNotificationEmails -Value "exapmle@contoso.com"
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name SecurityComplianceNotificationMails -Value "exapmle@contoso.com"
@@ -124,7 +120,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return Values from the get method" {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-AzureADTenantDetail" -Exactly 1
+                Should -Invoke -CommandName "Get-MgOrganization" -Exactly 1
             }
 
             It 'Should return true from the test method' {
@@ -139,23 +135,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SecurityComplianceNotificationPhones   = "+1123456789"
                     SecurityComplianceNotificationMails    = "exapmle@contoso.com"
                     MarketingNotificationEmails            = "NOTexapmle@contoso.com" #Drift
-                    GlobalAdminAccount                     = $GlobalAdminAccount
+                    Credential                     = $Credential
                     IsSingleInstance                       = 'Yes'
                 }
 
-                Mock -CommandName Get-AzureADTenantDetail -MockWith {
+                Mock -CommandName Get-MgOrganization -MockWith {
                     $AADTenantDetails = New-Object PSCustomObject
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name MarketingNotificationEmails -Value "exapmle@contoso.com"
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name SecurityComplianceNotificationMails -Value "exapmle@contoso.com"
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name SecurityComplianceNotificationPhones -Value "+1123456789"
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name TechnicalNotificationMails -Value "exapmle@contoso.com"
+                    $AADTenantDetails | Add-Member -MemberType NoteProperty -Name Id -Value "12345-12345-12345-12345-12345"
                     return $AADTenantDetails
                 }
             }
 
             It "Should return values from the get method" {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Get-AzureADTenantDetail" -Exactly 1
+                Should -Invoke -CommandName "Get-MgOrganization" -Exactly 1
             }
 
             It 'Should return false from the test method' {
@@ -164,17 +161,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Set-AzureADTenantDetail' -Exactly 1
+                Should -Invoke -CommandName 'Update-MgOrganization' -Exactly 1
             }
         }
 
         Context -Name "ReverseDSC tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
-                Mock -CommandName Get-AzureADTenantDetail -MockWith {
+                Mock -CommandName Get-MgOrganization -MockWith {
                     $AADTenantDetails = New-Object PSCustomObject
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name IsSingleInstance -Value 'Yes'
                     return $AADTenantDetails

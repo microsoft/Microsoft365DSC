@@ -32,6 +32,8 @@ Configuration Master
     $Domain = $GlobalAdmin.Username.Split('@')[1]
     Node Localhost
     {
+
+#region AAD
         AADApplication DSCApp1
         {
             DisplayName                = "App1"
@@ -48,13 +50,13 @@ Configuration Master
             ReplyURLs                  = "https://app.contoso.com"
             SamlMetadataUrl            = ""
             Ensure                     = "Present"
-            GlobalAdminAccount         = $GlobalAdmin
+            Credential         = $GlobalAdmin
         }
 
         AADGroupsNamingPolicy GroupsNamingPolicy
         {
             CustomBlockedWordsList        = @("CEO", "President");
-            GlobalAdminAccount            = $GlobalAdmin;
+            Credential            = $GlobalAdmin;
             IsSingleInstance              = "Yes";
             PrefixSuffixNamingRequirement = "[Title]Test[Company][GroupName][Office]Redmond";
         }
@@ -66,7 +68,7 @@ Configuration Master
             AllowToAddGuests              = $True;
             EnableGroupCreation           = $True;
             Ensure                        = "Present";
-            GlobalAdminAccount            = $GlobalAdmin;
+            Credential            = $GlobalAdmin;
             GroupCreationAllowedGroupName = "Office365DSC Core Team";
             GuestUsageGuidelinesUrl       = "";
             IsSingleInstance              = "Yes";
@@ -82,15 +84,16 @@ Configuration Master
             MailNickname       = "M365DSCCoreGroup"
             Visibility         = "Private"
             GroupTypes         = @("Unified");
-            GlobalAdminAccount = $GlobalAdmin;
+            Credential = $GlobalAdmin;
             Ensure             = "Present"
         }
+#endregion
 
         EXOAcceptedDomain O365DSCDomain
         {
             Identity           = $Domain
             DomainType         = "Authoritative"
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
             Ensure             = "Present"
         }
         <#
@@ -113,7 +116,7 @@ Configuration Master
             TargetedDomainProtectionAction        = "NoAction";
             AdminDisplayName                      = "";
             AuthenticationFailAction              = "MoveToJmf";
-            GlobalAdminAccount                    = $GlobalAdmin;
+            Credential                    = $GlobalAdmin;
             TargetedUserProtectionAction          = "NoAction";
             TargetedUsersToProtect                = $null;
             EnableTargetedUserProtection          = $null;
@@ -128,7 +131,7 @@ Configuration Master
         EXOAntiPhishRule AntiPhishRule
         {
             ExceptIfSentToMemberOf    = $null;
-            GlobalAdminAccount        = $GlobalAdmin;
+            Credential        = $GlobalAdmin;
             ExceptIfSentTo            = $null;
             SentTo                    = $null;
             ExceptIfRecipientDomainIs = $null;
@@ -148,7 +151,7 @@ Configuration Master
             AllowClickThrough       = $false
             BlockUrls               = "https://badurl.contoso.com"
             EnableATPForSPOTeamsODB = $true
-            GlobalAdminAccount      = $GlobalAdmin
+            Credential      = $GlobalAdmin
             Ensure                  = "Present"
         }#>
 
@@ -161,7 +164,7 @@ Configuration Master
         {
             ActiveSyncEnabled  = $True;
             OwaMailboxPolicy   = "OwaMailboxPolicy-Default";
-            GlobalAdminAccount = $GlobalAdmin;
+            Credential = $GlobalAdmin;
             PopEnabled         = $True;
             Identity           = $CASIdentity;
             Ensure             = "Present";
@@ -172,7 +175,7 @@ Configuration Master
         {
             Ensure                               = "Present";
             Action                               = "AllowAccess";
-            GlobalAdminAccount                   = $GlobalAdmin;
+            Credential                   = $GlobalAdmin;
             UserRecipientFilter                  = $null;
             ExceptAnyOfAuthenticationTypes       = @();
             ExceptUsernameMatchesAnyOfPatterns   = @();
@@ -190,7 +193,7 @@ Configuration Master
         <#EXODkimSigningConfig DKIMSigning
         {
             KeySize                = 1024;
-            GlobalAdminAccount     = $GlobalAdmin;
+            Credential     = $GlobalAdmin;
             Identity               = $Domain;
             HeaderCanonicalization = "Relaxed";
             Enabled                = $True;
@@ -228,7 +231,7 @@ Configuration Master
             DefaultPublicFolderAgeLimit                               = $null;
             OutlookMobileGCCRestrictionsEnabled                       = $False;
             ActivityBasedAuthenticationTimeoutEnabled                 = $True;
-            GlobalAdminAccount                                        = $GlobalAdmin;
+            Credential                                        = $GlobalAdmin;
             ConnectorsEnabledForYammer                                = $True;
             HierarchicalAddressBookRoot                               = $null;
             DefaultPublicFolderMaxItemSize                            = "13 KB (13,312 bytes)";
@@ -302,7 +305,7 @@ Configuration Master
             Country            = "Canada"
             Office             = "HQ"
             PostalCode         = "5K5 K5K"
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
             Ensure             = "Present"
         }
 
@@ -313,7 +316,7 @@ Configuration Master
             ManagedBy          = "admin@$Domain"
             Description        = "Group for all the Core Team members"
             Members            = @("John.Smith@$Domain")
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
             Ensure             = "Present"
             DependsOn          = "[O365User]JohnSmith"
         }
@@ -327,7 +330,7 @@ Configuration Master
                 DisplayName          = "Integration PowerApps Environment";
                 Ensure               = "Present"
                 EnvironmentSKU       = "Production";
-                GlobalAdminAccount   = $GlobalAdmin;
+                Credential   = $GlobalAdmin;
                 Location             = $location;
             }
         }#>
@@ -336,21 +339,21 @@ Configuration Master
         {
             Workload           = "SharePoint"
             Ensure             = "Present";
-            GlobalAdminAccount = $GlobalAdmin;
+            Credential = $GlobalAdmin;
         }
 
         SCAuditConfigurationPolicy OneDriveAuditPolicy
         {
             Workload           = "OneDriveForBusiness"
             Ensure             = "Present";
-            GlobalAdminAccount = $GlobalAdmin;
+            Credential = $GlobalAdmin;
         }
 
         SCAuditConfigurationPolicy ExchangeAuditPolicy
         {
             Workload           = "Exchange"
             Ensure             = "Present";
-            GlobalAdminAccount = $GlobalAdmin;
+            Credential = $GlobalAdmin;
         }
 
         SCComplianceSearch DemoSearchSPO
@@ -360,7 +363,7 @@ Configuration Master
             Name                                  = "Integration Compliance Search - SPO";
             Ensure                                = "Present";
             Language                              = "iv";
-            GlobalAdminAccount                    = $GlobalAdmin;
+            Credential                    = $GlobalAdmin;
             AllowNotFoundExchangeLocationsEnabled = $False;
             SharePointLocation                    = @("All");
         }
@@ -372,7 +375,7 @@ Configuration Master
             Name                                  = "Integration Compliance Search - EXO";
             Ensure                                = "Present";
             Language                              = "iv";
-            GlobalAdminAccount                    = $GlobalAdmin;
+            Credential                    = $GlobalAdmin;
             AllowNotFoundExchangeLocationsEnabled = $False;
             ExchangeLocation                      = @("All")
             PublicFolderLocation                  = @("All")
@@ -383,7 +386,7 @@ Configuration Master
             IncludeSharePointDocumentVersions = $False;
             Action                            = "Retention";
             SearchName                        = "Integration Compliance Search - EXO";
-            GlobalAdminAccount                = $GlobalAdmin;
+            Credential                = $GlobalAdmin;
             IncludeCredential                 = $False;
             RetryOnError                      = $False;
             ActionScope                       = "IndexedItemsOnly";
@@ -395,7 +398,7 @@ Configuration Master
         {
             Action             = "Purge";
             SearchName         = "Integration Compliance Search - EXO";
-            GlobalAdminAccount = $GlobalAdmin;
+            Credential = $GlobalAdmin;
             IncludeCredential  = $False;
             RetryOnError       = $False;
             Ensure             = "Present";
@@ -407,7 +410,7 @@ Configuration Master
             Description        = "This Case is generated by the Integration Tests"
             Status             = "Active"
             Ensure             = "Present"
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
         }
 
         SCCaseHoldPolicy DemoCaseHoldPolicy
@@ -419,7 +422,7 @@ Configuration Master
             Comment              = "This is a test for integration"
             Ensure               = "Present"
             Enabled              = $True
-            GlobalAdminAccount   = $GlobalAdmin;
+            Credential   = $GlobalAdmin;
         }
 
         SCCaseHoldRule DemoHoldRule
@@ -430,7 +433,7 @@ Configuration Master
             Disabled           = $false
             ContentMatchQuery  = "filename:2016 budget filetype:xlsx"
             Ensure             = "Present"
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
         }
 
         SCComplianceTag DemoRule
@@ -446,7 +449,7 @@ Configuration Master
                 FilePlanPropertyCategory   = "Accounts receivable"
             }
             Ensure             = "Present"
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
         }
 
         SCDLPCompliancePolicy DLPPolicy
@@ -456,7 +459,7 @@ Configuration Master
             Priority           = 0
             SharePointLocation = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
             Ensure             = "Present"
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
         }
 
         SCDLPComplianceRule DLPRule
@@ -465,21 +468,21 @@ Configuration Master
             Policy                              = "MyDLPPolicy"
             BlockAccess                         = $True;
             Ensure                              = "Present";
-            GlobalAdminAccount                  = $GlobalAdmin
+            Credential                  = $GlobalAdmin
         }
 
         SCFilePlanPropertyAuthority FilePlanPropertyAuthority
         {
             Name               = "My Authority"
             Ensure             = "Present"
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
         }
 
         SCFilePlanPropertyCategory FilePlanPropertyCategory
         {
             Name               = "My Category"
             Ensure             = "Present"
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
         }
 
         SCFilePlanPropertyCitation IntegrationCitation
@@ -488,21 +491,21 @@ Configuration Master
             CitationURL          = "https://contoso.com"
             CitationJurisdiction = "Federal"
             Ensure               = "Present"
-            GlobalAdminAccount   = $GlobalAdmin
+            Credential   = $GlobalAdmin
         }
 
         SCFilePlanPropertyDepartment FilePlanPropertyDepartment
         {
             Name               = "Demo Department"
             Ensure             = "Present"
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
         }
 
         SCFilePlanPropertyReferenceId FilePlanPropertyReferenceId
         {
             Name               = "My Reference ID"
             Ensure             = "Present"
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
         }
 
         SCRetentionCompliancePolicy RCPolicy
@@ -511,7 +514,7 @@ Configuration Master
             Comment            = "Test Policy"
             ExchangeLocation   = @()
             Ensure             = "Present"
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
         }
 
         SCRetentionComplianceRule RCRule
@@ -522,7 +525,7 @@ Configuration Master
             RetentionComplianceAction    = "Keep"
             RetentionDuration            = "Unlimited"
             RetentionDurationDisplayHint = "Days"
-            GlobalAdminAccount           = $GlobalAdmin
+            Credential           = $GlobalAdmin
             Ensure                       = "Present"
         }
 
@@ -531,7 +534,7 @@ Configuration Master
             Comment            = "DSC Event Type description.";
             Name               = "DSCEventType";
             Ensure             = "Present";
-            GlobalAdminAccount = $GlobalAdmin;
+            Credential = $GlobalAdmin;
 
         }
 
@@ -541,7 +544,7 @@ Configuration Master
             Comment            = "Test Policy"
             Reviewers          = @($GlobalAdmin.UserName)
             Ensure             = "Present"
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
         }
 
         SCSupervisoryReviewRule SRRule
@@ -551,14 +554,14 @@ Configuration Master
             SamplingRate       = 100
             Policy             = 'MySRPolicy'
             Ensure             = "Present"
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
         }
 
         SPOSearchManagedProperty ManagedProp1
         {
             Name               = "Gilles"
             Type               = "Text"
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
             Ensure             = "Present"
         }
 
@@ -569,7 +572,7 @@ Configuration Master
             Owner              = $GlobalAdmin.UserName
             Template           = "STS#0"
             TimeZoneID         = 13
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
             Ensure             = "Present"
         }
 
@@ -580,7 +583,7 @@ Configuration Master
             Owner              = $GlobalAdmin.UserName
             Template           = "STS#3"
             TimeZoneID         = 13
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
             Ensure             = "Present"
         }
 
@@ -605,7 +608,7 @@ Configuration Master
             SocialBarOnSitePagesDisabled                = $False;
             StorageMaximumLevel                         = 26214400;
             StorageWarningLevel                         = 25574400;
-            GlobalAdminAccount                          = $GlobalAdmin
+            Credential                          = $GlobalAdmin
             Ensure                                      = "Present"
         }
 
@@ -614,7 +617,7 @@ Configuration Master
             Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
             Key                = "MyKey"
             Value              = "MyValue#3"
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
             Ensure             = "Present"
         }
 
@@ -624,7 +627,7 @@ Configuration Master
             Description        = "Description of item"
             Protocol           = "Local"
             Type               = "SharePoint"
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
             Ensure             = "Present"
         }
 
@@ -632,7 +635,7 @@ Configuration Master
         {
             Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
             AuditFlags         = "All"
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
         }
 
         SPOSiteGroup TestSiteGroup
@@ -641,11 +644,11 @@ Configuration Master
             Identity           = "TestSiteGroup"
             PermissionLevels   = @("Edit", "Read")
             Ensure             = "Present"
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
         }
         SPOTheme SPTheme01
         {
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
             Name               = "Integration Palette"
             Palette            = @(MSFT_SPOThemePaletteProperty
                 {
@@ -664,7 +667,7 @@ Configuration Master
         {
             Enable             = $True
             CdnType            = "Public"
-            GlobalAdminAccount = $GlobalAdmin;
+            Credential = $GlobalAdmin;
             Ensure             = "Present"
         }
 
@@ -672,7 +675,7 @@ Configuration Master
         {
             LibraryUrl         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern/Shared Documents"
             CdnType            = "Public"
-            GlobalAdminAccount = $GlobalAdmin;
+            Credential = $GlobalAdmin;
             Ensure             = "Present"
         }
 
@@ -689,7 +692,7 @@ Configuration Master
                         Value = "Pasta"
                     }
                 )
-                GlobalAdminAccount = $GlobalAdmin
+                Credential = $GlobalAdmin
                 Ensure             = "Present"
             }
         }#>
@@ -697,7 +700,7 @@ Configuration Master
         TeamsUpgradeConfiguration UpgradeConfig
         {
             DownloadTeams      = $True;
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
             IsSingleInstance   = "Yes"
             SfBMeetingJoinUx   = "NativeLimitedClient"
         }
@@ -709,7 +712,7 @@ Configuration Master
             BroadcastAttendeeVisibilityMode = "EveryoneInCompany";
             BroadcastRecordingMode          = "AlwaysEnabled";
             Ensure                          = "Present";
-            GlobalAdminAccount              = $GlobalAdmin;
+            Credential              = $GlobalAdmin;
             Identity                        = "IntegrationPolicy";
         }
 
@@ -726,7 +729,7 @@ Configuration Master
             AllowShareFile                   = $True;
             AllowSkypeBusinessInterop        = $True;
             ContentPin                       = "RequiredOutsideScheduleMeeting";
-            GlobalAdminAccount               = $GlobalAdmin;
+            Credential               = $GlobalAdmin;
             Identity                         = "Global";
             ResourceAccountContentAccess     = "NoAccess";
             RestrictedSenderList             = $null;
@@ -739,7 +742,7 @@ Configuration Master
             AllowPrivateTeamDiscovery   = $True;
             Description                 = $null;
             Ensure                      = "Present";
-            GlobalAdminAccount          = $GlobalAdmin;
+            Credential          = $GlobalAdmin;
             Identity                    = "Integration Channel Policy";
         }
 
@@ -751,7 +754,7 @@ Configuration Master
             NotificationGroup         = $GlobalAdmin.UserName;
             NotificationMode          = "NotificationOnly";
             Ensure                    = "Present"
-            GlobalAdminAccount        = $GlobalAdmin
+            Credential        = $GlobalAdmin
         }
 
         TeamsMeetingBroadcastConfiguration MeetingBroadcastConfiguration
@@ -762,7 +765,7 @@ Configuration Master
             SdnProviderName                     = "hive"
             SdnLicenseId                        = "5c12d0-d52950-e03e66-92b587"
             SdnApiTemplateUrl                   = "https://api.hivestreaming.com/v1/eventadmin?partner_token={0}"
-            GlobalAdminAccount                  = $GlobalAdmin
+            Credential                  = $GlobalAdmin
         }
 
         TeamsEmergencyCallRoutingPolicy EmergencyCallRoutingPolicyExample
@@ -778,7 +781,7 @@ Configuration Master
                 }
             );
             Ensure                         = "Present";
-            GlobalAdminAccount             = $GlobalAdmin;
+            Credential             = $GlobalAdmin;
             Identity                       = "Integration Test";
         }
 
@@ -801,7 +804,7 @@ Configuration Master
             AutoAdmittedUsers                          = "Everyone";
             Description                                = "Integration Meeting Policy";
             Ensure                                     = "Present";
-            GlobalAdminAccount                         = $GlobalAdmin;
+            Credential                         = $GlobalAdmin;
             Identity                                   = "Integration Meeting Policy";
             MediaBitRateKb                             = 50000;
             ScreenSharingMode                          = "EntireScreen";
@@ -812,7 +815,7 @@ Configuration Master
             DisplayName          = "Alpha Team"
             AllowAddRemoveApps   = $true
             AllowChannelMentions = $false
-            GlobalAdminAccount   = $GlobalAdmin
+            Credential   = $GlobalAdmin
             Ensure               = "Present"
         }
 
@@ -821,7 +824,7 @@ Configuration Master
             DisplayName        = "Channel Alpha"
             Description        = "Test Channel"
             TeamName           = "Alpha Team"
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
             Ensure             = "Present"
             DependsON          = "[TeamsTeam]TeamAlpha"
         }
@@ -830,7 +833,7 @@ Configuration Master
         {
             TeamName           = "Alpha Team"
             User               = "John.Smith@$($Domain)"
-            GlobalAdminAccount = $GlobalAdmin
+            Credential = $GlobalAdmin
             Ensure             = "Present"
             DependsON          = @("[O365User]JohnSmith", "[TeamsTeam]TeamAlpha")
         }
@@ -847,7 +850,7 @@ Configuration Master
             CustomFooterText            = "This is some custom footer text";
             DisableAnonymousJoin        = $False;
             EnableQoS                   = $False;
-            GlobalAdminAccount          = $GlobalAdmin;
+            Credential          = $GlobalAdmin;
             HelpURL                     = "https://github.com/Microsoft/Microsoft365DSC/Help";
             Identity                    = "Global";
             LegalURL                    = "https://github.com/Microsoft/Microsoft365DSC/Legal";
@@ -858,7 +861,7 @@ Configuration Master
         {
             Identity            = "Global";
             AllowPrivateCalling = $True;
-            GlobalAdminAccount  = $GlobalAdmin;
+            Credential  = $GlobalAdmin;
         }
 
         TeamsMessagingPolicy SampleTeamsMessage
@@ -880,7 +883,7 @@ Configuration Master
             AudioMessageEnabledType       = "ChatsOnly"
             AllowOwnerDeleteMessage       = $False
             ChannelsInChatListEnabledType = "EnabledUserOverride"
-            GlobalAdminAccount            = $GlobalAdmin
+            Credential            = $GlobalAdmin
             Ensure                        = "Present"
         }
 
@@ -888,7 +891,7 @@ Configuration Master
         {
             Description           = 'This is a demo dial plan';
             Ensure                = "Present";
-            GlobalAdminAccount    = $GlobalAdmin;
+            Credential    = $GlobalAdmin;
             Identity              = "DemoPlan";
             NormalizationRules    = MSFT_TeamsVoiceNormalizationRule
             {
@@ -958,7 +961,7 @@ Configuration Master
                         Value = "Enabled"
                     }
                 )
-                GlobalAdminAccount = $GlobalAdmin
+                Credential = $GlobalAdmin
                 Ensure             = "Present"
             }
         }

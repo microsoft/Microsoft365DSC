@@ -22,7 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.onmicrosoft.com", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.onmicrosoft.com", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -44,7 +44,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Organization           = "contoso.onmicrosoft.com"
                     MailTipsAllTipsEnabled = $True
                     Ensure                 = "Present"
-                    GlobalAdminAccount     = $GlobalAdminAccount
+                    Credential     = $Credential
                 }
 
                 Mock -CommandName Get-OrganizationConfig -MockWith {
@@ -73,7 +73,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Organization                = "contoso.onmicrosoft.com"
                     MailTipsGroupMetricsEnabled = $True
                     Ensure                      = "Present"
-                    GlobalAdminAccount          = $GlobalAdminAccount
+                    Credential          = $Credential
                 }
 
                 Mock -CommandName Get-OrganizationConfig -MockWith {
@@ -102,7 +102,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Organization                   = "contoso.onmicrosoft.com"
                     MailTipsLargeAudienceThreshold = 50
                     Ensure                         = "Present"
-                    GlobalAdminAccount             = $GlobalAdminAccount
+                    Credential             = $Credential
                 }
 
                 Mock -CommandName Get-OrganizationConfig -MockWith {
@@ -131,7 +131,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Organization                      = "contoso.onmicrosoft.com"
                     MailTipsMailboxSourcedTipsEnabled = $True
                     Ensure                            = "Present"
-                    GlobalAdminAccount                = $GlobalAdminAccount
+                    Credential                = $Credential
                 }
 
                 Mock -CommandName Get-OrganizationConfig -MockWith {
@@ -160,7 +160,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Organization                          = "contoso.onmicrosoft.com"
                     MailTipsExternalRecipientsTipsEnabled = $True
                     Ensure                                = "Present"
-                    GlobalAdminAccount                    = $GlobalAdminAccount
+                    Credential                    = $Credential
                 }
 
                 Mock -CommandName Get-OrganizationConfig -MockWith {
@@ -193,7 +193,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MailTipsGroupMetricsEnabled           = $True
                     MailTipsExternalRecipientsTipsEnabled = $True
                     Ensure                                = "Present"
-                    GlobalAdminAccount                    = $GlobalAdminAccount
+                    Credential                    = $Credential
                 }
 
                 Mock -CommandName Get-OrganizationConfig -MockWith {
@@ -222,7 +222,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Organization           = "contoso.onmicrosoft.com"
                     MailTipsAllTipsEnabled = $True
                     Ensure                 = "Present"
-                    GlobalAdminAccount     = $GlobalAdminAccount
+                    Credential     = $Credential
                 }
 
                 Mock -CommandName Get-OrganizationConfig -MockWith {
@@ -238,7 +238,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-OrganizationConfig -MockWith {

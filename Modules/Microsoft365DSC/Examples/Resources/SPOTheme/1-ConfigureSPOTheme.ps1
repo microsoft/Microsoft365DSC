@@ -16,7 +16,7 @@ Configuration Example
     {
         SPOTheme MySPOTheme
         {
-            GlobalAdminAccount = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
             Name               = "PSTheme1"
             IsInverted         = $false
             Palette            =  @(MSFT_SPOThemePaletteProperty {

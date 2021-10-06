@@ -9,5 +9,5 @@ class MSFT_SCCaseHoldPolicy : OMI_BaseResource
     [Write, Description("The PublicFolderLocation parameter specifies that you want to include all public folders in the case hold policy. You use the value All for this parameter.")] String PublicFolderLocation[];
     [Write, Description("The SharePointLocation parameter specifies the SharePoint Online and OneDrive for Business sites to include. You identify a site by its URL value.")] String SharePointLocation[];
     [Write, Description("Specify if this policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Required, Description("Credentials of the Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+    [Required, Description("Credentials of the Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
 };

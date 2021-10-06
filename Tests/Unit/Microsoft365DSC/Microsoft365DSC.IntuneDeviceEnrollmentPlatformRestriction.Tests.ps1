@@ -23,7 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -54,7 +54,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description                                  = "";
                     DisplayName                                  = "My DSC Restriction";
                     Ensure                                       = "Present"
-                    GlobalAdminAccount                           = $GlobalAdminAccount;
+                    Credential                           = $Credential;
                     iOSOSMaximumVersion                          = "11.0";
                     iOSOSMinimumVersion                          = "9.0";
                     iOSPersonalDeviceEnrollmentBlocked           = $False;
@@ -94,7 +94,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description                                  = "";
                     DisplayName                                  = "My DSC Restriction";
                     Ensure                                       = "Present"
-                    GlobalAdminAccount                           = $GlobalAdminAccount;
+                    Credential                           = $Credential;
                     iOSOSMaximumVersion                          = "11.0";
                     iOSOSMinimumVersion                          = "9.0";
                     iOSPersonalDeviceEnrollmentBlocked           = $False;
@@ -120,7 +120,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description              = "";
                         DisplayName              = "My DSC Restriction";
                         Ensure                   = "Present"
-                        GlobalAdminAccount       = $GlobalAdminAccount;
+                        Credential       = $Credential;
                         iOSRestriction           = @{
                             OSMaximumVersion                = "11.0";
                             OSMinimumVersion                = "9.0";
@@ -165,7 +165,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description                                  = "";
                     DisplayName                                  = "My DSC Restriction";
                     Ensure                                       = "Present"
-                    GlobalAdminAccount                           = $GlobalAdminAccount;
+                    Credential                           = $Credential;
                     iOSOSMaximumVersion                          = "11.0";
                     iOSOSMinimumVersion                          = "9.0";
                     iOSPersonalDeviceEnrollmentBlocked           = $False;
@@ -234,7 +234,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description                                  = "";
                     DisplayName                                  = "My DSC Restriction";
                     Ensure                                       = "Absent"
-                    GlobalAdminAccount                           = $GlobalAdminAccount;
+                    Credential                           = $Credential;
                     iOSOSMaximumVersion                          = "11.0";
                     iOSOSMinimumVersion                          = "9.0";
                     iOSPersonalDeviceEnrollmentBlocked           = $False;
@@ -297,7 +297,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount;
+                    Credential = $Credential;
                 }
 
                 Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
@@ -312,7 +312,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             }
                             DisplayName              = "My DSC Restriction";
                             Ensure                   = "Present"
-                            GlobalAdminAccount       = $GlobalAdminAccount;
+                            Credential       = $Credential;
                             iOSRestriction           = @{
                                 OSMaximumVersion                = "11.0";
                                 OSMinimumVersion                = "9.0";
