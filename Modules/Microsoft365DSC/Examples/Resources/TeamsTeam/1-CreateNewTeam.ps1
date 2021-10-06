@@ -36,7 +36,7 @@ Configuration Example
             AllowCustomMemes                  = $True
             AllowGuestCreateUpdateChannels    = $true
             AllowGuestDeleteChannels          = $true
-            GlobalAdminAccount                = $credsGlobalAdmin
+            Credential                        = $credsGlobalAdmin
             Ensure                            = "Present"
         }
     }

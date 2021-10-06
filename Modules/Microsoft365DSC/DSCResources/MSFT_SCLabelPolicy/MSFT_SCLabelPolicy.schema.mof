@@ -27,5 +27,5 @@ class MSFT_SCLabelPolicy : OMI_BaseResource
     [Write, Description("The RemoveModernGroupLocation parameter specifies the Microsoft 365 Groups to remove from the policy.")] String RemoveModernGroupLocation[];
     [Write, Description("The RemoveModernGroupLocationException parameter specifies the Microsoft 365 Groups to remove from excluded values when you're using the value All for the ModernGroupLocation parameter.")] String RemoveModernGroupLocationException[];
     [Write, Description("The RemoveLabels parameter specifies the sensitivity labels that are removed from the policy. You can use any value that uniquely identifies the label.")] String RemoveLabels[];
-    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
 };

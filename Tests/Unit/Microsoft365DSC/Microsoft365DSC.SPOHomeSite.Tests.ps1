@@ -23,7 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -43,7 +43,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance   = "Yes"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Ensure             = "Absent"
                 }
 
@@ -65,7 +65,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance   = "Yes"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Ensure             = "Absent"
                 }
 
@@ -97,7 +97,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     IsSingleInstance   = "Yes"
                     Url                = "https://contoso.sharepoint.com/sites/homesite"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Ensure             = "Present"
                 }
 
@@ -125,7 +125,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should throw an error" {
-                { Set-TargetResource @testParams } | Should -Throw "The specified Site Collection $($testParams.Url) for SPOHomeSite doesn't exist." 
+                { Set-TargetResource @testParams } | Should -Throw "The specified Site Collection $($testParams.Url) for SPOHomeSite doesn't exist."
                 Should -Invoke -CommandName Get-PnPTenantSite -Exactly 1
                 Should -Invoke -CommandName New-M365DSCLogEntry -Exactly 1
             }
@@ -136,7 +136,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     IsSingleInstance   = "Yes"
                     Url                = "https://contoso.sharepoint.com/sites/homesite"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Ensure             = "Present"
                 }
 
@@ -162,7 +162,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-PnPHomeSite -MockWith {

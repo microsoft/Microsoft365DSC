@@ -16,38 +16,38 @@ Configuration Example
     {
         SCSensitivityLabel DemoRule
         {
-            Name           = "DemoLabel"
-            Comment        = "Demo Label comment"
-            ToolTip        = "Demo tool tip"
-            DisplayName    = "Demo Label"
-            ApplyContentMarkingFooterAlignment = "Center"
-            ApplyContentMarkingFooterEnabled= $true
-            ApplyContentMarkingFooterFontColor= "#FF0000"
-            ApplyContentMarkingFooterFontName= "calibri"
-            ApplyContentMarkingFooterFontSize=10
-            ApplyContentMarkingFooterMargin= 5
-            ApplyContentMarkingFooterText= "Demo footer text"
-            ApplyContentMarkingHeaderAlignment= "Center"
-            ApplyContentMarkingHeaderEnabled= $true
-            ApplyContentMarkingHeaderFontColor=  "#FF0000"
-            ApplyContentMarkingHeaderFontName= "calibri"
-            ApplyContentMarkingHeaderFontSize= 10
-            ApplyContentMarkingHeaderMargin= 5
-            ApplyContentMarkingHeaderText= "demo header text"
-            ApplyWaterMarkingEnabled= $true
-            ApplyWaterMarkingFontColor= "#FF0000"
-            ApplyWaterMarkingFontName= "calibri"
-            ApplyWaterMarkingFontSize= 10
-            ApplyWaterMarkingLayout="Diagonal"
-            ApplyWaterMarkingText= "demo watermark"
-            SiteAndGroupProtectionAllowAccessToGuestUsers= $true
-            SiteAndGroupProtectionAllowEmailFromGuestUsers= $true
-            SiteAndGroupProtectionAllowFullAccess= $true
-            SiteAndGroupProtectionAllowLimitedAccess= $true
-            SiteAndGroupProtectionBlockAccess= $true
-            SiteAndGroupProtectionEnabled= $true
-            SiteAndGroupProtectionPrivacy= "Private"
-            LocaleSettings = @(
+            Name                                           = "DemoLabel"
+            Comment                                        = "Demo Label comment"
+            ToolTip                                        = "Demo tool tip"
+            DisplayName                                    = "Demo Label"
+            ApplyContentMarkingFooterAlignment             = "Center"
+            ApplyContentMarkingFooterEnabled               = $true
+            ApplyContentMarkingFooterFontColor             = "#FF0000"
+            ApplyContentMarkingFooterFontName              = "calibri"
+            ApplyContentMarkingFooterFontSize              = 10
+            ApplyContentMarkingFooterMargin                = 5
+            ApplyContentMarkingFooterText                  = "Demo footer text"
+            ApplyContentMarkingHeaderAlignment             = "Center"
+            ApplyContentMarkingHeaderEnabled               = $true
+            ApplyContentMarkingHeaderFontColor             =  "#FF0000"
+            ApplyContentMarkingHeaderFontName              = "calibri"
+            ApplyContentMarkingHeaderFontSize              = 10
+            ApplyContentMarkingHeaderMargin                = 5
+            ApplyContentMarkingHeaderText                  = "demo header text"
+            ApplyWaterMarkingEnabled                       = $true
+            ApplyWaterMarkingFontColor                     = "#FF0000"
+            ApplyWaterMarkingFontName                      = "calibri"
+            ApplyWaterMarkingFontSize                      = 10
+            ApplyWaterMarkingLayout                        = "Diagonal"
+            ApplyWaterMarkingText                          = "demo watermark"
+            SiteAndGroupProtectionAllowAccessToGuestUsers  = $true
+            SiteAndGroupProtectionAllowEmailFromGuestUsers = $true
+            SiteAndGroupProtectionAllowFullAccess          = $true
+            SiteAndGroupProtectionAllowLimitedAccess       = $true
+            SiteAndGroupProtectionBlockAccess              = $true
+            SiteAndGroupProtectionEnabled                  = $true
+            SiteAndGroupProtectionPrivacy                  = "Private"
+            LocaleSettings                                 = @(
                 MSFT_SCLabelLocaleSettings
                 {
                     LocaleKey = "DisplayName"
@@ -93,9 +93,9 @@ Configuration Example
                     Value = "Enabled"
                 }
             )
-            ParentId           = "Personal"
-            GlobalAdminAccount = $credsGlobalAdmin
-            Ensure             = "Present"
+            ParentId                                    = "Personal"
+            Credential                                  = $credsGlobalAdmin
+            Ensure                                      = "Present"
         }
     }
 }

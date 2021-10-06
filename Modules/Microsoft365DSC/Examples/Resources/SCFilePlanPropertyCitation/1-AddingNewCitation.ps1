@@ -20,7 +20,7 @@ Configuration Example
             CitationURL          = "https://contoso.com"
             CitationJurisdiction = "Federal"
             Ensure               = "Present";
-            GlobalAdminAccount   = $credsGlobalAdmin;
+            Credential           = $credsGlobalAdmin;
         }
     }
 }

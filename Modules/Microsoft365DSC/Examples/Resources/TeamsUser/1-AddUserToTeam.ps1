@@ -20,7 +20,7 @@ Configuration Example
             User               = "jdoe@dsazure.com"
             Role               = "Member"
             Ensure             = "Absent"
-            GlobalAdminAccount = $credsGlobalAdmin
+            Credential         = $credsGlobalAdmin
         }
     }
 }

@@ -4,16 +4,12 @@ function Start-M365DSCConfigurationExtract
     [OutputType([System.Collections.Hashtable])]
     param(
         [Parameter()]
-        [Switch]
-        $Quiet,
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String[]]
-        $ComponentsToExtract,
+        $Components,
 
         [Parameter()]
         [Switch]
@@ -94,25 +90,25 @@ function Start-M365DSCConfigurationExtract
 
         if ($null -ne $Workloads)
         {
-            $ComponentsToExtract = Get-M365DSCResourcesByWorkloads -Workloads $Workloads `
+            $Components = Get-M365DSCResourcesByWorkloads -Workloads $Workloads `
                 -Mode $Mode
         }
 
-        if ($null -eq $ComponentsToExtract -or $ComponentsToExtract.Length -eq 0)
+        if ($null -eq $Components -or $Components.Length -eq 0)
         {
-            $ComponentsToExtractSpecified = $false
+            $ComponentsSpecified = $false
         }
         else
         {
-            $ComponentsToExtractSpecified = $true
+            $ComponentsSpecified = $true
         }
 
         $ComponentsToSkip = @()
-        if ($Mode -eq 'Default' -and $null -eq $ComponentsToExtract)
+        if ($Mode -eq 'Default' -and $null -eq $Components)
         {
             $ComponentsToSkip = $Global:FullComponents
         }
-        elseif ($Mode -eq 'Lite' -and $null -eq $ComponentsToExtract)
+        elseif ($Mode -eq 'Lite' -and $null -eq $Components)
         {
             $ComponentsToSkip = $Global:DefaultComponents + $Global:FullComponents
         }
@@ -121,7 +117,7 @@ function Start-M365DSCConfigurationExtract
         # we are allowed to export the selected components.
         $AuthMethods = @()
 
-        if ($null -ne $GlobalAdminAccount)
+        if ($null -ne $Credential)
         {
             $AuthMethods += "Credentials"
         }
@@ -140,7 +136,7 @@ function Start-M365DSCConfigurationExtract
 
         # If some resources are not supported based on the Authentication parameters
         # received, write a warning.
-        if ($ComponentsToExtract.Length -eq 0)
+        if ($Components.Length -eq 0)
         {
             $allResourcesInModule = Get-M365DSCAllResources
             $selectedItems = Compare-Object -ReferenceObject $allResourcesInModule `
@@ -153,7 +149,7 @@ function Start-M365DSCConfigurationExtract
         }
         else
         {
-            $selectedResources = $ComponentsToExtract
+            $selectedResources = $Components
         }
 
         try
@@ -184,28 +180,6 @@ function Start-M365DSCConfigurationExtract
             Write-Host "$resourcesNotSupported" -ForegroundColor Gray
         }
 
-        if (-not $PSBoundParameters.ContainsKey('Quiet'))
-        {
-            $unattendedCommand = "Export-M365DSCConfiguration -Quiet -ComponentsToExtract @("
-            $Components = ""
-            foreach ($resource in $ComponentsToExtract)
-            {
-                if ($resource -ne 'Credential' -and $resource -ne 'Application' -and `
-                        $resource -ne 'Certificate')
-                {
-                    $Components += "'$resource',"
-                }
-            }
-            if (-not [System.String]::IsNullOrEmpty($Components))
-            {
-                $Components = $Components.Substring(0, $Components.Length - 1)
-            }
-            $unattendedCommand += $Components + ") -GlobalAdminAccount (Get-Credential)"
-            Write-Host "[INFO]" -NoNewline -ForegroundColor Cyan
-            Write-Host " You can perform an equivalent unattended Export operation by running the following command:" -ForegroundColor Gray
-            Write-Host $unattendedCommand -ForegroundColor Blue
-        }
-
         # Get Tenant Info
         $organization = ""
         $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
@@ -225,9 +199,9 @@ function Start-M365DSCConfigurationExtract
         elseif ($AuthMethods -Contains 'Credentials')
         {
             $ConnectionMode = 'Credential'
-            if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
+            if ($null -ne $Credential -and $Credential.UserName.Contains("@"))
             {
-                $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+                $organization = $Credential.UserName.Split("@")[1]
             }
         }
         if ($organization.IndexOf(".") -gt 0)
@@ -244,7 +218,7 @@ function Start-M365DSCConfigurationExtract
             $DSCContent += "param (`r`n"
             $DSCContent += "    [parameter()]`r`n"
             $DSCContent += "    [System.Management.Automation.PSCredential]`r`n"
-            $DSCContent += "    `$GlobalAdminAccount`r`n"
+            $DSCContent += "    `$Credential`r`n"
             $DSCContent += ")`r`n`r`n"
         }
         else
@@ -279,17 +253,17 @@ function Start-M365DSCConfigurationExtract
             $DSCContent += "    param (`r`n"
             $DSCContent += "        [parameter()]`r`n"
             $DSCContent += "        [System.Management.Automation.PSCredential]`r`n"
-            $DSCContent += "        `$GlobalAdminAccount`r`n"
+            $DSCContent += "        `$Credential`r`n"
             $DSCContent += "    )`r`n`r`n"
-            $DSCContent += "    if (`$null -eq `$GlobalAdminAccount)`r`n"
+            $DSCContent += "    if (`$null -eq `$Credential)`r`n"
             $DSCContent += "    {`r`n"
             $DSCContent += "        <# Credentials #>`r`n"
             $DSCContent += "    }`r`n"
             $DSCContent += "    else`r`n"
             $DSCContent += "    {`r`n"
-            $DSCContent += "        `$Credsglobaladmin = `$GlobalAdminAccount`r`n"
+            $DSCContent += "        `$CredsCredential = `$Credential`r`n"
             $DSCContent += "    }`r`n`r`n"
-            $DSCContent += "    `$OrganizationName = `$Credsglobaladmin.UserName.Split('@')[1]`r`n"
+            $DSCContent += "    `$OrganizationName = `$CredsCredential.UserName.Split('@')[1]`r`n"
         }
         else
         {
@@ -364,8 +338,8 @@ function Start-M365DSCConfigurationExtract
 
         if ($ConnectionMode -eq 'Credential')
         {
-            # Add the GlobalAdminAccount to the Credentials List
-            Save-Credentials -UserName "globaladmin"
+            # Add the Credential to the Credentials List
+            Save-Credentials -UserName "credential"
         }
         else
         {
@@ -443,11 +417,11 @@ function Start-M365DSCConfigurationExtract
                         break
                     }
                 }
-                if (($null -ne $ComponentsToExtract -and
-                        ($ComponentsToExtract -contains $resourceName -or $ComponentsToExtract -contains ("chck" + $resourceName))) -or
+                if (($null -ne $Components -and
+                        ($Components -contains $resourceName -or $Components -contains ("chck" + $resourceName))) -or
                     $AllComponents -or `
-                    ($null -eq $ComponentsToExtract -and $null -eq $Workloads) -and `
-                    ($ComponentsToExtractSpecified -or -not $ComponentsToSkip.Contains($resourceName)) -and `
+                    ($null -eq $Components -and $null -eq $Workloads) -and `
+                    ($ComponentsSpecified -or -not $ComponentsToSkip.Contains($resourceName)) -and `
                     $resourcesNotSupported -notcontains $ResourceModule.Name.Split('.')[0].Replace('MSFT_', ''))
                 {
                     $ResourcesToExport += $ResourceModule
@@ -472,7 +446,7 @@ function Start-M365DSCConfigurationExtract
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePath       = $CertificatePath
                 CertificatePassword   = $CertificatePassword
-                Credential            = $GlobalAdminAccount
+                Credential            = $Credential
             }
             try
             {
@@ -495,14 +469,14 @@ function Start-M365DSCConfigurationExtract
             $TenantIdExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("TenantId")
             $AppIdExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("ApplicationId")
             $AppSecretExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("ApplicationSecret")
-            $GlobalAdminExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("GlobalAdminAccount")
+            $CredentialExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("Credential")
             $CertPathExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("CertificatePath")
             $CertPasswordExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("CertificatePassword")
 
             $parameters = @{}
-            if ($GlobalAdminExists -and -not [System.String]::IsNullOrEmpty($GlobalAdminAccount))
+            if ($CredentialExists -and -not [System.String]::IsNullOrEmpty($Credential))
             {
-                $parameters.Add("GlobalAdminAccount", $GlobalAdminAccount)
+                $parameters.Add("Credential", $Credential)
             }
             if ($MaxProcessesExists -and -not [System.String]::IsNullOrEmpty($MaxProcesses))
             {
@@ -556,17 +530,17 @@ function Start-M365DSCConfigurationExtract
         {
             #region Add the Prompt for Required Credentials at the top of the Configuration
             $credsContent = ""
-            foreach ($credential in $Global:CredsRepo)
+            foreach ($credEntry in $Global:CredsRepo)
             {
-                if (!$credential.ToLower().StartsWith("builtin"))
+                if (!$credEntry.ToLower().StartsWith("builtin"))
                 {
                     if (!$AzureAutomation)
                     {
-                        $credsContent += "        " + (Resolve-Credentials $credential) + " = Get-Credential -Message `"Global Admin credentials`"`r`n"
+                        $credsContent += "        " + (Resolve-Credentials $credEntry) + " = Get-Credential -Message `"Credentials`"`r`n"
                     }
                     else
                     {
-                        $resolvedName = (Resolve-Credentials $credential)
+                        $resolvedName = (Resolve-Credentials $credEntry)
                         $credsContent += "    " + $resolvedName + " = Get-AutomationPSCredential -Name " + ($resolvedName.Replace("$", "")) + "`r`n"
                     }
                 }
@@ -574,7 +548,7 @@ function Start-M365DSCConfigurationExtract
             $credsContent += "`r`n"
             $startPosition = $DSCContent.IndexOf("<# Credentials #>") + 19
             $DSCContent = $DSCContent.Insert($startPosition, $credsContent)
-            $DSCContent += "$ConfigurationName -ConfigurationData .\ConfigurationData.psd1 -GlobalAdminAccount `$GlobalAdminAccount"
+            $DSCContent += "$ConfigurationName -ConfigurationData .\ConfigurationData.psd1 -Credential `$Credential"
             #endregion
         }
         else
@@ -619,7 +593,7 @@ function Start-M365DSCConfigurationExtract
             }
         }
 
-        $shouldOpenOutputDirectory = !$Quiet
+        $shouldOpenOutputDirectory = $false
         #region Prompt the user for a location to save the extract and generate the files
         if ([System.String]::IsNullOrEmpty($Path))
         {
@@ -662,13 +636,13 @@ function Start-M365DSCConfigurationExtract
         #endregion
 
         #region Copy Downloaded files back into output folder
-        if (($null -ne $ComponentsToExtract -and
-                $ComponentsToExtract.Contains("chckSPOApp")) -or
+        if (($null -ne $Components -and
+                $Components.Contains("SPOApp")) -or
             $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains('SPO')))
         {
             if ($ConnectionMode -eq 'credential')
             {
-                $filesToDownload = Get-AllSPOPackages -GlobalAdminAccount $GlobalAdminAccount
+                $filesToDownload = Get-AllSPOPackages -Credential $Credential
             }
             else
             {

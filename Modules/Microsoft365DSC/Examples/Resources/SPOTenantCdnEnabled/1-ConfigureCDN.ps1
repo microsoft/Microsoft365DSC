@@ -18,7 +18,7 @@ Configuration Example
         {
             Enable             = $True
             CdnType            = "Public"
-            GlobalAdminAccount = $credsGlobalAdmin;
+            Credential         = $credsGlobalAdmin;
             Ensure             = "Present"
         }
 

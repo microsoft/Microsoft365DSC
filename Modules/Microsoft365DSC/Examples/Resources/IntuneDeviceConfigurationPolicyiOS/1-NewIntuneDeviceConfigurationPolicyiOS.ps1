@@ -124,7 +124,7 @@ Configuration Example
             VoiceDialingBlocked                            = $False;
             WallpaperBlockModification                     = $False;
             Ensure                                         = 'Present'
-            GlobalAdminAccount                              = $credsGlobalAdmin;
+            Credential                                     = $credsGlobalAdmin;
         }
     }
 }

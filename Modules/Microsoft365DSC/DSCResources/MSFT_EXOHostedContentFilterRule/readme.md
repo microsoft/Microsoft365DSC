@@ -19,10 +19,10 @@ Ensure
 - Description: `Present` is the only value accepted.
     Configurations using `Ensure = 'Absent'` will throw an Error!
 
-GlobalAdminAccount
+Credential
 
 - Required: Yes
-- Description: Credentials of an Office365 Global Admin
+- Description: Credentials of the account to authenticate with
 
 Identity
 
@@ -35,7 +35,7 @@ Identity
         EXOHostedContentFilterRule TestHostedContentFilterRule {
             Ensure = 'Present'
             Identity = 'TestRule'
-            GlobalAdminAccount = $GlobalAdminAccount
+            Credential = $Credential
             HostedContentFilterPolicy = 'TestPolicy'
             Enabled = $true
             Priority = 0

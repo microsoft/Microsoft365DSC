@@ -49,9 +49,9 @@ Configuration Example
             ConfigurationManagerComplianceRequired      = $False;
             TPMRequired                                 = $False;
             deviceCompliancePolicyScript                = $null;
-            ValidOperatingSystemBuildRanges             = [];
+            ValidOperatingSystemBuildRanges             = @();
             Ensure                                      = 'Present';
-            GlobalAdminAccount                          = $GlobalAdminAccount;
+            Credential                                  = $Credential;
         }
     }
 }

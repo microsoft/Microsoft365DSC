@@ -3,7 +3,7 @@ on: [push]
 
 jobs:
   build:
-    if: (github.repository == 'microsoft/Microsoft365DSC' && github.event.ref == 'refs/heads/master') && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed'))
+    if: github.repository == 'microsoft/Microsoft365DSC' && github.event.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     environment:
       name: PROD
@@ -40,6 +40,9 @@ jobs:
     name: Deploy to Production
     needs: build
     steps:
+      - uses: actions/download-artifact@master
+        with:
+          name: website-build
       - name: Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1

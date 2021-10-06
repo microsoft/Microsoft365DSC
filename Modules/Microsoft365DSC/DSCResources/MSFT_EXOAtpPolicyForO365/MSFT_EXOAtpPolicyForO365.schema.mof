@@ -11,7 +11,7 @@ class MSFT_EXOAtpPolicyForO365 : OMI_BaseResource
     [Write, Description("The EnableSafeDocs parameter specifies whether to enable the Safe Documents feature in the organization. Default is $false.")] Boolean EnableSafeDocs;
     [Write, Description("The EnableSafeLinksForO365Clients parameter specifies whether Safe Links scanning is enabled for supported Office 365 desktop, mobile, and web apps. Default is $true.")] Boolean EnableSafeLinksForO365Clients;
     [Write, Description("The TrackClicks parameter specifies whether to track user clicks related to blocked URLs. Default is $true.")] Boolean TrackClicks;
-    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;

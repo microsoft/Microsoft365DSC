@@ -22,7 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
@@ -72,7 +72,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Case               = "Test Case"
                     Comment            = "This is a test Case"
                     Enabled            = $true
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Ensure             = "Present"
                 }
 
@@ -105,7 +105,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SharePointLocation   = @("https://contoso.com", "https://northwind.com")
                     ExchangeLocation     = @("admin@contoso.com", "admin@northwind.com")
                     PublicFolderLocation = @("contoso.com", "northwind.com")
-                    GlobalAdminAccount   = $GlobalAdminAccount
+                    Credential   = $Credential
                     Ensure               = "Present"
                 }
 
@@ -161,7 +161,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name               = "Test Policy"
                     Case               = "Test Case"
                     Comment            = "This is a test Case"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Ensure             = "Absent"
                 }
 
@@ -189,7 +189,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 $caseHoldPolicy1 = @{

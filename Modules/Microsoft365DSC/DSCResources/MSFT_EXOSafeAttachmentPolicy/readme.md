@@ -12,7 +12,7 @@ Ensure
 - Required: No (Defaults to 'Present')
 - Description: Specifies if the configuration should exist or not
 
-GlobalAdminAccount
+Credential
 
 - Required: Yes
 - Description: Credentials of the Office 365 Global Admin
@@ -84,7 +84,7 @@ RedirectAddress
         EXOSafeAttachmentPolicy SafeAttachmentPolicyExample {
                 Ensure             = 'Present'
                 Identity           = 'TestSafeAttachmentPolicy'
-                GlobalAdminAccount = $GlobalAdminAccount
+                Credential = $Credential
                 AdminDisplayName   = 'Test Safe Attachment Policy'
                 Action             = 'Block'
                 Enable             = $true

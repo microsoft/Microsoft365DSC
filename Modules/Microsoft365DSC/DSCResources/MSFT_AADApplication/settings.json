@@ -10,9 +10,6 @@
             ],
             "update": [
                 {
-                    "name": "User.Write.All"
-                },
-                {
                     "name": "User.ReadWrite.All"
                 }
             ]

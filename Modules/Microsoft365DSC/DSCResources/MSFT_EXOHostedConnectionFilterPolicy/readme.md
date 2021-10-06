@@ -13,10 +13,10 @@ Ensure
 - Description: `Present` is the only value accepted.
     Configurations using `Ensure = 'Absent'` will throw an Error!
 
-GlobalAdminAccount
+Credential
 
 - Required: Yes
-- Description: Credentials of an Office365 Global Admin
+- Description: Credentials of the account to authenticate with
 
 Identity
 
@@ -67,7 +67,7 @@ IPBlockList
     EXOHostedConnectionFilterPolicy TestHostedConnectionFilterPolicy {
         Ensure             = 'Present'
         Identity           = 'TestPolicy'
-        GlobalAdminAccount = $GlobalAdminAccount
+        Credential         = $Credential
         AdminDisplayName   = 'This policiy is a test'
         EnableSafeList     = $true
         IPAllowList        = @('192.168.1.100', '10.1.1.0/24', '172.16.5.1-172.16.5.150')

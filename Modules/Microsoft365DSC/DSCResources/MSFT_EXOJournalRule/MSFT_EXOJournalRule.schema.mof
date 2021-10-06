@@ -8,7 +8,7 @@ class MSFT_EXOJournalRule : OMI_BaseResource
     [Write, Description("Specifies whether the Journal Rule is enabled or not.")] Boolean Enabled;
     [Write, Description("The Scope parameter specifies the scope of email messages to which the journal rule is applied"), ValueMap{"Global","Internal","External"}, Values{"Global","Internal","External"}] String RuleScope;
     [Write, Description("Present ensures the rule exists, Absent that it does not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
