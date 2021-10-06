@@ -1,11 +1,6 @@
 # Change log for Microsoft365DSC
 
-1.21.1006.2
-
-* DEPENDENCIES
-  * Updated MSCloudLoginAssistant to version 1.0.71;
-
-1.21.1006.1
+1.21.1006.3
 
 * BREAKING CHANGES
 
@@ -26,7 +21,7 @@
   * Removing dependency on AzureADPreview;
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.137;
   * Updated MicrosoftTeams to version 2.6.0;
-  * Updated MSCloudLoginAssistant to version 1.0.69;
+  * Updated MSCloudLoginAssistant to version 1.0.72;
 * MISC
   * Renamed the GlobalAdminAccount parameter to Credential across all resources;
   * Revamped entire Azure AD Workload to leverage Microsoft Graph;
