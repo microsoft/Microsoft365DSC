@@ -117,7 +117,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.69"
+            RequiredVersion = "1.0.70"
         },
         @{
             ModuleName      = "PnP.PowerShell"
@@ -201,7 +201,12 @@
             IconUri      = 'https://github.com/microsoft/Microsoft365DSC/blob/Dev/Modules/Microsoft365DSC/Dependencies/Images/Logo.png?raw=true'
 
             # ReleaseNotes of this module
-            ReleaseNotes = "* BREAKING CHANGES
+            ReleaseNotes = "1.21.1006.2
+
+            * DEPENDENCIES
+              * Updated MSCloudLoginAssistant to version 1.0.70;
+
+            * BREAKING CHANGES
             * AADApplication
               * Removed support for the Oauth2AllowImplicitFlow, SamlMetadataUrl and
                 Oauth2AllowUrlPathMatching properties;
