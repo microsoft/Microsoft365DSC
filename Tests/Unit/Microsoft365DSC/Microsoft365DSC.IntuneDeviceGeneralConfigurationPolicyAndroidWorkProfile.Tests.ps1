@@ -37,6 +37,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credential"
             }
 
+            Mock -CommandName Select-MGProfile -MockWith {
+
+            }
+
             Mock -CommandName New-MgDeviceManagementDeviceConfiguration -MockWith {
             }
             Mock -CommandName Update-MgDeviceManagementDeviceConfiguration -MockWith {
