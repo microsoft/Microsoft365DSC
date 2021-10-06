@@ -117,7 +117,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.70"
+            RequiredVersion = "1.0.71"
         },
         @{
             ModuleName      = "PnP.PowerShell"
@@ -204,7 +204,7 @@
             ReleaseNotes = "1.21.1006.2
 
             * DEPENDENCIES
-              * Updated MSCloudLoginAssistant to version 1.0.70;
+              * Updated MSCloudLoginAssistant to version 1.0.71;
 
             * BREAKING CHANGES
             * AADApplication
