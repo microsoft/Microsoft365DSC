@@ -1,6 +1,11 @@
 # Change log for Microsoft365DSC
 
-1.21.1006.3
+# 1.21.1013.1
+
+* MISC
+  * Obfuscating Authentication Secrets from the Verbose output;
+
+# 1.21.1006.3
 
 * BREAKING CHANGES
 

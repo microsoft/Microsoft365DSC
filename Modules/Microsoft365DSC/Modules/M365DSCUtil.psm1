@@ -148,6 +148,7 @@ function Convert-M365DscHashtableToString
         $Hashtable
     )
     $values = @()
+    $parametersToObfuscate = @('ApplicationId', 'ApplicationSecret', 'TenantId', "CertificateThumnbprint", "CertificatePath", "CertificatePassword", "Credential")
     foreach ($pair in $Hashtable.GetEnumerator())
     {
         try
@@ -168,7 +169,14 @@ function Convert-M365DscHashtableToString
                 }
                 else
                 {
-                    $str = "$($pair.Key)=$($pair.Value)"
+                    if ($parametersToObfuscate.Contains($pair.Key))
+                    {
+                        $str = "$($pair.Key)=***"
+                    }
+                    else
+                    {
+                        $str = "$($pair.Key)=$($pair.Value)"
+                    }
                 }
             }
             $values += $str
