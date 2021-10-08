@@ -200,7 +200,6 @@ function New-EXOAntiPhishPolicy
     )
     try
     {
-        $VerbosePreference = 'Continue'
         $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishPolicyParams -Operation 'New' )
         Write-Verbose -Message "Creating New AntiPhishPolicy $($BuiltParams.Name) with values: $(Convert-M365DscHashtableToString -Hashtable $BuiltParams)"
         New-AntiPhishPolicy @BuiltParams
@@ -1041,7 +1040,6 @@ function New-M365DSCConnection
         [ValidateSet("v1.0", "beta")]
         $ProfileName = "v1.0"
     )
-
     if ($Workload -eq "MicrosoftTeams")
     {
         try
@@ -2129,7 +2127,6 @@ function Update-M365DSCExportAuthenticationResults
         [System.Collections.Hashtable]
         $Results
     )
-
     if ($ConnectionMode -eq 'Credentials')
     {
         $Results.Credential = Resolve-Credentials -UserName "credential"
@@ -2160,7 +2157,7 @@ function Update-M365DSCExportAuthenticationResults
     }
     else
     {
-        if ($Results.ContainsKey("Credential") -and $ConnectionMode -ne 'CredentialsWithApplicationId')
+        if ($Results.ContainsKey("Credential") -and ($ConnectionMode -ne 'CredentialsWithApplicationId' -or $ConnectionMode -ne 'Credentials'))
         {
             $Results.Remove("Credential") | Out-Null
         }
@@ -2297,11 +2294,10 @@ function Get-M365DSCExportContentForResource
     # Ensure the string properties are properly formatted;
     $Results = Format-M365DSCString -Properties $Results `
         -ResourceName $ResourceName
-
     $content = "        $ResourceName " + (New-Guid).ToString() + "`r`n"
     $content += "        {`r`n"
     $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath
-    if ($ConnectionMode -eq 'Credential')
+    if ($ConnectionMode -eq 'Credentials')
     {
         $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
             -ParameterName "Credential"
