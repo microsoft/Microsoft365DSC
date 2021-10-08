@@ -2419,7 +2419,7 @@ function Get-M365DSCComponentsForAuthenticationType
                     -not $parameters.Contains('CertificatePassword') -and `
                     -not $parameters.Contains('TenantId')))
         {
-            $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+            $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
         }
 
         #Case - Resource certificate info and TenantId
@@ -2429,7 +2429,7 @@ function Get-M365DSCComponentsForAuthenticationType
                     $parameters.Contains('CertificatePassword')) -and `
                 $parameters.Contains('TenantId'))
         {
-            $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+            $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
         }
 
         # Case - Resource contains ApplicationSecret
@@ -2438,14 +2438,14 @@ function Get-M365DSCComponentsForAuthenticationType
                 $parameters.Contains('ApplicationSecret') -and `
                 $parameters.Contains('TenantId'))
         {
-            $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+            $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
         }
 
         # Case - Resource contains Credential
         elseif ($AuthenticationMethod.Contains("Credentials") -and `
                 $parameters.Contains('Credential'))
         {
-            $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+            $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
         }
     }
     return $Components
@@ -2462,7 +2462,7 @@ function Get-M365DSCAllResources
     $result = @()
     foreach ($resource in $allResources)
     {
-        $result += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+        $result += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
     }
 
     return $result

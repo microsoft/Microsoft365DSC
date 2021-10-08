@@ -465,7 +465,7 @@ function Export-TargetResource
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
-            Credential    = $Credential
+            Credential            = $Credential
             ApplicationSecret     = $ApplicationSecret
         }
 

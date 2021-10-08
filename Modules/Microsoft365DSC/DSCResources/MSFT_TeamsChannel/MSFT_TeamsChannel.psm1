@@ -355,12 +355,12 @@ function Export-TargetResource
             {
                 Write-Host "        |---[$i/$($channels.Length)] $($channel.DisplayName)" -NoNewline
 
-                if ($ConnectionMode -eq 'Credential')
+                if ($ConnectionMode -eq 'Credentials')
                 {
                     $params = @{
                         TeamName           = $team.DisplayName
                         DisplayName        = $channel.DisplayName
-                        Credential = $Credential
+                        Credential         = $Credential
                     }
                 }
                 else
