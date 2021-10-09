@@ -1,6 +1,10 @@
 # Change log for Microsoft365DSC
 
-1.21.1006.3
+1.21.1013.1
+
+* IntuneDeviceCompliancePolicyAndroidDeviceOwner
+  Initial release;
+# 1.21.1006.3
 
 * BREAKING CHANGES
 
