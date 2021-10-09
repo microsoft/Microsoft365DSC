@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "IntuneDeviceCompliancePolicyDeviceOwner" -GenericStubModule $GenericStubPath
+    -DscResource "IntuneDeviceCompliancePolicyAndroidDeviceOwner" -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
