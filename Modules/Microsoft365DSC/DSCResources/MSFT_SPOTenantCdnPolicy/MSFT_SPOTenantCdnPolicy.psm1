@@ -64,14 +64,14 @@ function Get-TargetResource
         $ExcludeRestrictedKey = $Policies.Keys | Where-Object -FilterScript {$_.Value -eq "ExcludeRestrictedSiteClassifications"}
         $IncludeFileExtensionsKey = $Policies.Keys | Where-Object -FilterScript {$_.Value -eq "IncludeFileExtensions"}
 
-        if ($Policies.$ExcludeRestrictedKey)
+        if ($ExcludeRestrictedKey)
         {
-            $ExcludeRestrictedSiteClassificationsValue = $Policies.$ExcludeRestrictedKey.Split(',')
+            $ExcludeRestrictedSiteClassificationsValue = $ExcludeRestrictedKey.Split(',')
         }
 
-        if ($Policies.$IncludeFileExtensionsKey)
+        if ($IncludeFileExtensionsKey)
         {
-            $IncludeFileExtensionsValue = $Policies.$IncludeFileExtensionsKey.Split(',')
+            $IncludeFileExtensionsValue = $IncludeFileExtensionsKey.Split(',')
         }
 
         return @{
