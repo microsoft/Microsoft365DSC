@@ -16,3 +16,6 @@ Modules/Microsoft365DSC/DSCResources/MSFT_EXOMalwareFilterPolicy/Set-MalwareFilt
 Modules/start-extraction.ps1
 Modules/Microsoft365DSC/DSCResources/MSFT_EXOAvailabilityAddressSpace/Add-AvailabilityAddressSpace-parameterset.txt
 *.log
+
+# generated docs
+docs/site

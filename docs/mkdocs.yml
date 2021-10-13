@@ -1,0 +1,74 @@
+site_name: Microsoft365DSC - Your Cloud Configuration
+site_url: https://microsoft.github.io/Microsoft365DSC
+nav:
+  - Home: 'index.md'
+  - User guide:
+    - 'How to install': 'user-guide/install-first-module.md'
+    - 'Write your First Microsoft365DSC Configuration': 'user-guide/write-first-config.md'
+    - 'Extracting Configuration from an Existing Microsoft 365 Tenant': 'user-guide/extract-config.md'
+    - 'Apply a Configuration to your Microsoft 365 Tenant': 'user-guide/apply-config.md'
+    - 'Monitor Tenants for Configuration Drifts': 'user-guide/monitor-tenants.md'
+    - 'Assess Tenants Against a Blueprint': 'user-guide/assess-tenants-blueprint.md'
+    - 'Generating Reports': 'user-guide/generate-reports.md'
+  - Contributing:
+    - 'Guidelines': 'contributing/contribution-guidelines.md'
+    - 'Getting started': 'contributing/getting-started.md'
+    - 'Develop a New Resource': 'contributing/develop-new-resource.md'
+  - Concepts:
+    - 'Breaking Changes Policy': 'concepts/breaking-changes.md'
+    - 'OneDrive & SharePoint Permissions': 'concepts/odsp-permissions.md'
+  - Tutorials:
+    - 'How to Create a M365DSC Blueprint': 'tutorials/create-blueprint.md'
+    - 'Resources': 'tutorials/resources.md'
+  - Releases:
+    - 'Releases': 'releases/releases.md'
+  - About:
+    - 'Why Microsoft365DSC': 'about/why.md'
+    - 'License': 'about/license.md'
+    - 'Contributors': 'about/contributors.md'
+
+theme:
+  name: 'material'
+  logo: images/promo.png
+  favicon: images/favicon.ico
+  icon:
+    repo: fontawesome/brands/git-alt
+  palette:
+    - scheme: default
+      primary: blue
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.instant
+    - search.share
+markdown_extensions:
+  - admonition
+  - codehilite:
+     guess_lang: false
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.snippets
+  - def_list
+extra:
+  social:
+    - icon: fontawesome/brands/twitter
+      link: 'https://twitter.com/Microsoft365DSC'
+    - icon: fontawesome/brands/youtube
+      link: 'https://www.youtube.com/channel/UCveScabVT6pxzqYgGRu17iw'
+    - icon: fontawesome/solid/link
+      link: 'https://www.powershellgallery.com/packages/Microsoft365DSC/'
+  generator: false
+  analytics:
+    provider: google
+    property: UA-209929913-1
+repo_url: https://github.com/microsoft/Microsoft365DSC
+edit_uri: tree/dev/docs/docs
+copyright: Microsoft365DSC
