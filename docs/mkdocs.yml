@@ -25,7 +25,6 @@ nav:
   - About:
     - 'Why Microsoft365DSC': 'about/why.md'
     - 'License': 'about/license.md'
-    - 'Contributors': 'about/contributors.md'
 
 theme:
   name: 'material'
