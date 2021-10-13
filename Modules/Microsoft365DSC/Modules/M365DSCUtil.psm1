@@ -1164,7 +1164,7 @@ function New-M365DSCConnection
             Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
-                -CertificatePassword $InboundParameters.CertificatePassword `
+                -CertificatePassword $InboundParameters.CertificatePassword.Password `
                 -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName

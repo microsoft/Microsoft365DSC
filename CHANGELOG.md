@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+## unreleased changes
+
+* Fix appsecret parameter on Connect-M365Tenant
+* Fix passing of certificate password in M365DSCReverse
+
+
 1.21.1006.3
 
 * BREAKING CHANGES
