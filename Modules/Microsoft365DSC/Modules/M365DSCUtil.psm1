@@ -930,7 +930,8 @@ function Export-M365DSCConfiguration
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
-                -GenerateInfo $GenerateInfo
+                -GenerateInfo $GenerateInfo `
+                -AllComponents
         }
     }
 }
@@ -2293,7 +2294,7 @@ function Get-M365DSCExportContentForResource
     $content = "        $ResourceName " + (New-Guid).ToString() + "`r`n"
     $content += "        {`r`n"
     $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath
-    if ($ConnectionMode -eq 'Credential')
+    if ($ConnectionMode -eq 'Credentials')
     {
         $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
             -ParameterName "Credential"
@@ -2507,7 +2508,7 @@ function Get-M365DSCWorkloadsListFromResourceNames
     [Array] $workloads = @()
     foreach ($resource in $ResourceNames)
     {
-        switch ($resource.Substring(5,2))
+        switch ($resource.Substring(0,2).ToUpper())
         {
             "AA" {
                 if (-not $workloads.Contains("MicrosoftGraph"))

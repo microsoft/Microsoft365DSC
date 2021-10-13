@@ -109,7 +109,7 @@
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
-            RequiredVersion = "2.0.137"
+            RequiredVersion = "2.0.138"
         },
         @{
             ModuleName      = "MicrosoftTeams"
@@ -121,7 +121,7 @@
         },
         @{
             ModuleName      = "PnP.PowerShell"
-            RequiredVersion = "1.7.0"
+            RequiredVersion = "1.8.0"
         },
         @{
             ModuleName      = "ReverseDSC"

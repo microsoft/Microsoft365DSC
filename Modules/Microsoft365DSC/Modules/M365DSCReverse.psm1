@@ -213,7 +213,7 @@ function Start-M365DSCConfigurationExtract
         $version = $version[0].Version
         $DSCContent = "# Generated with Microsoft365DSC version $version`r`n"
         $DSCContent += "# For additional information on how to use Microsoft365DSC, please visit https://aka.ms/M365DSC`r`n"
-        if ($ConnectionMode -eq 'Credential')
+        if ($ConnectionMode -eq 'Credentials')
         {
             $DSCContent += "param (`r`n"
             $DSCContent += "    [parameter()]`r`n"
@@ -248,7 +248,7 @@ function Start-M365DSCConfigurationExtract
         }
         $DSCContent += "Configuration $ConfigurationName`r`n{`r`n"
 
-        if ($ConnectionMode -eq 'Credential')
+        if ($ConnectionMode -eq 'Credentials')
         {
             $DSCContent += "    param (`r`n"
             $DSCContent += "        [parameter()]`r`n"
@@ -353,19 +353,20 @@ function Start-M365DSCConfigurationExtract
 
         $i = 1
         $ResourcesToExport = @()
+        $ResourcesPath = @()
         foreach ($ResourceModule in $AllResources)
         {
-            $VerbosePreference ='Continue'
             try
             {
                 $resourceName = $ResourceModule.Name.Split('.')[0] -replace 'MSFT_', ''
-                if (($null -ne $Components -and $Components -contains $resourceName) -or $AllComponents -or `
-                    ($null -eq $Components -and $null -eq $Workloads) -and `
-                    ($ComponentsSpecified -or -not $ComponentsToSkip -contains $resourceName) -and `
-                    $resourcesNotSupported -notcontains ($ResourceModule.Name.Split('.')[0] -replace 'MSFT_', ''))
+
+                if ((($Components -and ($Components -contains $resourceName)) -or $AllComponents -or `
+                    (-not $Components -and $null -eq $Workloads)) -and `
+                    ($ComponentsSpecified -or ($ComponentsToSkip -notcontains $resourceName)) -and `
+                    $resourcesNotSupported -notcontains $resourceName)
                 {
-                    Write-Verbose -Message "ResourceModule: $ResourceModule"
-                    $ResourcesToExport += $ResourceModule
+                    $ResourcesToExport += $ResourceName
+                    $ResourcesPath += $ResourceModule
                 }
             }
             catch
@@ -401,7 +402,7 @@ function Start-M365DSCConfigurationExtract
             }
         }
 
-        foreach ($resource in $ResourcesToExport)
+        foreach ($resource in $ResourcesPath)
         {
             Import-Module $resource.FullName | Out-Null
             $MaxProcessesExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("MaxProcesses")
@@ -454,7 +455,7 @@ function Start-M365DSCConfigurationExtract
                 if ($GenerateInfo)
                 {
                     $exportString += "`r`n        # For information on how to use this resource, please refer to:`r`n"
-                    $exportString += "        # https://github.com/microsoft/Microsoft365DSC/wiki/$($resource.Name.Split('.')[0] -replace 'MSFT_', '')`r`n"
+                    $exportString += "        # https://github.com/microsoft/Microsoft365DSC/wiki/$($resource.NAme.Split('.')[0] -replace 'MSFT_', '')`r`n"
                 }
                 $exportString += Export-TargetResource @parameters
                 $i++
@@ -467,7 +468,7 @@ function Start-M365DSCConfigurationExtract
         $DSCContent += "    }`r`n"
         $DSCContent += "}`r`n"
 
-        if ($ConnectionMode -eq 'Credential')
+        if ($ConnectionMode -eq 'Credentials')
         {
             #region Add the Prompt for Required Credentials at the top of the Configuration
             $credsContent = ""
@@ -643,7 +644,14 @@ function Start-M365DSCConfigurationExtract
 
         if ($shouldOpenOutputDirectory)
         {
-            Invoke-Item -Path $OutputDSCPath
+            try
+            {
+                Invoke-Item -Path $OutputDSCPath
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+            }
         }
     }
     catch
