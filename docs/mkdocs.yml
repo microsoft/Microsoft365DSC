@@ -28,7 +28,7 @@ nav:
 
 theme:
   name: 'material'
-  logo: images/promo.png
+  logo: images/Promo.png
   favicon: images/favicon.ico
   icon:
     repo: fontawesome/brands/git-alt
