@@ -1,7 +1,9 @@
 site_name: Microsoft365DSC - Your Cloud Configuration
 site_url: https://microsoft.github.io/Microsoft365DSC
 nav:
-  - Home: 'index.md'
+  - Home:
+    - 'Introduction': 'index.md'
+    - 'What is Microsoft365DSC?': 'home/what-is-M365DSC.md'
   - User guide:
     - 'How to install': 'user-guide/install-first-module.md'
     - 'Write your First Microsoft365DSC Configuration': 'user-guide/write-first-config.md'
@@ -61,6 +63,8 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.snippets
   - def_list
+  - attr_list
+  - md_in_html
 extra:
   social:
     - icon: fontawesome/brands/twitter
