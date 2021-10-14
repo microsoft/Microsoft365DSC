@@ -24,7 +24,7 @@ jobs:
                -MainModulePath 'Modules\Microsoft365DSC' `
                -ResourceModuleName 'Microsoft365DSC'
       - name: Extract some files
-        run: 7z x Microsoft365DSC_1.0.0_wikicontent.zip -o./content
+        run: 7z x Microsoft365DSC_1.0.0_wikicontent.zip -ocontent
       - name: Commit files  # transfer the new html files back into the repository
         run: |
           git config --local user.name  ${{ github.actor }}
