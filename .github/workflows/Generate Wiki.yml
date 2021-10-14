@@ -5,9 +5,6 @@ jobs:
   GenerateWiki:
     runs-on: windows-latest
 
-    # Only when run from the main repo
-    if: github.repository == 'microsoft/Microsoft365DSC'
-
     steps:
       - uses: actions/checkout@v2
       - name: Install Modules
@@ -22,7 +19,5 @@ jobs:
                -Type 'Wiki' `
                -MainModulePath 'Modules\Microsoft365DSC' `
                -ResourceModuleName 'Microsoft365DSC'
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Upload Wiki Content
-          path: D:\a\Microsoft365DSC\Microsoft365DSC\Microsoft365DSC_1.0.0_wikicontent.zip
+      - name: Extract some files
+        run: 7z x Microsoft365DSC_1.0.0_wikicontent.zip
