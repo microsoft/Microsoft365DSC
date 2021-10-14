@@ -24,4 +24,14 @@ jobs:
                -MainModulePath 'Modules\Microsoft365DSC' `
                -ResourceModuleName 'Microsoft365DSC'
       - name: Extract some files
-        run: 7z x Microsoft365DSC_1.0.0_wikicontent.zip
+        run: 7z x Microsoft365DSC_1.0.0_wikicontent.zip -o./content
+      - name: Commit files  # transfer the new html files back into the repository
+        run: |
+          git config --local user.name  ${{ github.actor }}
+          git add ./docs/docs/test
+          git commit -m "Updating the repository GitHub html pages in the docs folder"
+      - name: Push changes  # push the output folder to your repo
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          force: true
