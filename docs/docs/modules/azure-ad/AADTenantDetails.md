@@ -2,9 +2,18 @@
 
 ## Parameters
 
-| Parameter        | Attribute | DataType | Description                | Allowed Values |
-| ---------------- | --------- | -------- | -------------------------- | -------------- |
-| IsSingleInstance | Key       | String   | Only valid value is 'Yes'. | Yes            |
+| Parameter                            | Attribute | DataType      | Description                                                                                                  | Allowed Values |
+| ------------------------------------ | --------- | ------------- | ------------------------------------------------------------------------------------------------------------ | -------------- |
+| IsSingleInstance                     | Key       | String        | Only valid value is 'Yes'.                                                                                   | Yes            |
+| MarketingNotificationEmails          | Write     | StringArray[] | Email-addresses from the people who should receive Marketing Notifications                                   |                |
+| SecurityComplianceNotificationMails  | Write     | StringArray[] | Email-addresses from the people who should receive Security Compliance Notifications                         |                |
+| SecurityComplianceNotificationPhones | Write     | StringArray[] | Phone Numbers from the people who should receive Security Notifications                                      |                |
+| TechnicalNotificationMails           | Write     | StringArray[] | Email-addresses from the people who should receive Technical Notifications                                   |                |
+| Credential                           | Write     | PSCredential  | Credentials of the Azure Active Directory Admin                                                              |                |
+| ApplicationId                        | Write     | String        | Id of the Azure Active Directory application to authenticate with.                                           |                |
+| TenantId                             | Write     | String        | Id of the Azure Active Directory tenant used for authentication.                                             |                |
+| ApplicationSecret                    | Write     | String        | Secret of the Azure Active Directory application to authenticate with.                                       |                |
+| CertificateThumbprint                | Write     | String        | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. |                |
 
 ## AAD Tenant Details
 
