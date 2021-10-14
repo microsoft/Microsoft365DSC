@@ -1,5 +1,9 @@
 name: Generate Wiki Content
-on: [pull_request]
+on:
+  push:
+    branches:
+      - master
+      - Dev
 
 jobs:
   GenerateWiki:
