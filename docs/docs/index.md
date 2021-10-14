@@ -1,8 +1,31 @@
-# What is Microsoft365DSC - Your Cloud Configuration?
+!!! cite "What is Microsoft365DSC?"
+
+    Microsoft365DSC is a free open-source tool led by Microsoft engineers and maintained by the community.
+
+
+# Export your configuration
 
 Microsoft365DSC is the most comprehensive and complete solution to have your Microsoft 365 tenant configuration simple and stable. It's an Open-Source initiative hosted on [GitHub](https://github.com/Microsoft/Microsoft365DSC), lead by Microsoft engineers and maintained by the community.
 
-![gui](images/GUI.png)
+![Export](images/home_export.png)
+
+# Monitor your configuration
+
+If something changes in your tenant's configuration, the continous monitoring feature of Microsoft365DSC, will automatically detect a drift and can act upon it.
+
+![Monitor](images/home_monitor.png)
+
+# Secure your configuration
+
+Microsoft365DSC is the most comprehensive and complete solution to have your Microsoft 365 tenant configuration simple and stable. It's an Open-Source initiative hosted on [GitHub](https://github.com/Microsoft/Microsoft365DSC), lead by Microsoft engineers and maintained by the community.
+
+![Export](images/home_export.png)
+
+# Test your configuration
+
+Microsoft365DSC is the most comprehensive and complete solution to have your Microsoft 365 tenant configuration simple and stable. It's an Open-Source initiative hosted on [GitHub](https://github.com/Microsoft/Microsoft365DSC), lead by Microsoft engineers and maintained by the community.
+
+![Export](images/home_export.png)
 
 ## Why Microsoft365DSC?
 
