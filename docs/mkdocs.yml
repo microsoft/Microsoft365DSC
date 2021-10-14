@@ -17,13 +17,17 @@ nav:
   - Concepts:
     - 'Breaking Changes Policy': 'concepts/breaking-changes.md'
     - 'OneDrive & SharePoint Permissions': 'concepts/odsp-permissions.md'
+    - 'Consent Flow': 'concepts/consent-flow.md'
   - Tutorials:
     - 'How to Create a M365DSC Blueprint': 'tutorials/create-blueprint.md'
     - 'Resources': 'tutorials/resources.md'
-  - Releases:
-    - 'Releases': 'releases/releases.md'
+  - Modules:
+    - 'Overview': 'modules/overview.md'
+    - 'Azure AD':
+      - 'AADTenantDetails': 'modules/azure-ad/AADTenantDetails.md'
   - About:
     - 'Why Microsoft365DSC': 'about/why.md'
+    - 'Release Notes': 'about/release-notes.md'
     - 'License': 'about/license.md'
 
 theme:
