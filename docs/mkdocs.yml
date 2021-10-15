@@ -14,8 +14,7 @@ nav:
       - 'Assess Tenants Against a Blueprint': 'user-guide/assess-tenants-blueprint.md'
       - 'Generating Reports': 'user-guide/generate-reports.md'
     - Advanced:
-      - 'How to Create a M365DSC Blueprint': 'tutorials/create-blueprint.md'
-      - 'Resources': 'tutorials/resources.md'
+      - 'How to Create a M365DSC Blueprint': 'user-guide/create-blueprint.md'
   - Contributing:
     - 'Guidelines': 'contributing/contribution-guidelines.md'
     - 'Getting started': 'contributing/getting-started.md'
@@ -40,6 +39,7 @@ nav:
     - 'Why Microsoft365DSC': 'about/why.md'
     - 'Changelog': 'about/changelog.md'
     - 'License': 'about/license.md'
+    - 'Community Resources': 'about/resources.md'
 plugins:
   - search
   - include_dir_to_nav
