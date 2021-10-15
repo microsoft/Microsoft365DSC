@@ -198,7 +198,7 @@ function Start-M365DSCConfigurationExtract
         }
         elseif ($AuthMethods -Contains 'Credentials')
         {
-            $ConnectionMode = 'Credential'
+            $ConnectionMode = 'Credentials'
             if ($null -ne $Credential -and $Credential.UserName.Contains("@"))
             {
                 $organization = $Credential.UserName.Split("@")[1]
@@ -213,7 +213,7 @@ function Start-M365DSCConfigurationExtract
         $version = $version[0].Version
         $DSCContent = "# Generated with Microsoft365DSC version $version`r`n"
         $DSCContent += "# For additional information on how to use Microsoft365DSC, please visit https://aka.ms/M365DSC`r`n"
-        if ($ConnectionMode -eq 'Credential')
+        if ($ConnectionMode -eq 'Credentials')
         {
             $DSCContent += "param (`r`n"
             $DSCContent += "    [parameter()]`r`n"
@@ -248,7 +248,7 @@ function Start-M365DSCConfigurationExtract
         }
         $DSCContent += "Configuration $ConfigurationName`r`n{`r`n"
 
-        if ($ConnectionMode -eq 'Credential')
+        if ($ConnectionMode -eq 'Credentials')
         {
             $DSCContent += "    param (`r`n"
             $DSCContent += "        [parameter()]`r`n"
@@ -336,7 +336,7 @@ function Start-M365DSCConfigurationExtract
             -Value "0" `
             -Description "Default Value Used to Ensure a Configuration Data File is Generated"
 
-        if ($ConnectionMode -eq 'Credential')
+        if ($ConnectionMode -eq 'Credentials')
         {
             # Add the Credential to the Credentials List
             Save-Credentials -UserName "credential"
@@ -353,78 +353,20 @@ function Start-M365DSCConfigurationExtract
 
         $i = 1
         $ResourcesToExport = @()
+        $ResourcesPath = @()
         foreach ($ResourceModule in $AllResources)
         {
             try
             {
-                $resourceName = $ResourceModule.Name.Split('.')[0].Replace('MSFT_', '')
-                [array]$currentWorkload = $ResourceName.Substring(0, 2)
-                switch ($currentWorkload.ToUpper())
+                $resourceName = $ResourceModule.Name.Split('.')[0] -replace 'MSFT_', ''
+
+                if ((($Components -and ($Components -contains $resourceName)) -or $AllComponents -or `
+                    (-not $Components -and $null -eq $Workloads)) -and `
+                    ($ComponentsSpecified -or ($ComponentsToSkip -notcontains $resourceName)) -and `
+                    $resourcesNotSupported -notcontains $resourceName)
                 {
-                    'AA'
-                    {
-                        $currentWorkload = 'AAD';
-                        break
-                    }
-                    'EX'
-                    {
-                        $currentWorkload = 'EXO';
-                        break
-                    }
-                    'IN'
-                    {
-                        $currentWorkload = 'INTUNE';
-                        break
-                    }
-                    'O3'
-                    {
-                        $currentWorkload = 'O365';
-                        break
-                    }
-                    'OD'
-                    {
-                        $currentWorkload = 'OD';
-                        break
-                    }
-                    'PL'
-                    {
-                        $currentWorkload = 'PLANNER';
-                        break
-                    }
-                    'PP'
-                    {
-                        $currentWorkload = 'PP';
-                        break
-                    }
-                    'SC'
-                    {
-                        $currentWorkload = 'SC';
-                        break
-                    }
-                    'SP'
-                    {
-                        $currentWorkload = 'SPO';
-                        break
-                    }
-                    'TE'
-                    {
-                        $currentWorkload = 'Teams';
-                        break
-                    }
-                    default
-                    {
-                        $currentWorkload = $null;
-                        break
-                    }
-                }
-                if (($null -ne $Components -and
-                        ($Components -contains $resourceName -or $Components -contains ("chck" + $resourceName))) -or
-                    $AllComponents -or `
-                    ($null -eq $Components -and $null -eq $Workloads) -and `
-                    ($ComponentsSpecified -or -not $ComponentsToSkip.Contains($resourceName)) -and `
-                    $resourcesNotSupported -notcontains $ResourceModule.Name.Split('.')[0].Replace('MSFT_', ''))
-                {
-                    $ResourcesToExport += $ResourceModule
+                    $ResourcesToExport += $ResourceName
+                    $ResourcesPath += $ResourceModule
                 }
             }
             catch
@@ -460,7 +402,7 @@ function Start-M365DSCConfigurationExtract
             }
         }
 
-        foreach ($resource in $ResourcesToExport)
+        foreach ($resource in $ResourcesPath)
         {
             Import-Module $resource.FullName | Out-Null
             $MaxProcessesExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("MaxProcesses")
@@ -506,14 +448,14 @@ function Start-M365DSCConfigurationExtract
             {
                 $parameters.Add("CertificatePassword", $CertificatePassword)
             }
-            if ($ComponentsToSkip -notcontains $resource.Name.Split('.')[0].Replace('MSFT_', ''))
+            if ($ComponentsToSkip -notcontains $resource.Name.Split('.')[0] -replace 'MSFT_', '')
             {
-                Write-Host "[$i/$($ResourcesToExport.Length)] Extracting [$($resource.Name.Split('.')[0].Replace('MSFT_', ''))]..." -NoNewline
+                Write-Host "[$i/$($ResourcesToExport.Length)] Extracting [$($resource.Name.Split('.')[0] -replace 'MSFT_', '')]..." -NoNewline
                 $exportString = ""
                 if ($GenerateInfo)
                 {
                     $exportString += "`r`n        # For information on how to use this resource, please refer to:`r`n"
-                    $exportString += "        # https://github.com/microsoft/Microsoft365DSC/wiki/$($resource.Name.Split('.')[0].Replace('MSFT_', ''))`r`n"
+                    $exportString += "        # https://github.com/microsoft/Microsoft365DSC/wiki/$($resource.NAme.Split('.')[0] -replace 'MSFT_', '')`r`n"
                 }
                 $exportString += Export-TargetResource @parameters
                 $i++
@@ -526,7 +468,7 @@ function Start-M365DSCConfigurationExtract
         $DSCContent += "    }`r`n"
         $DSCContent += "}`r`n"
 
-        if ($ConnectionMode -eq 'Credential')
+        if ($ConnectionMode -eq 'Credentials')
         {
             #region Add the Prompt for Required Credentials at the top of the Configuration
             $credsContent = ""
@@ -702,7 +644,14 @@ function Start-M365DSCConfigurationExtract
 
         if ($shouldOpenOutputDirectory)
         {
-            Invoke-Item -Path $OutputDSCPath
+            try
+            {
+                Invoke-Item -Path $OutputDSCPath
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+            }
         }
     }
     catch
@@ -732,7 +681,7 @@ function Get-M365DSCResourcesByWorkloads
     $Components = @()
     foreach ($resource in $modules)
     {
-        $ResourceName = $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+        $ResourceName = $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
         foreach ($Workload in $Workloads)
         {
             if ($ResourceName.StartsWith($Workload,'CurrentCultureIgnoreCase') -and
