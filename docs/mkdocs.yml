@@ -28,6 +28,12 @@ nav:
     - 'Overview': 'modules/overview.md'
     - 'Azure AD':
       - 'AADTenantDetails': 'modules/azure-ad/AADTenantDetails.md'
+    - 'Exchange':
+      - 'EXOAcceptedDomain': 'modules/exchange/EXOAcceptedDomain.md'
+    - 'Intune':
+      - 'IntuneAppConfigurationPolicy': 'modules/intune/IntuneAppConfigurationPolicy.md'
+    - 'Office365':
+      - 'O365AdminAuditLogConfig': 'modules/office365/O365AdminAuditLogConfig.md'
   - About:
     - 'Why Microsoft365DSC': 'about/why.md'
     - 'Changelog': 'about/changelog.md'
