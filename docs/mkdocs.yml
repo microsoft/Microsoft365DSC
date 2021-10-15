@@ -38,7 +38,9 @@ nav:
     - 'Why Microsoft365DSC': 'about/why.md'
     - 'Changelog': 'about/changelog.md'
     - 'License': 'about/license.md'
-
+plugins:
+  - search
+  - include_dir_to_nav
 theme:
   name: 'material'
   logo: images/Promo.png
