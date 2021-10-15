@@ -4,14 +4,18 @@ nav:
   - Home:
     - 'Introduction': 'index.md'
     - 'What is Microsoft365DSC?': 'home/what-is-M365DSC.md'
-  - User guide:
-    - 'How to install': 'user-guide/install-first-module.md'
-    - 'Write your First Microsoft365DSC Configuration': 'user-guide/write-first-config.md'
-    - 'Extracting Configuration from an Existing Microsoft 365 Tenant': 'user-guide/extract-config.md'
-    - 'Apply a Configuration to your Microsoft 365 Tenant': 'user-guide/apply-config.md'
-    - 'Monitor Tenants for Configuration Drifts': 'user-guide/monitor-tenants.md'
-    - 'Assess Tenants Against a Blueprint': 'user-guide/assess-tenants-blueprint.md'
-    - 'Generating Reports': 'user-guide/generate-reports.md'
+  - User Guide:
+    - 'Get Started':
+      - 'How to install': 'user-guide/install-first-module.md'
+      - 'Write your First Microsoft365DSC Configuration': 'user-guide/write-first-config.md'
+      - 'Extracting Configuration from an Existing Microsoft 365 Tenant': 'user-guide/extract-config.md'
+      - 'Apply a Configuration to your Microsoft 365 Tenant': 'user-guide/apply-config.md'
+      - 'Monitor Tenants for Configuration Drifts': 'user-guide/monitor-tenants.md'
+      - 'Assess Tenants Against a Blueprint': 'user-guide/assess-tenants-blueprint.md'
+      - 'Generating Reports': 'user-guide/generate-reports.md'
+    - Advanced:
+      - 'How to Create a M365DSC Blueprint': 'tutorials/create-blueprint.md'
+      - 'Resources': 'tutorials/resources.md'
   - Contributing:
     - 'Guidelines': 'contributing/contribution-guidelines.md'
     - 'Getting started': 'contributing/getting-started.md'
@@ -20,9 +24,6 @@ nav:
     - 'Breaking Changes Policy': 'concepts/breaking-changes.md'
     - 'OneDrive & SharePoint Permissions': 'concepts/odsp-permissions.md'
     - 'Consent Flow': 'concepts/consent-flow.md'
-  - Tutorials:
-    - 'How to Create a M365DSC Blueprint': 'tutorials/create-blueprint.md'
-    - 'Resources': 'tutorials/resources.md'
   - Modules:
     - 'Overview': 'modules/overview.md'
     - 'Azure AD':
