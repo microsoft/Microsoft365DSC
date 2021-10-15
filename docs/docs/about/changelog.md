@@ -206,7 +206,7 @@
     to version 2.0.126;
   - Updated PnP.PowerShell to version 1.6.0;
 
-# 1.21.602.1
+## 1.21.602.1
 
 - AADMSGroups
   - Fix for the export where the MailNickName was being prompted;
@@ -221,7 +221,7 @@
   - Fix for Teams authentication. Improvements on session
     reuse.
 
-# 1.21.526.2
+## 1.21.526.2
 
 - EXOSafeAttachmentRule
 - Fixed issue #1213 Policy X already has rule Y associated with it
@@ -237,7 +237,7 @@
 - EXOTransportRule
   - Fix #1230 Changed ExceptIfSenderInRecipientList to array
 
-# 1.21.519.2
+## 1.21.519.2
 
 - AzureADRoleDefinition
   - Fix an issue where deprecated roles were not increasing
@@ -253,7 +253,7 @@
   - Forces a Global load of the new MicrosoftTeams module for
     Teams resources;
 
-#1.21.519.1
+## 1.21.519.1
 
 - TeamsClientConfiguration
   - Fixed an issue where the RestrictedSenderList was not properly
@@ -262,7 +262,7 @@
 - DEPENDENCIES
   - Updated AzureADPreview to version 2.0.2.136;
 
-# 1.21.512.1
+## 1.21.512.1
 
 - EXOOfflineAddresBook
   - Fixed issue in Set-TargetResource where ConfiguredAttributes
@@ -271,14 +271,14 @@
   - Added several new parameters
   - Fixed several bugs on extract
 
-# 1.21.505.1
+## 1.21.505.1
 
 - EXOTransportRule
   - Adding ExceptIfSCLOver and SCLOver.
   - Fixes SubjectOrBodyContainsWords parameter not being an array.
   - Fixes DateTime formating on ExpiryDate and ActivationDate
 
-# 1.21.428.2
+## 1.21.428.2
 
 - EXOTransportRule
   - Fixed typo in accepted value for ApplyHtmlDisclaimerLocation;
@@ -297,13 +297,13 @@
   - Revamp of Telemetry;
   - Using Shorter cmdlet names;
 
-# 1.21.421.2
+## 1.21.421.2
 
 - MISC
   - Updated the SkipModuleReload logic for a dozen of EXO modules
     which were failing authentication;
 
-# 1.21.421.1
+## 1.21.421.1
 
 - AADConditionalAccessPolicy
   - Fix to allow 'undefined' as a value for multiple parameters;
@@ -317,7 +317,7 @@
   - Refactored connections across all resources to help with
     Telemetry regarding what auth method users are leveraging.
 
-# 1.21.414.2
+## 1.21.414.2
 
 - AADConditionalAccessPolicy
   - Fixed an issue with the default values for device states;
@@ -341,7 +341,7 @@
   - Updated MSCloudLoginAssistant to version 1.0.51;
   - Updated PnP.PowerShell to version 1.5.0;
 
-# 1.21.407.1
+## 1.21.407.1
 
 - AADConditionalAccessPolicy
   - BREAKING: Renamed the 'includeDeviceStates' and 'excludeDeviceStates'
@@ -353,7 +353,7 @@
   - Fixed issue in most EXO resources where AzureAD App information
     was not returned by the Get-TargetResource function;
 
-# 1.21.331.1
+## 1.21.331.1
 
 - AADApplication
   - Added support for API Permissions;
@@ -377,7 +377,7 @@
 - MISC
   - Fixed issue with ODSettings and ExcludedFileExtensions
 
-# 1.21.317.1
+## 1.21.317.1
 
 - DEPENDENCIES
   - Updated Exchange Management to version 2.0.4 (REDO);
@@ -386,12 +386,12 @@
   - Fixed issue when using CertificatePath and CertificatePassword
     for SPO resource;
 
-# 1.21.224.1
+## 1.21.224.1
 
 - DEPENDENCIES
   - Rolled-back ExchangeOnlineManagement to 2.0.3;
 
-# 1.21.217.1
+## 1.21.217.1
 
 - SPOSite
   - Fixed an issue related to new cmdlets in PnP.PowerShell;
@@ -399,7 +399,7 @@
   - Updated ExchangeOnlineManagement to 2.0.4;
   - Updated PNP.PowerShell to 1.3.0;
 
-# 1.21.203.1
+## 1.21.203.1
 
 - SPOSiteDesignRights
   - Fixed an issue that was preventing this resource from
@@ -417,7 +417,7 @@
   - Updated Microsoft.Graph.Teams to version 1.3.1;
   - Updated MSCloudLoginAssistant to version 1.0.48;
 
-# 1.21.127.1
+## 1.21.127.1
 
 - AADNamedLocation
   - Initial Release;
@@ -426,14 +426,14 @@
   - Updated Microsoft.PowerApps.Administration.PowerShell to
     1.0.208;
 
-# 1.21.120.1
+## 1.21.120.1
 
 - DEPENDENCIES
   - Updated MSCloudLoginAssistant to version 1.0.45;
   - Replaced the SharePointPnPPowerShellOnline dependency by the new
     PnP.PowerShell core module;
 
-# 1.21.113.1
+## 1.21.113.1
 
 - AADTenantDetails
   - Fixes an issue where the Set would fail if Service Principal
@@ -446,7 +446,7 @@
   - Updated Microsoft.PowerApps.Administration.PowerShell
     to 2.0.104;
 
-# 1.20.1223.1
+## 1.20.1223.1
 
 - SPOHubSite
   - Changed Export logic to make the url parameterized
@@ -468,7 +468,7 @@
   - Added the GlobalAccount Parameter to the example
     that is outputted after using the Export GUI
 
-# 1.20.1216.1
+## 1.20.1216.1
 
 - AADConditionalAccessPolicy
   - Initial Release;
@@ -480,7 +480,7 @@
 - TeamsChannelTab
   - Initial Release;
 
-# 1.20.1209.1
+## 1.20.1209.1
 
 - IntuneAppProtectionPolicyiOS
   - Initial Release;
