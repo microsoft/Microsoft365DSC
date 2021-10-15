@@ -15,31 +15,27 @@ Configuration Example
     {
         IntuneDeviceCompliancePolicyAndroidDeviceOwner f7d82525-b7c0-475c-9d5e-16fafdfa487a
         {
-            Description                                        = "";
-            DisplayName                                        = "DeviceOwner";
-            DeviceThreatProtectionEnabled                      = $False;
-            DeviceThreatProtectionRequiredSecurityLevel        = "unavailable";
-            AdvancedThreatProtectionRequiredSecurityLevel      = "unavailable";
-            SecurityRequireSafetyNetAttestationBasicIntegrity  = $False;
-            SecurityRequireSafetyNetAttestationCertifiedDevice = $False;
-            OsMinimumVersion                                   = "10"
-            OsMaximumVersion                                   = "11"
-            MinAndroidSecurityPatchLevel                       = "2020-03-01"
-            PasswordRequired                                   = $True;
-            PasswordMinimumLength                              = 6;
-            PasswordMinimumLetterCharacters                    = 1;
-            PasswordMinimumLowerCaseCharacters                 = 1;
-            PasswordMinimumNonLetterCharacters                 = 2;
-            PasswordMinimumNumericCharacters                   = 1;
-            PasswordMinimumSymbolCharacters                    = 1;
-            PasswordMinimumUpperCaseCharacters                 = 1;
-            PasswordRequiredType                               = "numericComplex";
-            PasswordMinutesOfInactivityBeforeLock              = 5;
-            PasswordExpirationDays                             = 90;
-            PasswordPreviousPasswordCountToBlock               = 13;
-            StorageRequireEncryption                           = $True;
+            AdvancedThreatProtectionRequiredSecurityLevel      = "low";
+            ApplicationId                                      = $ConfigurationData.NonNodeData.ApplicationId;
+            ApplicationSecret                                  = $ConfigurationData.NonNodeData.ApplicationSecret;
+            DeviceThreatProtectionEnabled                      = $True;
+            DeviceThreatProtectionRequiredSecurityLevel        = "secured";
+            DisplayName                                        = "AE - COPE";
             Ensure                                             = "Present";
-            Credential                                         = $Credsglobaladmin;
+            OsMaximumVersion                                   = "13";
+            OsMinimumVersion                                   = "10";
+            PasswordExpirationDays                             = 90;
+            PasswordMinimumLength                              = 6;
+            PasswordMinutesOfInactivityBeforeLock              = 5;
+            PasswordPreviousPasswordCountToBlock               = 13;
+            PasswordRequired                                   = $True;
+            PasswordRequiredType                               = "numericComplex";
+            RoleScopeTagIds                                    = @("0");
+            SecurityRequireIntuneAppIntegrity                  = $True;
+            SecurityRequireSafetyNetAttestationBasicIntegrity  = $True;
+            SecurityRequireSafetyNetAttestationCertifiedDevice = $True;
+            StorageRequireEncryption                           = $True;
+            TenantId                                           = $ConfigurationData.NonNodeData.TenantId;
         }
     }
 }

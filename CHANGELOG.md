@@ -2,6 +2,8 @@
 
 1.21.1013.1
 
+* IntuneDeviceCompliancePolicyAndroidDeviceOwner
+  Initial release;
 * MISC
   * Added support for PowerShell 7 and above;
 * DEPENDENCIES
