@@ -30,7 +30,7 @@ nav:
       - 'AADTenantDetails': 'modules/azure-ad/AADTenantDetails.md'
   - About:
     - 'Why Microsoft365DSC': 'about/why.md'
-    - 'Release Notes': 'about/release-notes.md'
+    - 'Changelog': 'about/changelog.md'
     - 'License': 'about/license.md'
 
 theme:
