@@ -4,7 +4,14 @@
 
 * IntuneDeviceCompliancePolicyAndroidDeviceOwner
   Initial release;
-# 1.21.1006.3
+* MISC
+  * Added support for PowerShell 7 and above;
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.138;
+  * Updated MSCloudLoginAssistant to version 1.0.73;
+  * Updated PnP.PowerShell to version 1.8.0;
+
+1.21.1006.3
 
 * BREAKING CHANGES
 
