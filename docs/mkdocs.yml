@@ -26,7 +26,8 @@ nav:
     - 'Consent Flow': 'concepts/consent-flow.md'
   - Modules:
     - 'Overview': 'modules/overview.md'
-    - 'Azure AD': '/modules/azure-ad/'
+    - 'Azure AD':
+      - 'AADTenantDetails': 'modules/azure-ad/AADTenantDetails.md'
     - 'Exchange':
       - 'EXOAcceptedDomain': 'modules/exchange/EXOAcceptedDomain.md'
     - 'Intune':
