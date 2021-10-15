@@ -39,7 +39,7 @@ nav:
     - 'Why Microsoft365DSC': 'about/why.md'
     - 'Changelog': 'about/changelog.md'
     - 'License': 'about/license.md'
-    - 'Community Resources': 'about/resources.md'
+    - 'Community Resources': 'about/community-resources.md'
 plugins:
   - search
   - include_dir_to_nav
