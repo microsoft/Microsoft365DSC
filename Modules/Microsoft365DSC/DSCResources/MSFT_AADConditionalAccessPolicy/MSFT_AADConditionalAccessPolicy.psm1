@@ -907,7 +907,7 @@ function Set-TargetResource
                     $userguid = $null
                     try
                     {
-                        $userguid = (Get-MgUser -UserId $includeuser).ObjectId
+                        $userguid = (Get-MgUser -UserId $includeuser).Id
                     }
                     catch
                     {
@@ -983,7 +983,7 @@ function Set-TargetResource
                 {
                     $userguid = $null
                     try
-                    { $userguid = (Get-MgUser -UserId $excludeuser).ObjectId
+                    { $userguid = (Get-MgUser -UserId $excludeuser).Id
                     }
                     catch
                     {
