@@ -24,16 +24,16 @@ nav:
     - 'Breaking Changes Policy': 'concepts/breaking-changes.md'
     - 'OneDrive & SharePoint Permissions': 'concepts/odsp-permissions.md'
     - 'Consent Flow': 'concepts/consent-flow.md'
-  - Modules:
-    - 'Overview': 'modules/overview.md'
-    - 'Azure AD':
-      - 'AADTenantDetails': 'modules/azure-ad/AADTenantDetails.md'
-    - 'Exchange':
-      - 'EXOAcceptedDomain': 'modules/exchange/EXOAcceptedDomain.md'
-    - 'Intune':
-      - 'IntuneAppConfigurationPolicy': 'modules/intune/IntuneAppConfigurationPolicy.md'
-    - 'Office365':
-      - 'O365AdminAuditLogConfig': 'modules/office365/O365AdminAuditLogConfig.md'
+  - Resources:
+    - 'Overview': 'resources/overview.md'
+    - 'Azure AD': 'resources/azure-ad'
+    - 'AADTenantDetails': 'resources/azure-ad/AADTenantDetails.md'
+    - 'Exchange': 'resources/exchange'
+    - 'EXOAcceptedDomain': 'resources/exchange/EXOAcceptedDomain.md'
+    - 'Intune': 'resources/intune'
+    - 'IntuneAppConfigurationPolicy': 'resources/intune/IntuneAppConfigurationPolicy.md'
+    - 'Office365': 'resources/office365'
+    - 'O365AdminAuditLogConfig': 'resources/office365/O365AdminAuditLogConfig.md'
   - About:
     - 'Why Microsoft365DSC': 'about/why.md'
     - 'Changelog': 'about/changelog.md'
