@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-1.21.1006.3
+## 1.21.1006.3
 
 - BREAKING CHANGES
 
@@ -31,7 +31,7 @@
   - Renaming the ComponentsToExtract property from the Export-M365DSCConfiguration
     cmdlet to Components;
 
-# 1.21.922.1
+## 1.21.922.1
 
 - AADApplication
 
@@ -45,7 +45,7 @@
 - DEPENDENCIES
   - Updated MSCloudLoginAssistant to version 1.0.68;
 
-# 1.21.915.1
+## 1.21.915.1
 
 - EXOAntiPhishPolicy
   - Added support for EnableFirstContactSafetyTips & EnableViaTag;
@@ -76,7 +76,7 @@
   - Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.136;
   - Updated MSCloudLoginAssistant to version 1.0.67;
 
-# 1.21.908.1
+## 1.21.908.1
 
 - PPTenantSettings
   - Initial Release;
@@ -85,7 +85,7 @@
 - MISC
   - Fixing duplicate teams names in reports;
 
-# 1.21.901.1
+## 1.21.901.1
 
 - DEPENDENCIES;
   - Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.133;
@@ -93,7 +93,7 @@
 - MISC
   - Additional display alignment fixes for Export;
 
-# 1.21.825.1
+## 1.21.825.1
 
 - SPOTenantSettings
   - Added the DisabledWebpartIds & ConditionalAccessPolicy properties;
@@ -104,7 +104,7 @@
 - MISC
   - Additional display alignment fixes for Export;
 
-# 1.21.804.1
+## 1.21.804.1
 
 - SCDLPComplianceRule
   - Fixed issue where SCDLPCompliance rule failed when using senstitivy labels;
@@ -114,7 +114,7 @@
   - Added support for ApplicationSecret in SPO resources;
   - Revamped the entire display from an Export;
 
-# 1.21.728.1
+## 1.21.728.1
 
 - DEPENDENCIES;
   - Updated MSCloudLoginAssistant to version 1.0.59;
@@ -123,7 +123,7 @@
   - Added support for Service Principal Authentication for all Intune resources;
   - Deprecated GUI and added reference to new Web based GUI;
 
-# 1.21.721.1
+## 1.21.721.1
 
 - AADMSGroup
   - Fixed an issue where the Visibility parameter was never properly returned
@@ -134,7 +134,7 @@
   - Fixed the StorageQuotaWarningLevel value returned by the Get-TargetResource
     function.
 
-# 1.21.714.1
+## 1.21.714.1
 
 - EXOHostedContentFilterPolicy
   - Fixed issues with null values falsely detected as drifts;
@@ -148,7 +148,7 @@
     if an organization is using a custom App Insights account;
     ISSUE #1222
 
-# 1.21.707.1
+## 1.21.707.1
 
 - EXODkimSigningConfig
   - Change the logic to remove an entry to disable it instead since the
@@ -170,7 +170,7 @@
     a discrepancy.
     ISSUES #1178 & #1249
 
-# 1.21.630.1
+## 1.21.630.1
 
 - O365User
   - Fix where export was throwing an error about an empty DSCBlock
@@ -178,7 +178,7 @@
 - SPOTenantSettings
   - Added support for specifying MarkNewFilesSensitiveByDefault
 
-# 1.21.616.1
+## 1.21.616.1
 
 - SPOSiteAuditSettings
   - Fixed issue with Export where property Ensure was added
@@ -188,12 +188,12 @@
   - Updated Microsoft.Graph.Planner to version 1.6.0;
   - Updated Microsoft.Graph.Teams to version 1.6.0;
 
-# 1.21.609.2
+## 1.21.609.2
 
 - Fixed dependency on Microsoft.Graph.Authentication for
   version 1.5.0.
 
-# 1.21.609.1
+## 1.21.609.1
 
 - TeamsUpgradePolicy
   - Fixes to how we are retrieving users assigned to the
