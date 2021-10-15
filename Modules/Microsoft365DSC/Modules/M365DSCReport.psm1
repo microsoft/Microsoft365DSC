@@ -1,12 +1,17 @@
 function New-M365DSCConfigurationToHTML
 {
     [CmdletBinding()]
+    [OutputType([System.String])]
     Param(
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $ConfigurationPath,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
+        [Array]
+        $ParsedContent,
+
+        [Parameter()]
         [System.String]
         $OutputPath,
 
@@ -15,16 +20,22 @@ function New-M365DSCConfigurationToHTML
         $SortProperties
     )
 
-    $TemplateFile = Get-Item $ConfigurationPath
-    $parsedContent = ConvertTo-DSCObject -Path $ConfigurationPath
-    $TemplateName = $TemplateFile.Name.Split('.')[0]
+    if ([System.String]::IsNullOrEmpty($ParsedContent))
+    {
+        $TemplateFile = Get-Item $ConfigurationPath
+        $ParsedContent = ConvertTo-DSCObject -Path $ConfigurationPath
+        $TemplateName = $TemplateFile.Name.Split('.')[0]
+    }
+    else
+    {
+        $TemplateName = "Configuration Report"
+    }
     $fullHTML = "<h1>" + $TemplateName + "</h1>"
     $fullHTML += "<div style='width:100%;text-align:center;'>"
     $fullHTML += "<h2>Template Details</h2>"
     foreach ($resource in $parsedContent)
     {
-        $partHTML = "<div width='100%' style='text-align:center;'><table width='80%' style='margin-left:auto;
-    margin-right:auto;'>"
+        $partHTML = "<div width='100%' style='text-align:center;'><table width='80%' style='margin-left:auto; margin-right:auto;'>"
         $partHTML += "<tr><th rowspan='" + ($resource.Keys.Count) + "' width='20%'>"
         $partHTML += "<img src='" + (Get-IconPath -ResourceName $resource.ResourceName) + "' />"
         $partHTML += "</th>"
@@ -81,7 +92,11 @@ function New-M365DSCConfigurationToHTML
         $fullHtml += $partHTML
     }
 
-    $fullHtml | Out-File $OutputPath
+    if (-not [System.String]::IsNullOrEmpty($OutputPath))
+    {
+        $fullHtml | Out-File $OutputPath
+    }
+    return $fullHTML
 }
 
 
@@ -274,17 +289,25 @@ function Compare-M365DSCConfigurations
     [CmdletBinding()]
     [OutputType([System.Array])]
     param (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Source,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Destination,
 
         [Parameter()]
         [System.Boolean]
-        $CaptureTelemetry = $true
+        $CaptureTelemetry = $true,
+
+        [Parameter()]
+        [Array]
+        $SourceObject,
+
+        [Parameter()]
+        [Array]
+        $DestinationObject
     )
 
     if ($CaptureTelemetry)
@@ -297,8 +320,15 @@ function Compare-M365DSCConfigurations
     }
 
     [Array] $Delta = @()
-    [Array] $SourceObject  = ConvertTo-DSCObject -Path $Source
-    [Array] $DestinationObject  = ConvertTo-DSCObject -Path $Destination
+
+    if (-not $SourceObject)
+    {
+        [Array] $SourceObject  = ConvertTo-DSCObject -Path $Source
+    }
+    if (-not $DestinationObject)
+    {
+        [Array] $DestinationObject  = ConvertTo-DSCObject -Path $Destination
+    }
 
     # Loop through all items in the source array
     $i = 1
@@ -543,15 +573,15 @@ function New-M365DSCDeltaReport
 {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Source,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Destination,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter()]
         [System.String]
         $OutputPath,
 
@@ -565,7 +595,11 @@ function New-M365DSCDeltaReport
 
         [Parameter()]
         [System.String]
-        $HeaderFilePath
+        $HeaderFilePath,
+
+        [Parameter()]
+        [Array]
+        $Delta
     )
 
     #region Telemetry
@@ -575,7 +609,10 @@ function New-M365DSCDeltaReport
     #endregion
 
     Write-Verbose -Message 'Obtaining Delta between the source and destination configurations'
-    $Delta = Compare-M365DSCConfigurations -Source $Source -Destination $Destination -CaptureTelemetry $false
+    if (-not $Delta)
+    {
+        $Delta = Compare-M365DSCConfigurations -Source $Source -Destination $Destination -CaptureTelemetry $false
+    }
 
     $reportSB = [System.Text.StringBuilder]::new()
     #region Custom Header
@@ -756,6 +793,13 @@ function New-M365DSCDeltaReport
         }
     }
     [void]$reportSB.AppendLine("</body></html>")
-    $reportSB.ToString() | Out-File $OutputPath
-    Invoke-Item $OutputPath
+    if (-not [System.String]::IsNullOrEmpty($OutputPath))
+    {
+        $reportSB.ToString() | Out-File $OutputPath
+        Invoke-Item $OutputPath
+    }
+    else
+    {
+        return $reportSB.ToString()
+    }
 }
