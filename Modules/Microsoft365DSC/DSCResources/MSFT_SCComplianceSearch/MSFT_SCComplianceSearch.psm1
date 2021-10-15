@@ -63,7 +63,7 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
 
     Write-Verbose -Message "Getting configuration of SCComplianceSearch for $Name"
@@ -79,13 +79,11 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
     }
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -125,7 +123,7 @@ function Get-TargetResource
                 PublicFolderLocation                  = $Search.PublicFolderLocation
                 SharePointLocation                    = $Search.SharePointLocation
                 SharePointLocationExclusion           = $Search.SharePointLocationExclusion
-                GlobalAdminAccount                    = $GlobalAdminAccount
+                Credential                    = $Credential
                 Ensure                                = 'Present'
             }
 
@@ -157,9 +155,9 @@ function Get-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -237,16 +235,17 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
 
     Write-Verbose -Message "Setting configuration of SCComplianceSearch for $Name"
+
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -258,7 +257,7 @@ function Set-TargetResource
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentSearch.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove("GlobalAdminAccount")
+        $CreationParams.Remove("Credential")
         $CreationParams.Remove("Ensure")
 
         Write-Verbose "Creating new Compliance Search $Name calling the New-ComplianceSearch cmdlet."
@@ -269,7 +268,7 @@ function Set-TargetResource
         $SetParams = $PSBoundParameters
 
         #Remove unused parameters for Set-ComplianceTag cmdlet
-        $SetParams.Remove("GlobalAdminAccount")
+        $SetParams.Remove("Credential")
         $SetParams.Remove("Ensure")
         $SetParams.Remove("Name")
         $SetParams.Remove("Case")
@@ -348,15 +347,14 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -366,7 +364,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('Credential') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -386,7 +384,7 @@ function Export-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $Credential
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
@@ -394,13 +392,11 @@ function Export-TargetResource
         -SkipModuleReload $true
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -424,7 +420,7 @@ function Export-TargetResource
             Write-Host "        |---[$i/$($searches.Name.Count)] $($search.Name)" -NoNewline
             $params = @{
                 Name               = $search.Name
-                GlobalAdminAccount = $GlobalAdminAccount
+                Credential = $Credential
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -433,7 +429,7 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
+                -Credential $Credential
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
@@ -452,7 +448,7 @@ function Export-TargetResource
                 $Params = @{
                     Name               = $search.Name
                     Case               = $case.Name
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
                 Write-Host "        |---[$i/$($searches.Name.Count)] $($search.Name)" -NoNewline
                 $Results = Get-TargetResource @Params
@@ -462,7 +458,7 @@ function Export-TargetResource
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
-                    -GlobalAdminAccount $GlobalAdminAccount
+                    -Credential $Credential
                 $dscContent += $currentDSCBlock
 
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -486,9 +482,9 @@ function Export-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `

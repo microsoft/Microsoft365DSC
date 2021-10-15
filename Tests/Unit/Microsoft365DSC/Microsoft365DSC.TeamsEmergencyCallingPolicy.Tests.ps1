@@ -23,7 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             $Global:PartialExportFileName = "c:\TestPath"
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
@@ -56,7 +56,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Description               = "Desc";
                     Ensure                    = "Present";
-                    GlobalAdminAccount        = $GlobalAdminAccount;
+                    Credential        = $Credential;
                     Identity                  = "TestPolicy";
                     NotificationDialOutNumber = "+1234567890";
                     NotificationGroup         = "john.smith@contoso.onmicrosoft.com";
@@ -87,7 +87,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Description               = "Desc";
                     Ensure                    = "Present";
-                    GlobalAdminAccount        = $GlobalAdminAccount;
+                    Credential        = $Credential;
                     Identity                  = "TestPolicy";
                     NotificationDialOutNumber = "+34565432345"; #drift
                     NotificationGroup         = "john.smith@contoso.onmicrosoft.com";
@@ -125,7 +125,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Description               = "Desc";
                     Ensure                    = "Present";
-                    GlobalAdminAccount        = $GlobalAdminAccount;
+                    Credential        = $Credential;
                     Identity                  = "TestPolicy";
                     NotificationDialOutNumber = "+1234567890";
                     NotificationGroup         = "john.smith@contoso.onmicrosoft.com";
@@ -157,7 +157,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Description               = "Desc";
                     Ensure                    = "Absent";
-                    GlobalAdminAccount        = $GlobalAdminAccount;
+                    Credential        = $Credential;
                     Identity                  = "TestPolicy";
                     NotificationDialOutNumber = "+1234567890";
                     NotificationGroup         = "john.smith@contoso.onmicrosoft.com";
@@ -192,7 +192,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When the No Optional Parameters are Specified" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount              = $GlobalAdminAccount;
+                    Credential              = $Credential;
                     Identity                        = "TestPolicy";
                 }
             }
@@ -205,7 +205,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-CsTeamsEmergencyCallingPolicy -MockWith {

@@ -22,7 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -60,7 +60,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Ensure             = 'Present'
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Priority           = 1
                     SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
                     Name               = 'TestPolicy'
@@ -88,7 +88,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Ensure             = 'Present'
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Priority           = 1
                     Mode               = "Enable"
                     SharePointLocation = @("https://contoso.sharepoint.com/sites/demo")
@@ -126,7 +126,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Ensure             = 'Absent'
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
                     Name               = 'TestPolicy'
                 }
@@ -155,7 +155,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Ensure                      = 'Present'
-                    GlobalAdminAccount          = $GlobalAdminAccount
+                    Credential          = $Credential
                     SharePointLocation          = @("https://contoso.sharepoint.com/sites/demo", "https://northwind.com")
                     SharePointLocationException = @("https://contoso.sharepoint.com/sites/ex", "https://northwind.com/ex")
                     OneDriveLocation            = @("https://contoso.sharepoint.com/sites/demo", "https://northwind.com")
@@ -209,7 +209,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-DLPCompliancePolicy -MockWith {

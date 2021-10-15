@@ -22,7 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.onmicrosoft.com", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.onmicrosoft.com", $secpasswd)
 
             $Global:PartialExportFileName = "c:\TestPath"
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
@@ -84,7 +84,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisableCompanyWideSharingLinks = "NotDisabled";
                     DisableFlows                   = $False;
                     Ensure                         = "Present";
-                    GlobalAdminAccount             = $GlobalAdminAccount;
+                    Credential             = $Credential;
                     LocaleId                       = 1033;
                     StorageMaximumLevel            = 26214400;
                     StorageWarningLevel            = 25574400;
@@ -182,7 +182,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisableCompanyWideSharingLinks = "NotDisabled";
                     DisableFlows                   = $False;
                     Ensure                         = "Present";
-                    GlobalAdminAccount             = $GlobalAdminAccount;
+                    Credential             = $Credential;
                     LocaleId                       = 1033;
                     StorageMaximumLevel            = 26214400;
                     StorageWarningLevel            = 25574400;
@@ -286,7 +286,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisableCompanyWideSharingLinks = "NotDisabled";
                     DisableFlows                   = $False;
                     Ensure                         = "Present";
-                    GlobalAdminAccount             = $GlobalAdminAccount;
+                    Credential             = $Credential;
                     LocaleId                       = 1033;
                     StorageMaximumLevel            = 26214400;
                     StorageWarningLevel            = 25574400;
@@ -382,7 +382,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisableCompanyWideSharingLinks = "NotDisabled";
                     DisableFlows                   = $False;
                     Ensure                         = "Present";
-                    GlobalAdminAccount             = $GlobalAdminAccount;
+                    Credential             = $Credential;
                     LocaleId                       = 1033;
                     StorageMaximumLevel            = 26214400;
                     StorageWarningLevel            = 25574400;
@@ -478,7 +478,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisableCompanyWideSharingLinks = "NotDisabled";
                     DisableFlows                   = $False;
                     Ensure                         = "Present";
-                    GlobalAdminAccount             = $GlobalAdminAccount;
+                    Credential             = $Credential;
                     LocaleId                       = 1033;
                     StorageMaximumLevel            = 26214400;
                     StorageWarningLevel            = 25574400;
@@ -569,7 +569,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 $CalledOnce = $false

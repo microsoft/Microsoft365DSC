@@ -39,7 +39,7 @@ Configuration Example
             ExceptIfHasSenderOverride           = $False;
             ExceptIfProcessingLimitExceeded     = $False;
             GenerateIncidentReport              = @("SiteAdmin");
-            GlobalAdminAccount                  = $Credsglobaladmin;
+            Credential                          = $Credsglobaladmin;
             HasSenderOverride                   = $False;
             IncidentReportContent               = @("DocumentLastModifier","Detections","Severity","DetectionDetails","OriginalContent");
             Name                                = "Low volume EU Sensitive content found";

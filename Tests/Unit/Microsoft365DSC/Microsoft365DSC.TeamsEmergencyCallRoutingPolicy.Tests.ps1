@@ -23,7 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "Pass@word1)" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             $Global:PartialExportFileName = "c:\TestPath"
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
@@ -66,7 +66,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         OnlinePSTNUsage     = ''
                     } -ClientOnly)
                     Ensure                         = "Present";
-                    GlobalAdminAccount             = $GlobalAdminAccount;
+                    Credential             = $Credential;
                     Identity                       = "UnitTest";
                 }
 
@@ -100,7 +100,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         OnlinePSTNUsage     = ''
                     } -ClientOnly)
                     Ensure                         = "Present";
-                    GlobalAdminAccount             = $GlobalAdminAccount;
+                    Credential             = $Credential;
                     Identity                       = "UnitTest";
                 }
 
@@ -144,7 +144,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         OnlinePSTNUsage     = ''
                     } -ClientOnly)
                     Ensure                         = "Present";
-                    GlobalAdminAccount             = $GlobalAdminAccount;
+                    Credential             = $Credential;
                     Identity                       = "UnitTest";
                 }
 
@@ -182,7 +182,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         OnlinePSTNUsage     = ''
                     } -ClientOnly)
                     Ensure                         = "Absent";
-                    GlobalAdminAccount             = $GlobalAdminAccount;
+                    Credential             = $Credential;
                     Identity                       = "UnitTest";
                 }
 
@@ -217,7 +217,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When the No Optional Parameters are Specified" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount              = $GlobalAdminAccount;
+                    Credential              = $Credential;
                     Identity                        = "UnitTest";
                 }
             }
@@ -230,7 +230,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-CsTeamsEmergencyCallRoutingPolicy -MockWith {

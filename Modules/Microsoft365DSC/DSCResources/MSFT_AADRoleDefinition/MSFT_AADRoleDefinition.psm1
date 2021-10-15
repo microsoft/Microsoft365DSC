@@ -43,7 +43,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -55,23 +55,27 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration of Azure AD role definition"
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
-        -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'beta'
+    Select-MgProfile -Name 'Beta'
+
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
@@ -81,7 +85,7 @@ function Get-TargetResource
         {
             if ($null -ne $Id -or $Id -ne "")
             {
-                $AADRoleDefinition = Get-AzureADMSRoleDefinition -Id $Id
+                $AADRoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -Id $Id
             }
         }
         catch
@@ -90,7 +94,7 @@ function Get-TargetResource
         }
         if ($null -eq $AADRoleDefinition)
         {
-            $AADRoleDefinition = Get-AzureADMSRoleDefinition -Filter "DisplayName eq '$($DisplayName)'"
+            $AADRoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($DisplayName)'"
         }
         if ($null -eq $AADRoleDefinition)
         {
@@ -108,7 +112,7 @@ function Get-TargetResource
                 TemplateId            = $AADRoleDefinition.TemplateId
                 Version               = $AADRoleDefinition.Version
                 Ensure                = "Present"
-                GlobalAdminAccount    = $GlobalAdminAccount
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
@@ -170,7 +174,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -182,17 +186,21 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration of Azure AD role definition"
+
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -203,7 +211,7 @@ function Set-TargetResource
     $currentParameters.Remove("ResourceScopes")  | Out-Null
     $currentParameters.Remove("TenantId")  | Out-Null
     $currentParameters.Remove("CertificateThumbprint")  | Out-Null
-    $currentParameters.Remove("GlobalAdminAccount")  | Out-Null
+    $currentParameters.Remove("Credential")  | Out-Null
     $currentParameters.Remove("Ensure")  | Out-Null
 
     $rolePermissionsObj = @()
@@ -219,20 +227,21 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating New AzureAD role defition {$DisplayName}"
         $currentParameters.Remove("Id") | Out-Null
-        New-AzureADMSRoleDefinition @currentParameters
+        New-MgRoleManagementDirectoryRoleDefinition @currentParameters
     }
     # Role definition should exist and will be configured to desired state
     if ($Ensure -eq 'Present' -and $currentAADRoleDef.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing AzureAD role definition {$DisplayName}"
-        $currentParameters.Id = $currentAADRoleDef.Id
-        Set-AzureADMSRoleDefinition @currentParameters
+        $currentParameters.Add("UnifiedRoleDefinitionId", $currentAADRoleDef.Id)
+        $currentParameters.Remove("Id") | Out-Null
+        Update-MgRoleManagementDirectoryRoleDefinition @currentParameters
     }
     # Role definition exists but should not
     elseif ($Ensure -eq 'Absent' -and $currentAADRoleDef.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing AzureAD role definition {$DisplayName}"
-        Remove-AzureADMSRoleDefinition -Id $currentAADRoleDef.Id
+        Remove-MgRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $currentAADRoleDef.Id
     }
 }
 
@@ -281,7 +290,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -293,16 +302,19 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -313,7 +325,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove("ApplicationId") | Out-Null
     $ValuesToCheck.Remove("TenantId") | Out-Null
     $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
@@ -338,7 +350,7 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -350,32 +362,40 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'Beta'
+    Select-MgProfile -Name 'beta'
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
     $dscContent = ''
     $i = 1
-    Write-Host "`r`n" -NoNewline
     try
     {
-        [array]$AADRoleDefinitions = Get-AzureADMSRoleDefinition -ErrorAction Stop
+        [array]$AADRoleDefinitions = Get-MgRoleManagementDirectoryRoleDefinition -ErrorAction Stop
+        if ($AADRoleDefinitions.Length -gt 0)
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
         foreach ($AADRoleDefinition in $AADRoleDefinitions)
         {
             Write-Host "    |---[$i/$($AADRoleDefinitions.Count)] $($AADRoleDefinition.DisplayName)" -NoNewline
             $Params = @{
-                GlobalAdminAccount    = $GlobalAdminAccount
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
@@ -394,7 +414,7 @@ function Export-TargetResource
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
-                    -GlobalAdminAccount $GlobalAdminAccount
+                    -Credential $Credential
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
@@ -407,7 +427,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $_
+        Write-Host $Global:M365DSCEmojiRedX
         Write-Verbose -Message $_
         Add-M365DSCEvent -Message $_ -EntryType 'Error' `
             -EventID 1 -Source $($MyInvocation.MyCommand.Source)

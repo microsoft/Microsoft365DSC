@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.com", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.com", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -63,7 +63,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsSingleInstance              = 'Yes'
                     Ensure                        = 'Present'
                     Identity                      = 'Default'
-                    GlobalAdminAccount            = $GlobalAdminAccount
+                    Credential            = $Credential
                     AllowClickThrough             = $false
                     AllowSafeDocsOpen             = $false
                     BlockUrls                     = @()
@@ -77,7 +77,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IsSingleInstance              = 'Yes'
                         Ensure                        = 'Present'
                         Identity                      = 'Default'
-                        GlobalAdminAccount            = $GlobalAdminAccount
+                        Credential            = $Credential
                         AllowClickThrough             = $false
                         AllowSafeDocsOpen             = $false
                         BlockUrls                     = @()
@@ -99,7 +99,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsSingleInstance              = 'Yes'
                     Ensure                        = 'Present'
                     Identity                      = 'Default'
-                    GlobalAdminAccount            = $GlobalAdminAccount
+                    Credential            = $Credential
                     AllowClickThrough             = $false
                     AllowSafeDocsOpen             = $false
                     BlockUrls                     = @()
@@ -112,7 +112,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IsSingleInstance              = 'Yes'
                         Ensure                        = 'Present'
                         Identity                      = 'Default'
-                        GlobalAdminAccount            = $GlobalAdminAccount
+                        Credential            = $Credential
                         AllowClickThrough             = $true
                         AllowSafeDocsOpen             = $true
                         BlockUrls                     = @()
@@ -138,7 +138,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsSingleInstance              = 'Yes'
                     Ensure                        = 'Present'
                     Identity                      = 'Invalid'
-                    GlobalAdminAccount            = $GlobalAdminAccount
+                    Credential            = $Credential
                     AllowClickThrough             = $false
                     AllowSafeDocsOpen             = $false
                     BlockUrls                     = @()
@@ -176,7 +176,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-AtpPolicyForO365 -MockWith {

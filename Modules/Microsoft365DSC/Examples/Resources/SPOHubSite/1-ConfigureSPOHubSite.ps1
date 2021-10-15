@@ -24,7 +24,7 @@ Configuration Example
             AllowedToJoin        = @("admin@office365dsc.onmicrosoft.com", "superuser@office365dsc.onmicrosoft.com")
             SiteDesignId         = "f7eba920-9cca-4de8-b5aa-1da75a2a893c"
             Ensure               = "Present"
-            GlobalAdminAccount   = $credsGlobalAdmin
+            Credential           = $credsGlobalAdmin
         }
     }
 }

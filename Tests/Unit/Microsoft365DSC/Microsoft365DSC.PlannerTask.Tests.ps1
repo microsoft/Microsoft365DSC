@@ -23,7 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Connect-Graph -MockWith {
             }
@@ -43,7 +43,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     StartDateTime         = "2020-06-09"
                     Ensure                = "Present"
                     ApplicationId         = "1234567890"
-                    GlobalAdminAccount    = $GlobalAdminAccount
+                    Credential    = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {
@@ -86,13 +86,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             }
                             public string ConversationThreadId {get;set;}
                             public string OrderHint {get;set;}
-                            public void Create(System.Management.Automation.PSCredential GlobalAdminAccount, string ApplicationId){}
-                            public void Update(System.Management.Automation.PSCredential GlobalAdminAccount, string ApplicationId){}
+                            public void Create(System.Management.Automation.PSCredential Credential, string ApplicationId){}
+                            public void Update(System.Management.Automation.PSCredential Credential, string ApplicationId){}
                             public string GetTaskCategoryNameByColor(string ColorName){return "";}
                             public string GetTaskColorNameByCategory(string CategoryName){return "";}
-                            public void PopulateById(System.Management.Automation.PSCredential GlobalAdminAccount, string ApplicationId, string TaskId){}
-                            public void UpdateDetails(System.Management.Automation.PSCredential GlobalAdminAccount, string ApplicationId){}
-                            public void Delete(System.Management.Automation.PSCredential GlobalAdminAccount, string ApplicationId, string TaskId){}
+                            public void PopulateById(System.Management.Automation.PSCredential Credential, string ApplicationId, string TaskId){}
+                            public void UpdateDetails(System.Management.Automation.PSCredential Credential, string ApplicationId){}
+                            public void Delete(System.Management.Automation.PSCredential Credential, string ApplicationId, string TaskId){}
                         }
 "@
                 }
@@ -126,7 +126,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     StartDateTime         = "2020-06-09"
                     Ensure                = "Present"
                     ApplicationId         = "1234567890"
-                    GlobalAdminAccount    = $GlobalAdminAccount
+                    Credential    = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {
@@ -166,7 +166,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Bucket                = 'Bucket12345'
                     Ensure                = "Present"
                     ApplicationId         = "1234567890"
-                    GlobalAdminAccount    = $GlobalAdminAccount
+                    Credential    = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {
@@ -202,7 +202,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     StartDateTime         = "2020-06-09"
                     Ensure                = "Absent"
                     ApplicationId         = "1234567890"
-                    GlobalAdminAccount    = $GlobalAdminAccount
+                    Credential    = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {
@@ -238,7 +238,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     StartDateTime         = "2020-06-09"
                     Ensure                = "Present"
                     ApplicationId         = "1234567890"
-                    GlobalAdminAccount    = $GlobalAdminAccount
+                    Credential    = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {
@@ -283,7 +283,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     StartDateTime         = "2020-06-09"
                     Ensure                = "Present"
                     ApplicationId         = "1234567890"
-                    GlobalAdminAccount    = $GlobalAdminAccount
+                    Credential    = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {
@@ -318,7 +318,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     StartDateTime         = "2020-06-09"
                     Ensure                = "Present"
                     ApplicationId         = "1234567890"
-                    GlobalAdminAccount    = $GlobalAdminAccount
+                    Credential    = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {
@@ -354,7 +354,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     ApplicationId         = "1234567890"
-                    GlobalAdminAccount    = $GlobalAdminAccount
+                    Credential    = $Credential
                 }
 
                 Mock -CommandName Get-MgPlannerTask -MockWith {

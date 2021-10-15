@@ -23,7 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -94,7 +94,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GameCenterBlocked                              = $False;
                     GamingBlockGameCenterFriends                   = $True;
                     GamingBlockMultiplayer                         = $False;
-                    GlobalAdminAccount                             = $GlobalAdminAccount;
+                    Credential                             = $Credential;
                     HostPairingBlocked                             = $False;
                     iBooksStoreBlocked                             = $False;
                     iBooksStoreBlockErotica                        = $False;
@@ -228,7 +228,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GameCenterBlocked                              = $False;
                     GamingBlockGameCenterFriends                   = $True;
                     GamingBlockMultiplayer                         = $False;
-                    GlobalAdminAccount                             = $GlobalAdminAccount;
+                    Credential                             = $Credential;
                     HostPairingBlocked                             = $False;
                     iBooksStoreBlocked                             = $False;
                     iBooksStoreBlockErotica                        = $False;
@@ -344,7 +344,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GameCenterBlocked                              = $False;
                         GamingBlockGameCenterFriends                   = $True;
                         GamingBlockMultiplayer                         = $False;
-                        GlobalAdminAccount                             = $GlobalAdminAccount;
+                        Credential                             = $Credential;
                         HostPairingBlocked                             = $False;
                         iBooksStoreBlocked                             = $False;
                         iBooksStoreBlockErotica                        = $False;
@@ -476,7 +476,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GameCenterBlocked                              = $False;
                     GamingBlockGameCenterFriends                   = $True;
                     GamingBlockMultiplayer                         = $False;
-                    GlobalAdminAccount                             = $GlobalAdminAccount;
+                    Credential                             = $Credential;
                     HostPairingBlocked                             = $False;
                     iBooksStoreBlocked                             = $False;
                     iBooksStoreBlockErotica                        = $False;
@@ -548,7 +548,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         id                                             = "12345-12345-12345-12345-12345"
                         DisplayName                                    = "iOS DSC Created";
                         Description                                    = "iOS Device Restriction Policy";
-                        GlobalAdminAccount                             = $GlobalAdminAccount;
+                        Credential                             = $Credential;
                         Ensure                                         = "Present";
                         AdditionalProperties = @{
                             '@odata.type'                                  = "#microsoft.graph.iosGeneralDeviceConfiguration"
@@ -673,7 +673,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName        = "iOS DSC Created";
                     Ensure             = 'Absent'
-                    GlobalAdminAccount = $GlobalAdminAccount;
+                    Credential = $Credential;
                 }
 
                 Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
@@ -725,7 +725,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GameCenterBlocked                              = $False;
                         GamingBlockGameCenterFriends                   = $True;
                         GamingBlockMultiplayer                         = $False;
-                        GlobalAdminAccount                             = $GlobalAdminAccount;
+                        Credential                             = $Credential;
                         HostPairingBlocked                             = $False;
                         iBooksStoreBlocked                             = $False;
                         iBooksStoreBlockErotica                        = $False;
@@ -811,7 +811,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount;
+                    Credential = $Credential;
                 }
 
                 Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {

@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -62,7 +62,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Ensure                               = 'Present'
                     Identity                             = 'ExampleCASRule'
-                    GlobalAdminAccount                   = $GlobalAdminAccount
+                    Credential                   = $Credential
                     Action                               = 'AllowAccess'
                     AnyOfAuthenticationTypes             = @('AdfsAuthentication', 'BasicAuthentication')
                     AnyOfClientIPAddressesOrRanges       = @('192.168.1.100', '10.1.1.0/24', '172.16.5.1-172.16.5.150')
@@ -96,7 +96,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Ensure                               = 'Present'
                     Identity                             = 'ExampleCASRule'
-                    GlobalAdminAccount                   = $GlobalAdminAccount
+                    Credential                   = $Credential
                     Action                               = 'AllowAccess'
                     AnyOfAuthenticationTypes             = @('AdfsAuthentication', 'BasicAuthentication')
                     AnyOfClientIPAddressesOrRanges       = @('192.168.1.100', '10.1.1.0/24', '172.16.5.1-172.16.5.150')
@@ -113,7 +113,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Ensure                               = 'Present'
                         Identity                             = 'ExampleCASRule'
-                        GlobalAdminAccount                   = $GlobalAdminAccount
+                        Credential                   = $Credential
                         Action                               = 'AllowAccess'
                         AnyOfAuthenticationTypes             = @('AdfsAuthentication', 'BasicAuthentication')
                         AnyOfClientIPAddressesOrRanges       = @('192.168.1.100', '10.1.1.0/24', '172.16.5.1-172.16.5.150')
@@ -138,7 +138,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Ensure                               = 'Present'
                     Identity                             = 'ExampleCASRule'
-                    GlobalAdminAccount                   = $GlobalAdminAccount
+                    Credential                   = $Credential
                     Action                               = 'AllowAccess'
                     AnyOfAuthenticationTypes             = @('AdfsAuthentication', 'BasicAuthentication')
                     AnyOfClientIPAddressesOrRanges       = @('192.168.1.100', '10.1.1.0/24', '172.16.5.1-172.16.5.150')
@@ -155,7 +155,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Ensure                               = 'Present'
                         Identity                             = 'ExampleCASRule'
-                        GlobalAdminAccount                   = $GlobalAdminAccount
+                        Credential                   = $Credential
                         Action                               = 'DenyAccess'
                         AnyOfAuthenticationTypes             = @('AdfsAuthentication')
                         AnyOfClientIPAddressesOrRanges       = @('192.168.1.100')
@@ -184,7 +184,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Ensure             = 'Absent'
                     Identity           = 'ExampleCASRule'
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Action             = 'DenyAccess'
                 }
 
@@ -207,7 +207,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-ClientAccessRule -MockWith {

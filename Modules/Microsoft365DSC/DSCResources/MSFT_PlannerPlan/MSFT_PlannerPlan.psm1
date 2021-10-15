@@ -32,29 +32,27 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of Planner Plan {$Title}"
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", "ServicePrincipal")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
     try
     {
         $UsedID = $false
-        $AllGroups = Get-AzureADGroup -ObjectId $OwnerGroup -ErrorAction 'SilentlyContinue'
+        $AllGroups = Get-MgGroup -GroupId $OwnerGroup -ErrorAction 'SilentlyContinue'
         if ($AllGroups -eq $null)
         {
             Write-Verbose -Message "Could not get Azure AD Group {$OwnerGroup} by ID. `
                 Trying by Name."
-            [Array]$AllGroups = Get-AzureADGroup -SearchString $OwnerGroup
+            [Array]$AllGroups = Get-MgGroup -Search $OwnerGroup
         }
         else
         {
@@ -105,9 +103,9 @@ function Get-TargetResource
                     {
                         $tenantIdValue = $TenantId
                     }
-                    elseif ($null -ne $GlobalAdminAccount)
+                    elseif ($null -ne $Credential)
                     {
-                        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                        $tenantIdValue = $Credential.UserName.Split('@')[1]
                     }
                     Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                         -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -150,9 +148,9 @@ function Get-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -199,12 +197,11 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of Planner Plan {$Title}"
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -226,11 +223,11 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Planner Plan {$Title} already exists, but is not in the `
             Desired State. Updating it."
-        [Array]$AllGroups = Get-AzureADGroup -ObjectId $OwnerGroup -ErrorAction 'SilentlyContinue'
+        [Array]$AllGroups = Get-MgGroup -GroupId $OwnerGroup -ErrorAction 'SilentlyContinue'
         Write-Verbose -Message $AllGroups[0]
         if ($AllGroups -eq $null)
         {
-            [Array]$AllGroups = Get-AzureADGroup -SearchString $OwnerGroup
+            [Array]$AllGroups = Get-MgGroup -Search $OwnerGroup
         }
         $plan = Get-MgGroupPlannerPlan -GroupId $AllGroups[0].ObjectId | Where-Object -FilterScript { $_.Title -eq $Title }
         $SetParams.Add("PlannerPlanId", $plan.Id)
@@ -276,12 +273,11 @@ function Test-TargetResource
         $CertificateThumbprint
     )
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -323,22 +319,20 @@ function Export-TargetResource
         $CertificateThumbprint
     )
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", "ServicePrincipal")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     try
     {
-        [array]$groups = Get-AzureADGroup -All:$true -ErrorAction Stop
+        [array]$groups = Get-MgGroup -All:$true -ErrorAction Stop
 
         $ConnectionMode = Connect-Graph -Scopes "Group.ReadWrite.All"
         $i = 1
@@ -368,7 +362,7 @@ function Export-TargetResource
                         -ConnectionMode $ConnectionMode `
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
-                        -GlobalAdminAccount $GlobalAdminAccount
+                        -Credential $Credential
                     $dscContent += $currentDSCBlock
 
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -387,9 +381,9 @@ function Export-TargetResource
                     {
                         $tenantIdValue = $TenantId
                     }
-                    elseif ($null -ne $GlobalAdminAccount)
+                    elseif ($null -ne $Credential)
                     {
-                        $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                        $tenantIdValue = $Credential.UserName.Split('@')[1]
                     }
                     Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                         -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -413,9 +407,9 @@ function Export-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `

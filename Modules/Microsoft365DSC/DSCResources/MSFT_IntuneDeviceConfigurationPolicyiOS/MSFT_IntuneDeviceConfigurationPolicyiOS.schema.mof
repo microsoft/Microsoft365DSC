@@ -144,7 +144,7 @@ class MSFT_IntuneDeviceConfigurationPolicyiOS : OMI_BaseResource
     [Write, Description("N/A")] Boolean VoiceDialingBlocked;
     [Write, Description("N/A")] Boolean WallpaperBlockModification;
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
-    [Write, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+    [Write, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Secret of the Azure Active Directory tenant used for authentication.")] String ApplicationSecret;

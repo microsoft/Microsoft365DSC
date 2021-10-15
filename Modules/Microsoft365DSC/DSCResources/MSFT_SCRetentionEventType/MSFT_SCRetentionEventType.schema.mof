@@ -4,5 +4,5 @@ class MSFT_SCRetentionEventType : OMI_BaseResource
     [Key, Description("The Name parameter specifies the unique name of the retention event type.")] String Name;
     [Write, Description("Specify if this rule should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("The Comment parameter specifies an optional comment.")] String Comment;
-    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
 };

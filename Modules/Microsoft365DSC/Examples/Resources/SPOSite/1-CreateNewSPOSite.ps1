@@ -20,7 +20,7 @@ Configuration Example
             StorageMaximumLevel                         = 26214400
             LocaleId                                    = 1033
             Template                                    = "STS#3"
-            GlobalAdminAccount                          = $credsGlobalAdmin
+            Credential                                  = $credsGlobalAdmin
             Owner                                       = "admin@contoso.onmicrosoft.com"
             Title                                       = "TestSite"
             TimeZoneId                                  = 13

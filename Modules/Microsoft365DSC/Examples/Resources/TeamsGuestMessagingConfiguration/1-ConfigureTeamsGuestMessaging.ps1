@@ -23,7 +23,7 @@ Configuration Example
             AllowUserDeleteMessage = $False;
             AllowUserEditMessage   = $True;
             GiphyRatingType        = "Moderate";
-            GlobalAdminAccount     = $credsglobaladmin;
+            Credential             = $credsglobaladmin;
             Identity               = "Global";
         }
     }

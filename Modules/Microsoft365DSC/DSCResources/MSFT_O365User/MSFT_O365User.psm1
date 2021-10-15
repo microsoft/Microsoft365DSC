@@ -100,7 +100,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -124,17 +124,15 @@ function Get-TargetResource
     )
     Write-Verbose -Message "Getting configuration of Office 365 User $UserPrincipalName"
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -146,14 +144,14 @@ function Get-TargetResource
         UsageLocation      = $null
         LicenseAssignment  = $null
         Password           = $null
-        GlobalAdminAccount = $GlobalAdminAccount
+        Credential = $Credential
         Ensure             = "Absent"
     }
 
     try
     {
         Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
-        $user = Get-AzureADUser -ObjectId $UserPrincipalName -ErrorAction SilentlyContinue
+        $user = Get-MgUser -UserId $UserPrincipalName -ErrorAction SilentlyContinue
         if ($null -eq $user)
         {
             Write-Verbose -Message "The specified User doesn't already exist."
@@ -162,7 +160,7 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found User $($UserPrincipalName)"
         $currentLicenseAssignment = @()
-        $skus = Get-AzureADUserLicenseDetail -ObjectId $UserPrincipalName -ErrorAction Stop
+        $skus = Get-MgUserLicenseDetail -UserId $UserPrincipalName -ErrorAction Stop
         foreach ($sku in $skus)
         {
             $currentLicenseAssignment += $sku.SkuPartNumber
@@ -195,7 +193,7 @@ function Get-TargetResource
             StreetAddress        = $user.StreetAddress
             Title                = $user.JobTitle
             UserType             = $user.UserType
-            GlobalAdminAccount   = $GlobalAdminAccount
+            Credential   = $Credential
             Ensure               = "Present"
         }
         return [System.Collections.Hashtable] $results
@@ -210,9 +208,9 @@ function Get-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
@@ -327,7 +325,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -357,24 +355,24 @@ function Set-TargetResource
     }
 
     Write-Verbose -Message "Setting configuration of Office 365 User $UserPrincipalName"
+
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     $user = Get-TargetResource @PSBoundParameters
     if ($user.Ensure -eq 'Present' -and $Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Removing User {$UserPrincipalName}"
-        Remove-AzureADUser -ObjectId $UserPrincipalName
+        Remove-MgUser -UserId $UserPrincipalName
     }
     else
     {
@@ -410,16 +408,24 @@ function Set-TargetResource
         }
         $CreationParams = Remove-NullEntriesFromHashtable -Hash $CreationParams
 
-        $licenses = New-Object -TypeName Microsoft.Open.AzureAD.Model.AssignedLicenses
+        $licenses = @{}
 
         foreach ($licenseSkuPart in $LicenseAssignment)
         {
             Write-Verbose -Message "Adding License {$licenseSkuPart} to the Queue"
-            $license = New-Object -TypeName Microsoft.Open.AzureAD.Model.AssignedLicense
-            $license.SkuId = (Get-AzureADSubscribedSku | Where-Object -Property SkuPartNumber -Value $licenseSkuPart -EQ).SkuID
+            $license = @{
+                SkuId = (Get-MgSubscribedSku | Where-Object -Property SkuPartNumber -Value $licenseSkuPart -EQ).SkuID
+            }
 
             # Set the Office license as the license we want to add in the $licenses object
-            $licenses.AddLicenses += $license
+            if ($licenses.Keys -NotContains "AddLicenses")
+            {
+                $licenses.Add("AddLicenses", @($license))
+            }
+            else
+            {
+                $licenses.AddLicenses += $license
+            }
         }
 
         foreach ($currentLicense in $user.LicenseAssignment)
@@ -427,8 +433,17 @@ function Set-TargetResource
             if (-not $LicenseAssignment.Contains($currentLicense))
             {
                 Write-Verbose -Message "Removing {$currentLicense} from user {$UserPrincipalName}"
-                $license = (Get-AzureADSubscribedSku | Where-Object -Property SkuPartNumber -Value $currentLicense -EQ).SkuID
-                $licenses.RemoveLicenses += $license
+                $license = @{
+                    SkuId = (Get-MgSubscribedSku | Where-Object -Property SkuPartNumber -Value $currentLicense -EQ).SkuID
+                }
+                if ( $licenses.Keys -NotContains "AddLicenses")
+                {
+                    $licenses.Add("RemoveLicenses", @($license))
+                }
+                else
+                {
+                    $licenses.RemoveLicenses += $license
+                }
             }
         }
 
@@ -442,7 +457,7 @@ function Set-TargetResource
                 try
                 {
                     Write-Verbose -Message "Assigning $($licenses.Count) licences to existing user"
-                    Set-AzureADUserLicense -ObjectId $UserPrincipalName `
+                    Update-MgUser -UserId $UserPrincipalName `
                         -AssignedLicenses $licenses `
                         -ErrorAction SilentlyContinue
                 }
@@ -455,48 +470,20 @@ function Set-TargetResource
             }
 
             Write-Verbose -Message "Updating Office 365 User $UserPrincipalName Information"
-            $CreationParams.Add("ObjectID", $UserPrincipalName)
-            $user = Set-AzureADUser @CreationParams
+            $CreationParams.Add("UserId", $UserPrincipalName)
+            $user = Update-MgUser @CreationParams
         }
         else
         {
             Write-Verbose -Message "Creating Office 365 User $UserPrincipalName"
             $CreationParams.Add("AccountEnabled", $true)
-            $PasswordProfile = New-Object -TypeName Microsoft.Open.AzureAD.Model.PasswordProfile
-            $PasswordProfile.Password = 'TempP@ss'
+            $PasswordProfile = @{
+                Password = 'TempP@ss'
+            }
+            $CreationParams.Add("AssignedLicenses", $licenses)
             $CreationParams.Add("PasswordProfile", $PasswordProfile)
             $CreationParams.Add("MailNickName", $UserPrincipalName.Split('@')[0])
-            $user = New-AzureADUser @CreationParams
-            Set-AzureADUserPassword -ObjectId $UserPrincipalName -Password $Password.Password | Out-Null
-
-            try
-            {
-                if ($null -ne $licenses -and `
-                    ($licenses.AddLicenses.Length -gt 0))
-                {
-                    Write-Verbose -Message "Assigning $($licenses.Count) licences to new user"
-                    Set-AzureADUserLicense -ObjectId $UserPrincipalName `
-                        -AssignedLicenses $licenses `
-                        -ErrorAction SilentlyContinue
-                }
-            }
-            catch
-            {
-                $Message = "Could not assign license {$($licenses.AddLicenses)} to user {$UserPrincipalName}"
-                $tenantIdValue = ""
-                if (-not [System.String]::IsNullOrEmpty($TenantId))
-                {
-                    $tenantIdValue = $TenantId
-                }
-                elseif ($null -ne $GlobalAdminAccount)
-                {
-                    $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
-                }
-                New-M365DSCLogEntry -Error $_ -Message $Message `
-                    -Source $MyInvocation.MyCommand.ModuleName `
-                    -TenantId $tenantIdValue
-                throw $Message
-            }
+            $user = New-MgUser @CreationParams
         }
     }
 }
@@ -603,7 +590,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -626,12 +613,11 @@ function Test-TargetResource
         $CertificatePassword
     )
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -681,7 +667,7 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
+        $Credential,
 
         [Parameter()]
         [System.String]
@@ -703,23 +689,21 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'AzureAD' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $ResourceName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    $data.Add("Principal", $GlobalAdminAccount.UserName)
-    $data.Add("TenantId", $TenantId)
-    $data.Add("ConnectionMode", $ConnectionMode)
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    $CommandName  = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
     try
     {
-        $users = Get-AzureADUser -All $true -ErrorAction Stop
+        $users = Get-MgUser -All -ErrorAction Stop
         $dscContent = ""
         $i = 1
         Write-Host "`r`n" -NoNewline
@@ -731,8 +715,8 @@ function Export-TargetResource
             {
                 $Params = @{
                     UserPrincipalName     = $userUPN
-                    GlobalAdminAccount    = $GlobalAdminAccount
-                    Password              = $GlobalAdminAccount
+                    Credential    = $Credential
+                    Password              = $Credential
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
@@ -743,14 +727,15 @@ function Export-TargetResource
                 $Results = Get-TargetResource @Params
                 if ($null -ne $Results.UserPrincipalName)
                 {
-                    $Results.Password = Resolve-Credentials -UserName "globaladmin"
+                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                        -Results $Results
                     $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                         -Results $Results
                     $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                         -ConnectionMode $ConnectionMode `
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
-                        -GlobalAdminAccount $GlobalAdminAccount
+                        -Credential $Credential
                     $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Password"
                     $dscContent += $currentDSCBlock
 
@@ -773,9 +758,9 @@ function Export-TargetResource
             {
                 $tenantIdValue = $TenantId
             }
-            elseif ($null -ne $GlobalAdminAccount)
+            elseif ($null -ne $Credential)
             {
-                $tenantIdValue = $GlobalAdminAccount.UserName.Split('@')[1]
+                $tenantIdValue = $Credential.UserName.Split('@')[1]
             }
             Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `

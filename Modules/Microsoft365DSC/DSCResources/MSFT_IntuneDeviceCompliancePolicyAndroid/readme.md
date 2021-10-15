@@ -187,7 +187,7 @@ IntuneDeviceCompliancePolicyAndroid a58cdba9-c410-4ba4-b7d2-3a09593b5d84
             DeviceThreatProtectionRequiredSecurityLevel        = "unavailable";
             DisplayName                                        = "Compliance Android";
             Ensure                                             = "Present";
-            GlobalAdminAccount                                 = $Credsglobaladmin;
+            Credential                                         = $Credsglobaladmin;
             osMinimumVersion                                   = "7";
             PasswordExpirationDays                             = 90;
             PasswordMinimumLength                              = 6;

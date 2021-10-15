@@ -122,7 +122,7 @@ For more information, see Gatekeeper on macOS.
             FirewallBlockAllIncoming                    = $False;
             FirewallEnableStealthMode                   = $False;
             Ensure                                      = 'Present';
-            GlobalAdminAccount                          = $GlobalAdminAccount;
+            Credential                          = $Credential;
         }
 
 ```

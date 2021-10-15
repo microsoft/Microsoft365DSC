@@ -19,7 +19,7 @@ Ensure
 - Description: Specifies whether the configured Client Access Rule
   should be Present or Absent.
 
-GlobalAdminAccount
+Credential
 
 - Required: Yes
 - Description: Credentials of the Office 365 Global Admin
@@ -182,7 +182,7 @@ UserRecipientFilter
 EXOClientAccessRule CliendAccessRuleExampleConfig {
     Ensure                               = 'Present'
     Identity                             = 'ExampleCASRule'
-    GlobalAdminAccount                   = $GlobalAdminAccount
+    Credential                           = $Credential
     Action                               = 'AllowAccess'
     AnyOfAuthenticationTypes             = @('AdfsAuthentication', 'BasicAuthentication')
     AnyOfClientIPAddressesOrRanges       = @('192.168.1.100', '10.1.1.0/24', '172.16.5.1-172.16.5.150')

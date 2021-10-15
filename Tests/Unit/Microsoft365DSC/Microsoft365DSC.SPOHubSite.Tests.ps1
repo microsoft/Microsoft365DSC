@@ -22,7 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
             Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
                 return @{}
@@ -53,7 +53,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RequiresJoinApproval = $true
                     AllowedToJoin        = @("admin@contoso.onmicrosoft.com", "superuser@contoso.onmicrosoft.com")
                     SiteDesignId         = "f7eba920-9cca-4de8-b5aa-1da75a2a893c"
-                    GlobalAdminAccount   = $GlobalAdminAccount
+                    Credential   = $Credential
                     Ensure               = "Present"
                 }
 
@@ -79,7 +79,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Url                = "https://contoso.sharepoint.com/sites/Marketing"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Ensure             = "Absent"
                 }
 
@@ -104,7 +104,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Url                = "https://contoso.sharepoint.com/sites/Marketing"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                     Ensure             = "Absent"
                 }
 
@@ -134,7 +134,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return $returnVal
                 }
 
-                Mock -CommandName Get-AzureADGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @(
                         @{
                             EmailAddress = "group@contoso.onmicrosoft.com"
@@ -169,7 +169,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RequiresJoinApproval = $true
                     AllowedToJoin        = @("admin@contoso.onmicrosoft.com", "group@contoso.onmicrosoft.com")
                     SiteDesignId         = "f7eba920-9cca-4de8-b5aa-1da75a2a893c"
-                    GlobalAdminAccount   = $GlobalAdminAccount
+                    Credential   = $Credential
                     Ensure               = "Present"
                 }
 
@@ -199,7 +199,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return $returnVal
                 }
 
-                Mock -CommandName Get-AzureADGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         EmailAddress = "group@contoso.onmicrosoft.com"
                     }
@@ -227,7 +227,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RequiresJoinApproval = $true
                     AllowedToJoin        = @("admin@contoso.onmicrosoft.com", "group@contoso.onmicrosoft.com")
                     SiteDesignId         = "f7eba920-9cca-4de8-b5aa-1da75a2a893c"
-                    GlobalAdminAccount   = $GlobalAdminAccount
+                    Credential   = $Credential
                     Ensure               = "Present"
                 }
 
@@ -258,7 +258,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return $returnVal
                 }
 
-                Mock -CommandName Get-AzureADGroup -MockWith {
+                Mock -CommandName Get-MGGroup -MockWith {
                     return @{
                         EmailAddress = "wronggroup@contoso.onmicrosoft.com"
                     }
@@ -293,7 +293,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RequiresJoinApproval = $true
                     AllowedToJoin        = @("admin@contoso.onmicrosoft.com", "group@contoso.onmicrosoft.com", "SecurityGroup")
                     SiteDesignId         = "f7eba920-9cca-4de8-b5aa-1da75a2a893c"
-                    GlobalAdminAccount   = $GlobalAdminAccount
+                    Credential   = $Credential
                     Ensure               = "Present"
                 }
 
@@ -304,7 +304,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-AzureADGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         DisplayName = "SecurityGroup"
                     }
@@ -339,7 +339,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RequiresJoinApproval = $true
                     AllowedToJoin        = @("admin@contoso.onmicrosoft.com", "group@contoso.onmicrosoft.com", "SecurityGroup")
                     SiteDesignId         = "f7eba920-9cca-4de8-b5aa-1da75a2a893c"
-                    GlobalAdminAccount   = $GlobalAdminAccount
+                    Credential   = $Credential
                     Ensure               = "Present"
                 }
 
@@ -352,6 +352,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Register-PnPHubSite -MockWith { }
                 Mock -CommandName Set-PnPHubSite -MockWith { }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @(
+                        @{
+                            EmailAddress = "group@contoso.onmicrosoft.com"
+                        }
+                    )
+                }
             }
 
             It "Should throw exception the Set method" {
@@ -362,7 +370,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-PnPTenantSite -MockWith {
@@ -390,6 +398,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SiteUrl              = 'https://contoso.hub.sharepoint.com'
                     }
                     return $returnVal
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @(
+                        @{
+                            EmailAddress = "group@contoso.onmicrosoft.com"
+                        }
+                    )
                 }
             }
 
