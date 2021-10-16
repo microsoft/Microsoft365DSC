@@ -125,8 +125,10 @@ function Get-TargetResource
     {
         $devicePolicy = Get-MGDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerCompliancePolicy' -and `
-                $_.displayName -eq $($DisplayName) }
+            -FilterScript {
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerCompliancePolicy' -and `
+                $_.displayName -eq $($DisplayName)
+            }
 
         if ($null -eq $devicePolicy)
         {
@@ -160,8 +162,8 @@ function Get-TargetResource
             TenantId                                            = $TenantId
             ApplicationSecret                                   = $ApplicationSecret
             CertificateThumbprint                               = $CertificateThumbprint
-            }
-    return [System.Collections.Hashtable] $results
+        }
+        return [System.Collections.Hashtable] $results
     }
     catch
     {
@@ -295,7 +297,7 @@ function Set-TargetResource
         $CertificateThumbprint
     )
 
-   Write-Verbose -Message "Intune Android Device Owner Device Compliance Policy {$DisplayName}"
+    Write-Verbose -Message "Intune Android Device Owner Device Compliance Policy {$DisplayName}"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters -ProfileName 'Beta'
@@ -317,6 +319,7 @@ function Set-TargetResource
     $PSBoundParameters.Remove('ApplicationId') | Out-Null
     $PSBoundParameters.Remove('TenantId') | Out-Null
     $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
+    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
 
     $scheduledActionsForRule = @{
         ruleName                      = "PasswordRequired"
@@ -343,9 +346,11 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating Intune Android Device Owner Device Compliance Policy {$DisplayName}"
         $configDeviceAndroidPolicy = Get-MGDeviceManagementDeviceCompliancePolicy `
-        -ErrorAction Stop | Where-Object `
-        -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerCompliancePolicy' -and `
-            $_.displayName -eq $($DisplayName) }
+            -ErrorAction Stop | Where-Object `
+            -FilterScript {
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerCompliancePolicy' -and `
+                $_.displayName -eq $($DisplayName)
+            }
 
         $PSBoundParameters.Remove('DisplayName') | Out-Null
         $PSBoundParameters.Remove('Description') | Out-Null
@@ -359,8 +364,10 @@ function Set-TargetResource
         Write-Verbose -Message "Removing Intune Android Device Owner Device Compliance Policy {$DisplayName}"
         $configDeviceAndroidPolicy = Get-MGDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerCompliancePolicy' -and `
-                $_.displayName -eq $($DisplayName) }
+            -FilterScript {
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerCompliancePolicy' -and `
+                $_.displayName -eq $($DisplayName)
+            }
 
         Remove-MGDeviceManagementDeviceCompliancePolicy -DeviceCompliancePolicyId $configDeviceAndroidPolicy.Id
     }
@@ -494,6 +501,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -549,7 +557,9 @@ function Export-TargetResource
     {
         [array]$configDeviceAndroidPolicies = Get-MGDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerCompliancePolicy'}
+            -FilterScript {
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerCompliancePolicy'
+            }
         $i = 1
         $dscContent = ''
         if ($configDeviceAndroidPolicies.Length -eq 0)
@@ -590,7 +600,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_
