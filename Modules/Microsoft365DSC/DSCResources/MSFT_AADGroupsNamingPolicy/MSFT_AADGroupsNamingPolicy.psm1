@@ -46,7 +46,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of AzureAD Groups Naming Policy"
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -158,7 +158,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of Azure AD Groups Naming Policy"
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -256,7 +256,7 @@ function Test-TargetResource
     )
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -318,7 +318,7 @@ function Export-TargetResource
       -ProfileName "beta"
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
