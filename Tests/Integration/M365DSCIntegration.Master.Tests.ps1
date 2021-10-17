@@ -293,6 +293,14 @@ Configuration Master
             Ensure             = "Present"
             DependsOn          = "[O365User]JohnSmith"
         }
+        IntuneDeviceCategory Demo
+        {
+            DisplayName          = "Contoso"
+            Description          = "Contoso Category"
+            RoleScopeTagIds      = "0"
+            Ensure               = "Present"
+            Credential           = $Credential;
+        }
 
         # TODO - Re-assess current issue with PowerApps module
         <#if ($Environment -ne 'GCC')
