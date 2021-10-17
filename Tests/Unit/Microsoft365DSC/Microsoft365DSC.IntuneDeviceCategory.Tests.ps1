@@ -51,8 +51,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName        = 'Test Category'
                     Description        = 'Test Definition'
+                    RoleScopeTagIds    = '0'
                     Ensure             = 'Present'
-                    Credential = $Credential;
+                    Credential         = $Credential;
                 }
 
                 Mock -CommandName Get-MgDeviceManagementDeviceCategory -MockWith {
@@ -79,15 +80,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName        = 'Test Category'
                     Description        = 'Test Definition'
+                    RoleScopeTagIds    = '0'
                     Ensure             = 'Present'
-                    Credential = $Credential;
+                    Credential         = $Credential;
                 }
 
                 Mock -CommandName Get-MgDeviceManagementDeviceCategory -MockWith {
                     return @{
-                        DisplayName = 'Test Category'
-                        Description = "Different Value"
-                        Id          = "12345-12345-12345-12345-12345"
+                        DisplayName     = 'Test Category'
+                        Description     = 'Different Value'
+                        RoleScopeTagIds = '0'
+                        Id              = '12345-12345-12345-12345-12345'
                     }
                 }
             }
@@ -111,15 +114,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName        = 'Test Category'
                     Description        = 'Test Definition'
+                    RoleScopeTagIds    = '0'
                     Ensure             = 'Present'
-                    Credential = $Credential;
+                    Credential         = $Credential;
                 }
 
                 Mock -CommandName Get-MgDeviceManagementDeviceCategory -MockWith {
                     return @{
-                        DisplayName = 'Test Category'
-                        Description = "Test Definition"
-                        Id          = "12345-12345-12345-12345-12345"
+                        DisplayName     = 'Test Category'
+                        Description     = 'Test Definition'
+                        RoleScopeTagIds = '0'
+                        Id              = '12345-12345-12345-12345-12345'
                     }
                 }
             }
@@ -134,15 +139,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName        = 'Test Category'
                     Description        = 'Test Definition'
+                    RoleScopeTagIds    = '0'
                     Ensure             = 'Absent'
-                    Credential = $Credential;
+                    Credential         = $Credential;
                 }
 
                 Mock -CommandName Get-MgDeviceManagementDeviceCategory -MockWith {
                     return @{
-                        DisplayName = 'Test Category'
-                        Description = "Test Definition"
-                        Id          = "12345-12345-12345-12345-12345"
+                        DisplayName     = 'Test Category'
+                        Description     = 'Test Definition'
+                        RoleScopeTagIds = '0'
+                        Id              = '12345-12345-12345-12345-12345'
                     }
                 }
             }
@@ -169,9 +176,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDeviceManagementDeviceCategory -MockWith {
                     return @{
-                        DisplayName = 'Test Category'
-                        Description = "Test Definition"
-                        Id          = "12345-12345-12345-12345-12345"
+                        DisplayName     = 'Test Category'
+                        Description     = 'Test Definition'
+                        RoleScopeTagIds = '0'
+                        Id              = '12345-12345-12345-12345-12345'
                     }
                 }
             }

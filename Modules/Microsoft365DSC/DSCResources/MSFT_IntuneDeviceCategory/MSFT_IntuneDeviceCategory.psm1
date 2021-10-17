@@ -12,6 +12,10 @@ function Get-TargetResource
         [System.String]
         $Description,
 
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -38,9 +42,10 @@ function Get-TargetResource
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Checking for the Intune Device Category {$DisplayName}"
+    Write-Verbose -Message "Checking for the Intune Android Work Profile Device Compliance Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters -ProfileName 'Beta'
+    Select-MGProfile -Name 'Beta' | Out-Null
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
@@ -65,16 +70,18 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Found Device Category with Identity {$Identity}"
-        return @{
+        $results =  @{
             DisplayName           = $category.DisplayName
             Description           = $category.Description
+            RoleScopeTagIds       = $category.RoleScopeTagIds
             Ensure                = "Present"
-            Credential    = $Credential
+            Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
         }
+        return [System.Collections.Hashtable] $results
     }
     catch
     {
@@ -115,6 +122,10 @@ function Set-TargetResource
         [System.String]
         $Description,
 
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -144,7 +155,8 @@ function Set-TargetResource
     Write-Verbose -Message "Updating Teams Upgrade Policy {$Identity}"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters -ProfileName 'Beta'
+    Select-MGProfile -Name 'Beta' | Out-Null
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
@@ -161,14 +173,14 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating new Device Category {$DisplayName}"
         New-MgDeviceManagementDeviceCategory -DisplayName $DisplayName `
-            -Description $Description
+            -Description $Description -RoleScopeTagIds $RoleScopeTagIds
     }
     elseif ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Device Category {$DisplayName}"
         $category = Get-MgDeviceManagementDeviceCategory -Filter "displayName eq '$DisplayName'"
         Update-MgDeviceManagementDeviceCategory -deviceCategoryId $category.id `
-            -displayName $DisplayName -Description $Description
+            -displayName $DisplayName -Description $Description -RoleScopeTagIds $RoleScopeTagIds
     }
     elseif ($Ensure -eq 'Absent' -and $currentCategory.Ensure -eq 'Present')
     {
@@ -191,6 +203,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -237,6 +253,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
                                                   -Source $($MyInvocation.MyCommand.Source) `
@@ -275,7 +292,8 @@ function Export-TargetResource
         $CertificateThumbprint
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters -ProfileName 'Beta'
+    Select-MGProfile -Name 'Beta' | Out-Null
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
@@ -306,7 +324,7 @@ function Export-TargetResource
             $params = @{
                 DisplayName           = $category.displayName
                 Ensure                = 'Present'
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 ApplicationSecret     = $ApplicationSecret
                 TenantId              = $TenantId
