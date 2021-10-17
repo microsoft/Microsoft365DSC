@@ -49,10 +49,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When the category doesn't already exist" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName        = 'Test Category'
-                    Description        = 'Test Definition'
-                    RoleScopeTagIds    = '0'
-                    Ensure             = 'Present'
+                    DisplayName        = "Test Category"
+                    Description        = "Test Definition"
+                    RoleScopeTagIds    = "0"
+                    Ensure             = "Present"
                     Credential         = $Credential;
                 }
 
@@ -78,19 +78,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When the policy already exists and is NOT in the Desired State" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName        = 'Test Category'
-                    Description        = 'Test Definition'
-                    RoleScopeTagIds    = '0'
-                    Ensure             = 'Present'
+                    DisplayName        = "Test Category"
+                    Description        = "Test Definition"
+                    RoleScopeTagIds    = "0"
+                    Ensure             = "Present"
                     Credential         = $Credential;
                 }
 
                 Mock -CommandName Get-MgDeviceManagementDeviceCategory -MockWith {
                     return @{
-                        DisplayName     = 'Test Category'
-                        Description     = 'Different Value'
-                        RoleScopeTagIds = '0'
-                        Id              = '12345-12345-12345-12345-12345'
+                        DisplayName        = "Test Category"
+                        Description        = "Different Value"
+                        RoleScopeTagIds    = "0"
+                        Id                 = "12345-12345-12345-12345-12345"
                     }
                 }
             }
@@ -112,19 +112,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When the policy already exists and IS in the Desired State" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName        = 'Test Category'
-                    Description        = 'Test Definition'
-                    RoleScopeTagIds    = '0'
-                    Ensure             = 'Present'
+                    DisplayName        = "Test Category"
+                    Description        = "Test Definition"
+                    RoleScopeTagIds    = "0"
+                    Ensure             = "Present"
                     Credential         = $Credential;
                 }
 
                 Mock -CommandName Get-MgDeviceManagementDeviceCategory -MockWith {
                     return @{
-                        DisplayName     = 'Test Category'
-                        Description     = 'Test Definition'
-                        RoleScopeTagIds = '0'
-                        Id              = '12345-12345-12345-12345-12345'
+                        DisplayName        = "Test Category"
+                        Description        = "Test Definition"
+                        RoleScopeTagIds    = "0"
+                        Id                 = "12345-12345-12345-12345-12345"
                     }
                 }
             }
@@ -137,19 +137,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When the policy exists and it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName        = 'Test Category'
-                    Description        = 'Test Definition'
-                    RoleScopeTagIds    = '0'
-                    Ensure             = 'Absent'
+                    DisplayName        = "Test Category"
+                    Description        = "Test Definition"
+                    RoleScopeTagIds    = "0"
+                    Ensure             = "Absent"
                     Credential         = $Credential;
                 }
 
                 Mock -CommandName Get-MgDeviceManagementDeviceCategory -MockWith {
                     return @{
-                        DisplayName     = 'Test Category'
-                        Description     = 'Test Definition'
-                        RoleScopeTagIds = '0'
-                        Id              = '12345-12345-12345-12345-12345'
+                        DisplayName        = "Test Category"
+                        Description        = "Test Definition"
+                        RoleScopeTagIds    = "0"
+                        Id                 = "12345-12345-12345-12345-12345"
                     }
                 }
             }
@@ -176,10 +176,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgDeviceManagementDeviceCategory -MockWith {
                     return @{
-                        DisplayName     = 'Test Category'
-                        Description     = 'Test Definition'
-                        RoleScopeTagIds = '0'
-                        Id              = '12345-12345-12345-12345-12345'
+                        DisplayName        = "Test Category"
+                        Description        = "Test Definition"
+                        RoleScopeTagIds    = "0"
+                        Id                 = "12345-12345-12345-12345-12345"
                     }
                 }
             }
