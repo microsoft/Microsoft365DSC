@@ -1,6 +1,12 @@
 # Change log for Microsoft365DSC
 
-1.21.1013.1
+# 1.21.1020.1
+
+* IntuneDeviceCompliancePolicyAndroidDeviceOwner
+  * Initial release;
+* IntuneDeviceCategory
+  * Switched to Beta Profile to include RoleScopeTags
+# 1.21.1013.1
 
 * IntuneDeviceCompliancePolicyAndroidDeviceOwner
   Initial release;
@@ -11,7 +17,7 @@
   * Updated MSCloudLoginAssistant to version 1.0.73;
   * Updated PnP.PowerShell to version 1.8.0;
 
-1.21.1006.3
+# 1.21.1006.3
 
 * BREAKING CHANGES
 
