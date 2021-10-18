@@ -25,3 +25,6 @@ If something changes in your tenant's configuration, the **continous monitoring 
 ![Export](images/home_assess.png){ align=left width=300 }
 
 Assess any Microsoft 365 tenant against a **known good configuration** and generate a **discrepency report**. Microsoft365DSC makes it feasible for organizations to **validate the configuration** of their existing Microsoft 365 tenant against industry's best practices with a single line command.
+
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/mDCuZgvCWWc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

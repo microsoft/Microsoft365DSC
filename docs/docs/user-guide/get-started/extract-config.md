@@ -1,5 +1,3 @@
-## Extracting Configuration from an Existing Microsoft 365 Tenant
-
 The moment you install the Microsoft365DSC module onto a machine, a new PowerShell cmdlet, **Export-M365DSCConfiguration** is made available. The Export-M365DSCConfiguration cmdlet exposes several parameters to help you customize the extraction experience. The following table lists all the parameters available:
 
 | Parameter Name     | Type             | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Description                                                                                                 |
@@ -24,3 +22,6 @@ Once the extraction completes it will prompt you to enter in a file location whe
 **ConfigurationData.psd1** contains information about the tenant, and let's you abstract additional values in your configuration (advanced topic).
 
 **M365TenantConfig.ps1** file that represents the configuration of the tenant. This file has the information that was extracted.
+
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/xkfJnyzeEnY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
