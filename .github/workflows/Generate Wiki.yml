@@ -25,4 +25,6 @@ jobs:
                -ResourceModuleName 'Microsoft365DSC'
       - name: loop files
         run: tree /f
+      - name: Copy AAD Files
+        run: xcopy "/wikicontent/AAD*.md" "/docs/docs/resources/azure-ad" /y
         
