@@ -23,8 +23,10 @@ jobs:
                -Type 'Wiki' `
                -MainModulePath 'Modules\Microsoft365DSC' `
                -ResourceModuleName 'Microsoft365DSC'
+      - name: Extract some files
+        run: 7z x Microsoft365DSC_1.0.0_wikicontent.zip
       - name: loop files
         run: tree /f
       - name: Copy AAD Files
-        run: xcopy "D:\**\AAD*.md" "d:\docs\docs\resources\azure-ad"
+        run: xcopy "D:\AAD*.md" "d:\docs\docs\resources\azure-ad"
         
