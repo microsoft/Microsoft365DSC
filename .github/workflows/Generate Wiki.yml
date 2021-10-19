@@ -24,7 +24,7 @@ jobs:
                -MainModulePath 'Modules\Microsoft365DSC' `
                -ResourceModuleName 'Microsoft365DSC'
       - name: loop files
-        run: tree /f
+        run: tree D:\wikicontent
       - name: Copy AAD Files
         run: xcopy "D:\wikicontent\AAD*.md" "d:\docs\docs\resources\azure-ad"
         
