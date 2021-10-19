@@ -26,5 +26,5 @@ jobs:
       - name: loop files
         run: tree /f
       - name: Copy AAD Files
-        run: xcopy "/wikicontent/AAD*.md" "/docs/docs/resources/azure-ad"
+        run: xcopy "D:\wikicontent\AAD*.md" "d:\docs\docs\resources\azure-ad"
         
