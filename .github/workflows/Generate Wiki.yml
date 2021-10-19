@@ -28,5 +28,5 @@ jobs:
       - name: loop files
         run: tree /f
       - name: Copy AAD Files
-        run: xcopy /S /Q /Y /F "D:\AAD*.md" "d:\docs\docs\resources\azure-ad"
+        run: xcopy /S /Q /Y /F "D:\AAD*.md" "d:\temp\azure-ad"
         
