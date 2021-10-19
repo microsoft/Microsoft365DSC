@@ -24,38 +24,13 @@ jobs:
                -MainModulePath 'Modules\Microsoft365DSC' `
                -ResourceModuleName 'Microsoft365DSC'
                
-      - name: Fetch action
-        id: pl
-        uses: Rishabh510/Path-lister-action@master
-        with:
-          path: ""
-          type: ".*"
-
-      - name: Output results
-        run: |
-          echo "Found ${{ steps.pl.outputs.path_count }} file(s) with this extension:"
-          for i in ${{ steps.pl.outputs.paths }}; do
-          echo $i
-          done
       - name: Extract some files
         run: 7z x Microsoft365DSC_1.0.0_wikicontent.zip
+      - name: loop files
+        run: tree /f
       - name: Archive code coverage results
         uses: actions/upload-artifact@v2
         with:
           name: code-coverage-report
           path: /**/*.md
         
-      - name: Fetch action
-        id: pl2
-        uses: Rishabh510/Path-lister-action@master
-        with:
-          path: ""
-          type: ".*"
-
-      - name: Output results
-        run: |
-          echo "Found ${{ steps.pl2.outputs.path_count }} file(s) with this extension:"
-          for i in ${{ steps.pl2.outputs.paths }}; do
-          echo $i
-          done 
-
