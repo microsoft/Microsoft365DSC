@@ -55,9 +55,6 @@ jobs:
           git config --local user.name "Rick Van Rousselt"
           git add ./docs/docs/resources/**/*.md
           git commit -m "Add changes"
-      - name: Push changes # push the output folder to your repo
-        uses: ad-m/github-push-action@Dev
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          force: true
+          git push
+
         
