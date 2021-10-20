@@ -28,5 +28,5 @@ jobs:
       - name: loop files
         run: tree /f
       - name: Copy AAD Filesµ
-        run: move AAD*.md \docs\docs\resources\azure-ad
+        run: move \AAD*.md \docs\docs\resources\azure-ad
         
