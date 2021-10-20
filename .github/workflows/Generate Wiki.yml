@@ -27,6 +27,6 @@ jobs:
         run: 7z x Microsoft365DSC_1.0.0_wikicontent.zip
       - name: loop files
         run: tree /f
-      - name: Copy AAD Files
-        run: xcopy /Q /Y /F "D:\AAD*.md" "d:\temp\azure-ad"
+      - name: Copy AAD Filesµ
+        run: move AAD*.md \docs\docs\resources\azure-ad
         
