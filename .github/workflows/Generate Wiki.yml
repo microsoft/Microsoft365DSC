@@ -30,23 +30,23 @@ jobs:
       - name: Move AAD Files
         run: move D:\AAD*.md D:\docs\docs\resources\azure-ad
       - name: Move EXO Files
-        run: move EXO*.md \docs\docs\resources\exchange
+        run: move D:\AEXO*.md D:\Adocs\docs\resources\exchange
       - name: Move Intune Files
-        run: move Intune*.md \docs\docs\resources\intune
+        run: move D:\AIntune*.md D:\docs\docs\resources\intune
       - name: Move office365 Files
-        run: move O365*.md \docs\docs\resources\office365
+        run: move D:\AO365*.md D:\docs\docs\resources\office365
       - name: Move onedrive Files
-        run: move OD*.md \docs\docs\resources\onedrive
+        run: move D:\AOD*.md D:\docs\docs\resources\onedrive
       - name: Move planner Files
-        run: move Planner*.md \docs\docs\resources\planner
+        run: move D:\APlanner*.md D:\docs\docs\resources\planner
       - name: Move power-platform Files
-        run: move PP*.md \docs\docs\resources\power-platform
+        run: move D:\APP*.md D:\docs\docs\resources\power-platform
       - name: Move security-compliance Files
-        run: move SC*.md \docs\docs\resources\security-compliance
+        run: move D:\ASC*.md D:\docs\docs\resources\security-compliance
       - name: Move SharePoint Files
-        run: move SPO*.md \docs\docs\resources\sharepoint
+        run: move D:\ASPO*.md D:\docs\docs\resources\sharepoint
       - name: Move Teams Files
-        run: move Teams*.md \docs\docs\resources\teams
+        run: move D:\ATeams*.md D:\docs\docs\resources\teams
       - name: loop files
         run: tree /f
       - name: Commit files # commit the output folder
