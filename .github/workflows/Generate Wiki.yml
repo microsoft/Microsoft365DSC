@@ -27,6 +27,37 @@ jobs:
         run: 7z x Microsoft365DSC_1.0.0_wikicontent.zip
       - name: loop files
         run: tree /f
-      - name: Copy AAD Filesµ
+      - name: Move AAD Files
         run: move \AAD*.md \docs\docs\resources\azure-ad
+      - name: Move EXO Files
+        run: move \EXO*.md \docs\docs\resources\exchange
+      - name: Move EXO Files
+        run: move \Intune*.md \docs\docs\resources\intune
+      - name: Move office365 Files
+        run: move \O365*.md \docs\docs\resources\office365
+      - name: Move onedrive Files
+        run: move \OD*.md \docs\docs\resources\onedrive
+      - name: Move planner Files
+        run: move \Planner*.md \docs\docs\resources\planner
+      - name: Move power-platform Files
+        run: move \PP*.md \docs\docs\resources\power-platform
+      - name: Move security-compliance Files
+        run: move \SC*.md \docs\docs\resources\security-compliance
+      - name: Move SharePoint Files
+        run: move \SPO*.md \docs\docs\resources\sharepoint
+      - name: Move Teams Files
+        run: move \Teams*.md \docs\docs\resources\teams
+      - name: loop files
+        run: tree /f
+      - name: Commit files # commit the output folder
+        run: |
+          git config --local user.email "rick.vanrousselt@outlook.com"
+          git config --local user.name "Rick Van Rousselt"
+          git add ./docs/docs/resources/**/*.md
+          git commit -m "Add changes"
+      - name: Push changes # push the output folder to your repo
+        uses: ad-m/github-push-action@Dev
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          force: true
         
