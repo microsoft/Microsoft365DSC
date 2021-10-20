@@ -30,23 +30,23 @@ jobs:
       - name: Move AAD Files
         run: robocopy D:\a\Microsoft365DSC\Microsoft365DSC D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\azure-ad AAD*.md
       - name: Move EXO Files
-        run: move D:\a\Microsoft365DSC\Microsoft365DSC\EXO*.md D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\exchange
+        run: robocopy D:\a\Microsoft365DSC\Microsoft365DSC D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\exchange EXO*.md
       - name: Move Intune Files
-        run: move D:\a\Microsoft365DSC\Microsoft365DSC\Intune*.md D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\intune
+        run: robocopy D:\a\Microsoft365DSC\Microsoft365DSC D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\intune Intune*.md
       - name: Move office365 Files
-        run: move \O365*.md D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\office365
+        run: robocopy D:\a\Microsoft365DSC\Microsoft365DSC D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\office365 O365*.md
       - name: Move onedrive Files
-        run: move \OD*.md D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\onedrive
+        run: robocopy D:\a\Microsoft365DSC\Microsoft365DSC D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\onedrive OD*.md
       - name: Move planner Files
-        run: move Planner*.md D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\planner
+        run: robocopy D:\a\Microsoft365DSC\Microsoft365DSC D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\planner Planner*.md
       - name: Move power-platform Files
-        run: move PP*.md D:\docs\docs\resources\power-platform
+        run: robocopy D:\a\Microsoft365DSC\Microsoft365DSC D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\power-platform PP*.md
       - name: Move security-compliance Files
-        run: move SC*.md D:\docs\docs\resources\security-compliance
+        run: robocopy D:\a\Microsoft365DSC\Microsoft365DSC D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\security-compliance SC*.md
       - name: Move SharePoint Files
-        run: move SPO*.md D:\docs\docs\resources\sharepoint
+        run: robocopy D:\a\Microsoft365DSC\Microsoft365DSCS D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\sharepoint PO*.md
       - name: Move Teams Files
-        run: move Teams*.md \docs\docs\resources\teams
+        run: robocopy D:\a\Microsoft365DSC\Microsoft365DSC D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\teams Teams*.md
       - name: loop files
         run: tree /f
       - name: Commit files # commit the output folder
