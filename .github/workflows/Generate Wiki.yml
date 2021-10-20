@@ -30,10 +30,10 @@ jobs:
       - name: Move AAD Files
         run: |
           robocopy D:\a\Microsoft365DSC\Microsoft365DSC D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\azure-ad AAD*.md 
-          @echo robocopy exit code: %ERRORLEVEL%
-          @if %ERRORLEVEL% GTR 3 ( echo robocopy ERROR )
-          @if %ERRORLEVEL% GTR 3 ( exit %ERRORLEVEL% )
-          @set ERRORLEVEL=0
+          echo robocopy exit code: %ERRORLEVEL%
+          if %ERRORLEVEL% GTR 3 ( echo robocopy ERROR )
+          if %ERRORLEVEL% GTR 3 ( exit %ERRORLEVEL% )
+          set ERRORLEVEL=0
       - name: Move EXO Files
         if: always()
         run: robocopy D:\a\Microsoft365DSC\Microsoft365DSC D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\exchange EXO*.md
