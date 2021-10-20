@@ -28,15 +28,15 @@ jobs:
       - name: loop files
         run: tree /f
       - name: Move AAD Files
-        run: move AAD*.md D:\docs\docs\resources\azure-ad
+        run: move D:\a\Microsoft365DSC\Microsoft365DSC\AAD*.md D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\azure-ad
       - name: Move EXO Files
-        run: dir EXO*.md
+        run: move D:\a\Microsoft365DSC\Microsoft365DSC\EXO*.md D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\exchange
       - name: Move Intune Files
         run: move D:\a\Microsoft365DSC\Microsoft365DSC\Intune*.md D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\intune
       - name: Move office365 Files
-        run: move O365*.md D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\office365
+        run: move \O365*.md D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\office365
       - name: Move onedrive Files
-        run: move OD*.md D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\onedrive
+        run: move \OD*.md D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\onedrive
       - name: Move planner Files
         run: move Planner*.md D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\planner
       - name: Move power-platform Files
