@@ -53,7 +53,7 @@ jobs:
         run: |
           git config --local user.email "rick.vanrousselt@outlook.com"
           git config --local user.name "Rick Van Rousselt"
-          git add ./docs/docs/resources/**/*.md
+          git add docs/docs/resources/\*
           git commit -m "Add changes"
           git push
 
