@@ -45,7 +45,8 @@ plugins:
   - include_dir_to_nav
 theme:
   name: 'material'
-  logo: images/Promo.png
+  custom_dir: docs/overrides
+  logo: images/SmallLogo.png
   favicon: images/favicon.ico
   icon:
     repo: fontawesome/brands/git-alt

@@ -37,6 +37,6 @@ In order to assess an existing tenant against a given Microsoft365DSC Blueprint,
 Assert-M365DSCBlueprint -BluePrintUrl [Url or local path to the .m365] -OutputReportPath [Full path to where to save the HTML report] -Credentials [Optional credentials for the tenant to assess]
 ```
 
-See the [Assessing](../get-started.assess-tenants-blueprint.md) page for more information about blueprints.
+See the [Assessing](../get-started/assess-tenants-blueprint.md) page for more information about blueprints.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/UE-nRdZ4iJk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
