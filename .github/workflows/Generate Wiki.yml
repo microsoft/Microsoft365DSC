@@ -28,28 +28,40 @@ jobs:
       - name: loop files
         run: tree /f
       - name: Move AAD Files
+        if: always()
         run: robocopy D:\a\Microsoft365DSC\Microsoft365DSC D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\azure-ad AAD*.md
       - name: Move EXO Files
+        if: always()
         run: robocopy D:\a\Microsoft365DSC\Microsoft365DSC D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\exchange EXO*.md
       - name: Move Intune Files
+        if: always()
         run: robocopy D:\a\Microsoft365DSC\Microsoft365DSC D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\intune Intune*.md
       - name: Move office365 Files
+        if: always()
         run: robocopy D:\a\Microsoft365DSC\Microsoft365DSC D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\office365 O365*.md
       - name: Move onedrive Files
+        if: always()
         run: robocopy D:\a\Microsoft365DSC\Microsoft365DSC D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\onedrive OD*.md
       - name: Move planner Files
+        if: always()
         run: robocopy D:\a\Microsoft365DSC\Microsoft365DSC D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\planner Planner*.md
       - name: Move power-platform Files
+        if: always()
         run: robocopy D:\a\Microsoft365DSC\Microsoft365DSC D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\power-platform PP*.md
       - name: Move security-compliance Files
+        if: always()
         run: robocopy D:\a\Microsoft365DSC\Microsoft365DSC D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\security-compliance SC*.md
       - name: Move SharePoint Files
+        if: always()
         run: robocopy D:\a\Microsoft365DSC\Microsoft365DSCS D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\sharepoint PO*.md
       - name: Move Teams Files
+        if: always()
         run: robocopy D:\a\Microsoft365DSC\Microsoft365DSC D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\teams Teams*.md
       - name: loop files
+        if: always()
         run: tree /f
       - name: Commit files # commit the output folder
+        if: always()
         run: |
           git config --local user.email "rick.vanrousselt@outlook.com"
           git config --local user.name "Rick Van Rousselt"
