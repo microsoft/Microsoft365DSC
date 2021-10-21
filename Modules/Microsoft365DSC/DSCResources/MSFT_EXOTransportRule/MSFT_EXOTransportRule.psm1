@@ -672,6 +672,11 @@ function Get-TargetResource
         $SetSCL,
 
         [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $State,
+
+        [Parameter()]
         [System.Boolean]
         $StopRuleProcessing,
 
@@ -1896,10 +1901,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $DlpPolicy,
-
-        [Parameter()]
-        [System.Boolean]
-        $Enabled,
 
         [Parameter()]
         [System.String]
