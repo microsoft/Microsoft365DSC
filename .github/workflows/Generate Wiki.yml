@@ -28,7 +28,7 @@ jobs:
       - name: loop files
         run: tree /f
       - name: Move AAD Files
-        run: Copy-Item -Path AAD*.md -Destination \docs\docs\resources\azure-ad
+        run: Copy-Item -Path D:\a\Microsoft365DSC\Microsoft365DSCS\* -Destination  D:\a\Microsoft365DSC\Microsoft365DSCS\docs\docs\resources\azure-ad\ -Include AAD*.md
     
 
         
