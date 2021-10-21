@@ -28,9 +28,7 @@ jobs:
       - name: loop files
         run: tree /f
       - name: Move AAD Files
-        run: |
-          set ERRORLEVEL=0 &&
-          robocopy D:\a\Microsoft365DSC\Microsoft365DSC D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\azure-ad AAD*.md 
+        run: robocopy D:\a\Microsoft365DSC\Microsoft365DSC D:\a\Microsoft365DSC\Microsoft365DSC\docs\docs\resources\azure-ad AAD*.md /NFL /NDL /NJH /NJS /nc /ns /np
     
 
         
