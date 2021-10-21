@@ -163,10 +163,6 @@ function Get-TargetResource
         $DlpPolicy,
 
         [Parameter()]
-        [System.Boolean]
-        $Enabled,
-
-        [Parameter()]
         [System.String]
         $ExceptIfADComparisonAttribute,
 
