@@ -161,6 +161,7 @@ class MSFT_EXOTransportRule : OMI_BaseResource
     [Write, Description("The SetHeaderName parameter specifies an action that adds or modifies a header field in the message header.")] String SetHeaderName;
     [Write, Description("The SetHeaderValue parameter specifies an action that adds or modifies a header field in the message header.")] String SetHeaderValue;
     [Write, Description("The SetSCL parameter specifies an action that adds or modifies the SCL value of messages.")] String SetSCL;
+    [Write, Description("The Enabled parameter specifies whether the new rule is created as enabled or disabled.")] Boolean Enabled;
     [Write, Description("The StopRuleProcessing parameter specifies an action that stops processing more rules.")] Boolean StopRuleProcessing;
     [Write, Description("The SubjectContainsWords parameter specifies a condition that looks for words in the Subject field of messages.")] String SubjectContainsWords[];
     [Write, Description("The SubjectMatchesPatterns parameter specifies a condition that looks for text patterns in the Subject field of messages by using regular expressions.")] String SubjectMatchesPatterns[];
