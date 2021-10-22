@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+## unreleased changes
+
+* Fix appsecret parameter on Connect-M365Tenant
+* Fix passing of certificate password in M365DSCReverse
+
+* AADConditionalAccessPolicy
+  * Updated User ID returned from Get-MGUser
 1.21.1013.1
 
 * MISC
