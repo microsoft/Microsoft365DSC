@@ -937,7 +937,8 @@ function Export-M365DSCConfiguration
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
-                -GenerateInfo $GenerateInfo
+                -GenerateInfo $GenerateInfo `
+                -AllComponents
         }
     }
 }
@@ -1141,7 +1142,7 @@ function New-M365DSCConnection
         {
             Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
-                -Credential $InboundParameters.Credential `
+                -ApplicationSecret $InboundParameters.ApplicationSecret `
                 -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
@@ -1170,7 +1171,7 @@ function New-M365DSCConnection
             Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
-                -CertificatePassword $InboundParameters.CertificatePassword `
+                -CertificatePassword $InboundParameters.CertificatePassword.Password `
                 -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
@@ -2423,7 +2424,7 @@ function Get-M365DSCComponentsForAuthenticationType
                     -not $parameters.Contains('CertificatePassword') -and `
                     -not $parameters.Contains('TenantId')))
         {
-            $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+            $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
         }
 
         #Case - Resource certificate info and TenantId
@@ -2433,7 +2434,7 @@ function Get-M365DSCComponentsForAuthenticationType
                     $parameters.Contains('CertificatePassword')) -and `
                 $parameters.Contains('TenantId'))
         {
-            $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+            $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
         }
 
         # Case - Resource contains ApplicationSecret
@@ -2442,14 +2443,14 @@ function Get-M365DSCComponentsForAuthenticationType
                 $parameters.Contains('ApplicationSecret') -and `
                 $parameters.Contains('TenantId'))
         {
-            $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+            $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
         }
 
         # Case - Resource contains Credential
         elseif ($AuthenticationMethod.Contains("Credentials") -and `
                 $parameters.Contains('Credential'))
         {
-            $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+            $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
         }
     }
     return $Components
@@ -2466,7 +2467,7 @@ function Get-M365DSCAllResources
     $result = @()
     foreach ($resource in $allResources)
     {
-        $result += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+        $result += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
     }
 
     return $result
@@ -2511,7 +2512,7 @@ function Get-M365DSCWorkloadsListFromResourceNames
     [Array] $workloads = @()
     foreach ($resource in $ResourceNames)
     {
-        switch ($resource.Substring(5,2))
+        switch ($resource.Substring(0,2).ToUpper())
         {
             "AA" {
                 if (-not $workloads.Contains("MicrosoftGraph"))

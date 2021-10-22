@@ -172,7 +172,7 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -843,7 +843,7 @@ function Set-TargetResource
     )
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -907,7 +907,7 @@ function Set-TargetResource
                     $userguid = $null
                     try
                     {
-                        $userguid = (Get-MgUser -UserId $includeuser).ObjectId
+                        $userguid = (Get-MgUser -UserId $includeuser).Id
                     }
                     catch
                     {
@@ -983,7 +983,7 @@ function Set-TargetResource
                 {
                     $userguid = $null
                     try
-                    { $userguid = (Get-MgUser -UserId $excludeuser).ObjectId
+                    { $userguid = (Get-MgUser -UserId $excludeuser).Id
                     }
                     catch
                     {
@@ -1893,7 +1893,7 @@ function Export-TargetResource
     )
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
