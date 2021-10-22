@@ -26,9 +26,9 @@ jobs:
       - name: Extract some files
         run: 7z x Microsoft365DSC_1.0.0_wikicontent.zip
       - name: loop files
-        run: tree /f
+        run: Get-ChildItem
       - name: Move AAD Files
-        run: Copy-Item -Path D:/a/Microsoft365DSC/Microsoft365DSCS/* -Destination  D:/a/Microsoft365DSC/Microsoft365DSCS/docs/docs/resources/azure-ad/ -Include AAD*.md
+        run: Copy-Item -Path "D:\a\Microsoft365DSC\Microsoft365DSCS\AAD*.md" -Destination "D:\a\Microsoft365DSC\Microsoft365DSCS\docs\docs\resources\azure-ad\" 
     
 
         
