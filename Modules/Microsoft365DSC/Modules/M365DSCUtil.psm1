@@ -148,6 +148,7 @@ function Convert-M365DscHashtableToString
         $Hashtable
     )
     $values = @()
+    $parametersToObfuscate = @('ApplicationId', 'ApplicationSecret', 'TenantId', "CertificateThumnbprint", "CertificatePath", "CertificatePassword", "Credential")
     foreach ($pair in $Hashtable.GetEnumerator())
     {
         try
@@ -168,7 +169,14 @@ function Convert-M365DscHashtableToString
                 }
                 else
                 {
-                    $str = "$($pair.Key)=$($pair.Value)"
+                    if ($parametersToObfuscate.Contains($pair.Key))
+                    {
+                        $str = "$($pair.Key)=***"
+                    }
+                    else
+                    {
+                        $str = "$($pair.Key)=$($pair.Value)"
+                    }
                 }
             }
             $values += $str
@@ -192,7 +200,6 @@ function New-EXOAntiPhishPolicy
     )
     try
     {
-        $VerbosePreference = 'Continue'
         $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishPolicyParams -Operation 'New' )
         Write-Verbose -Message "Creating New AntiPhishPolicy $($BuiltParams.Name) with values: $(Convert-M365DscHashtableToString -Hashtable $BuiltParams)"
         New-AntiPhishPolicy @BuiltParams
@@ -1034,7 +1041,6 @@ function New-M365DSCConnection
         [ValidateSet("v1.0", "beta")]
         $ProfileName = "v1.0"
     )
-
     if ($Workload -eq "MicrosoftTeams")
     {
         try
@@ -1136,7 +1142,7 @@ function New-M365DSCConnection
         {
             Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
-                -Credential $InboundParameters.Credential `
+                -ApplicationSecret $InboundParameters.ApplicationSecret `
                 -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
@@ -1165,7 +1171,7 @@ function New-M365DSCConnection
             Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
-                -CertificatePassword $InboundParameters.CertificatePassword `
+                -CertificatePassword $InboundParameters.CertificatePassword.Password `
                 -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
@@ -2122,7 +2128,6 @@ function Update-M365DSCExportAuthenticationResults
         [System.Collections.Hashtable]
         $Results
     )
-
     if ($ConnectionMode -eq 'Credentials')
     {
         $Results.Credential = Resolve-Credentials -UserName "credential"
@@ -2153,7 +2158,7 @@ function Update-M365DSCExportAuthenticationResults
     }
     else
     {
-        if ($Results.ContainsKey("Credential") -and $ConnectionMode -ne 'CredentialsWithApplicationId')
+        if ($Results.ContainsKey("Credential") -and ($ConnectionMode -ne 'CredentialsWithApplicationId' -or $ConnectionMode -ne 'Credentials'))
         {
             $Results.Remove("Credential") | Out-Null
         }
@@ -2290,7 +2295,6 @@ function Get-M365DSCExportContentForResource
     # Ensure the string properties are properly formatted;
     $Results = Format-M365DSCString -Properties $Results `
         -ResourceName $ResourceName
-
     $content = "        $ResourceName " + (New-Guid).ToString() + "`r`n"
     $content += "        {`r`n"
     $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath

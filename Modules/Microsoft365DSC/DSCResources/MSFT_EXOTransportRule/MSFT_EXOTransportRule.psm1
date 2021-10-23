@@ -668,6 +668,11 @@ function Get-TargetResource
         $SetSCL,
 
         [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $State,
+
+        [Parameter()]
         [System.Boolean]
         $StopRuleProcessing,
 
@@ -920,6 +925,7 @@ function Get-TargetResource
             SetHeaderName                                 = $TransportRule.SetHeaderName
             SetHeaderValue                                = $TransportRule.SetHeaderValue
             SetSCL                                        = $TransportRule.SetSCL
+            State                                         = $TransportRule.State
             StopRuleProcessing                            = $TransportRule.StopRuleProcessing
             SubjectContainsWords                          = $TransportRule.SubjectContainsWords
             SubjectMatchesPatterns                        = $TransportRule.SubjectMatchesPatterns
@@ -927,7 +933,7 @@ function Get-TargetResource
             SubjectOrBodyMatchesPatterns                  = $TransportRule.SubjectOrBodyMatchesPatterns
             WithImportance                                = $TransportRule.WithImportance
             Ensure                                        = 'Present'
-            Credential                            = $Credential
+            Credential                                    = $Credential
             ApplicationId                                 = $ApplicationId
             CertificateThumbprint                         = $CertificateThumbprint
             CertificatePath                               = $CertificatePath
@@ -1112,6 +1118,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $DlpPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
         [System.String]
@@ -1719,7 +1729,7 @@ function Set-TargetResource
     elseif ($Ensure -eq "Present" -and $currentTransportRuleConfig.Ensure -eq "Present")
     {
         Write-Verbose -Message "Transport Rule '$($Name)' already exists, but needs updating."
-        Write-Verbose -Message "Setting Transport Rule $($Name) with values: $(Convert-M365DscHashtableToString  -Hashtable $SetTransportRuleParams)"
+        Write-Verbose -Message "Setting Transport Rule $($Name) with values: $(Convert-M365DscHashtableToString -Hashtable $SetTransportRuleParams)"
         Set-TransportRule @SetTransportRuleParams
     }
 }
@@ -2392,6 +2402,11 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $SetSCL,
+
+        [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $State,
 
         [Parameter()]
         [System.Boolean]
