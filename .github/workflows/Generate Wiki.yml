@@ -25,8 +25,6 @@ jobs:
                -ResourceModuleName 'Microsoft365DSC'
       - name: Extract some files
         run: 7z x Microsoft365DSC_1.0.0_wikicontent.zip
-      - name: loop files
-        run: Get-ChildItem
       - name: Copy AAD Files
         run: |
           $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
@@ -43,14 +41,39 @@ jobs:
         run: |
           $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
           Copy-Item -Path $executingScriptDirectory\Intune*.md -Destination $executingScriptDirectory\docs\docs\resources\intune\ 
-      - name: loop files
-        if: always()
-        run: tree /f
+      - name: Copy office365 Files
+        run: |
+          $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+          Copy-Item -Path $executingScriptDirectory\O365*.md -Destination $executingScriptDirectory\docs\docs\resources\office365\ 
+      - name: Copy onedrive Files
+        run: |
+          $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+          Copy-Item -Path $executingScriptDirectory\OD*.md -Destination $executingScriptDirectory\docs\docs\resources\onedrive\ 
+      - name: Copy power-platform Files
+        run: |
+          $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+          Copy-Item -Path $executingScriptDirectory\PP*.md -Destination $executingScriptDirectory\docs\docs\resources\power-platform\ 
+      - name: Copy planner Files
+        run: |
+          $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+          Copy-Item -Path $executingScriptDirectory\Planner*.md -Destination $executingScriptDirectory\docs\docs\resources\planner\ 
+      - name: Copy security-compliance Files
+        run: |
+          $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+          Copy-Item -Path $executingScriptDirectory\SC*.md -Destination $executingScriptDirectory\docs\docs\resources\security-compliance\ 
+      - name: Copy sharepoint Files
+        run: |
+          $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+          Copy-Item -Path $executingScriptDirectory\SPO*.md -Destination $executingScriptDirectory\docs\docs\resources\sharepoint\ 
+      - name: Copy Teams Files
+        run: |
+          $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+          Copy-Item -Path $executingScriptDirectory\Teams*.md -Destination $executingScriptDirectory\docs\docs\resources\teams\ 
       - name: Commit files # commit the output folder
         if: always()
         run: |
           git config --local user.email "rick.vanrousselt@outlook.com"
           git config --local user.name "Rick Van Rousselt"
-          git add D:/a/Microsoft365DSC/Microsoft365DSC/docs/docs/resources/\*
+          git add D:/a/Microsoft365DSC/Microsoft365DSC/docs/docs/resources/*
           git commit -m "Add changes"
           git push
