@@ -27,10 +27,30 @@ jobs:
         run: 7z x Microsoft365DSC_1.0.0_wikicontent.zip
       - name: loop files
         run: Get-ChildItem
-      - name: Move AAD Files
+      - name: Copy AAD Files
         run: |
           $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
           Copy-Item -Path $executingScriptDirectory\AAD*.md -Destination $executingScriptDirectory\docs\docs\resources\azure-ad\ 
-    
-
-        
+      - name: Move EXO Files
+        run: |
+          $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+          Copy-Item -Path $executingScriptDirectory\EXO*.md -Destination $executingScriptDirectory\docs\docs\resources\exchange\ 
+      - name: Copy EXO Files
+        run: |
+          $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+          Copy-Item -Path $executingScriptDirectory\EXO*.md -Destination $executingScriptDirectory\docs\docs\resources\exchange\ 
+      - name: Copy Intune Files
+        run: |
+          $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+          Copy-Item -Path $executingScriptDirectory\Intune*.md -Destination $executingScriptDirectory\docs\docs\resources\intune\ 
+      - name: loop files
+        if: always()
+        run: tree /f
+      - name: Commit files # commit the output folder
+        if: always()
+        run: |
+          git config --local user.email "rick.vanrousselt@outlook.com"
+          git config --local user.name "Rick Van Rousselt"
+          git add D:/a/Microsoft365DSC/Microsoft365DSC/docs/docs/resources/\*
+          git commit -m "Add changes"
+          git push
