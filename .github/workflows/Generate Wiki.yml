@@ -31,39 +31,39 @@ jobs:
           Move-Item -Path $executingScriptDirectory\AAD*.md -Destination $executingScriptDirectory\docs\docs\resources\azure-ad\ -force
       - name: Copy EXO Files
         run: |
-          $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-          get-childitem -Recurse -path .\ | where {($_.extension -eq '.md' -and $_ -like 'EXO*')} | move-item -Destination $executingScriptDirectory\docs\docs\resources\exchange\ -force
+          $executingScriptDirectory = ${Env:GITHUB_WORKSPACE}
+          Move-Item -Path $executingScriptDirectory\EXO*.md -Destination $executingScriptDirectory\docs\docs\resources\exchange\ -force
       - name: Copy Intune Files
         run: |
-          $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-          get-childitem -Recurse -path $executingScriptDirectory | where {($_.extension -eq '.md' -and $_ -like 'Intune*')} | move-item -Destination $executingScriptDirectory\docs\docs\resources\intune\ -force
+          $executingScriptDirectory = ${Env:GITHUB_WORKSPACE}
+          Move-Item -Path $executingScriptDirectory\Intune*.md -Destination $executingScriptDirectory\docs\docs\resources\intune\ -force
       - name: Copy office365 Files
         run: |
-          $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+          $executingScriptDirectory = ${Env:GITHUB_WORKSPACE}
           Move-Item -Path $executingScriptDirectory\O365*.md -Destination $executingScriptDirectory\docs\docs\resources\office365\ -force
       - name: Copy onedrive Files
         run: |
-          $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+          $executingScriptDirectory = ${Env:GITHUB_WORKSPACE}
           Move-Item -Path $executingScriptDirectory\OD*.md -Destination $executingScriptDirectory\docs\docs\resources\onedrive\ -force
       - name: Copy power-platform Files
         run: |
-          $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+          $executingScriptDirectory = ${Env:GITHUB_WORKSPACE}
           Move-Item -Path $executingScriptDirectory\PP*.md -Destination $executingScriptDirectory\docs\docs\resources\power-platform\ -force
       - name: Copy planner Files
         run: |
-          $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+          $executingScriptDirectory = ${Env:GITHUB_WORKSPACE}
           Move-Item -Path $executingScriptDirectory\Planner*.md -Destination $executingScriptDirectory\docs\docs\resources\planner\ -force
       - name: Copy security-compliance Files
         run: |
-          $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+          $executingScriptDirectory = ${Env:GITHUB_WORKSPACE}
           Move-Item -Path $executingScriptDirectory\SC*.md -Destination $executingScriptDirectory\docs\docs\resources\security-compliance\ -force 
       - name: Copy sharepoint Files
         run: |
-          $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+          $executingScriptDirectory = ${Env:GITHUB_WORKSPACE}
           Move-Item -Path $executingScriptDirectory\SPO*.md -Destination $executingScriptDirectory\docs\docs\resources\sharepoint\ -force
       - name: Copy Teams Files
         run: |
-          $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+          $executingScriptDirectory = ${Env:GITHUB_WORKSPACE}
           Move-Item -Path $executingScriptDirectory\Teams*.md -Destination $executingScriptDirectory\docs\docs\resources\teams\ -force
       - name: Commit files # commit the output folder
         if: always()
