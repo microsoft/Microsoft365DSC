@@ -28,7 +28,9 @@ jobs:
       - name: loop files
         run: Get-ChildItem
       - name: Move AAD Files
-        run: Copy-Item -Path "D:\a\Microsoft365DSC\Microsoft365DSCS\AAD*.md" -Destination "D:\a\Microsoft365DSC\Microsoft365DSCS\docs\docs\resources\azure-ad\" 
+        run: |
+          $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+          Copy-Item -Path $executingScriptDirectory\AAD*.md -Destination $executingScriptDirectory\docs\docs\resources\azure-ad\ 
     
 
         
