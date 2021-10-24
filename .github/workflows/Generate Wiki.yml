@@ -27,16 +27,16 @@ jobs:
         run: 7z x Microsoft365DSC_1.0.0_wikicontent.zip
       - name: Copy AAD Files
         run: |
-          $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+          $executingScriptDirectory = ${Env:GITHUB_WORKSPACE}
           Move-Item -Path $executingScriptDirectory\AAD*.md -Destination $executingScriptDirectory\docs\docs\resources\azure-ad\ -force
       - name: Copy EXO Files
         run: |
           $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-          Move-Item -Path $executingScriptDirectory\EXO*.md -Destination $executingScriptDirectory\docs\docs\resources\exchange\ -force
+          get-childitem -Recurse -path .\ | where {($_.extension -eq '.md' -and $_ -like 'EXO*')} | move-item -Destination $executingScriptDirectory\docs\docs\resources\exchange\ -force
       - name: Copy Intune Files
         run: |
           $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-          Copy-Item -Path $executingScriptDirectory\Intune*.md -Destination $executingScriptDirectory\docs\docs\resources\intune\ -force
+          get-childitem -Recurse -path $executingScriptDirectory | where {($_.extension -eq '.md' -and $_ -like 'Intune*')} | move-item -Destination $executingScriptDirectory\docs\docs\resources\intune\ -force
       - name: Copy office365 Files
         run: |
           $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
