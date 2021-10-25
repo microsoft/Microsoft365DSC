@@ -1,8 +1,12 @@
 # Change log for Microsoft365DSC
 
+# 1.21.1027.1
+
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.74;
+
 # 1.21.1013.1
 
-* MISC
   * Obfuscating Authentication Secrets from the Verbose output;
 
 # 1.21.1006.3
