@@ -39,6 +39,7 @@ class MSFT_EXOTransportRule : OMI_BaseResource
     [Write, Description("The CopyTo parameter specifies an action that adds recipients to the Cc field of messages.")] String CopyTo[];
     [Write, Description("The DeleteMessage parameter specifies an action that silently drops messages without an NDR.")] Boolean DeleteMessage;
     [Write, Description("The DlpPolicy parameter specifies the data loss prevention (DLP) policy that's associated with the rule.")] String DlpPolicy;
+    [Write, Description("The Enabled parameter specifies whether the new rule is created as enabled or disabled.")] Boolean Enabled;
     [Write, Description("The ExceptIfADComparisonAttribute parameter specifies an exception that compares an Active Directory attribute between the sender and all recipients of the message.")] String ExceptIfADComparisonAttribute;
     [Write, Description("The ExceptIfADComparisonOperator parameter specifies the comparison operator for the ExceptIfADComparisonAttribute parameter."), ValueMap{"Equal","NotEqual"}, Values{"Equal","NotEqual"}] String ExceptIfADComparisonOperator;
     [Write, Description("The ExceptIfAnyOfCcHeader parameter specifies an exception that looks for recipients in the Cc field of messages.")] String ExceptIfAnyOfCcHeader[];
@@ -160,6 +161,7 @@ class MSFT_EXOTransportRule : OMI_BaseResource
     [Write, Description("The SetAuditSeverity parameter specifies an action that sets the severity level of the incident report and the corresponding entry that's written to the message tracking log when messages violate DLP policies."), ValueMap{"DoNotAudit","Low","Medium","High"}, Values{"DoNotAudit","Low","Medium","High"}] String SetAuditSeverity;
     [Write, Description("The SetHeaderName parameter specifies an action that adds or modifies a header field in the message header.")] String SetHeaderName;
     [Write, Description("The SetHeaderValue parameter specifies an action that adds or modifies a header field in the message header.")] String SetHeaderValue;
+    [Write, Description("The State parameter specifies filters the results by enabled or disabled rules.")] String State;
     [Write, Description("The SetSCL parameter specifies an action that adds or modifies the SCL value of messages.")] String SetSCL;
     [Write, Description("The StopRuleProcessing parameter specifies an action that stops processing more rules.")] Boolean StopRuleProcessing;
     [Write, Description("The SubjectContainsWords parameter specifies a condition that looks for words in the Subject field of messages.")] String SubjectContainsWords[];
