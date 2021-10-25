@@ -587,7 +587,7 @@ function Get-M365DSCNormalizationRulesAsString
     {
         return $null
     }
-    $currentProperty = "MSFT_TeamsVoiceNormalizationRule{`r`n"
+    $currentProperty = "@(MSFT_TeamsVoiceNormalizationRule{`r`n"
     foreach ($key in $params.Keys)
     {
         if ($key -eq 'Priority')
@@ -603,7 +603,7 @@ function Get-M365DSCNormalizationRulesAsString
             $currentProperty += "                " + $key + " = '" + $params[$key] + "'`r`n"
         }
     }
-    $currentProperty += "            }"
+    $currentProperty += "            })"
     return $currentProperty
 }
 

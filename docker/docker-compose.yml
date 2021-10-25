@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  microsoft365dsc:
+    image: microsoft365dsc
+    build:
+      context: .
+      dockerfile: ./Dockerfile

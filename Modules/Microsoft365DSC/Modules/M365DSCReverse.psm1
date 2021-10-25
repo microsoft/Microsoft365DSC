@@ -387,7 +387,7 @@ function Start-M365DSCConfigurationExtract
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePath       = $CertificatePath
-                CertificatePassword   = $CertificatePassword
+                CertificatePassword   = $CertificatePassword.Password
                 Credential            = $Credential
             }
             try
