@@ -7,7 +7,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -20,7 +20,7 @@ Configuration Example
             DeviceThreatProtectionRequiredSecurityLevel        = "unavailable";
             DisplayName                                        = "Test Policy";
             Ensure                                             = "Present";
-            Credential                                         = $Credsglobaladmin;
+            Credential                                         = $Credential;
             PasswordExpirationDays                             = 90;
             PasswordMinimumLength                              = 6;
             PasswordMinutesOfInactivityBeforeLock              = 5;
