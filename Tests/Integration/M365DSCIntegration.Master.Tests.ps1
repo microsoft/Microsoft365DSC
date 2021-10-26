@@ -272,7 +272,7 @@ Configuration Master
         {
             DisplayName                                    = "Android Work Profile - Device Restrictions - Standard";
             Ensure                                         = "Present";
-            GlobalAdminAccount                             = $GlobalAdmin;
+            Credential                                     = $Credential;
             PasswordBlockFingerprintUnlock                 = $False;
             PasswordBlockTrustAgents                       = $False;
             PasswordMinimumLength                          = 6;
