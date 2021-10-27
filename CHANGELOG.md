@@ -1,5 +1,21 @@
 # Change log for Microsoft365DSC
 
+# 1.21.1027.1
+
+* DEPENDENCIES
+  * Updated Microsoft.Graph.Applications to 1.8.0;
+  * Updated Microsoft.Graph.Authentication to 1.8.0;
+  * Updated Microsoft.Graph.DeviceManagement to 1.8.0;
+  * Updated Microsoft.Graph.DeviceManagement.Administration to 1.8.0;
+  * Updated Microsoft.Graph.DeviceManagement.Enrolment to 1.8.0;
+  * Updated Microsoft.Graph.Devices.CorporateManagement to 1.8.0;
+  * Updated Microsoft.Graph.Groups to 1.8.0;
+  * Updated Microsoft.Graph.Identity.DirectoryManagement to 1.8.0;
+  * Updated Microsoft.Graph.Identity.SignIns to 1.8.0;
+  * Updated Microsoft.Graph.Planner to 1.8.0;
+  * Updated Microsoft.Graph.Teams to 1.8.0;
+  * Updated Microsoft.Graph.Users to 1.8.0;
+
 # 1.21.1013.1
 
 * MISC
