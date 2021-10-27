@@ -334,120 +334,127 @@ function Compare-M365DSCConfigurations
     $i = 1
     foreach ($sourceResource in $SourceObject)
     {
-        [array]$key = Get-M365DSCResourceKey -Resource $sourceResource
-        Write-Progress -Activity "Scanning Source $Source...[$i/$($SourceObject.Count)]" -PercentComplete ($i/($SourceObject.Count)*100)
-        [array]$destinationResource = $DestinationObject | Where-Object -FilterScript {$_.ResourceName -eq $sourceResource.ResourceName -and $_.($key[0]) -eq $sourceResource.($key[0])}
+        try
+        {
+            [array]$key = Get-M365DSCResourceKey -Resource $sourceResource
+            Write-Progress -Activity "Scanning Source $Source...[$i/$($SourceObject.Count)]" -PercentComplete ($i/($SourceObject.Count)*100)
+            [array]$destinationResource = $DestinationObject | Where-Object -FilterScript {$_.ResourceName -eq $sourceResource.ResourceName -and $_.($key[0]) -eq $sourceResource.($key[0])}
 
-        $keyname=$key[0..1] -join '\'
-        $SourceKeyValue=$sourceResource.($key[0])
-        # Filter on the second key
-        if ($key.Count -gt 1)
-        {
-            [array]$destinationResource = $destinationResource | Where-Object -FilterScript {$_.ResourceName -eq $sourceResource.ResourceName -and $_.($key[1]) -eq $sourceResource.($key[1])}
-            $SourceKeyValue=$sourceResource.($key[0]),$sourceResource.($key[1]) -join '\'
-        }
-        if ($null -eq $destinationResource)
-        {
-            $drift = @{
-                ResourceName       = $sourceResource.ResourceName
-                Key                = $keyName
-                KeyValue           = $SourceKeyValue
-                Properties         = @(@{
-                    ParameterName      = 'Ensure'
-                    ValueInSource      = 'Present'
-                    ValueInDestination = 'Absent'
-                })
-            }
-            $Delta += ,$drift
-            $drift = $null
-        }
-        else
-        {
-            [System.Collections.Hashtable]$destinationResource = $destinationResource[0]
-            # The resource instance exists in both the source and the destination. Compare each property;
-            foreach ($propertyName in $sourceResource.Keys)
+            $keyname=$key[0..1] -join '\'
+            $SourceKeyValue=$sourceResource.($key[0])
+            # Filter on the second key
+            if ($key.Count -gt 1)
             {
-                # Needs to be a separate nested if statement otherwise the ReferenceObject an be null and it will error out;
-                if($null -ne (Compare-Object -ReferenceObject ($sourceResource.$propertyName)`
-                                             -DifferenceObject ($destinationResource.$propertyName)))
-                {
-                    if ($null -eq $drift)
-                    {
-                        $drift = @{
-                            ResourceName       = $sourceResource.ResourceName
-                            Key                = $keyname
-                            KeyValue           = $SourceKeyValue
-                            Properties = @(@{
-                                ParameterName      = $propertyName
-                                ValueInSource      = $sourceResource.$propertyName
-                                ValueInDestination = $destinationResource.$propertyName
-                            })
-                        }
-
-                        if ($destinationResource.Contains("_metadata_$($propertyName)"))
-                        {
-                            $Metadata = $destinationResource."_metadata_$($propertyName)"
-                            $Level = $Metadata.Split('|')[0].Replace("### ", "")
-                            $Information = $Metadata.Split('|')[1]
-                            $drift.Properties[0].Add("_Metadata_Level", $Level)
-                            $drift.Properties[0].Add("_Metadata_Info", $Information)
-                        }
-                    }
-                    else
-                    {
-                        $newDrift = @{
-                                ParameterName      = $propertyName
-                                ValueInSource      = $sourceResource.$propertyName
-                                ValueInDestination = $destinationResource.$propertyName
-                        }
-                        if ($destinationResource.Contains("_metadata_$($propertyName)"))
-                        {
-                            $Metadata = $destinationResource."_metadata_$($propertyName)"
-                            $Level = $Metadata.Split('|')[0].Replace("### ", "")
-                            $Information = $Metadata.Split('|')[1]
-                            $newDrift.Add("_Metadata_Level", $Level)
-                            $newDrift.Add("_Metadata_Info", $Information)
-                        }
-                        $drift.Properties += $newDrift
-                    }
+                [array]$destinationResource = $destinationResource | Where-Object -FilterScript {$_.ResourceName -eq $sourceResource.ResourceName -and $_.($key[1]) -eq $sourceResource.($key[1])}
+                $SourceKeyValue=$sourceResource.($key[0]),$sourceResource.($key[1]) -join '\'
+            }
+            if ($null -eq $destinationResource)
+            {
+                $drift = @{
+                    ResourceName       = $sourceResource.ResourceName
+                    Key                = $keyName
+                    KeyValue           = $SourceKeyValue
+                    Properties         = @(@{
+                        ParameterName      = 'Ensure'
+                        ValueInSource      = 'Present'
+                        ValueInDestination = 'Absent'
+                    })
                 }
-            }
-
-            # Do the scan the other way around because there's a chance that the property, if null, wasn't part of the source
-            # object. By scanning against the destination we will catch properties that are not null on the source but not null in destination;
-            foreach ($propertyName in $destinationResource.Keys)
-            {
-                if (-not $sourceResource.Contains($propertyName))
-                {
-                    if ($null -eq $drift)
-                    {
-                        $drift = @{
-                            ResourceName       = $sourceResource.ResourceName
-                            Key                = $keyName
-                            KeyValue           = $SourceKeyValue
-                            Properties         = @(@{
-                                ParameterName      = $propertyName
-                                ValueInSource      = $null
-                                ValueInDestination = $destinationResource.$propertyName
-                            })
-                        }
-                    }
-                    else
-                    {
-                        $drift.Properties += @{
-                                ParameterName      = $propertyName
-                                ValueInSource      = $null
-                                ValueInDestination = $destinationResource.$propertyName
-                        }
-                    }
-                }
-            }
-
-            if ($null -ne $drift)
-            {
                 $Delta += ,$drift
                 $drift = $null
             }
+            else
+            {
+                [System.Collections.Hashtable]$destinationResource = $destinationResource[0]
+                # The resource instance exists in both the source and the destination. Compare each property;
+                foreach ($propertyName in $sourceResource.Keys)
+                {
+                    # Needs to be a separate nested if statement otherwise the ReferenceObject an be null and it will error out;
+                    if($null -ne (Compare-Object -ReferenceObject ($sourceResource.$propertyName)`
+                                                -DifferenceObject ($destinationResource.$propertyName)))
+                    {
+                        if ($null -eq $drift)
+                        {
+                            $drift = @{
+                                ResourceName       = $sourceResource.ResourceName
+                                Key                = $keyname
+                                KeyValue           = $SourceKeyValue
+                                Properties = @(@{
+                                    ParameterName      = $propertyName
+                                    ValueInSource      = $sourceResource.$propertyName
+                                    ValueInDestination = $destinationResource.$propertyName
+                                })
+                            }
+
+                            if ($destinationResource.Contains("_metadata_$($propertyName)"))
+                            {
+                                $Metadata = $destinationResource."_metadata_$($propertyName)"
+                                $Level = $Metadata.Split('|')[0].Replace("### ", "")
+                                $Information = $Metadata.Split('|')[1]
+                                $drift.Properties[0].Add("_Metadata_Level", $Level)
+                                $drift.Properties[0].Add("_Metadata_Info", $Information)
+                            }
+                        }
+                        else
+                        {
+                            $newDrift = @{
+                                    ParameterName      = $propertyName
+                                    ValueInSource      = $sourceResource.$propertyName
+                                    ValueInDestination = $destinationResource.$propertyName
+                            }
+                            if ($destinationResource.Contains("_metadata_$($propertyName)"))
+                            {
+                                $Metadata = $destinationResource."_metadata_$($propertyName)"
+                                $Level = $Metadata.Split('|')[0].Replace("### ", "")
+                                $Information = $Metadata.Split('|')[1]
+                                $newDrift.Add("_Metadata_Level", $Level)
+                                $newDrift.Add("_Metadata_Info", $Information)
+                            }
+                            $drift.Properties += $newDrift
+                        }
+                    }
+                }
+
+                # Do the scan the other way around because there's a chance that the property, if null, wasn't part of the source
+                # object. By scanning against the destination we will catch properties that are not null on the source but not null in destination;
+                foreach ($propertyName in $destinationResource.Keys)
+                {
+                    if (-not $sourceResource.Contains($propertyName))
+                    {
+                        if ($null -eq $drift)
+                        {
+                            $drift = @{
+                                ResourceName       = $sourceResource.ResourceName
+                                Key                = $keyName
+                                KeyValue           = $SourceKeyValue
+                                Properties         = @(@{
+                                    ParameterName      = $propertyName
+                                    ValueInSource      = $null
+                                    ValueInDestination = $destinationResource.$propertyName
+                                })
+                            }
+                        }
+                        else
+                        {
+                            $drift.Properties += @{
+                                    ParameterName      = $propertyName
+                                    ValueInSource      = $null
+                                    ValueInDestination = $destinationResource.$propertyName
+                            }
+                        }
+                    }
+                }
+
+                if ($null -ne $drift)
+                {
+                    $Delta += ,$drift
+                    $drift = $null
+                }
+            }
+        }
+        catch
+        {
+            Write-Host "Error: $($sourceResource.ResourceName)"
         }
         $i++
     }
@@ -566,6 +573,10 @@ function Get-M365DSCResourceKey
     elseif ($Resource.Contains("Usage"))
     {
         return @("Usage")
+    }
+    elseif ($Resource.Contains("OrgWideAccount"))
+    {
+        return @("OrgWideAccount")
     }
 }
 
