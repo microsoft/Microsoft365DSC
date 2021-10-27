@@ -15,6 +15,10 @@
   * Updated Microsoft.Graph.Planner to 1.8.0;
   * Updated Microsoft.Graph.Teams to 1.8.0;
   * Updated Microsoft.Graph.Users to 1.8.0;
+  * Updated MSCloudLoginAssistant to version 1.0.74;
+* MISC
+  * Fixed issue generating delta report containing EXOAvailabilityConfig
+    resources;
 
 # 1.21.1013.1
 
