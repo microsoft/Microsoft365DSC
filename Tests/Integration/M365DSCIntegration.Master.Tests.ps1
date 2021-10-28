@@ -268,6 +268,33 @@ Configuration Master
             ReadTrackingEnabled                                       = $False;
         }
 
+        IntuneDeviceConfigurationPolicyAndroidWorkProfile IntuneDeviceConfigurationPolicyAndroidWorkProfile
+        {
+            DisplayName                                    = "Android Work Profile - Device Restrictions - Standard";
+            Ensure                                         = "Present";
+            Credential                                     = $Credential;
+            PasswordBlockFingerprintUnlock                 = $False;
+            PasswordBlockTrustAgents                       = $False;
+            PasswordMinimumLength                          = 6;
+            PasswordMinutesOfInactivityBeforeScreenTimeout = 15;
+            PasswordRequiredType                           = "atLeastNumeric";
+            SecurityRequireVerifyApps                      = $True;
+            WorkProfileBlockAddingAccounts                 = $True;
+            WorkProfileBlockCamera                         = $False;
+            WorkProfileBlockCrossProfileCallerId           = $False;
+            WorkProfileBlockCrossProfileContactsSearch     = $False;
+            WorkProfileBlockCrossProfileCopyPaste          = $True;
+            WorkProfileBlockNotificationsWhileDeviceLocked = $True;
+            WorkProfileBlockScreenCapture                  = $True;
+            WorkProfileBluetoothEnableContactSharing       = $False;
+            WorkProfileDataSharingType                     = "allowPersonalToWork";
+            WorkProfileDefaultAppPermissionPolicy          = "deviceDefault";
+            WorkProfilePasswordBlockFingerprintUnlock      = $False;
+            WorkProfilePasswordBlockTrustAgents            = $False;
+            WorkProfilePasswordRequiredType                = "deviceDefault";
+            WorkProfileRequirePassword                     = $False;
+        }
+
         O365User JohnSmith
         {
             UserPrincipalName  = "John.Smith@$Domain"

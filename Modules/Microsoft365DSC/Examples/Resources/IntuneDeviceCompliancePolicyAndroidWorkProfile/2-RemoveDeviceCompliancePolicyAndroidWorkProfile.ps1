@@ -7,7 +7,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -17,7 +17,7 @@ Configuration Example
         {
             DisplayName          = "Test Android Work Profile Device Compliance Policy"
             Ensure               = "Absent"
-            Credential           = $credsGlobalAdmin;
+            Credential           = $Credential;
         }
     }
 }
