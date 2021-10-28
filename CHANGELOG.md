@@ -3,6 +3,7 @@
 # 1.21.1027.1
 
 * DEPENDENCIES
+
   * Updated Microsoft.Graph.Applications to 1.8.0;
   * Updated Microsoft.Graph.Authentication to 1.8.0;
   * Updated Microsoft.Graph.DeviceManagement to 1.8.0;
@@ -22,7 +23,6 @@
 
 # 1.21.1013.1
 
-* MISC
   * Obfuscating Authentication Secrets from the Verbose output;
 
 # 1.21.1006.3

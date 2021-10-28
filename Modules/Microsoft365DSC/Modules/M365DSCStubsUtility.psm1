@@ -31,46 +31,24 @@ function New-M365DSCStubFiles
         }
     }
 
-    $Modules = @(
-        @{
-            Platform     = 'ExchangeOnline'
-            ModuleName   = $null
-            RandomCmdlet = 'Add-AvailabilityAddressSpace'
-        },
-        @{
-            Platform   = 'Intune'
-            ModuleName = "Microsoft.Graph.Intune"
-        },
-        @{
-            Platform     = 'MicrosoftTeams'
-            ModuleName   = 'MicrosoftTeams'
-            RandomCmdlet = 'Get-CsOnlineVoiceRoute'
-        },
-        @{
-            Platform   = 'PnP'
-            ModuleName = 'PnP.PowerShell'
-        },
-        @{
-            Platform   = 'PowerPlatforms'
-            ModuleName = 'Microsoft.PowerApps.Administration.PowerShell'
-        },
-        @{
-            Platform     = 'SecurityComplianceCenter'
-            ModuleName   = $null
-            RandomCmdlet = 'Add-ComplianceCaseMember'
-        }
-    )
+    $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
+    $manifest = Import-PowerShellDataFile "$currentPath/Microsoft365DSC.psd1"
+    $dependencies = $manifest.RequiredModules
     $Content = ''
     $folderPath = Join-Path $PSScriptRoot -ChildPath "../DSCResources"
     Write-Host $FolderPath
-    foreach ($Module in $Modules)
+    $workloads = @('ExchangeOnline','SecurityComplianceCenter','PnP','PowerPlatforms','MicrosoftTeams','MicrosoftGraph')
+    foreach ($workload in $workloads)
+    {
+        $ConnectionMode = New-M365DSCConnection -Workload $workload `
+                    -InboundParameters $PSBoundParameters
+    }
+    foreach ($Module in $dependencies.ModuleName)
     {
         Write-Host "Generating Stubs for {$($Module.Platform)}..."
         $CurrentModuleName = $Module.ModuleName
         if ($null -eq $CurrentModuleName)
         {
-            $ConnectionMode = New-M365DSCConnection -Workload $Module.Platform `
-                -InboundParameters $PSBoundParameters
             $foundModule = Get-Module | Where-Object -FilterScript { $_.ExportedCommands.Values.Name -ccontains $Module.RandomCmdlet }
             $CurrentModuleName = $foundModule.Name
             Import-Module $CurrentModuleName -Force -Global -ErrorAction SilentlyContinue
@@ -86,6 +64,19 @@ function New-M365DSCStubFiles
         if ($null -eq $cmdlets -or $Module.ModuleName -eq 'MicrosoftTeams')
         {
             $cmdlets += Get-Command -CommandType 'Function' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
+        }
+
+        if ($CurrentModuleName -eq 'Intune')
+        {
+            Select-MgProfile -Name beta | Out-Null
+            $betaCmdlets = Get-Command -CommandType 'Cmdlet' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
+            foreach ($cmdlet in $betaCmdlets)
+            {
+                if ($cmdlets.Name -notcontains $cmdlet.Name)
+                {
+                    $cmdlets += $cmdlet
+                }
+            }
         }
 
         try
