@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# 1.21.1103.1
+
+* TeamsCallingPolicy
+  * Added support for value 'Unanswered' for property
+    BudyOnBusyEnabledType.
+    Fix Issue #1514
+
 # 1.21.1027.1
 
 * DEPENDENCIES
