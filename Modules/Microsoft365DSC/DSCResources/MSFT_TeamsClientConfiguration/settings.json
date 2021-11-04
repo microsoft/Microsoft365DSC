@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "TeamsClientConfiguration",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

@@ -14,13 +14,13 @@ Configuration Example
 
     node localhost
     {
-        SCFilePlanPropertyCitation IntegrationCitation
+        SCFilePlanPropertyCitation 'FilePlanPropertyCitation'
         {
             Name                 = "Demo Citation"
             CitationURL          = "https://contoso.com"
             CitationJurisdiction = "Federal"
-            Ensure               = "Present";
-            Credential           = $credsGlobalAdmin;
+            Ensure               = "Present"
+            Credential           = $credsGlobalAdmin
         }
     }
 }

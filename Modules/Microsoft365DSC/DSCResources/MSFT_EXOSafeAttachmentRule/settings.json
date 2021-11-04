@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOSafeAttachmentRule",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

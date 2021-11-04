@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOInboundConnector",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

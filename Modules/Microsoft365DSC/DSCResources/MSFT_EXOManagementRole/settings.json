@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOManagementRole",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

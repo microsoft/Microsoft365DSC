@@ -14,12 +14,12 @@ Configuration Example
 
     node localhost
     {
-        SPOHomeSite "SetMarketingSiteCollectionAsHomeSite"
+        SPOHomeSite 'SetMarketingSiteCollectionAsHomeSite'
         {
-            IsSingleInstance     = "Yes"
-            Url                  = "https://office365dsc.sharepoint.com/sites/Marketing"
-            Ensure               = "Present"
-            Credential           = $credsGlobalAdmin
+            IsSingleInstance = "Yes"
+            Url              = "https://contoso.sharepoint.com/sites/Marketing"
+            Ensure           = "Present"
+            Credential       = $credsGlobalAdmin
         }
     }
 }

@@ -1,9 +1,9 @@
-name: AzureUSGovernment - Integration
+name: AzureCloud GCC - Integration
 on: [push]
 
 jobs:
   # This workflow contains a single job called "build"
-  IntegrationGCC:
+  Integration-GCC:
     # The type of runner that the job will run on
     runs-on: windows-latest
 

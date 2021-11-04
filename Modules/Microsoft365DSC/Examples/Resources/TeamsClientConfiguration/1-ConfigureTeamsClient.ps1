@@ -14,22 +14,22 @@ Configuration Example
 
     node localhost
     {
-        TeamsClientConfiguration TeamsClientConfiguration
+        TeamsClientConfiguration 'TeamsClientConfiguration'
         {
-            AllowBox                         = $True;
-            AllowDropBox                     = $True;
-            AllowEmailIntoChannel            = $True;
-            AllowGoogleDrive                 = $True;
-            AllowGuestUser                   = $True;
-            AllowOrganizationTab             = $True;
-            AllowResourceAccountSendMessage  = $True;
-            AllowScopedPeopleSearchandAccess = $False;
-            AllowShareFile                   = $True;
-            AllowSkypeBusinessInterop        = $True;
-            ContentPin                       = "RequiredOutsideScheduleMeeting";
-            Credential                       = $credsGlobalAdmin;
-            Identity                         = "Global";
-            ResourceAccountContentAccess     = "NoAccess";
+            AllowBox                         = $True
+            AllowDropBox                     = $True
+            AllowEmailIntoChannel            = $True
+            AllowGoogleDrive                 = $True
+            AllowGuestUser                   = $True
+            AllowOrganizationTab             = $True
+            AllowResourceAccountSendMessage  = $True
+            AllowScopedPeopleSearchandAccess = $False
+            AllowShareFile                   = $True
+            AllowSkypeBusinessInterop        = $True
+            ContentPin                       = "RequiredOutsideScheduleMeeting"
+            Identity                         = "Global"
+            ResourceAccountContentAccess     = "NoAccess"
+            Credential                       = $credsGlobalAdmin
         }
     }
 }

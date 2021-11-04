@@ -14,18 +14,18 @@ Configuration Example
 
     node localhost
     {
-        AADGroupsSettings GeneralGroupsSettings
+        AADGroupsSettings 'GeneralGroupsSettings'
         {
-            AllowGuestsToAccessGroups     = $True;
-            AllowGuestsToBeGroupOwner     = $True;
-            AllowToAddGuests              = $True;
-            EnableGroupCreation           = $True;
-            Ensure                        = "Present";
-            Credential                    = $credsGlobalAdmin;
-            GroupCreationAllowedGroupName = "All Company";
-            GuestUsageGuidelinesUrl       = "https://contoso.com/guestusage";
-            IsSingleInstance              = "Yes";
-            UsageGuidelinesUrl            = "https://contoso.com/usage";
+            IsSingleInstance              = "Yes"
+            AllowGuestsToAccessGroups     = $True
+            AllowGuestsToBeGroupOwner     = $True
+            AllowToAddGuests              = $True
+            EnableGroupCreation           = $True
+            GroupCreationAllowedGroupName = "All Company"
+            GuestUsageGuidelinesUrl       = "https://contoso.com/guestusage"
+            UsageGuidelinesUrl            = "https://contoso.com/usage"
+            Ensure                        = "Present"
+            Credential                    = $credsGlobalAdmin
         }
     }
 }

@@ -14,22 +14,22 @@ Configuration Example
 
     node localhost
     {
-        SPOApp ee4a977d-4d7d-4968-9238-2a1702aa699c
+        SPOApp 'ConfigureDemoApp'
         {
-            Identity           = "DemoApp"
-            Path               = "C:\Demo\DemoApp.sppkg"
-            Publish            = $true
-            Credential         = $credsGlobalAdmin
-            Ensure             = "Present"
+            Identity   = "DemoApp"
+            Path       = "C:\Demo\DemoApp.sppkg"
+            Publish    = $true
+            Ensure     = "Present"
+            Credential = $credsGlobalAdmin
         }
 
-        SPOApp ee4a977d-4eee-4968-9238-2a1702aa1234
+        SPOApp 'ConfigureDemoApp2'
         {
-            Identity           = "DemoApp2"
-            Path               = "C:\Demo\DemoApp2.app"
-            Publish            = $true
-            Credential         = $credsGlobalAdmin
-            Ensure             = "Present"
+            Identity   = "DemoApp2"
+            Path       = "C:\Demo\DemoApp2.app"
+            Publish    = $true
+            Ensure     = "Present"
+            Credential = $credsGlobalAdmin
         }
     }
 }

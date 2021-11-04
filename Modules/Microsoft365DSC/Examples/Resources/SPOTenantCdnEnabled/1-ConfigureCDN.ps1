@@ -14,12 +14,12 @@ Configuration Example
 
     node localhost
     {
-        SPOTenantCdnEnabled CDN
+        SPOTenantCdnEnabled 'ConfigureCDN'
         {
-            Enable             = $True
-            CdnType            = "Public"
-            Credential         = $credsGlobalAdmin;
-            Ensure             = "Present"
+            Enable     = $True
+            CdnType    = "Public"
+            Ensure     = "Present"
+            Credential = $credsGlobalAdmin
         }
 
     }

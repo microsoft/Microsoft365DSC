@@ -14,25 +14,25 @@ Configuration Example
 
     node localhost
     {
-        SPOSite DemoSite
+        SPOSite 'ConfigureTestSite'
         {
-            Url                                         = "https://contoso.sharepoint.com/sites/testsite1"
-            StorageMaximumLevel                         = 26214400
-            LocaleId                                    = 1033
-            Template                                    = "STS#3"
-            Credential                                  = $credsGlobalAdmin
-            Owner                                       = "admin@contoso.onmicrosoft.com"
-            Title                                       = "TestSite"
-            TimeZoneId                                  = 13
-            Ensure                                      = "Present"
-            StorageWarningLevel                         = 25574400
-            SharingCapability                           = "Disabled"
-            CommentsOnSitePagesDisabled                 = $false
-            DisableAppViews                             = "NotDisabled"
-            DisableCompanyWideSharingLinks              = "NotDisabled"
-            DisableFlows                                = $false
-            DefaultSharingLinkType                      = "None"
-            DefaultLinkPermission                       = "None"
+            Url                            = "https://contoso.sharepoint.com/sites/testsite1"
+            StorageMaximumLevel            = 26214400
+            LocaleId                       = 1033
+            Template                       = "STS#3"
+            Owner                          = "admin@contoso.onmicrosoft.com"
+            Title                          = "TestSite"
+            TimeZoneId                     = 13
+            StorageWarningLevel            = 25574400
+            SharingCapability              = "Disabled"
+            CommentsOnSitePagesDisabled    = $false
+            DisableAppViews                = "NotDisabled"
+            DisableCompanyWideSharingLinks = "NotDisabled"
+            DisableFlows                   = $false
+            DefaultSharingLinkType         = "None"
+            DefaultLinkPermission          = "None"
+            Ensure                         = "Present"
+            Credential                     = $credsGlobalAdmin
         }
     }
 }

@@ -14,14 +14,14 @@ Configuration Example
 
     node localhost
     {
-        AADGroupLifecyclePolicy GroupLifecyclePolicy
+        AADGroupLifecyclePolicy 'GroupLifecyclePolicy'
         {
-            AlternateNotificationEmails = @("john.smith@contoso.com");
-            Ensure                      = "Present";
-            Credential                  = $credsGlobalAdmin;
-            GroupLifetimeInDays         = 99;
-            IsSingleInstance            = "Yes";
-            ManagedGroupTypes           = "Selected";
+            IsSingleInstance            = "Yes"
+            AlternateNotificationEmails = @("john.smith@contoso.com")
+            GroupLifetimeInDays         = 99
+            ManagedGroupTypes           = "Selected"
+            Ensure                      = "Present"
+            Credential                  = $credsGlobalAdmin
         }
     }
 }

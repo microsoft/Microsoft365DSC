@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SCFilePlanPropertyCitation",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

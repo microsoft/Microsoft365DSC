@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOAntiPhishPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

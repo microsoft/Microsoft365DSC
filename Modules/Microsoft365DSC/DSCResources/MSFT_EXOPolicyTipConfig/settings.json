@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOPolicyTipConfig",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

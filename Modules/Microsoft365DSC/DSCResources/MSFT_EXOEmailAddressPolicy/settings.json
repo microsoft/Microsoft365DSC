@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOEmailAddressPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

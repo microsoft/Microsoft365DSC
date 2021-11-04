@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOHostedContentFilterRule",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

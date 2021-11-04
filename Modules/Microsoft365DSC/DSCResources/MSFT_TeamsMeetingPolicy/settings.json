@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "TeamsMeetingPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

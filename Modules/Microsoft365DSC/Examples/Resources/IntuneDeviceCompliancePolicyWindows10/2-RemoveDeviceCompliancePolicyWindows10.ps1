@@ -13,11 +13,11 @@ Configuration Example
 
     node localhost
     {
-        IntuneDeviceCompliancePolicyWindows10 MyCustomWindows10Policy
+        IntuneDeviceCompliancePolicyWindows10 'RemoveDeviceCompliancePolicyWindows10'
         {
-            DisplayName          = 'Demo Windows 10 Device Compliance Policy';
-            Ensure               = 'Absent';
-            Credential           = $credsGlobalAdmin;
+            DisplayName          = 'Demo Windows 10 Device Compliance Policy'
+            Ensure               = 'Absent'
+            Credential           = $credsGlobalAdmin
         }
     }
 }

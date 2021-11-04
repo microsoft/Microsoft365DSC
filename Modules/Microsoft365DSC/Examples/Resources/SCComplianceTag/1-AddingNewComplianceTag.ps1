@@ -14,14 +14,15 @@ Configuration Example
 
     node localhost
     {
-        SCComplianceTag DemoRule
+        SCComplianceTag 'ConfigureComplianceTag'
         {
-            Name               = "DemoTag"
-            Comment            = "This is a Demo Tag"
-            RetentionAction    = "Keep"
-            RetentionDuration  = "1025"
-            RetentionType      = "ModificationAgeInDays"
-            FilePlanProperty   = MSFT_SCFilePlanProperty {
+            Name              = "DemoTag"
+            Comment           = "This is a Demo Tag"
+            RetentionAction   = "Keep"
+            RetentionDuration = "1025"
+            RetentionType     = "ModificationAgeInDays"
+            FilePlanProperty  = MSFT_SCFilePlanProperty
+            {
                 FilePlanPropertyDepartment  = "DemoDept"
                 FilePlanPropertyCitation    = "DemoCit"
                 FilePlanPropertyReferenceId = "DemoRef"
@@ -29,8 +30,8 @@ Configuration Example
                 FilePlanPropertyCategory    = "DemoCat"
                 FilePlanPropertySubcategory = "DemoSub"
             }
-            Ensure             = "Present"
-            Credential         = $credsGlobalAdmin
+            Ensure            = "Present"
+            Credential        = $credsGlobalAdmin
         }
     }
 }

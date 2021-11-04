@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXORoleAssignmentPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

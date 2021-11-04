@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOJournalRule",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

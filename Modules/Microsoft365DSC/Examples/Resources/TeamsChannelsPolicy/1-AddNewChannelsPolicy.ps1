@@ -13,13 +13,13 @@ Configuration Example
 
     node localhost
     {
-        TeamsChannelsPolicy ChannelsPolicy
+        TeamsChannelsPolicy 'ConfigureChannelsPolicy'
         {
             Identity                    = 'New Channels Policy'
-            AllowOrgWideTeamCreation    = $True;
-            AllowPrivateChannelCreation = $True;
-            AllowPrivateTeamDiscovery   = $True;
-            Description                 = 'This is an example';
+            AllowOrgWideTeamCreation    = $True
+            AllowPrivateChannelCreation = $True
+            AllowPrivateTeamDiscovery   = $True
+            Description                 = 'This is an example'
             Ensure                      = 'Present'
             Credential                  = $credsGlobalAdmin
         }

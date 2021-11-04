@@ -1,4 +1,4 @@
-name: AzureCloud - Integration
+name: AzureCloud Public - Integration
 on: [push]
 
 jobs:

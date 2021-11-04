@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "TeamsMessagingPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

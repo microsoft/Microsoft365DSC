@@ -13,13 +13,13 @@ Configuration Example
 
     node localhost
     {
-        IntuneDeviceEnrollmentLimitRestriction LimitRestriction
+        IntuneDeviceEnrollmentLimitRestriction 'DeviceEnrollmentLimitRestriction'
         {
-            Description          = "My Restriction";
-            DisplayName          = "My DSC Limit";
+            Description          = "My Restriction"
+            DisplayName          = "My DSC Limit"
+            Limit                = 12
             Ensure               = "Present"
-            Credential           = $Credsglobaladmin;
-            Limit                = 12;
+            Credential           = $credsGlobalAdmin
         }
     }
 }

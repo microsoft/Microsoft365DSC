@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "TeamsVoiceRoute",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

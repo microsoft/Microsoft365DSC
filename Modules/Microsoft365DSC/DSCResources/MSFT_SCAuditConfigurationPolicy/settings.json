@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SCAuditConfigurationPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

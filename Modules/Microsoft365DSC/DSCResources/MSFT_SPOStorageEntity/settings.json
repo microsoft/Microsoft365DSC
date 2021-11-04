@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SPOStorageEntity",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}
