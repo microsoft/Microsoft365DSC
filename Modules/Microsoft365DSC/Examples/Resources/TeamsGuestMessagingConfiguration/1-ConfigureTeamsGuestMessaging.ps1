@@ -13,18 +13,18 @@ Configuration Example
 
     node localhost
     {
-        TeamsGuestMessagingConfiguration TeamsGuestMessagingConfig
+        TeamsGuestMessagingConfiguration 'TeamsGuestMessagingConfig'
         {
-            AllowGiphy             = $True;
-            AllowImmersiveReader   = $False;
-            AllowMemes             = $True;
-            AllowStickers          = $True;
-            AllowUserChat          = $True;
-            AllowUserDeleteMessage = $False;
-            AllowUserEditMessage   = $True;
-            GiphyRatingType        = "Moderate";
-            Credential             = $credsglobaladmin;
-            Identity               = "Global";
+            Identity               = "Global"
+            AllowGiphy             = $True
+            AllowImmersiveReader   = $False
+            AllowMemes             = $True
+            AllowStickers          = $True
+            AllowUserChat          = $True
+            AllowUserDeleteMessage = $False
+            AllowUserEditMessage   = $True
+            GiphyRatingType        = "Moderate"
+            Credential             = $credsglobaladmin
         }
     }
 }

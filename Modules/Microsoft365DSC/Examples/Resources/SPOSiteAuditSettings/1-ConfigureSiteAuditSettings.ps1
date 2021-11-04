@@ -14,11 +14,11 @@ Configuration Example
 
     node localhost
     {
-        SPOSiteAuditSettings MyStorageEntity
+        SPOSiteAuditSettings 'ConfigureSiteAuditSettings '
         {
-            Url                = "https://contoso.sharepoint.com/sites/DemoSite"
-            AuditFlags         = "All"
-            Credential         = $credsGlobalAdmin
+            Url        = "https://contoso.sharepoint.com/sites/DemoSite"
+            AuditFlags = "All"
+            Credential = $credsGlobalAdmin
         }
     }
 }

@@ -14,25 +14,23 @@ Configuration Example
 
     node localhost
     {
-        AADNamedLocationPolicy CompanyNetwork
+        AADNamedLocationPolicy 'CompanyNetwork'
         {
-            DisplayName        = "Company Network";
-            Ensure             = "Present";
-            IpRanges           = @("2.1.1.1/32", "1.2.2.2/32");
-            IsTrusted          = $True;
-            OdataType          = "#microsoft.graph.ipNamedLocation";
-            TenantId           = $ConfigurationData.NonNodeData.TenantId;
-            Credential         = $credsGlobalAdmin;
+            DisplayName = "Company Network"
+            IpRanges    = @("2.1.1.1/32", "1.2.2.2/32")
+            IsTrusted   = $True
+            OdataType   = "#microsoft.graph.ipNamedLocation"
+            Ensure      = "Present"
+            Credential  = $credsGlobalAdmin
         }
-        AADNamedLocationPolicy AllowedCountries
+        AADNamedLocationPolicy 'AllowedCountries'
         {
-            CountriesAndRegions               = @("GH", "AX", "DZ", "AI", "AM");
-            DisplayName                       = "Allowed Countries";
-            Ensure                            = "Present";
-            IncludeUnknownCountriesAndRegions = $False;
-            OdataType                         = "#microsoft.graph.countryNamedLocation";
-            TenantId                          = $ConfigurationData.NonNodeData.TenantId;
-            Credential                        = $credsGlobalAdmin;
+            CountriesAndRegions               = @("GH", "AX", "DZ", "AI", "AM")
+            DisplayName                       = "Allowed Countries"
+            IncludeUnknownCountriesAndRegions = $False
+            OdataType                         = "#microsoft.graph.countryNamedLocation"
+            Ensure                            = "Present"
+            Credential                        = $credsGlobalAdmin
         }
     }
 }

@@ -14,7 +14,7 @@ Configuration Example
 
     node localhost
     {
-        EXOAddressList HRUsers
+        EXOAddressList 'HRUsersAddressList'
         {
             Name                       = "HR Users"
             ConditionalCompany         = "Contoso"

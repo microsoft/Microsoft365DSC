@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SCFilePlanPropertySubCategory",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

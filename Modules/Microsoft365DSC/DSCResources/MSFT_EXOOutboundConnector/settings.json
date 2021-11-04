@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOOutboundConnector",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

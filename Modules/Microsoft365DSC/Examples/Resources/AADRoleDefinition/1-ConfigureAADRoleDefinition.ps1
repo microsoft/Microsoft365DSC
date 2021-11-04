@@ -14,7 +14,7 @@ Configuration Example
 
     node localhost
     {
-        AADRoleDefinition DSCRole1
+        AADRoleDefinition 'AADRoleDefinition1'
         {
             DisplayName                   = "DSCRole1"
             Description                   = "DSC created role definition"

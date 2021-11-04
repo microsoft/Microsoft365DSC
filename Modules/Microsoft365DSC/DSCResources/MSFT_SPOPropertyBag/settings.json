@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SPOPropertyBag",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

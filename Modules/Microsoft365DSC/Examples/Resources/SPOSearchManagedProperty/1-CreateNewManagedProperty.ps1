@@ -14,12 +14,11 @@ Configuration Example
 
     node localhost
     {
-        SPOSearchManagedProperty SearchMP
+        SPOSearchManagedProperty 'ConfigureSearchMP'
         {
             Searchable                  = $True
             FullTextIndex               = ""
             MappedCrawledProperties     = @()
-            Credential                  = $credsGlobalAdmin
             LanguageNeutralTokenization = $True
             CompanyNameExtraction       = $False
             AllowMultipleValues         = $True
@@ -35,8 +34,9 @@ Configuration Example
             FullTextContext             = 4
             Sortable                    = "Yes"
             Refinable                   = "Yes"
-            Ensure                      = "Present"
             TokenNormalization          = $True
+            Ensure                      = "Present"
+            Credential                  = $credsGlobalAdmin
         }
     }
 }

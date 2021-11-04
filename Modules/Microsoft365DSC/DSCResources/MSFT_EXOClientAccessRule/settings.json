@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOClientAccessRule",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

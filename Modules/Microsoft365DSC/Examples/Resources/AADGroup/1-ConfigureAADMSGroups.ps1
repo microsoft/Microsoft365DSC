@@ -14,17 +14,17 @@ Configuration Example
 
     node localhost
     {
-        AADGroup MyGroups
+        AADGroup 'MyGroups'
         {
-            DisplayName                   = "DSCGroup"
-            Description                   = "Microsoft DSC Group"
-            SecurityEnabled               = $True
-            MailEnabled                   = $True
-            GroupTypes                    = @("Unified")
-            MailNickname                  = "M365DSC"
-            Visibility                    = "Private"
-            Credential                    = $credsGlobalAdmin
-            Ensure                        = "Present"
+            DisplayName     = "DSCGroup"
+            Description     = "Microsoft DSC Group"
+            SecurityEnabled = $True
+            MailEnabled     = $True
+            GroupTypes      = @("Unified")
+            MailNickname    = "M365DSC"
+            Visibility      = "Private"
+            Ensure          = "Present"
+            Credential      = $credsGlobalAdmin
         }
     }
 }

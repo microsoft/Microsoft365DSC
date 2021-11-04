@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOAddressList",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

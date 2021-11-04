@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SCComplianceSearchAction",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

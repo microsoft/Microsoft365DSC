@@ -9,19 +9,19 @@ Configuration Example
 
     node localhost
     {
-        TeamsChannelTab MyWebTab
+        TeamsChannelTab 'ConfigureChannelTab'
         {
-            ApplicationId         = "12345";
-            CertificateThumbprint = "ABCDEF1234567890";
-            ChannelName           = "General";
-            ContentUrl            = "https://contoso.com";
+            ChannelName           = "General"
+            ContentUrl            = "https://contoso.com"
             DisplayName           = "TestTab"
+            SortOrderIndex        = "10100"
+            TeamName              = "Contoso Team"
+            TeamsApp              = "com.microsoft.teamspace.tab.web"
+            WebSiteUrl            = "https://contoso.com"
             Ensure                = "Present"
-            SortOrderIndex        = "10100";
-            TeamName              = "Contoso Team";
-            TeamsApp              = "com.microsoft.teamspace.tab.web";
-            TenantId              = "contoso.onmicrosoft.com";
-            WebSiteUrl            = "https://contoso.com";
+            ApplicationId         = "12345"
+            CertificateThumbprint = "ABCDEF1234567890"
+            TenantId              = "contoso.onmicrosoft.com"
         }
     }
 }

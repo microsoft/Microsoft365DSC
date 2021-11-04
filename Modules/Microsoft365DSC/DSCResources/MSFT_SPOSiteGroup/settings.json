@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SPOSiteGroup",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

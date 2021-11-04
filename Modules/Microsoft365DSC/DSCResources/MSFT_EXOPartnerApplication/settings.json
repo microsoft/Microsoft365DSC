@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOPartnerApplication",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

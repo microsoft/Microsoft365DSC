@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SCDeviceConditionalAccessPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SCRetentionComplianceRule",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

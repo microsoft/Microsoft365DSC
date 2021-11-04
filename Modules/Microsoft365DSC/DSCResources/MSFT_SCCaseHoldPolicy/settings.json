@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SCCaseHoldPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

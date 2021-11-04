@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOOnPremisesOrganization",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

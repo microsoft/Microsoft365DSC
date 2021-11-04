@@ -14,13 +14,13 @@ Configuration Example
 
     node localhost
     {
-        SPOBrowserIdleSignout MyTenant
+        SPOBrowserIdleSignout 'ConfigureBrowserIdleSignout'
         {
-            Enabled            = $True;
-            Credential         = $Credsglobaladmin;
-            IsSingleInstance   = "Yes";
-            SignOutAfter       = "04:00:00";
-            WarnAfter          = "03:30:00";
+            IsSingleInstance = "Yes"
+            Enabled          = $True
+            SignOutAfter     = "04:00:00"
+            WarnAfter        = "03:30:00"
+            Credential       = $Credsglobaladmin
         }
     }
 }

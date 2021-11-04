@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "PPPowerAppsEnvironment",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

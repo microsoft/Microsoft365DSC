@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SPOSiteDesign",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

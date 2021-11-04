@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOAcceptedDomain",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

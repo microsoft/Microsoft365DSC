@@ -13,13 +13,13 @@ Configuration Example
 
     node localhost
     {
-        TeamsEmergencyCallingPolicy DemoEmergencyCallingPolicy
+        TeamsEmergencyCallingPolicy 'ConfigureEmergencyCallingPolicy'
         {
-            Description               = "Demo";
-            Identity                  = "Demo Emergency Calling Policy";
-            NotificationDialOutNumber = "+1234567890";
-            NotificationGroup         = 'john.smith@contoso.com';
-            NotificationMode          = "NotificationOnly";
+            Description               = "Demo"
+            Identity                  = "Demo Emergency Calling Policy"
+            NotificationDialOutNumber = "+1234567890"
+            NotificationGroup         = 'john.smith@contoso.com'
+            NotificationMode          = "NotificationOnly"
             Ensure                    = 'Present'
             Credential                = $credsGlobalAdmin
         }

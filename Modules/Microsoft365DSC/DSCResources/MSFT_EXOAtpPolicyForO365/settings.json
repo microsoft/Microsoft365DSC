@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOAtpPolicyForO365",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

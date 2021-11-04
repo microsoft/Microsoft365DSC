@@ -14,7 +14,7 @@ Configuration Example
 
     node localhost
     {
-        AADServicePrincipal AADServicePrincipal1
+        AADServicePrincipal 'AADServicePrincipal'
         {
             AppId                         = "<AppID GUID>"
             DisplayName                   = "AADAppName"

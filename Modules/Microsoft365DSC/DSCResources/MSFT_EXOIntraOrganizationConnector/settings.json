@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOIntraOrganizationConnector",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

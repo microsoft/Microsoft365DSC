@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "TeamsChannelsPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

@@ -13,10 +13,11 @@ Configuration Example
 
     node localhost
     {
-        TeamsEmergencyCallRoutingPolicy EmergencyCallRoutingPolicyExample
+        TeamsEmergencyCallRoutingPolicy 'EmergencyCallRoutingPolicyExample'
         {
-            AllowEnhancedEmergencyServices = $False;
-            Description                    = "Description";
+            Identity                       = "Unit Test"
+            AllowEnhancedEmergencyServices = $False
+            Description                    = "Description"
             EmergencyNumbers               = @(
                 MSFT_TeamsEmergencyNumber
                 {
@@ -24,10 +25,9 @@ Configuration Example
                     EmergencyDialMask   = '123'
                     OnlinePSTNUsage     = ''
                 }
-            );
-            Ensure                         = "Present";
-            Credential                     = $credsGlobalAdmin;
-            Identity                       = "Unit Test";
+            )
+            Ensure                         = "Present"
+            Credential                     = $credsGlobalAdmin
         }
     }
 }

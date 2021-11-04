@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SPOHomeSite",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

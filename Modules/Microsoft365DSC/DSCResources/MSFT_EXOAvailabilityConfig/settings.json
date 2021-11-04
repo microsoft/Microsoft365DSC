@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOAvailabilityConfig",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

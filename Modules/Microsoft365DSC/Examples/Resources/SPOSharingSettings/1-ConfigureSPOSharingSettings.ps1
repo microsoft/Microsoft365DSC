@@ -14,10 +14,9 @@ Configuration Example
 
     node localhost
     {
-        SPOSharingSettings MyTenant
+        SPOSharingSettings 'ConfigureSharingSettings'
         {
             IsSingleInstance                           = "Yes"
-            Credential                                 = $credsGlobalAdmin
             SharingCapability                          = 'ExternalUserSharingOnly'
             ShowEveryoneClaim                          = $false
             ShowAllUsersClaim                          = $false
@@ -36,9 +35,10 @@ Configuration Example
             FileAnonymousLinkType                      = "Edit"
             FolderAnonymousLinkType                    = "Edit"
             NotifyOwnersWhenItemsReshared              = $true
-            DefaultLinkPermission                      ="View"
+            DefaultLinkPermission                      = "View"
             RequireAcceptingAccountMatchInvitedAccount = $false
             Ensure                                     = "Present"
+            Credential                                 = $credsGlobalAdmin
         }
     }
 }

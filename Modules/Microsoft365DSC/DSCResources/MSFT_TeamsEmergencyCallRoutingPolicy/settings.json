@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "TeamsEmergencyCallRoutingPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

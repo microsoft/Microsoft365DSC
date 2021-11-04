@@ -14,19 +14,19 @@ Configuration Example
 
     node localhost
     {
-        SPOTenantCDNPolicy PublicCDNPolicy
+        SPOTenantCDNPolicy 'PublicCDNPolicy'
         {
-            IncludeFileExtensions                = @('.jpg', '.png');
+            IncludeFileExtensions                = @('.jpg', '.png')
+            CDNType                              = "Public"
+            ExcludeRestrictedSiteClassifications = @()
             Credential                           = $credsGlobalAdmin
-            CDNType                              = "Public";
-            ExcludeRestrictedSiteClassifications = @();
         }
-        SPOTenantCDNPolicy PrivateCDNPolicy
+        SPOTenantCDNPolicy 'PrivateCDNPolicy'
         {
-            IncludeFileExtensions                = @('.gif');
+            IncludeFileExtensions                = @('.gif')
+            CDNType                              = "Private"
+            ExcludeRestrictedSiteClassifications = @()
             Credential                           = $credsGlobalAdmin
-            CDNType                              = "Private";
-            ExcludeRestrictedSiteClassifications = @();
         }
     }
 }

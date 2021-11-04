@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOCASMailboxPlan",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

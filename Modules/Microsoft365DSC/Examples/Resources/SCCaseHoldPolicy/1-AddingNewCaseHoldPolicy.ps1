@@ -14,16 +14,16 @@ Configuration Example
 
     node localhost
     {
-        SCCaseHoldPolicy CaseHoldPolicy
+        SCCaseHoldPolicy 'CaseHoldPolicy'
         {
-            Case                 = "Test Case";
-            ExchangeLocation     = "DemoGroup@contoso.onmicrosoft.com";
-            Name                 = "Demo Hold";
-            PublicFolderLocation = "All";
-            Comment              = "This is a demo";
-            Ensure               = "Present";
-            Enabled              = $True;
-            Credential           = $Credsglobaladmin;
+            Case                 = "Test Case"
+            ExchangeLocation     = "DemoGroup@contoso.onmicrosoft.com"
+            Name                 = "Demo Hold"
+            PublicFolderLocation = "All"
+            Comment              = "This is a demo"
+            Enabled              = $True
+            Ensure               = "Present"
+            Credential           = $credsGlobalAdmin
         }
     }
 }

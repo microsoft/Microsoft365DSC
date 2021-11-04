@@ -14,15 +14,15 @@ Configuration Example
 
     node localhost
     {
-        SCRetentionComplianceRule DemoRule
+        SCRetentionComplianceRule 'RetentionComplianceRule'
         {
             Name                      = "DemoRule2"
             Policy                    = "ContosoPolicy"
             Comment                   = "This is a Demo Rule"
             RetentionComplianceAction = "Keep"
             RetentionDuration         = "Unlimited"
-            Credential                = $credsGlobalAdmin
             Ensure                    = "Present"
+            Credential                = $credsGlobalAdmin
         }
     }
 }

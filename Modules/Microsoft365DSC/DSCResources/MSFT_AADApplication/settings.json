@@ -1,16 +1,37 @@
-{
+﻿{
     "resourceName": "AADApplication",
     "description": "This resource configures an Azure Active Directory Application.",
     "permissions": [
         {
             "read": [
                 {
-                    "name":"User.Read.All"
+                    "name": "Application.Read.All"
+                },
+                {
+                    "name": "Application.ReadWrite.All"
+                },
+                {
+                    "name": "Directory.AccessAsUser.All"
+                },
+                {
+                    "name": "Directory.Read.All"
                 }
             ],
             "update": [
                 {
-                    "name": "User.ReadWrite.All"
+                    "name": "Application.Read.All"
+                },
+                {
+                    "name": "Application.ReadWrite.All"
+                },
+                {
+                    "name": "Directory.AccessAsUser.All"
+                },
+                {
+                    "name": "Directory.Read.All"
+                },
+                {
+                    "name": "Directory.ReadWrite.All"
                 }
             ]
         }

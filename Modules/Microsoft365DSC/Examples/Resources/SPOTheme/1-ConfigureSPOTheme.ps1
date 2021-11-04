@@ -14,21 +14,24 @@ Configuration Example
 
     node localhost
     {
-        SPOTheme MySPOTheme
+        SPOTheme 'ConfigureSharePointTheme'
         {
-            Credential         = $credsGlobalAdmin
-            Name               = "PSTheme1"
-            IsInverted         = $false
-            Palette            =  @(MSFT_SPOThemePaletteProperty {
+            Name       = "PSTheme1"
+            IsInverted = $false
+            Palette    = @(
+                MSFT_SPOThemePaletteProperty
+                {
                     Property = "themePrimary"
                     Value    = "#0078d4"
                 }
-                MSFT_SPOThemePaletteProperty {
+                MSFT_SPOThemePaletteProperty
+                {
                     Property = "themeLighterAlt"
                     Value    = "#eff6fc"
                 }
             )
-            Ensure             = "Present"
+            Ensure     = "Present"
+            Credential = $credsGlobalAdmin
         }
     }
 }

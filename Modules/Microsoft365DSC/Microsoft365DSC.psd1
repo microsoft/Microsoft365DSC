@@ -170,7 +170,9 @@
         'New-M365DSCStubFiles',
         'Set-M365DSCAgentCertificateConfiguration',
         'Test-M365DSCAgent',
-        'Test-M365DSCDependenciesForNewVersions')
+        'Test-M365DSCDependenciesForNewVersions',
+        'Update-M365DSCAllowedGraphScopes',
+        'Update-M365DSCResourcesSettingsJSON')
 
     # Variables to export from this module
     # VariablesToExport = @()

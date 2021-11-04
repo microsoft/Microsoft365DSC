@@ -13,12 +13,12 @@ Configuration Example
 
     node localhost
     {
-        SCFilePlanPropertySubCategory FilePlanPropertySubCategory
+        SCFilePlanPropertySubCategory 'FilePlanPropertySubCategory'
         {
-            Name               = "My Sub-Category"
-            Category           = "My Category"
-            Ensure             = "Present"
-            Credential         = $credsGlobalAdmin
+            Name       = "My Sub-Category"
+            Category   = "My Category"
+            Ensure     = "Present"
+            Credential = $credsGlobalAdmin
         }
     }
 }

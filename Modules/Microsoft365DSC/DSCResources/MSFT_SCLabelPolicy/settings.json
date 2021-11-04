@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SCLabelPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}
