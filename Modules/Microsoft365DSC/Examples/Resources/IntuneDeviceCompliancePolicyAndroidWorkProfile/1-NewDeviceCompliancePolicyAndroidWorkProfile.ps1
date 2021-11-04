@@ -16,8 +16,12 @@ Configuration Example
         IntuneDeviceCompliancePolicyAndroidWorkProfile 'ConfigureAndroidDeviceCompliancePolicyWorkProfile'
         {
             DisplayName                                        = "Test Policy"
+            Description                                        = ""
             DeviceThreatProtectionEnabled                      = $False
             DeviceThreatProtectionRequiredSecurityLevel        = "unavailable"
+            PasswordExpirationDays                             = 90
+            PasswordMinimumLength                              = 6
+            PasswordMinutesOfInactivityBeforeLock              = 5
             PasswordRequired                                   = $True
             PasswordRequiredType                               = "numericComplex"
             SecurityBlockJailbrokenDevices                     = $True

@@ -405,7 +405,9 @@ Configuration Master
             ReadTrackingEnabled                                       = $False
             Credential                                                = $GlobalAdmin
         }
+        #endregion
 
+        #region O365
         IntuneDeviceConfigurationPolicyAndroidWorkProfile IntuneDeviceConfigurationPolicyAndroidWorkProfile
         {
             DisplayName                                    = "Android Work Profile - Device Restrictions - Standard"

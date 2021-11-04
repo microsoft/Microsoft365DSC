@@ -7,7 +7,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $credsGlobbaAdminlAdmin
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
