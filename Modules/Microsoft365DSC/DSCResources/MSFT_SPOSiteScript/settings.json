@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SPOSiteScript",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

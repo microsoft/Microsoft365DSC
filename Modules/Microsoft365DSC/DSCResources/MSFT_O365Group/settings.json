@@ -1,0 +1,32 @@
+﻿{
+    "resourceName": "O365Group",
+    "description": "",
+    "permissions": [
+        {
+            "read": [
+                {
+                    "name": "Directory.AccessAsUser.All"
+                },
+                {
+                    "name": "Directory.Read.All"
+                },
+                {
+                    "name": "Directory.ReadWrite.All"
+                },
+                {
+                    "name": "Group.Read.All"
+                },
+                {
+                    "name": "Group.ReadWrite.All"
+                },
+                {
+                    "name": "GroupMember.Read.All"
+                },
+                {
+                    "name": "GroupMember.ReadWrite.All"
+                }
+            ],
+            "update": []
+        }
+    ]
+}

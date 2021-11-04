@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SPOSharingSettings",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

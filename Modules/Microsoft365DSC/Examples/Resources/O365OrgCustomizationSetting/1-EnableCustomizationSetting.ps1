@@ -15,11 +15,11 @@ Configuration Example
 
     node localhost
     {
-        O365OrgCustomizationSetting O365OrgCustomizationSetting
+        O365OrgCustomizationSetting 'O365OrgCustomizationSetting'
         {
-            IsSingleInstance   = "Yes"
-            Ensure             = "Present"
-            Credential         = $credsGlobalAdmin
+            IsSingleInstance = "Yes"
+            Ensure           = "Present"
+            Credential       = $credsGlobalAdmin
         }
     }
 }

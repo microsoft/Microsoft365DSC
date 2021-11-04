@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "TeamsUser",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

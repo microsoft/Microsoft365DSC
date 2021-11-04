@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "TeamsMeetingConfiguration",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

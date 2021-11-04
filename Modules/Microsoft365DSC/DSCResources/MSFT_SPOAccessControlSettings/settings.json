@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SPOAccessControlSettings",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

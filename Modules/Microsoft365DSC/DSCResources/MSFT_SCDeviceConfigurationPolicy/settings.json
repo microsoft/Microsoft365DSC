@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SCDeviceConfigurationPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

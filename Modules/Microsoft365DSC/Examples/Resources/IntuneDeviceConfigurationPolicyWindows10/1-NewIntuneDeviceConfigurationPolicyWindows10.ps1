@@ -13,7 +13,7 @@ Configuration Example
 
     node localhost
     {
-        IntuneDeviceConfigurationPolicyWindows10 0467863a-17e0-455c-af2f-266ac7b07c77
+        IntuneDeviceConfigurationPolicyWindows10 'ConfigureDeviceConfigurationPolicyWindows10'
         {
             displayName                                           = "CONTOSO | W10 | Device Restriction"
             description                                           = "Default device restriction settings"
@@ -38,8 +38,8 @@ Configuration Example
             defenderScheduledQuickScanTime                        = '13:00:00.0000000'
             defenderScanType                                      = 'quick'   #quick,full,userDefined
             defenderSystemScanSchedule                            = 'monday'  #days of week
-            defenderScheduledScanTime                             =  '11:00:00.0000000'
-            defenderDetectedMalwareActions                        = @("lowSeverity=clean","moderateSeverity=quarantine","highSeverity=remove","severeSeverity=block")
+            defenderScheduledScanTime                             = '11:00:00.0000000'
+            defenderDetectedMalwareActions                        = @("lowSeverity=clean", "moderateSeverity=quarantine", "highSeverity=remove", "severeSeverity=block")
             defenderFileExtensionsToExclude                       = "[`"csv,jpg,docx`"]"
             defenderFilesAndFoldersToExclude                      = "[`"c:\\2,C:\\1`"]"
             defenderProcessesToExclude                            = "[`"notepad.exe,c:\\Windows\\myprocess.exe`"]"
@@ -185,9 +185,9 @@ Configuration Example
             enterpriseCloudPrintOAuthClientIdentifier             = "30fbf7e8-321c-40ce-8b9f-160b6b049257"
             enterpriseCloudPrintOAuthAuthority                    = "https:/tenant.contoso.com/adfs"
             enterpriseCloudPrintResourceIdentifier                = "http://cloudenterpriseprint/cloudPrint"
-            networkProxyServer                                    = @("address=proxy.contoso.com:8080","exceptions=*.contoso.com`r`n*.internal.local","useForLocalAddresses=false")
+            networkProxyServer                                    = @("address=proxy.contoso.com:8080", "exceptions=*.contoso.com`r`n*.internal.local", "useForLocalAddresses=false")
             Ensure                                                = 'Present'
-            Credential                                            = $credsGlobalAdmin;
+            Credential                                            = $credsGlobalAdmin
         }
     }
 }

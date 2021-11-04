@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SPOTenantSettings",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

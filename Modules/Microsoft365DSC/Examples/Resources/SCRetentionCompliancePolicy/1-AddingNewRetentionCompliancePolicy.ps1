@@ -14,7 +14,7 @@ Configuration Example
 
     node localhost
     {
-        SCRetentionCompliancePolicy Policy
+        SCRetentionCompliancePolicy 'RetentionCompliancePolicy'
         {
             Name               = "MyPolicy"
             Comment            = "Test Policy"

@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOMobileDeviceMailboxPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

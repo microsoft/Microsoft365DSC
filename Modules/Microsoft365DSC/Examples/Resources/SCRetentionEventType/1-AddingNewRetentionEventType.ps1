@@ -14,12 +14,12 @@ Configuration Example
 
     Node localhost
     {
-        SCRetentionEventType EventType
+        SCRetentionEventType 'RetentionEventType'
         {
-            Name               = "DemoEventType"
-            Comment            = "Demo event comment"
-            Ensure             = "Present"
-            Credential         = $credsGlobalAdmin
+            Name       = "DemoEventType"
+            Comment    = "Demo event comment"
+            Ensure     = "Present"
+            Credential = $credsGlobalAdmin
         }
     }
 }

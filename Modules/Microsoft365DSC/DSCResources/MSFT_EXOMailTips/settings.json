@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOMailTips",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

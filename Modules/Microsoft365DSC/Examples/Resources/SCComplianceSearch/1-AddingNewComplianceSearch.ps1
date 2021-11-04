@@ -14,16 +14,16 @@ Configuration Example
 
     node localhost
     {
-        SCComplianceSearch DemoSearch
+        SCComplianceSearch 'ConfigureComplianceSearch'
         {
-            Case                                  = "Demo Search";
-            HoldNames                             = @();
-            Name                                  = "Demo Compliance Search";
-            Ensure                                = "Present";
-            Language                              = "iv";
-            Credential                            = $credsGlobalAdmin;
-            AllowNotFoundExchangeLocationsEnabled = $False;
-            SharePointLocation                    = @("All");
+            Case                                  = "Demo Search"
+            HoldNames                             = @()
+            Name                                  = "Demo Compliance Search"
+            Language                              = "iv"
+            AllowNotFoundExchangeLocationsEnabled = $False
+            SharePointLocation                    = @("All")
+            Credential                            = $credsGlobalAdmin
+            Ensure                                = "Present"
         }
     }
 }

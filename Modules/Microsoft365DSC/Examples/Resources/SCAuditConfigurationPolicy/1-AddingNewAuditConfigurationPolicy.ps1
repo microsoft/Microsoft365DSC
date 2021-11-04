@@ -14,21 +14,21 @@ Configuration Example
 
     node localhost
     {
-        SCAuditConfigurationPolicy ExchangeAuditPolicy
+        SCAuditConfigurationPolicy 'ExchangeAuditPolicy'
         {
             Workload           = "Exchange"
             Ensure             = "Present"
             Credential         = $credsGlobalAdmin
         }
 
-        SCAuditConfigurationPolicy OneDriveAuditPolicy
+        SCAuditConfigurationPolicy 'OneDriveAuditPolicy'
         {
             Workload           = "OneDriveForBusiness"
             Ensure             = "Present"
             Credential         = $credsGlobalAdmin
         }
 
-        SCAuditConfigurationPolicy SharePointAuditPolicy
+        SCAuditConfigurationPolicy 'SharePointAuditPolicy'
         {
             Workload           = "SharePoint"
             Ensure             = "Present"

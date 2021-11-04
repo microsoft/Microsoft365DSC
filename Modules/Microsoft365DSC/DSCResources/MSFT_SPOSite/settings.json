@@ -1,0 +1,26 @@
+﻿{
+    "resourceName": "SPOSite",
+    "description": "",
+    "permissions": [
+        {
+            "read": [
+                {
+                    "name": "Application.Read.All"
+                },
+                {
+                    "name": "Application.ReadWrite.All"
+                },
+                {
+                    "name": "Directory.AccessAsUser.All"
+                },
+                {
+                    "name": "Directory.Read.All"
+                },
+                {
+                    "name": "Directory.ReadWrite.All"
+                }
+            ],
+            "update": []
+        }
+    ]
+}

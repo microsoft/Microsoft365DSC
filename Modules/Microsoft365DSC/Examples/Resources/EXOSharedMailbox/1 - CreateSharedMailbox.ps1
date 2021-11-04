@@ -14,7 +14,7 @@ Configuration Example
 
     node localhost
     {
-        EXOSharedMailbox Mailbox
+        EXOSharedMailbox 'SharedMailbox'
         {
             DisplayName        = "Test"
             PrimarySMTPAddress = "Test@O365DSC1.onmicrosoft.com"

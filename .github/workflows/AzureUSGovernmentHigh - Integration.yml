@@ -1,9 +1,9 @@
-name: AzureCloud - GCCHigh - Integration
+name: AzureCloud GCCHigh - Integration
 on: [push]
 
 jobs:
   # This workflow contains a single job called "build"
-  Integration-PublicCloud:
+  Integration-GCCHigh:
     # The type of runner that the job will run on
     runs-on: windows-latest
 

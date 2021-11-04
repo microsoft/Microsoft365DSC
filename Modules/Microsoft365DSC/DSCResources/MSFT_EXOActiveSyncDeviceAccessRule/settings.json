@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOActiveSyncDeviceAccessRule",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

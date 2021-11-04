@@ -13,15 +13,15 @@ Configuration Example
 
     node localhost
     {
-        TeamsMeetingBroadcastPolicy DemoPolicy
+        TeamsMeetingBroadcastPolicy 'ConfigureMeetingBroadcastPolicy'
         {
-            AllowBroadcastScheduling        = $True;
-            AllowBroadcastTranscription     = $False;
-            BroadcastAttendeeVisibilityMode = "EveryoneInCompany";
-            BroadcastRecordingMode          = "AlwaysEnabled";
-            Ensure                          = "Present";
-            Credential                      = $Credsglobaladmin;
-            Identity                        = "MyDemoPolicy";
+            Identity                        = "MyDemoPolicy"
+            AllowBroadcastScheduling        = $True
+            AllowBroadcastTranscription     = $False
+            BroadcastAttendeeVisibilityMode = "EveryoneInCompany"
+            BroadcastRecordingMode          = "AlwaysEnabled"
+            Ensure                          = "Present"
+            Credential                      = $credsGlobalAdmin
         }
     }
 }

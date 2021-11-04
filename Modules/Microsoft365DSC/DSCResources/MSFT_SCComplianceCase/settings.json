@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SCComplianceCase",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

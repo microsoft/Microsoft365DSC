@@ -13,13 +13,13 @@ Configuration Example
 
     node localhost
     {
-        TeamsVoiceRoutingPolicy VoiceRoutingPolicy
+        TeamsVoiceRoutingPolicy 'ConfigureVoiceRoutingPolicy'
         {
-            Identity           = 'NewVoiceRoutingPolicy'
-            OnlinePstnUsages   = @('Long Distance','Local','Internal')
-            Description        = 'This is a sample Voice Routing Policy'
-            Ensure             = 'Present'
-            Credential         = $credsGlobalAdmin
+            Identity         = 'NewVoiceRoutingPolicy'
+            OnlinePstnUsages = @('Long Distance', 'Local', 'Internal')
+            Description      = 'This is a sample Voice Routing Policy'
+            Ensure           = 'Present'
+            Credential       = $credsGlobalAdmin
         }
     }
 }

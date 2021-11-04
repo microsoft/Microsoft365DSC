@@ -14,13 +14,13 @@ Configuration Example
 
     node localhost
     {
-        SPOSiteDesignRights MyTenant
+        SPOSiteDesignRights 'ConfigureSiteDesignRights'
         {
-            SiteDesignTitle    = "Customer List"
-            UserPrincipals     = "jdoe@O365DSC1.onmicrosoft.com"
-            Rights             = "View"
-            Ensure             = "Present"
-            Credential         = $credsGlobalAdmin
+            SiteDesignTitle = "Customer List"
+            UserPrincipals  = "jdoe@contoso.onmicrosoft.com"
+            Rights          = "View"
+            Ensure          = "Present"
+            Credential      = $credsGlobalAdmin
         }
     }
 }

@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SPOTenantCdnEnabled",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

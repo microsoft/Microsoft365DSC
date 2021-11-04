@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SCRetentionEventType",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

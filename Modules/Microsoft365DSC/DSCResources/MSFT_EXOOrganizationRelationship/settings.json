@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOOrganizationRelationship",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

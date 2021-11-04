@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SCDLPComplianceRule",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

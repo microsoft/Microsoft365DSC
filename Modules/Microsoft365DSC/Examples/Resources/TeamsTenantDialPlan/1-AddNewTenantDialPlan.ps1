@@ -13,12 +13,10 @@ Configuration Example
 
     node localhost
     {
-        TeamsTenantDialPlan TestTenantDialPlan
+        TeamsTenantDialPlan 'ConfigureTenantDialPlan'
         {
-            Description           = 'This is a demo dial plan';
-            Ensure                = "Present";
-            Credential            = $Credsglobaladmin;
-            Identity              = "DemoPlan";
+            Identity              = "DemoPlan"
+            Description           = 'This is a demo dial plan'
             NormalizationRules    = MSFT_TeamsVoiceNormalizationRule{
                 Pattern = '^00(\d+)$'
                 Description = 'LB International Dialing Rule'
@@ -26,9 +24,11 @@ Configuration Example
                 Translation = '+$1'
                 Priority = 0
                 IsInternalExtension = $False
-            };
-            OptimizeDeviceDialing = $true;
-            SimpleName            = "DemoPlan";
+            }
+            OptimizeDeviceDialing = $true
+            SimpleName            = "DemoPlan"
+            Ensure                = "Present"
+            Credential            = $Credsglobaladmin
         }
     }
 }

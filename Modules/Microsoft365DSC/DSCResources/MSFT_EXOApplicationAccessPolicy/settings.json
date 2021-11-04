@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOApplicationAccessPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

@@ -14,7 +14,7 @@ Configuration Example
 
     node localhost
     {
-        SCDLPCompliancePolicy Policy
+        SCDLPCompliancePolicy 'ConfigureCompliancePolicy'
         {
             Name               = "MyPolicy"
             Comment            = "Test Policy"

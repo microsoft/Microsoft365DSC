@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SCFilePlanPropertyAuthority",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

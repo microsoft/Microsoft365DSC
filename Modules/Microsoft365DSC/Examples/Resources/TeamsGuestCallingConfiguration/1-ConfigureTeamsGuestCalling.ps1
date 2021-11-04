@@ -13,11 +13,11 @@ Configuration Example
 
     node localhost
     {
-        TeamsGuestCallingConfiguration GuestCallingConfig
+        TeamsGuestCallingConfiguration 'ConfigureGuestCalling'
         {
-            Identity            = "Global";
-            AllowPrivateCalling = $True;
-            Credential          = $credsGlobalAdmin;
+            Identity            = "Global"
+            AllowPrivateCalling = $True
+            Credential          = $credsGlobalAdmin
         }
     }
 }

@@ -13,28 +13,28 @@ Configuration Example
 
     node localhost
     {
-        TeamsMeetingPolicy DemoMeetingPolicy
+        TeamsMeetingPolicy 'ConfigureMeetingPolicy'
         {
-            AllowAnonymousUsersToStartMeeting          = $False;
-            AllowChannelMeetingScheduling              = $True;
-            AllowCloudRecording                        = $True;
-            AllowExternalParticipantGiveRequestControl = $False;
-            AllowIPVideo                               = $True;
-            AllowMeetNow                               = $True;
-            AllowOutlookAddIn                          = $True;
-            AllowParticipantGiveRequestControl         = $True;
-            AllowPowerPointSharing                     = $True;
-            AllowPrivateMeetingScheduling              = $True;
-            AllowSharedNotes                           = $True;
-            AllowTranscription                         = $False;
-            AllowWhiteboard                            = $True;
-            AutoAdmittedUsers                          = "Everyone";
-            Description                                = "My Demo Meeting Policy";
-            Ensure                                     = "Present";
-            Credential                                 = $credsglobaladmin;
-            Identity                                   = "Demo Policy";
-            MediaBitRateKb                             = 50000;
-            ScreenSharingMode                          = "EntireScreen";
+            Identity                                   = "Demo Policy"
+            AllowAnonymousUsersToStartMeeting          = $False
+            AllowChannelMeetingScheduling              = $True
+            AllowCloudRecording                        = $True
+            AllowExternalParticipantGiveRequestControl = $False
+            AllowIPVideo                               = $True
+            AllowMeetNow                               = $True
+            AllowOutlookAddIn                          = $True
+            AllowParticipantGiveRequestControl         = $True
+            AllowPowerPointSharing                     = $True
+            AllowPrivateMeetingScheduling              = $True
+            AllowSharedNotes                           = $True
+            AllowTranscription                         = $False
+            AllowWhiteboard                            = $True
+            AutoAdmittedUsers                          = "Everyone"
+            Description                                = "My Demo Meeting Policy"
+            MediaBitRateKb                             = 50000
+            ScreenSharingMode                          = "EntireScreen"
+            Ensure                                     = "Present"
+            Credential                                 = $credsglobaladmin
         }
     }
 }

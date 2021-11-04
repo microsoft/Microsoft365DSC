@@ -1,0 +1,30 @@
+﻿{
+    "resourceName": "PlannerBucket",
+    "description": "",
+    "permissions": [
+        {
+            "read": [
+                {
+                    "name": "Group.Read.All"
+                },
+                {
+                    "name": "Group.ReadWrite.All"
+                },
+                {
+                    "name": "Tasks.Read"
+                },
+                {
+                    "name": "Tasks.ReadWrite"
+                }
+            ],
+            "update": [
+                {
+                    "name": "Group.ReadWrite.All"
+                },
+                {
+                    "name": "Tasks.ReadWrite"
+                }
+            ]
+        }
+    ]
+}

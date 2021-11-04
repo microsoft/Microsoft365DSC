@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SPOOrgAssetsLibrary",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

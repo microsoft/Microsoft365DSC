@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SPOTheme",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

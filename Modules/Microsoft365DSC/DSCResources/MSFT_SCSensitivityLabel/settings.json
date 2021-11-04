@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SCSensitivityLabel",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

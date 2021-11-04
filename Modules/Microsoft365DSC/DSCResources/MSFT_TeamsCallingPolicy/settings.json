@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "TeamsCallingPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

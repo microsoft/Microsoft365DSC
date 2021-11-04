@@ -14,7 +14,7 @@ Configuration Example
 
     node localhost
     {
-        O365Group OttawaTeam
+        O365Group 'OttawaTeamGroup'
         {
             DisplayName        = "Ottawa Employees"
             MailNickName       = "OttawaEmployees"
