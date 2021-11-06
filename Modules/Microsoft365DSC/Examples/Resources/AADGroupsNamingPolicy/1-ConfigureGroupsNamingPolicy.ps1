@@ -14,13 +14,13 @@ Configuration Example
 
     node localhost
     {
-        AADGroupsNamingPolicy GroupsNamingPolicy
+        AADGroupsNamingPolicy 'GroupsNamingPolicy'
         {
-            CustomBlockedWordsList        = @("CEO", "President");
-            Credential                    = $credsGlobalAdmin;
-            IsSingleInstance              = "Yes";
-            PrefixSuffixNamingRequirement = "[Title]Test[Company][GroupName][Office]Redmond";
-            Ensure                        = "Present";
+            IsSingleInstance              = "Yes"
+            CustomBlockedWordsList        = @("CEO", "President")
+            PrefixSuffixNamingRequirement = "[Title]Test[Company][GroupName][Office]Redmond"
+            Ensure                        = "Present"
+            Credential                    = $credsGlobalAdmin
         }
     }
 }

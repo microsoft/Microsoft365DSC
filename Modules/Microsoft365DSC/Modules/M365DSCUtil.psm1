@@ -148,6 +148,7 @@ function Convert-M365DscHashtableToString
         $Hashtable
     )
     $values = @()
+    $parametersToObfuscate = @('ApplicationId', 'ApplicationSecret', 'TenantId', "CertificateThumnbprint", "CertificatePath", "CertificatePassword", "Credential")
     foreach ($pair in $Hashtable.GetEnumerator())
     {
         try
@@ -168,7 +169,14 @@ function Convert-M365DscHashtableToString
                 }
                 else
                 {
-                    $str = "$($pair.Key)=$($pair.Value)"
+                    if ($parametersToObfuscate.Contains($pair.Key))
+                    {
+                        $str = "$($pair.Key)=***"
+                    }
+                    else
+                    {
+                        $str = "$($pair.Key)=$($pair.Value)"
+                    }
                 }
             }
             $values += $str
@@ -192,7 +200,6 @@ function New-EXOAntiPhishPolicy
     )
     try
     {
-        $VerbosePreference = 'Continue'
         $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishPolicyParams -Operation 'New' )
         Write-Verbose -Message "Creating New AntiPhishPolicy $($BuiltParams.Name) with values: $(Convert-M365DscHashtableToString -Hashtable $BuiltParams)"
         New-AntiPhishPolicy @BuiltParams
@@ -930,7 +937,8 @@ function Export-M365DSCConfiguration
                 -CertificateThumbprint $CertificateThumbprint `
                 -CertificatePath $CertificatePath `
                 -CertificatePassword $CertificatePassword `
-                -GenerateInfo $GenerateInfo
+                -GenerateInfo $GenerateInfo `
+                -AllComponents
         }
     }
 }
@@ -1033,7 +1041,6 @@ function New-M365DSCConnection
         [ValidateSet("v1.0", "beta")]
         $ProfileName = "v1.0"
     )
-
     if ($Workload -eq "MicrosoftTeams")
     {
         try
@@ -1135,7 +1142,7 @@ function New-M365DSCConnection
         {
             Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
-                -Credential $InboundParameters.Credential `
+                -ApplicationSecret $InboundParameters.ApplicationSecret `
                 -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
@@ -1164,7 +1171,7 @@ function New-M365DSCConnection
             Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
-                -CertificatePassword $InboundParameters.CertificatePassword `
+                -CertificatePassword $InboundParameters.CertificatePassword.Password `
                 -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
@@ -2121,7 +2128,6 @@ function Update-M365DSCExportAuthenticationResults
         [System.Collections.Hashtable]
         $Results
     )
-
     if ($ConnectionMode -eq 'Credentials')
     {
         $Results.Credential = Resolve-Credentials -UserName "credential"
@@ -2152,7 +2158,7 @@ function Update-M365DSCExportAuthenticationResults
     }
     else
     {
-        if ($Results.ContainsKey("Credential") -and $ConnectionMode -ne 'CredentialsWithApplicationId')
+        if ($Results.ContainsKey("Credential") -and ($ConnectionMode -ne 'CredentialsWithApplicationId' -or $ConnectionMode -ne 'Credentials'))
         {
             $Results.Remove("Credential") | Out-Null
         }
@@ -2289,11 +2295,10 @@ function Get-M365DSCExportContentForResource
     # Ensure the string properties are properly formatted;
     $Results = Format-M365DSCString -Properties $Results `
         -ResourceName $ResourceName
-
     $content = "        $ResourceName " + (New-Guid).ToString() + "`r`n"
     $content += "        {`r`n"
     $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath
-    if ($ConnectionMode -eq 'Credential')
+    if ($ConnectionMode -eq 'Credentials')
     {
         $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
             -ParameterName "Credential"
@@ -2419,7 +2424,7 @@ function Get-M365DSCComponentsForAuthenticationType
                     -not $parameters.Contains('CertificatePassword') -and `
                     -not $parameters.Contains('TenantId')))
         {
-            $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+            $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
         }
 
         #Case - Resource certificate info and TenantId
@@ -2429,7 +2434,7 @@ function Get-M365DSCComponentsForAuthenticationType
                     $parameters.Contains('CertificatePassword')) -and `
                 $parameters.Contains('TenantId'))
         {
-            $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+            $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
         }
 
         # Case - Resource contains ApplicationSecret
@@ -2438,14 +2443,14 @@ function Get-M365DSCComponentsForAuthenticationType
                 $parameters.Contains('ApplicationSecret') -and `
                 $parameters.Contains('TenantId'))
         {
-            $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+            $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
         }
 
         # Case - Resource contains Credential
         elseif ($AuthenticationMethod.Contains("Credentials") -and `
                 $parameters.Contains('Credential'))
         {
-            $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+            $Components += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
         }
     }
     return $Components
@@ -2462,7 +2467,7 @@ function Get-M365DSCAllResources
     $result = @()
     foreach ($resource in $allResources)
     {
-        $result += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+        $result += $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
     }
 
     return $result
@@ -2507,7 +2512,7 @@ function Get-M365DSCWorkloadsListFromResourceNames
     [Array] $workloads = @()
     foreach ($resource in $ResourceNames)
     {
-        switch ($resource.Substring(5,2))
+        switch ($resource.Substring(0,2).ToUpper())
         {
             "AA" {
                 if (-not $workloads.Contains("MicrosoftGraph"))

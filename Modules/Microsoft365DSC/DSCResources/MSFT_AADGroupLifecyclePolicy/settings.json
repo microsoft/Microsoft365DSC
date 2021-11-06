@@ -1,14 +1,20 @@
-{
+﻿{
     "resourceName": "AADGroupLifecyclePolicy",
     "description": "This resource configures an Azure Active Directory Group Lifecycle Policy (e.g. Expiration).",
     "permissions": [
         {
             "read": [
                 {
-                    "name":"Directory.Read.All"
+                    "name": "Directory.Read.All"
+                },
+                {
+                    "name": "Directory.ReadWrite.All"
                 }
             ],
             "update": [
+                {
+                    "name": "Directory.Read.All"
+                },
                 {
                     "name": "Directory.ReadWrite.All"
                 }

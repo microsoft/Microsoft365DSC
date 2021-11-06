@@ -47,7 +47,7 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -158,7 +158,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of Teams Guest Calling"
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -321,7 +321,7 @@ function Test-TargetResource
         $Credential
     )
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -393,7 +393,7 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -587,7 +587,7 @@ function Get-M365DSCNormalizationRulesAsString
     {
         return $null
     }
-    $currentProperty = "MSFT_TeamsVoiceNormalizationRule{`r`n"
+    $currentProperty = "@(MSFT_TeamsVoiceNormalizationRule{`r`n"
     foreach ($key in $params.Keys)
     {
         if ($key -eq 'Priority')
@@ -603,7 +603,7 @@ function Get-M365DSCNormalizationRulesAsString
             $currentProperty += "                " + $key + " = '" + $params[$key] + "'`r`n"
         }
     }
-    $currentProperty += "            }"
+    $currentProperty += "            })"
     return $currentProperty
 }
 

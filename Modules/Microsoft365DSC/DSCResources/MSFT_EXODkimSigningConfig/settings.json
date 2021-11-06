@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXODkimSigningConfig",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

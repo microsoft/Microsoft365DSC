@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "O365AdminAuditLogConfig",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

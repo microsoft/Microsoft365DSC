@@ -14,12 +14,12 @@ Configuration Example
 
     node localhost
     {
-        TeamsUpgradeConfiguration UpgradeConfig
+        TeamsUpgradeConfiguration 'ConfigureUpgradeConfig'
         {
-            DownloadTeams        = $True;
-            Credential           = $credsGlobalAdmin
-            IsSingleInstance     = "Yes"
-            SfBMeetingJoinUx     = "NativeLimitedClient"
+            IsSingleInstance = "Yes"
+            DownloadTeams    = $True
+            SfBMeetingJoinUx = "NativeLimitedClient"
+            Credential       = $credsGlobalAdmin
         }
     }
 }

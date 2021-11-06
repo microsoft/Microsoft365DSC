@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SPOBrowserIdleSignout",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

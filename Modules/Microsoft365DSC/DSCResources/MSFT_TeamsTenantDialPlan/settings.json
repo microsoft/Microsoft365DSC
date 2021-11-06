@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "TeamsTenantDialPlan",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

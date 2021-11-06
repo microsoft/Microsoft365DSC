@@ -1,14 +1,104 @@
-{
+﻿{
     "resourceName": "AADConditionalAccessPolicy",
     "description": "This resource configures an Azure Active Directory Conditional Access Policy.",
     "permissions": [
         {
             "read": [
                 {
-                    "name":"Policy.Read.All"
+                    "name": "DeviceManagementApps.Read.All"
+                },
+                {
+                    "name": "DeviceManagementApps.ReadWrite.All"
+                },
+                {
+                    "name": "DeviceManagementManagedDevices.Read.All"
+                },
+                {
+                    "name": "DeviceManagementManagedDevices.ReadWrite.All"
+                },
+                {
+                    "name": "DeviceManagementServiceConfig.Read.All"
+                },
+                {
+                    "name": "DeviceManagementServiceConfig.ReadWrite.All"
+                },
+                {
+                    "name": "Directory.AccessAsUser.All"
+                },
+                {
+                    "name": "Directory.Read.All"
+                },
+                {
+                    "name": "Directory.ReadWrite.All"
+                },
+                {
+                    "name": "Group.Read.All"
+                },
+                {
+                    "name": "Group.ReadWrite.All"
+                },
+                {
+                    "name": "GroupMember.Read.All"
+                },
+                {
+                    "name": "Policy.Read.All"
+                },
+                {
+                    "name": "RoleManagement.Read.Directory"
+                },
+                {
+                    "name": "RoleManagement.ReadWrite.Directory"
+                },
+                {
+                    "name": "User.Read.All"
+                },
+                {
+                    "name": "User.ReadBasic.All"
+                },
+                {
+                    "name": "User.ReadWrite.All"
                 }
             ],
             "update": [
+                {
+                    "name": "Application.Read.All"
+                },
+                {
+                    "name": "DeviceManagementApps.Read.All"
+                },
+                {
+                    "name": "DeviceManagementApps.ReadWrite.All"
+                },
+                {
+                    "name": "DeviceManagementManagedDevices.Read.All"
+                },
+                {
+                    "name": "DeviceManagementManagedDevices.ReadWrite.All"
+                },
+                {
+                    "name": "DeviceManagementServiceConfig.Read.All"
+                },
+                {
+                    "name": "DeviceManagementServiceConfig.ReadWrite.All"
+                },
+                {
+                    "name": "Directory.AccessAsUser.All"
+                },
+                {
+                    "name": "Directory.Read.All"
+                },
+                {
+                    "name": "Directory.ReadWrite.All"
+                },
+                {
+                    "name": "Group.Read.All"
+                },
+                {
+                    "name": "Group.ReadWrite.All"
+                },
+                {
+                    "name": "GroupMember.Read.All"
+                },
                 {
                     "name": "Policy.Read.All"
                 },
@@ -16,7 +106,19 @@
                     "name": "Policy.ReadWrite.ConditionalAccess"
                 },
                 {
-                    "name": "Application.Read.All"
+                    "name": "RoleManagement.Read.Directory"
+                },
+                {
+                    "name": "RoleManagement.ReadWrite.Directory"
+                },
+                {
+                    "name": "User.Read.All"
+                },
+                {
+                    "name": "User.ReadBasic.All"
+                },
+                {
+                    "name": "User.ReadWrite.All"
                 }
             ]
         }

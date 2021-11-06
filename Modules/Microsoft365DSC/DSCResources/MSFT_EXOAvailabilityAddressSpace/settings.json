@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOAvailabilityAddressSpace",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

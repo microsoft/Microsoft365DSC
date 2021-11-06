@@ -14,13 +14,13 @@ Configuration Example
 
     node localhost
     {
-        TeamsGuestMeetingConfiguration TeamsGuestMeetingConfiguration
+        TeamsGuestMeetingConfiguration 'TeamsGuestMeetingConfiguration'
         {
-            AllowIPVideo       = $True;
-            AllowMeetNow       = $True;
-            Credential         = $credsGlobalAdmin;
-            Identity           = "Global";
-            ScreenSharingMode  = "EntireScreen";
+            Identity           = "Global"
+            AllowIPVideo       = $True
+            AllowMeetNow       = $True
+            ScreenSharingMode  = "EntireScreen"
+            Credential         = $credsGlobalAdmin
         }
     }
 }

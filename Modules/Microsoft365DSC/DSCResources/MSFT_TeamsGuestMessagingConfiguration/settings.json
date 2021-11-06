@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "TeamsGuestMessagingConfiguration",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

@@ -14,7 +14,7 @@ Configuration Example
 
     Node localhost
     {
-        SCFilePlanPropertyDepartment FilePlanPropertyDepartment
+        SCFilePlanPropertyDepartment 'FilePlanPropertyDepartment'
         {
             Name               = "Demo Department"
             Ensure             = "Present"

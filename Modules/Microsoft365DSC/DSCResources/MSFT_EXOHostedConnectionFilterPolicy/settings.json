@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOHostedConnectionFilterPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

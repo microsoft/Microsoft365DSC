@@ -13,7 +13,7 @@ Configuration Example
 
   node localhost
   {
-    PPTenantSettings TenantSettings
+    PPTenantSettings 'PowerPlatformTenantSettings'
     {
       IsSingleInstance                               = 'Yes'
       WalkMeOptOut                                   = $false
@@ -31,7 +31,7 @@ Configuration Example
       DisableShareWithEveryone                       = $false
       EnableGuestsToMake                             = $false
       ShareWithColleaguesUserLimit                   = 10000
-      Credential                                     = $Credential
+      Credential                                     = $credsGlobalAdmin
     }
   }
 }

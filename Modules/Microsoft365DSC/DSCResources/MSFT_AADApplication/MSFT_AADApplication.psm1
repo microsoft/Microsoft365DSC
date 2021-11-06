@@ -87,7 +87,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of Azure AD Application"
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -272,7 +272,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of Azure AD Application"
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -301,7 +301,7 @@ function Set-TargetResource
     $currentParameters.Remove("Ensure")  | Out-Null
     $currentParameters.Remove("Credential")  | Out-Null
 
-    if ($null -ne $KnownClientApplications)
+    if ($KnownClientApplications)
     {
         Write-Verbose -Message "Checking if the known client applications already exist."
         $testedKnownClientApplications = New-Object System.Collections.Generic.List[string]
@@ -347,13 +347,23 @@ function Set-TargetResource
         $currentParameters.Remove("KnownClientApplications") | Out-Null
     }
 
-    if ($null -ne $ReplyUrls -or $null -ne $LogoutURL)
+    if ($ReplyUrls -or $LogoutURL -or $Homepage)
     {
-        $webValue = @{
-            RedirectUris = $currentParameters.ReplyURLs
-            LogoutUrl    = $currentParameters.LogoutURL
-            HomePageUrl  = $currentParameters.Homepage
+        $webValue = @{}
+
+        if ($ReplyUrls)
+        {
+            $webValue.Add("RedirectUris", $currentParameters.ReplyURLs)
         }
+        if ($LogoutURL)
+        {
+            $webValue.Add("LogoutUrl", $currentParameters.LogoutURL)
+        }
+        if ($Homepage)
+        {
+            $webValue.Add("HomePageUrl", $currentParameters.Homepage)
+        }
+
         $currentParameters.Add("web", $webValue)
         $currentParameters.Remove("ReplyURLs") | Out-Null
         $currentParameters.Remove("LogoutURL") | Out-Null
@@ -532,7 +542,7 @@ function Test-TargetResource
     )
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -629,7 +639,7 @@ function Export-TargetResource
     )
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `

@@ -26,7 +26,6 @@ function New-M365DSCLogEntry
 
     try
     {
-        $VerbosePreference = 'Continue'
         Write-Host "$($Global:M365DSCEmojiRedX)"
 
         #region Telemetry

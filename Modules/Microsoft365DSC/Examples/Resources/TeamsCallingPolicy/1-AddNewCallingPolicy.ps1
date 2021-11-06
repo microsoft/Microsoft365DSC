@@ -7,13 +7,13 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsAdmin
+        $credsGlobalAdmin
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
-        TeamsCallingPolicy CallingPolicy
+        TeamsCallingPolicy 'ConfigureCallingPolicy'
         {
             Identity                   = 'New Calling Policy'
             AllowPrivateCalling        = $false
@@ -25,7 +25,7 @@ Configuration Example
             PreventTollBypass          = $true
             BusyOnBusyEnabledType      = 'Enabled'
             Ensure                     = 'Present'
-            Credential                 = $credsAdmin
+            Credential                 = $credsGlobalAdmin
         }
     }
 }

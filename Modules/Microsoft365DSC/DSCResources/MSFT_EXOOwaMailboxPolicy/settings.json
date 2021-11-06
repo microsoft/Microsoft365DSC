@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOOwaMailboxPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

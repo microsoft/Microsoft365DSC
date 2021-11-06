@@ -14,14 +14,14 @@ Configuration Example
 
     node localhost
     {
-        SPOHubSite "ff4a977d-4d7d-4968-9238-2a1702aa699c"
+        SPOHubSite 'ConfigureHubSite'
         {
-            Url                  = "https://office365dsc.sharepoint.com/sites/Marketing"
+            Url                  = "https://contoso.sharepoint.com/sites/Marketing"
             Title                = "Marketing Hub"
             Description          = "Hub for the Marketing division"
-            LogoUrl              = "https://office365dsc.sharepoint.com/sites/Marketing/SiteAssets/hublogo.png"
+            LogoUrl              = "https://contoso.sharepoint.com/sites/Marketing/SiteAssets/hublogo.png"
             RequiresJoinApproval = $true
-            AllowedToJoin        = @("admin@office365dsc.onmicrosoft.com", "superuser@office365dsc.onmicrosoft.com")
+            AllowedToJoin        = @("admin@contoso.onmicrosoft.com", "superuser@contoso.onmicrosoft.com")
             SiteDesignId         = "f7eba920-9cca-4de8-b5aa-1da75a2a893c"
             Ensure               = "Present"
             Credential           = $credsGlobalAdmin

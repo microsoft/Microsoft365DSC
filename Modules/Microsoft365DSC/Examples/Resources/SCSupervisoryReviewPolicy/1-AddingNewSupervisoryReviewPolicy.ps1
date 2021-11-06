@@ -14,13 +14,13 @@ Configuration Example
 
     Node localhost
     {
-        SCSupervisoryReviewPolicy Policy
+        SCSupervisoryReviewPolicy 'SupervisoryReviewPolicy'
         {
-            Name               = "MyPolicy"
-            Comment            = "Test Policy"
-            Reviewers          = @("admin@contoso.com")
-            Ensure             = "Present"
-            Credential         = $credsGlobalAdmin
+            Name       = "MyPolicy"
+            Comment    = "Test Policy"
+            Reviewers  = @("admin@contoso.com")
+            Ensure     = "Present"
+            Credential = $credsGlobalAdmin
         }
     }
 }

@@ -1,0 +1,84 @@
+﻿{
+    "resourceName": "PlannerTask",
+    "description": "",
+    "permissions": [
+        {
+            "read": [
+                {
+                    "name": "DeviceManagementApps.Read.All"
+                },
+                {
+                    "name": "DeviceManagementApps.ReadWrite.All"
+                },
+                {
+                    "name": "DeviceManagementManagedDevices.Read.All"
+                },
+                {
+                    "name": "DeviceManagementManagedDevices.ReadWrite.All"
+                },
+                {
+                    "name": "DeviceManagementServiceConfig.Read.All"
+                },
+                {
+                    "name": "DeviceManagementServiceConfig.ReadWrite.All"
+                },
+                {
+                    "name": "Directory.AccessAsUser.All"
+                },
+                {
+                    "name": "Directory.Read.All"
+                },
+                {
+                    "name": "Directory.ReadWrite.All"
+                },
+                {
+                    "name": "User.Read.All"
+                },
+                {
+                    "name": "User.ReadBasic.All"
+                },
+                {
+                    "name": "User.ReadWrite.All"
+                }
+            ],
+            "update": [
+                {
+                    "name": "DeviceManagementApps.Read.All"
+                },
+                {
+                    "name": "DeviceManagementApps.ReadWrite.All"
+                },
+                {
+                    "name": "DeviceManagementManagedDevices.Read.All"
+                },
+                {
+                    "name": "DeviceManagementManagedDevices.ReadWrite.All"
+                },
+                {
+                    "name": "DeviceManagementServiceConfig.Read.All"
+                },
+                {
+                    "name": "DeviceManagementServiceConfig.ReadWrite.All"
+                },
+                {
+                    "name": "Directory.AccessAsUser.All"
+                },
+                {
+                    "name": "Directory.Read.All"
+                },
+                {
+                    "name": "Directory.ReadWrite.All"
+                },
+                {
+                    "name": "User.Read.All"
+                },
+                {
+                    "name": "User.ReadBasic.All"
+                },
+                {
+                    "name": "User.ReadWrite.All"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+﻿{
+    "resourceName":  "TeamsGuestCallingConfiguration",
+    "description":  "",
+    "permissions":  [
+                        {
+                            "read":  [
+
+                                     ],
+                            "update":  [
+
+                                       ]
+                        }
+                    ]
+}

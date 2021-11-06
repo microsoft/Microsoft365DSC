@@ -13,24 +13,24 @@ Configuration Example
 
     node localhost
     {
-        IntuneDeviceEnrollmentPlatformRestriction DemoRestriction
+        IntuneDeviceEnrollmentPlatformRestriction 'DeviceEnrollmentPlatformRestriction'
         {
-            AndroidPersonalDeviceEnrollmentBlocked       = $False;
-            AndroidPlatformBlocked                       = $False;
-            Description                                  = "";
-            DisplayName                                  = "My DSC Restriction";
+            AndroidPersonalDeviceEnrollmentBlocked       = $False
+            AndroidPlatformBlocked                       = $False
+            Description                                  = ""
+            DisplayName                                  = "My DSC Restriction"
+            iOSOSMaximumVersion                          = "11.0"
+            iOSOSMinimumVersion                          = "9.0"
+            iOSPersonalDeviceEnrollmentBlocked           = $False
+            iOSPlatformBlocked                           = $False
+            MacPersonalDeviceEnrollmentBlocked           = $False
+            MacPlatformBlocked                           = $True
+            WindowsMobilePersonalDeviceEnrollmentBlocked = $False
+            WindowsMobilePlatformBlocked                 = $True
+            WindowsPersonalDeviceEnrollmentBlocked       = $True
+            WindowsPlatformBlocked                       = $False
             Ensure                                       = "Present"
-            Credential                                   = $Credential;
-            iOSOSMaximumVersion                          = "11.0";
-            iOSOSMinimumVersion                          = "9.0";
-            iOSPersonalDeviceEnrollmentBlocked           = $False;
-            iOSPlatformBlocked                           = $False;
-            MacPersonalDeviceEnrollmentBlocked           = $False;
-            MacPlatformBlocked                           = $True;
-            WindowsMobilePersonalDeviceEnrollmentBlocked = $False;
-            WindowsMobilePlatformBlocked                 = $True;
-            WindowsPersonalDeviceEnrollmentBlocked       = $True;
-            WindowsPlatformBlocked                       = $False;
+            Credential                                   = $credsGlobalAdmin
         }
     }
 }

@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "O365OrgCustomizationSetting",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

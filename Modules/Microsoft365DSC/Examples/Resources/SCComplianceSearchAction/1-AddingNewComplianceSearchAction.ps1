@@ -14,41 +14,43 @@ Configuration Example
 
     node localhost
     {
-        SCComplianceSearchAction DemoPurge
+        SCComplianceSearchAction 'ComplianceSearchActionPurge'
         {
-            Action             = "Purge";
-            Credential         = $credsGlobalAdmin;
-            PurgeType          = "SoftDelete";
-            IncludeCredential  = $True;
-            Ensure             = "Present";
-            RetryOnError       = $False;
-            SearchName         = "Demo Search";
+            Action            = "Purge"
+            PurgeType         = "SoftDelete"
+            IncludeCredential = $True
+            RetryOnError      = $False
+            SearchName        = "Demo Search"
+            Ensure            = "Present"
+            Credential        = $credsGlobalAdmin
         }
-        SCComplianceSearchAction DemoExport
+
+        SCComplianceSearchAction 'ComplianceSearchActionExport'
         {
-            IncludeSharePointDocumentVersions   = $False;
-            Action                              = "Export";
-            SearchName                          = "Demo Search";
-            Credential                          = $credsGlobalAdmin;
-            FileTypeExclusionsForUnindexedItems = $null;
-            IncludeCredential                   = $False;
-            RetryOnError                        = $False;
-            ActionScope                         = "IndexedItemsOnly";
-            Ensure                              = "Present";
-            EnableDedupe                        = $False;
+            IncludeSharePointDocumentVersions   = $False
+            Action                              = "Export"
+            SearchName                          = "Demo Search"
+            FileTypeExclusionsForUnindexedItems = $null
+            IncludeCredential                   = $False
+            RetryOnError                        = $False
+            ActionScope                         = "IndexedItemsOnly"
+            EnableDedupe                        = $False
+            Ensure                              = "Present"
+            Credential                          = $credsGlobalAdmin
         }
-        SCComplianceSearchAction DemoRetention
+
+        SCComplianceSearchAction 'ComplianceSearchActionRetention'
         {
-            IncludeSharePointDocumentVersions   = $False;
-            Action                              = "Retention";
-            SearchName                          = "Demo Search";
-            Credential                          = $credsGlobalAdmin;
-            FileTypeExclusionsForUnindexedItems = $null;
-            IncludeCredential                   = $False;
-            RetryOnError                        = $False;
-            ActionScope                         = "IndexedItemsOnly";
-            Ensure                              = "Present";
-            EnableDedupe                        = $False;
+            IncludeSharePointDocumentVersions   = $False
+            Action                              = "Retention"
+            SearchName                          = "Demo Search"
+            FileTypeExclusionsForUnindexedItems = $null
+            IncludeCredential                   = $False
+            RetryOnError                        = $False
+            ActionScope                         = "IndexedItemsOnly"
+            EnableDedupe                        = $False
+            Ensure                              = "Present"
+            Credential                          = $credsGlobalAdmin
         }
     }
 }

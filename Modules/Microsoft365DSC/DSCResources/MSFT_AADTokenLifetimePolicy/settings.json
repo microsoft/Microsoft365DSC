@@ -1,28 +1,19 @@
-{
+﻿{
     "resourceName": "AADTokenLifetimePolicy",
     "description": "This resource configures the Azure AD Token Lifetime Policies.",
     "permissions": [
         {
             "read": [
                 {
-                    "name":"Policy.Read.All"
+                    "name": "Policy.Read.All"
+                },
+                {
+                    "name": "Policy.ReadWrite.ApplicationConfiguration"
                 }
             ],
             "update": [
                 {
                     "name": "Policy.ReadWrite.ApplicationConfiguration"
-                },
-                {
-                    "name": "Policy.ReadWrite.Authorization"
-                },
-                {
-                    "name": "Policy.ReadWrite.ApplicationConfiguration"
-                },
-                {
-                    "name": "Policy.ReadWrite.ConditionalAccess"
-                },
-                {
-                    "name": "Policy.Read.All"
                 }
             ]
         }

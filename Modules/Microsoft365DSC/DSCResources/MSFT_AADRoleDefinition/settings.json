@@ -1,11 +1,11 @@
-{
+﻿{
     "resourceName": "AADRoleDefinition",
-    "description": "This resource configures an Azure Active Directory role definition. To configure custom roles you require an Azure AD Premium P1 license. The account used to configure role definitions based on this resource needs either to be a 'Global Administrator' or a 'Privileged role administrator'.",
+    "description": "This resource configures an Azure Active Directory role definition. To configure custom roles you require an Azure AD Premium P1 license. The account used to configure role definitions based on this resource needs either to be a \u0027Global Administrator\u0027 or a \u0027Privileged role administrator\u0027.",
     "permissions": [
         {
             "read": [
                 {
-                    "name":"RoleManagement.Read.Directory"
+                    "name": "RoleManagement.Read.Directory"
                 }
             ],
             "update": [

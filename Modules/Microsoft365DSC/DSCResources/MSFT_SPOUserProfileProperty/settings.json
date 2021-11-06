@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SPOUserProfileProperty",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

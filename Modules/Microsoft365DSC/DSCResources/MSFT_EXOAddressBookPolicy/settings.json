@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOAddressBookPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

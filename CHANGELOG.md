@@ -1,6 +1,61 @@
 # Change log for Microsoft365DSC
 
-1.21.1006.3
+# Unreleased
+
+* MISC
+  * Standardized examples
+  * Added missing examples
+  * Added settings.json generator cmdlet (Update-M365DSCResourcesSettingsJSON)
+  * Added cmdlet to configure delegated permissions to Graph app based on
+    settings.json file (Update-M365DSCAllowedGraphScopes)
+  * Preparation to run integration tests dynamically using the resource examples
+
+# 1.21.1013.1
+
+* MISC
+  * Standardized examples
+  * Added missing examples
+  * Added settings.json generator cmdlet (Update-M365DSCResourcesSettingsJSON)
+  * Added cmdlet to configure delegated permissions to Graph app based on
+    settings.json file (Update-M365DSCAllowedGraphScopes)
+  * Preparation to run integration tests dynamically using the resource examples
+
+# 1.21.1103.1
+
+* TeamsCallingPolicy
+  * Added support for value 'Unanswered' for property
+    BudyOnBusyEnabledType.
+    Fix Issue #1514
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to
+    2.0.139;
+  * Updated MSCloudLoginAssistant to version 1.0.75;
+
+# 1.21.1027.1
+
+* DEPENDENCIES
+  * Updated Microsoft.Graph.Applications to 1.8.0;
+  * Updated Microsoft.Graph.Authentication to 1.8.0;
+  * Updated Microsoft.Graph.DeviceManagement to 1.8.0;
+  * Updated Microsoft.Graph.DeviceManagement.Administration to 1.8.0;
+  * Updated Microsoft.Graph.DeviceManagement.Enrolment to 1.8.0;
+  * Updated Microsoft.Graph.Devices.CorporateManagement to 1.8.0;
+  * Updated Microsoft.Graph.Groups to 1.8.0;
+  * Updated Microsoft.Graph.Identity.DirectoryManagement to 1.8.0;
+  * Updated Microsoft.Graph.Identity.SignIns to 1.8.0;
+  * Updated Microsoft.Graph.Planner to 1.8.0;
+  * Updated Microsoft.Graph.Teams to 1.8.0;
+  * Updated Microsoft.Graph.Users to 1.8.0;
+  * Updated MSCloudLoginAssistant to version 1.0.74;
+* MISC
+  * Fixed issue generating delta report containing EXOAvailabilityConfig
+    resources;
+
+# 1.21.1013.1
+
+  * Obfuscating Authentication Secrets from the Verbose output;
+
+# 1.21.1006.3
 
 * BREAKING CHANGES
 
@@ -1264,3 +1319,7 @@
 * SPOSite
   * Added default value for Storage Quota;
   * Fixed an issue with site creation that could result in infinite loops;
+
+## UNRELEASED
+* IntuneDeviceConfigurationPolicyAndroidWorkProfile
+  * Initial release;

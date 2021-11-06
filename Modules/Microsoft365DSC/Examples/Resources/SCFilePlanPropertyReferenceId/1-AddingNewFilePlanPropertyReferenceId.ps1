@@ -14,7 +14,7 @@ Configuration Example
 
     node localhost
     {
-        SCFilePlanPropertyReferenceId FilePlanPropertyReferenceId
+        SCFilePlanPropertyReferenceId 'FilePlanPropertyReferenceId'
         {
             Name               = "My Reference ID"
             Ensure             = "Present"
