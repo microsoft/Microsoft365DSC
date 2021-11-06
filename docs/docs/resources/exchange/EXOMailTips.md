@@ -41,7 +41,7 @@ Configuration Example
 
     node localhost
     {
-        EXOMailTips OrgWide
+        EXOMailTips 'OrgWideMailTips'
         {
             Organization                          = "contoso.com"
             MailTipsAllTipsEnabled                = $True

@@ -32,7 +32,7 @@ Configuration Example
 
     node localhost
     {
-        TeamsUpgradePolicy IslandsPolicy
+        TeamsUpgradePolicy 'ConfigureIslandsPolicy'
         {
             Identity               = 'Islands'
             Users                  = @("John.Smith@contoso.com", "Nik.Charlebois@contoso.com")

@@ -38,7 +38,7 @@ Configuration Example
 
     node localhost
     {
-        SCCaseHoldRule DemoHoldRule
+        SCCaseHoldRule 'ConfigureCaseHoldRule'
         {
             Name               = "My Rule"
             Policy             = "My Policy"

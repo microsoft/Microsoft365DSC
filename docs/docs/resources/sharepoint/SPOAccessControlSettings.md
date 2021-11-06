@@ -63,12 +63,11 @@ Configuration Example
 
     node localhost
     {
-        SPOAccessControlSettings MyTenantAccessControlSettings
+        SPOAccessControlSettings 'ConfigureAccessControlSettings'
         {
             IsSingleInstance             = "Yes"
-            Credential                   = $credsGlobalAdmin
             DisplayStartASiteOption      = $false
-            StartASiteFormUrl            = "https://o365dsc1.sharepoint.com"
+            StartASiteFormUrl            = "https://contoso.sharepoint.com"
             IPAddressEnforcement         = $false
             IPAddressWACTokenLifetime    = 15
             CommentsOnSitePagesDisabled  = $false
@@ -78,6 +77,7 @@ Configuration Example
             EmailAttestationRequired     = $false
             EmailAttestationReAuthDays   = 30
             Ensure                       = "Present"
+            Credential                   = $credsGlobalAdmin
         }
     }
 }

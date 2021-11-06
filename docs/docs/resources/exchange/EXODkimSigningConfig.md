@@ -103,4 +103,37 @@ KeySize
         }
 ```
 
+## Examples
+
+### Example 1
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsGlobalAdmin
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXODkimSigningConfig 'ConfigureDKIMSigning'
+        {
+            KeySize                = 1024
+            Identity               = 'contoso.onmicrosoft.com'
+            HeaderCanonicalization = "Relaxed"
+            Enabled                = $True
+            BodyCanonicalization   = "Relaxed"
+            AdminDisplayName       = ""
+            Ensure                 = "Present"
+            Credential             = $credsGlobalAdmin
+        }
+    }
+}
+```
 

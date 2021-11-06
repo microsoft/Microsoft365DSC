@@ -54,13 +54,13 @@ Configuration Example
 
     node localhost
     {
-        SPOPropertyBag MyKey
+        SPOPropertyBag 'ConfigurePropertyBag'
         {
-            Url                = "https://office365dsc.sharepoint.com/sites/Marketing"
-            Key                = "MyKey"
-            Value              = "MyValue"
-            Ensure             = "Present"
-            Credential         = $credsGlobalAdmin
+            Url        = "https://contoso.sharepoint.com/sites/Marketing"
+            Key        = "MyKey"
+            Value      = "MyValue"
+            Ensure     = "Present"
+            Credential = $credsGlobalAdmin
         }
     }
 }

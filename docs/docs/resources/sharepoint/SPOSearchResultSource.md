@@ -45,14 +45,14 @@ Configuration Example
 
     node localhost
     {
-        SPOSearchResultSource SearchMP
+        SPOSearchResultSource 'ConfigureSearchResultSource'
         {
-            Name               = "MyResultSource"
-            Description        = "Description of item"
-            Protocol           = "Local"
-            Type               = "SharePoint"
-            Credential         = $credsGlobalAdmin
-            Ensure             = "Present"
+            Name        = "MyResultSource"
+            Description = "Description of item"
+            Protocol    = "Local"
+            Type        = "SharePoint"
+            Ensure      = "Present"
+            Credential  = $credsGlobalAdmin
         }
     }
 }

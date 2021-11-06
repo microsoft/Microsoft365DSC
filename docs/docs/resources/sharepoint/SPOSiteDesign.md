@@ -60,7 +60,7 @@ Configuration Example
 
     node localhost
     {
-        SPOSiteDesign SiteDesign
+        SPOSiteDesign 'ConfigureSiteDesign'
         {
             Title               = "DSC Site Design"
             SiteScriptNames     = @("Cust List", "List_Views")

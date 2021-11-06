@@ -71,7 +71,7 @@ Configuration Example
 
     node localhost
     {
-        TeamsTeam MyTeam
+        TeamsTeam 'ConfigureTeam'
         {
             DisplayName                       = "Sample3"
             Description                       = "Sample"
@@ -93,8 +93,8 @@ Configuration Example
             AllowCustomMemes                  = $True
             AllowGuestCreateUpdateChannels    = $true
             AllowGuestDeleteChannels          = $true
-            Credential                        = $credsGlobalAdmin
             Ensure                            = "Present"
+            Credential                        = $credsGlobalAdmin
         }
     }
 }

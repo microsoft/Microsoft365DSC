@@ -42,6 +42,7 @@
 | **CopyTo** | Write | StringArray[] | The CopyTo parameter specifies an action that adds recipients to the Cc field of messages. ||
 | **DeleteMessage** | Write | Boolean | The DeleteMessage parameter specifies an action that silently drops messages without an NDR. ||
 | **DlpPolicy** | Write | String | The DlpPolicy parameter specifies the data loss prevention (DLP) policy that's associated with the rule. ||
+| **Enabled** | Write | Boolean | The Enabled parameter specifies whether the new rule is created as enabled or disabled. ||
 | **ExceptIfADComparisonAttribute** | Write | String | The ExceptIfADComparisonAttribute parameter specifies an exception that compares an Active Directory attribute between the sender and all recipients of the message. ||
 | **ExceptIfADComparisonOperator** | Write | String | The ExceptIfADComparisonOperator parameter specifies the comparison operator for the ExceptIfADComparisonAttribute parameter. |Equal, NotEqual|
 | **ExceptIfAnyOfCcHeader** | Write | StringArray[] | The ExceptIfAnyOfCcHeader parameter specifies an exception that looks for recipients in the Cc field of messages. ||
@@ -163,6 +164,7 @@
 | **SetAuditSeverity** | Write | String | The SetAuditSeverity parameter specifies an action that sets the severity level of the incident report and the corresponding entry that's written to the message tracking log when messages violate DLP policies. |DoNotAudit, Low, Medium, High|
 | **SetHeaderName** | Write | String | The SetHeaderName parameter specifies an action that adds or modifies a header field in the message header. ||
 | **SetHeaderValue** | Write | String | The SetHeaderValue parameter specifies an action that adds or modifies a header field in the message header. ||
+| **State** | Write | String | The State parameter specifies filters the results by enabled or disabled rules. ||
 | **SetSCL** | Write | String | The SetSCL parameter specifies an action that adds or modifies the SCL value of messages. ||
 | **StopRuleProcessing** | Write | Boolean | The StopRuleProcessing parameter specifies an action that stops processing more rules. ||
 | **SubjectContainsWords** | Write | StringArray[] | The SubjectContainsWords parameter specifies a condition that looks for words in the Subject field of messages. ||

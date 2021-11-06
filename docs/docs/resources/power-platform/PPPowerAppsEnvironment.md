@@ -36,13 +36,13 @@ Configuration Example
 
     node localhost
     {
-        PPPowerAppsEnvironment DemoEnvironment
+        PPPowerAppsEnvironment 'PowerAppsDemoEnvironment'
         {
             DisplayName        = "My Demo Environment"
-            Ensure             = "Present"
             EnvironmentSKU     = "Production"
-            Credential         = $credsGlobalAdmin
             Location           = "canada"
+            Ensure             = "Present"
+            Credential         = $credsGlobalAdmin
         }
     }
 }

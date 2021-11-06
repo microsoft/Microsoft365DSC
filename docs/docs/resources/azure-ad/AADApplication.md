@@ -64,19 +64,19 @@ Configuration Example
 
     node localhost
     {
-        AADApplication DSCApp1
+        AADApplication 'AADApp1'
         {
-            DisplayName                = "AppDisplayName"
-            AvailableToOtherTenants    = $false
-            GroupMembershipClaims      = "0"
-            Homepage                   = "https://app.contoso.com"
-            IdentifierUris             = "https://app.contoso.com"
-            KnownClientApplications    = ""
-            LogoutURL                  = "https://app.contoso.com/logout"
-            Oauth2RequirePostResponse  = $false
-            PublicClient               = $false
-            ReplyURLs                  = "https://app.contoso.com"
-            Permissions                = @(
+            DisplayName               = "AppDisplayName"
+            AvailableToOtherTenants   = $false
+            GroupMembershipClaims     = "0"
+            Homepage                  = "https://app.contoso.com"
+            IdentifierUris            = "https://app.contoso.com"
+            KnownClientApplications   = ""
+            LogoutURL                 = "https://app.contoso.com/logout"
+            Oauth2RequirePostResponse = $false
+            PublicClient              = $false
+            ReplyURLs                 = "https://app.contoso.com"
+            Permissions               = @(
                 MSFT_AADApplicationPermission
                 {
                     Name                = 'User.Read'
@@ -99,8 +99,8 @@ Configuration Example
                     AdminConsentGranted = $True
                 }
             )
-            Ensure                     = "Present"
-            Credential                 = $credsGlobalAdmin
+            Ensure                    = "Present"
+            Credential                = $credsGlobalAdmin
         }
     }
 }

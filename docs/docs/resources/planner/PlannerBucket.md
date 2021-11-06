@@ -32,7 +32,7 @@ Configuration Example
 
     node localhost
     {
-        PlannerBucket ContosoBucket
+        PlannerBucket 'ContosoPlannerBucket'
         {
             PlanId                = "1234567890"
             Name                  = "Contoso Bucket"

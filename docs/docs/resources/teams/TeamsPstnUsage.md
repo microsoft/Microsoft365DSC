@@ -31,11 +31,11 @@ Configuration Example
 
     node localhost
     {
-        TeamsPstnUsage PstnUsage
+        TeamsPstnUsage 'ConfigurePstnUsage'
         {
-            Usage              = 'Long Distance'
-            Ensure             = 'Present'
-            Credential         = $credsGlobalAdmin
+            Usage      = 'Long Distance'
+            Ensure     = 'Present'
+            Credential = $credsGlobalAdmin
         }
     }
 }

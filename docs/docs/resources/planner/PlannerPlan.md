@@ -31,7 +31,7 @@ Configuration Example
 
     node localhost
     {
-        PlannerPlan ContosoPlan
+        PlannerPlan 'ContosoPlannerPlan'
         {
             Title                 = "Contoso Plan"
             OwnerGroup            = "Contoso Group"

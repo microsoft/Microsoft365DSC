@@ -39,12 +39,12 @@ Configuration Example
 
     node localhost
     {
-        IntuneAppConfigurationPolicy AddRemoveAppConfigPolicy
+        IntuneAppConfigurationPolicy 'AddAppConfigPolicy'
         {
-            DisplayName          = 'Contoso'
-            Description          = 'Contoso Policy'
-            Ensure               = 'Present'
-            Credential           = $credsGlobalAdmin;
+            DisplayName = 'ContosoNew'
+            Description = 'New Contoso Policy'
+            Ensure      = 'Present'
+            Credential  = $credsGlobalAdmin
         }
     }
 }
@@ -66,12 +66,12 @@ Configuration Example
 
     node localhost
     {
-        IntuneAppConfigurationPolicy DemoRemoveAppConfigPolicy
+        IntuneAppConfigurationPolicy 'RemoveAppConfigPolicy'
         {
-            DisplayName          = 'Contoso'
-            Description          = 'Contoso Policy'
-            Ensure               = 'Absent'
-            Credential           = $credsGlobalAdmin;
+            DisplayName = 'ContosoOld'
+            Description = 'Old Contoso Policy'
+            Ensure      = 'Absent'
+            Credential  = $credsGlobalAdmin
         }
     }
 }

@@ -35,7 +35,7 @@ Configuration Example
 
     node localhost
     {
-        SCComplianceCase Case
+        SCComplianceCase 'ConfigureComplianceCase'
         {
             Name               = "MyCase"
             Description        = "MyPolicy"

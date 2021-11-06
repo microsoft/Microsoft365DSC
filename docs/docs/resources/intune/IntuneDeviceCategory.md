@@ -36,12 +36,12 @@ Configuration Example
 
     node localhost
     {
-        IntuneDeviceCategory Demo
+        IntuneDeviceCategory 'ConfigureDeviceCategory'
         {
             DisplayName          = "Contoso"
             Description          = "Contoso Category"
             Ensure               = "Present"
-            Credential           = $credsGlobalAdmin;
+            Credential           = $credsGlobalAdmin
         }
     }
 }

@@ -50,7 +50,7 @@ Configuration Example
 
     node localhost
     {
-        IntuneDeviceCompliancePolicyiOs AddDeviceCompliancePolicyiOs
+        IntuneDeviceCompliancePolicyiOs 'ConfigureDeviceCompliancePolicyiOS'
         {
             DisplayName                                 = 'Test iOS Device Compliance Policy'
             Description                                 = 'Test iOS Device Compliance Policy Description'
@@ -69,7 +69,7 @@ Configuration Example
             DeviceThreatProtectionRequiredSecurityLevel = 'medium'
             ManagedEmailProfileRequired                 = $True
             Ensure                                      = 'Present'
-            Credential                                  = $Credential
+            Credential                                  = $credsGlobalAdmin
 
         }
     }
@@ -92,11 +92,11 @@ Configuration Example
 
     node localhost
     {
-        IntuneDeviceCompliancePolicyiOs RemoveDeviceCompliancePolicyiOs
+        IntuneDeviceCompliancePolicyiOs 'RemoveDeviceCompliancePolicyiOS'
         {
             DisplayName          = 'Demo iOS Device Compliance Policy'
             Ensure               = 'Absent'
-            Credential           = $credsGlobalAdmin;
+            Credential           = $credsGlobalAdmin
         }
     }
 }
