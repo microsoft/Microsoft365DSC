@@ -58,15 +58,11 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-<<<<<<< Updated upstream
-
-
-=======
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters -ProfileName "beta"
     $MaximumFunctionCount = 32000
     Select-MgProfile -Name Beta | Out-Null
->>>>>>> Stashed changes
+
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
     try
