@@ -90,5 +90,5 @@ extra:
     provider: google
     property: UA-209929913-1
 repo_url: https://github.com/microsoft/Microsoft365DSC
-edit_uri: tree/gh-pages/docs/docs
+edit_uri: tree/Dev/docs/docs
 copyright: Microsoft365DSC
