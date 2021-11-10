@@ -7,7 +7,7 @@ on:
 jobs:
   GenerateResource:
     runs-on: windows-latest
-  
+
       # Only when run from the main repo
     if: github.repository == 'microsoft/Microsoft365DSC'
 
@@ -70,8 +70,8 @@ jobs:
       - name: Commit files # commit the output folder
         if: always()
         run: |
-          git config --local user.email "rick.vanrousselt@outlook.com"
-          git config --local user.name "Rick Van Rousselt"
+          git config --local user.email "nik.charlebois@microsoft.com"
+          git config --local user.name "Nik Charlebois"
           git add D:/a/Microsoft365DSC/Microsoft365DSC/docs/docs/resources/*
           git commit -m "Add changes"
           git push
@@ -81,10 +81,10 @@ jobs:
   deploy:
     needs: GenerateResource
     runs-on: ubuntu-latest
-    
+
     # Only when run from the main repo
     if: github.repository == 'microsoft/Microsoft365DSC'
-    
+
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
