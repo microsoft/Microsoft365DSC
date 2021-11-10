@@ -41,7 +41,7 @@ Just like any other normal PowerShell DSC configuration, your Microsoft365DSC fi
 
 See the [Automating](../../user-guide/get-started/apply-config) page for more information about possible options.
 
-## Export ![Infographic](../images/Export.png){ align=left width=100 }
+## Export ![Infographic](../images/export.PNG){ align=left width=100 }
 
 
 Microsoft365DSC is the very first PowerShell project that natively supports ReverseDSC. This means that by simply installing the module, you are able to leverage ReverseDSC to extract the entire configuration of any existing tenants. The module exposes a cmdlet called **Export-M365DSCConfiguration** which launches a Graphical User Interface (GUI) that allows you to pick and choose what configuration components you wish to extract in a granular fashion.
