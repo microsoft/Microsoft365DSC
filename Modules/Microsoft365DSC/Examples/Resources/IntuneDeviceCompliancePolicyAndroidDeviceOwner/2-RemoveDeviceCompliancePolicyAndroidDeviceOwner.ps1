@@ -13,11 +13,11 @@ Configuration Example
 
     node localhost
     {
-        IntuneDeviceCompliancePolicyAndroidDeviceOwner f7d82525-b7c0-475c-9d5e-16fafdfa487a
+        IntuneDeviceCompliancePolicyAndroidDeviceOwner 'RemoveAndroidDeviceCompliancePolicyOwner'
         {
             DisplayName          = "DeviceOwner"
             Ensure               = "Absent"
-            Credential           = $credsGlobalAdmin;
+            Credential           = $credsGlobalAdmin
         }
     }
 }

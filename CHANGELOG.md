@@ -1,6 +1,11 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
+# 1.21.1117.1
+
+* IntuneDeviceCompliancePolicyAndroidDeviceOwner
+  * Initial release;
+
+# 1.21.1110.1
 
 * MISC
   * Standardized examples
@@ -9,16 +14,8 @@
   * Added cmdlet to configure delegated permissions to Graph app based on
     settings.json file (Update-M365DSCAllowedGraphScopes)
   * Preparation to run integration tests dynamically using the resource examples
-
-# 1.21.1013.1
-
-* MISC
-  * Standardized examples
-  * Added missing examples
-  * Added settings.json generator cmdlet (Update-M365DSCResourcesSettingsJSON)
-  * Added cmdlet to configure delegated permissions to Graph app based on
-    settings.json file (Update-M365DSCAllowedGraphScopes)
-  * Preparation to run integration tests dynamically using the resource examples
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.76;
 
 # 1.21.1103.1
 
