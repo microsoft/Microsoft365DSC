@@ -74,9 +74,7 @@ jobs:
           git config --local user.name "Nik Charlebois"
           git add D:/a/Microsoft365DSC/Microsoft365DSC/docs/docs/resources/*
           git commit -m "Add changes"
-          git push
-
-
+          git push https://${Env:PAGES_ACCESS_TOKEN}@github.com/Microsoft/Microsoft365DSC.git
 
   deploy:
     needs: GenerateResource
