@@ -146,7 +146,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Test-TargetResource @testParams | Should -Be $false
                 }
 
-                It "Should update the iOS Device Compliance Policy from the Set method" {
+                It "Should update the Android Device Owner Device Compliance Policy from the Set method" {
                     Set-TargetResource @testParams
                     Should -Invoke -CommandName Update-MgDeviceManagementDeviceCompliancePolicy -Exactly 1
                 }
@@ -212,24 +212,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 BeforeAll {
                     $testParams = @{
                         DisplayName                                        = 'Test Android Device Owner Device Compliance Policy'
-                        Description                                        = 'Test Android Device Owner Device Compliance Policy Description'
-                        DeviceThreatProtectionEnabled                      = $True
-                        DeviceThreatProtectionRequiredSecurityLevel        = "Unavailable"
-                        AdvancedThreatProtectionRequiredSecurityLevel      = "Unavailable"
-                        SecurityRequireSafetyNetAttestationBasicIntegrity  = $True
-                        SecurityRequireSafetyNetAttestationCertifiedDevice = $True
-                        OsMinimumVersion                                   = 7
-                        OsMaximumVersion                                   = 11
-                        PasswordRequired                                   = $True
-                        PasswordMinimumLength                              = 6
-                        PasswordRequiredType                               = "DeviceDefault"
-                        PasswordMinutesOfInactivityBeforeLock              = 5
-                        PasswordExpirationDays                             = 365
-                        PasswordPreviousPasswordCountToBlock               = 10
-                        StorageRequireEncryption                           = $True
-                        SecurityRequireIntuneAppIntegrity                  = $True
-                        RoleScopeTagIds                                    = "0"
-                        Ensure                                             = 'Present'
+                        Ensure                                             = 'Absent'
                         Credential                                         = $Credential
                     }
 
@@ -263,11 +246,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
                 }
 
-                It "Should return true from the Test method" {
+                It "Should return false from the Test method" {
                     Test-TargetResource @testParams | Should -Be $false
                 }
 
-                It "Should remove the iOS Device Compliance Policy from the Set method" {
+                It "Should remove the Android Device Owner Device Compliance Policy from the Set method" {
                     Set-TargetResource @testParams
                     Should -Invoke -CommandName Remove-MgDeviceManagementDeviceCompliancePolicy -Exactly 1
                 }
