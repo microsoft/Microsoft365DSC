@@ -173,7 +173,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -841,10 +841,11 @@ function Set-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    Write-Verbose -Message "Setting configuration of AzureAD Conditional Access Policy"
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -873,7 +874,7 @@ function Set-TargetResource
         $conditions = @{
             Applications = @{
             }
-            Users = @{
+            Users        = @{
             }
         }
         #create and provision Application Condition object
@@ -888,7 +889,7 @@ function Set-TargetResource
         }
         if ($IncludeUserActions)
         {
-            $conditions.Applications.Add("IncludeUserActions",  $IncludeUserActions)
+            $conditions.Applications.Add("IncludeUserActions", $IncludeUserActions)
         }
 
         #create and provision User Condition object
@@ -983,7 +984,8 @@ function Set-TargetResource
                 {
                     $userguid = $null
                     try
-                    { $userguid = (Get-MgUser -UserId $excludeuser).Id
+                    {
+                        $userguid = (Get-MgUser -UserId $excludeuser).Id
                     }
                     catch
                     {
@@ -1341,9 +1343,9 @@ function Set-TargetResource
             if (-not $conditions.Contains("Platforms"))
             {
                 $conditions.Add("Platforms", @{
-                    ExcludePlatforms = @()
-                    IncludePlatforms = @()
-                })
+                        ExcludePlatforms = @()
+                        IncludePlatforms = @()
+                    })
             }
             else
             {
@@ -1366,9 +1368,9 @@ function Set-TargetResource
         if ($IncludeLocations -or $ExcludeLocations)
         {
             $conditions.Add("Locations", @{
-                ExcludeLocations = @()
-                IncludeLocations = @()
-            })
+                    ExcludeLocations = @()
+                    IncludeLocations = @()
+                })
             $conditions.Locations.IncludeLocations = @()
             $conditions.Locations.ExcludeLocations = @()
             Write-Verbose -Message "Set-Targetresource: locations specified"
@@ -1463,9 +1465,9 @@ function Set-TargetResource
             if (-not $conditions.Contains("Platforms"))
             {
                 $conditions.Add("Platforms", @{
-                    ExcludePlatforms = @()
-                    IncludePlatforms = @()
-                })
+                        ExcludePlatforms = @()
+                        IncludePlatforms = @()
+                    })
             }
             else
             {
@@ -1485,7 +1487,7 @@ function Set-TargetResource
         $Conditions.Add("SignInRiskLevels", $SignInRiskLevels)
         #no translation or conversion needed
         Write-Verbose -Message "Set-Targetresource: ClientAppTypes: $ClientAppTypes"
-        $Conditions.Add("ClientAppTypes",  $ClientAppTypes)
+        $Conditions.Add("ClientAppTypes", $ClientAppTypes)
         #no translation or conversion needed
         Write-Verbose -Message "Set-Targetresource: Adding processed conditions"
         #add all conditions to the parameter list
@@ -1894,7 +1896,7 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters

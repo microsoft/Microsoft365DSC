@@ -14,7 +14,7 @@ Configuration Example
 
     node localhost
     {
-        SCSensitivityLabel DemoRule
+        SCSensitivityLabel 'ConfigureSensitivityLabel'
         {
             Name                                           = "DemoLabel"
             Comment                                        = "Demo Label comment"
@@ -29,7 +29,7 @@ Configuration Example
             ApplyContentMarkingFooterText                  = "Demo footer text"
             ApplyContentMarkingHeaderAlignment             = "Center"
             ApplyContentMarkingHeaderEnabled               = $true
-            ApplyContentMarkingHeaderFontColor             =  "#FF0000"
+            ApplyContentMarkingHeaderFontColor             = "#FF0000"
             ApplyContentMarkingHeaderFontName              = "calibri"
             ApplyContentMarkingHeaderFontSize              = 10
             ApplyContentMarkingHeaderMargin                = 5
@@ -51,7 +51,7 @@ Configuration Example
                 MSFT_SCLabelLocaleSettings
                 {
                     LocaleKey = "DisplayName"
-                    Settings = @(
+                    Settings  = @(
                         MSFT_SCLabelSetting
                         {
                             Key   = "en-us"
@@ -67,7 +67,7 @@ Configuration Example
                 MSFT_SCLabelLocaleSettings
                 {
                     LocaleKey = "StopColor"
-                    Settings = @(
+                    Settings  = @(
                         MSFT_SCLabelSetting
                         {
                             Key   = "en-us"
@@ -81,21 +81,21 @@ Configuration Example
                     )
                 }
             )
-            AdvancedSettings = @(
+            AdvancedSettings                               = @(
                 MSFT_SCLabelSetting
                 {
-                    Key = "AllowedLevel"
+                    Key   = "AllowedLevel"
                     Value = @("Sensitive", "Classified")
                 }
                 MSFT_SCLabelSetting
                 {
-                    Key = "LabelStatus"
+                    Key   = "LabelStatus"
                     Value = "Enabled"
                 }
             )
-            ParentId                                    = "Personal"
-            Credential                                  = $credsGlobalAdmin
-            Ensure                                      = "Present"
+            ParentId                                       = "Personal"
+            Ensure                                         = "Present"
+            Credential                                     = $credsGlobalAdmin
         }
     }
 }

@@ -14,26 +14,26 @@ Configuration Example
 
     node localhost
     {
-        SCLabelPolicy DemoPolicy
+        SCLabelPolicy 'ConfigureLabelPolicy'
         {
-            Name           = "DemoLabelPolicy"
-            Comment        = "Demo Label policy comment"
-            Labels = @("Personal", "General");
+            Name             = "DemoLabelPolicy"
+            Comment          = "Demo Label policy comment"
+            Labels           = @("Personal", "General")
             ExchangeLocation = @("All")
             AdvancedSettings = @(
                 MSFT_SCLabelSetting
                 {
-                    Key = "AllowedLevel"
+                    Key   = "AllowedLevel"
                     Value = @("Sensitive", "Classified")
                 }
                 MSFT_SCLabelSetting
                 {
-                    Key = "LabelStatus"
+                    Key   = "LabelStatus"
                     Value = "Enabled"
                 }
             )
-            Credential         = $credsGlobalAdmin
-            Ensure             = "Present"
+            Ensure           = "Present"
+            Credential       = $credsGlobalAdmin
         }
     }
 }

@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SPOSearchResultSource",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

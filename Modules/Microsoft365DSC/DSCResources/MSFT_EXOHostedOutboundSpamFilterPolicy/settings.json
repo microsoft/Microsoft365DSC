@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOHostedOutboundSpamFilterPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

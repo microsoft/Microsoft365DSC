@@ -186,6 +186,7 @@ function Get-TargetResource {
         ProfileName = 'Beta'
     }
     $ConnectionMode = New-M365DSCConnection @M365DSCConnectionSplat
+    $MaximumFunctionCount = 32000
     Select-MGProfile -Name 'Beta' | Out-Null
 
     #region Telemetry
@@ -464,6 +465,7 @@ function Set-TargetResource
         ProfileName = 'Beta'
     }
     $ConnectionMode = New-M365DSCConnection @M365DSCConnectionSplat
+    $MaximumFunctionCount = 32000
     Select-MGProfile -Name 'Beta' | Out-Null
 
     #region Telemetry
@@ -765,6 +767,7 @@ function Export-TargetResource
         ProfileName = 'Beta'
     }
     $ConnectionMode = New-M365DSCConnection @M365DSCConnectionSplat
+    $MaximumFunctionCount = 32000
     Select-MGProfile -Name 'Beta' | Out-Null
 
     #region Telemetry

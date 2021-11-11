@@ -45,6 +45,10 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of AzureAD Groups Naming Policy"
 
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters -ProfileName "beta"
+    Select-MgProfile -Name Beta | Out-Null
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -56,6 +60,7 @@ function Get-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters -ProfileName "beta"
+    $MaximumFunctionCount = 32000
     Select-MgProfile -Name Beta | Out-Null
 
     $nullReturn = $PSBoundParameters
@@ -156,6 +161,10 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Azure AD Groups Naming Policy"
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters -ProfileName "beta"
+    Select-MgProfile -Name Beta | Out-Null
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
@@ -314,8 +323,8 @@ function Export-TargetResource
 
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-      -InboundParameters $PSBoundParameters `
-      -ProfileName "beta"
+        -InboundParameters $PSBoundParameters -ProfileName "beta"
+    Select-MgProfile -Name Beta | Out-Null
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""

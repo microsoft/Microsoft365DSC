@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SPOTenantCdnPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

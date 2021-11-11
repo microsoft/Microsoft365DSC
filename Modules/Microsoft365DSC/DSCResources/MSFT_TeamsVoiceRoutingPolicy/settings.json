@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "TeamsVoiceRoutingPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

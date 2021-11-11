@@ -14,7 +14,7 @@ Configuration Example
 
     node localhost
     {
-        SCFilePlanPropertyCategory FilePlanPropertyCategory
+        SCFilePlanPropertyCategory 'FilePlanPropertyCategory'
         {
             Name               = "My Category"
             Ensure             = "Present"

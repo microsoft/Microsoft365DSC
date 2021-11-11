@@ -1,11 +1,14 @@
-name: AzureCloud - GCCHigh - Integration
+name: AzureCloud GCCHigh - Integration
 on: [push]
 
 jobs:
   # This workflow contains a single job called "build"
-  Integration-PublicCloud:
+  Integration-GCCHigh:
     # The type of runner that the job will run on
     runs-on: windows-latest
+    
+    # Only when run from the main repo
+    if: github.repository == 'microsoft/Microsoft365DSC'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:

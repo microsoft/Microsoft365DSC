@@ -14,16 +14,16 @@ Configuration Example
 
     node localhost
     {
-        SPOStorageEntity MyStorageEntity
+        SPOStorageEntity 'ConfigureDSCStorageEntity'
         {
-            Key                = "DSCKey"
-            Value              = "Test storage entity"
-            EntityScope        = "Tenant"
-            Description        = "Description created by DSC"
-            Comment            = "Comment from DSC"
-            Ensure             = "Present"
-            SiteUrl            = "https://o365dsc1-admin.sharepoint.com"
-            Credential         = $credsGlobalAdmin
+            Key         = "DSCKey"
+            Value       = "Test storage entity"
+            EntityScope = "Tenant"
+            Description = "Description created by DSC"
+            Comment     = "Comment from DSC"
+            SiteUrl     = "https://contoso-admin.sharepoint.com"
+            Ensure      = "Present"
+            Credential  = $credsGlobalAdmin
         }
     }
 }

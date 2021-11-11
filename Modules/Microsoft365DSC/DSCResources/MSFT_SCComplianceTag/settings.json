@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SCComplianceTag",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

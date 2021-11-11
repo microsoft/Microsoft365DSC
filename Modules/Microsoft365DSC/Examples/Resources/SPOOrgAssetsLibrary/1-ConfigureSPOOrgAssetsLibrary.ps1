@@ -14,13 +14,13 @@ Configuration Example
 
     node localhost
     {
-        SPOOrgAssetsLibrary SiteAssets
+        SPOOrgAssetsLibrary 'ConfigureOrgSiteAssets'
         {
-            LibraryUrl         = "https://contoso.sharepoint.com/sites/org/Branding"
-            ThumbnailUrl       = "https://contoso.sharepoint.com/sites/org/Branding/Logo/Owagroup.png"
-            CdnType            = "Public"
-            Credential         = $credsGlobalAdmin;
-            Ensure             = "Present"
+            LibraryUrl   = "https://contoso.sharepoint.com/sites/org/Branding"
+            ThumbnailUrl = "https://contoso.sharepoint.com/sites/org/Branding/Logo/Owagroup.png"
+            CdnType      = "Public"
+            Ensure       = "Present"
+            Credential   = $credsGlobalAdmin
         }
     }
 }

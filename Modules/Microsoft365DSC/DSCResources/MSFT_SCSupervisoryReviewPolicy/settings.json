@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "SCSupervisoryReviewPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

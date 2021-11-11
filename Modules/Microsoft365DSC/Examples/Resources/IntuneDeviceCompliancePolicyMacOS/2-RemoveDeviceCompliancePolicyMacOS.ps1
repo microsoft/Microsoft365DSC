@@ -13,11 +13,11 @@ Configuration Example
 
     node localhost
     {
-        IntuneDeviceCompliancePolicyMacOS RemoveDeviceCompliancePolicyMacOS
+        IntuneDeviceCompliancePolicyMacOS 'RemoveDeviceCompliancePolicyMacOS'
         {
-            DisplayName          = 'Demo MacOS Device Compliance Policy';
-            Ensure               = 'Absent';
-            Credential           = $credsGlobalAdmin;
+            DisplayName          = 'Demo MacOS Device Compliance Policy'
+            Ensure               = 'Absent'
+            Credential           = $credsGlobalAdmin
         }
     }
 }

@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXORemoteDomain",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

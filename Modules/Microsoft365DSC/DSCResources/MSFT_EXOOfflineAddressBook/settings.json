@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOOfflineAddressBook",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

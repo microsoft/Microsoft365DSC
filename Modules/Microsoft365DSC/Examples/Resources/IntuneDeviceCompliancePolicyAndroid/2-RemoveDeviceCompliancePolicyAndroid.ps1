@@ -13,11 +13,11 @@ Configuration Example
 
     node localhost
     {
-        IntuneDeviceCompliancePolicyAndroid RemoveDeviceCompliancePolicyAndroid
+        IntuneDeviceCompliancePolicyAndroid 'RemoveDeviceCompliancePolicyAndroid'
         {
-            DisplayName          = "Test Android Device Compliance Policy"
-            Ensure               = "Absent"
-            Credential           = $credsGlobalAdmin;
+            DisplayName = "Test Android Device Compliance Policy"
+            Ensure      = "Absent"
+            Credential  = $credsGlobalAdmin
         }
     }
 }

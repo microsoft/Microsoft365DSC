@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "TeamsUpgradePolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

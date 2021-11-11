@@ -1,0 +1,58 @@
+﻿# EXOMailTips
+
+## Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **Organization** | Key | String |  ||
+| **MailTipsAllTipsEnabled** | Write | Boolean | Specifies whether MailTips are enabled. ||
+| **MailTipsGroupMetricsEnabled** | Write | Boolean | Specifies whether MailTips that rely on group metrics data are enabled. ||
+| **MailTipsLargeAudienceThreshold** | Write | UInt32 | Specifies what a large audience is. ||
+| **MailTipsMailboxSourcedTipsEnabled** | Write | Boolean | Specifies whether MailTips that rely on mailbox data (out-of-office or full mailbox) are enabled. ||
+| **MailTipsExternalRecipientsTipsEnabled** | Write | Boolean | Specifies whether MailTips for external recipients are enabled. ||
+| **Ensure** | Write | String |  |Present, Absent|
+| **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin ||
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
+| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword ||
+| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. ||
+
+## Description
+
+This resource allows to configure Mailtips behaviors in Exchange Online.
+
+## Examples
+
+### Example 1
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsGlobalAdmin
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOMailTips 'OrgWideMailTips'
+        {
+            Organization                          = "contoso.com"
+            MailTipsAllTipsEnabled                = $True
+            MailTipsGroupMetricsEnabled           = $True
+            MailTipsLargeAudienceThreshold        = 100
+            MailTipsMailboxSourcedTipsEnabled     = $True
+            MailTipsExternalRecipientsTipsEnabled = $True
+            Ensure                                = "Present"
+            Credential                            = $credsGlobalAdmin
+        }
+    }
+}
+```
+

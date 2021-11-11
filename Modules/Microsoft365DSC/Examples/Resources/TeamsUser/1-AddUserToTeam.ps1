@@ -14,13 +14,13 @@ Configuration Example
 
     node localhost
     {
-        TeamsUser MyTeam
+        TeamsUser 'ConfigureTeamsUser'
         {
-            TeamName           = "SuperSecretTeam"
-            User               = "jdoe@dsazure.com"
-            Role               = "Member"
-            Ensure             = "Absent"
-            Credential         = $credsGlobalAdmin
+            TeamName   = "SuperSecretTeam"
+            User       = "jdoe@contoso.com"
+            Role       = "Member"
+            Ensure     = "Present"
+            Credential = $credsGlobalAdmin
         }
     }
 }

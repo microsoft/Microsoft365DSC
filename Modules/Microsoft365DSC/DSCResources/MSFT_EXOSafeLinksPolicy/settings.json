@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOSafeLinksPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

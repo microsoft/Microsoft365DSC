@@ -13,29 +13,29 @@ Configuration Example
 
     node localhost
     {
-        IntuneDeviceCompliancePolicyMacOS MyCustomMacOSPolicy
+        IntuneDeviceCompliancePolicyMacOS 'ConfigureDeviceCompliancePolicyMacOS'
         {
-            DisplayName                                 = "MacOS DSC Policy";
-            Description                                 = "Test policy";
-            PasswordRequired                            = $False;
-            PasswordBlockSimple                         = $False;
-            PasswordExpirationDays                      = 365;
-            PasswordMinimumLength                       = 6;
-            PasswordMinutesOfInactivityBeforeLock       = 5;
-            PasswordPreviousPasswordBlockCount          = 13;
-            PasswordMinimumCharacterSetCount            = 1;
-            PasswordRequiredType                        = "DeviceDefault";
-            OsMinimumVersion                            = 10;
-            OsMaximumVersion                            = 13;
-            SystemIntegrityProtectionEnabled            = $False;
-            DeviceThreatProtectionEnabled               = $False;
-            DeviceThreatProtectionRequiredSecurityLevel = "Unavailable";
-            StorageRequireEncryption                    = $False;
-            FirewallEnabled                             = $False;
-            FirewallBlockAllIncoming                    = $False;
-            FirewallEnableStealthMode                   = $False;
-            Ensure                                      = 'Present';
-            Credential                                  = $Credential;
+            DisplayName                                 = "MacOS DSC Policy"
+            Description                                 = "Test policy"
+            PasswordRequired                            = $False
+            PasswordBlockSimple                         = $False
+            PasswordExpirationDays                      = 365
+            PasswordMinimumLength                       = 6
+            PasswordMinutesOfInactivityBeforeLock       = 5
+            PasswordPreviousPasswordBlockCount          = 13
+            PasswordMinimumCharacterSetCount            = 1
+            PasswordRequiredType                        = "DeviceDefault"
+            OsMinimumVersion                            = 10
+            OsMaximumVersion                            = 13
+            SystemIntegrityProtectionEnabled            = $False
+            DeviceThreatProtectionEnabled               = $False
+            DeviceThreatProtectionRequiredSecurityLevel = "Unavailable"
+            StorageRequireEncryption                    = $False
+            FirewallEnabled                             = $False
+            FirewallBlockAllIncoming                    = $False
+            FirewallEnableStealthMode                   = $False
+            Ensure                                      = 'Present'
+            Credential                                  = $credsGlobalAdmin
         }
     }
 }

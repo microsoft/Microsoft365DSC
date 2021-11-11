@@ -22,7 +22,7 @@ Configuration Example
 
     node localhost
     {
-        EXOMailboxSettings OttawaTeam
+        EXOMailboxSettings 'OttawaTeamMailboxSettings'
         {
             DisplayName        = "Ottawa Employees"
             TimeZone           = "Eastern Standard Time"

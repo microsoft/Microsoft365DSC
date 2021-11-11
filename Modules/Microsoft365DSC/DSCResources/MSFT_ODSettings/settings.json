@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "ODSettings",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

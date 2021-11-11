@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOSharedMailbox",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

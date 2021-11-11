@@ -14,18 +14,18 @@ Configuration Example
 
     node localhost
     {
-        SPOUserProfileProperty AdminFavoriteColor
+        SPOUserProfileProperty 'ConfigureUserProfileProperty'
         {
-            UserName           = "John.Smith@contoso.com"
-            Properties         = @(
+            UserName   = "John.Smith@contoso.com"
+            Properties = @(
                 MSFT_SPOUserProfilePropertyInstance
                 {
                     Key   = "MyProperty"
                     Value = "MyValue"
                 }
             )
-            Credential         = $credsGlobalAdmin
-            Ensure             = "Present"
+            Ensure     = "Present"
+            Credential = $credsGlobalAdmin
         }
     }
 }

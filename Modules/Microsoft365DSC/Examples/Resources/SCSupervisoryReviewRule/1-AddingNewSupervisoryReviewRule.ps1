@@ -14,14 +14,14 @@ Configuration Example
 
     Node localhost
     {
-        SCSupervisoryReviewRule Rule
+        SCSupervisoryReviewRule 'SupervisoryReviewRule'
         {
-            Name               = "DemoRule"
-            Condition          = "(NOT(Reviewee:US Compliance))"
-            SamplingRate       = 100
-            Policy             = 'TestPolicy'
-            Ensure             = "Present"
-            Credential         = $credsGlobalAdmin
+            Name         = "DemoRule"
+            Condition    = "(NOT(Reviewee:US Compliance))"
+            SamplingRate = 100
+            Policy       = 'TestPolicy'
+            Ensure       = "Present"
+            Credential   = $credsGlobalAdmin
         }
     }
 }

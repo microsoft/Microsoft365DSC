@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOOrganizationConfig",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

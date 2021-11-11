@@ -14,10 +14,9 @@ Configuration Example
 
     node localhost
     {
-        SPOTenantSettings MyTenantSettings
+        SPOTenantSettings 'ConfigureTenantSettings'
         {
             IsSingleInstance                              = "Yes"
-            Credential                                    = $credsGlobalAdmin
             MinCompatibilityLevel                         = 16
             MaxCompatibilityLevel                         = 16
             SearchResolveExactEmailOrUPN                  = $false
@@ -36,6 +35,7 @@ Configuration Example
             HideDefaultThemes                             = $false
             MarkNewFilesSensitiveByDefault                = "AllowExternalSharing"
             Ensure                                        = "Present"
+            Credential                                    = $credsGlobalAdmin
         }
     }
 }
