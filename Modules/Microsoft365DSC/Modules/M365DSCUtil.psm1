@@ -1312,7 +1312,8 @@ function New-M365DSCConnection
             -TenantId $InboundParameters.TenantId `
             -CertificateThumbprint $InboundParameters.CertificateThumbprint `
             -SkipModuleReload $Global:CurrentModeIsExport `
-            -ProfileName $ProfileName
+            -ProfileName $ProfileName `
+            -Url $Url
         return "ServicePrincipalWithThumbprint"
     }
     else

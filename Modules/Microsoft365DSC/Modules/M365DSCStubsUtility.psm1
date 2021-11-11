@@ -68,6 +68,7 @@ function New-M365DSCStubFiles
 
         if ($CurrentModuleName -eq 'Intune')
         {
+            $MaximumFunctionCount = 32000
             Select-MgProfile -Name beta | Out-Null
             $betaCmdlets = Get-Command -CommandType 'Cmdlet' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
             foreach ($cmdlet in $betaCmdlets)

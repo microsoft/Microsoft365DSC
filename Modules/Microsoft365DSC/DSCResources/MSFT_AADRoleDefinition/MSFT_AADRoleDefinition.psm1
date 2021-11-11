@@ -66,6 +66,7 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
+    $MaximumFunctionCount = 32000
     Select-MgProfile -Name 'Beta'
 
     #region Telemetry
@@ -371,6 +372,7 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ProfileName 'Beta'
+    $MaximumFunctionCount = 32000
     Select-MgProfile -Name 'beta'
 
     #region Telemetry
