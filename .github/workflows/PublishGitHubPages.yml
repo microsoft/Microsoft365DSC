@@ -72,7 +72,6 @@ jobs:
         run: |
           git config --local user.email "nik.charlebois@microsoft.com"
           git config --local user.name "Nik Charlebois"
-          git remote set-url origin https://${Env:PAGES_ACCESS_TOKEN}@github.com/Microsoft/Microsoft365DSC.git
           git add D:/a/Microsoft365DSC/Microsoft365DSC/docs/docs/resources/*
           git commit -m "Add changes"
           git push
