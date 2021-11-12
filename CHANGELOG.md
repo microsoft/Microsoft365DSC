@@ -2,6 +2,9 @@
 
 # 1.21.1117.1
 
+* EXOTransportRule
+  * Fixed issues with invalid State property and missing Enabled one;
+    ISSUE #1554;
 * IntuneDeviceCompliancePolicyAndroidDeviceOwner
   * Initial release;
 
