@@ -7,6 +7,9 @@
     ISSUE #1554;
 * IntuneDeviceCompliancePolicyAndroidDeviceOwner
   * Initial release;
+* DEPENDENCIES
+  * Updated DSCParser to version 1.3.0.2;
+  * Updated MSCloudLoginAssistant to version 1.0.77;
 
 # 1.21.1110.1
 

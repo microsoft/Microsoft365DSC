@@ -63,17 +63,32 @@ function New-M365DSCConfigurationToHTML
                 {
                     if ($resource.$property.GetType().Name -eq 'Object[]')
                     {
-                        $temp = $resource.$property -join ','
-                        [array]$components = $temp.Split(',')
-                        if ($components.Length -gt 0 -and
-                            -not [System.String]::IsNullOrEmpty($temp))
+                        if ($resource.$property -and $resource.$property[0].GetType().Name -eq 'Hashtable')
                         {
-                            $Value = "<ul>"
-                            foreach ($comp in $components)
+                            $value = ""
+                            foreach ($entry in $resource.$property)
                             {
-                                $value += "<li>$comp</li>"
+                                foreach ($key in $entry.Keys)
+                                {
+                                    $value += "<li>$key = $($entry.$key)</li>"
+                                }
+                                $value += "<hr />"
                             }
-                            $value += "</ul>"
+                        }
+                        else
+                        {
+                            $temp = $resource.$property -join ','
+                            [array]$components = $temp.Split(',')
+                            if ($components.Length -gt 0 -and
+                                -not [System.String]::IsNullOrEmpty($temp))
+                            {
+                                $Value = "<ul>"
+                                foreach ($comp in $components)
+                                {
+                                    $value += "<li>$comp</li>"
+                                }
+                                $value += "</ul>"
+                            }
                         }
                     }
                     else
