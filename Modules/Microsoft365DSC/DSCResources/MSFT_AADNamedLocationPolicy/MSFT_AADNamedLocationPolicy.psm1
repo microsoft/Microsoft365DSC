@@ -258,7 +258,15 @@ function Set-TargetResource
         $desiredValues.Add("NamedLocationId", $currentAADNamedLocation.Id) | Out-Null
         $VerboseAttributes = ($desiredValues | Out-String)
         Write-Verbose -Message "Updating existing AAD Named Location {$Displayname)} with attributes: $VerboseAttributes"
-        Update-MgIdentityConditionalAccessNamedLocation @desiredValues
+
+        $VerboseAttributes = ($desiredValues | Out-String)
+        Write-Verbose -Message "Updating AAD Named Location {$Displayname)} with attributes: $VerboseAttributes"
+        $JSONValue = ConvertTo-Json $desiredValues | Out-String
+        Write-Verbose -Message "JSON: $JSONValue"
+        $APIUrl = "https://graph.microsoft.com/v1.0/identity/conditionalAccess/namedLocations"
+        Invoke-MgGraphRequest -Method PATCH `
+            -Uri $APIUrl `
+            -Body $JSONValue | Out-Null
     }
     # Named Location exist but should not
     elseif ($Ensure -eq 'Absent' -and $CurrentAADNamedLocation.Ensure -eq 'Present')
