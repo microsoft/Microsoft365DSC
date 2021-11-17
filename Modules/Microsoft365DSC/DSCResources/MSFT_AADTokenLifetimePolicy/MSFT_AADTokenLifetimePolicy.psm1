@@ -188,7 +188,6 @@ function Set-TargetResource
 
     $currentAADPolicy = Get-TargetResource @PSBoundParameters
     $currentParameters = $PSBoundParameters
-    $currentParameters.Remove("OdataType") | Out-Null
     $currentParameters.Remove("ApplicationId")  | Out-Null
     $currentParameters.Remove("TenantId")  | Out-Null
     $currentParameters.Remove("CertificateThumbprint")  | Out-Null
@@ -198,14 +197,15 @@ function Set-TargetResource
     # Policy should exist but it doesn't
     if ($Ensure -eq 'Present' -and $currentAADPolicy.Ensure -eq "Absent")
     {
-        Write-Verbose -Message "Creating New AzureAD Policy {$Displayname)}"
+        Write-Verbose -Message "Creating new AzureAD Token Lifetime Policy {$Displayname)}"
+        Write-Verbose -Message "Parameters: $($currentParameters | Out-String)}"
         $currentParameters.Remove("Id") | Out-Null
         New-MgPolicyTokenLifetimePolicy @currentParameters
     }
     # Policy should exist and will be configured to desire state
     elseif ($Ensure -eq 'Present' -and $CurrentAADPolicy.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating exisitng AzureAD Policy {$Displayname)}"
+        Write-Verbose -Message "Updating existing AzureAD Policy {$Displayname)}"
         $currentParameters.Add("TokenLifetimePolicyId", $currentAADPolicy.ID)
         $currentParameters.Remove("Id") | Out-Null
         Update-MgPolicyTokenLifetimePolicy @currentParameters

@@ -146,7 +146,7 @@ function Get-TargetResource
                         ThumbnailUrl          = $orgthumbnailUrl
                         CdnType               = $cdn
                         Ensure                = "Present"
-                        Credential    = $Credential
+                        Credential            = $Credential
                         ApplicationId         = $ApplicationId
                         TenantId              = $TenantId
                         ApplicationSecret     = $ApplicationSecret
@@ -280,27 +280,41 @@ function Set-TargetResource
         }
     }
 
-
     if ($null -eq $cdn)
     {
         throw "Tenant $CdnType CDN must be configured before setting site organization Library"
     }
 
-
     if ($Ensure -eq 'Present' -and $currentOrgSiteAsset.Ensure -eq 'Present')
     {
+        Write-Verbose -Message "Removing existing Org Asset Library"
         ## No set so remove / add
         Remove-PnPOrgAssetsLibrary -LibraryUrl $currentOrgSiteAsset.LibraryUrl
         ### add slight delay fails if you immediately try to add
+        Write-Verbose -Message "Waiting 30 seconds"
         Start-Sleep -Seconds 30
+        Write-Verbose -Message "Adding Org Asset Library"
         Add-PnPOrgAssetsLibrary @currentParameters
     }
     elseif ($Ensure -eq 'Present' -and $currentOrgSiteAsset.Ensure -eq 'Absent')
     {
-        Add-PnPOrgAssetsLibrary @currentParameters
+        Write-Verbose -Message "Adding Org Asset Library $($currentParameters.LibraryUrl)"
+        try
+        {
+            Add-PnPOrgAssetsLibrary @currentParameters -ErrorAction Stop
+        }
+        catch
+        {
+            Write-Information -Message "Exception: $($_.Exception)"
+            if ($_ -notlike "*This library is already an organization assets library.*")
+            {
+                throw $_
+            }
+        }
     }
     elseif ($Ensure -eq 'Absent' -and $currentOrgSiteAsset.Ensure -eq 'Present')
     {
+        Write-Verbose -Message "Removing existing Org Asset Library"
         Remove-PnPOrgAssetsLibrary -LibraryUrl $currentOrgSiteAsset.LibraryUrl
     }
 }
