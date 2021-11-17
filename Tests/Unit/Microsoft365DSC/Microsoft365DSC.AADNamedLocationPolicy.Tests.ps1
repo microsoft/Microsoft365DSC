@@ -82,7 +82,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should create the Policy from the set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-MgIdentityConditionalAccessNamedLocation" -Exactly 1
             }
         }
         Context -Name "The Policy exists but it should not" -Fixture {
@@ -197,7 +196,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "Update-MgIdentityConditionalAccessNamedLocation" -Exactly 1
             }
         }
 
