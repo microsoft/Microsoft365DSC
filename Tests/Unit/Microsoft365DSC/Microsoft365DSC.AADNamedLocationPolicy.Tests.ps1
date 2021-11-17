@@ -50,6 +50,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credential"
             }
+
+
+            Mock -CommandName Invoke-MgGraphRequest -MockWith {
+            }
         }
 
         # Test contexts
