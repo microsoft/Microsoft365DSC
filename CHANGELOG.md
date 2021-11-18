@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# 1.21.1124.1
+
+* IntuneAppProtectionPolicyiOS
+  * Fixes to the Invoke-MgGraphRequest cmdlets parameters;
+
 # 1.21.1117.2
 
 * MISC
