@@ -210,15 +210,34 @@ function Set-TargetResource
     $currentAADNamedLocation = Get-TargetResource @PSBoundParameters
 
     $desiredValues = @{
-        DisplayName = $DisplayName
-        AdditionalProperties = @{
-            IsTrusted = $IsTrusted
-            IPRanges = @{
-                CidrAddress = $IPRanges
+        '@odata.type' = $OdataType
+        displayName = $DisplayName
+        isTrusted = $IsTrusted
+    }
+    if ($OdataType -eq '#microsoft.graph.ipNamedLocation')
+    {
+        $IpRangesValue = @()
+        foreach ($IpRange in $IpRanges)
+        {
+            $ipRangeType = '#microsoft.graph.iPv4CidrRange'
+            if ($IpRange.Contains(':'))
+            {
+                $ipRangeType = '#microsoft.graph.iPv6CidrRange'
             }
-            CountriesAndRegions               = $CountriesAndRegions
-            IncludeUnknownCountriesAndRegions = $IncludeUnknownCountriesAndRegions
+            $IpRangesValue += @{
+                '@odata.type' = $ipRangeType
+                cidrAddress = $IPRange
+            }
         }
+        if ($IpRangesValue)
+        {
+            $desiredValues.Add("ipRanges", $IpRangesValue)
+        }
+    }
+    elseif ($OdataType -eq '#microsoft.graph.countryNamedLocation')
+    {
+        $desiredValues.Add("includeUnknownCountriesAndRegions", $IncludeUnknownCountriesAndRegions)
+        $desiredValues.Add("countriesAndRegions", $CountriesAndRegions)
     }
 
     # Named Location should exist but it doesn't
@@ -226,7 +245,12 @@ function Set-TargetResource
     {
         $VerboseAttributes = ($desiredValues | Out-String)
         Write-Verbose -Message "Creating New AAD Named Location {$Displayname)} with attributes: $VerboseAttributes"
-        New-MgIdentityConditionalAccessNamedLocation @desiredValues
+        $JSONValue = ConvertTo-Json $desiredValues | Out-String
+        Write-Verbose -Message "JSON: $JSONValue"
+        $APIUrl = "https://graph.microsoft.com/v1.0/identity/conditionalAccess/namedLocations"
+        Invoke-MgGraphRequest -Method POST `
+            -Uri $APIUrl `
+            -Body $JSONValue | Out-Null
     }
     # Named Location should exist and will be configured to desired state
     elseif ($Ensure -eq 'Present' -and $CurrentAADNamedLocation.Ensure -eq 'Present')
@@ -234,7 +258,15 @@ function Set-TargetResource
         $desiredValues.Add("NamedLocationId", $currentAADNamedLocation.Id) | Out-Null
         $VerboseAttributes = ($desiredValues | Out-String)
         Write-Verbose -Message "Updating existing AAD Named Location {$Displayname)} with attributes: $VerboseAttributes"
-        Update-MgIdentityConditionalAccessNamedLocation @desiredValues
+
+        $VerboseAttributes = ($desiredValues | Out-String)
+        Write-Verbose -Message "Updating AAD Named Location {$Displayname)} with attributes: $VerboseAttributes"
+        $JSONValue = ConvertTo-Json $desiredValues | Out-String
+        Write-Verbose -Message "JSON: $JSONValue"
+        $APIUrl = "https://graph.microsoft.com/v1.0/identity/conditionalAccess/namedLocations"
+        Invoke-MgGraphRequest -Method PATCH `
+            -Uri $APIUrl `
+            -Body $JSONValue | Out-Null
     }
     # Named Location exist but should not
     elseif ($Ensure -eq 'Absent' -and $CurrentAADNamedLocation.Ensure -eq 'Present')

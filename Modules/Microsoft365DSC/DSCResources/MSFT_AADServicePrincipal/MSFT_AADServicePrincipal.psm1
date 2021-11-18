@@ -92,7 +92,7 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Azure AD ServicePrincipal"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters -ProfileName 'Beta'
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
@@ -273,6 +273,11 @@ function Set-TargetResource
         $CertificateThumbprint
     )
 
+    Write-Verbose -Message "1 - There are now {$((dir function: | measure).Count) functions}"
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters -ProfileName 'Beta'
+
+    Write-Verbose -Message "2 - There are now {$((dir function: | measure).Count) functions}"
     Write-Verbose -Message "Setting configuration of Azure AD ServicePrincipal"
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
@@ -292,7 +297,6 @@ function Set-TargetResource
     $currentParameters.Remove("Ensure") | Out-Null
     $currentParameters.Remove("ObjectID") | Out-Null
 
-
     # ServicePrincipal should exist but it doesn't
     if ($Ensure -eq "Present" -and $currentAADServicePrincipal.Ensure -eq "Absent")
     {
@@ -303,6 +307,8 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing Service Principal"
+        Write-Verbose -Message "CurrentParameters: $($currentParameters | Out-String)"
+        Write-Verbose -Message "ServicePrincipalID: $($currentAADServicePrincipal.ObjectID)"
         Update-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID @currentParameters
     }
     # ServicePrincipal exists but should not
@@ -463,6 +469,7 @@ function Export-TargetResource
         $CertificateThumbprint
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
+    Select-MgProfile Beta | Out-Null
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
