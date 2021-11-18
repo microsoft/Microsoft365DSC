@@ -1,12 +1,12 @@
 # What is Microsoft365DSC?
+
 Microsoft365DSC is an Open-Source initiative lead by Microsoft engineers and maintained by the community. It allows you to write a definition for how your Microsoft 365 tenant should be configured, automate the deployment of that configuration and ensures the monitoring of the defined configuration, notifying and acting on detected configuration drifts. It also allows you to extract a full-fidelity configuration out of any existing Microsoft 365 tenant. The tool covers all major Microsoft 365 workloads such as Exchange Online, Teams, SharePoint, OneDrive, Security and Compliance, Power Platforms, Intune and Planner.
 
 Microsoft365DSC is build as a module for the [PowerShell Desired State Configuration](https://docs.microsoft.com/en-us/powershell/scripting/dsc/overview/overview) framework and is made available via the [PowerShell Gallery](https://www.powershellgallery.com/packages/Microsoft365DSC/).
 
-![Infographic](../images/M365DSC-InfoGraphic.png){ align=center width=500 }
+![Infographic](../Images/M365DSC-InfoGraphic.png){ align=center width=500 }
 
-## Automate ![Infographic](../images/Automate.png){ align=left width=100 }
-
+## Automate ![Infographic](../Images/Automate.png){ align=left width=100 }
 
 Using PowerShell Desired State Configuration (DSC) syntax, write a complete definition of how you want your Microsoft 365 tenant to be configured. The Microsoft365DSC module allows Microsoft 365 administrators to define how the configuration of the various workloads (SharePoint, Exchange, Security & Compliance, Teams, etc.), and apply the configuration in an automated way. For example, administrator that wishes to deploy a new Search Managed Property to their SharePoint Online workload, can do so with similar lines of code (all code examples ca be found on the [Resources List](https://github.com/microsoft/Microsoft365DSC/wiki/Resources-List) wiki page):
 
@@ -41,12 +41,11 @@ Just like any other normal PowerShell DSC configuration, your Microsoft365DSC fi
 
 See the [Automating](../../user-guide/get-started/apply-config) page for more information about possible options.
 
-## Export ![Infographic](../images/export.PNG){ align=left width=100 }
-
+## Export ![Infographic](../Images/export.PNG){ align=left width=100 }
 
 Microsoft365DSC is the very first PowerShell project that natively supports ReverseDSC. This means that by simply installing the module, you are able to leverage ReverseDSC to extract the entire configuration of any existing tenants. The module exposes a cmdlet called **Export-M365DSCConfiguration** which launches a Graphical User Interface (GUI) that allows you to pick and choose what configuration components you wish to extract in a granular fashion.
 
-![ExportUI](../images/ExportUI.png){ align=center width=500 }
+![ExportUI](../Images/ExportUI.png){ align=center width=500 }
 
 Upon providing credentials with correct permissions, the tool will begin the extraction of the configuration. Once it completes the extraction, it will prompt you to specify a destination directory to store the extracted artifacts.
 
@@ -54,28 +53,27 @@ The tool will extract several artifacts, including all SharePoint Add-ins and Fr
 
 See the [Exporting](../../user-guide/get-started/extract-config) page for more information about possible options.
 
-## Synchronize ![Infographic](../images/Synchronize.png){ align=left width=100 }
+## Synchronize ![Infographic](../Images/Synchronize.png){ align=left width=100 }
 
 Microsoft365DSC makes it very easy for users to keep multiple tenants' configuration synchronized. With the tool you can export the configuration from any existing tenant and re-apply it onto multiple other tenants, keeping their configuration synchronized.
 
-![SyncFlow](../images/SyncFlow.png){ align=center width=500 }
-
+![SyncFlow](../Images/SyncFlow.png){ align=center width=500 }
 
 You can use this to grab the configuration of a production tenant and apply this configuration onto a test tenant, making sure you can troubleshoot issues with the exact production configuration.
 
-## Assess ![Infographic](../images/Assess.png){ align=left width=100 }
+## Assess ![Infographic](../Images/Assess.png){ align=left width=100 }
 
 Assess any Microsoft 365 tenant against a known good configuration and generate a discrepency report. Microsoft365DSC makes it feasible for organizations to validate the configuration of their existing Microsoft 365 tenant against industry's best practices with a single line command. You can assess any tenant against any baseline configuration that you and your team developed or use official Blueprints.
 
-![AssessFlowBlueprint](../images/AssessFlowBlueprint.png){ align=center width=500 }
+![AssessFlowBlueprint](../Images/AssessFlowBlueprint.png){ align=center width=500 }
 
 Microsoft365DSC also allows you to compare two configuration files and obtain the delta between the two. Whether you wish to compare the configuration between 2 tenants or two point-in-time exports of the same tenant, we've got you covered!
 
-![AssessFlowTenant](../images/AssessFlowTenant.png){ align=center width=500 }
+![AssessFlowTenant](../Images/AssessFlowTenant.png){ align=center width=500 }
 
 See the [Assessing](../../user-guide/get-started/assess-tenants-blueprint) page for more information about possible options.
 
-## Monitor ![Infographic](../images/Monitor.png){ align=left width=100 }
+## Monitor ![Infographic](../Images/Monitor.png){ align=left width=100 }
 
 Automatic monitoring of configuration drifts in your tenant and notification about detected drifts with in-depth details for troubleshooting. Microsoft365DSC will perform regular checks to detect configuration drifts (every 15 minutes by default) and can take one of the following 3 actions when drifts are detected:
 
@@ -83,14 +81,14 @@ Automatic monitoring of configuration drifts in your tenant and notification abo
 - Log detailed information about the drifts detected in Event Viewer;
 - Notify administrators via emails when drifts are detected, providing them with a detailed report as to what the drifts are (requires the use of Azure DevOPS pipelines);
 
-![MonitorFlow](../images/MonitorFlow.png){ align=center width=500 }
+![MonitorFlow](../Images/MonitorFlow.png){ align=center width=500 }
 
 See the [Monitoring](../../user-guide/get-started/monitor-tenants) page for more information about possible options.
 
-## Report ![Infographic](../images/report.PNG){ align=left width=100 }
+## Report ![Infographic](../Images/report.PNG){ align=left width=100 }
 
 Take any Microsoft365DSC configuration and generate a user friendly report from it in an Excel or HTML format. With a single command you can convert any Microsoft365DSC configuration
 
-![ReportFlow](../images/ReportFlow.png){ align=center width=500 }
+![ReportFlow](../Images/ReportFlow.png){ align=center width=500 }
 
 See the [Reporting](../../user-guide/get-started/generate-reports) page for more information about possible options.

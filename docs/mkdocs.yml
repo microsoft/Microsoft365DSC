@@ -2,52 +2,52 @@ site_name: Microsoft365DSC - Your Cloud Configuration
 site_url: https://microsoft.github.io/Microsoft365DSC
 nav:
   - Home:
-    - 'Introduction': 'index.md'
-    - 'What is Microsoft365DSC?': 'home/what-is-M365DSC.md'
+      - 'Introduction': 'index.md'
+      - 'What is Microsoft365DSC?': 'home/what-is-M365DSC.md'
   - User Guide:
-    - 'Get Started':
-      - 'How to install': 'user-guide/get-started/install-first-module.md'
-      - 'Write your First Microsoft365DSC Configuration': 'user-guide/get-started/write-first-config.md'
-      - 'Extracting Configuration from an Existing Microsoft 365 Tenant': 'user-guide/get-started/extract-config.md'
-      - 'Apply a Configuration to your Microsoft 365 Tenant': 'user-guide/get-started/apply-config.md'
-      - 'Monitor Tenants for Configuration Drifts': 'user-guide/get-started/monitor-tenants.md'
-      - 'Assess Tenants Against a Blueprint': 'user-guide/get-started/assess-tenants-blueprint.md'
-      - 'Generating Reports': 'user-guide/get-started/generate-reports.md'
-    - Advanced:
-      - 'How to Create a M365DSC Blueprint': 'user-guide/advanced/create-blueprint.md'
+      - 'Get Started':
+          - 'How to install': 'user-guide/get-started/install-first-module.md'
+          - 'Write your First Microsoft365DSC Configuration': 'user-guide/get-started/write-first-config.md'
+          - 'Extracting Configuration from an Existing Microsoft 365 Tenant': 'user-guide/get-started/extract-config.md'
+          - 'Apply a Configuration to your Microsoft 365 Tenant': 'user-guide/get-started/apply-config.md'
+          - 'Monitor Tenants for Configuration Drifts': 'user-guide/get-started/monitor-tenants.md'
+          - 'Assess Tenants Against a Blueprint': 'user-guide/get-started/assess-tenants-blueprint.md'
+          - 'Generating Reports': 'user-guide/get-started/generate-reports.md'
+      - Advanced:
+          - 'How to Create a M365DSC Blueprint': 'user-guide/advanced/create-blueprint.md'
   - Contributing:
-    - 'Guidelines': 'contributing/contribution-guidelines.md'
-    - 'Getting started': 'contributing/getting-started.md'
-    - 'Develop a New Resource': 'contributing/develop-new-resource.md'
+      - 'Guidelines': 'contributing/contribution-guidelines.md'
+      - 'Getting started': 'contributing/getting-started.md'
+      - 'Develop a New Resource': 'contributing/develop-new-resource.md'
   - Concepts:
-    - 'Breaking Changes Policy': 'concepts/breaking-changes.md'
-    - 'OneDrive & SharePoint Permissions': 'concepts/odsp-permissions.md'
-    - 'Consent Flow': 'concepts/consent-flow.md'
+      - 'Breaking Changes Policy': 'concepts/breaking-changes.md'
+      - 'OneDrive & SharePoint Permissions': 'concepts/odsp-permissions.md'
+      - 'Consent Flow': 'concepts/consent-flow.md'
   - Resources:
-    - 'Overview': 'resources/overview.md'
-    - 'Azure AD': 'resources/azure-ad'
-    - 'Exchange': 'resources/exchange'
-    - 'Intune': 'resources/intune'
-    - 'Office365': 'resources/office365'
-    - 'OneDrive': 'resources/onedrive'
-    - 'Planner': 'resources/planner'
-    - 'Power Platform': 'resources/power-platform'
-    - 'Security & Compliance': 'resources/security-compliance'
-    - 'SharePoint': 'resources/sharepoint'
-    - 'Teams': 'resources/teams'
+      - 'Overview': 'resources/overview.md'
+      - 'Azure AD': 'resources/azure-ad'
+      - 'Exchange': 'resources/exchange'
+      - 'Intune': 'resources/intune'
+      - 'Office365': 'resources/office365'
+      - 'OneDrive': 'resources/onedrive'
+      - 'Planner': 'resources/planner'
+      - 'Power Platform': 'resources/power-platform'
+      - 'Security & Compliance': 'resources/security-compliance'
+      - 'SharePoint': 'resources/sharepoint'
+      - 'Teams': 'resources/teams'
   - About:
-    - 'Why Microsoft365DSC': 'about/why.md'
-    - 'Changelog': 'about/changelog.md'
-    - 'License': 'about/license.md'
-    - 'Community Resources': 'about/community-resources.md'
+      - 'Why Microsoft365DSC': 'about/why.md'
+      - 'Changelog': 'about/changelog.md'
+      - 'License': 'about/license.md'
+      - 'Community Resources': 'about/community-resources.md'
 plugins:
   - search
   - include_dir_to_nav
 theme:
   name: 'material'
   custom_dir: docs/overrides
-  logo: images/SmallLogo.png
-  favicon: images/favicon.ico
+  logo: Images/SmallLogo.png
+  favicon: Images/favicon.ico
   icon:
     repo: fontawesome/brands/git-alt
   palette:
@@ -68,7 +68,7 @@ theme:
 markdown_extensions:
   - admonition
   - codehilite:
-     guess_lang: false
+      guess_lang: false
   - toc:
       permalink: true
   - pymdownx.details

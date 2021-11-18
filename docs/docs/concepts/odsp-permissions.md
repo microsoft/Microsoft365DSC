@@ -24,13 +24,13 @@ All SharePoint and OneDrive resources work with the SharePoint Admin role assign
 
 When executing the Export-M365DSCConfiguration cmdlet user name and password should be filled in the following fields:
 
-![User name and Password](../images/userpwdpng.png "Username and Password")
+![User name and Password](../Images/userpwdpng.png 'Username and Password')
 
 ## Azure AD app permissions
 
 The best option when using Microsoft365DSC with SharePoint and OneDrive is to use an Azure AD app principal. When using AAD App permission Microsoft365DSC supports 2 different scenarios, certificate path option or installing certificate and using the thumbprint. The permissions required for Azure AD applications are SharePoint Site.FullControl.All scope.
 
-![API Permissions](../images/APIPermissions.png "SharePoint Permissions")
+![API Permissions](../Images/APIPermissions.png 'SharePoint Permissions')
 
 ### Configure AzureAD app for Microsoft365DSC
 
@@ -42,7 +42,7 @@ Initialize-PnPPowerShellAuthentication -ApplicationName TestApp2 -Tenant contoso
 
 This cmdlet will open a dialog box to authenticate to Azure AD and grant admin consent once its created the AzureAD app. It will also install
 the certificate in current user store and output a PFX file in the c:\dsc directory. If you plan to use the certificate thumbprint option when using
-DSC by default the LCM runs under the system account so easiest option to install in cert store is by using [PSExec](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec).  To install certificate under system account using PSExec run the following:
+DSC by default the LCM runs under the system account so easiest option to install in cert store is by using [PSExec](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec). To install certificate under system account using PSExec run the following:
 
     1. .\PsExec.exe -s -i mmc.exe
     2. File add / remove snapin > Select certificates > MyUser account
@@ -52,9 +52,9 @@ DSC by default the LCM runs under the system account so easiest option to instal
 After AzureAD app is created and certificate is installed you need some additional properties before you can use with Microsoft365DSC. Login to
 Azure Active Directory and browse to the App registrations page you should see the TestApp2 app created from the script above. We need to copy the following properties:
 
-![Application Id](../images/AppId.png "Application ID")
+![Application Id](../Images/AppId.png 'Application ID')
 
-![Certificate Thumbprint](../images/CertificateThump.png "Certificate Thumbprint")
+![Certificate Thumbprint](../Images/CertificateThump.png 'Certificate Thumbprint')
 
 ### Using Certificate Thumbprint option
 
@@ -67,7 +67,7 @@ when using certificate thumbprint.
 
 From the Export-M365DSCConfiguration GUI the following fields should be used:
 
-![ExportThumprint](../images/ExportCertThumb.png "Export using thumbprint")
+![ExportThumprint](../Images/ExportCertThumb.png 'Export using thumbprint')
 
 ### Using Certificate Path option
 
@@ -81,4 +81,4 @@ would be the best solution. The following parameters are required when using cer
 
 From the Export-M365DSCConfiguration GUI the following fields should be used:
 
-![Export using Certificate Path](../images/CertPath.png){ align=center width=500 }
+![Export using Certificate Path](../Images/CertPath.png){ align=center width=500 }

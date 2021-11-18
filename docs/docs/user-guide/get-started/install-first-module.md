@@ -6,6 +6,6 @@ Install-Module Microsoft365DSC -Force
 
 When this is run, PowerShell is pinging the PowerShell gallery, getting the Microsoft365DSC module and will then download and install it locally on the machine. It will download the required components such as the SharePoint PNP module, Azure Active Directory module, the Exchange Online Management Shell, as well as other dependent modules.
 
-![import-module](../../images/ImportModule.png)
+![import-module](../../Images/ImportModule.png)
 
 Note: It is important that the machine that executes the configuration has internet connectivity back to the Microsoft 365 tenant you are trying to configure or extract the configuration from.
