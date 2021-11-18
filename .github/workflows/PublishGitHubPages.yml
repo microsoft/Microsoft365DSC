@@ -73,10 +73,9 @@ jobs:
           git config --local user.email "nik.charlebois@microsoft.com"
           git config --local user.name "Nik Charlebois"
           git add D:/a/Microsoft365DSC/Microsoft365DSC/docs/docs/resources/*
+          git pull
           git commit -m "Add changes"
           git push
-
-
 
   deploy:
     needs: GenerateResource

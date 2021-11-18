@@ -163,6 +163,10 @@ function Get-TargetResource
         $DlpPolicy,
 
         [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
         [System.String]
         $ExceptIfADComparisonAttribute,
 
@@ -668,11 +672,6 @@ function Get-TargetResource
         $SetSCL,
 
         [Parameter()]
-        [ValidateSet('Enabled', 'Disabled')]
-        [System.String]
-        $State,
-
-        [Parameter()]
         [System.Boolean]
         $StopRuleProcessing,
 
@@ -803,6 +802,7 @@ function Get-TargetResource
             CopyTo                                        = $TransportRule.CopyTo
             DeleteMessage                                 = $TransportRule.DeleteMessage
             DlpPolicy                                     = $TransportRule.DlpPolicy
+            Enabled                                       = $TransportRule.Enabled
             ExceptIfADComparisonAttribute                 = $TransportRule.ExceptIfADComparisonAttribute
             ExceptIfADComparisonOperator                  = $TransportRule.ExceptIfADComparisonOperator
             ExceptIfAnyOfCcHeader                         = $TransportRule.ExceptIfAnyOfCcHeader
@@ -925,7 +925,6 @@ function Get-TargetResource
             SetHeaderName                                 = $TransportRule.SetHeaderName
             SetHeaderValue                                = $TransportRule.SetHeaderValue
             SetSCL                                        = $TransportRule.SetSCL
-            State                                         = $TransportRule.State
             StopRuleProcessing                            = $TransportRule.StopRuleProcessing
             SubjectContainsWords                          = $TransportRule.SubjectContainsWords
             SubjectMatchesPatterns                        = $TransportRule.SubjectMatchesPatterns
@@ -1710,6 +1709,7 @@ function Set-TargetResource
 
     $SetTransportRuleParams = $NewTransportRuleParams.Clone()
     $SetTransportRuleParams.Add('Identity', $Name)
+    $SetTransportRuleParams.Remove("Enabled") | Out-Null
 
     # CASE: Transport Rule doesn't exist but should;
     if ($Ensure -eq "Present" -and $currentTransportRuleConfig.Ensure -eq "Absent")
@@ -1897,6 +1897,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $DlpPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
         [System.String]
@@ -2404,11 +2408,6 @@ function Test-TargetResource
         $SetSCL,
 
         [Parameter()]
-        [ValidateSet('Enabled', 'Disabled')]
-        [System.String]
-        $State,
-
-        [Parameter()]
         [System.Boolean]
         $StopRuleProcessing,
 
@@ -2539,6 +2538,10 @@ function Export-TargetResource
         if ($AllTransportRules.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
         }
         foreach ($TransportRule in $AllTransportRules)
         {

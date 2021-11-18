@@ -15,9 +15,9 @@ Configuration Example
     {
         IntuneDeviceCompliancePolicyAndroidDeviceOwner 'RemoveAndroidDeviceCompliancePolicyOwner'
         {
-            DisplayName = "DeviceOwnerOld"
-            Ensure      = "Absent"
-            Credential  = $credsGlobalAdmin
+            DisplayName          = "DeviceOwner"
+            Ensure               = "Absent"
+            Credential           = $credsGlobalAdmin
         }
     }
 }

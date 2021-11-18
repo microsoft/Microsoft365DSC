@@ -87,7 +87,7 @@ Automatic monitoring of configuration drifts in your tenant and notification abo
 
 See the [Monitoring](../../user-guide/get-started/monitor-tenants) page for more information about possible options.
 
-## Report ![Infographic](../images/Report.png){ align=left width=100 }
+## Report ![Infographic](../images/report.PNG){ align=left width=100 }
 
 Take any Microsoft365DSC configuration and generate a user friendly report from it in an Excel or HTML format. With a single command you can convert any Microsoft365DSC configuration
 

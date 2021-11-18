@@ -338,12 +338,16 @@ function Set-TargetResource
     $currentParameters.Remove("AvailableToOtherTenants") | Out-Null
     $currentParameters.Remove("PublicClient") | Out-Null
 
-    if ($null -ne $currentParameters.KnownClientApplications)
+    if ($currentParameters.KnownClientApplications)
     {
         $apiValue = @{
             KnownClientApplications = $currentParameters.KnownClientApplications
         }
         $currentParameters.Add("Api", $apiValue)
+        $currentParameters.Remove("KnownClientApplications") | Out-Null
+    }
+    else
+    {
         $currentParameters.Remove("KnownClientApplications") | Out-Null
     }
 
@@ -392,6 +396,10 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentAADApp.Ensure -eq 'Present')
     {
         $currentParameters.Remove("ObjectId") | Out-Null
+
+        # Passing in the Oauth2RequirePostResponse parameter returns an error when calling update-mgapplication.
+        # Removing it temporarly for the update scenario.
+        $currentParameters.Remove("Oauth2RequirePostResponse") | Out-Null
         $currentParameters.Add("ApplicationId", $currentAADApp.ObjectId)
         Write-Verbose -Message "Updating existing AzureAD Application {$DisplayName} with values:`r`n$($currentParameters | Out-String)"
         Update-MgApplication @currentParameters

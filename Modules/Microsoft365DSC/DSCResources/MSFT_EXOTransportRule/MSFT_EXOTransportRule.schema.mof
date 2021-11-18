@@ -161,7 +161,6 @@ class MSFT_EXOTransportRule : OMI_BaseResource
     [Write, Description("The SetAuditSeverity parameter specifies an action that sets the severity level of the incident report and the corresponding entry that's written to the message tracking log when messages violate DLP policies."), ValueMap{"DoNotAudit","Low","Medium","High"}, Values{"DoNotAudit","Low","Medium","High"}] String SetAuditSeverity;
     [Write, Description("The SetHeaderName parameter specifies an action that adds or modifies a header field in the message header.")] String SetHeaderName;
     [Write, Description("The SetHeaderValue parameter specifies an action that adds or modifies a header field in the message header.")] String SetHeaderValue;
-    [Write, Description("The State parameter specifies filters the results by enabled or disabled rules.")] String State;
     [Write, Description("The SetSCL parameter specifies an action that adds or modifies the SCL value of messages.")] String SetSCL;
     [Write, Description("The StopRuleProcessing parameter specifies an action that stops processing more rules.")] Boolean StopRuleProcessing;
     [Write, Description("The SubjectContainsWords parameter specifies a condition that looks for words in the Subject field of messages.")] String SubjectContainsWords[];

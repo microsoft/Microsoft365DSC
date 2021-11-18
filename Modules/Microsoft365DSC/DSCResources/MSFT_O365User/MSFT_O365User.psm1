@@ -184,7 +184,7 @@ function Get-TargetResource
             Department           = $user.Department
             Fax                  = $user.FacsimileTelephoneNumber
             MobilePhone          = $user.Mobile
-            Office               = $user.PhysicalDeliveryOfficeName
+            Office               = $user.OfficeLocation
             PasswordNeverExpires = $passwordNeverExpires
             PhoneNumber          = $user.TelephoneNumber
             PostalCode           = $user.PostalCode
@@ -395,7 +395,7 @@ function Set-TargetResource
             JobTitle                   = $Title
             Mobile                     = $MobilePhone
             PasswordPolicies           = $PasswordPolicies
-            PhysicalDeliveryOfficeName = $Office
+            OfficeLocation             = $Office
             PostalCode                 = $PostalCode
             PreferredLanguage          = $PreferredLanguage
             State                      = $State
@@ -430,7 +430,7 @@ function Set-TargetResource
 
         foreach ($currentLicense in $user.LicenseAssignment)
         {
-            if (-not $LicenseAssignment.Contains($currentLicense))
+            if ($LicenseAssignment -and -not $LicenseAssignment.Contains($currentLicense))
             {
                 Write-Verbose -Message "Removing {$currentLicense} from user {$UserPrincipalName}"
                 $license = @{
