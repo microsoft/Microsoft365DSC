@@ -9535,17 +9535,17 @@ function Get-Organization
         $organizationId
     )
 }
-function Invoke-MSGraphRequest
+function Invoke-MgGraphRequest
 {
     [CmdletBinding()]
     param(
         [Parameter()]
         [System.String]
-        $HttpMethod,
+        $Method,
 
         [Parameter()]
         [System.Object]
-        $Content,
+        $Body,
 
         [Parameter()]
         [System.Object]
@@ -9553,7 +9553,7 @@ function Invoke-MSGraphRequest
 
         [Parameter()]
         [System.String]
-        $Url
+        $Uri
     )
 }
 function New-Organization

@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# 1.21.1117.2
+
+* MISC
+  * Fixes old Intune Graph Request cmdlet name;
+
 # 1.21.1117.1
 
 * EXOTransportRule
