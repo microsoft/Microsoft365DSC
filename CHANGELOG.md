@@ -9,7 +9,7 @@
   * Initial release;
 * DEPENDENCIES
   * Updated DSCParser to version 1.3.0.2;
-  * Updated MSCloudLoginAssistant to version 1.0.77;
+  * Updated MSCloudLoginAssistant to version 1.0.78;
 
 # 1.21.1110.1
 
