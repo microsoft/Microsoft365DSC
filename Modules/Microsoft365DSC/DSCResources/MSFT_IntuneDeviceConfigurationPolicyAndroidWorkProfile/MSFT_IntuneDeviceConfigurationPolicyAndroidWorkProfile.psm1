@@ -528,13 +528,13 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Description,
+        $DisplayName,
 
         [Parameter()]
         [System.String]
-        $DisplayName,
+        $Description,
 
         [Parameter()]
         [System.Boolean]

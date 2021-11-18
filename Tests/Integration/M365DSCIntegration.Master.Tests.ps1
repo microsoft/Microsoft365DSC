@@ -73,7 +73,7 @@ Configuration Master
             Credential                = $GlobalAdmin
         }
 
-        AADConditionalAccessPolicy 'DSCConditionalAccessPolicy1'
+        <#AADConditionalAccessPolicy 'DSCConditionalAccessPolicy1'
         {
             BuiltInControls            = @("Mfa", "CompliantDevice", "DomainJoinedDevice", "ApprovedApplication", "CompliantApplication")
             ClientAppTypes             = @("ExchangeActiveSync", "Browser", "MobileAppsAndDesktopClients", "Other")
@@ -106,7 +106,7 @@ Configuration Master
             UserRiskLevels             = @("High", "Medium")
             Ensure                     = "Present"
             Credential                 = $GlobalAdmin
-        }
+        }#>
 
         AADGroup 'DSCAzureADGroup'
         {
@@ -121,7 +121,7 @@ Configuration Master
             Credential      = $GlobalAdmin
         }
 
-        AADGroupLifecyclePolicy 'DSCGroupLifecyclePolicy'
+        <#AADGroupLifecyclePolicy 'DSCGroupLifecyclePolicy'
         {
             IsSingleInstance            = "Yes"
             AlternateNotificationEmails = @("john.smith@$Domain")
@@ -138,7 +138,7 @@ Configuration Master
             PrefixSuffixNamingRequirement = "[Title]Test[Company][GroupName][Office]Redmond"
             Ensure                        = "Present"
             Credential                    = $GlobalAdmin
-        }
+        }#>
 
         AADGroupsSettings 'DSCGeneralGroupsSettings'
         {
@@ -174,7 +174,7 @@ Configuration Master
             Credential                        = $GlobalAdmin
         }
 
-        AADRoleDefinition 'DSCRoleDefinition1'
+        <#AADRoleDefinition 'DSCRoleDefinition1'
         {
             DisplayName     = "DSCRole1"
             Description     = "DSC created role definition"
@@ -184,26 +184,22 @@ Configuration Master
             Version         = "1.0"
             Ensure          = "Present"
             Credential      = $GlobalAdmin
-        }
+        }#>
 
         AADServicePrincipal 'DSCAADServicePrincipal1'
         {
-            AppId                     = "517b666c-1329-440c-96de-487d08c5f95a"
-            DisplayName               = "AADAppName"
-            AlternativeNames          = "AlternativeName1", "AlternativeName2"
-            AccountEnabled            = $true
-            AppRoleAssignmentRequired = $false
-            ErrorUrl                  = ""
-            Homepage                  = "https://AADAppName.contoso.com"
-            LogoutUrl                 = "https://AADAppName.contoso.com/logout"
-            PublisherName             = "Contoso"
-            ReplyURLs                 = "https://AADAppName.contoso.com"
-            SamlMetadataURL           = ""
-            ServicePrincipalNames     = "517b666c-1329-440c-96de-487d08c5f95a", "https://AADAppName.contoso.com"
-            ServicePrincipalType      = "Application"
-            Tags                      = "{WindowsAzureActiveDirectoryIntegratedApp}"
-            Ensure                    = "Present"
-            Credential                = $GlobalAdmin
+            AccountEnabled            = $True;
+            AlternativeNames          = @();
+            AppId                     = "46dc333e-6f5e-4bdd-8f7f-aa0c1fa68acc";
+            AppRoleAssignmentRequired = $False;
+            Credential                = $GlobalAdmin;
+            DisplayName               = "Microsoft365DSC";
+            Ensure                    = "Present";
+            ObjectID                  = "3c3d9e95-2456-43c8-a3c7-a5879c52a919";
+            ReplyURLs                 = @("https://app.getpostman.com/oauth2/callback");
+            ServicePrincipalNames     = @("46dc333e-6f5e-4bdd-8f7f-aa0c1fa68acc");
+            ServicePrincipalType      = "Application";
+            Tags                      = @("WindowsAzureActiveDirectoryIntegratedApp");
         }
 
         AADTenantDetails 'DSCTenantDetails'
@@ -219,7 +215,7 @@ Configuration Master
         AADTokenLifetimePolicy 'DSCTokenLifetimePolicy1'
         {
             DisplayName           = "PolicyDisplayName"
-            Definition            = @('{"TokenIssuancePolicy":{"Version": 1,"SigningAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1","TokenResponseSigningPolicy": "TokenOnly","SamlTokenVersion": "2.0"}}')
+            Definition            = @('{"TokenLifetimePolicy":{"Version":1,"AccessTokenLifetime":"02:00:00"}}')
             IsOrganizationDefault = $false
             Ensure                = "Present"
             Credential            = $GlobalAdmin
@@ -407,7 +403,8 @@ Configuration Master
         }
         #endregion
 
-        #region O365
+        #region Intune
+        <#
         IntuneDeviceConfigurationPolicyAndroidWorkProfile IntuneDeviceConfigurationPolicyAndroidWorkProfile
         {
             DisplayName                                    = "Android Work Profile - Device Restrictions - Standard"
@@ -434,7 +431,9 @@ Configuration Master
             Ensure                                         = "Present"
             Credential                                     = $GlobalAdmin
         }
-
+        #>
+        #endregion
+        #region O365
         O365User JohnSmith
         {
             UserPrincipalName = "John.Smith@$Domain"
