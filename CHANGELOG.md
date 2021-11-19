@@ -4,6 +4,9 @@
 
 * IntuneAppProtectionPolicyiOS
   * Fixes to the Invoke-MgGraphRequest cmdlets parameters;
+* MISC
+  * Removed the Quiet switch from the Assert Blueprint cmdlet;
+    ISSUE #1563
 
 # 1.21.1117.2
 
