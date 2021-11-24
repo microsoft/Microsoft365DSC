@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# 1.21.1124.2
+
+*DEPENDENCIES
+  * Updated ReverseDSC to 2.0.0.9;
+
 # 1.21.1124.1
 
 * IntuneAppProtectionPolicyiOS

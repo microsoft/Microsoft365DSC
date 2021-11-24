@@ -459,8 +459,11 @@ function Get-M365DSCDRGCimInstancesSchemaStringContent
         {
             if ($property.Type.StartsWith("microsoft.graph.powershell.models."))
             {
-                $nestedResults = Get-M365DSCDRGCimInstancesSchemaStringContent -CIMInstances $property.NestedCIM `
-                                     -Workload $Workload
+                if ($property.NestedCIM)
+                {
+                    $nestedResults = Get-M365DSCDRGCimInstancesSchemaStringContent -CIMInstances $property.NestedCIM `
+                                         -Workload $Workload
+                }
                 $propertyType = $property.Type -replace "microsoft.graph.powershell.models.", ""
                 $propertyType = $propertyType -replace "imicrosoftgraph", ""
                 $propertyType = $propertyType -replace '[[\]]',''
@@ -503,7 +506,11 @@ function Get-M365DSCDRGCimInstances
 
         [Parameter()]
         [Object[]]
-        $Properties
+        $Properties,
+
+        [Parameter()]
+        [System.String[]]
+        $DiscoveredComplexTypes = @()
     )
 
     $cimInstances = $Properties | Where-Object -FilterScript {$_.Type -like "Microsoft.Graph.PowerShell.Models.*"}
@@ -511,6 +518,7 @@ function Get-M365DSCDRGCimInstances
     $results = @()
     foreach ($cimInstance in $cimInstances)
     {
+        $DiscoveredComplexTypes += $cimInstance.Type
         $IsArray = $false
         $currentInstance = @{}
         $originalType = $cimInstance.Type
@@ -549,11 +557,15 @@ function Get-M365DSCDRGCimInstances
 
             if ($propertyType.StartsWith("microsoft.graph.powershell.models."))
             {
-                $subProperties = @{Type = $propertyType}
-                $subResult = Get-M365DSCDRGCimInstances -Workload $Workload `
-                                 -ResourceName $ResourceName `
-                                 -Properties $subProperties
-                $currentProperty.Add("NestedCIM", $subResult)
+                if ($DiscoveredComplexTypes -notcontains $propertyType)
+                {
+                    $subProperties = @{Type = $propertyType}
+                    $subResult = Get-M365DSCDRGCimInstances -Workload $Workload `
+                                     -ResourceName $ResourceName `
+                                     -Properties $subProperties `
+                                     -DiscoveredComplexTypes $DiscoveredComplexTypes
+                    $currentProperty.Add("NestedCIM", $subResult)
+                }
             }
             $currentProperty.Add("Type", $propertyType)
             $propertiesValues += $currentProperty
