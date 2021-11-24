@@ -953,7 +953,11 @@ function Get-M365DSCTenantDomain
         [Parameter(Mandatory = $true)]
         [System.String]
         $TenantId,
-
+        
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
+        
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
