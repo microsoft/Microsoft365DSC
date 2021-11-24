@@ -11,7 +11,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion     = '1.21.1124.1'
+    ModuleVersion     = '1.21.1124.2'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -125,7 +125,7 @@
         },
         @{
             ModuleName      = "ReverseDSC"
-            RequiredVersion = "2.0.0.8"
+            RequiredVersion = "2.0.0.9"
         }
     )
 
@@ -204,16 +204,26 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = "
-            * EXOTransportRule
-            * Fixed issues with invalid State property and missing Enabled one;
-              ISSUE #1554;
-          * IntuneDeviceCompliancePolicyAndroidDeviceOwner
-            * Initial release;
-          * DEPENDENCIES
-            * Updated DSCParser to version 1.3.0.2;
-            * Updated MSCloudLoginAssistant to version 1.0.78;
-          * MISC
-            * Fixes old Intune Graph Request cmdlet name;"
+            * IntuneAppProtectionPolicyiOS
+              * Fixes to the Invoke-MgGraphRequest cmdlets parameters;
+            * MISC
+              * Removed the Quiet switch from the Assert Blueprint cmdlet;
+                ISSUE #1563
+            * DEPENDENCIES
+              * Updated Microsoft.Graph.Applications to 1.9.0;
+              * Updated Microsoft.Graph.Authentication to 1.9.0;
+              * Updated Microsoft.Graph.DeviceManagement to 1.9.0;
+              * Updated Microsoft.Graph.DeviceManagement.Administration to 1.9.0;
+              * Updated Microsoft.Graph.DeviceManagement.Enrolment to 1.9.0;
+              * Updated Microsoft.Graph.Devices.CorporateManagement to 1.9.0;
+              * Updated Microsoft.Graph.Groups to 1.9.0;
+              * Updated Microsoft.Graph.Identity.DirectoryManagement to 1.9.0;
+              * Updated Microsoft.Graph.Identity.SignIns to 1.9.0;
+              * Updated Microsoft.Graph.Planner to 1.9.0;
+              * Updated Microsoft.Graph.Teams to 1.9.0;
+              * Updated Microsoft.Graph.Users to 1.9.0;
+              * Updated MSCloudLoginAssistant to 1.0.79;
+              * Updated ReverseDSC to 2.0.0.9;"
 
             # Flag to indicate whether the module requires explicit user acceptance for install/update
             # RequireLicenseAcceptance = $false
