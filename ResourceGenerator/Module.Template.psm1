@@ -204,13 +204,13 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating {$DisplayName}"
-
-        $PSBoundParameters.Remove('Id') | Out-Null
+        $CreateParameters = $PSBoundParameters
+        $CreateParameters.Remove("Id") | Out-Null
 
         $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
         <#ResourceGenerator
         #region resource generator code
-        <NewCmdLetName> -additionalProperties $AdditionalProperties
+        <NewCmdLetName> @CreateParameters
         #endregion
         ResourceGenerator#>
     }
@@ -219,7 +219,8 @@ function Set-TargetResource
         Write-Verbose -Message "Updating {$DisplayName}"
         $UpdateParameters = $PSBoundParameters
         $UpdateParameters.Remove("Id") | Out-Null
-        <#$AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        <#
         if ($AdditionalProperties)
         {
             $UpdateParameters.Add("AdditionalProperties", $AdditionalProperties)
@@ -238,11 +239,6 @@ function Set-TargetResource
 
         <#ResourceGenerator
         #region resource generator code
-        $getValue = <GetCmdLetName> `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-                <FilterScript>
-            }
         #endregion
         ResourceGenerator#>
 
@@ -251,7 +247,6 @@ function Set-TargetResource
         <RemoveCmdLetName> -<#UpdateKeyIdentifier#> $currentInstance.Id
         #endregion
         ResourceGenerator#>
-
     }
 }
 
