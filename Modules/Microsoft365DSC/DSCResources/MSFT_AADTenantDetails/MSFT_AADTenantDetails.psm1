@@ -83,6 +83,7 @@ function Get-TargetResource
                 Credential                           = $Credential
                 ApplicationId                        = $ApplicationId
                 TenantId                             = $TenantId
+                ApplicationSecret                    = $ApplicationSecret
                 CertificateThumbprint                = $CertificateThumbprint
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
