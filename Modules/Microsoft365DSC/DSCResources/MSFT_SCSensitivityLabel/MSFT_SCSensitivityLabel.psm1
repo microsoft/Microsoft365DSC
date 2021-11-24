@@ -271,7 +271,7 @@ function Get-TargetResource
                 Priority                                       = $label.Priority
                 Tooltip                                        = $label.Tooltip
                 Disabled                                       = $label.Disabled
-                Credential                             = $Credential
+                Credential                                     = $Credential
                 Ensure                                         = 'Present'
                 ApplyContentMarkingFooterAlignment             = $label.ApplyContentMarkingFooterAlignment
                 ApplyContentMarkingFooterEnabled               = $label.ApplyContentMarkingFooterEnabled

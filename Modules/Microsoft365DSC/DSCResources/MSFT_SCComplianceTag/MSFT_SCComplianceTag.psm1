@@ -107,7 +107,7 @@ function Get-TargetResource
                 RetentionAction    = $tagObject.RetentionAction
                 EventType          = $tagObject.EventType
                 RetentionType      = $tagObject.RetentionType
-                Credential = $Credential
+                Credential         = $Credential
                 Ensure             = 'Present'
             }
 
