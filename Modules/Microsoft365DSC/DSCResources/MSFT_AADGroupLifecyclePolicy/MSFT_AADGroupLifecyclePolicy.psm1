@@ -108,6 +108,7 @@ function Get-TargetResource
                 Ensure                      = "Present"
                 Credential                  = $Credential
                 ApplicationId               = $ApplicationId
+                ApplicationSecret           = $ApplicationSecret
                 TenantId                    = $TenantId
                 CertificateThumbprint       = $CertificateThumbprint
             }
@@ -419,6 +420,7 @@ function Export-TargetResource
             ManagedGroupTypes           = 'All'
             AlternateNotificationEmails = 'empty@contoso.com'
             ApplicationId               = $ApplicationId
+            ApplicationSecret           = $ApplicationSecret
             TenantId                    = $TenantId
             CertificateThumbprint       = $CertificateThumbprint
         }
