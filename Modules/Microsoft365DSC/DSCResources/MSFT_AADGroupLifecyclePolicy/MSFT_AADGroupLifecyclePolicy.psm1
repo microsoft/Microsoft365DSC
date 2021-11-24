@@ -384,10 +384,15 @@ function Export-TargetResource
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
     try
     {
-        if ($ConnectionMode -eq 'ServicePrincipal')
+        if ($ConnectionMode -eq 'ServicePrincipalWithThumbprint')
         {
             $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
                 -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
+        }
+        elseif ($ConnectionMode -eq 'ServicePrincipalWithSecret') 
+        {
+            $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
+                -TenantId $TenantId -ApplicationSecret $ApplicationSecret
         }
         else
         {
