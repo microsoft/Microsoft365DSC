@@ -330,6 +330,7 @@ function Export-TargetResource
             TechnicalNotificationMails           = $AADTenantDetails.TechnicalNotificationMails
             Credential                           = $Credential
             ApplicationId                        = $ApplicationId
+            ApplicationSecret                    = $ApplicationSecret
             TenantId                             = $TenantId
             CertificateThumbprint                = $CertificateThumbprint
             IsSingleInstance                     = 'Yes'
