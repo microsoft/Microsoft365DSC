@@ -3,10 +3,9 @@ function Get-TargetResource
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
-    (
-        <#ResourceGenerator
+    (<#ResourceGenerator
         #region resource generator code
-        <ParameterBlock>
+<ParameterBlock>
         #endregion
         ResourceGenerator#>
 
@@ -36,9 +35,19 @@ function Get-TargetResource
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Checking for the Intune Android Device Compliance Policy {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+    try
+    {
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters `
+            -ProfileName '<#APIVersion#>'
+        Write-Verbose -Message "1 - There are currently {$((dir function: | measure).Count) functions}"
+        Write-Verbose -Message "Here1 - Loading Profile {<#APIVersion#>}"
+        Select-MgProfile '<#APIVersion#>' -ErrorAction Stop
+    }
+    catch
+    {
+        Write-Verbose -Message "Reloading1"
+    }
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -60,6 +69,15 @@ function Get-TargetResource
             -FilterScript {
                 <FilterScript>
             }
+
+        if (-not $getValue)
+        {
+            [array]$getValue = <GetCmdLetName> `
+                -ErrorAction Stop | Where-Object `
+            -FilterScript {
+                $_.displayName -eq $DisplayName
+            }
+        }
         #endregion
         ResourceGenerator#>
 
@@ -87,6 +105,7 @@ function Get-TargetResource
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
         }
+        <#ComplexTypeContent#>
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -152,9 +171,18 @@ function Set-TargetResource
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Set {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+    try
+    {
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters `
+            -ProfileName '<#APIVersion#>'
+        Write-Verbose -Message "2 - There are currently {$((dir function: | measure).Count) functions}"
+        Write-Verbose -Message "Here2"
+    }
+    catch
+    {
+        Write-Verbose -Message "Reloading2"
+    }
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -165,7 +193,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $currentDeviceAndroidPolicy = Get-TargetResource @PSBoundParameters
+    $currentInstance = Get-TargetResource @PSBoundParameters
 
     $PSBoundParameters.Remove('Ensure') | Out-Null
     $PSBoundParameters.Remove('Credential') | Out-Null
@@ -173,73 +201,52 @@ function Set-TargetResource
     $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
     $PSBoundParameters.Remove('TenantId') | Out-Null
 
-    <#ResourceGenerator
-    Please make sure to add addtional module/cmdlet specific code!
-    ResourceGenerator#>
-
-    if ($Ensure -eq 'Present' -and $currentDeviceAndroidPolicy.Ensure -eq 'Absent')
+    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating {$DisplayName}"
-
-        $PSBoundParameters.Remove('DisplayName') | Out-Null
-        $PSBoundParameters.Remove('Description') | Out-Null
+        $CreateParameters = $PSBoundParameters
+        $CreateParameters.Remove("Id") | Out-Null
 
         $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
         <#ResourceGenerator
         #region resource generator code
-        <NewCmdLetName> -DisplayName $DisplayName `
-            -Description $Description `
-            -additionalProperties $AdditionalProperties
+        <NewCmdLetName> @CreateParameters
         #endregion
         ResourceGenerator#>
     }
-    elseif ($Ensure -eq 'Present' -and $currentDeviceAndroidPolicy.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating {$DisplayName}"
-
-        <#ResourceGenerator
-        #region resource generator code
-        $getValue = <GetCmdLetName> `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-                <FilterScript>
-            }
-        #endregion
-        ResourceGenerator#>
-
-        $PSBoundParameters.Remove('DisplayName') | Out-Null
-        $PSBoundParameters.Remove('Description') | Out-Null
-
+        $UpdateParameters = $PSBoundParameters
+        $UpdateParameters.Remove("Id") | Out-Null
         $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-
+        <#
+        if ($AdditionalProperties)
+        {
+            $UpdateParameters.Add("AdditionalProperties", $AdditionalProperties)
+        }#>
         <#ResourceGenerator
         #region resource generator code
-        <UpdateCmdLetName> -AdditionalProperties $AdditionalProperties `
-            - $getValue.Id
+        Write-Verbose -Message ($UpdateParameters | Out-String)
+        <UpdateCmdLetName> @UpdateParameters `
+            -<#UpdateKeyIdentifier#> $currentInstance.Id
         #endregion
         ResourceGenerator#>
     }
-    elseif ($Ensure -eq 'Absent' -and $currentDeviceAndroidPolicy.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing {$DisplayName}"
 
         <#ResourceGenerator
         #region resource generator code
-        $getValue = <GetCmdLetName> `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-                <FilterScript>
-            }
         #endregion
         ResourceGenerator#>
 
         <#ResourceGenerator
         #region resource generator code
-        <RemoveCmdLetName> -AdditionalProperties $AdditionalProperties `
-            - $getValue.Id
+        <RemoveCmdLetName> -<#UpdateKeyIdentifier#> $currentInstance.Id
         #endregion
         ResourceGenerator#>
-
     }
 }
 
@@ -341,7 +348,8 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -ProfileName '<#APIVersion#>'
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -361,6 +369,10 @@ function Export-TargetResource
             -FilterScript {
                 <FilterScript>
             }
+        if (-not $getValue)
+        {
+            [array]$getValue = <GetCmdLetName> -ErrorAction Stop
+        }
         #endregion
         ResourceGenerator#>
 
@@ -378,10 +390,7 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($config.Count)] $($config.displayName)" -NoNewline
             $params = @{
-                <#ResourceGenerator
-                #region resource generator code
-                #endregion
-                ResourceGenerator#>
+                DisplayName           = $config.DisplayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -392,11 +401,13 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
+            <#ConvertComplexToString#>
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
+            <#ConvertComplexToVariable#>
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -432,7 +443,53 @@ function Export-TargetResource
     }
 }
 
-function Get-M365DSCIntuneDeviceCompliancePolicyAndroidAdditionalProperties
+
+function Get-M365DSCDRGComplexTypeToHashtable
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = 'true')]
+        [System.Object]
+        $ComplexObject
+    )
+
+    $keys = $ComplexObject | Get-Member | Where-Object -FilterScript {$_.MemberType -eq 'Property' -and $_.Name -ne 'AdditionalProperties'}
+    $results = @{}
+    foreach ($key in $keys)
+    {
+        $results.Add($key.Name, $ComplexObject.$($key.Name))
+    }
+    return $results
+}
+
+function Get-M365DSCDRGComplexTypeToString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $ComplexObject,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $CIMInstanceName
+    )
+    if ($null -eq $ComplexObject)
+    {
+        return $null
+    }
+    $currentProperty = "MSFT_$CIMInstanceName{`r`n"
+    foreach ($key in $ComplexObject.Keys)
+    {
+        $currentProperty += "                " + $key + " = '" + $ComplexObject[$key] + "'`r`n"
+    }
+    $currentProperty += "            }"
+    return $currentProperty
+}
+
+function Get-M365DSCAdditionalProperties
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
