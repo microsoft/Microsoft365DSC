@@ -953,7 +953,11 @@ function Get-M365DSCTenantDomain
         [Parameter(Mandatory = $true)]
         [System.String]
         $TenantId,
-
+        
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
+        
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
@@ -1812,8 +1816,7 @@ function Assert-M365DSCBlueprint
         # types contained within the BluePrint;
         Write-Host "Initiating the Export of those ($($ResourcesInBluePrint.Length)) components from the tenant..."
         $TempExportName = (New-Guid).ToString() + ".ps1"
-        Export-M365DSCConfiguration -Quiet `
-            -Components $ResourcesInBluePrint `
+        Export-M365DSCConfiguration -Components $ResourcesInBluePrint `
             -Path $env:temp `
             -FileName $TempExportName `
             -Credential $Credentials

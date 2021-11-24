@@ -83,6 +83,7 @@ function Get-TargetResource
                 Credential                           = $Credential
                 ApplicationId                        = $ApplicationId
                 TenantId                             = $TenantId
+                ApplicationSecret                    = $ApplicationSecret
                 CertificateThumbprint                = $CertificateThumbprint
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -329,6 +330,7 @@ function Export-TargetResource
             TechnicalNotificationMails           = $AADTenantDetails.TechnicalNotificationMails
             Credential                           = $Credential
             ApplicationId                        = $ApplicationId
+            ApplicationSecret                    = $ApplicationSecret
             TenantId                             = $TenantId
             CertificateThumbprint                = $CertificateThumbprint
             IsSingleInstance                     = 'Yes'

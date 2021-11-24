@@ -721,8 +721,8 @@ function Get-M365DSCIntuneAppProtectionPolicyiOS
     try
     {
         $Url = "https://graph.microsoft.com/beta/deviceAppManagement/iosManagedAppProtections('$PolicyId')/`?expand=apps,assignments"
-        $response = Invoke-MgGraphRequest -HttpMethod Get `
-            -Url $Url
+        $response = Invoke-MgGraphRequest Method Get `
+            -Uri $Url
         return $response
     }
     catch
@@ -915,9 +915,9 @@ function New-M365DSCIntuneAppProtectionPolicyiOS
     {
         $Url = 'https://graph.microsoft.com/beta/deviceAppManagement/managedAppPolicies'
         Write-Verbose -Message "Creating new iOS App Protection policy with JSON payload: `r`n$JSONContent"
-        Invoke-MgGraphRequest -HttpMethod POST `
-            -Url $Url `
-            -Content $JSONContent `
+        Invoke-MgGraphRequest -Method POST `
+            -Uri $Url `
+            -Body $JSONContent `
             -Headers @{"Content-Type" = "application/json" } | Out-Null
     }
     catch
@@ -946,9 +946,9 @@ function Set-M365DSCIntuneAppProtectionPolicyiOS
     {
         $Url = "https://graph.microsoft.com/beta/deviceAppManagement/iosManagedAppProtections('$PolicyId')/"
         Write-Verbose -Message "Creating new iOS App Protection policy with JSON payload: `r`n$JSONContent"
-        Invoke-MgGraphRequest -HttpMethod PATCH `
-            -Url $Url `
-            -Content $JSONContent `
+        Invoke-MgGraphRequest -Method PATCH `
+            -Uri $Url `
+            -Body $JSONContent `
             -Headers @{"Content-Type" = "application/json" } | Out-Null
     }
     catch
@@ -977,9 +977,9 @@ function Set-M365DSCIntuneAppProtectionPolicyiOSApps
     {
         $Url = "https://graph.microsoft.com/beta/deviceAppManagement/managedAppPolicies/$PolicyId/targetApps"
         Write-Verbose -Message "Updating Apps for iOS App Protection policy with JSON payload: `r`n$JSONContent"
-        Invoke-MgGraphRequest -HttpMethod POST `
-            -Url $Url `
-            -Content $JSONContent `
+        Invoke-MgGraphRequest -Method POST `
+            -Uri $Url `
+            -Body $JSONContent `
             -Headers @{"Content-Type" = "application/json" } | Out-Null
     }
     catch
@@ -1008,9 +1008,9 @@ function Set-M365DSCIntuneAppProtectionPolicyiOSAssignment
     {
         $Url = "https://graph.microsoft.com/beta/deviceAppManagement/iosManagedAppProtections('$PolicyId')/assign"
         Write-Verbose -Message "Group Assignment for iOS App Protection policy with JSON payload: `r`n$JSONContent"
-        Invoke-MgGraphRequest -HttpMethod POST `
-            -Url $Url `
-            -Content $JSONContent `
+        Invoke-MgGraphRequest -Method POST `
+            -Uri $Url `
+            -Body $JSONContent `
             -Headers @{"Content-Type" = "application/json" } | Out-Null
     }
     catch

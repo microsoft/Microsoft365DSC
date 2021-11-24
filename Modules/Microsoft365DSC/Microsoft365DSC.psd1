@@ -61,51 +61,51 @@
         },
         @{
             ModuleName      = "Microsoft.Graph.Applications"
-            RequiredVersion = "1.8.0"
+            RequiredVersion = "1.9.0"
         },
         @{
             ModuleName      = "Microsoft.Graph.Authentication"
-            RequiredVersion = "1.8.0"
+            RequiredVersion = "1.9.0"
         },
         @{
             ModuleName      = "Microsoft.Graph.DeviceManagement"
-            RequiredVersion = "1.8.0"
+            RequiredVersion = "1.9.0"
         },
         @{
             ModuleName      = "Microsoft.Graph.DeviceManagement.Administration"
-            RequiredVersion = "1.8.0"
+            RequiredVersion = "1.9.0"
         },
         @{
             ModuleName      = "Microsoft.Graph.DeviceManagement.Enrolment"
-            RequiredVersion = "1.8.0"
+            RequiredVersion = "1.9.0"
         },
         @{
             ModuleName      = "Microsoft.Graph.Devices.CorporateManagement"
-            RequiredVersion = "1.8.0"
+            RequiredVersion = "1.9.0"
         },
         @{
             ModuleName      = "Microsoft.Graph.Groups"
-            RequiredVersion = "1.8.0"
+            RequiredVersion = "1.9.0"
         },
         @{
             ModuleName      = "Microsoft.Graph.Identity.DirectoryManagement"
-            RequiredVersion = "1.8.0"
+            RequiredVersion = "1.9.0"
         }
         @{
             ModuleName      = "Microsoft.Graph.Identity.SignIns"
-            RequiredVersion = "1.8.0"
+            RequiredVersion = "1.9.0"
         },
         @{
             ModuleName      = "Microsoft.Graph.Planner"
-            RequiredVersion = "1.8.0"
+            RequiredVersion = "1.9.0"
         },
         @{
             ModuleName      = "Microsoft.Graph.Teams"
-            RequiredVersion = "1.8.0"
+            RequiredVersion = "1.9.0"
         },
         @{
             ModuleName      = "Microsoft.Graph.Users"
-            RequiredVersion = "1.8.0"
+            RequiredVersion = "1.9.0"
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
@@ -117,7 +117,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.78"
+            RequiredVersion = "1.0.79"
         },
         @{
             ModuleName      = "PnP.PowerShell"
@@ -125,7 +125,7 @@
         },
         @{
             ModuleName      = "ReverseDSC"
-            RequiredVersion = "2.0.0.7"
+            RequiredVersion = "2.0.0.8"
         }
     )
 
