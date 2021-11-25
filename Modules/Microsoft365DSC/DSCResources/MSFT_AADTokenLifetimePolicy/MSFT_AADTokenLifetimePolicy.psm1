@@ -107,6 +107,7 @@ function Get-TargetResource
                 Ensure                = "Present"
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
+                ApplicationSecret     = $ApplicationSecret
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
             }
@@ -350,6 +351,7 @@ function Export-TargetResource
             $Params = @{
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
+                ApplicationSecret     = $ApplicationSecret
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 DisplayName           = $AADPolicy.DisplayName
