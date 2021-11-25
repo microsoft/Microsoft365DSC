@@ -887,6 +887,15 @@ function Export-M365DSCConfiguration
         $MaxProcesses = 16
     }
 
+    # Clear the Connection Cache from MSCloudLoginAssistant
+    $Global:MsCloudLoginConnectionProfile = $null
+
+    # Default to Credential if no authentication mechanism were provided
+    if (-not $Credential -and (-not $ApplicationId -or -not $TenantId -or (-not $ApplicationSecret -and -not $CertificateThumbprint)))
+    {
+        $Credential = Get-Credential
+    }
+
     if ($LaunchWebUI)
     {
         explorer "https://export.microsoft365dsc.com"
@@ -953,11 +962,11 @@ function Get-M365DSCTenantDomain
         [Parameter(Mandatory = $true)]
         [System.String]
         $TenantId,
-        
+
         [Parameter()]
         [System.String]
         $ApplicationSecret,
-        
+
         [Parameter()]
         [System.String]
         $CertificateThumbprint,

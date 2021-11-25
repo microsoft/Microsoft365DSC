@@ -87,17 +87,22 @@ function Get-TargetResource
             return $nullReturn
         }
 
-        return @{
+        $results =  @{
             DisplayName           = $channel.DisplayName
             TeamName              = $team.DisplayName
             Description           = $channel.Description
-            NewDisplayName        = $NewDisplayName
             Ensure                = "Present"
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
-            Credential    = $Credential
+            Credential            = $Credential
         }
+
+        if ($NewDisplayName)
+        {
+            $results.Add("NewDisplayName", $NewDisplayName)
+        }
+        return $results
     }
     catch
     {
@@ -354,46 +359,22 @@ function Export-TargetResource
             foreach ($channel in $channels)
             {
                 Write-Host "        |---[$i/$($channels.Length)] $($channel.DisplayName)" -NoNewline
-
-                if ($ConnectionMode -eq 'Credentials')
-                {
-                    $params = @{
-                        TeamName           = $team.DisplayName
-                        DisplayName        = $channel.DisplayName
-                        Credential         = $Credential
-                    }
+                $params = @{
+                    TeamName              = $team.DisplayName
+                    DisplayName           = $channel.DisplayName
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    Credential            = $Credential
                 }
-                else
-                {
-                    $params = @{
-                        TeamName              = $team.DisplayName
-                        DisplayName           = $channel.DisplayName
-                        ApplicationId         = $ApplicationId
-                        TenantId              = $TenantId
-                        CertificateThumbprint = $CertificateThumbprint
-                    }
-                }
-                $result = Get-TargetResource @params
-                if ($ConnectionMode -eq 'Credential')
-                {
-                    $result = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                        -Results $Result
-                    $result.Remove("ApplicationId") | Out-Null
-                    $result.Remove("TenantId") | Out-Null
-                    $result.Remove("CertificateThumbprint") | Out-Null
-                }
-                else
-                {
-                    $result.Remove("Credential")
-                }
-                $currentDSCBlock = "        TeamsChannel " + (New-Guid).ToString() + "`r`n"
-                $currentDSCBlock += "        {`r`n"
-                $content = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-                if ($ConnectionMode -eq 'Credential')
-                {
-                    $currentDSCBlock += Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "Credential"
-                }
-                $currentDSCBlock += "        }`r`n"
+                $Results = Get-TargetResource @Params
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -Credential $Credential
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName

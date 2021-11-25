@@ -685,45 +685,24 @@ function Export-TargetResource
             $params = @{
                 DisplayName           = $team.DisplayName
                 GroupID               = $team.GroupId
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
             }
-            $result = Get-TargetResource @params
-
-            if ($ConnectionMode -eq 'Credential')
-            {
-                $result = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Result
-            }
-
-            $result.Remove("GroupID") | Out-Null
-            if ("" -eq $result.Owner)
-            {
-                $result.Remove("Owner") | Out-Null
-            }
-            $currentDSCBlock = "        TeamsTeam " + (New-Guid).ToString() + "`r`n"
-            $currentDSCBlock += "        {`r`n"
-            $content = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            if ($ConnectionMode -eq 'Credential')
-            {
-                $currentDSCBlock += Convert-DSCStringParamToVariable -DSCBlock $content -ParameterName "Credential"
-            }
-            else
-            {
-                $currentDSCBlock += $content
-            }
-            $currentDSCBlock += "        }`r`n"
-            if ($currentDSCBlock.ToLower().Contains("@" + $organization.ToLower()))
-            {
-                $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
-            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckmark
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
 
         return $dscContent
