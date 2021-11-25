@@ -7,6 +7,8 @@
 * TeamChannel
   * Fixed issue where the exported Team Channel content was empty if
     Credentials were used to authenticate;
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to 1.0.80;
 
 # 1.21.1124.2
 
