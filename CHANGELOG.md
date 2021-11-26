@@ -2,11 +2,15 @@
 
 #1.21.1201.1
 
+* AADConditionalAccessPolicy
+  * Added support for Terms of Use;
 * TeamsTeam
   * Fix issue where Credentials weren't extracted as a variable;
 * TeamChannel
   * Fixed issue where the exported Team Channel content was empty if
     Credentials were used to authenticate;
+* MISC
+  * Removed RequiredModules in favor of a new custom dependency manifest;
 
 # 1.21.1124.2
 

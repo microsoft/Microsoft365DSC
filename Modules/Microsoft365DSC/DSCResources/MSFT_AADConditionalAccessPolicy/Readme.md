@@ -20,6 +20,7 @@ To authenticate via Azure Active Directory, this resource required the following
   * User.Read.All
 
 * **Export**
+  * Agreement.Read.All
   * Application.Read.All
   * Group.Read.All
   * Directory.Read.All

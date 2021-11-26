@@ -882,6 +882,17 @@ function Export-M365DSCConfiguration
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $outdatedOrMissingAssemblies = Test-M365DSCDependencies
+    if ($outdatedOrMissingAssemblies)
+    {
+        foreach ($dependency in $outdatedOrMissingAssemblies)
+        {
+            Write-Host "Updating dependency {$($dependency.ModuleName)} to version {$($dependency.RequiredVersion)}..." -NoNewline
+            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force | Out-Null
+            Write-Host $Global:M365DSCEmojiGreenCheckmark
+        }
+    }
+
     if ($null -eq $MaxProcesses)
     {
         $MaxProcesses = 16
@@ -950,6 +961,47 @@ function Export-M365DSCConfiguration
                 -AllComponents
         }
     }
+}
+
+function Start-M365DSCConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ConfigurationPath,
+
+        [Parameter()]
+        [switch]
+        $Wait,
+
+        [Parameter()]
+        [switch]
+        $Force
+    )
+    $outdatedOrMissingAssemblies = Test-M365DSCDependencies
+    if ($outdatedOrMissingAssemblies)
+    {
+        foreach ($dependency in $outdatedOrMissingAssemblies)
+        {
+            Write-Host "Updating dependency {$($dependency.ModuleName)} to version {$($dependency.RequiredVersion)}..." -NoNewline
+            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force | Out-Null
+            Write-Host $Global:M365DSCEmojiGreenCheckmark
+        }
+    }
+    try
+    {
+        $configPath = Join-Path -Path $PSScriptRoot -ChildPath $ConfigurationPath -Resolve -ErrorAction Stop
+    }
+    catch
+    {
+        $configPath = $ConfigurationPath
+    }
+
+    $PSBoundParameters.Add("Path", $configPath)
+    $PSBoundParameters.Remove("ConfigurationPath") | Out-Null
+
+    Start-DscConfiguration @PSBoundParameters
 }
 
 function Get-M365DSCTenantDomain
@@ -1851,8 +1903,8 @@ function Test-M365DSCDependenciesForNewVersions
     [CmdletBinding()]
     $InformationPreference = 'Continue'
     $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
-    $manifest = Import-PowerShellDataFile "$currentPath/Microsoft365DSC.psd1"
-    $dependencies = $manifest.RequiredModules
+    $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
+    $dependencies = $manifest.Dependencies
     $i = 1
     foreach ($dependency in $dependencies)
     {
@@ -1876,13 +1928,39 @@ function Test-M365DSCDependenciesForNewVersions
     }
 }
 
+function Test-M365DSCDependencies
+{
+    [CmdletBinding()]
+    $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
+    $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
+    $dependencies = $manifest.Dependencies
+    $missingDependencies = @()
+    foreach ($dependency in $dependencies)
+    {
+        try
+        {
+            Write-Verbose -Message "{$($dependency.ModuleName)} version $($dependency.RequiredVersion)"
+            $module = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript {$_.Version -eq $dependency.RequiredVersion}
+            if (-not $module)
+            {
+                $missingDependencies += $dependency
+            }
+        }
+        catch
+        {
+            Write-Verbose -Message "Error: $_"
+        }
+    }
+    return $missingDependencies
+}
+
 function Update-M365DSCDependencies
 {
     [CmdletBinding()]
     $InformationPreference = 'Continue'
     $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
-    $manifest = Import-PowerShellDataFile "$currentPath/Microsoft365DSC.psd1"
-    $dependencies = $manifest.RequiredModules
+    $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
+    $dependencies = $manifest.Dependencies
     $i = 1
     foreach ($dependency in $dependencies)
     {
