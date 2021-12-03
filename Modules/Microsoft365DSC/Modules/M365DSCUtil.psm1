@@ -1005,7 +1005,7 @@ function Confirm-M365DSCDependencies
             {
                 $ErrorMessage += "    * " + $invalidDependency.ModuleName + "`r`n"
             }
-            $ErrorMessage += "Please run Update-M365DSCDependencies.""
+            $ErrorMessage += "Please run Update-M365DSCDependencies."
             $Script:M365DSCDependenciesValidated = $false
             Add-M365DSCEvent -Message $ErrorMessage -EntryType 'Error' `
                 -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
