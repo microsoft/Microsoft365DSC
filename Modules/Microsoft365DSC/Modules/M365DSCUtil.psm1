@@ -890,6 +890,16 @@ function Export-M365DSCConfiguration
     # Clear the Connection Cache from MSCloudLoginAssistant
     $Global:MsCloudLoginConnectionProfile = $null
 
+    # Make sure we are not connected to Microsoft Graph on another tenant
+    try
+    {
+        Disconnect-MgGraph | Out-Null
+    }
+    catch
+    {
+        Write-Verbose -Message "No existing connections to Microsoft Graph"
+    }
+
     # Default to Credential if no authentication mechanism were provided
     if (-not $Credential -and (-not $ApplicationId -or -not $TenantId -or (-not $ApplicationSecret -and -not $CertificateThumbprint)))
     {
