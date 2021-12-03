@@ -444,6 +444,9 @@ function Test-M365DSCParameterState
         [System.String]
         $Source = 'Generic'
     )
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", "$Source")
@@ -749,7 +752,10 @@ function Test-M365DSCParameterState
         foreach ($key in $DriftedParameters.Keys)
         {
             Write-Verbose -Message "Detected Drifted Parameter [$Source]$key"
-            #region Telemetry
+            #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
             $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
             $driftedData.Add("Event", "DriftedParameter")
             $driftedData.Add("Parameter", "[$Source]$key")
@@ -766,7 +772,10 @@ function Test-M365DSCParameterState
             #endregion
             $EventMessage += "            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n"
         }
-        #region Telemetry
+        #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
         $data.Add("Event", "ConfigurationDrift")
         #endregion
         $EventMessage += "        </ParametersNotInDesiredState>`r`n"
@@ -787,6 +796,9 @@ function Test-M365DSCParameterState
         Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
             -EventID 1 -Source $Source
     }
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -870,6 +882,9 @@ function Export-M365DSCConfiguration
 
     # Suppress Warnings
     $Global:WarningPreference = 'SilentlyContinue'
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -973,45 +988,40 @@ function Export-M365DSCConfiguration
     }
 }
 
-function Start-M365DSCConfiguration
+$Script:M365DSCDependenciesValidated = $false
+function Confirm-M365DSCDependencies
 {
     [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $ConfigurationPath,
+    param()
 
-        [Parameter()]
-        [switch]
-        $Wait,
-
-        [Parameter()]
-        [switch]
-        $Force
-    )
-    $outdatedOrMissingAssemblies = Test-M365DSCDependencies
-    if ($outdatedOrMissingAssemblies)
+    if (-not $Script:M365DSCDependenciesValidated)
     {
-        foreach ($dependency in $outdatedOrMissingAssemblies)
+        Write-Verbose -Message "Dependencies were not already validated."
+        $result = Test-M365DSCDependencies
+        if ($result.Length -gt 0)
         {
-            Write-Host "Updating dependency {$($dependency.ModuleName)} to version {$($dependency.RequiredVersion)}..." -NoNewline
-            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force | Out-Null
-            Write-Host $Global:M365DSCEmojiGreenCheckmark
+            $ErrorMessage = "The following dependencies need updating:`r`n"
+            foreach ($invalidDependency in $result)
+            {
+                $ErrorMessage += "    * " + $invalidDependency.ModuleName + "`r`n"
+            }
+            $ErrorMessage += "Please run Update-M365DSCDependencies.""
+            $Script:M365DSCDependenciesValidated = $false
+            Add-M365DSCEvent -Message $ErrorMessage -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+            throw $ErrorMessage
+        }
+        else
+        {
+            Write-Verbose -Message "Dependencies were all successfully validated."
+            $Script:M365DSCDependenciesValidated = $true
         }
     }
-    try
+    else
     {
-        $configPath = Join-Path -Path $PSScriptRoot -ChildPath $ConfigurationPath -Resolve -ErrorAction Stop
+        Write-Verbose -Message "Dependencies were already successfully validated."
     }
-    catch
-    {
-        $configPath = $ConfigurationPath
-    }
-
-    $PSBoundParameters.Add("Path", $configPath)
-    $PSBoundParameters.Remove("ConfigurationPath") | Out-Null
-
-    Start-DscConfiguration @PSBoundParameters
 }
 
 function Get-M365DSCTenantDomain
@@ -1139,6 +1149,9 @@ function New-M365DSCConnection
     {
         $Global:CurrentModeIsExport = $false
     }
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Source", "M365DSCUtil")
@@ -1806,6 +1819,9 @@ function Assert-M365DSCTemplate
     $InformationPreference = 'SilentlyContinue'
     $WarningPreference = 'SilentlyContinue'
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Event", "AssertTemplate")
@@ -1838,6 +1854,9 @@ function Assert-M365DSCBlueprint
     )
     $InformationPreference = 'SilentlyContinue'
     $WarningPreference = 'SilentlyContinue'
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()

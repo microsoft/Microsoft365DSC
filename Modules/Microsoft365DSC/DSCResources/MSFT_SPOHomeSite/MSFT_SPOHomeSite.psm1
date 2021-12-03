@@ -51,6 +51,9 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -163,6 +166,9 @@ function Set-TargetResource
         $CertificateThumbprint
     )
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -251,6 +257,9 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -323,7 +332,10 @@ function Export-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
             -InboundParameters $PSBoundParameters
 
-        #region Telemetry
+        #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
         $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
         $CommandName  = $MyInvocation.MyCommand
         $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `

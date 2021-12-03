@@ -86,6 +86,7 @@
     CmdletsToExport   = @('Assert-M365DSCBlueprint',
         'Assert-M365DSCTemplate',
         'Compare-M365DSCConfigurations',
+        'Confirm-M365DSCDependencies',
         'Export-M365DSCConfiguration',
         'Export-M365DSCDiagnosticData',
         'New-M365DSCDeltaReport',

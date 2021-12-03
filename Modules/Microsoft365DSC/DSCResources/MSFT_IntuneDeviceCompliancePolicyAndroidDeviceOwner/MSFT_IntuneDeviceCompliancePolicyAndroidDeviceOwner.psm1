@@ -110,6 +110,9 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters -ProfileName 'Beta'
     Select-MGProfile -Name 'Beta' | Out-Null
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $CommandName  = $MyInvocation.MyCommand
@@ -303,6 +306,9 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters -ProfileName 'Beta'
     Select-MGProfile -Name 'Beta' | Out-Null
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $CommandName  = $MyInvocation.MyCommand
@@ -480,6 +486,9 @@ function Test-TargetResource
         $CertificateThumbprint
     )
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $CommandName  = $MyInvocation.MyCommand
@@ -543,6 +552,9 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters -ProfileName 'Beta'
     Select-MGProfile -Name 'Beta' | Out-Null
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")

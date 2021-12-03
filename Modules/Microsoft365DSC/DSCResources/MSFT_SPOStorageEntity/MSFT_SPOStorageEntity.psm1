@@ -68,6 +68,9 @@ function Get-TargetResource
         -Url $SiteUrl
 
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -211,6 +214,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for SPO Storage Entity for $Key"
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -325,6 +331,9 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -397,7 +406,10 @@ function Export-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
             -InboundParameters $PSBoundParameters
 
-        #region Telemetry
+        #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
         $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
         $CommandName  = $MyInvocation.MyCommand
         $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `

@@ -70,6 +70,9 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -249,6 +252,9 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for hub site collection $Url"
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
@@ -511,6 +517,9 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -584,7 +593,10 @@ function Export-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
             -InboundParameters $PSBoundParameters
 
-        #region Telemetry
+        #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
         $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
         $CommandName  = $MyInvocation.MyCommand
         $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
