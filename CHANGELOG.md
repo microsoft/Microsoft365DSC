@@ -11,6 +11,8 @@
     Credentials were used to authenticate;
 * MISC
   * Removed RequiredModules in favor of a new custom dependency manifest;
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to 1.0.80;
 
 # 1.21.1124.2
 
