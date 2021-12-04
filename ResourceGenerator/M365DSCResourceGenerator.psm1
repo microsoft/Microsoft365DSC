@@ -305,9 +305,13 @@ function New-M365DSCResource
         # Path to the new Resource
         [Parameter()]
         [System.String]
-        $Path = "c:\temp\newresource"
+        $Path = "c:\temp\newresource",
+
+        [Parameter()]
+        [System.String]
+        $APIVersion = "Beta"
     )
-    $APIVersion = 'v1.0'
+    
     $GetcmdletName = "Get-$GraphModuleCmdletNoun"
     $commandDetails = Find-MgGraphCommand -Command $GetcmdletName -ApiVersion $ApiVersion -ErrorAction SilentlyContinue
     $cmdletFound = Get-Command $GetcmdletName -ErrorAction SilentlyContinue
