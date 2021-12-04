@@ -444,8 +444,6 @@ function Test-M365DSCParameterState
         [System.String]
         $Source = 'Generic'
     )
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -752,10 +750,8 @@ function Test-M365DSCParameterState
         foreach ($key in $DriftedParameters.Keys)
         {
             Write-Verbose -Message "Detected Drifted Parameter [$Source]$key"
-            #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
 
-    #region Telemetry
+            #region Telemetry
             $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
             $driftedData.Add("Event", "DriftedParameter")
             $driftedData.Add("Parameter", "[$Source]$key")
@@ -772,10 +768,8 @@ function Test-M365DSCParameterState
             #endregion
             $EventMessage += "            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n"
         }
-        #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
 
-    #region Telemetry
+        #region Telemetry
         $data.Add("Event", "ConfigurationDrift")
         #endregion
         $EventMessage += "        </ParametersNotInDesiredState>`r`n"
@@ -796,8 +790,6 @@ function Test-M365DSCParameterState
         Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
             -EventID 1 -Source $Source
     }
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
 
     #region Telemetry
     Add-M365DSCTelemetryEvent -Data $data
@@ -882,9 +874,6 @@ function Export-M365DSCConfiguration
 
     # Suppress Warnings
     $Global:WarningPreference = 'SilentlyContinue'
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
