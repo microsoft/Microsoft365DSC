@@ -32,6 +32,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
+            Mock -CommandName Confirm-M365DSCDependencies -MockWith {
+
+            }
+
             Mock -CommandName Add-PnPTenantTheme -MockWith {
 
             }

@@ -33,6 +33,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
+            Mock -CommandName Confirm-M365DSCDependencies -MockWith {
+
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credential"
             }
