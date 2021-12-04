@@ -1013,6 +1013,21 @@ function Confirm-M365DSCDependencies
     }
 }
 
+function Import-M365DSCDependencies
+{
+    [CmdletBinding()]
+    param()
+
+    $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
+    $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
+    $dependencies = $manifest.Dependencies
+    $i = 1
+    foreach ($dependency in $dependencies)
+    {
+        Import-Module $dependency.ModuleName -Force
+    }
+}
+
 function Get-M365DSCTenantDomain
 {
     param(

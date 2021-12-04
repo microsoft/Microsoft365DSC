@@ -89,6 +89,7 @@
         'Confirm-M365DSCDependencies',
         'Export-M365DSCConfiguration',
         'Export-M365DSCDiagnosticData',
+        'Import-M365DSCDependencies',
         'New-M365DSCDeltaReport',
         'New-M365DSCReportFromConfiguration',
         'New-M365DSCStubFiles',
