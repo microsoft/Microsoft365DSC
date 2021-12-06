@@ -43,6 +43,24 @@ jobs:
           [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);
           Import-Module './Tests/TestHarness.psm1' -Force;
           $MaximumFunctionCount = 9999
+
+          $manifest = Import-PowerShellDataFile "./Modules/Microsoft365DSC/Dependencies/Manifest.psd1"
+          $dependencies = $manifest.Dependencies
+          $i = 1
+          foreach ($dependency in $dependencies)
+          {
+              Write-Progress -Activity "Importing Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
+              try
+              {
+                  Import-Module $dependency.ModuleName -AllowClobber -Force
+              }
+              catch
+              {
+                  Write-Host "Could not import {$($dependency.ModuleName)}"
+              }
+              $i++
+          }
+
           try
           {
               $results = Invoke-TestHarness -IgnoreCodeCoverage
