@@ -28,10 +28,7 @@ function New-M365DSCLogEntry
     {
         Write-Host "$($Global:M365DSCEmojiRedX)"
 
-        #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
+        #region Telemetry
         $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
         $driftedData.Add("Event", "Error")
         $driftedData.Add("Category", $Error.CategoryInfo.Category.ToString())

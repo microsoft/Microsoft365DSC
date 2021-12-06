@@ -20,6 +20,7 @@ function Invoke-TestHarness
     Write-Verbose -Message 'Starting all Microsoft365DSC tests'
 
     $repoDir = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
+    Import-Module Microsoft365DSC -Force
     Update-M365DSCDependencies
     Import-M365DSCDependencies
     $testCoverageFiles = @()

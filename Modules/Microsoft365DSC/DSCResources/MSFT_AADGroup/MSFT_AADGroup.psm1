@@ -495,7 +495,7 @@ function Export-TargetResource
 
     try
     {
-        [array] $groups = Get-MgGroup -ErrorAction Stop
+        [array] $groups = Get-MgGroup -All -ErrorAction Stop
         $i = 1
         $dscContent = ''
         Write-Host "`r`n" -NoNewline

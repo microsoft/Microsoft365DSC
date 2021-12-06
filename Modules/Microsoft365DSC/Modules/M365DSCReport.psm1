@@ -331,9 +331,9 @@ function Compare-M365DSCConfigurations
     if ($CaptureTelemetry)
     {
         #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
+        Confirm-M365DSCDependencies
 
-    #region Telemetry
+        #region Telemetry
         $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
         $data.Add("Event", "Compare")
         Add-M365DSCTelemetryEvent -Data $data

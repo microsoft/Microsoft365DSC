@@ -54,9 +54,9 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
+        Confirm-M365DSCDependencies
 
-    #region Telemetry
+        #region Telemetry
         $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
         $CommandName  = $MyInvocation.MyCommand
         $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
@@ -318,9 +318,9 @@ function Export-TargetResource
             -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
+        Confirm-M365DSCDependencies
 
-    #region Telemetry
+        #region Telemetry
         $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
         $CommandName  = $MyInvocation.MyCommand
         $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `

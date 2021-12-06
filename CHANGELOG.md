@@ -4,6 +4,8 @@
 
 * AADConditionalAccessPolicy
   * Added support for Terms of Use;
+* AADGroup
+  * Fixed issue where not all groups were exported;
 * TeamsTeam
   * Fix issue where Credentials weren't extracted as a variable;
 * TeamChannel
