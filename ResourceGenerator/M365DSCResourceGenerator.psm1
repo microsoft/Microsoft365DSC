@@ -198,6 +198,10 @@ function Get-M365DSCDRGParameterType
         {
             $parameterType = "System.Boolean"
         }
+        "system.management.automation.switchparameter"
+        {
+            $parameterType = "System.Boolean"
+        }
         "system.int32"
         {
             $parameterType = "System.Int32"
@@ -305,9 +309,13 @@ function New-M365DSCResource
         # Path to the new Resource
         [Parameter()]
         [System.String]
-        $Path = "c:\temp\newresource"
+        $Path = "c:\temp\newresource",
+
+        [Parameter()]
+        [ValidateSet("v1.0", "beta")]
+        [System.String]
+        $APIVersion = 'v1.0'
     )
-    $APIVersion = 'v1.0'
     $GetcmdletName = "Get-$GraphModuleCmdletNoun"
     $commandDetails = Find-MgGraphCommand -Command $GetcmdletName -ApiVersion $ApiVersion -ErrorAction SilentlyContinue
     $cmdletFound = Get-Command $GetcmdletName -ErrorAction SilentlyContinue
@@ -372,7 +380,7 @@ function New-M365DSCResource
         $typeChoice = $host.UI.PromptForChoice("Additional Type Information", "Please select an addtional type", $typeInformationChoices, 0) + 1
 
         $selectedODataType = $typeInformation[$typeChoice - 1]
-        $isAdditionalProperty = $true
+        $isAdditionalProperty = $false
     }
     else
     {
@@ -390,6 +398,7 @@ function New-M365DSCResource
     $CimInstances = Get-M365DSCDRGCimInstances -ResourceName $ResourceName `
         -Properties $parameterInformation `
         -Workload $Workload
+    $Global:AlreadyFoundInstances = @()
     $CimInstancesSchemaContent = Get-M365DSCDRGCimInstancesSchemaStringContent -CIMInstances $CimInstances `
                                      -Workload $Workload
 
@@ -457,12 +466,18 @@ function Get-M365DSCDRGCimInstancesSchemaStringContent
         $nestedResults = ''
         foreach ($property in $cimInstance.Properties)
         {
-            if ($property.Type.StartsWith("microsoft.graph.powershell.models."))
+            if ($property.Type.StartsWith("microsoft.graph.powershell.models.") -and `
+                -not $Global:AlreadyFoundInstances.Contains($property.Type))
             {
+                $Global:AlreadyFoundInstances += $property.Type
                 if ($property.NestedCIM)
                 {
                     $nestedResults = Get-M365DSCDRGCimInstancesSchemaStringContent -CIMInstances $property.NestedCIM `
                                          -Workload $Workload
+                }
+                else
+                {
+                    $nestedResults = ''
                 }
                 $propertyType = $property.Type -replace "microsoft.graph.powershell.models.", ""
                 $propertyType = $propertyType -replace "imicrosoftgraph", ""
@@ -475,7 +490,7 @@ function Get-M365DSCDRGCimInstancesSchemaStringContent
                 }
                 $stringResult += ";`r`n"
             }
-            else
+            elseif (-not $property.Type.StartsWith("microsoft.graph.powershell.models."))
             {
                 $propertyType = Get-M365DSCDRGParameterTypeForSchema -Type $property.Type
                 $stringResult += "    [Write, Description(`"`")] $($propertyType) $($property.Name)"
@@ -589,28 +604,31 @@ function New-M365SchemaPropertySet
     )
     $schemaProperties = ""
     $Properties | ForEach-Object -Process {
-        if ($_.Type.ToString().StartsWith("microsoft.graph.powershell.models."))
+        if ($_.Name -ne 'LastModifiedDateTime' -and $_.Name -ne 'CreatedDateTime')
         {
-            $propertyType = $_.Type -replace "microsoft.graph.powershell.models.", ""
-            $propertyType = $propertyType -replace "imicrosoftgraph", ""
-            $propertyType = $Workload + $propertyType
-            $propertyType = $propertyType -replace '[[\]]',''
-            $schemaProperties += "    [Write, Description(`"`"), EmbeddedInstance(`"MSFT_$propertyType`")] String $($_.Name)"
-            if ($_.Type.EndsWith("[]"))
+            if ($_.Type.ToString().StartsWith("microsoft.graph.powershell.models."))
             {
-                $schemaProperties += "[]"
+                $propertyType = $_.Type -replace "microsoft.graph.powershell.models.", ""
+                $propertyType = $propertyType -replace "imicrosoftgraph", ""
+                $propertyType = $Workload + $propertyType
+                $propertyType = $propertyType -replace '[[\]]',''
+                $schemaProperties += "    [Write, Description(`"`"), EmbeddedInstance(`"MSFT_$propertyType`")] String $($_.Name)"
+                if ($_.Type.EndsWith("[]"))
+                {
+                    $schemaProperties += "[]"
+                }
+                $schemaProperties += ";`r`n"
             }
-            $schemaProperties += ";`r`n"
-        }
-        else
-        {
-            $propertyType = Get-M365DSCDRGParameterTypeForSchema -Type $_.Type
-            $schemaProperties += "    [Write, Description(`"`")] $($propertyType) $($_.Name)"
-            if ($_.Type.EndsWith("[]"))
+            else
             {
-                $schemaProperties += "[]"
+                $propertyType = Get-M365DSCDRGParameterTypeForSchema -Type $_.Type
+                $schemaProperties += "    [Write, Description(`"`")] $($propertyType) $($_.Name)"
+                if ($_.Type.EndsWith("[]"))
+                {
+                    $schemaProperties += "[]"
+                }
+                $schemaProperties += ";`r`n"
             }
-            $schemaProperties += ";`r`n"
         }
     }
     return $schemaProperties
@@ -731,43 +749,54 @@ function New-M365HashTableMapping
     $convertToVariable = ""
     foreach ($property in $properties)
     {
-        $paramType = $newCmdlet.Parameters.$($property.Name).ParameterType.ToString()
-        $parameterName = $property.Name
-        $parameterNameFirstLetter = $property.Name.Substring(0, 1)
-        $parameterNameFirstLetter = $parameterNameFirstLetter.ToUpper()
-        $parameterNameCamelCaseString = $parameterName.Substring(1)
-        $parameterName = "$($parameterNameFirstLetter)$($parameterNameCamelCaseString)"
-
-        if ($paramType.StartsWith("Microsoft.Graph.PowerShell.Models."))
+        if ($property.Name -ne 'CreatedDateTime' -and $property.Name -ne 'LastModifiedDateTime')
         {
-            $CimInstanceName = $paramType -replace "Microsoft.Graph.PowerShell.Models.IMicrosoftGraph", ""
-            $CimInstanceName = $CimInstanceName  -replace '[[\]]',''
-            $CimInstanceName = $Workload + $CimInstanceName
+            $paramType = $newCmdlet.Parameters.$($property.Name).ParameterType.ToString()
+            $parameterName = $property.Name
+            $parameterNameFirstLetter = $property.Name.Substring(0, 1)
+            $parameterNameFirstLetter = $parameterNameFirstLetter.ToUpper()
+            $parameterNameCamelCaseString = $parameterName.Substring(1)
+            $parameterName = "$($parameterNameFirstLetter)$($parameterNameCamelCaseString)"
 
-            $complexTypeContent += "            if (`$getValue.$($property.Name))`r`n"
-            $complexTypeContent += "            {`r`n"
-            $complexTypeContent += "                `$results.Add(`"$parameterName`", (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject `$getValue.$($property.Name)))`r`n"
-            $complexTypeContent += "            }`r`n"
-
-            $convertToString += "        if (`$Results.$parameterName)`r`n"
-            $convertToString += "        {`r`n"
-            $convertToString += "            `$Results.$parameterName = Get-M365DSCDRGComplexTypeToString -ComplexObject `$Results.$parameterName -CIMInstanceName $CimInstanceName`r`n"
-            $convertToString += "        }`r`n"
-
-            $convertToVariable += "        if (`$Results.$parameterName)`r`n"
-            $convertToVariable += "        {`r`n"
-            $convertToVariable += "            `$currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock `$currentDSCBlock -ParameterName `"$parameterName`"`r`n"
-            $convertToVariable += "        }`r`n"
-        }
-        else
-        {
-            if ($UseAddtionalProperties)
+            if ($paramType.StartsWith("Microsoft.Graph.PowerShell.Models."))
             {
-                $hashtable += "$($parameterName) = `$getValue.AdditionalProperties.$($_propertyName) `r`n"
+                $CimInstanceName = $paramType -replace "Microsoft.Graph.PowerShell.Models.IMicrosoftGraph", ""
+                $CimInstanceName = $CimInstanceName  -replace '[[\]]',''
+                $CimInstanceName = $Workload + $CimInstanceName
+
+                $complexTypeContent += "        if (`$getValue.$($property.Name))`r`n"
+                $complexTypeContent += "        {`r`n"
+                $complexTypeContent += "            `$results.Add(`"$parameterName`", (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject `$getValue.$($property.Name)))`r`n"
+                $complexTypeContent += "        }`r`n"
+
+                $convertToString += "        if (`$Results.$parameterName)`r`n"
+                $convertToString += "        {`r`n"
+                $convertToString += "            `$complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject `$Results.$parameterName -CIMInstanceName $CimInstanceName`r`n"
+                $convertToString += "            if (`$complexTypeStringResult)`r`n"
+                $convertToString += "            {`r`n"
+                $convertToString += "                `$Results.$parameterName = `$complexTypeStringResult"
+                $convertToString += "            }`r`n"
+                $convertToString += "            else`r`n"
+                $convertToString += "            {`r`n"
+                $convertToString += "                `$Results.Remove('$parameterName') | Out-Null"
+                $convertToString += "            }`r`n"
+                $convertToString += "        }`r`n"
+
+                $convertToVariable += "        if (`$Results.$parameterName)`r`n"
+                $convertToVariable += "        {`r`n"
+                $convertToVariable += "            `$currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock `$currentDSCBlock -ParameterName `"$parameterName`"`r`n"
+                $convertToVariable += "        }`r`n"
             }
             else
             {
-                $hashtable += "$($parameterName) = `$getValue.$($property.Name) `r`n"
+                if ($UseAddtionalProperties)
+                {
+                    $hashtable += "            $($parameterName) = `$getValue.AdditionalProperties.$($_propertyName) `r`n"
+                }
+                else
+                {
+                    $hashtable += "            $($parameterName) = `$getValue.$($property.Name) `r`n"
+                }
             }
         }
     }
@@ -781,7 +810,6 @@ function New-M365HashTableMapping
 
 function Get-ParameterBlockStringForModule
 {
-
     param (
         [Parameter()]
         [Object[]]
@@ -790,24 +818,30 @@ function Get-ParameterBlockStringForModule
 
     $parameterBlockOutput = ""
     $ParameterBlockInformation | ForEach-Object -Process {
-        $parameterBlockOutput += "        $($_.Attribute)`r`n"
-
-        $propertyType = $_.Type.ToString()
-        if ($propertyType.StartsWith("microsoft.graph.powershell.models."))
+        if ($_.Name -ne 'LastModifiedDateTime' -and $_.Name -ne 'CreatedDateTime')
         {
-            $parameterBlockOutput += "        [Microsoft.Management.Infrastructure.CimInstance"
+            $parameterBlockOutput += "        $($_.Attribute)`r`n"
+            $propertyType = $_.Type.ToString()
+            if ($propertyType.StartsWith("microsoft.graph.powershell.models."))
+            {
+                $parameterBlockOutput += "        [Microsoft.Management.Infrastructure.CimInstance"
+            }
+            elseif ($propertyType.ToLower() -eq "system.management.automation.switchparameter")
+            {
+                $parameterBlockOutput += "        [System.Boolean"
+            }
+            else
+            {
+                $parameterBlockOutput += "        [$($_.Type)"
+            }
+            if ($_.Type.ToString().EndsWith("[]"))
+            {
+                $parameterBlockOutput += "[]"
+            }
+            $parameterBlockOutput += "]`r`n"
+            $parameterBlockOutput += "        `$$($_.Name),`r`n"
+            $parameterBlockOutput += "`r`n"
         }
-        else
-        {
-            $parameterBlockOutput += "        [$($_.Type)"
-        }
-        if ($_.Type.ToString().EndsWith("[]"))
-        {
-            $parameterBlockOutput += "[]"
-        }
-        $parameterBlockOutput += "]`r`n"
-        $parameterBlockOutput += "        `$$($_.Name),`r`n"
-        $parameterBlockOutput += "`r`n"
     }
     return $parameterBlockOutput
 }
