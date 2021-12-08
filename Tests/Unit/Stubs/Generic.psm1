@@ -14,6 +14,11 @@ function Get-MgServicePrincipal
         $Filter
     )
 }
+function Confirm-M365DSCDependencies
+{
+    [CmdletBinding()]
+    param()
+}
 
 function Update-MgServicePrincipal
 {

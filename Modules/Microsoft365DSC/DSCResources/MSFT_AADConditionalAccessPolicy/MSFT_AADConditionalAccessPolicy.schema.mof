@@ -28,6 +28,7 @@ class MSFT_AADConditionalAccessPolicy : OMI_BaseResource
     [Write, Description("Specifies, whether Cloud App Security is enforced by the Policy.")] Boolean CloudAppSecurityIsEnabled;
     [Write, Description("Specifies, what Cloud App Security control is enforced by the Policy.")] String CloudAppSecurityType;
     [Write, Description("Sign in frequency time in the given unit to be enforced by the policy.")] UInt32 SignInFrequencyValue;
+    [Write, Description("Display name of the terms of use to assign.")] String TermsOfUse;
     [Write, Description("Sign in frequency unit (days/hours) to be interpreted by the policy."), ValueMap{"Days","Hours",""}, Values{"Days","Hours",""}] String SignInFrequencyType;
     [Write, Description("Specifies, whether sign-in frequency is enforced by the Policy.")] Boolean SignInFrequencyIsEnabled;
     [Write, Description("Specifies, whether Browser Persistence is controlled by the Policy.")] Boolean PersistentBrowserIsEnabled;

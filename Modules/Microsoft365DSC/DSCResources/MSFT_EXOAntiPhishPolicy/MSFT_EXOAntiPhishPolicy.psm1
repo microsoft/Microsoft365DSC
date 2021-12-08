@@ -174,6 +174,9 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
     }
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -443,6 +446,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of AntiPhishPolicy for $Identity"
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -455,26 +461,31 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $AntiPhishPolicies = Get-AntiPhishPolicy
+    $currentInstance = Get-TargetResource @PSBoundParameters
 
-    $AntiPhishPolicy = $AntiPhishPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    $PSBoundParameters.Remove("ApplicationId") | Out-Null
+    $PSBoundParameters.Remove("TenantId") | Out-Null
+    $PSBoundParameters.Remove("CertificateThumbprint") | Out-Null
+    $PSBoundParameters.Remove("CertificatePassword") | Out-Null
+    $PSBoundParameters.Remove("CertificatePath") | Out-Null
+    $PSBoundParameters.Remove("Credential") | Out-Null
 
-    if (('Present' -eq $Ensure ) -and (-not $AntiPhishPolicy))
+    if (('Present' -eq $Ensure ) -and $currentInstance.Ensure -eq 'Absent')
     {
-        New-EXOAntiPhishPolicy -AntiPhishPolicyParams $PSBoundParameters
+        Write-Verbose -Message "Creating new instance of AntiPhish Policy {$Identity}"
+        $CreateParams = $PSBoundParameters
+        $CreateParams.Remove("Ensure") | Out-Null
+        $createParams.Add("Name", $Identity)
+        $createParams.Remove("Identity") | Out-Null
+        New-AntiPhishPolicy $PSBoundParameters
     }
-
-    if (('Present' -eq $Ensure ) -and ($AntiPhishPolicy))
+    elseif (('Present' -eq $Ensure ) -and $currentInstance.Ensure -eq 'Present')
     {
-        # The Set-AntiphishPolicy cmdlet doesn't account for more than 80% of the parameters
-        # defined by the New-AntiphishPolicy one. Therefore we need to delete the existing
-        # policy and recreate it in order to make sure the parameters all match the desired
-        # state specified;
-        Remove-AntiPhishPolicy -Identity $Identity -Confirm:$false -Force
-        New-EXOAntiPhishPolicy -AntiPhishPolicyParams $PSBoundParameters
+        Write-Verbose -Message "Updating existing AntiPhishPolicy {$Identity}"
+        $UpdateParams = $PSBoundParameters
+        $UpdateParams.Remove("Ensure") | Out-Null
     }
-
-    if (('Absent' -eq $Ensure ) -and ($AntiPhishPolicy))
+    elseif (('Absent' -eq $Ensure ) -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing AntiPhishPolicy $($Identity)"
         Remove-AntiPhishPolicy -Identity $Identity -Confirm:$false -Force
@@ -643,6 +654,9 @@ function Test-TargetResource
         $CertificatePassword
     )
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -705,6 +719,9 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""

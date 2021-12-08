@@ -52,6 +52,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of AzureAD Groups Lifecycle Policy"
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -194,6 +197,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Azure AD Groups Lifecycle Policy"
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -316,6 +322,9 @@ function Test-TargetResource
         $CertificateThumbprint
     )
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -371,6 +380,9 @@ function Export-TargetResource
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -389,7 +401,7 @@ function Export-TargetResource
             $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
                 -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
         }
-        elseif ($ConnectionMode -eq 'ServicePrincipalWithSecret') 
+        elseif ($ConnectionMode -eq 'ServicePrincipalWithSecret')
         {
             $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
                 -TenantId $TenantId -ApplicationSecret $ApplicationSecret
