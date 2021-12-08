@@ -281,6 +281,9 @@ function New-M365DSCReportFromConfiguration
         $OutputPath
     )
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Event", "Report")
@@ -327,6 +330,9 @@ function Compare-M365DSCConfigurations
 
     if ($CaptureTelemetry)
     {
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
         #region Telemetry
         $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
         $data.Add("Event", "Compare")
@@ -627,6 +633,9 @@ function New-M365DSCDeltaReport
         [Array]
         $Delta
     )
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()

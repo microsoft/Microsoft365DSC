@@ -50,84 +50,7 @@
     # ProcessorArchitecture = ''
 
     # Modules that must be imported into the global environment prior to importing this module
-    RequiredModules   = @(
-        @{
-            ModuleName      = "DSCParser"
-            RequiredVersion = "1.3.0.2"
-        },
-        @{
-            ModuleName      = "ExchangeOnlineManagement"
-            RequiredVersion = "2.0.5"
-        },
-        @{
-            ModuleName      = "Microsoft.Graph.Applications"
-            RequiredVersion = "1.9.0"
-        },
-        @{
-            ModuleName      = "Microsoft.Graph.Authentication"
-            RequiredVersion = "1.9.0"
-        },
-        @{
-            ModuleName      = "Microsoft.Graph.DeviceManagement"
-            RequiredVersion = "1.9.0"
-        },
-        @{
-            ModuleName      = "Microsoft.Graph.DeviceManagement.Administration"
-            RequiredVersion = "1.9.0"
-        },
-        @{
-            ModuleName      = "Microsoft.Graph.DeviceManagement.Enrolment"
-            RequiredVersion = "1.9.0"
-        },
-        @{
-            ModuleName      = "Microsoft.Graph.Devices.CorporateManagement"
-            RequiredVersion = "1.9.0"
-        },
-        @{
-            ModuleName      = "Microsoft.Graph.Groups"
-            RequiredVersion = "1.9.0"
-        },
-        @{
-            ModuleName      = "Microsoft.Graph.Identity.DirectoryManagement"
-            RequiredVersion = "1.9.0"
-        }
-        @{
-            ModuleName      = "Microsoft.Graph.Identity.SignIns"
-            RequiredVersion = "1.9.0"
-        },
-        @{
-            ModuleName      = "Microsoft.Graph.Planner"
-            RequiredVersion = "1.9.0"
-        },
-        @{
-            ModuleName      = "Microsoft.Graph.Teams"
-            RequiredVersion = "1.9.0"
-        },
-        @{
-            ModuleName      = "Microsoft.Graph.Users"
-            RequiredVersion = "1.9.0"
-        },
-        @{
-            ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
-            RequiredVersion = "2.0.139"
-        },
-        @{
-            ModuleName      = "MicrosoftTeams"
-            RequiredVersion = "2.6.0"
-        },
-        @{
-            ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.80"
-        },
-        @{
-            ModuleName      = "PnP.PowerShell"
-            RequiredVersion = "1.8.0"
-        },
-        @{
-            ModuleName      = "ReverseDSC"
-            RequiredVersion = "2.0.0.9"
-        }
-    )
+    RequiredModules   = @()
 
     # Assemblies that must be loaded prior to importing this module
     # RequiredAssemblies = @()
@@ -163,15 +86,20 @@
     CmdletsToExport   = @('Assert-M365DSCBlueprint',
         'Assert-M365DSCTemplate',
         'Compare-M365DSCConfigurations',
+        'Confirm-M365DSCDependencies',
         'Export-M365DSCConfiguration',
         'Export-M365DSCDiagnosticData',
+        'Import-M365DSCDependencies',
         'New-M365DSCDeltaReport',
         'New-M365DSCReportFromConfiguration',
         'New-M365DSCStubFiles',
         'Set-M365DSCAgentCertificateConfiguration',
+        'Start-M365DSCConfiguration',
         'Test-M365DSCAgent',
+        'Test-M365DSCDependencies',
         'Test-M365DSCDependenciesForNewVersions',
         'Update-M365DSCAllowedGraphScopes',
+        'Update-M365DSCDependencies',
         'Update-M365DSCResourcesSettingsJSON')
 
     # Variables to export from this module

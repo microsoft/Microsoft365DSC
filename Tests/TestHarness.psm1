@@ -20,7 +20,6 @@ function Invoke-TestHarness
     Write-Verbose -Message 'Starting all Microsoft365DSC tests'
 
     $repoDir = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
-
     $testCoverageFiles = @()
     if ($IgnoreCodeCoverage.IsPresent -eq $false)
     {
