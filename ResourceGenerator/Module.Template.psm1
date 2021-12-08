@@ -49,6 +49,9 @@ function Get-TargetResource
         Write-Verbose -Message "Reloading1"
     }
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $CommandName = $MyInvocation.MyCommand
@@ -184,6 +187,9 @@ function Set-TargetResource
         Write-Verbose -Message "Reloading2"
     }
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $CommandName = $MyInvocation.MyCommand
@@ -288,6 +294,9 @@ function Test-TargetResource
         $CertificateThumbprint
     )
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $CommandName = $MyInvocation.MyCommand
@@ -350,6 +359,9 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ProfileName '<#APIVersion#>'
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")

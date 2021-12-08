@@ -189,6 +189,9 @@ function Get-TargetResource {
     $MaximumFunctionCount = 32000
     Select-MGProfile -Name 'Beta' | Out-Null
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -468,6 +471,9 @@ function Set-TargetResource
     $MaximumFunctionCount = 32000
     Select-MGProfile -Name 'Beta' | Out-Null
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -702,6 +708,9 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -769,6 +778,9 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection @M365DSCConnectionSplat
     $MaximumFunctionCount = 32000
     Select-MGProfile -Name 'Beta' | Out-Null
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")

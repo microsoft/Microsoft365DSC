@@ -49,6 +49,9 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters -ProfileName "beta"
     Select-MgProfile -Name Beta | Out-Null
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -166,6 +169,9 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters -ProfileName "beta"
     Select-MgProfile -Name Beta | Out-Null
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -181,6 +187,7 @@ function Set-TargetResource
     $needToUpdate = $false
     if ($Ensure -eq "Present" -and $currentPolicy.Ensure -eq "Absent")
     {
+        Write-Verbose -Message "Creating new Groups Naming Policy"
         $Policy = New-MgDirectorySetting -TemplateId '62375ab9-6b52-47ed-826b-58e47e0e304b' | Out-Null
         $needToUpdate = $true
     }
@@ -209,11 +216,12 @@ function Set-TargetResource
             }
             $index++;
         }
-
+        Write-Verbose -Message "Updating Groups Naming Policy to {$($Policy.Values -join ',')}"
         Update-MgDirectorySetting -DirectorySettingId $Policy.id -Values $Policy.Values | Out-Null
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
+        Write-Verbose -Message "Removing existing Groups Naming Policy {$($policy.Id)}"
         $Policy = Get-MgDirectorySetting | Where-Object -FilterScript { $_.DisplayName -eq "Group.Unified" }
         Remove-MgDirectorySetting -DirectorySettingId $policy.Id | Out-Null
     }
@@ -263,6 +271,9 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
@@ -325,6 +336,9 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters -ProfileName "beta"
     Select-MgProfile -Name Beta | Out-Null
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""

@@ -86,6 +86,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Azure AD Application"
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -270,6 +273,9 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Azure AD Application"
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
@@ -548,6 +554,8 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
@@ -645,6 +653,9 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
