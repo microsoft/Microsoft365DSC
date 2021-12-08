@@ -444,6 +444,7 @@ function Test-M365DSCParameterState
         [System.String]
         $Source = 'Generic'
     )
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", "$Source")
@@ -749,6 +750,7 @@ function Test-M365DSCParameterState
         foreach ($key in $DriftedParameters.Keys)
         {
             Write-Verbose -Message "Detected Drifted Parameter [$Source]$key"
+
             #region Telemetry
             $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
             $driftedData.Add("Event", "DriftedParameter")
@@ -766,6 +768,7 @@ function Test-M365DSCParameterState
             #endregion
             $EventMessage += "            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n"
         }
+
         #region Telemetry
         $data.Add("Event", "ConfigurationDrift")
         #endregion
@@ -787,6 +790,7 @@ function Test-M365DSCParameterState
         Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
             -EventID 1 -Source $Source
     }
+
     #region Telemetry
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -882,9 +886,39 @@ function Export-M365DSCConfiguration
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $outdatedOrMissingAssemblies = Test-M365DSCDependencies
+    if ($outdatedOrMissingAssemblies)
+    {
+        foreach ($dependency in $outdatedOrMissingAssemblies)
+        {
+            Write-Host "Updating dependency {$($dependency.ModuleName)} to version {$($dependency.RequiredVersion)}..." -NoNewline
+            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force | Out-Null
+            Write-Host $Global:M365DSCEmojiGreenCheckmark
+        }
+    }
+
     if ($null -eq $MaxProcesses)
     {
         $MaxProcesses = 16
+    }
+
+    # Clear the Connection Cache from MSCloudLoginAssistant
+    $Global:MsCloudLoginConnectionProfile = $null
+
+    # Make sure we are not connected to Microsoft Graph on another tenant
+    try
+    {
+        Disconnect-MgGraph | Out-Null
+    }
+    catch
+    {
+        Write-Verbose -Message "No existing connections to Microsoft Graph"
+    }
+
+    # Default to Credential if no authentication mechanism were provided
+    if (-not $Credential -and (-not $ApplicationId -or -not $TenantId -or (-not $ApplicationSecret -and -not $CertificateThumbprint)))
+    {
+        $Credential = Get-Credential
     }
 
     if ($LaunchWebUI)
@@ -943,6 +977,57 @@ function Export-M365DSCConfiguration
     }
 }
 
+$Script:M365DSCDependenciesValidated = $false
+function Confirm-M365DSCDependencies
+{
+    [CmdletBinding()]
+    param()
+
+    if (-not $Script:M365DSCDependenciesValidated)
+    {
+        Write-Verbose -Message "Dependencies were not already validated."
+        $result = Test-M365DSCDependencies
+        if ($result.Length -gt 0)
+        {
+            $ErrorMessage = "The following dependencies need updating:`r`n"
+            foreach ($invalidDependency in $result)
+            {
+                $ErrorMessage += "    * " + $invalidDependency.ModuleName + "`r`n"
+            }
+            $ErrorMessage += "Please run Update-M365DSCDependencies."
+            $Script:M365DSCDependenciesValidated = $false
+            Add-M365DSCEvent -Message $ErrorMessage -EntryType 'Error' `
+                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $tenantIdValue
+            throw $ErrorMessage
+        }
+        else
+        {
+            Write-Verbose -Message "Dependencies were all successfully validated."
+            $Script:M365DSCDependenciesValidated = $true
+        }
+    }
+    else
+    {
+        Write-Verbose -Message "Dependencies were already successfully validated."
+    }
+}
+
+function Import-M365DSCDependencies
+{
+    [CmdletBinding()]
+    param()
+
+    $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
+    $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
+    $dependencies = $manifest.Dependencies
+    $i = 1
+    foreach ($dependency in $dependencies)
+    {
+        Import-Module $dependency.ModuleName -Force
+    }
+}
+
 function Get-M365DSCTenantDomain
 {
     param(
@@ -953,11 +1038,11 @@ function Get-M365DSCTenantDomain
         [Parameter(Mandatory = $true)]
         [System.String]
         $TenantId,
-        
+
         [Parameter()]
         [System.String]
         $ApplicationSecret,
-        
+
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
@@ -1068,6 +1153,9 @@ function New-M365DSCConnection
     {
         $Global:CurrentModeIsExport = $false
     }
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Source", "M365DSCUtil")
@@ -1735,6 +1823,9 @@ function Assert-M365DSCTemplate
     $InformationPreference = 'SilentlyContinue'
     $WarningPreference = 'SilentlyContinue'
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Event", "AssertTemplate")
@@ -1767,6 +1858,9 @@ function Assert-M365DSCBlueprint
     )
     $InformationPreference = 'SilentlyContinue'
     $WarningPreference = 'SilentlyContinue'
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -1842,8 +1936,8 @@ function Test-M365DSCDependenciesForNewVersions
     [CmdletBinding()]
     $InformationPreference = 'Continue'
     $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
-    $manifest = Import-PowerShellDataFile "$currentPath/Microsoft365DSC.psd1"
-    $dependencies = $manifest.RequiredModules
+    $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
+    $dependencies = $manifest.Dependencies
     $i = 1
     foreach ($dependency in $dependencies)
     {
@@ -1867,20 +1961,60 @@ function Test-M365DSCDependenciesForNewVersions
     }
 }
 
+function Test-M365DSCDependencies
+{
+    [CmdletBinding()]
+    $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
+    $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
+    $dependencies = $manifest.Dependencies
+    $missingDependencies = @()
+    foreach ($dependency in $dependencies)
+    {
+        try
+        {
+            Write-Verbose -Message "{$($dependency.ModuleName)} version $($dependency.RequiredVersion)"
+            $module = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript {$_.Version -eq $dependency.RequiredVersion}
+            if (-not $module)
+            {
+                $missingDependencies += $dependency
+            }
+        }
+        catch
+        {
+            Write-Verbose -Message "Error: $_"
+        }
+    }
+    return $missingDependencies
+}
+
 function Update-M365DSCDependencies
 {
     [CmdletBinding()]
+    param(
+        [parameter()]
+        [Switch]
+        $Force
+    )
     $InformationPreference = 'Continue'
     $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
-    $manifest = Import-PowerShellDataFile "$currentPath/Microsoft365DSC.psd1"
-    $dependencies = $manifest.RequiredModules
+    $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
+    $dependencies = $manifest.Dependencies
     $i = 1
     foreach ($dependency in $dependencies)
     {
         Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
         try
         {
-            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force
+            if (-not $Force)
+            {
+                $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript {$_.Version -eq $dependency.RequiredVersion}
+            }
+
+            if (-not $found -or $Force)
+            {
+                Write-Information -Message "Installing $($dependency.ModuleName)"
+                Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force
+            }
         }
         catch
         {

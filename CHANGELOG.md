@@ -1,8 +1,25 @@
 # Change log for Microsoft365DSC
 
+#1.21.1208.1
+
+* AADConditionalAccessPolicy
+  * Added support for Terms of Use;
+* AADGroup
+  * Fixed issue where not all groups were exported;
+* TeamsTeam
+  * Fix issue where Credentials weren't extracted as a variable;
+* TeamChannel
+  * Fixed issue where the exported Team Channel content was empty if
+    Credentials were used to authenticate;
+* MISC
+  * Removed RequiredModules in favor of a new custom dependency manifest;
+* DEPENDENCIES
+  * Updated MicrosoftTeams to 3.0.0;
+  * Updated MSCloudLoginAssistant to 1.0.80;
+
 # 1.21.1124.2
 
-*DEPENDENCIES
+* DEPENDENCIES
   * Updated ReverseDSC to 2.0.0.9;
 
 # 1.21.1124.1

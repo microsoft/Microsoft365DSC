@@ -57,6 +57,9 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters `
         -Url $Url
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -208,6 +211,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of SPOPropertyBag property for $Key at {$Url}"
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -288,6 +294,9 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -364,6 +373,9 @@ function Export-TargetResource
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
             -InboundParameters $PSBoundParameters
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
 
         #region Telemetry
         $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""

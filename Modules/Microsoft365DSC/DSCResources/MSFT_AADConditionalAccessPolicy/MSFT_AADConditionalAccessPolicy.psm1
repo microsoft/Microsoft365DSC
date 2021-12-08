@@ -140,6 +140,10 @@ function Get-TargetResource
         [System.Boolean]
         $PersistentBrowserIsEnabled,
 
+        [Parameter()]
+        [System.String]
+        $TermsOfUse,
+
         #generic
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -171,6 +175,9 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName = $MyInvocation.MyCommand
@@ -189,6 +196,7 @@ function Get-TargetResource
         }
         catch
         {
+            Write-Verbose -Message "Couldn't find existing policy by ID {$Id}"
             $Policy = Get-MgIdentityConditionalAccessPolicy -Filter "DisplayName eq '$DisplayName'"
             if ($Policy.Length -gt 1)
             {
@@ -209,6 +217,7 @@ function Get-TargetResource
 
     if ($null -eq $Policy)
     {
+        Write-Verbose -Message "No existing Policy with name {$DisplayName} were found"
         $currentValues = $PSBoundParameters
         $currentValues.Ensure = "Absent"
         return $currentValues
@@ -219,7 +228,7 @@ function Get-TargetResource
         $PolicyDisplayName = $Policy.DisplayName
 
         Write-Verbose -Message "Get-TargetResource: Process IncludeUsers"
-        #translate IncludeUser GUIDs to UPN, except id value is GuestsOrExternalUsers or All
+        #translate IncludeUser GUIDs to UPN, except id value is GuestsOrExternalUsers, None or All
         $IncludeUsers = @()
         if ($Policy.Conditions.Users.IncludeUsers)
         {
@@ -268,13 +277,13 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Get-TargetResource: Process ExcludeUsers"
-        #translate ExcludeUser GUIDs to UPN, except id value is GuestsOrExternalUsers or All
+        #translate ExcludeUser GUIDs to UPN, except id value is GuestsOrExternalUsers, None or All
         $ExcludeUsers = @()
         if ($Policy.Conditions.Users.ExcludeUsers)
         {
             foreach ($ExcludeUserGUID in $Policy.Conditions.Users.ExcludeUsers)
             {
-                if ($ExcludeUserGUID -notin "GuestsOrExternalUsers", "All")
+                if ($ExcludeUserGUID -notin "GuestsOrExternalUsers", "All", "None")
                 {
                     $ExcludeUser = $null
                     try
@@ -608,6 +617,17 @@ function Get-TargetResource
         {
             $PersistentBrowserMode = $null
         }
+
+        $termsOfUseName = $null
+        if ($Policy.GrantControls.TermsOfUse)
+        {
+            $termofUse = Get-MgAgreement | Where-Object -FilterScript {$_.Id -eq $Policy.GrantControls.TermsOfUse}
+            if ($termOfUse)
+            {
+                $termOfUseName = $termOfUse.DisplayName
+            }
+        }
+
         $result = @{
             DisplayName                              = $Policy.DisplayName
             Id                                       = $Policy.Id
@@ -662,6 +682,7 @@ function Get-TargetResource
             PersistentBrowserMode                    = [System.String]$Policy.SessionControls.PersistentBrowser.Mode
             #no translation needed
             #Standard part
+            TermsOfUse                                = $termOfUseName
             Ensure                                   = "Present"
             Credential                               = $Credential
             ApplicationSecret                        = $ApplicationSecret
@@ -815,6 +836,10 @@ function Set-TargetResource
         [System.Boolean]
         $PersistentBrowserIsEnabled,
 
+        [Parameter()]
+        [System.String]
+        $TermsOfUse,
+
         #generic
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -842,6 +867,9 @@ function Set-TargetResource
         $CertificateThumbprint
     )
     Write-Verbose -Message "Setting configuration of AzureAD Conditional Access Policy"
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
@@ -900,10 +928,10 @@ function Set-TargetResource
         }
         foreach ($includeuser in $IncludeUsers)
         {
-            #translate user UPNs to GUID, except id value is GuestsOrExternalUsers or All
+            #translate user UPNs to GUID, except id value is GuestsOrExternalUsers, None or All
             if ($includeuser)
             {
-                if ($includeuser -notin "GuestsOrExternalUsers", "All")
+                if ($includeuser -notin "GuestsOrExternalUsers", "All", "None")
                 {
                     $userguid = $null
                     try
@@ -977,10 +1005,10 @@ function Set-TargetResource
         }
         foreach ($excludeuser in $ExcludeUsers)
         {
-            #translate user UPNs to GUID, except id value is GuestsOrExternalUsers or All
+            #translate user UPNs to GUID, except id value is GuestsOrExternalUsers, None or All
             if ($excludeuser)
             {
-                if ($excludeuser -notin "GuestsOrExternalUsers", "All")
+                if ($excludeuser -notin "GuestsOrExternalUsers", "All", "None")
                 {
                     $userguid = $null
                     try
@@ -1495,11 +1523,22 @@ function Set-TargetResource
         #create and provision Grant Control object
         Write-Verbose -Message "Set-Targetresource: create and provision Grant Control object"
 
-        if ($GrantControlOperator -and $BuiltInControls)
+        if ($GrantControlOperator -and ($BuiltInControls -or $TermsOfUse))
         {
             $GrantControls = @{
                 Operator        = $GrantControlOperator
-                BuiltInControls = $BuiltInControls
+            }
+
+            if ($BuiltInControls)
+            {
+                $GrantControls.Add("BuiltInControls", $BuiltInControls)
+            }
+
+            if ($TermsOfUse)
+            {
+                Write-Verbose -Message "Gettign Terms of Use {$TermsOfUse}"
+                $TermsOfUseObj = Get-MgAgreement | Where-Object -FilterScript {$_.DisplayName -eq $TermsOfUse}
+                $GrantControls.Add('TermsOfUse', $TermsOfUseObj.Id)
             }
 
             #no translation or conversion needed
@@ -1606,6 +1645,8 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Set-Targetresource: create policy $DisplayName"
+        Write-Verbose -Message "Create Parameters:"
+        Write-Verbose -Message (Convert-M365DscHashtableToString $NewParameters)
         try
         {
             New-MgIdentityConditionalAccessPolicy @NewParameters
@@ -1818,6 +1859,10 @@ function Test-TargetResource
         [System.Boolean]
         $PersistentBrowserIsEnabled,
 
+        [Parameter()]
+        [System.String]
+        $TermsOfUse,
+
         #generic
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -1894,6 +1939,9 @@ function Export-TargetResource
         $CertificateThumbprint
     )
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName = $MyInvocation.MyCommand
@@ -1932,6 +1980,7 @@ function Export-TargetResource
                     Credential            = $Credential
                 }
                 $Results = Get-TargetResource @Params
+
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `

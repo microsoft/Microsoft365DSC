@@ -94,6 +94,9 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters -ProfileName 'Beta'
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -149,6 +152,7 @@ function Get-TargetResource
                 Ensure                    = "Present"
                 Credential                = $Credential
                 ApplicationId             = $ApplicationId
+                ApplicationSecret         = $ApplicationSecret
                 TenantId                  = $TenantId
                 CertificateThumbprint     = $CertificateThumbprint
             }
@@ -279,6 +283,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "2 - There are now {$((dir function: | measure).Count) functions}"
     Write-Verbose -Message "Setting configuration of Azure AD ServicePrincipal"
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -411,6 +418,9 @@ function Test-TargetResource
         $CertificateThumbprint
     )
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -471,6 +481,9 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
     Select-MgProfile Beta | Out-Null
 
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
     $CommandName  = $MyInvocation.MyCommand
@@ -492,6 +505,7 @@ function Export-TargetResource
             $Params = @{
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
+                ApplicationSecret     = $ApplicationSecret
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 AppID                 = $AADServicePrincipal.AppId
