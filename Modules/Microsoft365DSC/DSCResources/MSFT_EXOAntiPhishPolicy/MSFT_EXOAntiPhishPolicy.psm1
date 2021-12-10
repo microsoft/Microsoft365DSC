@@ -477,13 +477,14 @@ function Set-TargetResource
         $CreateParams.Remove("Ensure") | Out-Null
         $createParams.Add("Name", $Identity)
         $createParams.Remove("Identity") | Out-Null
-        New-AntiPhishPolicy $PSBoundParameters
+        New-AntiPhishPolicy @PSBoundParameters
     }
     elseif (('Present' -eq $Ensure ) -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing AntiPhishPolicy {$Identity}"
         $UpdateParams = $PSBoundParameters
         $UpdateParams.Remove("Ensure") | Out-Null
+        Set-AntiphishPolicy @UpdateParams
     }
     elseif (('Absent' -eq $Ensure ) -and $currentInstance.Ensure -eq 'Present')
     {

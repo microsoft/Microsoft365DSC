@@ -2093,7 +2093,7 @@ function Set-M365DSCAgentCertificateConfiguration
         }
     }
     M365AgentConfig | Out-Null
-    Set-DSCLocalConfigurationManager M365AgentConfig
+    Set-DSCLocalConfigurationManager M365AgentConfig -Force
 "@
     $LCMConfigContent | Out-File $configOutputFile
     & $configOutputFile
@@ -2124,6 +2124,7 @@ function Set-M365DSCAgentCertificateConfiguration
         Export-PfxCertificate -Cert $existingCertificate.PSPath `
             -FilePath $certificateFilePath.Replace('.cer','.pfx') `
             -Password $securePassword | Out-Null
+        Write-Host "Private Key stored at {$($certificateFilePath.Replace('.cer','.pfx'))}"
     }
     return $thumbprint
 }

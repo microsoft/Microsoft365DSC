@@ -1,6 +1,20 @@
 # Change log for Microsoft365DSC
 
-#1.21.1208.1
+# 1.21.1215.1
+
+* AADConditionalAccessPolicy
+  * Switched to the beta endpoint to allow the export to capture policies
+    with device compliance conditions configured;
+* O365User
+  * Fixed issue where the extraction wasn't properly formatting the temporary
+    password for a user;
+* TeamsMeetingPolicy
+  * Added support for value 'EveryoneInCompanyExcludingGuests' for the
+    AutoAdmittedUsers property;
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to 1.0.82;
+
+# 1.21.1208.1
 
 * AADConditionalAccessPolicy
   * Added support for Terms of Use;

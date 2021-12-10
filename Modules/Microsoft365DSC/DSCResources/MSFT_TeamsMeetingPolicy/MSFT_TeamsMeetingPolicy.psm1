@@ -76,7 +76,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('EveryoneInCompany', 'Everyone', 'EveryoneInSameAndFederatedCompany', 'OrganizerOnly', 'InvitedUsers')]
+        [ValidateSet('EveryoneInCompany', 'Everyone', 'EveryoneInSameAndFederatedCompany', 'OrganizerOnly', 'InvitedUsers', 'EveryoneInCompanyExcludingGuests')]
         $AutoAdmittedUsers,
 
         [Parameter()]
@@ -373,7 +373,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('EveryoneInCompany', 'Everyone', 'EveryoneInSameAndFederatedCompany', 'OrganizerOnly')]
+        [ValidateSet('EveryoneInCompany', 'Everyone', 'EveryoneInSameAndFederatedCompany', 'OrganizerOnly', 'InvitedUsers', 'EveryoneInCompanyExcludingGuests')]
         $AutoAdmittedUsers,
 
         [Parameter()]
@@ -630,7 +630,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('EveryoneInCompany', 'Everyone', 'EveryoneInSameAndFederatedCompany', 'OrganizerOnly')]
+        [ValidateSet('EveryoneInCompany', 'Everyone', 'EveryoneInSameAndFederatedCompany', 'OrganizerOnly', 'InvitedUsers', 'EveryoneInCompanyExcludingGuests')]
         $AutoAdmittedUsers,
 
         [Parameter()]

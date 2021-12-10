@@ -68,7 +68,6 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
 
-    $MaximumFunctionCount = 32000
     Select-MgProfile -Name 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
