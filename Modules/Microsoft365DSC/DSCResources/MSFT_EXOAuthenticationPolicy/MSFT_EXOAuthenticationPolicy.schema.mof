@@ -1,0 +1,35 @@
+[ClassVersion("1.0.0.0"), FriendlyName("EXOAuthenticationPolicy")]
+class MSFT_EXOAuthenticationPolicy : OMI_BaseResource
+{
+    [Key, Description("The Identity parameter specifies the authentication policy you want to modify.")] String Identity;
+    [write, Description("The AllowBasicAuthActiveSync switch specifies whether to allow Basic authentication with Exchange Active Sync")] Boolean AllowBasicAuthActiveSync;
+    [write, Description("The AllowBasicAuthAutodiscover switch specifies whether to allow Basic authentication with Autodiscover")] Boolean AllowBasicAuthAutodiscover;
+    [write, Description("The AllowBasicAuthImap switch specifies whether to allow Basic authentication with IMAP.")] Boolean AllowBasicAuthImap;
+    [write, Description("The AllowBasicAuthMapi switch specifies whether to allow Basic authentication with MAPI.")] Boolean AllowBasicAuthMapi;
+    [write, Description("The AllowBasicAuthOfflineAddressBook switch specifies whether to allow Basic authentication with Offline Address Books.")] Boolean AllowBasicAuthOfflineAdressBook;
+    [write, Description("The AllowBasicAuthOutlookService switch specifies whether to allow Basic authentication with the Outlook service.")] Boolean AllowBasicAuthOutlookService;
+    [write, Description("The AllowBasicAuthPop switch specifies whether to allow Basic authentication with POP.")] Boolean AllowBasicAuthPop;
+    [write, Description("The AllowBasicAuthPowerShell switch specifies whether to allow Basic authentication with PowerShell.")] Boolean AllowBasicAuthPowershell;
+    [write, Description("The AllowBasicAuthReporting Web Services switch specifies whether to allow Basic authentication with reporting web services.")] Boolean AllowBasicAuthReportingWebServices;
+    [write, Description("The AllowBasicAuthRpc switch specifies whether to allow Basic authentication with RPC.")] Boolean AllowBasicAuthRpc;
+    [write, Description("The AllowBasicAuthSmtp switch specifies whether to allow Basic authentication with SMTP.")] Boolean AllowBasicAuthSmtp;
+    [write, Description("The AllowBasicAuthWebServices switch specifies whether to allow Basic authentication with Exchange Web Services (EWS).")] Boolean AllowBasicAuthWebServices;
+    [write, Description("The BlockLegacyAuthActiveSync switch specifies whether to allow only modern authentication with Exchange ActiveSync in Exchange 2019 CU2 or later hybrid environments.")] Boolean BlockLegacyAuthActiveSync;
+    [write, Description("The BlockLegacyAuthAutodiscover switch specifies whether to allow only modern authentication with Autodiscover in Exchange 2019 CU2 or later hybrid environments.")] Boolean BlockLegacyAuthAutodiscover;
+    [write, Description("The BlockLegacyAuthImap switch specifies whether to allow only modern authentication with IMAP in Exchange 2019 CU2 or later hybrid environments.")] Boolean BlockLegacyAuthImap;
+    [write, Description("The BlockLegacyAuthMapi switch specifies whether to allow only modern authentication with MAPI in Exchange 2019 CU2 or later hybrid environments.")] Boolean BlockLegacyAuthMapi;
+    [write, Description("The BlockLegacyAuthOfflineAddressBook switch specifies whether to allow only modern authentication with Offline Address Books in Exchange 2019 CU2 or later hybrid environments.")] Boolean BlockLegacyAuthOfflineAdressBook;
+    [write, Description("The BlockLegacyAuthPop switch specifies whether to allow only modern authentication with POP in Exchange 2019 CU2 or later hybrid environments.")] Boolean BlockLegacyAuthPop;
+    [write, Description("The BlockLegacyAuthRpc switch specifies whether to allow only modern authentication with RPC in Exchange 2019 CU2 or later hybrid environments.")] Boolean BlockLegacyAuthRpc;
+    [write, Description("The BlockLegacyAuthWebServices switch specifies whether to allow only modern authentication with Exchange Web Services (EWS) in Exchange 2019 CU2 or later hybrid environments.")] Boolean BlockLegacyAuthWebServices;
+    [Write, Description("The AccessRight parameter specifies the permission that you want to assign in the application access policy."), ValueMap{"RestrictAccess","DenyAccess"}, Values{"RestrictAccess","DenyAccess"}] String AccessRight;
+    [Write, Description("The AppID parameter specifies the GUID of the apps to include in the policy.")] String AppID[];
+    [Write, Description("The PolicyScopeGroupID parameter specifies the recipient to define in the policy. You can use any value that uniquely identifies the recipient.")] String PolicyScopeGroupId;
+    [Write, Description("Specify if the Application Access Policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
+};
