@@ -104,7 +104,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Identity                                      = 'Test Channels Policy'
                         Description                                   = 'Test Description'
                         AllowChannelSharingToExternalUser             = $True;
-                        AllowOrgWideTeamCreation                      = $True;
+                        AllowOrgWideTeamCreation                      = $False;
                         AllowPrivateChannelCreation                   = $True;
                         AllowPrivateTeamDiscovery                     = $True;
                         AllowSharedChannelCreation                    = $True;
