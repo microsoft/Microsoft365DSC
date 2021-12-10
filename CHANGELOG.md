@@ -5,6 +5,10 @@
 * AADConditionalAccessPolicy
   * Switched to the beta endpoint to allow the export to capture policies
     with device compliance conditions configured;
+* EXOAntiphishPolicy
+  * Fixed an issue where trying to create a new policy would result in its
+    Identity being set to System.Collections.Hashtable;
+    FIXES #1620
 * O365User
   * Fixed issue where the extraction wasn't properly formatting the temporary
     password for a user;
