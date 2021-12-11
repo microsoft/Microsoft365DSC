@@ -9,6 +9,9 @@
   * Fixed an issue where trying to create a new policy would result in its
     Identity being set to System.Collections.Hashtable;
     FIXES #1620
+  * Fix for the MakeDefault property where it wasn't properly setting existing
+    policies to default.
+    FIXES #1582
 * O365User
   * Fixed issue where the extraction wasn't properly formatting the temporary
     password for a user;
