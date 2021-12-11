@@ -149,7 +149,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         EnableTargetedUserProtection          = $false
                         EnableUnusualCharactersSafetyTips     = $false
                         EnableViaTag                          = $false
-                        MakeDefault                           = $false
+                        IsDefault                             = $false
                         TreatSoftPassAsAuthenticated          = $true
                         AuthenticationFailAction              = 'Quarantine'
                         TargetedDomainProtectionAction        = 'BccMessage'
