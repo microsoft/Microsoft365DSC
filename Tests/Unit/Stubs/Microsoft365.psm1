@@ -5070,6 +5070,10 @@ function Set-AntiPhishPolicy
     param(
         [Parameter()]
         [System.Object]
+        $EnableAntispoofEnforcement,
+
+        [Parameter()]
+        [System.Object]
         $EnableFirstContactSafetyTips,
 
         [Parameter()]
