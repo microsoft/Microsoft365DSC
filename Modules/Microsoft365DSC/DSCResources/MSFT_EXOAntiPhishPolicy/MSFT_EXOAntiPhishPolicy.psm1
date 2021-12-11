@@ -235,7 +235,7 @@ function Get-TargetResource
                 ImpersonationProtectionState                  = $AntiPhishPolicy.ImpersonationProtectionState
                 MailboxIntelligenceProtectionAction           = $AntiPhishPolicy.MailboxIntelligenceProtectionAction
                 MailboxIntelligenceProtectionActionRecipients = $AntiPhishPolicy.MailboxIntelligenceProtectionActionRecipients
-                MakeDefault                                   = $AntiPhishPolicy.MakeDefault
+                MakeDefault                                   = $AntiPhishPolicy.IsDefault
                 PhishThresholdLevel                           = $PhishThresholdLevelValue
                 TargetedDomainActionRecipients                = $AntiPhishPolicy.TargetedDomainActionRecipients
                 TargetedDomainProtectionAction                = $AntiPhishPolicy.TargetedDomainProtectionAction
