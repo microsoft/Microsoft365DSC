@@ -1,6 +1,13 @@
 # Change log for Microsoft365DSC
 
-#1.21.1208.1
+# 1.21.1215.1
+
+* EXOAntiphishPolicy
+  * Fix for the MakeDefault property where it wasn't properly setting existing
+    policies to default.
+    FIXES #1582
+
+# 1.21.1208.1
 
 * AADConditionalAccessPolicy
   * Added support for Terms of Use;

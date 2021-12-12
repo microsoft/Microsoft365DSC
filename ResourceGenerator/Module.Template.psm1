@@ -92,15 +92,10 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found something with displayName {$DisplayName}"
         $results = @{
-
             <#ResourceGenerator
             #region resource generator code
-            # TODO
-            <HashTableMapping>
-            # TODO END
-            #endregion
+<HashTableMapping>
             ResourceGenerator#>
-
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -108,7 +103,7 @@ function Get-TargetResource
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
         }
-        <#ComplexTypeContent#>
+<#ComplexTypeContent#>
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -223,9 +218,29 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating {$DisplayName}"
-        $UpdateParameters = $PSBoundParameters
+        [System.Collections.Hashtable]$UpdateParameters = $PSBoundParameters
         $UpdateParameters.Remove("Id") | Out-Null
         $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+
+        $ConvertedParameters = @()
+        foreach ($key in $UpdateParameters.Keys)
+        {
+            if (($UpdateParameters[$key]).GetType().Name -eq 'CimInstance')
+            {
+                Write-Verbose -Message "Converting complex property {$key} to Hashtable"
+                $hashtableValue = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters[$key]
+                $currentParameter = @{
+                    Name = $key
+                    Value = $hashtableValue
+                }
+                $ConvertedParameters += $currentParameter
+            }
+        }
+
+        foreach ($convertedParameter in $ConvertedParameters)
+        {
+            $UpdateParameters[$convertedParameter.Name] = $convertedParameter.Value
+        }
         <#
         if ($AdditionalProperties)
         {
@@ -493,11 +508,29 @@ function Get-M365DSCDRGComplexTypeToString
         return $null
     }
     $currentProperty = "MSFT_$CIMInstanceName{`r`n"
+    $keyNotNull = 0
     foreach ($key in $ComplexObject.Keys)
     {
-        $currentProperty += "                " + $key + " = '" + $ComplexObject[$key] + "'`r`n"
+        if ($ComplexObject[$key])
+        {
+            $keyNotNull++
+
+            if ($ComplexObject[$key].GetType().Name -eq 'Boolean')
+            {
+                $currentProperty += "                " + $key + " = `$" + $ComplexObject[$key].ToString() + "`r`n"
+            }
+            else
+            {
+                $currentProperty += "                " + $key + " = '" + $ComplexObject[$key] + "'`r`n"
+            }
+        }
     }
     $currentProperty += "            }"
+
+    if ($keyNotNull -eq 0)
+    {
+        $currentProperty = $null
+    }
     return $currentProperty
 }
 

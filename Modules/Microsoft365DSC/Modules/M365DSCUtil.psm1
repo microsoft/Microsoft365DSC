@@ -1990,6 +1990,11 @@ function Test-M365DSCDependencies
 function Update-M365DSCDependencies
 {
     [CmdletBinding()]
+    param(
+        [parameter()]
+        [Switch]
+        $Force
+    )
     $InformationPreference = 'Continue'
     $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
     $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
@@ -2000,7 +2005,16 @@ function Update-M365DSCDependencies
         Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
         try
         {
-            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force
+            if (-not $Force)
+            {
+                $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript {$_.Version -eq $dependency.RequiredVersion}
+            }
+
+            if (-not $found -or $Force)
+            {
+                Write-Information -Message "Installing $($dependency.ModuleName)"
+                Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force
+            }
         }
         catch
         {
