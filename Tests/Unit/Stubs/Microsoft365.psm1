@@ -1207,12 +1207,12 @@ function New-AntiPhishPolicy
         $EnableFirstContactSafetyTips,
 
         [Parameter()]
-        [System.Object[]]
-        $EnableAntispoofEnforcement,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $MakeDefault,
+
+        [Parameter()]
+        [System.Object]
+        $EnableAntispoofEnforcement,
 
         [Parameter()]
         [System.Object]
@@ -5068,6 +5068,10 @@ function Set-AntiPhishPolicy
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Object]
+        $EnableAntispoofEnforcement,
+
         [Parameter()]
         [System.Object]
         $EnableFirstContactSafetyTips,
