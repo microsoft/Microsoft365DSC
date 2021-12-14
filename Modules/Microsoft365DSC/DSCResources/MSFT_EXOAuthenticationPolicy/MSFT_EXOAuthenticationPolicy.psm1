@@ -9,21 +9,48 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
-        [ValidateSet('RestrictAccess', 'DenyAccess')]
-        [System.String]
-        $AccessRight,
+        [Switch]
+        $AllowBasicAuthActiveSync,
 
         [Parameter()]
-        [System.String[]]
-        $AppID,
+        [Switch]
+        $AllowBasicAuthImap,
 
         [Parameter()]
-        [System.String]
-        $PolicyScopeGroupId,
+        [Switch]
+        $AllowBasicAuthMapi,
 
         [Parameter()]
-        [System.String]
-        $Description,
+        [Switch]
+        $AllowBasicAuthOfflineAddressBook,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthOutlookService,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPop,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPowerShell,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthReportingWebServices,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthRpc,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthSmtp,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthWebServices,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -55,7 +82,7 @@ function Get-TargetResource
         $CertificatePassword
     )
 
-    Write-Verbose -Message "Getting Application Access Policy configuration for $Identity"
+    Write-Verbose -Message "Getting Authentication Policy configuration for $Identity"
     if ($Global:CurrentModeIsExport)
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -87,42 +114,50 @@ function Get-TargetResource
     {
         try
         {
-            $AllApplicationAccessPolicies = Get-ApplicationAccessPolicy -ErrorAction Stop
+            $AllAuthenticationPolicies = Get-AuthenticationPolicy -ErrorAction Stop
         }
         catch
         {
             if ($_.Exception -like "The operation couldn't be performed because object*")
             {
-                Write-Verbose "Could not obtain Application Access Policies for Tenant"
+                Write-Verbose "Could not obtain Authentication Policies for Tenant"
                 return $nullReturn
             }
         }
 
-        $ApplicationAccessPolicy = $AllApplicationAccessPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        $AuthenticationPolicy = $AllAuthenticationPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
 
-        if ($null -eq $ApplicationAccessPolicy)
+        if ($null -eq $AuthenticationPolicy)
         {
-            Write-Verbose -Message "Application Access Policy $($Identity) does not exist."
+            Write-Verbose -Message "Authentication Policy $($Identity) does not exist."
             return $nullReturn
         }
         else
         {
             $result = @{
-                Identity              = $ApplicationAccessPolicy.Identity
-                AccessRight           = $ApplicationAccessPolicy.AccessRight
-                AppID                 = $ApplicationAccessPolicy.AppID
-                PolicyScopeGroupId    = $ApplicationAccessPolicy.ScopeIdentity
-                Description           = $ApplicationAccessPolicy.Description
-                Ensure                = 'Present'
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePath       = $CertificatePath
-                CertificatePassword   = $CertificatePassword
-                TenantId              = $TenantId
+                Identity                            = $AuthenticationPolicy.Identity
+                AllowBasicAuthActiveSync            = $AuthenticationPolicy.AllowBasicAuthActiveSync
+                AllowBasicAuthAutodiscover          = $AuthenticationPolicy.AllowBasicAuthAutodiscover
+                AllowBasicAuthImap                  = $AuthenticationPolicy.AllowBasicAuthImap
+                AllowBasicAuthMapi                  = $AuthenticationPolicy.AllowBasicAuthMapi
+                AllowBasicAuthOfflineAddressBook    = $AuthenticationPolicy.AllowBasicAuthOfflineAddressBook
+                AllowBasicAuthOutlookService        = $AuthenticationPolicy.AllowBasicAuthOutlookService
+                AllowBasicAuthPop                   = $AuthenticationPolicy.AllowBasicAuthPop
+                AllowBasicAuthPowerShell            = $AuthenticationPolicy.AllowBasicAuthPowerShell
+                AllowBasicAuthReportingWebServices  = $AuthenticationPolicy.AllowBasicAuthReportingWebServices
+                AllowBasicAuthRpc                   = $AuthenticationPolicy.AllowBasicAuthRpc
+                AllowBasicAuthSmtp                  = $AuthenticationPolicy.AllowBasicAuthSmtp
+                AllowBasicAuthWebServices           = $AuthenticationPolicy.AllowBasicAuthWebServices
+                Ensure                              = 'Present'
+                Credential                          = $Credential
+                ApplicationId                       = $ApplicationId
+                CertificateThumbprint               = $CertificateThumbprint
+                CertificatePath                     = $CertificatePath
+                CertificatePassword                 = $CertificatePassword
+                TenantId                            = $TenantId
             }
 
-            Write-Verbose -Message "Found Application Access Policy $($Identity)"
+            Write-Verbose -Message "Found Authentication Policy $($Identity)"
             return $result
         }
     }
@@ -162,21 +197,48 @@ function Set-TargetResource
         $Identity,
 
         [Parameter()]
-        [ValidateSet('RestrictAccess', 'DenyAccess')]
-        [System.String]
-        $AccessRight,
+        [Switch]
+        $AllowBasicAuthActiveSync,
 
         [Parameter()]
-        [System.String[]]
-        $AppID,
+        [Switch]
+        $AllowBasicAuthImap,
 
         [Parameter()]
-        [System.String]
-        $PolicyScopeGroupId,
+        [Switch]
+        $AllowBasicAuthMapi,
 
         [Parameter()]
-        [System.String]
-        $Description,
+        [Switch]
+        $AllowBasicAuthOfflineAddressBook,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthOutlookService,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPop,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPowerShell,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthReportingWebServices,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthRpc,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthSmtp,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthWebServices,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -208,9 +270,9 @@ function Set-TargetResource
         $CertificatePassword
     )
 
-    Write-Verbose -Message "Setting Application Access Policy configuration for $Identity"
+    Write-Verbose -Message "Setting Authentication Policy configuration for $Identity"
 
-    $currentApplicationAccessPolicyConfig = Get-TargetResource @PSBoundParameters
+    $currentAuthenticationPolicyConfig = Get-TargetResource @PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -227,55 +289,47 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $NewApplicationAccessPolicyParams = @{
-        AccessRight        = $AccessRight
-        AppID              = $AppID
-        PolicyScopeGroupId = $PolicyScopeGroupId
-        Description        = $Description
-        Confirm            = $false
+    $NewAuthenticationPolicyParams = @{
+        Identity                            = $Identity
+        AllowBasicAuthActiveSync            = $AllowBasicAuthActiveSync
+        AllowBasicAuthAutodiscover          = $AllowBasicAuthAutodiscover
+        AllowBasicAuthImap                  = $AllowBasicAuthImap
+        AllowBasicAuthMapi                  = $AllowBasicAuthMapi
+        AllowBasicAuthOfflineAddressBook    = $AllowBasicAuthOfflineAddressBook
+        AllowBasicAuthOutlookService        = $AllowBasicAuthOutlookService
+        AllowBasicAuthPop                   = $AllowBasicAuthPop
+        AllowBasicAuthPowerShell            = $AllowBasicAuthPowerShell
+        AllowBasicAuthReportingWebServices  = $AllowBasicAuthReportingWebServices
+        AllowBasicAuthRpc                   = $AllowBasicAuthRpc
+        AllowBasicAuthSmtp                  = $AllowBasicAuthSmtp
+        AllowBasicAuthWebServices           = $AllowBasicAuthWebServices
     }
 
-    $SetApplicationAccessPolicyParams = @{
-        Identity    = $Identity
-        Description = $Description
-        Confirm     = $false
-    }
-
-    # CASE: Application Access Policy doesn't exist but should;
-    if ($Ensure -eq "Present" -and $currentApplicationAccessPolicyConfig.Ensure -eq "Absent")
+    # CASE: Authentication Policy doesn't exist but should;
+    if ($Ensure -eq "Present" -and $currentAuthenticationPolicyConfig.Ensure -eq "Absent")
     {
-        Write-Verbose -Message "Application Access Policy '$($Identity)' does not exist but it should. Create and configure it."
-        # Create Application Access Policy
-        New-ApplicationAccessPolicy @NewApplicationAccessPolicyParams
-
+        Write-Verbose -Message "Authentication Policy '$($Identity)' does not exist but it should. Create and configure it."
+        # Create Authentication Policy
+        New-AuthenticationPolicy @NewAuthenticationPolicyParams
     }
-    # CASE: Application Access Policy exists but it shouldn't;
-    elseif ($Ensure -eq "Absent" -and $currentApplicationAccessPolicyConfig.Ensure -eq "Present")
+    # CASE: Authentication Policy exists but it shouldn't;
+    elseif ($Ensure -eq "Absent" -and $currentAuthenticationPolicyConfig.Ensure -eq "Present")
     {
-        Write-Verbose -Message "Application Access Policy '$($Identity)' exists but it shouldn't. Remove it."
-        Remove-ApplicationAccessPolicy -Identity $Identity -Confirm:$false
+        Write-Verbose -Message "Authentication Policy '$($Identity)' exists but it shouldn't. Remove it."
+        Remove-AuthenticationPolicy -Identity $Identity -Confirm:$false
     }
-    # CASE: Application Access Policy exists and it should, but Description attribute has different values than desired (Set-ApplicationAccessPolicy is only able to change description attribute)
-    elseif ($Ensure -eq "Present" -and $currentApplicationAccessPolicyConfig.Ensure -eq "Present" -and $currentApplicationAccessPolicyConfig.Description -ne $Description)
+    # CASE: Authentication Policy exists and it should, but has different values than the desired one
+    elseif ($Ensure -eq "Present" -and $currentAuthenticationPolicyConfig.Ensure -eq "Present")
     {
-        Write-Verbose -Message "Application Access Policy '$($Identity)' already exists, but needs updating."
-        Write-Verbose -Message "Setting Application Access Policy $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $SetApplicationAccessPolicyParams)"
-        Set-ApplicationAccessPolicy @SetApplicationAccessPolicyParams
-    }
-    # CASE: Application Access Policy exists and it should, but has different values than the desired one
-    # Set-ApplicationAccessPolicy is only able to change description attribute, therefore re-create policy
-    elseif ($Ensure -eq "Present" -and $currentApplicationAccessPolicyConfig.Ensure -eq "Present" -and $currentApplicationAccessPolicyConfig.Description -eq $Description)
-    {
-        Write-Verbose -Message "Re-create Application Access Policy '$($Identity)'"
-        Remove-ApplicationAccessPolicy -Identity $Identity -Confirm:$false
-        New-ApplicationAccessPolicy @NewApplicationAccessPolicyParams
+        Write-Verbose -Message "Authentication Policy '$($Identity)' exists. Updating settings."
+        Set-AuthenticationPolicy @NewAuthenticationPolicyParams
     }
 }
 
 function Test-TargetResource
 {
     [CmdletBinding()]
-    [OutputType([System.Boolean])]
+    [OutputType([Switch])]
     param
     (
         [Parameter(Mandatory = $true)]
@@ -283,21 +337,48 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
-        [ValidateSet('RestrictAccess', 'DenyAccess')]
-        [System.String]
-        $AccessRight,
+        [Switch]
+        $AllowBasicAuthActiveSync,
 
         [Parameter()]
-        [System.String[]]
-        $AppID,
+        [Switch]
+        $AllowBasicAuthImap,
 
         [Parameter()]
-        [System.String]
-        $PolicyScopeGroupId,
+        [Switch]
+        $AllowBasicAuthMapi,
 
         [Parameter()]
-        [System.String]
-        $Description,
+        [Switch]
+        $AllowBasicAuthOfflineAddressBook,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthOutlookService,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPop,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPowerShell,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthReportingWebServices,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthRpc,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthSmtp,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthWebServices,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -340,7 +421,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing Application Access Policy configuration for $Identity"
+    Write-Verbose -Message "Testing Authentication Policy configuration for $Identity"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -371,6 +452,59 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthActiveSync,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthImap,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthMapi,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthOfflineAddressBook,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthOutlookService,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPop,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPowerShell,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthReportingWebServices,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthRpc,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthSmtp,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthWebServices,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -415,20 +549,20 @@ function Export-TargetResource
     {
         try
         {
-            [array]$AllApplicationAccessPolicies = Get-ApplicationAccessPolicy -ErrorAction SilentlyContinue
+            [array]$AllAuthenticationPolicies = Get-AuthenticationPolicy -ErrorAction SilentlyContinue
         }
         catch
         {
             if ($_.Exception -like "*The operation couldn't be performed because object*")
             {
-                Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for Application Access Policies"
+                Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for Authentication Policies"
                 return ""
             }
             throw $_
         }
 
         $dscContent = ""
-        if ($AllApplicationAccessPolicies.Length -eq 0)
+        if ($AllAuthenticationPolicies.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
@@ -437,13 +571,13 @@ function Export-TargetResource
             Write-Host "`r`n" -NoNewline
         }
         $i = 1
-        foreach ($ApplicationAccessPolicy in $AllApplicationAccessPolicies)
+        foreach ($AuthenticationPolicy in $AllAuthenticationPolicies)
         {
-            Write-Host "    |---[$i/$($AllApplicationAccessPolicies.Count)] $($ApplicationAccessPolicy.Identity)" -NoNewline
+            Write-Host "    |---[$i/$($AllAuthenticationPolicies.Count)] $($AuthenticationPolicy.Identity)" -NoNewline
 
             $Params = @{
-                Identity              = $ApplicationAccessPolicy.Identity
-                Credential    = $Credential
+                Identity              = $AuthenticationPolicy.Identity
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
