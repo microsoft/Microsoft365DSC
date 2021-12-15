@@ -2043,7 +2043,7 @@ function Set-M365DSCAgentCertificateConfiguration
 
         [Parameter()]
         [System.String]
-        $Password
+        $Password = "Temp!P@ss123"
     )
 
     $existingCertificate = Get-ChildItem -Path Cert:\LocalMachine\My | `

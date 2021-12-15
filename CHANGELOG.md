@@ -15,6 +15,8 @@
 * O365User
   * Fixed issue where the extraction wasn't properly formatting the temporary
     password for a user;
+* TeamsChannelPolicy
+  * Added support for Shared Channels;
 * TeamsMeetingPolicy
   * Added support for value 'EveryoneInCompanyExcludingGuests' for the
     AutoAdmittedUsers property;
