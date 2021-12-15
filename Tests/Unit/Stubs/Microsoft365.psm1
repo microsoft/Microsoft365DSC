@@ -1212,6 +1212,10 @@ function New-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
+        $EnableAntispoofEnforcement,
+
+        [Parameter()]
+        [System.Object]
         $PhishThresholdLevel,
 
         [Parameter()]
@@ -5064,6 +5068,10 @@ function Set-AntiPhishPolicy
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Object]
+        $EnableAntispoofEnforcement,
+
         [Parameter()]
         [System.Object]
         $EnableFirstContactSafetyTips,

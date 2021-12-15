@@ -196,7 +196,7 @@ function Get-TargetResource
             StreetAddress        = $user.StreetAddress
             Title                = $user.JobTitle
             UserType             = $user.UserType
-            Credential   = $Credential
+            Credential           = $Credential
             Ensure               = "Present"
         }
         return [System.Collections.Hashtable] $results
@@ -727,7 +727,7 @@ function Export-TargetResource
             {
                 $Params = @{
                     UserPrincipalName     = $userUPN
-                    Credential    = $Credential
+                    Credential            = $Credential
                     Password              = $Credential
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
@@ -737,6 +737,7 @@ function Export-TargetResource
                 }
 
                 $Results = Get-TargetResource @Params
+                $Results.Password = "New-Object System.Management.Automation.PSCredential('Password', (ConvertTo-SecureString 'Pass@word!11' -AsPlainText -Force));"
                 if ($null -ne $Results.UserPrincipalName)
                 {
                     $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

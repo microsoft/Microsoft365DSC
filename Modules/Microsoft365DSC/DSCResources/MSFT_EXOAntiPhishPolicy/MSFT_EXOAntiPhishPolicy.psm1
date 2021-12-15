@@ -235,7 +235,7 @@ function Get-TargetResource
                 ImpersonationProtectionState                  = $AntiPhishPolicy.ImpersonationProtectionState
                 MailboxIntelligenceProtectionAction           = $AntiPhishPolicy.MailboxIntelligenceProtectionAction
                 MailboxIntelligenceProtectionActionRecipients = $AntiPhishPolicy.MailboxIntelligenceProtectionActionRecipients
-                MakeDefault                                   = $AntiPhishPolicy.MakeDefault
+                MakeDefault                                   = $AntiPhishPolicy.IsDefault
                 PhishThresholdLevel                           = $PhishThresholdLevelValue
                 TargetedDomainActionRecipients                = $AntiPhishPolicy.TargetedDomainActionRecipients
                 TargetedDomainProtectionAction                = $AntiPhishPolicy.TargetedDomainProtectionAction
@@ -477,13 +477,14 @@ function Set-TargetResource
         $CreateParams.Remove("Ensure") | Out-Null
         $createParams.Add("Name", $Identity)
         $createParams.Remove("Identity") | Out-Null
-        New-AntiPhishPolicy $PSBoundParameters
+        New-AntiPhishPolicy @PSBoundParameters
     }
     elseif (('Present' -eq $Ensure ) -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing AntiPhishPolicy {$Identity}"
         $UpdateParams = $PSBoundParameters
         $UpdateParams.Remove("Ensure") | Out-Null
+        Set-AntiphishPolicy @UpdateParams
     }
     elseif (('Absent' -eq $Ensure ) -and $currentInstance.Ensure -eq 'Present')
     {
