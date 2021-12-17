@@ -8,10 +8,12 @@ function Get-ApplicationInsightsTelemetryClient
         $AI = "$PSScriptRoot\..\Dependencies\Microsoft.ApplicationInsights.dll"
         [Reflection.Assembly]::LoadFile($AI) | Out-Null
 
-        $InstrumentationKey = "bc5aa204-0b1e-4499-a955-d6a639bdb4fa"
-        if ($null -ne $env:M365DSCTelemetryInstrumentationKey)
+        $InstrumentationKey = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryInstrumentationKey', `
+                [System.EnvironmentVariableTarget]::Machine)
+
+        if ($null -ne $InstrumentationKey)
         {
-            $InstrumentationKey = $env:M365DSCTelemetryInstrumentationKey
+            $InstrumentationKey = "bc5aa204-0b1e-4499-a955-d6a639bdb4fa"
         }
         $TelClient = [Microsoft.ApplicationInsights.TelemetryClient]::new()
         $TelClient.InstrumentationKey = $InstrumentationKey
