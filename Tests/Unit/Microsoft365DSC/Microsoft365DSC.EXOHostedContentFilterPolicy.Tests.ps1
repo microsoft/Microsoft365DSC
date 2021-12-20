@@ -257,7 +257,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         InlineSafetyTipsEnabled                  = $true
                         BulkSpamAction                           = 'MoveToJmf'
                         PhishSpamAction                          = 'Quarantine'
-                        MakeDefault                              = $false
+                        IsDefault                                = $false
                     }
                 }
             }
