@@ -2472,7 +2472,7 @@ function Get-M365DSCComponentsForAuthenticationType
     param(
         [Parameter()]
         [System.String[]]
-        [ValidateSet('Application', 'Certificate', 'Credentials')]
+        [ValidateSet('Application', 'ApplicationWithSecret', 'Certificate', 'Credentials')]
         $AuthenticationMethod
     )
 
@@ -2507,7 +2507,7 @@ function Get-M365DSCComponentsForAuthenticationType
         }
 
         # Case - Resource contains ApplicationSecret
-        elseif ($AuthenticationMethod.Contains("Application") -and `
+        elseif ($AuthenticationMethod.Contains("ApplicationWithSecret") -and `
                 $parameters.Contains('ApplicationId') -and `
                 $parameters.Contains('ApplicationSecret') -and `
                 $parameters.Contains('TenantId'))
