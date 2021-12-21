@@ -617,7 +617,7 @@ function Set-TargetResource
     $SearchConfigXML.OuterXml | Out-File $tempPath
 
     # Create the Managed Property if it doesn't already exist
-    Set-PnPSearchConfiguration -Scope Subscription -Path $tempPath
+    Set-PnPSearchConfiguration -Scope 'Subscription' -Configuration $SearchConfigXML.OuterXml
 
     #region Aliases
     if ($null -ne $Aliases)
@@ -821,13 +821,18 @@ function Test-TargetResource
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('Credential') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure", `
-            "Name",
-        "Type")
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
