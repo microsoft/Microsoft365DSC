@@ -123,14 +123,13 @@ function Start-M365DSCConfigurationExtract
         }
         if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint) -or `
                 -not [System.String]::IsNullOrEmpty($CertificatePassword) -or `
-                -not [System.String]::IsNullOrEmpty($CertificatePath) -or `
-                -not [System.String]::IsNullOrEmpty($TenantId))
+                -not [System.String]::IsNullOrEmpty($CertificatePath))
         {
             $AuthMethods += "Certificate"
         }
         if (-not [System.String]::IsNullOrEmpty($ApplicationSecret))
         {
-            $AuthMethods += "Application"
+            $AuthMethods += "ApplicationWithSecret"
         }
         $allSupportedResources = Get-M365DSCComponentsForAuthenticationType -AuthenticationMethod $AuthMethods
 
@@ -376,7 +375,10 @@ function Start-M365DSCConfigurationExtract
         }
 
         # Retrieve the list of Workloads represented by the resources to export and pre-authenticate to each one;
-        $WorkloadsToConnectTo = Get-M365DSCWorkloadsListFromResourceNames -ResourceNames $ResourcesToExport
+        if ($ResourcesToExport.Length -gt 0)
+        {
+            $WorkloadsToConnectTo = Get-M365DSCWorkloadsListFromResourceNames -ResourceNames $ResourcesToExport
+        }
         foreach ($Workload in $WorkloadsToConnectTo)
         {
             Write-Host "Connecting to {$Workload}..." -NoNewline

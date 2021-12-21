@@ -9,6 +9,10 @@
 * SPOUserProfileProperty
   * Removed the Required key from the schema.mof file for Credential;
     ISSUE #1632
+* MISC
+  * Added warning message when ApplicationSecret is used while attempting
+    to export resources for Exchange Online;
+    Fixes #1629
 
 # 1.21.1215.1
 
