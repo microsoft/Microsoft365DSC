@@ -9,6 +9,8 @@
 * SPOUserProfileProperty
   * Removed the Required key from the schema.mof file for Credential;
     ISSUE #1632
+* DEPENDENCIES
+  * Updated all Microsoft.Graph.* dependencies to version 1.9.1;
 * MISC
   * Added warning message when ApplicationSecret is used while attempting
     to export resources for Exchange Online;
