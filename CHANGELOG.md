@@ -2,6 +2,10 @@
 
 # 1.21.1222.1
 
+* EXOHostedCOntentFilterPolicy
+  * Fix for the MakeDefault property where it wasn't properly setting existing
+    policies to default.
+    FIXES #1635
 * SPOUserProfileProperty
   * Removed the Required key from the schema.mof file for Credential;
     ISSUE #1632
