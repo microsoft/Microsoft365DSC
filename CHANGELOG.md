@@ -2,6 +2,9 @@
 
 # 1.21.1222.1
 
+* EXOAntiPhishPolicy
+  * Deprecated the EnableAntispoofEnforcement and TargetDomainProtectionAction parameters;
+    FIXES #1018
 * EXOHostedCOntentFilterPolicy
   * Fix for the MakeDefault property where it wasn't properly setting existing
     policies to default.
