@@ -916,7 +916,7 @@ function Export-M365DSCConfiguration
     }
 
     # Default to Credential if no authentication mechanism were provided
-    if (-not $Credential -and (-not $ApplicationId -or -not $TenantId -or (-not $ApplicationSecret -and -not $CertificateThumbprint)))
+    if (-not $Credential -and (-not $ApplicationId -or -not $TenantId -or (-not $ApplicationSecret -and -not $CertificateThumbprint)) -and -not $LaunchWebUI)
     {
         $Credential = Get-Credential
     }

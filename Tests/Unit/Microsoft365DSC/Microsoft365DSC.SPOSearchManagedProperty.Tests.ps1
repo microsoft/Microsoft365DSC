@@ -85,11 +85,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             <d3p1:CompleteMatching>false</d3p1:CompleteMatching>
             <d3p1:Context>0</d3p1:Context>
             <d3p1:DeleteDisallowed>false</d3p1:DeleteDisallowed>
-            <d3p1:Description/>
+            <d3p1:Description>This is a test</d3p1:Description>
             <d3p1:EnabledForScoping>false</d3p1:EnabledForScoping>
             <d3p1:EntityExtractorBitMap>4161</d3p1:EntityExtractorBitMap>
             <d3p1:ExpandSegments>false</d3p1:ExpandSegments>
-            <d3p1:FullTextIndex/>
+            <d3p1:FullTextIndex>0</d3p1:FullTextIndex>
             <d3p1:HasMultipleValues>false</d3p1:HasMultipleValues>
             <d3p1:IndexOptions>0</d3p1:IndexOptions>
             <d3p1:IsImplicit>false</d3p1:IsImplicit>
@@ -210,7 +210,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential
                 }
                 Mock -CommandName Get-PnPSearchConfiguration -MockWith {
-
                     return $existingValueXML
                 }
 

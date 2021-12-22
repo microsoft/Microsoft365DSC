@@ -2,14 +2,26 @@
 
 # 1.21.1222.1
 
+* AADGroup
+  * Default to Unified type if no GroupTypes are provided;
+    FIXES #850
+* EXOAntiPhishPolicy
+  * Deprecated the EnableAntispoofEnforcement and TargetDomainProtectionAction parameters;
+    FIXES #1018
 * EXOHostedCOntentFilterPolicy
   * Fix for the MakeDefault property where it wasn't properly setting existing
     policies to default.
     FIXES #1635
+* SPOSearchManagedProperty
+  * Fixed an issue with the Aliases retrieval;
 * SPOUserProfileProperty
   * Removed the Required key from the schema.mof file for Credential;
     ISSUE #1632
+* DEPENDENCIES
+  * Updated all Microsoft.Graph.* dependencies to version 1.9.1;
 * MISC
+  * Fixed issue where running Export-M365DSCConfiguration with the -LaunchWebUI
+    parameter would prompt for credentials;
   * Added warning message when ApplicationSecret is used while attempting
     to export resources for Exchange Online;
     Fixes #1629
