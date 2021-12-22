@@ -5,6 +5,9 @@
 * AADGroup
   * Default to Unified type if no GroupTypes are provided;
     FIXES #850
+* EXOAntiPhishPolicy
+  * Deprecated the EnableAntispoofEnforcement and TargetDomainProtectionAction parameters;
+    FIXES #1018
 * EXOHostedCOntentFilterPolicy
   * Fix for the MakeDefault property where it wasn't properly setting existing
     policies to default.

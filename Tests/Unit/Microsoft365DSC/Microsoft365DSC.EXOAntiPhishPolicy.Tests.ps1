@@ -112,7 +112,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AdminDisplayName                    = 'DSC Test Policy'
                     Enabled                             = $true
                     EnableFirstContactSafetyTips        = $false
-                    EnableAntispoofEnforcement          = $true
                     EnableMailboxIntelligence           = $true
                     EnableOrganizationDomainsProtection = $false
                     EnableSimilarDomainsSafetyTips      = $false
@@ -123,7 +122,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnableViaTag                        = $false
                     MakeDefault                         = $false
                     AuthenticationFailAction            = 'Quarantine'
-                    TargetedDomainProtectionAction      = 'BccMessage'
                     TargetedDomainActionRecipients      = @('test@contoso.com', 'test@fabrikam.com')
                     TargetedUserProtectionAction        = 'BccMessage'
                     TargetedUserActionRecipients        = @('test@contoso.com', 'test@fabrikam.com')
@@ -139,7 +137,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AdminDisplayName                      = 'DSC Test Policy'
                         Enabled                               = $true
                         EnableFirstContactSafetyTips          = $false
-                        EnableAntispoofEnforcement            = $true
                         EnableAuthenticationSafetyTip         = $true
                         EnableMailboxIntelligence             = $true
                         EnableOrganizationDomainsProtection   = $false
@@ -152,7 +149,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IsDefault                             = $false
                         TreatSoftPassAsAuthenticated          = $true
                         AuthenticationFailAction              = 'Quarantine'
-                        TargetedDomainProtectionAction        = 'BccMessage'
                         TargetedDomainActionRecipients        = @('test@contoso.com', 'test@fabrikam.com')
                         TargetedUserProtectionAction          = 'BccMessage'
                         TargetedUserActionRecipients          = @('test@contoso.com', 'test@fabrikam.com')
@@ -177,7 +173,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AdminDisplayName                    = 'DSC Test Policy'
                     Enabled                             = $true
                     EnableFirstContactSafetyTips        = $false
-                    EnableAntispoofEnforcement          = $true
                     EnableMailboxIntelligence           = $true
                     EnableOrganizationDomainsProtection = $false
                     EnableSimilarDomainsSafetyTips      = $false
@@ -188,7 +183,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnableViaTag                        = $false
                     MakeDefault                         = $false
                     AuthenticationFailAction            = 'Quarantine'
-                    TargetedDomainProtectionAction      = 'BccMessage'
                     TargetedDomainActionRecipients      = @('test@contoso.com', 'test@fabrikam.com')
                     TargetedUserProtectionAction        = 'BccMessage'
                     TargetedUserActionRecipients        = @('test@contoso.com', 'test@fabrikam.com')
@@ -203,7 +197,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AdminDisplayName                    = 'DSC Test Policy'
                         Enabled                             = $false
                         EnableFirstContactSafetyTips        = $true
-                        EnableAntispoofEnforcement          = $false
                         EnableMailboxIntelligence           = $false
                         EnableOrganizationDomainsProtection = $true
                         EnableSimilarDomainsSafetyTips      = $true
@@ -214,7 +207,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         EnableViaTag                        = $true
                         MakeDefault                         = $true
                         AuthenticationFailAction            = 'MoveToJmf'
-                        TargetedDomainProtectionAction      = 'NoAction'
                         TargetedDomainActionRecipients      = @()
                         TargetedUserProtectionAction        = 'NoAction'
                         TargetedUserActionRecipients        = @()
