@@ -145,6 +145,9 @@ function Get-TargetResource
         $property = $Script:RecentMPExtract.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
         | Where-Object -FilterScript { $_.Value.Name -eq $Name }
 
+        [System.Xml.XmlElement]$aliases = $Script:RecentMPExtract.SearchConfigurationSettings.SearchSchemaConfigurationSettings.Aliases.dictionary.KeyValueOfstringAliasInfoy6h3NzC8 `
+        | Where-Object -FilterScript { $_.Value.ManagedPid -eq $property.Value.Pid }
+
         if ($null -eq $property)
         {
             Write-Verbose -Message "The specified Managed Property {$($Name)} doesn't already exist."
@@ -189,20 +192,20 @@ function Get-TargetResource
             Name                        = [string] $property.Value.Name
             Type                        = [string] $property.Value.ManagedType
             Description                 = [string] $property.Value.Description
-            Searchable                  = [boolean] $property.Value.Searchable
+            Searchable                  = [boolean]::Parse($property.Value.Searchable)
             FullTextIndex               = $FullTextIndex
             FullTextContext             = [UInt32] $property.Value.Context
-            Queryable                   = [boolean] $property.Value.Queryable
-            Retrievable                 = [boolean] $property.Value.Retrievable
-            AllowMultipleValues         = [boolean] $property.Value.HasMultipleValues
+            Queryable                   = [boolean]::Parse($property.Value.Queryable)
+            Retrievable                 = [boolean]::Parse($property.Value.Retrievable)
+            AllowMultipleValues         = [boolean]::Parse($property.Value.HasMultipleValues)
             Refinable                   = $fixedRefinable
             Sortable                    = $fixedSortable
-            Safe                        = [boolean] $property.Value.SafeForAnonymous
-            Aliases                     = [boolean] $property.Value.Aliases
-            TokenNormalization          = [boolean] $property.Value.TokenNormalization
-            CompleteMatching            = [boolean] $property.Value.CompleteMatching
-            LanguageNeutralTokenization = [boolean] $property.Value.LanguageNeutralWordBreaker
-            FinerQueryTokenization      = [boolean] $property.Value.ExpandSegments
+            Safe                        = [boolean]::Parse($property.Value.SafeForAnonymous)
+            Aliases                     = $aliases.Value.Name
+            TokenNormalization          = [boolean]::Parse($property.Value.TokenNormalization)
+            CompleteMatching            = [boolean]::Parse($property.Value.CompleteMatching)
+            LanguageNeutralTokenization = [boolean]::Parse($property.Value.LanguageNeutralWordBreaker)
+            FinerQueryTokenization      = [boolean]::Parse($property.Value.ExpandSegments)
             MappedCrawledProperties     = $mappings
             CompanyNameExtraction       = $CompanyNameExtraction
             Ensure                      = "Present"
@@ -390,6 +393,11 @@ function Set-TargetResource
     if ($null -ne $property)
     {
         $currentPID = $property.Value.Pid
+    }
+    else
+    {
+        $randomizer = [System.Random]::new()
+        $currentPID = $randomizer.Next(1000,9999)
     }
 
     $prop = $SearchConfigXml.ChildNodes[0].SearchSchemaConfigurationSettings.ManagedProperties.dictionary
@@ -617,21 +625,24 @@ function Set-TargetResource
     $SearchConfigXML.OuterXml | Out-File $tempPath
 
     # Create the Managed Property if it doesn't already exist
-    Set-PnPSearchConfiguration -Scope 'Subscription' -Configuration $SearchConfigXML.OuterXml
+    Write-Verbose -Message "Updating core properties for Search Managed Property {$Name}"
+    Set-PnPSearchConfiguration -Scope 'Subscription' -Path $tempPath
 
     #region Aliases
     if ($null -ne $Aliases)
     {
         $aliasesArray = $Aliases.Split(';')
-        $aliasProp = $SearchConfigXml.ChildNodes[0].SearchSchemaConfigurationSettings.Aliases.dictionary
+        $aliasDictNode = $SearchConfigXml.ChildNodes[0].SearchSchemaConfigurationSettings.Aliases.dictionary
 
-        if ($null -eq $currentPID)
+        if ([System.String]::IsNullOrEmpty($currentPID))
         {
             # Get the managed property back. This is the only way to ensure we have the right PID
             $currentConfigXML = [XML] (Get-PnPSearchConfiguration -Scope Subscription)
-            $property = $currentConfigXML.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
-            | Where-Object -FilterScript { $_.Value.Name -eq $Name }
+            [System.Xml.XmlElement]$property = $Script:currentConfigXML.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
+                | Where-Object -FilterScript { $_.Value.Name -eq $Name }
+
             $currentPID = $property.Value.Pid
+            Write-Verbose -Message "Found current Pid {$currentPID}"
 
             $node = $SearchConfigXML.CreateElement("d3p1:Pid", `
                     "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
@@ -666,21 +677,22 @@ function Set-TargetResource
 
             $node = $SearchConfigXML.CreateElement("d3p1:SchemaId", `
                     "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-            $node.InnerText = "6408"
+            $node.InnerText = "794"
             $valueNode.AppendChild($node) | Out-Null
 
             $mainNode.AppendChild($keyNode) | Out-Null
             $mainNode.AppendChild($valueNode) | Out-Null
-            $aliasProp.AppendChild($mainNode) | Out-Null
+            $SearchConfigXml.ChildNodes[0].SearchSchemaConfigurationSettings.Aliases.dictionary.AppendChild($mainNode) | Out-Null
         }
 
         $tempPath = Join-Path -Path $ENV:TEMP `
             -ChildPath ((New-Guid).ToString().Split('-')[0] + ".config")
+        $SearchConfigXML.OuterXml | Out-File $tempPath
         Write-Verbose -Message "Configuring SPO Search Schema with the following XML Document"
         Write-Verbose $SearchConfigXML.OuterXML
-        $SearchConfigXML.OuterXml | Out-File $tempPath
 
         # Create the aliases on the Managed Property
+        Write-Verbose -Message "Updating Aliases for Search Managed Property {$Name}"
         Set-PnPSearchConfiguration -Scope Subscription -Path $tempPath
     }
 }

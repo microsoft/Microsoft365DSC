@@ -9,6 +9,8 @@
   * Fix for the MakeDefault property where it wasn't properly setting existing
     policies to default.
     FIXES #1635
+* SPOSearchManagedProperty
+  * Fixed an issue with the Aliases retrieval;
 * SPOUserProfileProperty
   * Removed the Required key from the schema.mof file for Credential;
     ISSUE #1632
