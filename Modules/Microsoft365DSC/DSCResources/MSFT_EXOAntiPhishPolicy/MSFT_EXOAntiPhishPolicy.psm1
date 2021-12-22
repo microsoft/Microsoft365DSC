@@ -448,14 +448,14 @@ function Set-TargetResource
 
     if ($EnableAntispoofEnforcement)
     {
-        Write-Verbose -Message "The EnableAntispoofEnforcement parameter is now deprecated." `
-        " It will be removed in the next major release. Please update your configuraton."
+        Write-Verbose -Message ("The EnableAntispoofEnforcement parameter is now deprecated. " + `
+        "It will be removed in the next major release. Please update your configuraton.")
     }
 
     if ($TargetedDomainProtectionAction)
     {
-        Write-Verbose -Message "The TargetedDomainProtectionAction parameter is now deprecated." `
-        " It will be removed in the next major release. Please update your configuraton."
+        Write-Verbose -Message ("The TargetedDomainProtectionAction parameter is now deprecated. "+ `
+        "It will be removed in the next major release. Please update your configuraton.")
     }
 
     Write-Verbose -Message "Setting configuration of AntiPhishPolicy for $Identity"
