@@ -916,7 +916,7 @@ function Export-M365DSCConfiguration
     }
 
     # Default to Credential if no authentication mechanism were provided
-    if (-not $Credential -and (-not $ApplicationId -or -not $TenantId -or (-not $ApplicationSecret -and -not $CertificateThumbprint)))
+    if (-not $Credential -and (-not $ApplicationId -or -not $TenantId -or (-not $ApplicationSecret -and -not $CertificateThumbprint)) -and -not $LaunchWebUI)
     {
         $Credential = Get-Credential
     }
@@ -2129,41 +2129,6 @@ function Set-M365DSCAgentCertificateConfiguration
     return $thumbprint
 }
 
-function Format-M365ServicePrincipalData
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter()]
-        [System.String]
-        $configContent,
-
-        [Parameter()]
-        [System.String]
-        $principal,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
-    )
-    if ($configContent.ToLower().Contains($principal.ToLower()))
-    {
-        $configContent = $configContent -ireplace [regex]::Escape($principal), "`$(`$OrganizationName.Split('.')[0])"
-    }
-    if ($configContent.ToLower().Contains($ApplicationId.ToLower()))
-    {
-        $configContent = $configContent -ireplace [regex]::Escape($ApplicationId), "`$(`$ApplicationId)"
-    }
-    if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint) -and $configContent.ToLower().Contains($CertificateThumbprint.ToLower()))
-    {
-        $configContent = $configContent -ireplace [regex]::Escape($CertificateThumbprint), "`$(`$CertificateThumbprint)"
-    }
-    return $configContent
-}
 function Remove-EmptyValue
 {
     [alias('Remove-EmptyValues')]
@@ -2217,41 +2182,6 @@ function Remove-EmptyValue
     }
 }
 
-function Format-M365ServicePrincipalData
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter()]
-        [System.String]
-        $configContent,
-
-        [Parameter()]
-        [System.String]
-        $principal,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
-    )
-    if ($configContent.ToLower().Contains($principal.ToLower()))
-    {
-        $configContent = $configContent -ireplace [regex]::Escape($principal), "`$(`$OrganizationName.Split('.')[0])"
-    }
-    if ($configContent.ToLower().Contains($ApplicationId.ToLower()))
-    {
-        $configContent = $configContent -ireplace [regex]::Escape($ApplicationId), "`$(`$ApplicationId)"
-    }
-    if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint) -and $configContent.ToLower().Contains($CertificateThumbprint.ToLower()))
-    {
-        $configContent = $configContent -ireplace [regex]::Escape($CertificateThumbprint), "`$(`$CertificateThumbprint)"
-    }
-    return $configContent
-}
 
 function Update-M365DSCExportAuthenticationResults
 {
@@ -2542,7 +2472,7 @@ function Get-M365DSCComponentsForAuthenticationType
     param(
         [Parameter()]
         [System.String[]]
-        [ValidateSet('Application', 'Certificate', 'Credentials')]
+        [ValidateSet('Application', 'ApplicationWithSecret', 'Certificate', 'Credentials')]
         $AuthenticationMethod
     )
 
@@ -2577,7 +2507,7 @@ function Get-M365DSCComponentsForAuthenticationType
         }
 
         # Case - Resource contains ApplicationSecret
-        elseif ($AuthenticationMethod.Contains("Application") -and `
+        elseif ($AuthenticationMethod.Contains("ApplicationWithSecret") -and `
                 $parameters.Contains('ApplicationId') -and `
                 $parameters.Contains('ApplicationSecret') -and `
                 $parameters.Contains('TenantId'))

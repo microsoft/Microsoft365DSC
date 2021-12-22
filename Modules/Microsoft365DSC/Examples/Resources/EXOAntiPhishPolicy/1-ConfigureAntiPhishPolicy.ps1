@@ -20,27 +20,22 @@ Configuration Example
             MakeDefault                           = $null
             PhishThresholdLevel                   = 1
             EnableTargetedDomainsProtection       = $null
-            TreatSoftPassAsAuthenticated          = $True
             Enabled                               = $null
             TargetedDomainsToProtect              = $null
             EnableSimilarUsersSafetyTips          = $null
             ExcludedDomains                       = $null
-            EnableAuthenticationSafetyTip         = $False
             TargetedDomainActionRecipients        = $null
             EnableMailboxIntelligence             = $null
             EnableSimilarDomainsSafetyTips        = $null
-            TargetedDomainProtectionAction        = "NoAction"
             AdminDisplayName                      = ""
             AuthenticationFailAction              = "MoveToJmf"
             TargetedUserProtectionAction          = "NoAction"
             TargetedUsersToProtect                = $null
             EnableTargetedUserProtection          = $null
             ExcludedSenders                       = $null
-            EnableAuthenticationSoftPassSafetyTip = $False
             EnableOrganizationDomainsProtection   = $null
             EnableUnusualCharactersSafetyTips     = $null
             TargetedUserActionRecipients          = $null
-            EnableAntispoofEnforcement            = $True
             Ensure                                = "Present"
             Credential                            = $credsGlobalAdmin
         }
