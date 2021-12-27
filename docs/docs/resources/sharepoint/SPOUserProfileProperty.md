@@ -9,7 +9,7 @@
 | **UserName** | Key | String | Username of the user to configure the profile properties for. E.g. John.Smith@contoso.com ||
 | **Properties** | Write | InstanceArray[] | Array of MSFT_SPOUserProfilePropertyInstance representing the profile properties to set. ||
 | **Ensure** | Write | String | Only accepted value is 'Present'. |Present|
-| **Credential** | Required | PSCredential | Credentials of the Global Admin. ||
+| **Credential** | Write | PSCredential | Credentials of the Global Admin. ||
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
 | **ApplicationSecret** | Write | String | Secret of the Azure Active Directory application to authenticate with. ||
 | **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||

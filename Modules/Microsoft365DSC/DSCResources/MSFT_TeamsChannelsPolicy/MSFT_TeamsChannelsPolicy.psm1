@@ -14,6 +14,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowChannelSharingToExternalUser,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowOrgWideTeamCreation,
 
         [Parameter()]
@@ -23,6 +27,14 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowPrivateChannelCreation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSharedChannelCreation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserToParticipateInExternalSharedChannel,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -66,13 +78,16 @@ function Get-TargetResource
         }
         Write-Verbose -Message "Found Teams Channel Policy {$Identity}"
         return @{
-            Identity                    = $Identity
-            Description                 = $policy.Description
-            AllowOrgWideTeamCreation    = $policy.AllowOrgWideTeamCreation
-            AllowPrivateTeamDiscovery   = $policy.AllowPrivateTeamDiscovery
-            AllowPrivateChannelCreation = $policy.AllowPrivateChannelCreation
-            Ensure                      = 'Present'
-            Credential          = $Credential
+            Identity                                      = $Identity
+            Description                                   = $policy.Description
+            AllowChannelSharingToExternalUser             = $policy.AllowChannelSharingToExternalUser
+            AllowOrgWideTeamCreation                      = $policy.AllowOrgWideTeamCreation
+            AllowPrivateTeamDiscovery                     = $policy.AllowPrivateTeamDiscovery
+            AllowPrivateChannelCreation                   = $policy.AllowPrivateChannelCreation
+            AllowSharedChannelCreation                    = $policy.AllowSharedChannelCreation
+            AllowUserToParticipateInExternalSharedChannel = $policy.AllowUserToParticipateInExternalSharedChannel
+            Ensure                                        = 'Present'
+            Credential                                    = $Credential
         }
     }
     catch
@@ -116,6 +131,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowChannelSharingToExternalUser,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowOrgWideTeamCreation,
 
         [Parameter()]
@@ -125,6 +144,14 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowPrivateChannelCreation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSharedChannelCreation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserToParticipateInExternalSharedChannel,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -194,6 +221,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowChannelSharingToExternalUser,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowOrgWideTeamCreation,
 
         [Parameter()]
@@ -203,6 +234,14 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowPrivateChannelCreation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSharedChannelCreation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserToParticipateInExternalSharedChannel,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]

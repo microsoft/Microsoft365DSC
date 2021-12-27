@@ -173,7 +173,10 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of AzureAD Conditional Access Policy"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'beta'
+
+    Select-MgProfile -Name 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -1952,7 +1955,10 @@ function Export-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -ProfileName 'beta'
+
+    Select-MgProfile -Name 'beta'
 
     try
     {

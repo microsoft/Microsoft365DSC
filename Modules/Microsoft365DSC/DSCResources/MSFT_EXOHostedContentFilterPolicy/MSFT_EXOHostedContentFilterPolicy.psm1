@@ -325,7 +325,7 @@ function Get-TargetResource
                 IncreaseScoreWithNumericIps          = $HostedContentFilterPolicy.IncreaseScoreWithNumericIps
                 IncreaseScoreWithRedirectToOtherPort = $HostedContentFilterPolicy.IncreaseScoreWithRedirectToOtherPort
                 LanguageBlockList                    = $HostedContentFilterPolicy.LanguageBlockList
-                MakeDefault                          = $false
+                MakeDefault                          = $HostedContentFilterPolicy.IsDefault
                 MarkAsSpamBulkMail                   = $HostedContentFilterPolicy.MarkAsSpamBulkMail
                 MarkAsSpamEmbedTagsInHtml            = $HostedContentFilterPolicy.MarkAsSpamEmbedTagsInHtml
                 MarkAsSpamEmptyMessages              = $HostedContentFilterPolicy.MarkAsSpamEmptyMessages
@@ -698,14 +698,20 @@ function Set-TargetResource
             Name = $HostedContentFilterPolicyParams.Identity
         }
         $HostedContentFilterPolicyParams.Remove('Identity') | Out-Null
-        Write-Verbose -Message "Creating HostedContentFilterPolicy $($Identity)."
+        Write-Verbose -Message "Creating HostedContentFilterPolicy $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $HostedContentFilterPolicyParams)"
         New-HostedContentFilterPolicy @HostedContentFilterPolicyParams
+        if ($PSBoundParameters.MakeDefault)
+        {
+            Write-Verbose -Message "Updating Policy as default"
+            Set-HostedContentFilterPolicy @HostedContentFilterPolicyParams -MakeDefault -Confirm:$false
+        }
     }
     elseif (('Present' -eq $Ensure ) -and ($null -ne $HostedContentFilterPolicy))
     {
         Write-Verbose -Message "Setting HostedContentFilterPolicy $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $HostedContentFilterPolicyParams)."
         if ($PSBoundParameters.MakeDefault)
         {
+            Write-Verbose -Message "Updating Policy as default"
             Set-HostedContentFilterPolicy @HostedContentFilterPolicyParams -MakeDefault -Confirm:$false
         }
         else
