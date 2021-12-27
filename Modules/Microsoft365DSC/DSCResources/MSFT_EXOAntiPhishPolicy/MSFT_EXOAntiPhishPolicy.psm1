@@ -21,6 +21,7 @@ function Get-TargetResource
         [System.Boolean]
         $Enabled = $true,
 
+        # Deprecated
         [Parameter()]
         [System.Boolean]
         $EnableAntispoofEnforcement = $true,
@@ -113,6 +114,7 @@ function Get-TargetResource
         [System.String[]]
         $TargetedDomainActionRecipients = @(),
 
+        # Deprecated
         [Parameter()]
         [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
         [System.String]
@@ -218,7 +220,6 @@ function Get-TargetResource
                 AuthenticationFailAction                      = $AntiPhishPolicy.AuthenticationFailAction
                 Enabled                                       = $AntiPhishPolicy.Enabled
                 EnableFirstContactSafetyTips                  = $AntiPhishPolicy.EnableFirstContactSafetyTips
-                EnableAntispoofEnforcement                    = $AntiPhishPolicy.EnableAntispoofEnforcement
                 EnableMailboxIntelligence                     = $AntiPhishPolicy.EnableMailboxIntelligence
                 EnableMailboxIntelligenceProtection           = $AntiPhishPolicy.EnableMailboxIntelligenceProtection
                 EnableOrganizationDomainsProtection           = $AntiPhishPolicy.EnableOrganizationDomainsProtection
@@ -235,10 +236,9 @@ function Get-TargetResource
                 ImpersonationProtectionState                  = $AntiPhishPolicy.ImpersonationProtectionState
                 MailboxIntelligenceProtectionAction           = $AntiPhishPolicy.MailboxIntelligenceProtectionAction
                 MailboxIntelligenceProtectionActionRecipients = $AntiPhishPolicy.MailboxIntelligenceProtectionActionRecipients
-                MakeDefault                                   = $AntiPhishPolicy.MakeDefault
+                MakeDefault                                   = $AntiPhishPolicy.IsDefault
                 PhishThresholdLevel                           = $PhishThresholdLevelValue
                 TargetedDomainActionRecipients                = $AntiPhishPolicy.TargetedDomainActionRecipients
-                TargetedDomainProtectionAction                = $AntiPhishPolicy.TargetedDomainProtectionAction
                 TargetedDomainsToProtect                      = $AntiPhishPolicy.TargetedDomainsToProtect
                 TargetedUserActionRecipients                  = $AntiPhishPolicy.TargetedUserActionRecipients
                 TargetedUserProtectionAction                  = $TargetedUserProtectionActionValue
@@ -305,6 +305,7 @@ function Set-TargetResource
         [System.Boolean]
         $Enabled = $true,
 
+        # Deprecated
         [Parameter()]
         [System.Boolean]
         $EnableAntispoofEnforcement = $true,
@@ -397,6 +398,7 @@ function Set-TargetResource
         [System.String[]]
         $TargetedDomainActionRecipients = @(),
 
+        # Deprecated
         [Parameter()]
         [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
         [System.String]
@@ -444,6 +446,18 @@ function Set-TargetResource
         $CertificatePassword
     )
 
+    if ($EnableAntispoofEnforcement)
+    {
+        Write-Verbose -Message ("The EnableAntispoofEnforcement parameter is now deprecated. " + `
+        "It will be removed in the next major release. Please update your configuraton.")
+    }
+
+    if ($TargetedDomainProtectionAction)
+    {
+        Write-Verbose -Message ("The TargetedDomainProtectionAction parameter is now deprecated. "+ `
+        "It will be removed in the next major release. Please update your configuraton.")
+    }
+
     Write-Verbose -Message "Setting configuration of AntiPhishPolicy for $Identity"
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -477,13 +491,14 @@ function Set-TargetResource
         $CreateParams.Remove("Ensure") | Out-Null
         $createParams.Add("Name", $Identity)
         $createParams.Remove("Identity") | Out-Null
-        New-AntiPhishPolicy $PSBoundParameters
+        New-AntiPhishPolicy @PSBoundParameters
     }
     elseif (('Present' -eq $Ensure ) -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing AntiPhishPolicy {$Identity}"
         $UpdateParams = $PSBoundParameters
         $UpdateParams.Remove("Ensure") | Out-Null
+        Set-AntiphishPolicy @UpdateParams
     }
     elseif (('Absent' -eq $Ensure ) -and $currentInstance.Ensure -eq 'Present')
     {
@@ -515,6 +530,7 @@ function Test-TargetResource
         [System.Boolean]
         $Enabled = $true,
 
+        # Deprecated
         [Parameter()]
         [System.Boolean]
         $EnableAntispoofEnforcement = $true,
@@ -607,6 +623,7 @@ function Test-TargetResource
         [System.String[]]
         $TargetedDomainActionRecipients = @(),
 
+        # Deprecated
         [Parameter()]
         [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
         [System.String]

@@ -1,14 +1,14 @@
 # Microsoft365DSC
 
 This module allows organizations to automate the deployment,
-configuration, and monitoring of Microsoft 365 Tenants via PowerShell
+configuration, reporting and monitoring of Microsoft 365 Tenants via PowerShell
 Desired State Configuration. The compiled configuration needs to be
 executed from an agent's Local Configuration Manager (LCM) (machine
 or container) which can communicate back remotely to Microsoft 365 via
 remote API calls (therefore requires internet connectivity)
 
 For information on how to get started, additional documentation or
-templates, please navigate to the official web site at
+additional resources, please navigate to the official web site at
 [Microsoft365DSC.com](http://Microsoft365DSC.com) and check out the
 official YouTube channel
 [Microsoft365DSC](https://www.youtube.com/channel/UCveScabVT6pxzqYgGRu17iw).
@@ -68,7 +68,7 @@ Install-Module -Name Microsoft365DSC -Force
 Microsoft365DSC captures Telemetry data about the names of the resources
 in which a configuration drift has been detected, along with the type
 of exceptions being thrown by errors in the various modules. While no
-sensitive data is ever captured, App Insights, which performs 
+sensitive data is ever captured, App Insights, which performs
 telemetry analytics, captures information about the city
 where the telemetry entries were captured by default. Users can
 opt-out to prevent telemetry from being sent back to the Microsoft365DSC team
