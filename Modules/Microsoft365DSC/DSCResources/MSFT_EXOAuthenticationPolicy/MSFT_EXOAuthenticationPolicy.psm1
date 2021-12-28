@@ -298,7 +298,6 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     $NewAuthenticationPolicyParams = @{
-        Identity                            = $Identity
         AllowBasicAuthActiveSync            = $AllowBasicAuthActiveSync
         AllowBasicAuthAutodiscover          = $AllowBasicAuthAutodiscover
         AllowBasicAuthImap                  = $AllowBasicAuthImap
@@ -313,12 +312,16 @@ function Set-TargetResource
         AllowBasicAuthWebServices           = $AllowBasicAuthWebServices
     }
 
+    $UpdateAuthenticationPolicyParams = @{
+
+    }
+
     # CASE: Authentication Policy doesn't exist but should;
     if ($Ensure -eq "Present" -and $currentAuthenticationPolicyConfig.Ensure -eq "Absent")
     {
         Write-Verbose -Message "Authentication Policy '$($Identity)' does not exist but it should. Create and configure it."
         # Create Authentication Policy
-        New-AuthenticationPolicy @NewAuthenticationPolicyParams
+        New-AuthenticationPolicy -Name $Identity @NewAuthenticationPolicyParams
     }
     # CASE: Authentication Policy exists but it shouldn't;
     elseif ($Ensure -eq "Absent" -and $currentAuthenticationPolicyConfig.Ensure -eq "Present")
@@ -330,7 +333,7 @@ function Set-TargetResource
     elseif ($Ensure -eq "Present" -and $currentAuthenticationPolicyConfig.Ensure -eq "Present")
     {
         Write-Verbose -Message "Authentication Policy '$($Identity)' exists. Updating settings."
-        Set-AuthenticationPolicy @NewAuthenticationPolicyParams
+        Set-AuthenticationPolicy -Identity $Identity @NewAuthenticationPolicyParams
     }
 }
 
@@ -644,4 +647,3 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
-

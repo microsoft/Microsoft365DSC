@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("EXOAuthenticationPolicy")]
 class MSFT_EXOAuthenticationPolicy : OMI_BaseResource
 {
-    [Key, Description("The Name parameter specifies the unique name for the authentication policy.")] String Name;
+    [Key, Description("The Identity parameter specifies the authentication policy you want to view or modify.")] String Identity;
     [write, Description("The AllowBasicAuthActiveSync switch specifies whether to allow Basic authentication with Exchange Active Sync")] Switch AllowBasicAuthActiveSync;
     [write, Description("The AllowBasicAuthAutodiscover switch specifies whether to allow Basic authentication with Autodiscover")] Switch AllowBasicAuthAutodiscover;
     [write, Description("The AllowBasicAuthImap switch specifies whether to allow Basic authentication with IMAP.")] Switch AllowBasicAuthImap;

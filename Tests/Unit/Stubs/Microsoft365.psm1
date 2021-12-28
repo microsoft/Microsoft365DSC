@@ -120,7 +120,7 @@ function New-AuthenticationPolicy
     param(
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        $Name,
 
         [Parameter()]
         [Switch]
