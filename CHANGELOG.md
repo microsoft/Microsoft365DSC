@@ -1430,3 +1430,5 @@
 ## UNRELEASED
 * IntuneDeviceConfigurationPolicyAndroidWorkProfile
   * Initial release;
+* EXOAuthenticationPolicy
+  * Initial release;
