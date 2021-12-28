@@ -53,39 +53,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Authentication Policy should exist. Authentication Policy is missing. Test should fail." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity                            = "Contoso Auth Policy"
-                    $AllowBasicAuthActiveSync           = $False
-                    AllowBasicAuthAutodiscover          = $False
-                    AllowBasicAuthImap                  = $False
-                    AllowBasicAuthMapi                  = $False
-                    AllowBasicAuthOfflineAddressBook    = $False
-                    AllowBasicAuthOutlookService        = $False
-                    AllowBasicAuthPop                   = $False
-                    AllowBasicAuthPowerShell            = $False
-                    AllowBasicAuthReportingWebServices  = $False
-                    AllowBasicAuthRpc                   = $False
-                    AllowBasicAuthSmtp                  = $False
-                    AllowBasicAuthWebServices           = $False
-                    Ensure                              = 'Present'
-                    Credential                          = $Credential
+                    Identity                                = "Contoso Auth Policy"
+                    AllowBasicAuthActiveSync                = $False
+                    AllowBasicAuthAutodiscover              = $False
+                    AllowBasicAuthImap                      = $False
+                    AllowBasicAuthMapi                      = $False
+                    AllowBasicAuthOfflineAddressBook        = $False
+                    AllowBasicAuthOutlookService            = $False
+                    AllowBasicAuthPop                       = $False
+                    AllowBasicAuthPowerShell                = $False
+                    AllowBasicAuthReportingWebServices      = $False
+                    AllowBasicAuthRpc                       = $False
+                    AllowBasicAuthSmtp                      = $False
+                    AllowBasicAuthWebServices               = $False
+                    Ensure                                  = 'Present'
+                    Credential                              = $Credential
                 }
 
                 Mock -CommandName Get-AuthenticationPolicy -MockWith {
-                    return @{
-                        Identity                            = "Different Contoso Auth Policy"
-                        AllowBasicAuthActiveSync            = $False
-                        AllowBasicAuthAutodiscover          = $False
-                        AllowBasicAuthImap                  = $True
-                        AllowBasicAuthMapi                  = $False
-                        AllowBasicAuthOfflineAddressBook    = $False
-                        AllowBasicAuthOutlookService        = $False
-                        AllowBasicAuthPop                   = $False
-                        AllowBasicAuthPowerShell            = $False
-                        AllowBasicAuthReportingWebServices  = $False
-                        AllowBasicAuthRpc                   = $False
-                        AllowBasicAuthSmtp                  = $False
-                        AllowBasicAuthWebServices           = $False
-                    }
+                    return $null
                 }
 
                 Mock -CommandName Set-AuthenticationPolicy -MockWith {
@@ -122,24 +108,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Authentication Policy should exist. Authentication Policy exists. Test should pass." -Fixture {
+        Context -Name "Authentication Policy should exist. Authentication Policy does exists. Test should pass." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity                            = "Contoso Auth Policy"
-                    AllowBasicAuthActiveSync            = $False
-                    AllowBasicAuthAutodiscover          = $False
-                    AllowBasicAuthImap                  = $False
-                    AllowBasicAuthMapi                  = $False
-                    AllowBasicAuthOfflineAddressBook    = $False
-                    AllowBasicAuthOutlookService        = $False
-                    AllowBasicAuthPop                   = $False
-                    AllowBasicAuthPowerShell            = $False
-                    AllowBasicAuthReportingWebServices  = $False
-                    AllowBasicAuthRpc                   = $False
-                    AllowBasicAuthSmtp                  = $False
-                    AllowBasicAuthWebServices           = $False
-                    Ensure                              = 'Present'
-                    Credential                          = $Credential
+                    Identity                                = "Contoso Auth Policy"
+                    AllowBasicAuthActiveSync                = $False
+                    AllowBasicAuthAutodiscover              = $False
+                    AllowBasicAuthImap                      = $False
+                    AllowBasicAuthMapi                      = $False
+                    AllowBasicAuthOfflineAddressBook        = $False
+                    AllowBasicAuthOutlookService            = $False
+                    AllowBasicAuthPop                       = $False
+                    AllowBasicAuthPowerShell                = $False
+                    AllowBasicAuthReportingWebServices      = $False
+                    AllowBasicAuthRpc                       = $False
+                    AllowBasicAuthSmtp                      = $False
+                    AllowBasicAuthWebServices               = $False
+                    Ensure                                  = 'Present'
+                    Credential                              = $Credential
                 }
 
                 Mock -CommandName Get-AuthenticationPolicy -MockWith {
@@ -175,21 +161,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Authentication Policy should exist. Authentication Policy exists, AllowBasicAuthPop mismatch. Test should fail." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity                            = "Contoso Auth Policy"
-                    AllowBasicAuthActiveSync            = $False
-                    AllowBasicAuthAutodiscover          = $False
-                    AllowBasicAuthImap                  = $False
-                    AllowBasicAuthMapi                  = $False
-                    AllowBasicAuthOfflineAddressBook    = $False
-                    AllowBasicAuthOutlookService        = $False
-                    AllowBasicAuthPop                   = $False
-                    AllowBasicAuthPowerShell            = $False
-                    AllowBasicAuthReportingWebServices  = $False
-                    AllowBasicAuthRpc                   = $False
-                    AllowBasicAuthSmtp                  = $False
-                    AllowBasicAuthWebServices           = $False
-                    Ensure                              = 'Present'
-                    Credential                          = $Credential
+                    Identity                                = "Contoso Auth Policy"
+                    AllowBasicAuthActiveSync                = $False
+                    AllowBasicAuthAutodiscover              = $False
+                    AllowBasicAuthImap                      = $False
+                    AllowBasicAuthMapi                      = $False
+                    AllowBasicAuthOfflineAddressBook        = $False
+                    AllowBasicAuthOutlookService            = $False
+                    AllowBasicAuthPop                       = $False
+                    AllowBasicAuthPowerShell                = $False
+                    AllowBasicAuthReportingWebServices      = $False
+                    AllowBasicAuthRpc                       = $False
+                    AllowBasicAuthSmtp                      = $False
+                    AllowBasicAuthWebServices               = $False
+                    Ensure                                  = 'Present'
+                    Credential                              = $Credential
                 }
 
                 Mock -CommandName Get-AuthenticationPolicy -MockWith {
@@ -245,30 +231,30 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Credential = $Credential
+                    Credential                              = $Credential
                 }
 
                 $AuthPolicy = @{
-                    Identity                            = "Contoso Auth Policy"
-                    AllowBasicAuthActiveSync            = $False
-                    AllowBasicAuthAutodiscover          = $False
-                    AllowBasicAuthImap                  = $False
-                    AllowBasicAuthMapi                  = $False
-                    AllowBasicAuthOfflineAddressBook    = $False
-                    AllowBasicAuthOutlookService        = $False
-                    AllowBasicAuthPop                   = $False
-                    AllowBasicAuthPowerShell            = $False
-                    AllowBasicAuthReportingWebServices  = $False
-                    AllowBasicAuthRpc                   = $False
-                    AllowBasicAuthSmtp                  = $False
-                    AllowBasicAuthWebServices           = $False
+                    Identity                                = "Contoso Auth Policy"
+                    AllowBasicAuthActiveSync                = $False
+                    AllowBasicAuthAutodiscover              = $False
+                    AllowBasicAuthImap                      = $False
+                    AllowBasicAuthMapi                      = $False
+                    AllowBasicAuthOfflineAddressBook        = $False
+                    AllowBasicAuthOutlookService            = $False
+                    AllowBasicAuthPop                       = $False
+                    AllowBasicAuthPowerShell                = $False
+                    AllowBasicAuthReportingWebServices      = $False
+                    AllowBasicAuthRpc                       = $False
+                    AllowBasicAuthSmtp                      = $False
+                    AllowBasicAuthWebServices               = $False
                 }
                 Mock -CommandName Get-AuthenticationPolicy -MockWith {
                     return $AuthPolicy
                 }
             }
 
-            It "Should Reverse Engineer resource from the Export method when single" {
+            It "Should Reverse Engineer resource from the Export method" {
                 Export-TargetResource @testParams
             }
         }

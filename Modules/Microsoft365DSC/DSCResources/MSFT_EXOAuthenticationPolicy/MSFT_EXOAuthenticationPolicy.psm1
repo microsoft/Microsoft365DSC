@@ -14,6 +14,10 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
+        $AllowBasicAuthAutodiscover,
+
+        [Parameter()]
+        [Switch]
         $AllowBasicAuthImap,
 
         [Parameter()]
@@ -202,6 +206,10 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
+        $AllowBasicAuthAutodiscover,
+
+        [Parameter()]
+        [Switch]
         $AllowBasicAuthImap,
 
         [Parameter()]
@@ -342,6 +350,10 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
+        $AllowBasicAuthAutodiscover,
+
+        [Parameter()]
+        [Switch]
         $AllowBasicAuthImap,
 
         [Parameter()]
@@ -459,6 +471,10 @@ function Export-TargetResource
         [Parameter()]
         [Switch]
         $AllowBasicAuthActiveSync,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthAutodiscover,
 
         [Parameter()]
         [Switch]

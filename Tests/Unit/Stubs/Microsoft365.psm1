@@ -1,5 +1,233 @@
 
 #region ExchangeOnline
+function Get-AuthenticationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthActiveSync,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthAutodiscover,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthImap,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthMapi,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthOfflineAddressBook,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthOutlookService,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPop,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPowerShell,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthReportingWebServices,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthRpc,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthSmtp,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthWebServices
+    )
+}
+function Set-AuthenticationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthActiveSync,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthAutodiscover,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthImap,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthMapi,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthOfflineAddressBook,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthOutlookService,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPop,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPowerShell,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthReportingWebServices,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthRpc,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthSmtp,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthWebServices
+    )
+}
+function New-AuthenticationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthActiveSync,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthAutodiscover,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthImap,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthMapi,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthOfflineAddressBook,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthOutlookService,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPop,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPowerShell,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthReportingWebServices,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthRpc,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthSmtp,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthWebServices
+    )
+}
+function Remove-AuthenticationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthActiveSync,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthAutodiscover,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthImap,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthMapi,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthOfflineAddressBook,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthOutlookService,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPop,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPowerShell,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthReportingWebServices,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthRpc,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthSmtp,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthWebServices
+    )
+}
 function Add-AvailabilityAddressSpace
 {
     [CmdletBinding()]
