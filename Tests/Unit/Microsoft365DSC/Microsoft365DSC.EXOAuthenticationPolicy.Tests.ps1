@@ -16,11 +16,12 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
     -DscResource "EXOAuthenticationPolicy" -GenericStubModule $GenericStubPath
-Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
+
+    Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
-        BeforeAll {
 
+        BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
@@ -29,11 +30,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
             }
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
-
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -41,11 +40,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-PSSession -MockWith {
-
             }
 
             Mock -CommandName Remove-PSSession -MockWith {
+            }
 
+            Mock -CommandName New-AuthenticationPolicy {
+            }
+
+            Mock -commandName Set-AuthenticationPolicy {
+            }
+
+            Mock -CommandName Remove-AuthenticationPolicy {
             }
         }
 
@@ -73,34 +79,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-AuthenticationPolicy -MockWith {
                     return $null
                 }
-
-                Mock -CommandName Set-AuthenticationPolicy -MockWith {
-                    return @{
-                        Identity                            = "Contoso Auth Policy"
-                        AllowBasicAuthActiveSync            = $False
-                        AllowBasicAuthAutodiscover          = $False
-                        AllowBasicAuthImap                  = $False
-                        AllowBasicAuthMapi                  = $False
-                        AllowBasicAuthOfflineAddressBook    = $False
-                        AllowBasicAuthOutlookService        = $False
-                        AllowBasicAuthPop                   = $False
-                        AllowBasicAuthPowerShell            = $False
-                        AllowBasicAuthReportingWebServices  = $False
-                        AllowBasicAuthRpc                   = $False
-                        AllowBasicAuthSmtp                  = $False
-                        AllowBasicAuthWebServices           = $False
-                        Ensure                              = 'Present'
-                        Credential                          = $Credential
-                    }
-                }
             }
 
-            It 'Should return false from the Test method' {
+            It "Should return false from the Test method" {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
             It "Should call the Set method" {
                 Set-TargetResource @testParams
+                Should -Invoke -CommandName New-AuthenticationPolicy -Exactly 1
             }
 
             It "Should return Absent from the Get method" {
@@ -197,8 +184,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Credential                          = $Credential
                     }
                 }
+            }
 
-                Mock -CommandName Set-AuthenticationPolicy -MockWith {
+            It 'Should return Present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It "Should call the Set method" {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Set-AuthenticationPolicy -Exactly 1
+            }
+        }
+
+        Context -Name "Authentication Policy does exist. Authentication Policy should not exist." -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Identity                                = "Contoso Auth Policy"
+                    Credential                              = $Credentials
+                    Ensure                                  = "Absent"
+                }
+
+                Mock -CommandName Get-AuthenticationPolicy -MockWith {
                     return @{
                         Identity                            = "Contoso Auth Policy"
                         AllowBasicAuthActiveSync            = $False
@@ -219,12 +229,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It 'Should return false from the Test method' {
+            It "Should return Present from the Get method" {
+                (Get-AuthenticationPolicy @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It "Should return false from the Test method" {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Should call the Set method" {
+            It "Should remove the policy from the Set method" {
                 Set-TargetResource @testParams
+                Should -Invoke -CommandName Remove-AuthenticationPolicy -Exactly 1
             }
         }
 
