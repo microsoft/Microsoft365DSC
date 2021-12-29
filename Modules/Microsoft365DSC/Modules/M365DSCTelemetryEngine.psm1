@@ -11,7 +11,7 @@ function Get-ApplicationInsightsTelemetryClient
         $InstrumentationKey = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryInstrumentationKey', `
                 [System.EnvironmentVariableTarget]::Machine)
 
-        if ($null -ne $InstrumentationKey)
+        if ($null -eq $InstrumentationKey)
         {
             $InstrumentationKey = "bc5aa204-0b1e-4499-a955-d6a639bdb4fa"
         }

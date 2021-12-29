@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# 1.21.1229.1
+
+* DEPENDENCIES
+  * Updated all PnP.PowerShell dependencies to version 1.9.0;
+
 # 1.21.1222.1
 
 * AADGroup

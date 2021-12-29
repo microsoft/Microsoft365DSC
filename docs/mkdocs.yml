@@ -13,6 +13,7 @@ nav:
           - 'Monitor Tenants for Configuration Drifts': 'user-guide/get-started/monitor-tenants.md'
           - 'Assess Tenants Against a Blueprint': 'user-guide/get-started/assess-tenants-blueprint.md'
           - 'Generating Reports': 'user-guide/get-started/generate-reports.md'
+          - 'Configuring Graph Permissions': 'user-guide/get-started/graph-permissions.md'
       - Advanced:
           - 'How to Create a M365DSC Blueprint': 'user-guide/advanced/create-blueprint.md'
   - Contributing:
