@@ -112,15 +112,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint,
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificateThumbprint
     )
     Write-Verbose -Message "Getting configuration of Office 365 User $UserPrincipalName"
 
@@ -140,15 +136,19 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = @{
-        UserPrincipalName  = $null
-        DisplayName        = $null
-        FirstName          = $null
-        LastName           = $null
-        UsageLocation      = $null
-        LicenseAssignment  = $null
-        Password           = $null
-        Credential = $Credential
-        Ensure             = "Absent"
+        UserPrincipalName     = $null
+        DisplayName           = $null
+        FirstName             = $null
+        LastName              = $null
+        UsageLocation         = $null
+        LicenseAssignment     = $null
+        Password              = $null
+        Credential            = $Credential
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificateThumbprint = $CertificateThumbprint
+        ApplicationSecret     = $ApplicationSecret
+        Ensure                = "Absent"
     }
 
     try
@@ -175,29 +175,33 @@ function Get-TargetResource
         $passwordNeverExpires = $userPasswordPolicyInfo.PasswordNeverExpires
 
         $results = @{
-            UserPrincipalName    = $UserPrincipalName
-            DisplayName          = $user.DisplayName
-            FirstName            = $user.GivenName
-            LastName             = $user.Surname
-            UsageLocation        = $user.UsageLocation
-            LicenseAssignment    = $currentLicenseAssignment
-            Password             = $Password
-            City                 = $user.City
-            Country              = $user.Country
-            Department           = $user.Department
-            Fax                  = $user.FacsimileTelephoneNumber
-            MobilePhone          = $user.Mobile
-            Office               = $user.OfficeLocation
-            PasswordNeverExpires = $passwordNeverExpires
-            PhoneNumber          = $user.TelephoneNumber
-            PostalCode           = $user.PostalCode
-            PreferredLanguage    = $user.PreferredLanguage
-            State                = $user.State
-            StreetAddress        = $user.StreetAddress
-            Title                = $user.JobTitle
-            UserType             = $user.UserType
-            Credential           = $Credential
-            Ensure               = "Present"
+            UserPrincipalName     = $UserPrincipalName
+            DisplayName           = $user.DisplayName
+            FirstName             = $user.GivenName
+            LastName              = $user.Surname
+            UsageLocation         = $user.UsageLocation
+            LicenseAssignment     = $currentLicenseAssignment
+            Password              = $Password
+            City                  = $user.City
+            Country               = $user.Country
+            Department            = $user.Department
+            Fax                   = $user.FacsimileTelephoneNumber
+            MobilePhone           = $user.Mobile
+            Office                = $user.OfficeLocation
+            PasswordNeverExpires  = $passwordNeverExpires
+            PhoneNumber           = $user.TelephoneNumber
+            PostalCode            = $user.PostalCode
+            PreferredLanguage     = $user.PreferredLanguage
+            State                 = $user.State
+            StreetAddress         = $user.StreetAddress
+            Title                 = $user.JobTitle
+            UserType              = $user.UserType
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            Ensure                = "Present"
         }
         return [System.Collections.Hashtable] $results
     }
@@ -340,15 +344,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint,
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificateThumbprint
     )
 
     # PreferredDataLocation is no longer an accepted value;
@@ -608,15 +608,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint,
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificateThumbprint
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -688,15 +684,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint,
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificateThumbprint
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -732,16 +724,13 @@ function Export-TargetResource
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
-                    CertificatePassword   = $CertificatePassword
-                    CertificatePath       = $CertificatePath
+                    ApplicationSecret     = $ApplicationSecret
                 }
 
                 $Results = Get-TargetResource @Params
                 $Results.Password = "New-Object System.Management.Automation.PSCredential('Password', (ConvertTo-SecureString 'Pass@word!11' -AsPlainText -Force));"
                 if ($null -ne $Results.UserPrincipalName)
                 {
-                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                        -Results $Results
                     $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                         -Results $Results
                     $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `

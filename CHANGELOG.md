@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+# 1.22.105.1
+
+* O365Group
+  * Removed support for invalid CertificatePassword and CertificatePath parameters
+    and added support for ApplicationSecret;
+* O365User
+  * Removed support for invalid CertificatePassword and CertificatePath parameters
+    and added support for ApplicationSecret;
+
 # 1.21.1229.1
 
 * DEPENDENCIES
