@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# 1.21.105.1
+
+  * TeamsChannel
+    * Fixed an issue where special symbols in Teams names would cause the
+      Get-TeamByName cmdlet to fail.
+      ISSUE #1578
+
 # 1.21.1229.1
 
 * DEPENDENCIES
