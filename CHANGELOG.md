@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# 1.22.105.1
+
+* EXOMalwareFilterPolicy
+  * Fix for the MakeDefault property where it wasn't properly setting existing
+    policies to default.
+    FIXES #1648
+
 # 1.21.1229.1
 
 * DEPENDENCIES
