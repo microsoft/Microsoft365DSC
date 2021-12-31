@@ -4,7 +4,7 @@
 
 * MISC
   * Error Handling in Delta Report and removal of Authentication mechanism comparison;
-    FIXES #1548
+    FIXES #1548, #1541
 
 # 1.21.1229.1
 

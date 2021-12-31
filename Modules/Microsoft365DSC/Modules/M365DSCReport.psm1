@@ -393,9 +393,9 @@ function Compare-M365DSCConfigurations
                     if ($propertyName -notin @("ResourceName","Credential", "CertificatePath", "CertificatePassword", "TenantId", "ApplicationId", "CertificateThumbprint", "ApplicationSecret"))
                     {
                         # Needs to be a separate nested if statement otherwise the ReferenceObject an be null and it will error out;
-                        if(-not [System.String]::IsNullOrEmpty($propertyName) -and
+                        if([System.String]::IsNullOrEmpty($destinationResource.$propertyName) -or (-not [System.String]::IsNullOrEmpty($propertyName) -and
                             $null -ne (Compare-Object -ReferenceObject ($sourceResource.$propertyName)`
-                                                    -DifferenceObject ($destinationResource.$propertyName)))
+                                                    -DifferenceObject ($destinationResource.$propertyName))))
                         {
                             if ($null -eq $drift)
                             {
