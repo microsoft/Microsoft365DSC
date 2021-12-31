@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# 1.22.105.1
+
+* IntuneDeviceConfigurationPolicyWindows10
+  * Fixed mistmatch in property type between the PasswordBlockSimple and
+    PasswordSignInFailureCountBeforeFactoryReset properties.
+    FIXES #1525
+
 # 1.21.1229.1
 
 * DEPENDENCIES
