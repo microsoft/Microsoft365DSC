@@ -3,7 +3,7 @@
 # 1.22.105.1
 
 * IntuneDeviceConfigurationPolicyWindows10
-  * Fixed mistmatch in property type between the PasswordBlockSimple and
+  * Fixed mismatch in property types between the PasswordBlockSimple and
     PasswordSignInFailureCountBeforeFactoryReset properties.
     FIXES #1525
 
