@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# 1.22.105.1
+
+* AADNamedLocationPolicy
+  * Throw meaningful error if multiple policies with the same name were retrieved.
+
 # 1.21.1229.1
 
 * DEPENDENCIES

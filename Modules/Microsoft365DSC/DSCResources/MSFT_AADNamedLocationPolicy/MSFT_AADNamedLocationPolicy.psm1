@@ -95,9 +95,14 @@ function Get-TargetResource
             try
             {
                 $NamedLocation = Get-MgIdentityConditionalAccessNamedLocation -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
+                if ($NamedLocation.Length -gt 1)
+                {
+                    throw "More than one instance of a Named Location Policy with name {$DisplayName} was found. Please provide the ID parameter."
+                }
             }
             catch
             {
+                Write-Error $_
                 Write-Verbose -Message $_
                 Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                     -EventID 1 -Source $($MyInvocation.MyCommand.Source)
