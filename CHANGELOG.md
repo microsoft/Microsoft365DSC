@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# 1.22.105.1
+
+* MISC
+  * Error Handling in Delta Report and removal of Authentication mechanism comparison;
+    FIXES #1548
+
 # 1.21.1229.1
 
 * DEPENDENCIES
