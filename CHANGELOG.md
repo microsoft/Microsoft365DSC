@@ -4,6 +4,17 @@
 
 * AADNamedLocationPolicy
   * Throw meaningful error if multiple policies with the same name were retrieved.
+* EXOMalwareFilterPolicy
+  * Fix for the MakeDefault property where it wasn't properly setting existing
+    policies to default.
+    FIXES #1648
+* IntuneDeviceConfigurationPolicyWindows10
+  * Fixed mismatch in property types between the PasswordBlockSimple and
+    PasswordSignInFailureCountBeforeFactoryReset properties.
+    FIXES #1525
+* MISC
+  * Error Handling in Delta Report and removal of Authentication mechanism comparison;
+    FIXES #1548, #1541
 
 # 1.21.1229.1
 
