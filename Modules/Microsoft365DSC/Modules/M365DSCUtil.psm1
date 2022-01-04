@@ -2012,7 +2012,7 @@ function Update-M365DSCDependencies
 
             if (-not $found -or $Force)
             {
-                Write-Information -Message "Installing $($dependency.ModuleName)"
+                Write-Information -Message "Installing $($dependency.ModuleName) version {$($dependency.RequiredVersion)}"
                 Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force
             }
         }
