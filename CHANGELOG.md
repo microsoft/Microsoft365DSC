@@ -1,5 +1,24 @@
 # Change log for Microsoft365DSC
 
+# 1.22.105.1
+
+* AADNamedLocationPolicy
+  * Throw meaningful error if multiple policies with the same name were retrieved.
+* EXOMalwareFilterPolicy
+  * Fix for the MakeDefault property where it wasn't properly setting existing
+    policies to default.
+    FIXES #1648
+* IntuneDeviceConfigurationPolicyWindows10
+  * Fixed mismatch in property types between the PasswordBlockSimple and
+    PasswordSignInFailureCountBeforeFactoryReset properties.
+    FIXES #1525
+* TeamsChannel
+  * Fixed an issue where special symbols in Teams names would cause the
+    Get-TeamByName cmdlet to fail.
+    ISSUE #1578
+* MISC
+  * Error Handling in Delta Report and removal of Authentication mechanism comparison;
+    FIXES #1548, #1541
 # 1.21.1229.1
 
 * DEPENDENCIES

@@ -67,7 +67,7 @@ function Get-TargetResource
 
     try
     {
-        $team = Get-TeamByName $TeamName
+        $team = Get-TeamByName ([System.Net.WebUtility]::UrlEncode($TeamName))
 
         Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
 
