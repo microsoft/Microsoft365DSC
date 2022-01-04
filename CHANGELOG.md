@@ -12,6 +12,12 @@
   * Fixed mismatch in property types between the PasswordBlockSimple and
     PasswordSignInFailureCountBeforeFactoryReset properties.
     FIXES #1525
+* O365Group
+  * Removed support for invalid CertificatePassword and CertificatePath parameters
+    and added support for ApplicationSecret;
+* O365User
+  * Removed support for invalid CertificatePassword and CertificatePath parameters
+    and added support for ApplicationSecret;
 * TeamsChannel
   * Fixed an issue where special symbols in Teams names would cause the
     Get-TeamByName cmdlet to fail.
@@ -19,6 +25,7 @@
 * MISC
   * Error Handling in Delta Report and removal of Authentication mechanism comparison;
     FIXES #1548, #1541
+
 # 1.21.1229.1
 
 * DEPENDENCIES
