@@ -2,6 +2,8 @@
 
 # 1.22.105.1
 
+* AADNamedLocationPolicy
+  * Throw meaningful error if multiple policies with the same name were retrieved.
 * EXOMalwareFilterPolicy
   * Fix for the MakeDefault property where it wasn't properly setting existing
     policies to default.
