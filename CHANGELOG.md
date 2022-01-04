@@ -2,6 +2,10 @@
 
 # 1.22.105.1
 
+* EXOMalwareFilterPolicy
+  * Fix for the MakeDefault property where it wasn't properly setting existing
+    policies to default.
+    FIXES #1648
 * MISC
   * Error Handling in Delta Report and removal of Authentication mechanism comparison;
     FIXES #1548, #1541
