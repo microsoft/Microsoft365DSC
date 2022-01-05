@@ -49,63 +49,6 @@ function Format-EXOParams
     }
 }
 
-function Get-TimeZoneNameFromID
-{
-    [CmdletBinding()]
-    [OutputType([String])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $ID
-    )
-
-    $TimezoneObject = $Timezones | Where-Object -FilterScript { $_.ID -eq $ID }
-
-    if ($null -eq $TimezoneObject)
-    {
-        throw "The specified Timzone with ID {$($ID)} is not valid"
-    }
-    return $TimezoneObject.EnglishName
-}
-function Get-TimeZoneIDFromName
-{
-    [CmdletBinding()]
-    [OutputType([String])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Name
-    )
-
-    $TimezoneObject = $Timezones | Where-Object -FilterScript { $_.EnglishName -eq $Name }
-
-    if ($null -eq $TimezoneObject)
-    {
-        throw "The specified Timzone {$($Name)} is not valid"
-    }
-    return $TimezoneObject.ID
-}
-
-function Get-TeamByGroupID
-{
-    [CmdletBinding()]
-    [OutputType([Boolean])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $GroupId
-    )
-
-    $team = Get-Team -GroupId $GroupId
-    if ($null -eq $team)
-    {
-        return $false
-    }
-    return $true
-}
 function Get-TeamByName
 {
     [CmdletBinding()]
@@ -191,25 +134,6 @@ function Convert-M365DscHashtableToString
     return ($values -join "; ")
 }
 
-function New-EXOAntiPhishPolicy
-{
-    param (
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AntiPhishPolicyParams
-    )
-    try
-    {
-        $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishPolicyParams -Operation 'New' )
-        Write-Verbose -Message "Creating New AntiPhishPolicy $($BuiltParams.Name) with values: $(Convert-M365DscHashtableToString -Hashtable $BuiltParams)"
-        New-AntiPhishPolicy @BuiltParams
-        $VerbosePreference = 'SilentlyContinue'
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
-}
 
 function New-EXOSafeAttachmentRule
 {
@@ -246,35 +170,6 @@ function New-EXOSafeLinksRule
         Write-Verbose -Message "Creating New SafeLinksRule $($BuiltParams.Name) with values: $(Convert-M365DscHashtableToString -Hashtable $BuiltParams)"
         New-SafeLinksRule @BuiltParams -Confirm:$false
         $VerbosePreference = 'SilentlyContinue'
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
-}
-
-function Set-EXOAntiPhishPolicy
-{
-    param (
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AntiPhishPolicyParams
-    )
-    try
-    {
-        $VerbosePreference = 'Continue'
-        $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishPolicyParams -Operation 'Set' )
-        if ($BuiltParams.keys -gt 1)
-        {
-            Write-Verbose -Message "Setting AntiPhishPolicy $($BuiltParams.Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $BuiltParams)"
-            Set-AntiPhishPolicy @BuiltParams -Confirm:$false
-            $VerbosePreference = 'SilentlyContinue'
-        }
-        else
-        {
-            Write-Verbose -Message "No more values to Set on AntiPhishPolicy $($BuiltParams.Identity) using supplied values: $(Convert-M365DscHashtableToString -Hashtable $BuiltParams)"
-            $VerbosePreference = 'SilentlyContinue'
-        }
     }
     catch
     {
@@ -1492,25 +1387,6 @@ function Get-M365TenantName
 
     Write-Verbose -Message "M365 tenant name is $tenantName"
     return $tenantName
-}
-
-function Split-ArrayByBatchSize
-{
-    [OutputType([System.Object[]])]
-    Param(
-        [Parameter(Mandatory = $true)]
-        [System.Object[]]
-        $Array,
-
-        [Parameter(Mandatory = $true)]
-        [System.Uint32]
-        $BatchSize
-    )
-    for ($i = 0; $i -lt $Array.Count; $i += $BatchSize)
-    {
-        $NewArray += , @($Array[$i..($i + ($BatchSize - 1))]);
-    }
-    return $NewArray
 }
 
 function Split-ArrayByParts
