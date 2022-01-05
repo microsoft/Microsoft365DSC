@@ -312,15 +312,10 @@ function Set-TargetResource
         AllowBasicAuthWebServices           = $AllowBasicAuthWebServices
     }
 
-    $UpdateAuthenticationPolicyParams = @{
-
-    }
-
     # CASE: Authentication Policy doesn't exist but should;
     if ($Ensure -eq "Present" -and $currentAuthenticationPolicyConfig.Ensure -eq "Absent")
     {
         Write-Verbose -Message "Authentication Policy '$($Identity)' does not exist but it should. Create and configure it."
-        # Create Authentication Policy
         New-AuthenticationPolicy -Name $Identity @NewAuthenticationPolicyParams
     }
     # CASE: Authentication Policy exists but it shouldn't;
@@ -334,8 +329,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Authentication Policy '$($Identity)' exists. Updating settings."
         Set-AuthenticationPolicy -Identity $Identity @NewAuthenticationPolicyParams
-    }
-}
+    }}
 
 function Test-TargetResource
 {

@@ -56,7 +56,7 @@ $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
         }
 
         # Test contexts
-        Context -Name "Authentication Policy should exist. Authentication Policy is missing. Test should fail." -Fixture {
+        Context -Name "Authentication Policy should exist, but is missing. Test should fail." -Fixture {
             BeforeAll {
                 $testParams = @{
                     Identity                                = "Contoso Auth Policy"
@@ -95,7 +95,7 @@ $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
             }
         }
 
-        Context -Name "Authentication Policy should exist. Authentication Policy does exists. Test should pass." -Fixture {
+        Context -Name "Authentication Policy should exist and it does. Test should pass." -Fixture {
             BeforeAll {
                 $testParams = @{
                     Identity                                = "Contoso Auth Policy"
@@ -145,7 +145,7 @@ $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
             }
         }
 
-        Context -Name "Authentication Policy should exist. Authentication Policy exists, AllowBasicAuthPop mismatch. Test should fail." -Fixture {
+        Context -Name "Authentication Policy should exist and it does. Not in desired state. Test should fail." -Fixture {
             BeforeAll {
                 $testParams = @{
                     Identity                                = "Contoso Auth Policy"
@@ -200,7 +200,7 @@ $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
             }
         }
 
-        Context -Name "Authentication Policy does exist. Authentication Policy should not exist." -Fixture {
+        Context -Name "Authentication Policy should not exist, but it does." -Fixture {
             BeforeAll {
                 $testParams = @{
                     Identity                                = "Contoso Auth Policy"
