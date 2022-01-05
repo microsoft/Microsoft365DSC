@@ -58,18 +58,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 }
             }
-
-            Mock -CommandName New-EXOAntiPhishPolicy -MockWith {
-                return @{
-
-                }
-            }
-
-            Mock -CommandName Set-EXOAntiPhishPolicy -MockWith {
-                return @{
-
-                }
-            }
         }
 
         # Test contexts
