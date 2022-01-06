@@ -1078,6 +1078,7 @@ function New-M365DSCConnection
     {
         $message = 'No Authentication method was provided'
         Write-Verbose -Message $message
+        $message += "`r`nProvided Keys --> $($InboundParameters.Keys)"
         $data.Add("Event", "Error")
         $data.Add("Exception", $message)
         $errorText = "You must specify either the Credential or ApplicationId, TenantId and CertificateThumbprint parameters."
@@ -1211,6 +1212,7 @@ function New-M365DSCConnection
         {
             $message = 'No Authentication method was provided'
             Write-Verbose -Message $message
+            $message += "`r`nProvided Keys --> $($InboundParameters.Keys)"
             $data.Add("Event", "Error")
             $data.Add("Exception", $message)
             $errorText = "You must specify either the Credential or ApplicationId, TenantId and CertificateThumbprint parameters."
