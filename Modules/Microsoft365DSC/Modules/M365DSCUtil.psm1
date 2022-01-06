@@ -1100,6 +1100,17 @@ function New-M365DSCConnection
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
             $data.Add("ConnectionType", "Credential")
+
+            try
+            {
+                $tenantId = $InboundParameters.Credential.Username.Split('@')[1]
+                $data.Add("Tenant", $tenantId)
+            }
+            catch
+            {
+                Write-Verbose $_
+            }
+
             Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
             return 'Credentials'
         }
@@ -1112,6 +1123,17 @@ function New-M365DSCConnection
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
             $data.Add("ConnectionType", "Credential")
+
+            try
+            {
+                $tenantId = $InboundParameters.Credential.Username.Split('@')[1]
+                $data.Add("Tenant", $tenantId)
+            }
+            catch
+            {
+                Write-Verbose $_
+            }
+
             Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
             return 'Credentials'
         }
@@ -1123,6 +1145,20 @@ function New-M365DSCConnection
                 -Credential $InboundParameters.Credential `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
+
+            $data.Add("ConnectionType", "CredentialsWithApplicationId")
+
+            try
+            {
+                $tenantId = $InboundParameters.Credential.Username.Split('@')[1]
+                $data.Add("Tenant", $tenantId)
+            }
+            catch
+            {
+                Write-Verbose $_
+            }
+
+            Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
             return 'CredentialsWithApplicationId'
         }
         if ($InboundParameters.ContainsKey("ApplicationSecret") -and
@@ -1131,9 +1167,15 @@ function New-M365DSCConnection
             Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -ApplicationSecret $InboundParameters.ApplicationSecret `
+                -TenantId $InboundParameters.TenantId `
                 -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
+
+            $data.Add("ConnectionType", "ServicePrincipalWithSecret")
+            $data.Add("Tenant", $InboundParameters.TenantId)
+
+            Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
             return "ServicePrincipalWithSecret"
         }
         if ($InboundParameters.ContainsKey("CertificatePath") -and
@@ -1151,6 +1193,11 @@ function New-M365DSCConnection
                 -CertificateThumbprint $InboundParameters.CertificateThumbprint `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
+
+            $data.Add("ConnectionType", "ServicePrincipalWithThumbprint")
+            $data.Add("Tenant", $InboundParameters.TenantId)
+
+            Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
             return "ServicePrincipalWithThumbprint"
         }
         if ($InboundParameters.ContainsKey("CertificatePassword") -and
@@ -1165,9 +1212,10 @@ function New-M365DSCConnection
                 -ProfileName $ProfileName
             return "ServicePrincipalWithPath"
         }
-        $data.Add("ConnectionType", "ServicePrincipal")
+        $data.Add("ConnectionType", "ServicePrincipalWithPassword")
+        $data.Add("Tenant", $InboundParameters.TenantId)
         Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
-        return 'ServicePrincipal'
+        return 'ServicePrincipalWithPassword'
     }
     # Case only the ServicePrincipal with Thumbprint parameters are specified
     elseif ($null -eq $InboundParameters.Credential -and `
@@ -1186,6 +1234,10 @@ function New-M365DSCConnection
                 -CertificatePath $InboundParameters.CertificatePath `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
+
+            $data.Add("ConnectionType", "ServicePrincipalWithPath")
+            $data.Add("Tenant", $InboundParameters.TenantId)
+            Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
             return "ServicePrincipalWithPath"
         }
         #endregion
@@ -1243,6 +1295,15 @@ function New-M365DSCConnection
                     -ProfileName $ProfileName
             }
             $data.Add("ConnectionType", "Credential")
+            try
+            {
+                $tenantId = $InboundParameters.Credential.Username.Split('@')[1]
+                $data.Add("Tenant", $tenantId)
+            }
+            catch
+            {
+                Write-Verbose $_
+            }
             Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
             return "Credential"
         }
@@ -1250,6 +1311,7 @@ function New-M365DSCConnection
         elseif ($null -ne $InboundParameters.Credential -and `
                 -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
         {
+
             Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
@@ -1259,7 +1321,8 @@ function New-M365DSCConnection
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
         }
-        $data.Add("ConnectionType", "ServicePrincipal")
+        $data.Add("ConnectionType", "ServicePrincipalWithPath")
+        $data.Add("Tenant", $InboundParameters.TenantId)
         Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
 
         return "ServicePrincipalWithPath"
@@ -1279,6 +1342,10 @@ function New-M365DSCConnection
                 -ApplicationSecret $InboundParameters.ApplicationSecret `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
+
+            $data.Add("ConnectionType", "ServicePrincipalWithSecret")
+            $data.Add("Tenant", $InboundParameters.TenantId)
+            Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
             return "ServicePrincipalWithSecret"
         }
         else
@@ -1290,6 +1357,10 @@ function New-M365DSCConnection
                 -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
+
+            $data.Add("ConnectionType", "ServicePrincipalWithSecret")
+            $data.Add("Tenant", $InboundParameters.TenantId)
+            Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
             return "ServicePrincipalWithSecret"
         }
     }
@@ -1303,6 +1374,10 @@ function New-M365DSCConnection
             -SkipModuleReload $Global:CurrentModeIsExport `
             -ProfileName $ProfileName `
             -Url $Url
+
+        $data.Add("ConnectionType", "ServicePrincipalWithThumbprint")
+        $data.Add("Tenant", $InboundParameters.TenantId)
+        Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
         return "ServicePrincipalWithThumbprint"
     }
     else
