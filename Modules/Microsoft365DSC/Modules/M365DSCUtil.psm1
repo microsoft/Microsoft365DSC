@@ -317,6 +317,35 @@ function Compare-PSCustomObjectArrays
     return $DriftedProperties
 }
 
+function Get-M365DSCTenantNameFromParameterSet
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true, Position = 1)]
+        [System.Collections.HashTable]
+        $ParameterSet
+    )
+
+    if ($ParameterSet.TenantId)
+    {
+        return $ParameterSet.TenantId
+    }
+    elseif ($ParameterSet.Credential)
+    {
+        try
+        {
+            $tenantName = $ParameterSet.Credential.Username.Split('@')[1]
+            return $tenantName
+        }
+        catch
+        {
+            return $null
+        }
+    }
+}
+
 function Test-M365DSCParameterState
 {
     [CmdletBinding()]
@@ -337,7 +366,11 @@ function Test-M365DSCParameterState
 
         [Parameter(Position = 4)]
         [System.String]
-        $Source = 'Generic'
+        $Source = 'Generic',
+
+        [Parameter(Position = 5)]
+        [System.String]
+        $Tenant
     )
 
     #region Telemetry
@@ -641,7 +674,6 @@ function Test-M365DSCParameterState
         $EventMessage += "    <ConfigurationDrift Source=`"$Source`">`r`n"
 
         $EventMessage += "        <ParametersNotInDesiredState>`r`n"
-        $driftedValue = ''
         foreach ($key in $DriftedParameters.Keys)
         {
             Write-Verbose -Message "Detected Drifted Parameter [$Source]$key"
@@ -659,14 +691,19 @@ function Test-M365DSCParameterState
                 $driftedData.Add("CurrentValue",[string]($CurrentValues[$key]));
                 $driftedData.Add("DesiredValue",[string]($DesiredValues[$key]));
             }
+            $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
+            $driftedData.Add("Tenant", $TenantName)
             Add-M365DSCTelemetryEvent -Type "DriftInfo" -Data $driftedData
             #endregion
             $EventMessage += "            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n"
         }
 
         #region Telemetry
+        $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
         $data.Add("Event", "ConfigurationDrift")
+        $data.Add("Tenant", $TenantName)
         #endregion
+
         $EventMessage += "        </ParametersNotInDesiredState>`r`n"
         $EventMessage += "    </ConfigurationDrift>`r`n"
         $EventMessage += "    <DesiredValues>`r`n"
