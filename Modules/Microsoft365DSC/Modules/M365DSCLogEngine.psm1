@@ -1,6 +1,10 @@
-<# This method creates a new error log file for each session,
-   whenever an error is encountered, and appends valuable
-   troubleshooting information to the file;
+<#
+.Description
+This function creates a new error log file for each session, whenever an error
+is encountered, and appends valuable troubleshooting information to the file
+
+.Functionality
+Internal
 #>
 function New-M365DSCLogEntry
 {
@@ -70,6 +74,13 @@ function New-M365DSCLogEntry
     }
 }
 
+<#
+.Description
+This function creates a new entry in the M365DSC event log, based on the provided information
+
+.Functionality
+Internal
+#>
 function Add-M365DSCEvent
 {
     [CmdletBinding()]
@@ -135,6 +146,34 @@ function Add-M365DSCEvent
     }
 }
 
+<#
+.Description
+This function creates a ZIP package with a collection of troubleshooting information,
+like Verbose logs, M365DSC event log, PowerShell version, OS versions and LCM config.
+It is also able to anonymize this information (as much as possible), so important
+information isn't shared.
+
+.Parameter ExportFilePath
+The file path to the ZIP file that should be created.
+
+.Parameter NumberOfDays
+The number of days of logs that should be exported.
+
+.Parameter Anonymize
+Specify if the results should be anonymized.
+
+.Parameter Server
+(Anonymize=True) The server name that should be renamed.
+
+.Parameter Domain
+(Anonymize=True) The domain that should be renamed.
+
+.Parameter Url
+(Anonymize=True) The url that should be renamed.
+
+.Functionality
+Public
+#>
 function Export-M365DSCDiagnosticData
 {
     [CmdletBinding(DefaultParametersetName = 'None')]
@@ -259,3 +298,9 @@ function Export-M365DSCDiagnosticData
 
     Write-Host ('Completed with export. Information exported to {0}' -f $ExportFilePath) -ForegroundColor Yellow
 }
+
+Export-ModuleMember -Function @(
+    'Add-M365DSCEvent',
+    'Export-M365DSCDiagnosticData',
+    'New-M365DSCLogEntry'
+)

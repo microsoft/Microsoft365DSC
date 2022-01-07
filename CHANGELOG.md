@@ -25,6 +25,7 @@
 * MISC
   * Error Handling in Delta Report and removal of Authentication mechanism comparison;
     FIXES #1548, #1541
+  * Added automatic cmdlet documentation generation functions and prereqs.
 
 # 1.21.1229.1
 
