@@ -1,3 +1,10 @@
+<#
+.Description
+This function gets the Application Insights key to be used for storing telemetry
+
+.Functionality
+Internal, Hidden
+#>
 function Get-ApplicationInsightsTelemetryClient
 {
     [CmdletBinding()]
@@ -23,6 +30,13 @@ function Get-ApplicationInsightsTelemetryClient
     return $Global:M365DSCTelemetryEngine
 }
 
+<#
+.Description
+This function sends telemetry information to Application Insights
+
+.Functionality
+Internal
+#>
 function Add-M365DSCTelemetryEvent
 {
     [CmdletBinding()]
@@ -204,6 +218,22 @@ function Add-M365DSCTelemetryEvent
     }
 }
 
+<#
+.Description
+This function configures the telemetry feature of M365DSC
+
+.Parameter Enabled
+Enables or disables telemetry collection.
+
+.Parameter InstrumentationKey
+Specifies the Instrumention Key to be used to send the telemetry to.
+
+.Parameter ProjectName
+Specifies the name of the project to store the telemetry data under.
+
+.Functionality
+Public
+#>
 function Set-M365DSCTelemetryOption
 {
     [CmdletBinding()]
@@ -240,6 +270,13 @@ function Set-M365DSCTelemetryOption
     }
 }
 
+<#
+.Description
+This function gets the configuration for the M365DSC telemetry feature
+
+.Functionality
+Public
+#>
 function Get-M365DSCTelemetryOption
 {
     [CmdletBinding()]
@@ -262,6 +299,13 @@ function Get-M365DSCTelemetryOption
     }
 }
 
+<#
+.Description
+This function converts the data which is send to Application Insights to the correct format.
+
+.Functionality
+Internal
+#>
 function Format-M365DSCTelemetryParameters
 {
     [CmdletBinding()]
@@ -303,3 +347,10 @@ function Format-M365DSCTelemetryParameters
     }
     return $data
 }
+
+Export-ModuleMember -Function @(
+    'Add-M365DSCTelemetryEvent',
+    'Format-M365DSCTelemetryParameters',
+    'Get-M365DSCTelemetryOption',
+    'Set-M365DSCTelemetryOption'
+)

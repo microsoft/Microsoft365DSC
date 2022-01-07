@@ -1,4 +1,10 @@
-# This function tests the configuration of the agent
+<#
+.Description
+This function tests the configuration of the agent
+
+.Functionality
+Public
+#>
 function Test-M365DSCAgent
 {
     [CmdletBinding()]
@@ -105,3 +111,133 @@ function Test-M365DSCAgent
         Write-Host "The agent is properly configured."
     }
 }
+
+<#
+.Description
+This function configures the LCM with a self signed encryption certificate
+
+.Parameter KeepCertificate
+Specifies that the temporarily created CER file should not be deleted.
+
+.Parameter ForceRenew
+Specifies that a new certificate should be forcefully created.
+
+.Parameter GeneratePFX
+Specifies that a PFX export should be created for the generated certificate.
+
+.Parameter Password
+Specifies the password for the PFX file.
+
+.Functionality
+Public
+#>
+function Set-M365DSCAgentCertificateConfiguration
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter()]
+        [Switch]
+        $KeepCertificate,
+
+        [Parameter()]
+        [Switch]
+        $ForceRenew,
+
+        [Parameter()]
+        [Switch]
+        $GeneratePFX,
+
+        [Parameter()]
+        [System.String]
+        $Password = "Temp!P@ss123"
+    )
+
+    $existingCertificate = Get-ChildItem -Path Cert:\LocalMachine\My | `
+        Where-Object { $_.Subject -match "M365DSCEncryptionCert" }
+
+    if ($ForceRenew)
+    {
+        foreach ($cert in $existingCertificate)
+        {
+            Remove-Item $cert.PSPath | Out-Null
+        }
+        $existingCertificate = $null
+    }
+    if ($null -eq $existingCertificate)
+    {
+        Write-Verbose -Message "No existing M365DSC certificate found. Creating one."
+        $certificateFilePath = "$env:Temp\M365DSC.cer"
+        $cert = New-SelfSignedCertificate -Type DocumentEncryptionCertLegacyCsp `
+            -DnsName 'Microsoft365DSC' `
+            -Subject 'M365DSCEncryptionCert' `
+            -HashAlgorithm SHA256 `
+            -NotAfter (Get-Date).AddYears(10)
+        $cert | Export-Certificate -FilePath $certificateFilePath -Force | Out-Null
+        Import-Certificate -FilePath $certificateFilePath `
+            -CertStoreLocation 'Cert:\LocalMachine\My' -Confirm:$false | Out-Null
+        $existingCertificate = Get-ChildItem -Path Cert:\LocalMachine\My | `
+            Where-Object { $_.Subject -match "M365DSCEncryptionCert" }
+    }
+    else
+    {
+        Write-Verbose -Message "An existing M365DSc certificate was found. Re-using it."
+    }
+    $thumbprint = $existingCertificate.Thumbprint
+    Write-Verbose -Message "Using M365DSCEncryptionCert with thumbprint {$thumbprint}"
+
+    $configOutputFile = $env:Temp + "\M365DSCAgentLCMConfig.ps1"
+    $LCMConfigContent = @"
+    [DSCLocalConfigurationManager()]
+    Configuration M365AgentConfig
+    {
+        Node Localhost
+        {
+            Settings
+            {
+                CertificateID = '$thumbprint'
+            }
+        }
+    }
+    M365AgentConfig | Out-Null
+    Set-DSCLocalConfigurationManager M365AgentConfig -Force
+"@
+    $LCMConfigContent | Out-File $configOutputFile
+    & $configOutputFile
+
+    if ($KeepCertificate)
+    {
+        Write-Host "Certificate {$thumbprint} was stored under {$($env:Temp)} with name M365DSC.cer and M365DSC.pfx"
+    }
+    else
+    {
+        try
+        {
+            Remove-Item -Path $configOutputFile -Confirm:$false -ErrorAction SilentlyContinue
+            Remove-Item -Path "./M365AgentConfig" -Recurse -Confirm:$false -ErrorAction SilentlyContinue
+        }
+        catch
+        {
+            Write-Error $_
+        }
+    }
+
+    if ($GeneratePFX)
+    {
+        if ($Password -eq $null)
+        {
+            Throw "When the GeneratePFX switch is used, you also need to provide a password."
+        }
+        $securePassword = ConvertTo-SecureString -String $password -Force -AsPlainText
+        Export-PfxCertificate -Cert $existingCertificate.PSPath `
+            -FilePath $certificateFilePath.Replace('.cer', '.pfx') `
+            -Password $securePassword | Out-Null
+        Write-Host "Private Key stored at {$($certificateFilePath.Replace('.cer','.pfx'))}"
+    }
+    return $thumbprint
+}
+
+Export-ModuleMember -Function @(
+    'Set-M365DSCAgentCertificateConfiguration',
+    'Test-M365DSCAgent'
+)
