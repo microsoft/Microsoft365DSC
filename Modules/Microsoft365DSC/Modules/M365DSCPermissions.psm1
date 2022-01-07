@@ -1,5 +1,16 @@
 using namespace System.Management.Automation.Language
 
+<#
+.Description
+This function lists all Graph permissions required for the specified resources,
+both for reading and updating.
+
+.Parameter ResourceNameList
+An array of resource names for which the permissions should be determined.
+
+.Functionality
+Public
+#>
 function Get-M365DSCCompiledPermissionList
 {
     [CmdletBinding(DefaultParametersetName = 'None')]
@@ -64,6 +75,22 @@ function Get-M365DSCCompiledPermissionList
     return $results
 }
 
+<#
+.Description
+This function updates the required permissions in the Graph API for the specified resources and type
+
+.Parameter ResourceNameList
+An array of resource names for which the permissions should be determined.
+
+.Parameter All
+Specifies that the permissions should be determined for all resources.
+
+.Parameter Type
+For which action should the permissions be updated: Read or Update.
+
+.Functionality
+Public
+#>
 function Update-M365DSCAllowedGraphScopes
 {
     [CmdletBinding()]
@@ -131,10 +158,19 @@ function Update-M365DSCAllowedGraphScopes
     }
 }
 
+<#
+.Description
+This function updates the settings.json files for all resources that use Graph cmdlets.
+It is compiling a permissions list based on all used Graph cmdlets in the resource and
+retrieving the permissions for these cmdlets from the Graph. Then it updates the
+settings.json file
+
+.Functionality
+Public
+#>
 function Update-M365DSCResourcesSettingsJSON
 {
     [CmdletBinding()]
-    [OutputType()]
     param()
 
     Write-Verbose "Determining DSCResources path"
@@ -156,13 +192,7 @@ function Update-M365DSCResourcesSettingsJSON
 
             $sb = [ScriptBlock]::Create($content)
 
-            $Predicate = {
-                param( [Ast] $AstObject )
-
-                return ( $AstObject -is [FunctionDefinitionAst] )
-            }
-
-            $functions = $sb.Ast.FindAll($Predicate, $true)
+            $functions = $sb.Ast.FindAll({ $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] }, $true)
 
             $functions = $functions | Where-Object { $_.Name -in ("Get-TargetResource", "Set-TargetResource") }
 
@@ -257,3 +287,9 @@ function Update-M365DSCResourcesSettingsJSON
         }
     }
 }
+
+Export-ModuleMember -Function @(
+    'Get-M365DSCCompiledPermissionList',
+    'Update-M365DSCAllowedGraphScopes',
+    'Update-M365DSCResourcesSettingsJSON'
+)

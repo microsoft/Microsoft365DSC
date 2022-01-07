@@ -1,3 +1,11 @@
+<#
+.Description
+This function orchestrate the export process between Export-M365DSCConfiguration
+and the ReverseDSC module.
+
+.Functionality
+Internal
+#>
 function Start-M365DSCConfigurationExtract
 {
     [CmdletBinding()]
@@ -360,9 +368,9 @@ function Start-M365DSCConfigurationExtract
                 $resourceName = $ResourceModule.Name.Split('.')[0] -replace 'MSFT_', ''
 
                 if ((($Components -and ($Components -contains $resourceName)) -or $AllComponents -or `
-                    (-not $Components -and $null -eq $Workloads)) -and `
+                        (-not $Components -and $null -eq $Workloads)) -and `
                     ($ComponentsSpecified -or ($ComponentsToSkip -notcontains $resourceName)) -and `
-                    $resourcesNotSupported -notcontains $resourceName)
+                        $resourcesNotSupported -notcontains $resourceName)
                 {
                     $ResourcesToExport += $ResourceName
                     $ResourcesPath += $ResourceModule
@@ -522,8 +530,8 @@ function Start-M365DSCConfigurationExtract
         Write-Host "}"
         #endregion
 
-        $sessions = Get-PSSession | Where-Object -FilterScript {$_.Name -like "SfBPowerShellSessionViaTeamsModule_*" -or `
-            $_.Name -like "ExchangeOnlineInternalSession*"}
+        $sessions = Get-PSSession | Where-Object -FilterScript { $_.Name -like "SfBPowerShellSessionViaTeamsModule_*" -or `
+                $_.Name -like "ExchangeOnlineInternalSession*" }
         foreach ($session in $sessions)
         {
             try
@@ -664,6 +672,13 @@ function Start-M365DSCConfigurationExtract
     }
 }
 
+<#
+.Description
+This function gets all resources for the specified workloads
+
+.Functionality
+Internal, Hidden
+#>
 function Get-M365DSCResourcesByWorkloads
 {
     [CmdletBinding()]
@@ -686,10 +701,10 @@ function Get-M365DSCResourcesByWorkloads
         $ResourceName = $resource.Name -replace "MSFT_", "" -replace ".psm1", ""
         foreach ($Workload in $Workloads)
         {
-            if ($ResourceName.StartsWith($Workload,'CurrentCultureIgnoreCase') -and
+            if ($ResourceName.StartsWith($Workload, 'CurrentCultureIgnoreCase') -and
                 ($Mode -eq "Full" -or `
-                    ($Mode -eq "Default" -and -not $Global:FullComponents.Contains($ResourceName)) -or `
-                    ($Mode -eq "Lite" -and -not $Global:FullComponents.Contains($ResourceName) -and -not $Global:DefaultComponents.Contains($ResourceName))))
+                ($Mode -eq "Default" -and -not $Global:FullComponents.Contains($ResourceName)) -or `
+                ($Mode -eq "Lite" -and -not $Global:FullComponents.Contains($ResourceName) -and -not $Global:DefaultComponents.Contains($ResourceName))))
             {
                 $Components += $ResourceName
             }
@@ -697,3 +712,7 @@ function Get-M365DSCResourcesByWorkloads
     }
     return $Components
 }
+
+Export-ModuleMember -Function @(
+    'Start-M365DSCConfigurationExtract'
+)
