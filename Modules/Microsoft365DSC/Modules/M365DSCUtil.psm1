@@ -380,6 +380,43 @@ function Compare-PSCustomObjectArrays
     return $DriftedProperties
 }
 
+
+<#
+.Description
+This function retrieves the current tenant's name based on received authentication parameters.
+
+.Functionality
+Internal
+#>
+function Get-M365DSCTenantNameFromParameterSet
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true, Position = 1)]
+        [System.Collections.HashTable]
+        $ParameterSet
+    )
+
+    if ($ParameterSet.TenantId)
+    {
+        return $ParameterSet.TenantId
+    }
+    elseif ($ParameterSet.Credential)
+    {
+        try
+        {
+            $tenantName = $ParameterSet.Credential.Username.Split('@')[1]
+            return $tenantName
+        }
+        catch
+        {
+            return $null
+        }
+    }
+}
+
 <#
 .Description
 This function tests if the DSC hashtables have the same values
@@ -407,7 +444,11 @@ function Test-M365DSCParameterState
 
         [Parameter(Position = 4)]
         [System.String]
-        $Source = 'Generic'
+        $Source = 'Generic',
+
+        [Parameter(Position = 5)]
+        [System.String]
+        $Tenant
     )
 
     #region Telemetry
@@ -711,7 +752,6 @@ function Test-M365DSCParameterState
         $EventMessage += "    <ConfigurationDrift Source=`"$Source`">`r`n"
 
         $EventMessage += "        <ParametersNotInDesiredState>`r`n"
-        $driftedValue = ''
         foreach ($key in $DriftedParameters.Keys)
         {
             Write-Verbose -Message "Detected Drifted Parameter [$Source]$key"
@@ -729,14 +769,19 @@ function Test-M365DSCParameterState
                 $driftedData.Add("CurrentValue", [string]($CurrentValues[$key]));
                 $driftedData.Add("DesiredValue", [string]($DesiredValues[$key]));
             }
+            $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
+            $driftedData.Add("Tenant", $TenantName)
             Add-M365DSCTelemetryEvent -Type "DriftInfo" -Data $driftedData
             #endregion
             $EventMessage += "            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n"
         }
 
         #region Telemetry
+        $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
         $data.Add("Event", "ConfigurationDrift")
+        $data.Add("Tenant", $TenantName)
         #endregion
+
         $EventMessage += "        </ParametersNotInDesiredState>`r`n"
         $EventMessage += "    </ConfigurationDrift>`r`n"
         $EventMessage += "    <DesiredValues>`r`n"
@@ -1237,6 +1282,7 @@ function New-M365DSCConnection
     {
         $message = 'No Authentication method was provided'
         Write-Verbose -Message $message
+        $message += "`r`nProvided Keys --> $($InboundParameters.Keys)"
         $data.Add("Event", "Error")
         $data.Add("Exception", $message)
         $errorText = "You must specify either the Credential or ApplicationId, TenantId and CertificateThumbprint parameters."
@@ -1258,6 +1304,17 @@ function New-M365DSCConnection
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
             $data.Add("ConnectionType", "Credential")
+
+            try
+            {
+                $tenantId = $InboundParameters.Credential.Username.Split('@')[1]
+                $data.Add("Tenant", $tenantId)
+            }
+            catch
+            {
+                Write-Verbose $_
+            }
+
             Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
             return 'Credentials'
         }
@@ -1270,6 +1327,17 @@ function New-M365DSCConnection
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
             $data.Add("ConnectionType", "Credential")
+
+            try
+            {
+                $tenantId = $InboundParameters.Credential.Username.Split('@')[1]
+                $data.Add("Tenant", $tenantId)
+            }
+            catch
+            {
+                Write-Verbose $_
+            }
+
             Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
             return 'Credentials'
         }
@@ -1281,6 +1349,20 @@ function New-M365DSCConnection
                 -Credential $InboundParameters.Credential `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
+
+            $data.Add("ConnectionType", "CredentialsWithApplicationId")
+
+            try
+            {
+                $tenantId = $InboundParameters.Credential.Username.Split('@')[1]
+                $data.Add("Tenant", $tenantId)
+            }
+            catch
+            {
+                Write-Verbose $_
+            }
+
+            Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
             return 'CredentialsWithApplicationId'
         }
         if ($InboundParameters.ContainsKey("ApplicationSecret") -and
@@ -1289,9 +1371,15 @@ function New-M365DSCConnection
             Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -ApplicationSecret $InboundParameters.ApplicationSecret `
+                -TenantId $InboundParameters.TenantId `
                 -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
+
+            $data.Add("ConnectionType", "ServicePrincipalWithSecret")
+            $data.Add("Tenant", $InboundParameters.TenantId)
+
+            Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
             return "ServicePrincipalWithSecret"
         }
         if ($InboundParameters.ContainsKey("CertificatePath") -and
@@ -1309,6 +1397,11 @@ function New-M365DSCConnection
                 -CertificateThumbprint $InboundParameters.CertificateThumbprint `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
+
+            $data.Add("ConnectionType", "ServicePrincipalWithThumbprint")
+            $data.Add("Tenant", $InboundParameters.TenantId)
+
+            Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
             return "ServicePrincipalWithThumbprint"
         }
         if ($InboundParameters.ContainsKey("CertificatePassword") -and
@@ -1323,9 +1416,10 @@ function New-M365DSCConnection
                 -ProfileName $ProfileName
             return "ServicePrincipalWithPath"
         }
-        $data.Add("ConnectionType", "ServicePrincipal")
+        $data.Add("ConnectionType", "ServicePrincipalWithPassword")
+        $data.Add("Tenant", $InboundParameters.TenantId)
         Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
-        return 'ServicePrincipal'
+        return 'ServicePrincipalWithPassword'
     }
     # Case only the ServicePrincipal with Thumbprint parameters are specified
     elseif ($null -eq $InboundParameters.Credential -and `
@@ -1344,6 +1438,10 @@ function New-M365DSCConnection
                 -CertificatePath $InboundParameters.CertificatePath `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
+
+            $data.Add("ConnectionType", "ServicePrincipalWithPath")
+            $data.Add("Tenant", $InboundParameters.TenantId)
+            Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
             return "ServicePrincipalWithPath"
         }
         #endregion
@@ -1370,6 +1468,7 @@ function New-M365DSCConnection
         {
             $message = 'No Authentication method was provided'
             Write-Verbose -Message $message
+            $message += "`r`nProvided Keys --> $($InboundParameters.Keys)"
             $data.Add("Event", "Error")
             $data.Add("Exception", $message)
             $errorText = "You must specify either the Credential or ApplicationId, TenantId and CertificateThumbprint parameters."
@@ -1400,6 +1499,15 @@ function New-M365DSCConnection
                     -ProfileName $ProfileName
             }
             $data.Add("ConnectionType", "Credential")
+            try
+            {
+                $tenantId = $InboundParameters.Credential.Username.Split('@')[1]
+                $data.Add("Tenant", $tenantId)
+            }
+            catch
+            {
+                Write-Verbose $_
+            }
             Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
             return "Credential"
         }
@@ -1407,6 +1515,7 @@ function New-M365DSCConnection
         elseif ($null -ne $InboundParameters.Credential -and `
                 -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
         {
+
             Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
@@ -1416,7 +1525,8 @@ function New-M365DSCConnection
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
         }
-        $data.Add("ConnectionType", "ServicePrincipal")
+        $data.Add("ConnectionType", "ServicePrincipalWithPath")
+        $data.Add("Tenant", $InboundParameters.TenantId)
         Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
 
         return "ServicePrincipalWithPath"
@@ -1436,6 +1546,10 @@ function New-M365DSCConnection
                 -ApplicationSecret $InboundParameters.ApplicationSecret `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
+
+            $data.Add("ConnectionType", "ServicePrincipalWithSecret")
+            $data.Add("Tenant", $InboundParameters.TenantId)
+            Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
             return "ServicePrincipalWithSecret"
         }
         else
@@ -1447,6 +1561,10 @@ function New-M365DSCConnection
                 -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport `
                 -ProfileName $ProfileName
+
+            $data.Add("ConnectionType", "ServicePrincipalWithSecret")
+            $data.Add("Tenant", $InboundParameters.TenantId)
+            Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
             return "ServicePrincipalWithSecret"
         }
     }
@@ -1460,6 +1578,10 @@ function New-M365DSCConnection
             -SkipModuleReload $Global:CurrentModeIsExport `
             -ProfileName $ProfileName `
             -Url $Url
+
+        $data.Add("ConnectionType", "ServicePrincipalWithThumbprint")
+        $data.Add("Tenant", $InboundParameters.TenantId)
+        Add-M365DSCTelemetryEvent -Data $data -Type "Connection"
         return "ServicePrincipalWithThumbprint"
     }
     else
@@ -2890,7 +3012,7 @@ function New-M365DSCCmdletDocumentation
                     }
                     $mandatory = $parameter.Attributes.Where({ $_.TypeName.FullName -eq "Parameter" }).NamedArguments.Where({ $_.ArgumentName -eq "Mandatory" }).Argument.VariablePath.UserPath
                     if ($null -eq $mandatory)
-                    { $mandatory = "False" 
+                    { $mandatory = "False"
                     }
                     $mandatory = (Get-Culture).TextInfo.ToTitleCase($mandatory.ToLower())
 

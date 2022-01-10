@@ -133,6 +133,12 @@ function Add-M365DSCEvent
             }
         }
 
+        # Limit the size of the message. Maximum is about 32,766
+        if ($message.Length -gt 32766)
+        {
+            $message = $message.Substring(0, 32766)
+        }
+
         Write-EventLog -LogName $LogName -Source $Source `
             -EventId $EventID -Message $Message -EntryType $EntryType
     }
