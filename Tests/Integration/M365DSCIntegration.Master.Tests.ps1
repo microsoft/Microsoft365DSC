@@ -32,7 +32,6 @@ Configuration Master
     $Domain = $GlobalAdmin.Username.Split('@')[1]
     Node Localhost
     {
-
         #region AAD
         AADApplication 'DSCApp1'
         {
@@ -706,150 +705,150 @@ Configuration Master
                 Ensure       = "Present"
                 Credential   = $GlobalAdmin
             }
-        }
-        #endregion
+            #endregion
 
-        #region SPO
-        SPOSearchManagedProperty ManagedProp1
-        {
-            Name       = "Gilles"
-            type       = "Text"
-            Credential = $GlobalAdmin
-            Ensure     = "Present"
-        }
-
-        SPOSite ClassicSite
-        {
-            Title      = "Classic Site"
-            Url        = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
-            Owner      = $GlobalAdmin.UserName
-            Template   = "STS#0"
-            TimeZoneID = 13
-            Credential = $GlobalAdmin
-            Ensure     = "Present"
-        }
-
-        SPOSite ModernSite
-        {
-            Title      = "Modern Site"
-            Url        = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
-            Owner      = $GlobalAdmin.UserName
-            Template   = "STS#3"
-            TimeZoneID = 13
-            Credential = $GlobalAdmin
-            Ensure     = "Present"
-        }
-
-        SPOSite TestWithoutTemplate
-        {
-            Title                                       = "No Templates"
-            Url                                         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/NoTemplates"
-            Owner                                       = $GlobalAdmin.UserName
-            TimeZoneID                                  = 13
-            AllowSelfServiceUpgrade                     = $True
-            AnonymousLinkExpirationInDays               = 0
-            CommentsOnSitePagesDisabled                 = $False
-            DefaultLinkPermission                       = "None"
-            DefaultSharingLinkType                      = "None"
-            DenyAddAndCustomizePages                    = $True
-            DisableAppViews                             = "NotDisabled"
-            DisableCompanyWideSharingLinks              = "NotDisabled"
-            DisableFlows                                = $False
-            LocaleId                                    = 1033
-            OverrideTenantAnonymousLinkExpirationPolicy = $False
-            ShowPeoplePickerSuggestionsForGuestUsers    = $False
-            SocialBarOnSitePagesDisabled                = $False
-            StorageMaximumLevel                         = 26214400
-            StorageWarningLevel                         = 25574400
-            Ensure                                      = "Present"
-            Credential                                  = $GlobalAdmin
-        }
-
-        SPOPropertyBag MyKey
-        {
-            Url        = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
-            Key        = "MyKey"
-            Value      = "MyValue#3"
-            Ensure     = "Present"
-            Credential = $GlobalAdmin
-        }
-
-        SPOSearchResultSource SearchMP
-        {
-            Name        = "MyResultSource"
-            Description = "Description of item"
-            Protocol    = "Local"
-            type        = "SharePoint"
-            Ensure      = "Present"
-            Credential  = $GlobalAdmin
-        }
-
-        SPOSiteAuditSettings MyStorageEntity
-        {
-            Url        = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
-            AuditFlags = "All"
-            Credential = $GlobalAdmin
-        }
-
-        SPOSiteGroup TestSiteGroup
-        {
-            Url              = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
-            Identity         = "TestSiteGroup"
-            PermissionLevels = @("Edit", "Read")
-            Ensure           = "Present"
-            Credential       = $GlobalAdmin
-        }
-        SPOTheme SPTheme01
-        {
-            Name       = "Integration Palette"
-            Palette    = @(MSFT_SPOThemePaletteProperty
-                {
-                    Property = "themePrimary"
-                    Value    = "#0078d4"
-                }
-                MSFT_SPOThemePaletteProperty
-                {
-                    Property = "themeLighterAlt"
-                    Value    = "#eff6fc"
-                }
-            )
-            Credential = $GlobalAdmin
-        }
-
-        SPOTenantCdnEnabled CDN
-        {
-            Enable     = $True
-            CdnType    = "Public"
-            Ensure     = "Present"
-            Credential = $GlobalAdmin
-        }
-
-        SPOOrgAssetsLibrary OrgAssets
-        {
-            LibraryUrl = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern/Shared Documents"
-            CdnType    = "Public"
-            Ensure     = "Present"
-            Credential = $GlobalAdmin
-        }
-
-        # TODO - Investigate this for GCC
-        <#if ($Environment -ne 'GCC')
-        {
-            SPOUserProfileProperty SPOUserProfileProperty
+            #region SPO
+            SPOSearchManagedProperty ManagedProp1
             {
-                UserName           = "admin@$Domain"
-                Properties         = @(
-                    MSFT_SPOUserProfilePropertyInstance
+                Name       = "Gilles"
+                type       = "Text"
+                Credential = $GlobalAdmin
+                Ensure     = "Present"
+            }
+
+            SPOSite ClassicSite
+            {
+                Title      = "Classic Site"
+                Url        = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
+                Owner      = $GlobalAdmin.UserName
+                Template   = "STS#0"
+                TimeZoneID = 13
+                Credential = $GlobalAdmin
+                Ensure     = "Present"
+            }
+
+            SPOSite ModernSite
+            {
+                Title      = "Modern Site"
+                Url        = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
+                Owner      = $GlobalAdmin.UserName
+                Template   = "STS#3"
+                TimeZoneID = 13
+                Credential = $GlobalAdmin
+                Ensure     = "Present"
+            }
+
+            SPOSite TestWithoutTemplate
+            {
+                Title                                       = "No Templates"
+                Url                                         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/NoTemplates"
+                Owner                                       = $GlobalAdmin.UserName
+                TimeZoneID                                  = 13
+                AllowSelfServiceUpgrade                     = $True
+                AnonymousLinkExpirationInDays               = 0
+                CommentsOnSitePagesDisabled                 = $False
+                DefaultLinkPermission                       = "None"
+                DefaultSharingLinkType                      = "None"
+                DenyAddAndCustomizePages                    = $True
+                DisableAppViews                             = "NotDisabled"
+                DisableCompanyWideSharingLinks              = "NotDisabled"
+                DisableFlows                                = $False
+                LocaleId                                    = 1033
+                OverrideTenantAnonymousLinkExpirationPolicy = $False
+                ShowPeoplePickerSuggestionsForGuestUsers    = $False
+                SocialBarOnSitePagesDisabled                = $False
+                StorageMaximumLevel                         = 26214400
+                StorageWarningLevel                         = 25574400
+                Ensure                                      = "Present"
+                Credential                                  = $GlobalAdmin
+            }
+
+            SPOPropertyBag MyKey
+            {
+                Url        = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
+                Key        = "MyKey"
+                Value      = "MyValue#3"
+                Ensure     = "Present"
+                Credential = $GlobalAdmin
+            }
+
+            SPOSearchResultSource SearchMP
+            {
+                Name        = "MyResultSource"
+                Description = "Description of item"
+                Protocol    = "Local"
+                type        = "SharePoint"
+                Ensure      = "Present"
+                Credential  = $GlobalAdmin
+            }
+
+            SPOSiteAuditSettings MyStorageEntity
+            {
+                Url        = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
+                AuditFlags = "All"
+                Credential = $GlobalAdmin
+            }
+
+            SPOSiteGroup TestSiteGroup
+            {
+                Url              = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
+                Identity         = "TestSiteGroup"
+                PermissionLevels = @("Edit", "Read")
+                Ensure           = "Present"
+                Credential       = $GlobalAdmin
+            }
+            SPOTheme SPTheme01
+            {
+                Name       = "Integration Palette"
+                Palette    = @(MSFT_SPOThemePaletteProperty
                     {
-                        Key   = "FavoriteFood"
-                        Value = "Pasta"
+                        Property = "themePrimary"
+                        Value    = "#0078d4"
+                    }
+                    MSFT_SPOThemePaletteProperty
+                    {
+                        Property = "themeLighterAlt"
+                        Value    = "#eff6fc"
                     }
                 )
                 Credential = $GlobalAdmin
-                Ensure             = "Present"
             }
-        }#>
-        #endregion
+
+            SPOTenantCdnEnabled CDN
+            {
+                Enable     = $True
+                CdnType    = "Public"
+                Ensure     = "Present"
+                Credential = $GlobalAdmin
+            }
+
+            SPOOrgAssetsLibrary OrgAssets
+            {
+                LibraryUrl = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern/Shared Documents"
+                CdnType    = "Public"
+                Ensure     = "Present"
+                Credential = $GlobalAdmin
+            }
+
+            # TODO - Investigate this for GCC
+            <#if ($Environment -ne 'GCC')
+            {
+                SPOUserProfileProperty SPOUserProfileProperty
+                {
+                    UserName           = "admin@$Domain"
+                    Properties         = @(
+                        MSFT_SPOUserProfilePropertyInstance
+                        {
+                            Key   = "FavoriteFood"
+                            Value = "Pasta"
+                        }
+                    )
+                    Credential = $GlobalAdmin
+                    Ensure             = "Present"
+                }
+            }#>
+            #endregion
+        }
 
         #region Teams
         TeamsUpgradeConfiguration UpgradeConfig
