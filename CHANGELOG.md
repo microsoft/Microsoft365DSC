@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# 1.22.112.1
+
+* TeamsMeetingPolicy
+  * Added support for property WhoCanRegister;
+    FIXES #1483
+
 # 1.22.105.1
 
 * AADNamedLocationPolicy
