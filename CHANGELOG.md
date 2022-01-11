@@ -5,6 +5,8 @@
 * TeamsMeetingPolicy
   * Added support for property WhoCanRegister;
     FIXES #1483
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to 1.0.83;
 
 # 1.22.105.1
 
