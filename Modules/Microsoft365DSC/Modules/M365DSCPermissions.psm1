@@ -108,7 +108,12 @@ function Update-M365DSCAllowedGraphScopes
         [Parameter(Mandatory = $true)]
         [ValidateSet('Read', 'Update')]
         [System.String]
-        $Type
+        $Type,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Global', 'China', 'USGov', 'USGovDoD', 'Germany')]
+        [System.String]
+        $Environment = 'Global'
     )
 
     if ($All)
@@ -147,7 +152,7 @@ function Update-M365DSCAllowedGraphScopes
     }
 
     Write-Verbose -Message 'Connecting to MS Graph to update permissions'
-    $result = Connect-MgGraph @params
+    $result = Connect-MgGraph @params -Environment $Environment
     if ($result -eq 'Welcome To Microsoft Graph!')
     {
         Write-Output 'Allowed Graph scopes updated!'
