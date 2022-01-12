@@ -32,7 +32,6 @@ Configuration Master
     $Domain = $GlobalAdmin.Username.Split('@')[1]
     Node Localhost
     {
-
         #region AAD
         AADApplication 'DSCApp1'
         {
@@ -186,20 +185,23 @@ Configuration Master
             Credential      = $GlobalAdmin
         }#>
 
-        AADServicePrincipal 'DSCAADServicePrincipal1'
+        if ($Environment -eq 'Public')
         {
-            AccountEnabled            = $True;
-            AlternativeNames          = @();
-            AppId                     = "46dc333e-6f5e-4bdd-8f7f-aa0c1fa68acc";
-            AppRoleAssignmentRequired = $False;
-            Credential                = $GlobalAdmin;
-            DisplayName               = "Microsoft365DSC";
-            Ensure                    = "Present";
-            ObjectID                  = "3c3d9e95-2456-43c8-a3c7-a5879c52a919";
-            ReplyURLs                 = @("https://app.getpostman.com/oauth2/callback");
-            ServicePrincipalNames     = @("46dc333e-6f5e-4bdd-8f7f-aa0c1fa68acc");
-            ServicePrincipalType      = "Application";
-            Tags                      = @("WindowsAzureActiveDirectoryIntegratedApp");
+            AADServicePrincipal 'DSCAADServicePrincipal1'
+            {
+                AccountEnabled            = $True;
+                AlternativeNames          = @();
+                AppId                     = "46dc333e-6f5e-4bdd-8f7f-aa0c1fa68acc";
+                AppRoleAssignmentRequired = $False;
+                Credential                = $GlobalAdmin;
+                DisplayName               = "Microsoft365DSC";
+                Ensure                    = "Present";
+                ObjectID                  = "3c3d9e95-2456-43c8-a3c7-a5879c52a919";
+                ReplyURLs                 = @("https://app.getpostman.com/oauth2/callback");
+                ServicePrincipalNames     = @("46dc333e-6f5e-4bdd-8f7f-aa0c1fa68acc");
+                ServicePrincipalType      = "Application";
+                Tags                      = @("WindowsAzureActiveDirectoryIntegratedApp");
+            }
         }
 
         AADTenantDetails 'DSCTenantDetails'
@@ -290,19 +292,18 @@ Configuration Master
         }#>
 
         $CASIdentity = 'ExchangeOnlineEssentials-759100cd-4fb6-46db-80ae-bb0ef4bd92b0'
-        if ($Environment -eq 'GCC')
+        if ($Environment -eq 'Public')
         {
-            $CASIdentity = 'ExchangeOnlineEssentials-84fb79e4-1527-4f11-b2b9-48635783fcb2'
-        }
-        EXOCASMailboxPlan CASMailboxPlan
-        {
-            ActiveSyncEnabled = $True
-            OwaMailboxPolicy  = "OwaMailboxPolicy-Default"
-            Credential        = $GlobalAdmin
-            PopEnabled        = $True
-            Identity          = $CASIdentity
-            Ensure            = "Present"
-            ImapEnabled       = $True
+            EXOCASMailboxPlan CASMailboxPlan
+            {
+                ActiveSyncEnabled = $True
+                OwaMailboxPolicy  = "OwaMailboxPolicy-Default"
+                Credential        = $GlobalAdmin
+                PopEnabled        = $True
+                Identity          = $CASIdentity
+                Ensure            = "Present"
+                ImapEnabled       = $True
+            }
         }
 
         EXOClientAccessRule ClientAccessRule
@@ -448,16 +449,19 @@ Configuration Master
             Ensure            = "Present"
         }
 
-        O365Group O365DSCCoreTeam
+        if ($Environment -eq 'Public')
         {
-            DisplayName  = "Office365DSC Core Team"
-            MailNickName = "O365DSCCore"
-            ManagedBy    = "admin@$Domain"
-            Description  = "Group for all the Core Team members"
-            Members      = @("John.Smith@$Domain")
-            Credential   = $GlobalAdmin
-            Ensure       = "Present"
-            DependsOn    = "[O365User]JohnSmith"
+            O365Group O365DSCCoreTeam
+            {
+                DisplayName  = "Office365DSC Core Team"
+                MailNickName = "O365DSCCore"
+                ManagedBy    = "admin@$Domain"
+                Description  = "Group for all the Core Team members"
+                Members      = @("John.Smith@$Domain")
+                Credential   = $GlobalAdmin
+                Ensure       = "Present"
+                DependsOn    = "[O365User]JohnSmith"
+            }
         }
         #endregion
 
@@ -478,370 +482,373 @@ Configuration Master
         #endregion
 
         #region SC
-        SCAuditConfigurationPolicy SharePointAuditPolicy
+        if ($Environment -ne 'GCCH')
         {
-            Workload   = "SharePoint"
-            Ensure     = "Present"
-            Credential = $GlobalAdmin
-        }
-
-        SCAuditConfigurationPolicy OneDriveAuditPolicy
-        {
-            Workload   = "OneDriveForBusiness"
-            Ensure     = "Present"
-            Credential = $GlobalAdmin
-        }
-
-        SCAuditConfigurationPolicy ExchangeAuditPolicy
-        {
-            Workload   = "Exchange"
-            Ensure     = "Present"
-            Credential = $GlobalAdmin
-        }
-
-        SCComplianceSearch DemoSearchSPO
-        {
-            Case                                  = "Integration Case"
-            HoldNames                             = @()
-            Name                                  = "Integration Compliance Search - SPO"
-            Ensure                                = "Present"
-            Language                              = "iv"
-            Credential                            = $GlobalAdmin
-            AllowNotFoundExchangeLocationsEnabled = $False
-            SharePointLocation                    = @("All")
-        }
-
-        SCComplianceSearch DemoSearchEXO
-        {
-            Case                                  = "Integration Case"
-            HoldNames                             = @()
-            Name                                  = "Integration Compliance Search - EXO"
-            Ensure                                = "Present"
-            Language                              = "iv"
-            Credential                            = $GlobalAdmin
-            AllowNotFoundExchangeLocationsEnabled = $False
-            ExchangeLocation                      = @("All")
-            PublicFolderLocation                  = @("All")
-        }
-
-        SCComplianceSearchAction DemoSearchActionRetention
-        {
-            IncludeSharePointDocumentVersions = $False
-            Action                            = "Retention"
-            SearchName                        = "Integration Compliance Search - EXO"
-            Credential                        = $GlobalAdmin
-            IncludeCredential                 = $False
-            RetryOnError                      = $False
-            ActionScope                       = "IndexedItemsOnly"
-            Ensure                            = "Present"
-            EnableDedupe                      = $False
-        }
-
-        SCComplianceSearchAction DemoSearchActionPurge
-        {
-            Action            = "Purge"
-            SearchName        = "Integration Compliance Search - EXO"
-            Credential        = $GlobalAdmin
-            IncludeCredential = $False
-            RetryOnError      = $False
-            Ensure            = "Present"
-        }
-
-        SCComplianceCase DemoCase
-        {
-            Name        = "Integration Case"
-            Description = "This Case is generated by the Integration Tests"
-            Status      = "Active"
-            Ensure      = "Present"
-            Credential  = $GlobalAdmin
-        }
-
-        SCCaseHoldPolicy DemoCaseHoldPolicy
-        {
-            Case                 = "Integration Case"
-            ExchangeLocation     = "John.Smith@$Domain"
-            Name                 = "Integration Hold"
-            PublicFolderLocation = "All"
-            Comment              = "This is a test for integration"
-            Ensure               = "Present"
-            Enabled              = $True
-            Credential           = $GlobalAdmin
-        }
-
-        SCCaseHoldRule DemoHoldRule
-        {
-            Name              = "Integration Hold"
-            Policy            = "Integration Hold"
-            Comment           = "This is a demo rule"
-            Disabled          = $false
-            ContentMatchQuery = "filename:2016 budget filetype:xlsx"
-            Ensure            = "Present"
-            Credential        = $GlobalAdmin
-        }
-
-        SCComplianceTag DemoRule
-        {
-            Name              = "DemoTag"
-            Comment           = "This is a Demo Tag"
-            RetentionAction   = "Keep"
-            RetentionDuration = "1025"
-            RetentionType     = "ModificationAgeInDays"
-            FilePlanProperty  = MSFT_SCFilePlanProperty
+            SCAuditConfigurationPolicy SharePointAuditPolicy
             {
-                FilePlanPropertyDepartment = "Human resources"
-                FilePlanPropertyCategory   = "Accounts receivable"
+                Workload   = "SharePoint"
+                Ensure     = "Present"
+                Credential = $GlobalAdmin
             }
-            Ensure            = "Present"
-            Credential        = $GlobalAdmin
-        }
 
-        SCDLPCompliancePolicy DLPPolicy
-        {
-            Name               = "MyDLPPolicy"
-            Comment            = "Test Policy"
-            Priority           = 0
-            SharePointLocation = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
-            Ensure             = "Present"
-            Credential         = $GlobalAdmin
-        }
-
-        SCDLPComplianceRule DLPRule
-        {
-            Name        = "MyDLPRule"
-            Policy      = "MyDLPPolicy"
-            BlockAccess = $True
-            Ensure      = "Present"
-            Credential  = $GlobalAdmin
-        }
-
-        SCFilePlanPropertyAuthority FilePlanPropertyAuthority
-        {
-            Name       = "My Authority"
-            Ensure     = "Present"
-            Credential = $GlobalAdmin
-        }
-
-        SCFilePlanPropertyCategory FilePlanPropertyCategory
-        {
-            Name       = "My Category"
-            Ensure     = "Present"
-            Credential = $GlobalAdmin
-        }
-
-        SCFilePlanPropertyCitation IntegrationCitation
-        {
-            Name                 = "Integration Citation"
-            CitationURL          = "https://contoso.com"
-            CitationJurisdiction = "Federal"
-            Ensure               = "Present"
-            Credential           = $GlobalAdmin
-        }
-
-        SCFilePlanPropertyDepartment FilePlanPropertyDepartment
-        {
-            Name       = "Demo Department"
-            Ensure     = "Present"
-            Credential = $GlobalAdmin
-        }
-
-        SCFilePlanPropertyReferenceId FilePlanPropertyReferenceId
-        {
-            Name       = "My Reference ID"
-            Ensure     = "Present"
-            Credential = $GlobalAdmin
-        }
-
-        SCRetentionCompliancePolicy RCPolicy
-        {
-            Name             = "MyRCPolicy"
-            Comment          = "Test Policy"
-            ExchangeLocation = @()
-            Ensure           = "Present"
-            Credential       = $GlobalAdmin
-        }
-
-        SCRetentionComplianceRule RCRule
-        {
-            Name                         = "DemoRule2"
-            Policy                       = "MyRCPolicy"
-            Comment                      = "This is a Demo Rule"
-            RetentionComplianceAction    = "Keep"
-            RetentionDuration            = "Unlimited"
-            RetentionDurationDisplayHint = "Days"
-            Credential                   = $GlobalAdmin
-            Ensure                       = "Present"
-        }
-
-        SCRetentionEventType SCEventType
-        {
-            Comment    = "DSC Event Type description."
-            Name       = "DSCEventType"
-            Ensure     = "Present"
-            Credential = $GlobalAdmin
-
-        }
-
-        SCSupervisoryReviewPolicy SRPolicy
-        {
-            Name       = "MySRPolicy"
-            Comment    = "Test Policy"
-            Reviewers  = @($GlobalAdmin.UserName)
-            Ensure     = "Present"
-            Credential = $GlobalAdmin
-        }
-
-        SCSupervisoryReviewRule SRRule
-        {
-            Name         = "DemoRule"
-            Condition    = "(Reviewee:$($GlobalAdmin.UserName))"
-            SamplingRate = 100
-            Policy       = 'MySRPolicy'
-            Ensure       = "Present"
-            Credential   = $GlobalAdmin
-        }
-        #endregion
-
-        #region SPO
-        SPOSearchManagedProperty ManagedProp1
-        {
-            Name       = "Gilles"
-            type       = "Text"
-            Credential = $GlobalAdmin
-            Ensure     = "Present"
-        }
-
-        SPOSite ClassicSite
-        {
-            Title      = "Classic Site"
-            Url        = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
-            Owner      = $GlobalAdmin.UserName
-            Template   = "STS#0"
-            TimeZoneID = 13
-            Credential = $GlobalAdmin
-            Ensure     = "Present"
-        }
-
-        SPOSite ModernSite
-        {
-            Title      = "Modern Site"
-            Url        = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
-            Owner      = $GlobalAdmin.UserName
-            Template   = "STS#3"
-            TimeZoneID = 13
-            Credential = $GlobalAdmin
-            Ensure     = "Present"
-        }
-
-        SPOSite TestWithoutTemplate
-        {
-            Title                                       = "No Templates"
-            Url                                         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/NoTemplates"
-            Owner                                       = $GlobalAdmin.UserName
-            TimeZoneID                                  = 13
-            AllowSelfServiceUpgrade                     = $True
-            AnonymousLinkExpirationInDays               = 0
-            CommentsOnSitePagesDisabled                 = $False
-            DefaultLinkPermission                       = "None"
-            DefaultSharingLinkType                      = "None"
-            DenyAddAndCustomizePages                    = $True
-            DisableAppViews                             = "NotDisabled"
-            DisableCompanyWideSharingLinks              = "NotDisabled"
-            DisableFlows                                = $False
-            LocaleId                                    = 1033
-            OverrideTenantAnonymousLinkExpirationPolicy = $False
-            ShowPeoplePickerSuggestionsForGuestUsers    = $False
-            SocialBarOnSitePagesDisabled                = $False
-            StorageMaximumLevel                         = 26214400
-            StorageWarningLevel                         = 25574400
-            Ensure                                      = "Present"
-            Credential                                  = $GlobalAdmin
-        }
-
-        SPOPropertyBag MyKey
-        {
-            Url        = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
-            Key        = "MyKey"
-            Value      = "MyValue#3"
-            Ensure     = "Present"
-            Credential = $GlobalAdmin
-        }
-
-        SPOSearchResultSource SearchMP
-        {
-            Name        = "MyResultSource"
-            Description = "Description of item"
-            Protocol    = "Local"
-            type        = "SharePoint"
-            Ensure      = "Present"
-            Credential  = $GlobalAdmin
-        }
-
-        SPOSiteAuditSettings MyStorageEntity
-        {
-            Url        = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
-            AuditFlags = "All"
-            Credential = $GlobalAdmin
-        }
-
-        SPOSiteGroup TestSiteGroup
-        {
-            Url              = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
-            Identity         = "TestSiteGroup"
-            PermissionLevels = @("Edit", "Read")
-            Ensure           = "Present"
-            Credential       = $GlobalAdmin
-        }
-        SPOTheme SPTheme01
-        {
-            Name       = "Integration Palette"
-            Palette    = @(MSFT_SPOThemePaletteProperty
-                {
-                    Property = "themePrimary"
-                    Value    = "#0078d4"
-                }
-                MSFT_SPOThemePaletteProperty
-                {
-                    Property = "themeLighterAlt"
-                    Value    = "#eff6fc"
-                }
-            )
-            Credential = $GlobalAdmin
-        }
-
-        SPOTenantCdnEnabled CDN
-        {
-            Enable     = $True
-            CdnType    = "Public"
-            Ensure     = "Present"
-            Credential = $GlobalAdmin
-        }
-
-        SPOOrgAssetsLibrary OrgAssets
-        {
-            LibraryUrl = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern/Shared Documents"
-            CdnType    = "Public"
-            Ensure     = "Present"
-            Credential = $GlobalAdmin
-        }
-
-        # TODO - Investigate this for GCC
-        <#if ($Environment -ne 'GCC')
-        {
-            SPOUserProfileProperty SPOUserProfileProperty
+            SCAuditConfigurationPolicy OneDriveAuditPolicy
             {
-                UserName           = "admin@$Domain"
-                Properties         = @(
-                    MSFT_SPOUserProfilePropertyInstance
+                Workload   = "OneDriveForBusiness"
+                Ensure     = "Present"
+                Credential = $GlobalAdmin
+            }
+
+            SCAuditConfigurationPolicy ExchangeAuditPolicy
+            {
+                Workload   = "Exchange"
+                Ensure     = "Present"
+                Credential = $GlobalAdmin
+            }
+
+            SCComplianceSearch DemoSearchSPO
+            {
+                Case                                  = "Integration Case"
+                HoldNames                             = @()
+                Name                                  = "Integration Compliance Search - SPO"
+                Ensure                                = "Present"
+                Language                              = "iv"
+                Credential                            = $GlobalAdmin
+                AllowNotFoundExchangeLocationsEnabled = $False
+                SharePointLocation                    = @("All")
+            }
+
+            SCComplianceSearch DemoSearchEXO
+            {
+                Case                                  = "Integration Case"
+                HoldNames                             = @()
+                Name                                  = "Integration Compliance Search - EXO"
+                Ensure                                = "Present"
+                Language                              = "iv"
+                Credential                            = $GlobalAdmin
+                AllowNotFoundExchangeLocationsEnabled = $False
+                ExchangeLocation                      = @("All")
+                PublicFolderLocation                  = @("All")
+            }
+
+            SCComplianceSearchAction DemoSearchActionRetention
+            {
+                IncludeSharePointDocumentVersions = $False
+                Action                            = "Retention"
+                SearchName                        = "Integration Compliance Search - EXO"
+                Credential                        = $GlobalAdmin
+                IncludeCredential                 = $False
+                RetryOnError                      = $False
+                ActionScope                       = "IndexedItemsOnly"
+                Ensure                            = "Present"
+                EnableDedupe                      = $False
+            }
+
+            SCComplianceSearchAction DemoSearchActionPurge
+            {
+                Action            = "Purge"
+                SearchName        = "Integration Compliance Search - EXO"
+                Credential        = $GlobalAdmin
+                IncludeCredential = $False
+                RetryOnError      = $False
+                Ensure            = "Present"
+            }
+
+            SCComplianceCase DemoCase
+            {
+                Name        = "Integration Case"
+                Description = "This Case is generated by the Integration Tests"
+                Status      = "Active"
+                Ensure      = "Present"
+                Credential  = $GlobalAdmin
+            }
+
+            SCCaseHoldPolicy DemoCaseHoldPolicy
+            {
+                Case                 = "Integration Case"
+                ExchangeLocation     = "John.Smith@$Domain"
+                Name                 = "Integration Hold"
+                PublicFolderLocation = "All"
+                Comment              = "This is a test for integration"
+                Ensure               = "Present"
+                Enabled              = $True
+                Credential           = $GlobalAdmin
+            }
+
+            SCCaseHoldRule DemoHoldRule
+            {
+                Name              = "Integration Hold"
+                Policy            = "Integration Hold"
+                Comment           = "This is a demo rule"
+                Disabled          = $false
+                ContentMatchQuery = "filename:2016 budget filetype:xlsx"
+                Ensure            = "Present"
+                Credential        = $GlobalAdmin
+            }
+
+            SCComplianceTag DemoRule
+            {
+                Name              = "DemoTag"
+                Comment           = "This is a Demo Tag"
+                RetentionAction   = "Keep"
+                RetentionDuration = "1025"
+                RetentionType     = "ModificationAgeInDays"
+                FilePlanProperty  = MSFT_SCFilePlanProperty
+                {
+                    FilePlanPropertyDepartment = "Human resources"
+                    FilePlanPropertyCategory   = "Accounts receivable"
+                }
+                Ensure            = "Present"
+                Credential        = $GlobalAdmin
+            }
+
+            SCDLPCompliancePolicy DLPPolicy
+            {
+                Name               = "MyDLPPolicy"
+                Comment            = "Test Policy"
+                Priority           = 0
+                SharePointLocation = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
+                Ensure             = "Present"
+                Credential         = $GlobalAdmin
+            }
+
+            SCDLPComplianceRule DLPRule
+            {
+                Name        = "MyDLPRule"
+                Policy      = "MyDLPPolicy"
+                BlockAccess = $True
+                Ensure      = "Present"
+                Credential  = $GlobalAdmin
+            }
+
+            SCFilePlanPropertyAuthority FilePlanPropertyAuthority
+            {
+                Name       = "My Authority"
+                Ensure     = "Present"
+                Credential = $GlobalAdmin
+            }
+
+            SCFilePlanPropertyCategory FilePlanPropertyCategory
+            {
+                Name       = "My Category"
+                Ensure     = "Present"
+                Credential = $GlobalAdmin
+            }
+
+            SCFilePlanPropertyCitation IntegrationCitation
+            {
+                Name                 = "Integration Citation"
+                CitationURL          = "https://contoso.com"
+                CitationJurisdiction = "Federal"
+                Ensure               = "Present"
+                Credential           = $GlobalAdmin
+            }
+
+            SCFilePlanPropertyDepartment FilePlanPropertyDepartment
+            {
+                Name       = "Demo Department"
+                Ensure     = "Present"
+                Credential = $GlobalAdmin
+            }
+
+            SCFilePlanPropertyReferenceId FilePlanPropertyReferenceId
+            {
+                Name       = "My Reference ID"
+                Ensure     = "Present"
+                Credential = $GlobalAdmin
+            }
+
+            SCRetentionCompliancePolicy RCPolicy
+            {
+                Name             = "MyRCPolicy"
+                Comment          = "Test Policy"
+                ExchangeLocation = @()
+                Ensure           = "Present"
+                Credential       = $GlobalAdmin
+            }
+
+            SCRetentionComplianceRule RCRule
+            {
+                Name                         = "DemoRule2"
+                Policy                       = "MyRCPolicy"
+                Comment                      = "This is a Demo Rule"
+                RetentionComplianceAction    = "Keep"
+                RetentionDuration            = "Unlimited"
+                RetentionDurationDisplayHint = "Days"
+                Credential                   = $GlobalAdmin
+                Ensure                       = "Present"
+            }
+
+            SCRetentionEventType SCEventType
+            {
+                Comment    = "DSC Event Type description."
+                Name       = "DSCEventType"
+                Ensure     = "Present"
+                Credential = $GlobalAdmin
+
+            }
+
+            SCSupervisoryReviewPolicy SRPolicy
+            {
+                Name       = "MySRPolicy"
+                Comment    = "Test Policy"
+                Reviewers  = @($GlobalAdmin.UserName)
+                Ensure     = "Present"
+                Credential = $GlobalAdmin
+            }
+
+            SCSupervisoryReviewRule SRRule
+            {
+                Name         = "DemoRule"
+                Condition    = "(Reviewee:$($GlobalAdmin.UserName))"
+                SamplingRate = 100
+                Policy       = 'MySRPolicy'
+                Ensure       = "Present"
+                Credential   = $GlobalAdmin
+            }
+            #endregion
+
+            #region SPO
+            SPOSearchManagedProperty ManagedProp1
+            {
+                Name       = "Gilles"
+                type       = "Text"
+                Credential = $GlobalAdmin
+                Ensure     = "Present"
+            }
+
+            SPOSite ClassicSite
+            {
+                Title      = "Classic Site"
+                Url        = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
+                Owner      = $GlobalAdmin.UserName
+                Template   = "STS#0"
+                TimeZoneID = 13
+                Credential = $GlobalAdmin
+                Ensure     = "Present"
+            }
+
+            SPOSite ModernSite
+            {
+                Title      = "Modern Site"
+                Url        = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
+                Owner      = $GlobalAdmin.UserName
+                Template   = "STS#3"
+                TimeZoneID = 13
+                Credential = $GlobalAdmin
+                Ensure     = "Present"
+            }
+
+            SPOSite TestWithoutTemplate
+            {
+                Title                                       = "No Templates"
+                Url                                         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/NoTemplates"
+                Owner                                       = $GlobalAdmin.UserName
+                TimeZoneID                                  = 13
+                AllowSelfServiceUpgrade                     = $True
+                AnonymousLinkExpirationInDays               = 0
+                CommentsOnSitePagesDisabled                 = $False
+                DefaultLinkPermission                       = "None"
+                DefaultSharingLinkType                      = "None"
+                DenyAddAndCustomizePages                    = $True
+                DisableAppViews                             = "NotDisabled"
+                DisableCompanyWideSharingLinks              = "NotDisabled"
+                DisableFlows                                = $False
+                LocaleId                                    = 1033
+                OverrideTenantAnonymousLinkExpirationPolicy = $False
+                ShowPeoplePickerSuggestionsForGuestUsers    = $False
+                SocialBarOnSitePagesDisabled                = $False
+                StorageMaximumLevel                         = 26214400
+                StorageWarningLevel                         = 25574400
+                Ensure                                      = "Present"
+                Credential                                  = $GlobalAdmin
+            }
+
+            SPOPropertyBag MyKey
+            {
+                Url        = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
+                Key        = "MyKey"
+                Value      = "MyValue#3"
+                Ensure     = "Present"
+                Credential = $GlobalAdmin
+            }
+
+            SPOSearchResultSource SearchMP
+            {
+                Name        = "MyResultSource"
+                Description = "Description of item"
+                Protocol    = "Local"
+                type        = "SharePoint"
+                Ensure      = "Present"
+                Credential  = $GlobalAdmin
+            }
+
+            SPOSiteAuditSettings MyStorageEntity
+            {
+                Url        = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
+                AuditFlags = "All"
+                Credential = $GlobalAdmin
+            }
+
+            SPOSiteGroup TestSiteGroup
+            {
+                Url              = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
+                Identity         = "TestSiteGroup"
+                PermissionLevels = @("Edit", "Read")
+                Ensure           = "Present"
+                Credential       = $GlobalAdmin
+            }
+            SPOTheme SPTheme01
+            {
+                Name       = "Integration Palette"
+                Palette    = @(MSFT_SPOThemePaletteProperty
                     {
-                        Key   = "FavoriteFood"
-                        Value = "Pasta"
+                        Property = "themePrimary"
+                        Value    = "#0078d4"
+                    }
+                    MSFT_SPOThemePaletteProperty
+                    {
+                        Property = "themeLighterAlt"
+                        Value    = "#eff6fc"
                     }
                 )
                 Credential = $GlobalAdmin
-                Ensure             = "Present"
             }
-        }#>
-        #endregion
+
+            SPOTenantCdnEnabled CDN
+            {
+                Enable     = $True
+                CdnType    = "Public"
+                Ensure     = "Present"
+                Credential = $GlobalAdmin
+            }
+
+            SPOOrgAssetsLibrary OrgAssets
+            {
+                LibraryUrl = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern/Shared Documents"
+                CdnType    = "Public"
+                Ensure     = "Present"
+                Credential = $GlobalAdmin
+            }
+
+            # TODO - Investigate this for GCC
+            <#if ($Environment -ne 'GCC')
+            {
+                SPOUserProfileProperty SPOUserProfileProperty
+                {
+                    UserName           = "admin@$Domain"
+                    Properties         = @(
+                        MSFT_SPOUserProfilePropertyInstance
+                        {
+                            Key   = "FavoriteFood"
+                            Value = "Pasta"
+                        }
+                    )
+                    Credential = $GlobalAdmin
+                    Ensure             = "Present"
+                }
+            }#>
+            #endregion
+        }
 
         #region Teams
         TeamsUpgradeConfiguration UpgradeConfig

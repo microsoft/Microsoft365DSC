@@ -1,5 +1,13 @@
 # Change log for Microsoft365DSC
 
+# 1.22.112.1
+
+* TeamsMeetingPolicy
+  * Added support for property WhoCanRegister;
+    FIXES #1483
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to 1.0.83;
+
 # 1.22.105.1
 
 * AADNamedLocationPolicy
@@ -25,6 +33,7 @@
 * MISC
   * Error Handling in Delta Report and removal of Authentication mechanism comparison;
     FIXES #1548, #1541
+  * Added automatic cmdlet documentation generation functions and prereqs.
 
 # 1.21.1229.1
 

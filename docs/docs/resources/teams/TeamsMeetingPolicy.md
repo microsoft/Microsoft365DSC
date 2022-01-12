@@ -45,6 +45,7 @@
 | **AllowBreakoutRooms** | Write | Boolean | Determines whether or not meetings created by users with this policy are able to utilize the Breakout Rooms feature. ||
 | **TeamsCameraFarEndPTZMode** | Write | String | Determines whether or not meetings created by users with this policy are able to utilize the Camera Far-End PTZ Mode. |Disabled, Enabled|
 | **AllowMeetingReactions** | Write | Boolean | Determines whether or not meetings created by users with this policy are able to utilize the Meeting Reactions feature. ||
+| **WhoCanRegister** | Write | String | Specifies who can attend and register for webinars. |Everyone, EveryoneInCompany|
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. |Present, Absent|
 | **Credential** | Required | PSCredential | Credentials of the Teams Global Admin. ||
 

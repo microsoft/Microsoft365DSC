@@ -3,13 +3,14 @@ Microsoft365DSC is using several other modules to connect to Microsoft 365, for 
 ## Authentication and permissions
 
 The Graph API has two different authentication implementations:
+
 1. Delegated permissions: Here a username/password is used to authenticate.
 
     This option is using an AzureAD app in the background to call the Graph API. However the effective permissions will be the intersection of the delegated permissions **and** the user privileges. By default, the Graph app has no permissions meaning it can't access anything and therefore won't work. You have to grant these permissions to the app before using them. Consent for these permissions can be given [by the user himself](https://docs.microsoft.com/en-us/graph/auth-v2-user) or by an admin for all users in the tenant.
 
     For example: If your account only has permissions on three SharePoint sites, only these sites can be retrieved. Even when the AzureAD app has Sites.FullControll.All permissions granted.
 
-    ![Infographic](../Images/PermissionsGraphDelegatedApp.png){ align=center width=500 }
+    ![Infographic](../../Images/PermissionsGraphDelegatedApp.png){ align=center width=500 }
 
     To update the delegated permissions on the Graph app, you can use the "***Update-M365DSCAllowedGraphScopes***" cmdlet and specify the resources you are using. This will read the required permissions for those resources and update those on the Graph app.
 
@@ -21,7 +22,7 @@ The Graph API has two different authentication implementations:
 
     **NOTE:** This is the easiest option to use.
 
-    ![Infographic](../Images/PermissionsM365DSCApp.png){ align=center width=500 }
+    ![Infographic](../../Images/PermissionsM365DSCApp.png){ align=center width=500 }
 
 **IMPORTANT**: Applications with high privileges should be monitored closely. In practice there are advantages to use conditional access policies for these applications to limit access to specific sources or user accounts.
 

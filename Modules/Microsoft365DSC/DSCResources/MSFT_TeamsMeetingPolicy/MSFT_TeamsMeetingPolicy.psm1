@@ -185,6 +185,11 @@ function Get-TargetResource
         $AllowMeetingReactions,
 
         [Parameter()]
+        [ValidateSet('Everyone', 'EveryoneInCompany')]
+        [System.String]
+        $WhoCanRegister,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -266,8 +271,9 @@ function Get-TargetResource
             AllowBreakoutRooms                         = $policy.AllowBreakoutRooms
             TeamsCameraFarEndPTZMode                   = $policy.TeamsCameraFarEndPTZMode
             AllowMeetingReactions                      = $policy.AllowMeetingReactions
+            WhoCanRegister                             = $policy.WhoCanRegister
             Ensure                                     = 'Present'
-            Credential                         = $Credential
+            Credential                                 = $Credential
         }
     }
     catch
@@ -480,6 +486,11 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowMeetingReactions,
+
+        [Parameter()]
+        [ValidateSet('Everyone', 'EveryoneInCompany')]
+        [System.String]
+        $WhoCanRegister,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -737,6 +748,11 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowMeetingReactions,
+
+        [Parameter()]
+        [ValidateSet('Everyone', 'EveryoneInCompany')]
+        [System.String]
+        $WhoCanRegister,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]

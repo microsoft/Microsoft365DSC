@@ -6,7 +6,7 @@ jobs:
   Integration-GCCHigh:
     # The type of runner that the job will run on
     runs-on: windows-latest
-    
+
     # Only when run from the main repo
     if: github.repository == 'microsoft/Microsoft365DSC'
 
@@ -14,26 +14,6 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-    - name: Install Dependencies
-      shell : powershell
-      run: |
-       [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
-
-       $manifest = Import-PowerShellDataFile "./Modules/Microsoft365DSC/Microsoft365DSC.psd1"
-       $dependencies = $manifest.RequiredModules
-       foreach ($dependency in $dependencies)
-       {
-           Write-Verbose -Message "Installing Module {$($dependency.ModuleName)} Version {$($dependency.RequiredVersion)}"
-           Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -SkipPublisherCheck -AllowClobber -Scope AllUsers -Verbose
-           try
-           {
-               Import-Module $dependency.ModuleName -Force
-           }
-           catch
-           {
-               Write-Verbose -Message $_
-           }
-       }
     - name: Install Microsoft365DSC
       shell : powershell
       run: |
@@ -41,6 +21,7 @@ jobs:
         $source = "./Modules/Microsoft365DSC/"
         $destination = "C:\Program Files\WindowsPowerShell\Modules"
         Copy-Item -Path $source -Recurse -Destination $destination -Container -Force
+        Update-M365DSCDependencies
     - name: Run Integration Tests
       shell : powershell
       env:
@@ -55,7 +36,8 @@ jobs:
        Write-Verbose -Message "Username: $($env:GCCHIGH_USERNAME)"
        & ./Tests/Integration/M365DSCIntegration.Master.Tests.ps1 `
        -GlobalAdminUser $env:GCCHIGH_USERNAME `
-       -GlobalAdminPassword $env:GCCHIGH_PASSWORD
+       -GlobalAdminPassword $env:GCCHIGH_PASSWORD `
+       -Environment GCCH
     - name: Validate Configuration
       shell: powershell
       run: |
