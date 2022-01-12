@@ -36,7 +36,8 @@ jobs:
        Write-Verbose -Message "Username: $($env:GCCHIGH_USERNAME)"
        & ./Tests/Integration/M365DSCIntegration.Master.Tests.ps1 `
        -GlobalAdminUser $env:GCCHIGH_USERNAME `
-       -GlobalAdminPassword $env:GCCHIGH_PASSWORD
+       -GlobalAdminPassword $env:GCCHIGH_PASSWORD `
+       -Environment GCCH
     - name: Validate Configuration
       shell: powershell
       run: |
