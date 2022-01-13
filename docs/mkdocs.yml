@@ -38,7 +38,7 @@ nav:
       - 'Teams': 'resources/teams'
   - About:
       - 'Why Microsoft365DSC': 'about/why.md'
-      - 'Changelog': 'about/changelog.md'
+      - 'Changelog': https://github.com/microsoft/Microsoft365DSC/blob/Dev/CHANGELOG.md" target="_blank
       - 'License': 'about/license.md'
       - 'Community Resources': 'about/community-resources.md'
 plugins:
