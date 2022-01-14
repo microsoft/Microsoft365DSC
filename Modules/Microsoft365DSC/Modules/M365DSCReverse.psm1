@@ -334,7 +334,7 @@ function Start-M365DSCConfigurationExtract
         }
         [array]$ModuleVersion = Get-Module Microsoft365DSC
         $ModuleVersion = $ModuleVersion[0]
-        $DSCContent += "    Import-DscResource -ModuleName 'Microsoft365DSC'`r`n`r`n"
+        $DSCContent += "    Import-DscResource -ModuleName 'Microsoft365DSC' -ModuleVersion '$version'`r`n`r`n"
         $DSCContent += "    Node localhost`r`n"
         $DSCContent += "    {`r`n"
 

@@ -5,6 +5,10 @@
 * EXORoleAssignmentPolicy
   * Fixed logic to update roles assigned to an existing policy;
     FIXES #1538
+MISC
+  * Updated logic for Report generation so that it no longer requires the
+    same module version as defined in the configuration installed on the
+    system where the report is being generated from.
 
 # 1.22.112.1
 

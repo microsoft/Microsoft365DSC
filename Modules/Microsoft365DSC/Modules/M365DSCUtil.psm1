@@ -2148,7 +2148,11 @@ function Assert-M365DSCBlueprint
     if ((Test-Path -Path $LocalBluePrintPath))
     {
         # Parse the content of the BluePrint into an array of PowerShell Objects
-        $parsedBluePrint = ConvertTo-DSCObject -Path $LocalBluePrintPath
+        $fileContent = Get-Content $LocalBluePrintPath -Raw
+        $startPosition = $fileContent.IndexOf(" -ModuleVersion")
+        $endPosition = $fileContent.IndexOf("`r", $startPosition)
+        $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
+        $parsedBluePrint = ConvertTo-DSCObject -Content $fileContent
 
         # Generate an Array of Resource Types contained in the BluePrint
         $ResourcesInBluePrint = @()
