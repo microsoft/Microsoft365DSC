@@ -941,6 +941,16 @@ function Export-M365DSCConfiguration
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Event", "Extraction")
+
+    if (-not [System.String]::IsNullOrEmpty($TenantId))
+    {
+        $data.Add("Tenant", $TenantId)
+    }
+    else
+    {
+        $tenant = $Credential.UserName.Split('@')[1]
+        $data.Add("Tenant", $tenant)
+    }
     $data.Add("Path", [System.String]::IsNullOrEmpty($Path))
     $data.Add("FileName", $null -ne [System.String]::IsNullOrEmpty($FileName))
     $data.Add("Components", $null -ne $Components)
@@ -966,7 +976,7 @@ function Export-M365DSCConfiguration
     }
 
     # Clear the Connection Cache from MSCloudLoginAssistant
-    $Global:MsCloudLoginConnectionProfile = $null
+    #$Global:MsCloudLoginConnectionProfile = $null
 
     # Make sure we are not connected to Microsoft Graph on another tenant
     try

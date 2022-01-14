@@ -251,9 +251,20 @@ function Set-TargetResource
     elseif ($Ensure -eq "Present" -and $currentRoleAssignmentPolicyConfig.Ensure -eq "Present" -and $null -ne (Compare-Object -ReferenceObject $($currentRoleAssignmentPolicyConfig.Roles) -DifferenceObject $Roles))
     {
         Write-Verbose -Message "Role Assignment Policy '$($Name)' already exists, but roles attribute needs updating."
-        Write-Verbose -Message "Remove Role AssignmentPolicy before recreating because Roles attribute cannot be change with Set cmdlet"
-        Remove-RoleAssignmentPolicy -Identity $Name -Confirm:$false
-        New-RoleAssignmentPolicy @NewRoleAssignmentPolicyParams
+        $differences = Compare-Object -ReferenceObject $($currentRoleAssignmentPolicyConfig.Roles) -DifferenceObject $Roles
+        foreach ($difference in $differences)
+        {
+            if ($difference.SideIndicator -eq '=>')
+            {
+                Write-Verbose -Message "Adding Role {$($difference.InputObject)} to Role Assignment Policy {$Name}"
+                New-ManagementRoleAssignment -Role $($difference.InputObject) -Policy $Name
+            }
+            elseif ($difference.SideIndicator -eq '<=')
+            {
+                Write-Verbose -Message "Removing Role {$($difference.InputObject)} to Role Assignment Policy {$Name}"
+                Remove-ManagementRoleAssignment -Identity "$($difference.InputObject)-$Name"
+            }
+        }
     }
 }
 

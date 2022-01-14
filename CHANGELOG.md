@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# 1.22.119.1
+
+* EXORoleAssignmentPolicy
+  * Fixed logic to update roles assigned to an existing policy;
+    FIXES #1538
+
 # 1.22.112.1
 
 * TeamsMeetingPolicy
