@@ -261,7 +261,7 @@ function Set-TargetResource
             }
             elseif ($difference.SideIndicator -eq '<=')
             {
-                Write-Verbose -Message "Removing Role {$($difference.InputObject)} to Role Assignment Policy {$Name}"
+                Write-Verbose -Message "Removing Role {$($difference.InputObject)} from Role Assignment Policy {$Name}"
                 Remove-ManagementRoleAssignment -Identity "$($difference.InputObject)-$Name"
             }
         }
