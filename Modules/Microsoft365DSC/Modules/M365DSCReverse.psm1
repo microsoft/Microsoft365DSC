@@ -636,10 +636,6 @@ function Start-M365DSCConfigurationExtract
                         -Cert "cert:\LocalMachine\my\$($LCMConfig.CertificateID)" `
                         -Type CERT `
                         -NoClobber | Out-Null
-                    Add-ConfigurationDataEntry -Node "localhost" `
-                        -Key "CertificateFile" `
-                        -Value "M365DSC.cer" `
-                        -Description "Path of the certificate used to encrypt credentials in the file."
                 }
                 catch
                 {
@@ -648,6 +644,10 @@ function Start-M365DSCConfigurationExtract
                         -EventID 1 -Source $($MyInvocation.MyCommand.Source)
                 }
             }
+            Add-ConfigurationDataEntry -Node "localhost" `
+                -Key "CertificateFile" `
+                -Value "M365DSC.cer" `
+                -Description "Path of the certificate used to encrypt credentials in the file."
             $outputConfigurationData = $OutputDSCPath + "ConfigurationData.psd1"
             New-ConfigurationDataDocument -Path $outputConfigurationData
         }

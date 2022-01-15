@@ -110,7 +110,7 @@ function Update-M365DSCAllowedGraphScopes
         [System.String]
         $Type,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [ValidateSet('Global', 'China', 'USGov', 'USGovDoD', 'Germany')]
         [System.String]
         $Environment = 'Global'
