@@ -30,7 +30,11 @@ function New-M365DSCConfigurationToHTML
     if ([System.String]::IsNullOrEmpty($ParsedContent))
     {
         $TemplateFile = Get-Item $ConfigurationPath
-        $ParsedContent = ConvertTo-DSCObject -Path $ConfigurationPath
+        $fileContent = Get-Content $ConfigurationPath -Raw
+        $startPosition = $fileContent.IndexOf(" -ModuleVersion")
+        $endPosition = $fileContent.IndexOf("`r", $startPosition)
+        $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
+        $ParsedContent = ConvertTo-DSCObject -Content $fileContent
         $TemplateName = $TemplateFile.Name.Split('.')[0]
     }
     else
@@ -211,7 +215,11 @@ function New-M365DSCConfigurationToExcel
     $report.Range("A1:C1").Borders.Weight = -4138
     $row = 2
 
-    $parsedContent = ConvertTo-DSCObject -Path $ConfigurationPath
+    $fileContent = Get-Content $ConfigurationPath -Raw
+    $startPosition = $fileContent.IndexOf(" -ModuleVersion")
+    $endPosition = $fileContent.IndexOf("`r", $startPosition)
+    $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
+    $ParsedContent = ConvertTo-DSCObject -Content $fileContent
     foreach ($resource in $parsedContent)
     {
         $beginRow = $row
@@ -391,11 +399,19 @@ function Compare-M365DSCConfigurations
 
     if (-not $SourceObject)
     {
-        [Array] $SourceObject = ConvertTo-DSCObject -Path $Source
+        $fileContent = Get-Content $Source -Raw
+        $startPosition = $fileContent.IndexOf(" -ModuleVersion")
+        $endPosition = $fileContent.IndexOf("`r", $startPosition)
+        $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
+        [Array] $SourceObject = ConvertTo-DSCObject -Content $fileContent
     }
     if (-not $DestinationObject)
     {
-        [Array] $DestinationObject = ConvertTo-DSCObject -Path $Destination
+        $fileContent = Get-Content $Destination -Raw
+        $startPosition = $fileContent.IndexOf(" -ModuleVersion")
+        $endPosition = $fileContent.IndexOf("`r", $startPosition)
+        $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
+        [Array] $DestinationObject = ConvertTo-DSCObject -Content $FileContent
     }
 
     # Loop through all items in the source array
