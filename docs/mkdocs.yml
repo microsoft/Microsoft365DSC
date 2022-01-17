@@ -6,8 +6,7 @@ nav:
       - 'What is Microsoft365DSC?': 'home/what-is-M365DSC.md'
   - User Guide:
       - 'Get Started': 'user-guide/get-started/complete-story.md'
-      - Advanced:
-          - 'How to Create a M365DSC Blueprint': 'user-guide/advanced/create-blueprint.md'
+      - 'How to Create a M365DSC Blueprint': 'user-guide/advanced/create-blueprint.md'
   - Contributing:
       - 'Guidelines': 'contributing/contribution-guidelines.md'
       - 'Getting started': 'contributing/getting-started.md'
