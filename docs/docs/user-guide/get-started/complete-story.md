@@ -89,6 +89,7 @@ As mentioned above, Microsoft365DSC now defaults to an unattended capture proces
 
 You could always pass in the credentials in as a variable, which will bypass the credential prompt and automatically initiate the export process when calling the cmdlet.
 E.g.
+
 ```
 $creds = Get-Credential
 Export-M365DSCConfiguration -Credential $creds
@@ -190,10 +191,12 @@ The first step in trying to deploy a DSC configuration is to compile the configu
 
 # Securing your Compiled Configuration
 In the case where you are using credentials to authenticate to your tenant, you will be prompted to provide credentials at compilation time for your configuration. By default, these credentials will be stored as plain text in the resulting MOF file, which is a big security concern.
+
 ![image](https://user-images.githubusercontent.com/2547149/149799792-6656a848-cc46-487c-9c77-a141aec63e30.png)
 
 
 To remediate to this, PowerShell DSC lets us use an encryption certificate to encrypt information about credentials in the MOF files. To make this process easier for users, Microsoft365DSC defines a function named **Set-M365DSCAgentCertificateConfiguration** which will automatically generate an encryption certificate and configure the PowerShell DSC engine on the system to use it for encrypting the MOF files. The cmdlet will return the Thumbprint for the newly generated certificate.
+
 ![image](https://user-images.githubusercontent.com/2547149/149799811-a6f64a8b-bcb8-4cdc-8c80-d7d68849ea25.png)
 
 You can also have the cmdlet generate the private key for the certificate by using the **-GeneratePFX** switch and specifying a password with the **-Password** parameter. This will require you to also specify the **-ForceRenew** parameter so that a brand new certificate gets emitted.
@@ -201,9 +204,11 @@ You can also have the cmdlet generate the private key for the certificate by usi
 ![image](https://user-images.githubusercontent.com/2547149/149799898-7a5b36ad-634a-41c3-aaa3-abc1ca7d8848.png)
 
 Once the certificate has been configured every time you do a snapshot of an existing tenant’s configuration, a new M365DSC.cer certificate file will be stored in the same repository as the configuration files. The ConfigurationData.psd1 will also contain a new entry under the localhost node that will point to this certificate, effectively telling DSC to use this file to encrypt credentials when compiling.
+
  ![image](https://user-images.githubusercontent.com/2547149/149799919-7b594207-f435-491d-a424-c3f15447294c.png)
 
 If you compile your configuration using the new certificate and take a look at your MOF file, you should see that the password for the credential object was successfully encrypted and is no longer showing in plaintext.
+
  ![image](https://user-images.githubusercontent.com/2547149/149799949-163c0ba6-8bd9-4ec5-acab-9597ae77966f.png)
 
 ## Deploying the Configuration
