@@ -7,7 +7,7 @@ nav:
   - User Guide:
       - 'Get Started':
           - 'How to install': 'user-guide/get-started/install-first-module.md'
-          - 'Write your First Microsoft365DSC Configuration': 'user-guide/get-started/write-first-config.md'
+          - 'Write your First Microsoft365DSC Configuration': 'user-guide/get-started/complete-story.md'
           - 'Extracting Configuration from an Existing Microsoft 365 Tenant': 'user-guide/get-started/extract-config.md'
           - 'Apply a Configuration to your Microsoft 365 Tenant': 'user-guide/get-started/apply-config.md'
           - 'Monitor Tenants for Configuration Drifts': 'user-guide/get-started/monitor-tenants.md'
