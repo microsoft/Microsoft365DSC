@@ -249,6 +249,10 @@ function Get-TargetResource
         $RemotePublicFolderMailboxes,
 
         [Parameter()]
+        [System.Boolean]
+        $SendFromAliasEnabled,
+
+        [Parameter()]
         [System.String]
         $SiteMailboxCreationURL,
 
@@ -388,12 +392,13 @@ function Get-TargetResource
             PublicFolderShowClientControl                             = $ConfigSettings.PublicFolderShowClientControl
             ReadTrackingEnabled                                       = $ConfigSettings.ReadTrackingEnabled
             RemotePublicFolderMailboxes                               = $ConfigSettings.RemotePublicFolderMailboxes
+            SendFromAliasEnabled                                      = $ConfigSettings.SendFromAliasEnabled
             SiteMailboxCreationURL                                    = $ConfigSettings.SiteMailboxCreationURL
             SmtpActionableMessagesEnabled                             = $ConfigSettings.SmtpActionableMessagesEnabled
             VisibleMeetingUpdateProperties                            = $ConfigSettings.VisibleMeetingUpdateProperties
             WebPushNotificationsDisabled                              = $ConfigSettings.WebPushNotificationsDisabled
             WebSuggestedRepliesDisabled                               = $ConfigSettings.WebSuggestedRepliesDisabled
-            Credential                                        = $Credential
+            Credential                                                = $Credential
             ApplicationId                                             = $ApplicationId
             CertificateThumbprint                                     = $CertificateThumbprint
             CertificatePath                                           = $CertificatePath
@@ -697,6 +702,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $RemotePublicFolderMailboxes,
+
+        [Parameter()]
+        [System.Boolean]
+        $SendFromAliasEnabled,
 
         [Parameter()]
         [System.String]
@@ -1036,6 +1045,10 @@ function Test-TargetResource
         $RemotePublicFolderMailboxes,
 
         [Parameter()]
+        [System.Boolean]
+        $SendFromAliasEnabled,
+
+        [Parameter()]
         [System.String]
         $SiteMailboxCreationURL,
 
@@ -1167,7 +1180,7 @@ function Export-TargetResource
     {
         $Params = @{
             IsSingleInstance      = 'Yes'
-            Credential    = $Credential
+            Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
