@@ -1,7 +1,7 @@
-This article is a complete guide to installing, deploying and using Microsoft365DSC. Microsoft365DSC is an open-source solution that’s available for free on <a href='https://github.com/Microsoft/Microsoft365DSC'>GitHub</a>. It is led by Microsoft engineers and maintained by the community. Official documentation for the solution is available on the official site at https://Microsoft365DSC.com. Microsoft365DSC is the declarative form of Microsoft 365 tenant’s configuration. It is to the Microsoft 365 environment what Azure Resource Manager templates (ARM) are to Azure.  It allows you to represent your tenant’s configuration-as-code using <a href="https://docs.microsoft.com/en-us/powershell/dsc/overview/dscforengineers?view=dsc-1.1">PowerShell Desired State Configuration (DSC)</a>, use it to automatically configure your Microsoft tenants in the described state, take snapshots of existing tenants into DSC declarative code, generate reports out of those snapshots, continuously monitor all your Microsoft 365 tenants for configuration drifts and be alerted when drifts are detected, clone the configuration of an existing tenant onto another and compare the configuration between one or multiple tenants.
+This article is a complete guide to installing, deploying and using Microsoft365DSC. Microsoft365DSC is an open-source solution that’s available for free on <a href='https://github.com/Microsoft/Microsoft365DSC'>GitHub</a>. It is led by Microsoft engineers and maintained by the community. Official documentation for the solution is available on the official site at <a href="https://Microsoft365DSC.com">https://Microsoft365DSC.com</a>. Microsoft365DSC is the declarative form of Microsoft 365 tenant’s configuration. It is to the Microsoft 365 environment what Azure Resource Manager templates (ARM) are to Azure.  It allows you to represent your tenant’s configuration-as-code using <a href="https://docs.microsoft.com/en-us/powershell/dsc/overview/dscforengineers?view=dsc-1.1">PowerShell Desired State Configuration (DSC)</a>, use it to automatically configure your Microsoft tenants in the described state, take snapshots of existing tenants into DSC declarative code, generate reports out of those snapshots, continuously monitor all your Microsoft 365 tenants for configuration drifts and be alerted when drifts are detected, clone the configuration of an existing tenant onto another and compare the configuration between one or multiple tenants.
 
 # Prerequisites
-Microsoft365DSC is supported for PowerShell version 5.1 and 7.1. Support for newer versions of PowerShell is not yet offered since these have now decoupled the DSC engine into its own separate module and require additional work from the team. It is however on the roadmap as a priority item for the later part of Calendar Year of 2022. 
+Microsoft365DSC is supported for PowerShell version 5.1 and 7.1. Support for newer versions of PowerShell is not yet offered since these have now decoupled the DSC engine into its own separate module and require additional work from the team. It is however on the roadmap as a priority item for the later part of Calendar Year of 2022.
 
 To get the best experience, it is recommended that you use the <a href="https://www.microsoft.com/en-ca/p/windows-terminal/9n0dx20hk701?activetab=pivot:overviewtab">Windows Terminal</a> to run and execute Microsoft365DSC. All screenshots provided in this article are using the Windows Terminal. This tool allows you to quickly switch between PowerShell versions and provide better support for icons and symbols that are used throughout Microsoft365DSC’s experience.
 
@@ -16,19 +16,19 @@ In order to be able to interact with these components, you need to grant your ap
 
 Doing so will return an object with two properties. The ReadPermissions property contains a list of the minimal permissions that need to be granted for the app to be able to read information about the selected components. These are the permissions you want to grant if you are taking a snapshot of the configuration of an existing tenant. The second property, UpdatePermissions, contains the minimal permissions required to interact with and configure the selected components. You will need to grant your application these permissions if you are trying to apply a configuration onto a tenant.
 
-If you are trying to interact with all available components in Microsoft365DSC, you can get a complete picture of all permissions required across all resources by running the following line of PowerShell. 
+If you are trying to interact with all available components in Microsoft365DSC, you can get a complete picture of all permissions required across all resources by running the following line of PowerShell.
 
 ```
 Get-M365DSCCompiledPermissionList -ResourceNameList (Get-M365DSCAllResources)
 ```
 ![image](https://user-images.githubusercontent.com/2547149/149797453-3f7ea11c-f7d3-4431-b65f-2fe1ab815871.png)
- 
+
 The **Get-M365DSCAllResources** cmdlet will return a list of all components available inside of the Microsoft365DSC solution which will then by passed in the Get-M365DSCCompiledPermissionList cmdlet which will compile the resulting permissions needed for the list of components it receives, in occurrence all of them. These permissions need to be granted to your application instance, either using the Azure portal or automating the process via PowerShell.
 
 We provide an easy way of consenting permissions to the Microsoft Graph PowerShell application in your tenant with the **Update-M365DSCAllowedGraphScopes** cmdlet. This cmdlet accepts either a list of components to grant the permissions for or can grant it for all resources if the **-All** switch is used. You also need to specify what type of permissions, Read or Update, you wish to grant it using the **-Type** parameter.
 
 ![image](https://user-images.githubusercontent.com/2547149/149797611-409a38ae-953e-4fc4-9751-4183c7ad7497.png)
- 
+
 Executing the cmdlet will prompt you to authenticate using an administrator account that has access to consent permissions to Azure AD applications in your environment.
 
 # How to Install
@@ -45,7 +45,7 @@ Update-M365DSCDependencies
 ```
  ![image](https://user-images.githubusercontent.com/2547149/149797877-bb59cb8b-6d39-4f14-8912-ca2a1f1ea851.png)
 
-Running the above command will automatically read the list of dependencies from the [root]/Dependencies/Manifest.psd1 file, check to see if they are installed on the machine with the proper version, and if not it will automatically download them and install them from the PowerShell Gallery. 
+Running the above command will automatically read the list of dependencies from the [root]/Dependencies/Manifest.psd1 file, check to see if they are installed on the machine with the proper version, and if not it will automatically download them and install them from the PowerShell Gallery.
 
 Depending on your configuration and on the version of PowerShell you are using, the installed modules may be put in different locations. The process of installing a PowerShell module from the PowerShell Gallery really just comes down to downloading the files from the gallery as a zip, extracting them and copying to a location on the system that is associated with PowerShell via environment variables. The following command will allow you to view the version of any given PowerShell module on a system along with its associated version:
 ```
@@ -54,7 +54,7 @@ Get-Module Microsoft365DSC -ListAvailable | select ModuleBase, Version
  ![image](https://user-images.githubusercontent.com/2547149/149798129-051dba57-95b8-4916-8109-5d5445fd0737.png)
 
 # Authentication
-It is also very important for users to understand the authentication process of Microsoft365DSC. The solution supports connecting to the various workloads for either applying the configuration, monitoring it for configuration drifts or taking a snapshot of an existing configuration. It supports authenticating using either a set of credentials for a user, to use a Service Principal by specifying parameters such as an Azure Active Directory (AD) Application ID, or a combination of both. 
+It is also very important for users to understand the authentication process of Microsoft365DSC. The solution supports connecting to the various workloads for either applying the configuration, monitoring it for configuration drifts or taking a snapshot of an existing configuration. It supports authenticating using either a set of credentials for a user, to use a Service Principal by specifying parameters such as an Azure Active Directory (AD) Application ID, or a combination of both.
 
 The recommendation is to use Service Principal whenever possible because it offers the most granular levels of security and doesn’t introduce the risk of having to send high privileged credentials across the wire to authenticate. However, not all workloads supported by Microsoft365DSC are currently able to handle Service Principal authentication. Currently, the Security and Compliance and Microsoft Teams workload unfortunately do not support authenticating using the Service Principal of an Azure Active Directory Application. The following picture gives you an overview of what authentication mechanisms are supported by each workload and what underlying module is being used to authenticate for each.
  ![image](https://user-images.githubusercontent.com/2547149/149798164-6e95848a-9405-40f5-aa3c-dc0063ba02d3.png)
@@ -63,11 +63,11 @@ As you can see from the picture above, Credentials while being the least preferr
 
 We are having discussions with the various product groups that are responsible for these PowerShell modules inside of Microsoft to have better consistency across all workloads on how to authenticate. Items highlighted in green in the table above, are workloads for which we use the <a href="https://github.com/microsoftgraph/msgraph-sdk-powershell">Microsoft Graph PowerShell SDK</a> to authenticate against. Our plan is to update the underlying logic of every component inside of Microsoft365DSC to leverage that SDK as new APIs become available on Microsoft Graph.
 
-It is possible for a configuration to use a mix of credentials and Service Principals to authenticate against the various workloads. For example, if you decide to keep a master configuration for all of you tenant’s configuration, you could have Azure AD components use the Service Principal of an app you’ve created to authenticate, and further down in the configuration have your Security and Compliance components use credentials. That approach is perfectly fine, but we’d recommend to try and split different workloads across different configuration files in this case to make it easier to manage. 
+It is possible for a configuration to use a mix of credentials and Service Principals to authenticate against the various workloads. For example, if you decide to keep a master configuration for all of you tenant’s configuration, you could have Azure AD components use the Service Principal of an app you’ve created to authenticate, and further down in the configuration have your Security and Compliance components use credentials. That approach is perfectly fine, but we’d recommend to try and split different workloads across different configuration files in this case to make it easier to manage.
 
 It is also important to note that we’ve added logic inside of the command that allows you to take a snapshot of your current’s tenant configuration to warn you when the components you are trying to capture can’t be accessed based on the authentication model you’ve selected. For example, if you are trying to take a snapshot of both Azure AD and Security and Compliance components, but are authenticating using a Service Principal, the tool will warn you that the Security and Compliance components can’t be captured and that they will be ignored. In this case, the resulting capture would only contain the Azure AD components because those are the only ones the tool can get access to using Service Principal.
 ![image](https://user-images.githubusercontent.com/2547149/149798269-70a82229-f8c9-4645-bf57-5419b721ea92.png)
- 
+
 # Taking a Snapshot of Existing Tenant
 The first thing that most folks using the solution will want to do is take a snapshot of an existing tenant they have access to and that they are familiar with. As soon as you install the Microsoft365DSC module on a system, it will automatically get access to run the **Export-M365DSCConfiguragtion** PowerShell cmdlet which is the main command for initiating a snapshot of an existing configuration. In previous versions of the module, simply running the above cmdlet would automatically launch a Graphical User Interface that would allow you to pick and choose the components you wanted to capture the configuration for as part of your snapshot and initiate the capture process. Newer versions of the module have moved to an unattended process by default, meaning that running the cmdlet will expect additional parameters by default and will then attempt to initiate the snapshot process automatically without further human interaction.
 
@@ -77,11 +77,11 @@ Initiating the snapshot process via the **Export-M365DSCConfiguration** cmdlet w
 While the default process has changed with recent versions of the module, you can still use a newly revamped, web-based User Interface to help you build the PowerShell command to execute based on the components you wish to capture. To launch this new web interface, simply use the **-LaunchWebUI** switch when calling the Export-M365DSCConfiguration cmdlet. This will automatically launch a new web browser interface and navigate you to https://Export.Microsoft365DSC.com
 ![image](https://user-images.githubusercontent.com/2547149/149798448-3a01db84-3a6e-4a97-9d65-11bfcaca20eb.png)
 
- 
+
 From the interface, simply select the components you want, and click on the **Generate** button at the top right. This will open a new prompt that will allow you to copy the PowerShell command you need to run to capture a snapshot of the selected components via Microsoft365DSC. Simply copy this command and paste it in your PowerShell console to initiate the capture process.
 ![image](https://user-images.githubusercontent.com/2547149/149798483-d8dac9ea-5498-4870-ab60-be497111e92e.png)
 
- 
+
 ## Unattended Capture
 As mentioned above, Microsoft365DSC now defaults to an unattended capture process when running the Export-M365DSCConfiguration cmdlet. To quickly get started, simply open a new PowerShell console and type in the cmdlet. By default, if you don’t provide any additional parameters to the cmdlet, it will try to use credentials to authenticate against the various workloads. In the case where no additional authentication parameters are provided, Microsoft365DSC will prompt you for credentials and will use those credentials to authenticate throughout the capture process.
 
@@ -99,11 +99,11 @@ The same process applies if you are trying to authenticate using a Service Princ
  ![image](https://user-images.githubusercontent.com/2547149/149798742-569902f8-84fa-4360-82e7-fcb334f69b5d.png)
 ![image](https://user-images.githubusercontent.com/2547149/149798752-7335cc56-d09a-485d-8408-9ff12ebd89f6.png)
 
- 
+
 It is important to understand that the resulting file that contains the captured configuration will also implement the same authentication mechanism used by the capture process. For example, if you used credentials to capture the configuration, the resulting file will contain logic to capture credentials when it gets executed and every component it defines will also implement the **Credential** parameter.
 ![image](https://user-images.githubusercontent.com/2547149/149798788-d9e1f08b-6e18-46d3-b9ca-652c6c1a18bf.png)
 
- 
+
 In comparison, if you used a Service Principal to do the export, the resulting file will implement logic to receive information about the Azure AD application instance to use and every component defined within the file will as well.
   ![image](https://user-images.githubusercontent.com/2547149/149798810-9e7ba15d-e8ae-4f64-8340-e4e950ef31cf.png)
 
@@ -162,14 +162,14 @@ This parameter allows users to specify what set of components they wish to captu
 * Default
 * Full
 And off course, omitting to specify this parameter will default to the **default** mode.
-To keep track of what resources are available in what mode, Microsoft365DSC defines two global variables which contain the list of resources unique to this extraction mode: **$Global:DefaultComponents** and **$Global:FullComponents** 
+To keep track of what resources are available in what mode, Microsoft365DSC defines two global variables which contain the list of resources unique to this extraction mode: **$Global:DefaultComponents** and **$Global:FullComponents**
 ![image](https://user-images.githubusercontent.com/2547149/149799484-cda8c84e-971e-446a-b247-b58c40f08a6a.png)
 
- 
+
 This means that the **Lite** extraction mode will contain all resources with the exception of those listed in Default and Full. The **Default** mode will include all resources from the Lite mode, plus the SPOApp and SPOSiteDesign components, and **Full** will include every resource available in the project.
- 
+
 ### MaxProcesses
-There are a few components inside of Microsoft365DSC for which parallelism has been implemented as part of their snapshot process to improve speed. This parameter allows user to specify how many parallel threads should be created during the capture process. Components leveraging parallelism are: SPOPropertyBag, SPOUserProfileProperty and TeamsUser. The specified value for this parameter has to be between **1** and **100**. Instances of the components will be equally divided amongst the various threads. 
+There are a few components inside of Microsoft365DSC for which parallelism has been implemented as part of their snapshot process to improve speed. This parameter allows user to specify how many parallel threads should be created during the capture process. Components leveraging parallelism are: SPOPropertyBag, SPOUserProfileProperty and TeamsUser. The specified value for this parameter has to be between **1** and **100**. Instances of the components will be equally divided amongst the various threads.
  ![image](https://user-images.githubusercontent.com/2547149/149799619-509d7526-eba0-4ccc-b028-aeb012a2275a.png)
 ![image](https://user-images.githubusercontent.com/2547149/149799632-06ae6b61-4bbc-4cf8-8102-1c008d805205.png)
 
@@ -187,17 +187,17 @@ The first step in trying to deploy a DSC configuration is to compile the configu
  ![image](https://user-images.githubusercontent.com/2547149/149799734-204e64d7-19d5-4f5b-a62c-90fcb04213a0.png)
 ![image](https://user-images.githubusercontent.com/2547149/149799745-ff76dcc4-a4d4-4c43-8f76-9f29873e5d18.png)![image](https://user-images.githubusercontent.com/2547149/149799755-5880b2c7-545a-45c5-b4d7-36c99ecaff31.png)
 
-  
+
 # Securing your Compiled Configuration
 In the case where you are using credentials to authenticate to your tenant, you will be prompted to provide credentials at compilation time for your configuration. By default, these credentials will be stored as plain text in the resulting MOF file, which is a big security concern.
 ![image](https://user-images.githubusercontent.com/2547149/149799792-6656a848-cc46-487c-9c77-a141aec63e30.png)
 
- 
+
 To remediate to this, PowerShell DSC lets us use an encryption certificate to encrypt information about credentials in the MOF files. To make this process easier for users, Microsoft365DSC defines a function named **Set-M365DSCAgentCertificateConfiguration** which will automatically generate an encryption certificate and configure the PowerShell DSC engine on the system to use it for encrypting the MOF files. The cmdlet will return the Thumbprint for the newly generated certificate.
 ![image](https://user-images.githubusercontent.com/2547149/149799811-a6f64a8b-bcb8-4cdc-8c80-d7d68849ea25.png)
- 
+
 You can also have the cmdlet generate the private key for the certificate by using the **-GeneratePFX** switch and specifying a password with the **-Password** parameter. This will require you to also specify the **-ForceRenew** parameter so that a brand new certificate gets emitted.
- 
+
 ![image](https://user-images.githubusercontent.com/2547149/149799898-7a5b36ad-634a-41c3-aaa3-abc1ca7d8848.png)
 
 Once the certificate has been configured every time you do a snapshot of an existing tenant’s configuration, a new M365DSC.cer certificate file will be stored in the same repository as the configuration files. The ConfigurationData.psd1 will also contain a new entry under the localhost node that will point to this certificate, effectively telling DSC to use this file to encrypt credentials when compiling.
@@ -207,9 +207,9 @@ If you compile your configuration using the new certificate and take a look at y
  ![image](https://user-images.githubusercontent.com/2547149/149799949-163c0ba6-8bd9-4ec5-acab-9597ae77966f.png)
 
 ## Deploying the Configuration
-To initiate the deployment of a configuration onto a Microsoft 365 tenant, you need to use the out-of-the-box cmdlet provided by PowerShell DSC named **Start-DSCConfiguration**. By default, this cmdlet will execute as a background job. If you wish to monitor the execution of the process, you need to use the **-Wait** switch, which will make the process synchronous. We also recommend using the **-Verbose** switch with the command to get additional details on the progression of the process. The cmdlet takes in the path to the folder that contains the compiled .MOF file. 
+To initiate the deployment of a configuration onto a Microsoft 365 tenant, you need to use the out-of-the-box cmdlet provided by PowerShell DSC named **Start-DSCConfiguration**. By default, this cmdlet will execute as a background job. If you wish to monitor the execution of the process, you need to use the **-Wait** switch, which will make the process synchronous. We also recommend using the **-Verbose** switch with the command to get additional details on the progression of the process. The cmdlet takes in the path to the folder that contains the compiled .MOF file.
 
-e.g. 
+e.g.
 ```
 Start-DSCConfiguration C:\DemoM365DSC\M365TenantConfig -Wait -Verbose -Force
 ```
@@ -231,7 +231,7 @@ Once a configuration has been applied to a Microsoft 365 tenant using Microsoft3
 Just like for any DSC module, you can also configure the DSC engine to automatically attempt to automatically fix detected drift and bring the tenant back into its desired state. This is referred to as the DSC configuration mode. To learn more about how you can configure the DSC engine to automatically fix detected drift, please refer to <a href="https://docs.microsoft.com/en-us/powershell/dsc/managing-nodes/metaconfig?view=dsc-1.1">Configuring the Local Configuration Manager</a>.
 
 # Cloning Tenant's Configuration
-This feature of Microsoft365DSC is not a true standalone feature; it is a combination of existing features to unlock a new scenario for users. Since Microsoft365DSC is able to take a snapshot of any Microsoft 365 tenant and because we can deploy a Microsoft365DSC configuration onto any tenant, we can easily clone the configuration of any tenant over another one (or another set of tenants). When you take a snapshot of an existing tenant, the extracted configuration file doesn’t contain any information that is specific to the source tenant. It abstracts it all into variables, which make the configuration generic instead of unique for a particular tenant. It is then at compilation time that you provide information about the environment onto which this configuration will be applied to. 
+This feature of Microsoft365DSC is not a true standalone feature; it is a combination of existing features to unlock a new scenario for users. Since Microsoft365DSC is able to take a snapshot of any Microsoft 365 tenant and because we can deploy a Microsoft365DSC configuration onto any tenant, we can easily clone the configuration of any tenant over another one (or another set of tenants). When you take a snapshot of an existing tenant, the extracted configuration file doesn’t contain any information that is specific to the source tenant. It abstracts it all into variables, which make the configuration generic instead of unique for a particular tenant. It is then at compilation time that you provide information about the environment onto which this configuration will be applied to.
 
 For example, let's assume you are trying to clone the configuration of Tenant A onto Tenant B. You would start by capturing the existing configuration of tenant A using credentials or a Service Principal that exists and has rights on Tenant A. This will generate the configuration file containing all the configuration settings for Tenant A. Then at compilation time, when trying to compile the extracted configuration into a MOF file, you will need to provide credentials or a Service Principal that has access to Tenant B. Then all that is left to do is to deploy the configuration onto Tenant B to have all the configurations settings from tenant A applied onto it.
 
@@ -245,8 +245,8 @@ Generating an HTML report will generate a different result. It will create the r
  ![image](https://user-images.githubusercontent.com/2547149/149800454-466920fd-0fb0-48fd-b5b2-873c3cb00b28.png)
 ![image](https://user-images.githubusercontent.com/2547149/149800462-c3ab5699-4991-48b3-89cc-3f48e36d8a86.png)
 
- 
- 
+
+
 # Comparing Configurations
 The Microsoft365DSC solution has a built-in engine to compare configurations and generate a delta report in HTML that shows the discrepancies between the two. You can either use it to compare the configuration between 2 files or you can use it to compare a configuration against another tenant and see how it defers from that tenant’s current configuration.
 
@@ -254,11 +254,11 @@ The Microsoft365DSC solution has a built-in engine to compare configurations and
 Using the **New-M365DSCDeltaReport** cmdlet, you can specify the two configuration files you wish to compare using the **-Source** and **-Destination** parameters. You then need to specify where you wish to store the resulting HTML report using the **-OutputPath** parameter. Consider the following example, where I've taken two configuration snapshots of my tenant over a period of 6 months apart. I wish to determine what configuration settings have changed over that period of time. Using the **New-M365DSCDeltaReport** cmdlet, I can easily compare the two and generate a delta report as shown in the image below.
 ![image](https://user-images.githubusercontent.com/2547149/149800668-d0c6ab84-703f-4b46-a17e-8603388ca190.png)
 
- 
+
 You can also decide to customize the generated report by injecting your own HTML into its header. To do so, simply specify the location of the HTML file to inject in the header of the report using the **-HeaderFilePath** parameter. The example shown in the following picture shows how to add your customer header to a delta report.
 ![image](https://user-images.githubusercontent.com/2547149/149800692-614c5463-906f-4d1f-9acf-d52c0794121f.png)
 
- 
+
 ## Comparing a Configuration Against Another Tenant
 Using Microsoft365DSC, you can compare any configuration file against the current configuration of any other given Microsoft 365 tenant. This can be very useful in comparing the configuration between two tenants in scenarios like mergers and acquisitions. For example, let’s assume you are trying to compare the configuration of Tenant A with the one from Tenant B. You can start by taking a snapshot of both tenants, and then use this feature to compare it against the configuration of Tenant B using the **New-M365DSCDeltaReport** cmdlet.
 
