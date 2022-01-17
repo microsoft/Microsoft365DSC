@@ -2,6 +2,8 @@
 
 # 1.22.119.1
 
+* EXOOrganizationConfig
+  * Added support for the new SendFromAliasEnabled parameter;
 * EXORoleAssignmentPolicy
   * Fixed logic to update roles assigned to an existing policy;
     FIXES #1538

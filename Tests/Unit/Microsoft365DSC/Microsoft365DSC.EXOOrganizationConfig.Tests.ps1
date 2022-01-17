@@ -72,6 +72,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DefaultPublicFolderDeletedItemRetention    = "30.00:00:00";
                     ByteEncoderTypeFor7BitCharsets             = 0;
                     ActivityBasedAuthenticationTimeoutInterval = "06:00:00";
+                    SendFromAliasEnabled                       = $false
                     DefaultGroupAccessType                     = "Private";
                 }
 
@@ -89,6 +90,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DefaultPublicFolderMovedItemRetention      = "07.00:00:00";
                         DefaultPublicFolderDeletedItemRetention    = "30.00:00:00";
                         ByteEncoderTypeFor7BitCharsets             = 0;
+                        SendFromAliasEnabled                       = $false
                         ActivityBasedAuthenticationTimeoutInterval = "06:00:00";
                         DefaultGroupAccessType                     = "Private";
                     }
@@ -128,6 +130,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DefaultPublicFolderDeletedItemRetention    = "30.00:00:00";
                     ByteEncoderTypeFor7BitCharsets             = 0;
                     ActivityBasedAuthenticationTimeoutInterval = "06:00:00";
+                    SendFromAliasEnabled                       = $false
                     DefaultGroupAccessType                     = "Public";
                 }
 
@@ -147,6 +150,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ByteEncoderTypeFor7BitCharsets             = 0;
                         ActivityBasedAuthenticationTimeoutInterval = "06:00:00";
                         DefaultGroupAccessType                     = "Private";
+                        SendFromAliasEnabled                       = $false
                     }
                 }
             }
@@ -187,6 +191,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DefaultGroupAccessType                     = "Public";
                     EWSAllowList                               = @("111");
                     EWSBlockList                               = @("222");
+                    SendFromAliasEnabled                       = $false
                 }
             }
 
@@ -217,6 +222,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ByteEncoderTypeFor7BitCharsets             = 0;
                         ActivityBasedAuthenticationTimeoutInterval = "06:00:00";
                         DefaultGroupAccessType                     = "Private";
+                        SendFromAliasEnabled                       = $false
                     }
                 }
             }
