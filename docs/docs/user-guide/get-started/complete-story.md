@@ -93,7 +93,7 @@ E.g.
 ```
 $creds = Get-Credential
 Export-M365DSCConfiguration -Credential $creds
- ```
+```
  
  ![image](https://user-images.githubusercontent.com/2547149/149798704-328e8355-fafc-4748-a277-1224009b0515.png)
 
