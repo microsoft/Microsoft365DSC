@@ -93,12 +93,12 @@ E.g.
 ```
 $creds = Get-Credential
 Export-M365DSCConfiguration -Credential $creds
- ```
- 
- ![image](https://user-images.githubusercontent.com/2547149/149798704-328e8355-fafc-4748-a277-1224009b0515.png)
+```
+
+![image](https://user-images.githubusercontent.com/2547149/149798704-328e8355-fafc-4748-a277-1224009b0515.png)
 
 The same process applies if you are trying to authenticate using a Service Principal. In this case you would need to pass in the ApplicationID and TenantID parameter and decide whether to use an ApplicationSecret or a CertificateThumbprint.
- ![image](https://user-images.githubusercontent.com/2547149/149798742-569902f8-84fa-4360-82e7-fcb334f69b5d.png)
+![image](https://user-images.githubusercontent.com/2547149/149798742-569902f8-84fa-4360-82e7-fcb334f69b5d.png)
 ![image](https://user-images.githubusercontent.com/2547149/149798752-7335cc56-d09a-485d-8408-9ff12ebd89f6.png)
 
 
@@ -107,14 +107,14 @@ It is important to understand that the resulting file that contains the captured
 
 
 In comparison, if you used a Service Principal to do the export, the resulting file will implement logic to receive information about the Azure AD application instance to use and every component defined within the file will as well.
-  ![image](https://user-images.githubusercontent.com/2547149/149798810-9e7ba15d-e8ae-4f64-8340-e4e950ef31cf.png)
+![image](https://user-images.githubusercontent.com/2547149/149798810-9e7ba15d-e8ae-4f64-8340-e4e950ef31cf.png)
 
 As we can see from the image above, the Service Principal fields' values are coming from the Configuration Data file that also get stored along the configuration file during the snapshot process. If you take a look at the folder where the resulting files were stored, you should see a file named ConfigurationData.psd1. This is where the value for the parameters above are defined.
 ![image](https://user-images.githubusercontent.com/2547149/149798970-fff1404b-6f48-4186-8acb-30299816de9d.png)
 
 
 It is also important to note, the resulting file will always contain random GUID for the name of the resources in the DSC configuration. These are random and are only used to ensure we don’t have resource naming conflicts inside the configuration. They can be replaced by anything meaningful, as long as you don’t have two components of the same resource type named the same across your configuration. Names are meaningless in the world of DSC and are only used as a primary key when compiling your configuration.
- ![image](https://user-images.githubusercontent.com/2547149/149799004-4e57c166-df00-4b43-a554-add1f03dee3e.png)
+![image](https://user-images.githubusercontent.com/2547149/149799004-4e57c166-df00-4b43-a554-add1f03dee3e.png)
 
 ## Available Parameters
 The Microsoft365DSC tenant's configuration snapshot feature offers several options you can use to better control the output capture. This section provides an overview of each additional parameter that is available for the **Export-M365DSCConfiguration** cmdlet and how they can be used during the capture process
@@ -124,23 +124,23 @@ As mentioned above, the moment this switch is present when calling the Export-M3
 
 ### FileName
 This allows you to specify how you wish the resulting file to be named. Specify the name of the file, including the extension (e.g. .ps1).
- ![image](https://user-images.githubusercontent.com/2547149/149799116-4942a0e9-4865-48be-a32e-7de683ea9264.png)
+![image](https://user-images.githubusercontent.com/2547149/149799116-4942a0e9-4865-48be-a32e-7de683ea9264.png)
 
 Omitting to specify this parameter will name the resulting file as M365TenantConfig.ps1
 
 ### ConfigurationName
 This parameter allows you to specify how the DSC configuration object, inside of the exported configuration file will be named.
- ![image](https://user-images.githubusercontent.com/2547149/149799157-cb03fb1e-d3b6-4a39-b33c-959b1e3ccbde.png)
+![image](https://user-images.githubusercontent.com/2547149/149799157-cb03fb1e-d3b6-4a39-b33c-959b1e3ccbde.png)
 
 Omitting to specify this parameter will result in the configuration object to be named as the file’s name (e.g. M365TenantConfig).
 
 ### Path
 Specifies the location where the resulting file will be stored. Omitting to specify this parameter will prompt the user to provide the destination path at the end of the capture process.
- ![image](https://user-images.githubusercontent.com/2547149/149799199-5f8e454b-9d05-42da-9a7c-5a22cf39fe46.png)
+![image](https://user-images.githubusercontent.com/2547149/149799199-5f8e454b-9d05-42da-9a7c-5a22cf39fe46.png)
 
 ### Components
 This parameter accepts an array containing the names of the components you want to capture as part of your snapshot. Omitting this parameter will default the capture process to capture all components that are part of the default components list (see parameter Mode).
- ![image](https://user-images.githubusercontent.com/2547149/149799217-4f2c2bf8-1ceb-4e6c-a9a4-d8d989c1a05a.png)
+![image](https://user-images.githubusercontent.com/2547149/149799217-4f2c2bf8-1ceb-4e6c-a9a4-d8d989c1a05a.png)
 
 ### Workloads
 This component accepts an array containing the names of various workloads you wish to capture the components for as part of your snapshot process.  Users need to specify the acronym of the workloads, which can be any of:
@@ -172,21 +172,21 @@ This means that the **Lite** extraction mode will contain all resources with the
 
 ### MaxProcesses
 There are a few components inside of Microsoft365DSC for which parallelism has been implemented as part of their snapshot process to improve speed. This parameter allows user to specify how many parallel threads should be created during the capture process. Components leveraging parallelism are: SPOPropertyBag, SPOUserProfileProperty and TeamsUser. The specified value for this parameter has to be between **1** and **100**. Instances of the components will be equally divided amongst the various threads.
- ![image](https://user-images.githubusercontent.com/2547149/149799619-509d7526-eba0-4ccc-b028-aeb012a2275a.png)
+![image](https://user-images.githubusercontent.com/2547149/149799619-509d7526-eba0-4ccc-b028-aeb012a2275a.png)
 ![image](https://user-images.githubusercontent.com/2547149/149799632-06ae6b61-4bbc-4cf8-8102-1c008d805205.png)
 
 While there are advantages to implementing multithreading for the snapshot process, there are many disadvantages as well such as not being able to properly view ongoing progress inside threads and added complexity to the design of the resources. After weighting in the pros can cons of implementing this approach across all components to speed up the entire capture process, we’ve opted to keep the design of the resources simpler (no use parallelism) for maintenance purposes and to ensure users have a consistent way of view progress during the snapshot process.
 
 ### GenerateInfo
 This parameter allows users to specify whether or not comments should be added as part of the exported file to provide additional information about the various types of components captured.
- ![image](https://user-images.githubusercontent.com/2547149/149799667-9cfc5e09-c7c4-460e-979e-3c3f1129abc2.png)
+![image](https://user-images.githubusercontent.com/2547149/149799667-9cfc5e09-c7c4-460e-979e-3c3f1129abc2.png)
 
 # Deploying Configurations
 This section explains how you can take a Microsoft365DSC configuration file you’ve written (or captured using the snapshot feature) and apply the settings it defines onto a Microsoft 365 tenant. It is very important to understand that at this stage, we are using PowerShell Desired State (DSC) out-of-the-box and that the process of applying a DSC configuration is not something specific to Microsoft365DSC.
 
 ## Compiling and Validating the Configuration
 The first step in trying to deploy a DSC configuration is to compile the configuration file into what we call a Managed Object Format (MOF) file. To do so, simply execute the .ps1 file that contains your configuration. The process of compiling your configuration will also perform some level of validation on the configuration such as ensuring that every component defined in the file has all of their mandatory parameters defined and that there are no typos in components or property names. If the compilation process is successful, you should see a mention that the .mof file was created. This file gets created in the same location where your configuration file is located by default and will create a new folder based on the name of the configuration object defined within your file.
- ![image](https://user-images.githubusercontent.com/2547149/149799734-204e64d7-19d5-4f5b-a62c-90fcb04213a0.png)
+![image](https://user-images.githubusercontent.com/2547149/149799734-204e64d7-19d5-4f5b-a62c-90fcb04213a0.png)
 ![image](https://user-images.githubusercontent.com/2547149/149799745-ff76dcc4-a4d4-4c43-8f76-9f29873e5d18.png)![image](https://user-images.githubusercontent.com/2547149/149799755-5880b2c7-545a-45c5-b4d7-36c99ecaff31.png)
 
 
@@ -206,11 +206,11 @@ You can also have the cmdlet generate the private key for the certificate by usi
 
 Once the certificate has been configured every time you do a snapshot of an existing tenant’s configuration, a new M365DSC.cer certificate file will be stored in the same repository as the configuration files. The ConfigurationData.psd1 will also contain a new entry under the localhost node that will point to this certificate, effectively telling DSC to use this file to encrypt credentials when compiling.
 
- ![image](https://user-images.githubusercontent.com/2547149/149799919-7b594207-f435-491d-a424-c3f15447294c.png)
+![image](https://user-images.githubusercontent.com/2547149/149799919-7b594207-f435-491d-a424-c3f15447294c.png)
 
 If you compile your configuration using the new certificate and take a look at your MOF file, you should see that the password for the credential object was successfully encrypted and is no longer showing in plaintext.
 
- ![image](https://user-images.githubusercontent.com/2547149/149799949-163c0ba6-8bd9-4ec5-acab-9597ae77966f.png)
+![image](https://user-images.githubusercontent.com/2547149/149799949-163c0ba6-8bd9-4ec5-acab-9597ae77966f.png)
 
 ## Deploying the Configuration
 To initiate the deployment of a configuration onto a Microsoft 365 tenant, you need to use the out-of-the-box cmdlet provided by PowerShell DSC named **Start-DSCConfiguration**. By default, this cmdlet will execute as a background job. If you wish to monitor the execution of the process, you need to use the **-Wait** switch, which will make the process synchronous. We also recommend using the **-Verbose** switch with the command to get additional details on the progression of the process. The cmdlet takes in the path to the folder that contains the compiled .MOF file.
@@ -221,18 +221,18 @@ Start-DSCConfiguration C:\DemoM365DSC\M365TenantConfig -Wait -Verbose -Force
 ```
 
 Executing the cmdlet will automatically authenticate against the affected workload using the authentication parameters provided at compilation time and will apply the configuration settings defined in the file.
- ![image](https://user-images.githubusercontent.com/2547149/149800095-28010b6b-8b7c-4c2b-85fd-f0614294fb50.png)
+![image](https://user-images.githubusercontent.com/2547149/149800095-28010b6b-8b7c-4c2b-85fd-f0614294fb50.png)
 
 It is normal for this process to take several minutes if not hours to complete, based on how many components are defined in your configuration. It is important to understand that once the configuration completes its deployment, this will configure the PowerShell DSC engine on the current system to due frequent checks against your Microsoft 365 tenant to check for configuration drifts. By default, the engine will wake up every 15 minutes (minimum value possible). For more details on how to configure this, please refer to <a href="https://docs.microsoft.com/en-us/powershell/dsc/managing-nodes/metaconfig?view=dsc-1.1">Configuring the Local Configuration Manager</a>. If you simply want to apply the configuration on the tenant as a one off and prevent the system form doing frequent checks for configuration drifts, you can remove the configuration you’ve applied from memory by running the following PowerShell commands:
 ```
 Stop-DSCConfiguration -Force
 Remove-DSCConfigurationDocument -Stage Current
 ```
- ![image](https://user-images.githubusercontent.com/2547149/149800178-ea830872-446a-4e97-9cda-068d9eef7266.png)
+![image](https://user-images.githubusercontent.com/2547149/149800178-ea830872-446a-4e97-9cda-068d9eef7266.png)
 
 # Monitoring for Configuration Drifts
 Once a configuration has been applied to a Microsoft 365 tenant using Microsoft365DSC, the local system will perform regular checks to analyze the configuration of the remote tenant against what its desired state should be and detect any configuration drifts. This feature comes from PowerShell DSC out-of-the-box and is not something specific to Microsoft365DSC. By default the DSC engine on the system where the configuration was applied from will check for configuration drifts every 15 minutes. If a drift in configuration is detected, it will log it in Event Viewer on the machine by default. Detected drifts will get logged under the **M365DSC** log journal in Event Viewer. Microsoft365DSC provide very detailed entries in event viewer that help you identify exactly in what component a drift was detected as well as what property was detected to have drifted.
- ![image](https://user-images.githubusercontent.com/2547149/149800220-a67f31ef-3cc3-46bd-b462-3099ce0c89d6.png)
+![image](https://user-images.githubusercontent.com/2547149/149800220-a67f31ef-3cc3-46bd-b462-3099ce0c89d6.png)
 
 Just like for any DSC module, you can also configure the DSC engine to automatically attempt to automatically fix detected drift and bring the tenant back into its desired state. This is referred to as the DSC configuration mode. To learn more about how you can configure the DSC engine to automatically fix detected drift, please refer to <a href="https://docs.microsoft.com/en-us/powershell/dsc/managing-nodes/metaconfig?view=dsc-1.1">Configuring the Local Configuration Manager</a>.
 
@@ -245,10 +245,10 @@ For example, let's assume you are trying to clone the configuration of Tenant A 
 Microsoft365DSC makes it very easy to generate user friendly reports from any configuration, whether you wrote it yourself or generated it using the configuration snapshot feature. The solution allows you to generate both HTML and Excel reports from existing files. To generate and Excel reports however, you need to have Office installed on the machine that you are trying to generate the report from. To generate reports, simply use the **New-M365DSCReportFromConfiguration** and specify what type of report you want using the **Type** parameter (specify HTML or Excel). The cmdlet also requires you to specify the full path to the .ps1 configuration file you want to generate the report from using the **-ConfigurationPath** parameter and specify where you wish to store the generated report using the **-OutputPath** parameter.
 
 Trying to generate an Excel report from a configuration will automatically launch the Excel client as part of the process. Users will see data being loaded progressively into it and once the generation processes has finished, columns will automatically be resized to fit the content. The report will also automatically put the key mandatory parameter (e.g. primary key) of each resource in bold and do some styling of the output. report.
- ![image](https://user-images.githubusercontent.com/2547149/149800400-e44efd1c-77a9-4b9c-8c43-c3b05f139714.png)
+![image](https://user-images.githubusercontent.com/2547149/149800400-e44efd1c-77a9-4b9c-8c43-c3b05f139714.png)
 
 Generating an HTML report will generate a different result. It will create the report file at the location specified by the **OutputPath** parameter, but it won’t actually launch the report in a browser. The **New-M365DSCReportFromConfiguration** cmdlet, when used for HTML reports will also return the raw HTML content of the report as seen in the image below.
- ![image](https://user-images.githubusercontent.com/2547149/149800454-466920fd-0fb0-48fd-b5b2-873c3cb00b28.png)
+![image](https://user-images.githubusercontent.com/2547149/149800454-466920fd-0fb0-48fd-b5b2-873c3cb00b28.png)
 ![image](https://user-images.githubusercontent.com/2547149/149800462-c3ab5699-4991-48b3-89cc-3f48e36d8a86.png)
 
 
