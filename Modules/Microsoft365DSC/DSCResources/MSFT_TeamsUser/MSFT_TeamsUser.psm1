@@ -61,7 +61,7 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Checking for existance of Team User $User"
-        $team = Get-TeamByName $TeamName -ErrorAction SilentlyContinue
+        $team = Get-TeamByName ([System.Net.WebUtility]::UrlEncode($TeamName)) -ErrorAction SilentlyContinue
         if ($null -eq $team)
         {
             return $nullReturn
@@ -182,7 +182,7 @@ function Set-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' -InboundParameters $PSBoundParameters
 
-    $team = Get-TeamByName $TeamName
+    $team = Get-TeamByName ([System.Net.WebUtility]::UrlEncode($TeamName))
 
     Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
 
