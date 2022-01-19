@@ -14,33 +14,16 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - name: Install Dependencies
-        shell: powershell
-        run: |
-          $VerbosePreference = 'Continue'
-          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
-
-          $manifest = Import-PowerShellDataFile "./Modules/Microsoft365DSC/Dependencies/Manifest.psd1"
-          $dependencies = $manifest.Dependencies
-          $i = 1
-          foreach ($dependency in $dependencies)
-          {
-              Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
-              try
-              {
-                  Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force
-              }
-              catch
-              {
-                  Write-Host "Could not update {$($dependency.ModuleName)}"
-              }
-              $i++
-          }
       - name: Run Test Harness
         shell: powershell
         run: |
           Get-Module -ListAvailable | Out-String
+          Install-Module PnP.PowerShell -Force
           Import-Module PnP.PowerShell -Force
+
+          Install-Module Microsoft.PowerApps.Administration.PowerShell -Force
+          Import-Module Microsoft.PowerApps.Administration.PowerShell -Force
+
           Install-Module Pester -Force -SkipPublisherCheck -RequiredVersion 5.0.4
           [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);
           Import-Module './Tests/TestHarness.psm1' -Force;

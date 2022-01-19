@@ -197,7 +197,7 @@ function Set-TargetResource
 
     $CurrentParameters = $PSBoundParameters
 
-    $team = Get-TeamByName $TeamName
+    $team = Get-TeamByName ([System.Net.WebUtility]::UrlEncode($TeamName))
 
     if ($team.Length -gt 1)
     {
