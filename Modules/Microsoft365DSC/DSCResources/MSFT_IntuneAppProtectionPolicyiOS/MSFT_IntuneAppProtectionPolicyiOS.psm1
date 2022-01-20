@@ -733,7 +733,7 @@ function Get-M365DSCIntuneAppProtectionPolicyiOS
     try
     {
         $Url = "https://graph.microsoft.com/beta/deviceAppManagement/iosManagedAppProtections('$PolicyId')/`?expand=apps,assignments"
-        $response = Invoke-MgGraphRequest Method Get `
+        $response = Invoke-MgGraphRequest -Method Get `
             -Uri $Url
         return $response
     }
