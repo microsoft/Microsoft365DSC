@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# 1.22.119.2
+
+* EXOOrganizationConfig
+  * Fixed issue where the name of the parameter in the module and
+    in the schema differed;
+    FIXES #1689
+
 # 1.22.119.1
 
 * EXOOrganizationConfig
