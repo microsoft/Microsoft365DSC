@@ -250,7 +250,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $SendFromAliasEnabled,
+        $SendFromEmailAliasEnabled,
 
         [Parameter()]
         [System.String]
@@ -392,7 +392,7 @@ function Get-TargetResource
             PublicFolderShowClientControl                             = $ConfigSettings.PublicFolderShowClientControl
             ReadTrackingEnabled                                       = $ConfigSettings.ReadTrackingEnabled
             RemotePublicFolderMailboxes                               = $ConfigSettings.RemotePublicFolderMailboxes
-            SendFromAliasEnabled                                      = $ConfigSettings.SendFromAliasEnabled
+            SendFromEmailAliasEnabled                                 = $ConfigSettings.SendFromEmailAliasEnabled
             SiteMailboxCreationURL                                    = $ConfigSettings.SiteMailboxCreationURL
             SmtpActionableMessagesEnabled                             = $ConfigSettings.SmtpActionableMessagesEnabled
             VisibleMeetingUpdateProperties                            = $ConfigSettings.VisibleMeetingUpdateProperties
@@ -705,7 +705,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $SendFromAliasEnabled,
+        $SendFromEmailAliasEnabled,
 
         [Parameter()]
         [System.String]
@@ -1046,7 +1046,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $SendFromAliasEnabled,
+        $SendFromEmailAliasEnabled,
 
         [Parameter()]
         [System.String]
