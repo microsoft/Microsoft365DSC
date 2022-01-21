@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# 1.22.126.1
+
+* DEPENDENCIES
+  * Updated Microsoft.Teams to version 3.1.0;
+
 # 1.22.119.2
 
 * EXOOrganizationConfig
