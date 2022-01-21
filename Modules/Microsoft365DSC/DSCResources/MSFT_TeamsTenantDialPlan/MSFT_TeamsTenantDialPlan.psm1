@@ -433,14 +433,7 @@ function Export-TargetResource
 
             if ($results.NormalizationRules.Count -gt 0)
             {
-                if ($results.NormalizationRules.GetType().Name -eq "Hashtable")
-                {
-                    $results.NormalizationRules = Get-M365DSCNormalizationRulesAsString $results.NormalizationRules
-                }
-                else
-                {
-                    $results.NormalizationRules = Get-M365DSCNormalizationRulesAsString $results.NormalizationRules[0]
-                }
+                $results.NormalizationRules = Get-M365DSCNormalizationRulesAsString $results.NormalizationRules
             }
             $currentDSCBlock = "        TeamsTenantDialPlan " + (New-Guid).ToString() + "`r`n"
             $currentDSCBlock += "        {`r`n"
@@ -591,7 +584,7 @@ function Get-M365DSCNormalizationRulesAsString
     [OutputType([System.String])]
     param(
         [Parameter(Mandatory = $true)]
-        [System.Collections.Hashtable]
+        [System.Object[]]
         $Params
     )
 
@@ -599,23 +592,29 @@ function Get-M365DSCNormalizationRulesAsString
     {
         return $null
     }
-    $currentProperty = "@(MSFT_TeamsVoiceNormalizationRule{`r`n"
-    foreach ($key in $params.Keys)
+    $currentProperty = "@("
+    
+    foreach ($rule in $params)
     {
-        if ($key -eq 'Priority')
+        $currentProperty += "MSFT_TeamsVoiceNormalizationRule{`r`n"
+        foreach ($key in $rule.Keys)
         {
-            $currentProperty += "                " + $key + " = " + $params[$key] + "`r`n"
+            if ($key -eq 'Priority')
+            {
+                $currentProperty += "                " + $key + " = " + $rule[$key] + "`r`n"
+            }
+            elseif ($key -eq "IsInternalExtension")
+            {
+                $currentProperty += "                " + $key + " = `$" + $rule[$key] + "`r`n"
+            }
+            else
+            {
+                $currentProperty += "                " + $key + " = '" + $rule[$key] + "'`r`n"
+            }
         }
-        elseif ($key -eq "IsInternalExtension")
-        {
-            $currentProperty += "                " + $key + " = `$" + $params[$key] + "`r`n"
-        }
-        else
-        {
-            $currentProperty += "                " + $key + " = '" + $params[$key] + "'`r`n"
-        }
+        $currentProperty += "            }"
     }
-    $currentProperty += "            })"
+    $currentProperty += ")"
     return $currentProperty
 }
 
