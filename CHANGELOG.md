@@ -3,6 +3,7 @@
 # 1.22.126.1
 
 * DEPENDENCIES
+  * Updated all Microsoft.Graph * to 1.9.2;
   * Updated Microsoft.Teams to version 3.1.0;
 
 # 1.22.119.2
