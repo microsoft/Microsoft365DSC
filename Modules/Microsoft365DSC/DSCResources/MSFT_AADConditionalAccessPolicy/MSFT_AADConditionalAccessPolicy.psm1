@@ -1493,21 +1493,21 @@ function Set-TargetResource
         if ($IncludeDevices -or $ExcludeDevices)
         {
             #create and provision Device condition object if used
-            if (-not $conditions.Contains("Platforms"))
+            if (-not $conditions.Contains("Devices"))
             {
-                $conditions.Add("Platforms", @{
-                        ExcludePlatforms = @()
-                        IncludePlatforms = @()
+                $conditions.Add("Devices", @{
+                        ExcludeDevices = @()
+                        IncludeDevices = @()
                     })
             }
             else
             {
-                $conditions.Platforms.Add("ExcludeDevices", @())
-                $conditions.Platforms.Add("IndludeDevices", @())
+                $conditions.Devices.Add("ExcludeDevices", @())
+                $conditions.Devices.Add("IndludeDevices", @())
             }
-            $conditions.Platforms.IncludeDevices = $IncludeDevices
+            $conditions.Devices.IncludeDevices = $IncludeDevices
             #no translation or conversion needed
-            $conditions.Platforms.ExcludeDevices = $ExcludeDevices
+            $conditions.Devices.ExcludeDevices = $ExcludeDevices
             #no translation or conversion needed
         }
         Write-Verbose -Message "Set-Targetresource: process risk levels and app types"
