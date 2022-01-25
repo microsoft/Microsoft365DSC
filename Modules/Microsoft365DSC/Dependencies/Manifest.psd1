@@ -38,7 +38,7 @@
         },
         @{
             ModuleName      = "Microsoft.Graph.Identity.DirectoryManagement"
-            RequiredVersion = "1.9."
+            RequiredVersion = "1.9.2"
         },
         @{
             ModuleName      = "Microsoft.Graph.Identity.Governance"
