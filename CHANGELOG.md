@@ -8,6 +8,8 @@
 * MISC
   * Update automatic cmdlet documentation generation functions and prereqs.
   * Adding cmdlet documentation to website
+  * Fixed an issue with the Export-M365DSCConfiguration cmdlet where it
+    would throw an error if no parameters were passed.
 
 # 1.22.119.2
 
