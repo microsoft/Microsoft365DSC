@@ -2,6 +2,9 @@
 .Description
 This function tests the configuration of the agent
 
+.Example
+Test-M365DSCAgent
+
 .Functionality
 Public
 #>
@@ -127,6 +130,12 @@ Specifies that a PFX export should be created for the generated certificate.
 
 .Parameter Password
 Specifies the password for the PFX file.
+
+.Example
+Set-M365DSCAgentCertificateConfiguration -KeepCertificate
+
+.Example
+Set-M365DSCAgentCertificateConfiguration -GeneratePFX -Password 'P@ssword123!'
 
 .Functionality
 Public

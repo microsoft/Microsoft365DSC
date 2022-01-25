@@ -231,6 +231,9 @@ Specifies the Instrumention Key to be used to send the telemetry to.
 .Parameter ProjectName
 Specifies the name of the project to store the telemetry data under.
 
+.Example
+Set-M365DSCTelemetryOption -Enabled $false
+
 .Functionality
 Public
 #>
@@ -273,6 +276,9 @@ function Set-M365DSCTelemetryOption
 <#
 .Description
 This function gets the configuration for the M365DSC telemetry feature
+
+.Example
+Get-M365DSCTelemetryOption
 
 .Functionality
 Public

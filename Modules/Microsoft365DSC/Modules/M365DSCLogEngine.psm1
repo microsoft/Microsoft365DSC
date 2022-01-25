@@ -177,6 +177,12 @@ Specify if the results should be anonymized.
 .Parameter Url
 (Anonymize=True) The url that should be renamed.
 
+.Example
+Export-M365DSCDiagnosticData -ExportFilePath C:\Temp\DSCLogsExport.zip -NumberOfDays 3
+
+.Example
+Export-M365DSCDiagnosticData -ExportFilePath C:\Temp\DSCLogsExport.zip -Anonymize -Server spfe -Domain contoso.com -Url sharepoint.contoso.com
+
 .Functionality
 Public
 #>
