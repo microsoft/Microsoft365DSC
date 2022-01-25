@@ -951,21 +951,11 @@ function Export-M365DSCConfiguration
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Event", "Extraction")
 
-    if (-not [System.String]::IsNullOrEmpty($TenantId))
-    {
-        $data.Add("Tenant", $TenantId)
-    }
-    else
-    {
-        $tenant = $Credential.UserName.Split('@')[1]
-        $data.Add("Tenant", $tenant)
-    }
     $data.Add("Path", [System.String]::IsNullOrEmpty($Path))
     $data.Add("FileName", $null -ne [System.String]::IsNullOrEmpty($FileName))
     $data.Add("Components", $null -ne $Components)
     $data.Add("Workloads", $null -ne $Workloads)
     $data.Add("MaxProcesses", $null -ne $MaxProcesses)
-    Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
     $outdatedOrMissingAssemblies = Test-M365DSCDependencies
@@ -1003,6 +993,17 @@ function Export-M365DSCConfiguration
         $Credential = Get-Credential
     }
 
+    if (-not [System.String]::IsNullOrEmpty($TenantId))
+    {
+        $data.Add("Tenant", $TenantId)
+    }
+    else
+    {
+        $tenant = $Credential.UserName.Split('@')[1]
+        $data.Add("Tenant", $tenant)
+    }
+
+    Add-M365DSCTelemetryEvent -Data $data
     if ($LaunchWebUI)
     {
         explorer "https://export.microsoft365dsc.com"
