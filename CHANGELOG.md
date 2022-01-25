@@ -2,6 +2,10 @@
 
 # 1.22.126.1
 
+*TeamsTenantDialPlan
+  * Fixed an issue where the Export only extracted the first
+    normalization rule.
+    FIXES #1695
 * DEPENDENCIES
   * Updated all Microsoft.Graph * to 1.9.2;
   * Updated Microsoft.Teams to version 3.1.0;

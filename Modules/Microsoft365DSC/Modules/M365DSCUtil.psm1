@@ -77,7 +77,7 @@ function Get-TeamByName
     $loopCounter = 0
     do
     {
-        $team = Get-Team -DisplayName $TeamName
+        $team = Get-Team -DisplayName $TeamName | Where-Object -FilterScript {$_.DisplayName -eq $TeamName}
         if ($null -eq $team)
         {
             Start-Sleep 5
