@@ -1,5 +1,20 @@
 # Change log for Microsoft365DSC
 
+# 1.22.126.1
+
+*TeamsTenantDialPlan
+  * Fixed an issue where the Export only extracted the first
+    normalization rule.
+    FIXES #1695
+* DEPENDENCIES
+  * Updated all Microsoft.Graph * to 1.9.2;
+  * Updated Microsoft.Teams to version 3.1.0;
+* MISC
+  * Update automatic cmdlet documentation generation functions and prereqs.
+  * Adding cmdlet documentation to website
+  * Fixed an issue with the Export-M365DSCConfiguration cmdlet where it
+    would throw an error if no parameters were passed.
+
 # 1.22.119.2
 
 * EXOOrganizationConfig
