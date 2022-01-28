@@ -306,6 +306,12 @@ The path to the exported DSC configuration that the report should be created for
 .Parameter OutputPath
 The output path of the report.
 
+.Example
+New-M365DSCReportFromConfiguration -Type 'HTML' -ConfigurationPath 'C:\DSC\' -OutputPath 'C:\Dsc\M365Report.html'
+
+.Example
+New-M365DSCReportFromConfiguration -Type 'Excel' -ConfigurationPath 'C:\DSC\' -OutputPath 'C:\Dsc\M365Report.xlsx'
+
 .Functionality
 Public
 #>
@@ -704,6 +710,12 @@ Specifies that file that contains a custom header for the report.
 
 .Parameter Delta
 An array with difference, already compiled from another source.
+
+.Example
+New-M365DSCDeltaReport -Source 'C:\DSC\Source.ps1' -Destination 'C:\DSC\Destination.ps1' -OutputPath 'C:\Dsc\DeltaReport.html'
+
+.Example
+New-M365DSCDeltaReport -Source 'C:\DSC\Source.ps1' -Destination 'C:\DSC\Destination.ps1' -OutputPath 'C:\Dsc\DeltaReport.html' -DriftOnly $true
 
 .Functionality
 Public

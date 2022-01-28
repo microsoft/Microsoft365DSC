@@ -8,6 +8,9 @@ both for reading and updating.
 .Parameter ResourceNameList
 An array of resource names for which the permissions should be determined.
 
+.Example
+Get-M365DSCCompiledPermissionList -ResourceNameList @('O365User', 'AADApplication')
+
 .Functionality
 Public
 #>
@@ -87,6 +90,12 @@ Specifies that the permissions should be determined for all resources.
 
 .Parameter Type
 For which action should the permissions be updated: Read or Update.
+
+.Example
+Update-M365DSCAllowedGraphScopes -ResourceNameList @('O365User', 'AADApplication') -Type 'Read'
+
+.Example
+Update-M365DSCAllowedGraphScopes -All -Type 'Update' -Environment 'Global'
 
 .Functionality
 Public
@@ -169,6 +178,9 @@ This function updates the settings.json files for all resources that use Graph c
 It is compiling a permissions list based on all used Graph cmdlets in the resource and
 retrieving the permissions for these cmdlets from the Graph. Then it updates the
 settings.json file
+
+.Example
+Update-M365DSCResourcesSettingsJSON
 
 .Functionality
 Public
