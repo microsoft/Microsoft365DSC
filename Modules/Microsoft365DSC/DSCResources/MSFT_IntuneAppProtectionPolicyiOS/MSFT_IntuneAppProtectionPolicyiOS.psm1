@@ -887,7 +887,7 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSAssignmentJSON
         [System.String[]]
         $Assignments,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false)]
         [System.String[]]
         $Exclusions
     )
