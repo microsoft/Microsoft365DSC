@@ -461,63 +461,6 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [Switch]
-        $AllowBasicAuthActiveSync,
-
-        [Parameter()]
-        [Switch]
-        $AllowBasicAuthAutodiscover,
-
-        [Parameter()]
-        [Switch]
-        $AllowBasicAuthImap,
-
-        [Parameter()]
-        [Switch]
-        $AllowBasicAuthMapi,
-
-        [Parameter()]
-        [Switch]
-        $AllowBasicAuthOfflineAddressBook,
-
-        [Parameter()]
-        [Switch]
-        $AllowBasicAuthOutlookService,
-
-        [Parameter()]
-        [Switch]
-        $AllowBasicAuthPop,
-
-        [Parameter()]
-        [Switch]
-        $AllowBasicAuthPowerShell,
-
-        [Parameter()]
-        [Switch]
-        $AllowBasicAuthReportingWebServices,
-
-        [Parameter()]
-        [Switch]
-        $AllowBasicAuthRpc,
-
-        [Parameter()]
-        [Switch]
-        $AllowBasicAuthSmtp,
-
-        [Parameter()]
-        [Switch]
-        $AllowBasicAuthWebServices,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
-
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,

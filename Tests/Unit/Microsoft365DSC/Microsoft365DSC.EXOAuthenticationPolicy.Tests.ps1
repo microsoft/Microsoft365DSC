@@ -204,7 +204,7 @@ $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
             BeforeAll {
                 $testParams = @{
                     Identity                                = "Contoso Auth Policy"
-                    Credential                              = $Credentials
+                    Credential                              = $Credential
                     Ensure                                  = "Absent"
                 }
 

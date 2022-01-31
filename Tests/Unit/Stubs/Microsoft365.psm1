@@ -4,7 +4,7 @@ function Get-AuthenticationPolicy
 {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Identity,
 
@@ -61,7 +61,7 @@ function Set-AuthenticationPolicy
 {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Identity,
 
@@ -111,14 +111,18 @@ function Set-AuthenticationPolicy
 
         [Parameter()]
         [Switch]
-        $AllowBasicAuthWebServices
+        $AllowBasicAuthWebServices,
+
+        [Parameter()]
+        [Bool]
+        $Confirm
     )
 }
 function New-AuthenticationPolicy
 {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Name,
 
@@ -175,7 +179,7 @@ function Remove-AuthenticationPolicy
 {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Identity,
 
