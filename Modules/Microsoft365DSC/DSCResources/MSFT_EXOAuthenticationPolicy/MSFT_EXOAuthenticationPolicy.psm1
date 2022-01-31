@@ -329,7 +329,8 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Authentication Policy '$($Identity)' exists. Updating settings."
         Set-AuthenticationPolicy -Identity $Identity @NewAuthenticationPolicyParams
-    }}
+    }
+}
 
 function Test-TargetResource
 {

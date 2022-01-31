@@ -204,27 +204,13 @@ $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
             BeforeAll {
                 $testParams = @{
                     Identity                                = "Contoso Auth Policy"
-                    Credential                              = $Credential
                     Ensure                                  = "Absent"
                 }
 
                 Mock -CommandName Get-AuthenticationPolicy -MockWith {
                     return @{
                         Identity                            = "Contoso Auth Policy"
-                        AllowBasicAuthActiveSync            = $False
-                        AllowBasicAuthAutodiscover          = $False
-                        AllowBasicAuthImap                  = $False
-                        AllowBasicAuthMapi                  = $False
-                        AllowBasicAuthOfflineAddressBook    = $False
-                        AllowBasicAuthOutlookService        = $False
-                        AllowBasicAuthPop                   = $False
-                        AllowBasicAuthPowerShell            = $False
-                        AllowBasicAuthReportingWebServices  = $False
-                        AllowBasicAuthRpc                   = $False
-                        AllowBasicAuthSmtp                  = $False
-                        AllowBasicAuthWebServices           = $False
                         Ensure                              = 'Present'
-                        Credential                          = $Credential
                     }
                 }
             }

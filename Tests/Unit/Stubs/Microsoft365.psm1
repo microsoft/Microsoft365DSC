@@ -53,6 +53,11 @@ function Get-AuthenticationPolicy
         $AllowBasicAuthSmtp,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure,
+
+        [Parameter()]
         [Switch]
         $AllowBasicAuthWebServices
     )
@@ -64,6 +69,10 @@ function Set-AuthenticationPolicy
         [Parameter()]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [Switch]
@@ -111,11 +120,7 @@ function Set-AuthenticationPolicy
 
         [Parameter()]
         [Switch]
-        $AllowBasicAuthWebServices,
-
-        [Parameter()]
-        [Bool]
-        $Confirm
+        $AllowBasicAuthWebServices
     )
 }
 function New-AuthenticationPolicy
@@ -125,6 +130,10 @@ function New-AuthenticationPolicy
         [Parameter()]
         [System.String]
         $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [Switch]
@@ -182,6 +191,10 @@ function Remove-AuthenticationPolicy
         [Parameter()]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [Switch]
