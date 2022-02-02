@@ -999,8 +999,11 @@ function Export-M365DSCConfiguration
     }
     else
     {
-        $tenant = $Credential.UserName.Split('@')[1]
-        $data.Add("Tenant", $tenant)
+        if ($Credential)
+        {
+            $tenant = $Credential.UserName.Split('@')[1]
+            $data.Add("Tenant", $tenant)
+        }
     }
 
     Add-M365DSCTelemetryEvent -Data $data
