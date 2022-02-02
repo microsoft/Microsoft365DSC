@@ -84,6 +84,11 @@ function Get-TargetResource
         [System.Boolean]
         $ContactSyncBlocked,
 
+        #Added Parameter 05/01/22 Jamie
+        [Parameter()]
+        [System.String] #confirm if correct...
+        $PeriodBeforePinReset,
+
         [Parameter()]
         [System.Boolean]
         $PrintBlocked,
@@ -91,6 +96,11 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $FingerprintBlocked,
+
+        #Added parameter 05/01/2022 Jamie
+        [Parameter()]
+        [System.Boolean]
+        $FaceIdBlocked,
 
         [Parameter()]
         [System.String]
@@ -153,7 +163,7 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
 
     try
-    {
+{
         $policyInfo = Get-MgDeviceAppManagementiosManagedAppProtection -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
 
@@ -334,6 +344,11 @@ function Set-TargetResource
         [System.Boolean]
         $ContactSyncBlocked,
 
+        #Added Parameter 05/01/22 Jamie
+        [Parameter()]
+        [System.String] #Confirm if correct
+        $PeriodBeforePinReset,
+
         [Parameter()]
         [System.Boolean]
         $PrintBlocked,
@@ -341,6 +356,11 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $FingerprintBlocked,
+
+        #Added Parameter 05/01/22 Jamie
+        [Parameter()]
+        [System.Boolean]
+        $FaceIDBlocked,
 
         [Parameter()]
         [System.String]
@@ -529,6 +549,11 @@ function Test-TargetResource
         [System.Boolean]
         $ContactSyncBlocked,
 
+        #Added Parameter 05/01/22 Jamie
+        [Parameter()]
+        [System.String] #confirm if correct
+        $PeriodBeforePinReset,
+
         [Parameter()]
         [System.Boolean]
         $PrintBlocked,
@@ -536,6 +561,11 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $FingerprintBlocked,
+
+        #Added Parameter 05/01/22 Jamie
+        [Parameter()]
+        [System.Boolean]
+        $FaceIDBlocked,
 
         [Parameter()]
         [System.String]
@@ -733,7 +763,7 @@ function Get-M365DSCIntuneAppProtectionPolicyiOS
     try
     {
         $Url = "https://graph.microsoft.com/beta/deviceAppManagement/iosManagedAppProtections('$PolicyId')/`?expand=apps,assignments"
-        $response = Invoke-MgGraphRequest -Method Get `
+        $response = Invoke-MgGraphRequest Method Get `
             -Uri $Url
         return $response
     }
