@@ -1,8 +1,17 @@
 # Change log for Microsoft365DSC
 
+# 1.22.202.1
+
+* IntuneAppProtectionPolicyiOS
+  * Fixes an issue where an error was thrown when no ExcludedGroups
+    were specified.
+    FIXES #1719
+* MISC
+  * Documentation updates
+
 # 1.22.126.1
 
-*TeamsTenantDialPlan
+* TeamsTenantDialPlan
   * Fixed an issue where the Export only extracted the first
     normalization rule.
     FIXES #1695
