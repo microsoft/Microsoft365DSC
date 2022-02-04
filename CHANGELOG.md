@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# 1.22.209.1
+
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 3.1.1;
+
 # 1.22.202.1
 
 * IntuneAppProtectionPolicyiOS
