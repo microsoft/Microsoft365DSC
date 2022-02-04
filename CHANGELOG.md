@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+# 1.22.209.1
+
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 3.1.1;
+* MISC
+  * Fixed an issue with the Export where the Configuration Data file
+    always referenced a certificate file even when none were configured.
+    FIXES #1724
+
 # 1.22.202.1
 
 * IntuneAppProtectionPolicyiOS

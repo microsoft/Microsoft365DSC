@@ -643,11 +643,12 @@ function Start-M365DSCConfigurationExtract
                     Add-M365DSCEvent -Message $_ -EntryType 'Error' `
                         -EventID 1 -Source $($MyInvocation.MyCommand.Source)
                 }
+
+                Add-ConfigurationDataEntry -Node "localhost" `
+                    -Key "CertificateFile" `
+                    -Value "M365DSC.cer" `
+                    -Description "Path of the certificate used to encrypt credentials in the file."
             }
-            Add-ConfigurationDataEntry -Node "localhost" `
-                -Key "CertificateFile" `
-                -Value "M365DSC.cer" `
-                -Description "Path of the certificate used to encrypt credentials in the file."
             $outputConfigurationData = $OutputDSCPath + "ConfigurationData.psd1"
             New-ConfigurationDataDocument -Path $outputConfigurationData
         }
