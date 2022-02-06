@@ -83,6 +83,7 @@ markdown_extensions:
       guess_lang: false
   - toc:
       permalink: true
+      toc_depth: 0
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.snippets
@@ -101,6 +102,8 @@ extra:
   analytics:
     provider: google
     property: UA-209929913-1
+extra_css:
+  - stylesheets/extra.css
 repo_url: https://github.com/microsoft/Microsoft365DSC
 edit_uri: tree/Dev/docs/docs
 copyright: Microsoft365DSC
