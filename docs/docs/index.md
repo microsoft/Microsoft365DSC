@@ -2,14 +2,25 @@
 
     Microsoft365DSC is the most comprehensive and complete solution to have your Microsoft 365 tenant configuration simple and stable. It's an Open-Source initiative hosted on [GitHub](https://github.com/Microsoft/Microsoft365DSC), lead by Microsoft engineers and maintained by the community.
 
-# Export your configuration
+# Automate Configuration Changes
 
-![Export](Images/home_export.png){ align=left width=300 }
+![Automate](Images/Marketing-Automation.gif){ align=left width=300 }
 
-**Microsoft365DSC** is the very first PowerShell project that natively **supports ReverseDSC**. This means that by simply installing the module, you are able to leverage ReverseDSC to **extract the entire configuration** of any existing tenants.
+Automate your Change Management processes for your Microsoft 365 environments by maintaining a single declarative configuration file to manage all of your workloads.
+
+<br />
+<br />
+<br />
+
+# Take Configuration Snapshots of Existing Microsoft 365 Tenants
+
+![Export](Images/Marketing-Export.gif){ align=left width=300 }
+
+**Microsoft365DSC** allows you to take snapshots of the current configuration of any existing Microsoft 365 tenant.
 
 <br/>
 <br/>
+<br />
 
 # Monitor your configuration
 
