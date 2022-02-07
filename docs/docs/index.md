@@ -30,11 +30,12 @@ If something changes in your tenant's configuration, the **continous monitoring 
 
 <br/>
 <br/>
+<br/>
 
-# Assess your configuration
+# Compare the Configurations of Two or More Tenants
 
-![Export](Images/home_assess.png){ align=left width=300 }
+[![Compare](Images/Marketing-Compare.gif){ align=left width=300 }](https://Microsoft365DSC.com/Images/Marketing-Compare.gif)
 
-Assess any Microsoft 365 tenant against a **known good configuration** and generate a **discrepency report**. Microsoft365DSC makes it feasible for organizations to **validate the configuration** of their existing Microsoft 365 tenant against industry's best practices with a single line command.
+Compare the configurations of any tenants and generate a report listing all differences between the environments.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/mDCuZgvCWWc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
