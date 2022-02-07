@@ -14,7 +14,7 @@ Automate your Change Management processes for your Microsoft 365 environments by
 
 # Take Configuration Snapshots of Existing Microsoft 365 Tenants
 
-![Export](Images/Marketing-Export.gif){ align=left width=300 }
+[![Export](Images/Marketing-Export.gif){ align=left width=300 }](https://Microsoft365DSC.com/Images/Marketing-Export.gif)
 
 **Microsoft365DSC** allows you to take snapshots of the current configuration of any existing Microsoft 365 tenant.
 
