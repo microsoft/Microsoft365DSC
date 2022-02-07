@@ -24,7 +24,7 @@ Automate your Change Management processes for your Microsoft 365 environments by
 
 # Monitor your configuration
 
-![Monitor](Images/home_monitor.png){ align=right width=300 }
+[![Monitoring](Images/Marketing-Monitoring.gif){ align=right width=300 }](https://Microsoft365DSC.com/Images/Marketing-Monitoring.gif)
 
 If something changes in your tenant's configuration, the **continous monitoring feature** of Microsoft365DSC, will automatically detect a drift and can act upon it, like **fixing** it, **logging** the drift or **notifying admins** via email.
 
