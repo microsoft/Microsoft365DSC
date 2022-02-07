@@ -4,7 +4,7 @@
 
 # Automate Configuration Changes
 
-![Automate](Images/Marketing-Automation.gif){ align=left width=300 }
+![Automate](Images/Marketing-Automation.gif){ align=left width=300 border='1px solid black' }(https://Microsoft365DSC.com/Images/Marketing-Automation.gif)
 
 Automate your Change Management processes for your Microsoft 365 environments by maintaining a single declarative configuration file to manage all of your workloads.
 
