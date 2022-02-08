@@ -163,7 +163,7 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
 
     try
-{
+    {
         $policyInfo = Get-MgDeviceAppManagementiosManagedAppProtection -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
 
@@ -227,6 +227,7 @@ function Get-TargetResource
             PinCharacterSet                         = $policy.PinCharacterSet
             AllowedDataStorageLocations             = $policy.AllowedDataStorageLocations
             ContactSyncBlocked                      = $policy.ContactSyncBlocked
+            PeriodBeforePinReset                    = $policy.PeriodBeforePinReset # DJB 070222
             PrintBlocked                            = $policy.PrintBlocked
             FingerprintBlocked                      = $policy.FingerprintBlocked
             AppDataEncryptionType                   = $policy.AppDataEncryptionType
@@ -763,7 +764,7 @@ function Get-M365DSCIntuneAppProtectionPolicyiOS
     try
     {
         $Url = "https://graph.microsoft.com/beta/deviceAppManagement/iosManagedAppProtections('$PolicyId')/`?expand=apps,assignments"
-        $response = Invoke-MgGraphRequest Method Get `
+        $response = Invoke-MgGraphRequest -Method Get `
             -Uri $Url
         return $response
     }
@@ -852,6 +853,7 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
         "minimumPinLength": $($Parameters.MinimumPinLength),
         "pinCharacterSet": "$($Parameters.PinCharacterSet)",
         "contactSyncBlocked": $($Parameters.ContactSyncBlocked.ToString().ToLower()),
+        "periodBeforePinReset": "$($Parameters.PeriodBeforePinReset)",
         "printBlocked": $($Parameters.PrintBlocked.ToString().ToLower()),
         "fingerprintBlocked": $($Parameters.FingerprintBlocked.ToString().ToLower()),
         "appDataEncryptionType": "$($Parameters.AppDataEncryptionType)",
@@ -917,7 +919,7 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSAssignmentJSON
         [System.String[]]
         $Assignments,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false)]
         [System.String[]]
         $Exclusions
     )
