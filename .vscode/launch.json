@@ -1,0 +1,27 @@
+{
+    "version": "0.3.0",
+    "configurations": [
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Run current unit test",
+            "script": "${file}",
+            "args": [
+                "${workspaceRoot}/Tests/Unit/Stubs/Microsoft365.psm1"
+            ],
+            "cwd": "${file}",
+            "createTemporaryIntegratedConsole": true
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Get current unit test code overage",
+            "script": "${workspaceRoot}/.vscode/GetTestCoverage.ps1",
+            "args": [
+                "${file}",
+                "${workspaceRoot}/Tests/Unit/Stubs/Microsoft365.psm1"
+            ],
+            "createTemporaryIntegratedConsole": true
+        }
+    ]
+}
