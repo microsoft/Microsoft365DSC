@@ -84,9 +84,8 @@ function Get-TargetResource
         [System.Boolean]
         $ContactSyncBlocked,
 
-        #Added Parameter 05/01/22 Jamie
         [Parameter()]
-        [System.String] #confirm if correct...
+        [System.String]
         $PeriodBeforePinReset,
 
         [Parameter()]
@@ -227,7 +226,7 @@ function Get-TargetResource
             PinCharacterSet                         = $policy.PinCharacterSet
             AllowedDataStorageLocations             = $policy.AllowedDataStorageLocations
             ContactSyncBlocked                      = $policy.ContactSyncBlocked
-            PeriodBeforePinReset                    = $policy.PeriodBeforePinReset # DJB 070222
+            PeriodBeforePinReset                    = $policy.PeriodBeforePinReset
             PrintBlocked                            = $policy.PrintBlocked
             FingerprintBlocked                      = $policy.FingerprintBlocked
             AppDataEncryptionType                   = $policy.AppDataEncryptionType
@@ -345,9 +344,8 @@ function Set-TargetResource
         [System.Boolean]
         $ContactSyncBlocked,
 
-        #Added Parameter 05/01/22 Jamie
         [Parameter()]
-        [System.String] #Confirm if correct
+        [System.String]
         $PeriodBeforePinReset,
 
         [Parameter()]
@@ -550,9 +548,8 @@ function Test-TargetResource
         [System.Boolean]
         $ContactSyncBlocked,
 
-        #Added Parameter 05/01/22 Jamie
         [Parameter()]
-        [System.String] #confirm if correct
+        [System.String]
         $PeriodBeforePinReset,
 
         [Parameter()]
