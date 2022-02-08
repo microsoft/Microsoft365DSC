@@ -15,6 +15,13 @@
         {
             "type": "PowerShell",
             "request": "launch",
+            "name": "Daniel Debugging Script",
+            "script": "${workspaceRoot}/debugging.ps1",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
             "name": "Get current unit test code overage",
             "script": "${workspaceRoot}/.vscode/GetTestCoverage.ps1",
             "args": [
