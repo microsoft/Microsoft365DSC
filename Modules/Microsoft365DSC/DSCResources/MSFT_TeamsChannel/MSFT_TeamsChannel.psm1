@@ -15,6 +15,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $GroupID,
+
+        [Parameter()]
+        [System.String]
         [ValidateLength(0, 50)]
         $NewDisplayName,
 
@@ -67,7 +71,20 @@ function Get-TargetResource
 
     try
     {
-        $team = Get-TeamByName ([System.Net.WebUtility]::UrlEncode($TeamName))
+        if (-not [System.String]::IsNullOrEmpty($GroupId))
+        {
+            $team = Get-Team -GroupId $GroupId -ErrorAction 'SilentlyContinue'
+        }
+
+        if ($null -eq $team)
+        {
+            $team = Get-TeamByName ([System.Net.WebUtility]::UrlEncode($TeamName))
+        }
+
+        if ($null -eq $team)
+        {
+            return $nullReturn
+        }
 
         Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
 
@@ -93,6 +110,7 @@ function Get-TargetResource
         $results =  @{
             DisplayName           = $channel.DisplayName
             TeamName              = $team.DisplayName
+            GroupId               = $team.GroupId
             Description           = $channel.Description
             Ensure                = "Present"
             ApplicationId         = $ApplicationId
@@ -146,6 +164,10 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $TeamName,
+
+        [Parameter()]
+        [System.String]
+        $GroupID,
 
         [Parameter()]
         [System.String]
@@ -262,6 +284,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $GroupID,
+
+        [Parameter()]
+        [System.String]
         [ValidateLength(0, 50)]
         $NewDisplayName,
 
@@ -373,6 +399,7 @@ function Export-TargetResource
                 Write-Host "        |---[$i/$($channels.Length)] $($channel.DisplayName)" -NoNewline
                 $params = @{
                     TeamName              = $team.DisplayName
+                    GroupId               = $team.GroupId
                     DisplayName           = $channel.DisplayName
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
