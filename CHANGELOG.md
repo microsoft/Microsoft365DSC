@@ -2,6 +2,10 @@
 
 # 1.22.209.1
 
+* TeamsChannel
+  * Fix to allow channels to be extracted properly when two Teams
+    have the same name.
+    FIXES #1746
 * DEPENDENCIES
   * Updated MicrosoftTeams to version 3.1.1;
 * MISC
