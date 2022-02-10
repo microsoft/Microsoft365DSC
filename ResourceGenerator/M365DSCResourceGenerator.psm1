@@ -106,7 +106,7 @@ function Get-DerivedType
     {
         $Version = "cleanbeta"
     }
-    $rawJson = Invoke-RestMethod -Method Get -Uri "https://metadataexplorerstorage.blob.core.windows.net/`$web/$($Version).js#search:$($Entity))"
+    $rawJson = Invoke-RestMethod -Method Get -Uri "https://metadataexplorerstorage.blob.core.windows.net/`$web/$($Version).js#search:$($Entity)"
     # Clean JSON
     $cleanJsonString = $rawJson.TrimStart("const json = ")
     $cleanJsonString = $CleanJsonString -replace ",}", "}"
