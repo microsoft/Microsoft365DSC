@@ -227,6 +227,7 @@ function Get-TargetResource
             AllowedDataStorageLocations             = $policy.AllowedDataStorageLocations
             ContactSyncBlocked                      = $policy.ContactSyncBlocked
             PeriodBeforePinReset                    = $policy.PeriodBeforePinReset
+            FaceIdBlocked                           = $policy.FaceIdBlocked
             PrintBlocked                            = $policy.PrintBlocked
             FingerprintBlocked                      = $policy.FingerprintBlocked
             AppDataEncryptionType                   = $policy.AppDataEncryptionType
@@ -359,7 +360,7 @@ function Set-TargetResource
         #Added Parameter 05/01/22 Jamie
         [Parameter()]
         [System.Boolean]
-        $FaceIDBlocked,
+        $FaceIdBlocked,
 
         [Parameter()]
         [System.String]
@@ -402,7 +403,6 @@ function Set-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -851,6 +851,7 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
         "pinCharacterSet": "$($Parameters.PinCharacterSet)",
         "contactSyncBlocked": $($Parameters.ContactSyncBlocked.ToString().ToLower()),
         "periodBeforePinReset": "$($Parameters.PeriodBeforePinReset)",
+        "faceIdBlocked": $($Parameters.FaceIdBlocked.ToString().ToLower()),
         "printBlocked": $($Parameters.PrintBlocked.ToString().ToLower()),
         "fingerprintBlocked": $($Parameters.FingerprintBlocked.ToString().ToLower()),
         "appDataEncryptionType": "$($Parameters.AppDataEncryptionType)",
