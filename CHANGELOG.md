@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# 1.22.216.1
+
+* DEPENDENCIES
+  * Updated ReverseDSC to version 2.0.0.10.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.142.
+
 # 1.22.209.1
 
 * TeamsChannel
