@@ -96,7 +96,6 @@ function Get-TargetResource
         [System.Boolean]
         $FingerprintBlocked,
 
-        #Added parameter 05/01/2022 Jamie
         [Parameter()]
         [System.Boolean]
         $FaceIdBlocked,
@@ -357,7 +356,6 @@ function Set-TargetResource
         [System.Boolean]
         $FingerprintBlocked,
 
-        #Added Parameter 05/01/22 Jamie
         [Parameter()]
         [System.Boolean]
         $FaceIdBlocked,
@@ -560,10 +558,9 @@ function Test-TargetResource
         [System.Boolean]
         $FingerprintBlocked,
 
-        #Added Parameter 05/01/22 Jamie
         [Parameter()]
         [System.Boolean]
-        $FaceIDBlocked,
+        $FaceIdBlocked,
 
         [Parameter()]
         [System.String]
