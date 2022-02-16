@@ -984,7 +984,7 @@ function Set-M365DSCIntuneAppProtectionPolicyiOS
     try
     {
         $Url = "https://graph.microsoft.com/beta/deviceAppManagement/iosManagedAppProtections('$PolicyId')/"
-        Write-Verbose -Message "Creating new iOS App Protection policy with JSON payload: `r`n$JSONContent"
+        Write-Verbose -Message "Updating iOS App Protection policy with JSON payload: `r`n$JSONContent"
         Invoke-MgGraphRequest -Method PATCH `
             -Uri $Url `
             -Body $JSONContent `
