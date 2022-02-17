@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# 1.22.223.1
+
+* DEPENDENCIES
+  * Updated DSCParser to version 1.3.0.3.
+
 # 1.22.216.1
 
 * DEPENDENCIES
