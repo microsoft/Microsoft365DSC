@@ -74,7 +74,8 @@ function New-M365DSCConfigurationToHTML
                 {
                     if ($resource.$property.GetType().Name -eq 'Object[]')
                     {
-                        if ($resource.$property -and $resource.$property[0].GetType().Name -eq 'Hashtable')
+                        if ($resource.$property -and ($resource.$property[0].GetType().Name -eq 'Hashtable' -or
+                        $resource.$property[0].GetType().Name -eq 'OrderedDictionary'))
                         {
                             $value = ""
                             foreach ($entry in $resource.$property)
