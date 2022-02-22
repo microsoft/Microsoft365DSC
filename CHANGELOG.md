@@ -1,5 +1,9 @@
 # Change log for Microsoft365DSC
 
+* MISC
+  * Added a function to uninstall all outdated dependencies
+    and older versions of Microsoft365DSC
+
 # 1.22.223.1
 
 * DEPENDENCIES
