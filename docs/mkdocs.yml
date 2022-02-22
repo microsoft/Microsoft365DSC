@@ -5,16 +5,28 @@ nav:
       - 'Introduction': 'index.md'
       - 'What is Microsoft365DSC?': 'home/what-is-M365DSC.md'
   - User Guide:
-      - 'Get Started':
-          - 'How to install': 'user-guide/get-started/install-first-module.md'
-          - 'Write your First Microsoft365DSC Configuration': 'user-guide/get-started/write-first-config.md'
-          - 'Extracting Configuration from an Existing Microsoft 365 Tenant': 'user-guide/get-started/extract-config.md'
-          - 'Apply a Configuration to your Microsoft 365 Tenant': 'user-guide/get-started/apply-config.md'
-          - 'Monitor Tenants for Configuration Drifts': 'user-guide/get-started/monitor-tenants.md'
-          - 'Assess Tenants Against a Blueprint': 'user-guide/get-started/assess-tenants-blueprint.md'
-          - 'Generating Reports': 'user-guide/get-started/generate-reports.md'
-      - Advanced:
-          - 'How to Create a M365DSC Blueprint': 'user-guide/advanced/create-blueprint.md'
+      - 'Get Started': 'user-guide/get-started/complete-story.md'
+      - Advanced: 'user-guide/advanced/create-blueprint.md'
+      - Cmdlets:
+          - 'Assert-M365DSCBlueprint': 'user-guide/cmdlets/Assert-M365DSCBlueprint.md'
+          - 'Export-M365DSCConfiguration': 'user-guide/cmdlets/Export-M365DSCConfiguration.md'
+          - 'Export-M365DSCDiagnosticData': 'user-guide/cmdlets/Export-M365DSCDiagnosticData.md'
+          - 'Get-M365DSCAllResources': 'user-guide/cmdlets/Get-M365DSCAllResources.md'
+          - 'Get-M365DSCCompiledPermissionList': 'user-guide/cmdlets/Get-M365DSCCompiledPermissionList.md'
+          - 'Get-M365DSCTelemetryOption': 'user-guide/cmdlets/Get-M365DSCTelemetryOption.md'
+          - 'Get-M365DSCWorkloadsListFromResourceNames': 'user-guide/cmdlets/Get-M365DSCWorkloadsListFromResourceNames.md'
+          - 'Import-M365DSCDependencies': 'user-guide/cmdlets/Import-M365DSCDependencies.md'
+          - 'Install-M365DSCDevBranch': 'user-guide/cmdlets/Install-M365DSCDevBranch.md'
+          - 'New-M365DSCDeltaReport': 'user-guide/cmdlets/New-M365DSCDeltaReport.md'
+          - 'New-M365DSCReportFromConfiguration': 'user-guide/cmdlets/New-M365DSCReportFromConfiguration.md'
+          - 'Set-M365DSCAgentCertificateConfiguration': 'user-guide/cmdlets/Set-M365DSCAgentCertificateConfiguration.md'
+          - 'Set-M365DSCTelemetryOption': 'user-guide/cmdlets/Set-M365DSCTelemetryOption.md'
+          - 'Test-M365DSCAgent': 'user-guide/cmdlets/Test-M365DSCAgent.md'
+          - 'Test-M365DSCDependenciesForNewVersions': 'user-guide/cmdlets/Test-M365DSCDependenciesForNewVersions.md'
+          - 'Test-M365DSCNewVersionAvailable': 'user-guide/cmdlets/Test-M365DSCNewVersionAvailable.md'
+          - 'Update-M365DSCAllowedGraphScopes': 'user-guide/cmdlets/Update-M365DSCAllowedGraphScopes.md'
+          - 'Update-M365DSCDependencies': 'user-guide/cmdlets/Update-M365DSCDependencies.md'
+          - 'Update-M365DSCResourcesSettingsJSON': 'user-guide/cmdlets/Update-M365DSCResourcesSettingsJSON.md'
   - Contributing:
       - 'Guidelines': 'contributing/contribution-guidelines.md'
       - 'Getting started': 'contributing/getting-started.md'
@@ -37,7 +49,7 @@ nav:
       - 'Teams': 'resources/teams'
   - About:
       - 'Why Microsoft365DSC': 'about/why.md'
-      - 'Changelog': 'about/changelog.md'
+      - 'Changelog': https://github.com/microsoft/Microsoft365DSC/blob/master/CHANGELOG.md" target="_blank
       - 'License': 'about/license.md'
       - 'Community Resources': 'about/community-resources.md'
 plugins:
@@ -71,6 +83,7 @@ markdown_extensions:
       guess_lang: false
   - toc:
       permalink: true
+      toc_depth: 0
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.snippets
@@ -89,6 +102,8 @@ extra:
   analytics:
     provider: google
     property: UA-209929913-1
+extra_css:
+  - stylesheets/extra.css
 repo_url: https://github.com/microsoft/Microsoft365DSC
 edit_uri: tree/Dev/docs/docs
 copyright: Microsoft365DSC

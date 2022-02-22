@@ -78,7 +78,7 @@
 | **LockScreenBlockCortana** | Write | Boolean | Indicates whether or not the user can interact with Cortana using speech while the system is locked. ||
 | **LockScreenBlockToastNotifications** | Write | Boolean | Indicates whether to allow toast notifications above the device lock screen. ||
 | **LockScreenTimeoutInSeconds** | Write | UInt64 | Set the duration (in seconds) from the screen locking to the screen turning off for Windows 10 Mobile devices. Supported values are 11-1800. Valid values 11 to 1800 ||
-| **PasswordBlockSimple** | Write | UInt64 | Specify whether PINs or passwords such as '1111' or '1234' are allowed. For Windows 10 desktops, it also controls the use of picture passwords. ||
+| **PasswordBlockSimple** | Write | Boolean | Specify whether PINs or passwords such as '1111' or '1234' are allowed. For Windows 10 desktops, it also controls the use of picture passwords. ||
 | **PasswordExpirationDays** | Write | UInt64 | The password expiration in days. Valid values 0 to 730 ||
 | **PasswordMinimumLength** | Write | UInt64 | The minimum password length. Valid values 4 to 16 ||
 | **PasswordMinutesOfInactivityBeforeScreenTimeout** | Write | UInt64 | The minutes of inactivity before the screen times out. ||
@@ -87,7 +87,7 @@
 | **PasswordRequired** | Write | Boolean | Indicates whether or not to require the user to have a password. ||
 | **PasswordRequireWhenResumeFromIdleState** | Write | Boolean | Indicates whether or not to require a password upon resuming from an idle state. ||
 | **PasswordRequiredType** | Write | String | The required password type. Possible values are: deviceDefault, alphanumeric, numeric. ||
-| **PasswordSignInFailureCountBeforeFactoryReset** | Write | Boolean | The number of sign in failures before factory reset. Valid values 0 to 999 ||
+| **PasswordSignInFailureCountBeforeFactoryReset** | Write | UInt64 | The number of sign in failures before factory reset. Valid values 0 to 999 ||
 | **PrivacyAdvertisingId** | Write | String | Enables or disables the use of advertising ID. Added in Windows 10, version 1607. Possible values are: notConfigured, blocked, allowed. ||
 | **PrivacyAutoAcceptPairingAndConsentPrompts** | Write | Boolean | Indicates whether or not to allow the automatic acceptance of the pairing and privacy user consent dialog when launching apps. ||
 | **PrivacyBlockInputPersonalization** | Write | Boolean | Indicates whether or not to block the usage of cloud based speech services for Cortana, Dictation, or Store applications. ||

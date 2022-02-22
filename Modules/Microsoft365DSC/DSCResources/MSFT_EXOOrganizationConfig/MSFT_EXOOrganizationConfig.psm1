@@ -28,6 +28,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowPlusAddressInRecipients,
+
+        [Parameter()]
+        [System.Boolean]
         $AsyncSendEnabled,
 
         [Parameter()]
@@ -217,7 +221,23 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $MessageRemindersEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MobileAppEducationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $OAuth2ClientProfileEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OnlineMeetingsByDefaultEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OutlookGifPickerDisabled,
 
         [Parameter()]
         [System.Boolean]
@@ -247,6 +267,10 @@ function Get-TargetResource
         [Parameter()]
         [System.String[]]
         $RemotePublicFolderMailboxes,
+
+        [Parameter()]
+        [System.Boolean]
+        $SendFromAliasEnabled,
 
         [Parameter()]
         [System.String]
@@ -311,7 +335,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -333,6 +357,7 @@ function Get-TargetResource
             ActivityBasedAuthenticationTimeoutEnabled                 = $ConfigSettings.ActivityBasedAuthenticationTimeoutEnabled
             ActivityBasedAuthenticationTimeoutInterval                = $ConfigSettings.ActivityBasedAuthenticationTimeoutInterval
             ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled = $ConfigSettings.ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled
+            AllowPlusAddressInRecipients                              = $ConfigSettings.AllowPlusAddressInRecipients
             AppsForOfficeEnabled                                      = $ConfigSettings.AppsForOfficeEnabled
             AsyncSendEnabled                                          = $ConfigSettings.AsyncSendEnabled
             AuditDisabled                                             = $ConfigSettings.AuditDisabled
@@ -380,20 +405,25 @@ function Get-TargetResource
             MailTipsGroupMetricsEnabled                               = $ConfigSettings.MailTipsGroupMetricsEnabled
             MailTipsLargeAudienceThreshold                            = $ConfigSettings.MailTipsLargeAudienceThreshold
             MailTipsMailboxSourcedTipsEnabled                         = $ConfigSettings.MailTipsMailboxSourcedTipsEnabled
+            MessageRemindersEnabled                                   = $ConfigSettings.MessageRemindersEnabled
+            MobileAppEducationEnabled                                 = $ConfigSettings.MobileAppEducationEnabled
             OAuth2ClientProfileEnabled                                = $ConfigSettings.OAuth2ClientProfileEnabled
+            OnlineMeetingsByDefaultEnabled                            = $ConfigSettings.OnlineMeetingsByDefaultEnabled
             OutlookMobileGCCRestrictionsEnabled                       = $ConfigSettings.OutlookMobileGCCRestrictionsEnabled
+            OutlookGifPickerDisabled                                  = $ConfigSettings.OutlookGifPickerDisabled
             OutlookPayEnabled                                         = $ConfigSettings.OutlookPayEnabled
             PublicComputersDetectionEnabled                           = $ConfigSettings.PublicComputersDetectionEnabled
             PublicFoldersEnabled                                      = $ConfigSettings.PublicFoldersEnabled
             PublicFolderShowClientControl                             = $ConfigSettings.PublicFolderShowClientControl
             ReadTrackingEnabled                                       = $ConfigSettings.ReadTrackingEnabled
             RemotePublicFolderMailboxes                               = $ConfigSettings.RemotePublicFolderMailboxes
+            SendFromAliasEnabled                                      = $ConfigSettings.SendFromAliasEnabled
             SiteMailboxCreationURL                                    = $ConfigSettings.SiteMailboxCreationURL
             SmtpActionableMessagesEnabled                             = $ConfigSettings.SmtpActionableMessagesEnabled
             VisibleMeetingUpdateProperties                            = $ConfigSettings.VisibleMeetingUpdateProperties
             WebPushNotificationsDisabled                              = $ConfigSettings.WebPushNotificationsDisabled
             WebSuggestedRepliesDisabled                               = $ConfigSettings.WebSuggestedRepliesDisabled
-            Credential                                        = $Credential
+            Credential                                                = $Credential
             ApplicationId                                             = $ApplicationId
             CertificateThumbprint                                     = $CertificateThumbprint
             CertificatePath                                           = $CertificatePath
@@ -474,6 +504,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowPlusAddressInRecipients,
+
+        [Parameter()]
+        [System.Boolean]
         $AppsForOfficeEnabled,
 
         [Parameter()]
@@ -667,7 +701,23 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $MessageRemindersEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MobileAppEducationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $OAuth2ClientProfileEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OnlineMeetingsByDefaultEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OutlookGifPickerDisabled,
 
         [Parameter()]
         [System.Boolean]
@@ -697,6 +747,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $RemotePublicFolderMailboxes,
+
+        [Parameter()]
+        [System.Boolean]
+        $SendFromAliasEnabled,
 
         [Parameter()]
         [System.String]
@@ -747,7 +801,7 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -811,6 +865,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowPlusAddressInRecipients,
+
+        [Parameter()]
+        [System.Boolean]
         $AppsForOfficeEnabled,
 
         [Parameter()]
@@ -1004,7 +1062,23 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $MessageRemindersEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MobileAppEducationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $OAuth2ClientProfileEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OnlineMeetingsByDefaultEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OutlookGifPickerDisabled,
 
         [Parameter()]
         [System.Boolean]
@@ -1034,6 +1108,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $RemotePublicFolderMailboxes,
+
+        [Parameter()]
+        [System.Boolean]
+        $SendFromAliasEnabled,
 
         [Parameter()]
         [System.String]
@@ -1084,7 +1162,7 @@ function Test-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -1156,7 +1234,7 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -1167,7 +1245,7 @@ function Export-TargetResource
     {
         $Params = @{
             IsSingleInstance      = 'Yes'
-            Credential    = $Credential
+            Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint

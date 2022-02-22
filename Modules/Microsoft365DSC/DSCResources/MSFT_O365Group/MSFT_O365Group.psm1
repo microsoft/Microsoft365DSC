@@ -43,15 +43,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint,
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Group $DisplayName"
@@ -134,8 +130,9 @@ function Get-TargetResource
                 Members               = $newMemberList
                 ManagedBy             = $ownersUPN
                 Description           = $description
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
+                ApplicationSecret     = $ApplicationSecret
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 Ensure                = "Present"
@@ -219,15 +216,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint,
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Group $DisplayName"
@@ -251,8 +244,12 @@ function Set-TargetResource
     if ($Ensure -eq "Present")
     {
         $CurrentParameters = $PSBoundParameters
-        $CurrentParameters.Remove("Ensure")
-        $CurrentParameters.Remove("Credential")
+        $CurrentParameters.Remove("Ensure") | Out-Null
+        $CurrentParameters.Remove("Credential") | Out-Null
+        $CurrentParameters.Remove("ApplicationId") | Out-Null
+        $CurrentParameters.Remove("TenantId") | Out-Null
+        $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
+        $CurrentParameters.Remove("ApplicationSecret") | Out-Null
 
         if ($currentGroup.Ensure -eq "Absent")
         {
@@ -428,15 +425,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint,
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificateThumbprint
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -486,15 +479,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint,
+        $ApplicationSecret,
 
         [Parameter()]
         [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificateThumbprint
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -525,10 +514,11 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($groups.Length)] $($group.DisplayName)" -NoNewline
             $Params = @{
-                Credential    = $Credential
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                ApplicationSecret     = $ApplicationSecret
                 DisplayName           = $group.DisplayName
                 ManagedBy             = "DummyUser"
                 MailNickName          = $group.MailNickName

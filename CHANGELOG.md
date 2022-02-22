@@ -1,5 +1,107 @@
 # Change log for Microsoft365DSC
 
+# 1.22.223.1
+
+* DEPENDENCIES
+  * Updated DSCParser to version 1.3.0.3.
+
+# 1.22.216.1
+
+* DEPENDENCIES
+  * Updated ReverseDSC to version 2.0.0.10.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.142.
+
+# 1.22.209.1
+
+* TeamsChannel
+  * Fix to allow channels to be extracted properly when two Teams
+    have the same name.
+    FIXES #1746
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 3.1.1;
+* MISC
+  * Fixed an issue with the Export where the Configuration Data file
+    always referenced a certificate file even when none were configured.
+    FIXES #1724
+
+# 1.22.202.1
+
+* IntuneAppProtectionPolicyiOS
+  * Fixes an issue where an error was thrown when no ExcludedGroups
+    were specified.
+    FIXES #1719
+* MISC
+  * Documentation updates
+
+# 1.22.126.1
+
+* TeamsTenantDialPlan
+  * Fixed an issue where the Export only extracted the first
+    normalization rule.
+    FIXES #1695
+* DEPENDENCIES
+  * Updated all Microsoft.Graph * to 1.9.2;
+  * Updated Microsoft.Teams to version 3.1.0;
+* MISC
+  * Update automatic cmdlet documentation generation functions and prereqs.
+  * Adding cmdlet documentation to website
+  * Fixed an issue with the Export-M365DSCConfiguration cmdlet where it
+    would throw an error if no parameters were passed.
+
+# 1.22.119.2
+
+* EXOOrganizationConfig
+  * Fixed issue where the name of the parameter in the module and
+    in the schema differed;
+    FIXES #1689
+
+# 1.22.119.1
+
+* EXOOrganizationConfig
+  * Added support for the new SendFromAliasEnabled parameter;
+* EXORoleAssignmentPolicy
+  * Fixed logic to update roles assigned to an existing policy;
+    FIXES #1538
+MISC
+  * Updated logic for Report generation so that it no longer requires the
+    same module version as defined in the configuration installed on the
+    system where the report is being generated from.
+
+# 1.22.112.1
+
+* TeamsMeetingPolicy
+  * Added support for property WhoCanRegister;
+    FIXES #1483
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to 1.0.83;
+
+# 1.22.105.1
+
+* AADNamedLocationPolicy
+  * Throw meaningful error if multiple policies with the same name were retrieved.
+* EXOMalwareFilterPolicy
+  * Fix for the MakeDefault property where it wasn't properly setting existing
+    policies to default.
+    FIXES #1648
+* IntuneDeviceConfigurationPolicyWindows10
+  * Fixed mismatch in property types between the PasswordBlockSimple and
+    PasswordSignInFailureCountBeforeFactoryReset properties.
+    FIXES #1525
+* O365Group
+  * Removed support for invalid CertificatePassword and CertificatePath parameters
+    and added support for ApplicationSecret;
+* O365User
+  * Removed support for invalid CertificatePassword and CertificatePath parameters
+    and added support for ApplicationSecret;
+* TeamsChannel
+  * Fixed an issue where special symbols in Teams names would cause the
+    Get-TeamByName cmdlet to fail.
+    ISSUE #1578
+* MISC
+  * Error Handling in Delta Report and removal of Authentication mechanism comparison;
+    FIXES #1548, #1541
+  * Added automatic cmdlet documentation generation functions and prereqs.
+
 # 1.21.1229.1
 
 * DEPENDENCIES

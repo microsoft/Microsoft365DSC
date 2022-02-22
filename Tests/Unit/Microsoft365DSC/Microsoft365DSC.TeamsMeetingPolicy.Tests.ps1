@@ -72,8 +72,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description                                = $null;
                     MediaBitRateKb                             = 50000;
                     ScreenSharingMode                          = "EntireScreen";
+                    WhoCanRegister                             = "EveryoneInCompany"
                     Ensure                                     = 'Present'
-                    Credential                         = $Credential
+                    Credential                                 = $Credential
                 }
 
                 Mock -CommandName Get-CsTeamsMeetingPolicy -MockWith {
@@ -116,8 +117,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description                                = $null;
                     MediaBitRateKb                             = 50000;
                     ScreenSharingMode                          = "EntireScreen";
+                    WhoCanRegister                             = "EveryoneInCompany"
                     Ensure                                     = 'Present'
-                    Credential                         = $Credential
+                    Credential                                 = $Credential
                 }
 
                 Mock -CommandName Get-CsTeamsMeetingPolicy -MockWith {
@@ -137,6 +139,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowTranscription                         = $False;
                         AllowWhiteboard                            = $False; #Variant
                         AutoAdmittedUsers                          = "Everyone";
+                        WhoCanRegister                             = "EveryoneInCompany"
                         Description                                = $null;
                         MediaBitRateKb                             = 50000;
                         ScreenSharingMode                          = "EntireScreen";
@@ -180,6 +183,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description                                = $null;
                     MediaBitRateKb                             = 50000;
                     ScreenSharingMode                          = "EntireScreen";
+                    WhoCanRegister                             = "EveryoneInCompany"
                     Ensure                                     = 'Present'
                     Credential                         = $Credential
                 }
@@ -204,6 +208,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description                                = $null;
                         MediaBitRateKb                             = 50000;
                         ScreenSharingMode                          = "EntireScreen";
+                        WhoCanRegister                             = "EveryoneInCompany"
                     }
                 }
             }
@@ -238,8 +243,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description                                = $null;
                     MediaBitRateKb                             = 50000;
                     ScreenSharingMode                          = "EntireScreen";
+                    WhoCanRegister                             = "EveryoneInCompany"
                     Ensure                                     = 'Absent'
-                    Credential                         = $Credential
+                    Credential                                 = $Credential
                 }
 
                 Mock -CommandName Get-CsTeamsMeetingPolicy -MockWith {
@@ -262,6 +268,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description                                = $null;
                         MediaBitRateKb                             = 50000;
                         ScreenSharingMode                          = "EntireScreen";
+                        WhoCanRegister                             = "EveryoneInCompany"
                     }
                 }
             }
@@ -306,6 +313,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description                                = $null;
                         MediaBitRateKb                             = 50000;
                         ScreenSharingMode                          = "EntireScreen";
+                        WhoCanRegister                             = "EveryoneInCompany"
                     }
                 }
             }

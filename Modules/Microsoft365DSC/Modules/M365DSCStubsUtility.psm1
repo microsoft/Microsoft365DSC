@@ -1,3 +1,10 @@
+<#
+.Description
+This function creates new stub files for all used M365 module dependencies
+
+.Functionality
+Internal
+#>
 function New-M365DSCStubFiles
 {
     param
@@ -37,11 +44,11 @@ function New-M365DSCStubFiles
     $Content = ''
     $folderPath = Join-Path $PSScriptRoot -ChildPath "../DSCResources"
     Write-Host $FolderPath
-    $workloads = @('ExchangeOnline','SecurityComplianceCenter','PnP','PowerPlatforms','MicrosoftTeams','MicrosoftGraph')
+    $workloads = @('ExchangeOnline', 'SecurityComplianceCenter', 'PnP', 'PowerPlatforms', 'MicrosoftTeams', 'MicrosoftGraph')
     foreach ($workload in $workloads)
     {
         $ConnectionMode = New-M365DSCConnection -Workload $workload `
-                    -InboundParameters $PSBoundParameters
+            -InboundParameters $PSBoundParameters
     }
     foreach ($Module in $dependencies.ModuleName)
     {
@@ -135,7 +142,7 @@ function New-M365DSCStubFiles
                 {
                     if ($null -eq $parameters -or
                         (-not $parameters.ContainsKey($additionalParam) -and `
-                                -not $invalidParameters.Contains($additionalParameter)))
+                            -not $invalidParameters.Contains($additionalParameter)))
                     {
                         $parameters += @{$additionalParam = $additionalParameters.$additionalParam }
                     }
@@ -203,3 +210,7 @@ function New-M365DSCStubFiles
     }
     $Content | Out-File $DestinationFilePath -Encoding utf8
 }
+
+Export-ModuleMember -Function @(
+    'New-M365DSCStubFiles'
+)

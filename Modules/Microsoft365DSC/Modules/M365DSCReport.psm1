@@ -1,3 +1,10 @@
+<#
+.Description
+This function creates a new HTML document from the specified exported configuration
+
+.Functionality
+Internal, Hidden
+#>
 function New-M365DSCConfigurationToHTML
 {
     [CmdletBinding()]
@@ -23,7 +30,11 @@ function New-M365DSCConfigurationToHTML
     if ([System.String]::IsNullOrEmpty($ParsedContent))
     {
         $TemplateFile = Get-Item $ConfigurationPath
-        $ParsedContent = ConvertTo-DSCObject -Path $ConfigurationPath
+        $fileContent = Get-Content $ConfigurationPath -Raw
+        $startPosition = $fileContent.IndexOf(" -ModuleVersion")
+        $endPosition = $fileContent.IndexOf("`r", $startPosition)
+        $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
+        $ParsedContent = ConvertTo-DSCObject -Content $fileContent
         $TemplateName = $TemplateFile.Name.Split('.')[0]
     }
     else
@@ -63,7 +74,8 @@ function New-M365DSCConfigurationToHTML
                 {
                     if ($resource.$property.GetType().Name -eq 'Object[]')
                     {
-                        if ($resource.$property -and $resource.$property[0].GetType().Name -eq 'Hashtable')
+                        if ($resource.$property -and ($resource.$property[0].GetType().Name -eq 'Hashtable' -or
+                        $resource.$property[0].GetType().Name -eq 'OrderedDictionary'))
                         {
                             $value = ""
                             foreach ($entry in $resource.$property)
@@ -115,6 +127,13 @@ function New-M365DSCConfigurationToHTML
 }
 
 
+<#
+.Description
+This function gets the URL to the logo of the workload of the specified resource
+
+.Functionality
+Internal, Hidden
+#>
 function Get-IconPath
 {
     [CmdletBinding()]
@@ -160,6 +179,13 @@ function Get-IconPath
     return $null
 }
 
+<#
+.Description
+This function creates a new Excel document from the specified exported configuration
+
+.Functionality
+Internal, Hidden
+#>
 function New-M365DSCConfigurationToExcel
 {
     [CmdletBinding()]
@@ -176,21 +202,25 @@ function New-M365DSCConfigurationToExcel
     $excel = New-Object -ComObject excel.application
     $excel.visible = $True
     $workbook = $excel.Workbooks.Add()
-    $report= $workbook.Worksheets.Item(1)
+    $report = $workbook.Worksheets.Item(1)
     $report.Name = 'Report'
-    $report.Cells.Item(1,1) = "Component Name"
-    $report.Cells.Item(1,1).Font.Size = 18
-    $report.Cells.Item(1,1).Font.Bold=$True
-    $report.Cells.Item(1,2) = "Property"
-    $report.Cells.Item(1,2).Font.Size = 18
-    $report.Cells.Item(1,2).Font.Bold=$True
-    $report.Cells.Item(1,3) = "Value"
-    $report.Cells.Item(1,3).Font.Size = 18
-    $report.Cells.Item(1,3).Font.Bold=$True
+    $report.Cells.Item(1, 1) = "Component Name"
+    $report.Cells.Item(1, 1).Font.Size = 18
+    $report.Cells.Item(1, 1).Font.Bold = $True
+    $report.Cells.Item(1, 2) = "Property"
+    $report.Cells.Item(1, 2).Font.Size = 18
+    $report.Cells.Item(1, 2).Font.Bold = $True
+    $report.Cells.Item(1, 3) = "Value"
+    $report.Cells.Item(1, 3).Font.Size = 18
+    $report.Cells.Item(1, 3).Font.Bold = $True
     $report.Range("A1:C1").Borders.Weight = -4138
     $row = 2
 
-    $parsedContent = ConvertTo-DSCObject -Path $ConfigurationPath
+    $fileContent = Get-Content $ConfigurationPath -Raw
+    $startPosition = $fileContent.IndexOf(" -ModuleVersion")
+    $endPosition = $fileContent.IndexOf("`r", $startPosition)
+    $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
+    $ParsedContent = ConvertTo-DSCObject -Content $fileContent
     foreach ($resource in $parsedContent)
     {
         $beginRow = $row
@@ -198,32 +228,32 @@ function New-M365DSCConfigurationToExcel
         {
             if ($property -ne "ResourceName" -and $property -ne "Credential")
             {
-                $report.Cells.Item($row,1) = $resource.ResourceName
-                $report.Cells.Item($row,2) = $property
+                $report.Cells.Item($row, 1) = $resource.ResourceName
+                $report.Cells.Item($row, 2) = $property
                 try
                 {
                     if ([System.String]::IsNullOrEmpty($resource.$property))
                     {
-                        $report.Cells.Item($row,3) = "`$Null"
+                        $report.Cells.Item($row, 3) = "`$Null"
                     }
                     else
                     {
                         if ($resource.$property.GetType().Name -eq 'Object[]')
                         {
                             $value = $resource.$property -join ','
-                            $report.Cells.Item($row,3) = $value
+                            $report.Cells.Item($row, 3) = $value
                         }
                         else
                         {
-                            $value = ($resource.$property).ToString().Replace("$","")
-                            $value = $value.Replace("@","")
-                            $value = $value.Replace("(","")
-                            $value = $value.Replace(")","")
-                            $report.Cells.Item($row,3) = $value
+                            $value = ($resource.$property).ToString().Replace("$", "")
+                            $value = $value.Replace("@", "")
+                            $value = $value.Replace("(", "")
+                            $value = $value.Replace(")", "")
+                            $report.Cells.Item($row, 3) = $value
                         }
                     }
 
-                    $report.Cells.Item($row,3).HorizontalAlignment = -4131
+                    $report.Cells.Item($row, 3).HorizontalAlignment = -4131
                 }
                 catch
                 {
@@ -244,12 +274,12 @@ function New-M365DSCConfigurationToExcel
                     $report.Cells.Item($row, 2) = $OriginPropertyName
                     $report.Cells.Item($row, 3) = $OriginPropertyValue
 
-                    $report.Cells($beginRow,1).Font.ColorIndex = 10
-                    $report.Cells($beginRow,2).Font.ColorIndex = 10
-                    $report.Cells($beginRow,3).Font.ColorIndex = 10
-                    $report.Cells($beginRow,1).Font.Bold = $true
-                    $report.Cells($beginRow,2).Font.Bold = $true
-                    $report.Cells($beginRow,3).Font.Bold = $true
+                    $report.Cells($beginRow, 1).Font.ColorIndex = 10
+                    $report.Cells($beginRow, 2).Font.ColorIndex = 10
+                    $report.Cells($beginRow, 3).Font.ColorIndex = 10
+                    $report.Cells($beginRow, 1).Font.Bold = $true
+                    $report.Cells($beginRow, 2).Font.Bold = $true
+                    $report.Cells($beginRow, 3).Font.Bold = $true
                 }
                 $row++
             }
@@ -263,6 +293,29 @@ function New-M365DSCConfigurationToExcel
     #$excel.Quit()
 }
 
+<#
+.Description
+This function creates a report from the specified exported configuration,
+either in HTML or Excel format
+
+.Parameter Type
+The type of report that should be created: Excel or HTML.
+
+.Parameter ConfigurationPath
+The path to the exported DSC configuration that the report should be created for.
+
+.Parameter OutputPath
+The output path of the report.
+
+.Example
+New-M365DSCReportFromConfiguration -Type 'HTML' -ConfigurationPath 'C:\DSC\' -OutputPath 'C:\Dsc\M365Report.html'
+
+.Example
+New-M365DSCReportFromConfiguration -Type 'Excel' -ConfigurationPath 'C:\DSC\' -OutputPath 'C:\Dsc\M365Report.xlsx'
+
+.Functionality
+Public
+#>
 function New-M365DSCReportFromConfiguration
 {
     [CmdletBinding()]
@@ -293,15 +346,24 @@ function New-M365DSCReportFromConfiguration
 
     switch ($Type)
     {
-        "Excel" {
+        "Excel"
+        {
             New-M365DSCConfigurationToExcel -ConfigurationPath $ConfigurationPath -OutputPath $OutputPath
         }
-        "HTML" {
+        "HTML"
+        {
             New-M365DSCConfigurationToHTML -ConfigurationPath $ConfigurationPath -OutputPath $OutputPath
         }
     }
 }
 
+<#
+.Description
+This function compares two provided DSC configuration to determine the delta
+
+.Functionality
+Internal, Hidden
+#>
 function Compare-M365DSCConfigurations
 {
     [CmdletBinding()]
@@ -344,11 +406,19 @@ function Compare-M365DSCConfigurations
 
     if (-not $SourceObject)
     {
-        [Array] $SourceObject  = ConvertTo-DSCObject -Path $Source
+        $fileContent = Get-Content $Source -Raw
+        $startPosition = $fileContent.IndexOf(" -ModuleVersion")
+        $endPosition = $fileContent.IndexOf("`r", $startPosition)
+        $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
+        [Array] $SourceObject = ConvertTo-DSCObject -Content $fileContent
     }
     if (-not $DestinationObject)
     {
-        [Array] $DestinationObject  = ConvertTo-DSCObject -Path $Destination
+        $fileContent = Get-Content $Destination -Raw
+        $startPosition = $fileContent.IndexOf(" -ModuleVersion")
+        $endPosition = $fileContent.IndexOf("`r", $startPosition)
+        $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
+        [Array] $DestinationObject = ConvertTo-DSCObject -Content $FileContent
     }
 
     # Loop through all items in the source array
@@ -358,30 +428,30 @@ function Compare-M365DSCConfigurations
         try
         {
             [array]$key = Get-M365DSCResourceKey -Resource $sourceResource
-            Write-Progress -Activity "Scanning Source $Source...[$i/$($SourceObject.Count)]" -PercentComplete ($i/($SourceObject.Count)*100)
-            [array]$destinationResource = $DestinationObject | Where-Object -FilterScript {$_.ResourceName -eq $sourceResource.ResourceName -and $_.($key[0]) -eq $sourceResource.($key[0])}
+            Write-Progress -Activity "Scanning Source $Source...[$i/$($SourceObject.Count)]" -PercentComplete ($i / ($SourceObject.Count) * 100)
+            [array]$destinationResource = $DestinationObject | Where-Object -FilterScript { $_.ResourceName -eq $sourceResource.ResourceName -and $_.($key[0]) -eq $sourceResource.($key[0]) }
 
-            $keyname=$key[0..1] -join '\'
-            $SourceKeyValue=$sourceResource.($key[0])
+            $keyname = $key[0..1] -join '\'
+            $SourceKeyValue = $sourceResource.($key[0])
             # Filter on the second key
             if ($key.Count -gt 1)
             {
-                [array]$destinationResource = $destinationResource | Where-Object -FilterScript {$_.ResourceName -eq $sourceResource.ResourceName -and $_.($key[1]) -eq $sourceResource.($key[1])}
-                $SourceKeyValue=$sourceResource.($key[0]),$sourceResource.($key[1]) -join '\'
+                [array]$destinationResource = $destinationResource | Where-Object -FilterScript { $_.ResourceName -eq $sourceResource.ResourceName -and $_.($key[1]) -eq $sourceResource.($key[1]) }
+                $SourceKeyValue = $sourceResource.($key[0]), $sourceResource.($key[1]) -join '\'
             }
             if ($null -eq $destinationResource)
             {
                 $drift = @{
-                    ResourceName       = $sourceResource.ResourceName
-                    Key                = $keyName
-                    KeyValue           = $SourceKeyValue
-                    Properties         = @(@{
-                        ParameterName      = 'Ensure'
-                        ValueInSource      = 'Present'
-                        ValueInDestination = 'Absent'
-                    })
+                    ResourceName = $sourceResource.ResourceName
+                    Key          = $keyName
+                    KeyValue     = $SourceKeyValue
+                    Properties   = @(@{
+                            ParameterName      = '_IsInConfiguration_'
+                            ValueInSource      = 'Present'
+                            ValueInDestination = 'Absent'
+                        })
                 }
-                $Delta += ,$drift
+                $Delta += , $drift
                 $drift = $null
             }
             else
@@ -390,48 +460,52 @@ function Compare-M365DSCConfigurations
                 # The resource instance exists in both the source and the destination. Compare each property;
                 foreach ($propertyName in $sourceResource.Keys)
                 {
-                    # Needs to be a separate nested if statement otherwise the ReferenceObject an be null and it will error out;
-                    if($null -ne (Compare-Object -ReferenceObject ($sourceResource.$propertyName)`
-                                                -DifferenceObject ($destinationResource.$propertyName)))
+                    if ($propertyName -notin @("ResourceName", "Credential", "CertificatePath", "CertificatePassword", "TenantId", "ApplicationId", "CertificateThumbprint", "ApplicationSecret"))
                     {
-                        if ($null -eq $drift)
+                        # Needs to be a separate nested if statement otherwise the ReferenceObject an be null and it will error out;
+                        if ([System.String]::IsNullOrEmpty($destinationResource.$propertyName) -or (-not [System.String]::IsNullOrEmpty($propertyName) -and
+                                $null -ne (Compare-Object -ReferenceObject ($sourceResource.$propertyName)`
+                                        -DifferenceObject ($destinationResource.$propertyName))))
                         {
-                            $drift = @{
-                                ResourceName       = $sourceResource.ResourceName
-                                Key                = $keyname
-                                KeyValue           = $SourceKeyValue
-                                Properties = @(@{
-                                    ParameterName      = $propertyName
-                                    ValueInSource      = $sourceResource.$propertyName
-                                    ValueInDestination = $destinationResource.$propertyName
-                                })
-                            }
+                            if ($null -eq $drift)
+                            {
+                                $drift = @{
+                                    ResourceName = $sourceResource.ResourceName
+                                    Key          = $keyname
+                                    KeyValue     = $SourceKeyValue
+                                    Properties   = @(@{
+                                            ParameterName      = $propertyName
+                                            ValueInSource      = $sourceResource.$propertyName
+                                            ValueInDestination = $destinationResource.$propertyName
+                                        })
+                                }
 
-                            if ($destinationResource.Contains("_metadata_$($propertyName)"))
-                            {
-                                $Metadata = $destinationResource."_metadata_$($propertyName)"
-                                $Level = $Metadata.Split('|')[0].Replace("### ", "")
-                                $Information = $Metadata.Split('|')[1]
-                                $drift.Properties[0].Add("_Metadata_Level", $Level)
-                                $drift.Properties[0].Add("_Metadata_Info", $Information)
+                                if ($destinationResource.Contains("_metadata_$($propertyName)"))
+                                {
+                                    $Metadata = $destinationResource."_metadata_$($propertyName)"
+                                    $Level = $Metadata.Split('|')[0].Replace("### ", "")
+                                    $Information = $Metadata.Split('|')[1]
+                                    $drift.Properties[0].Add("_Metadata_Level", $Level)
+                                    $drift.Properties[0].Add("_Metadata_Info", $Information)
+                                }
                             }
-                        }
-                        else
-                        {
-                            $newDrift = @{
+                            else
+                            {
+                                $newDrift = @{
                                     ParameterName      = $propertyName
                                     ValueInSource      = $sourceResource.$propertyName
                                     ValueInDestination = $destinationResource.$propertyName
+                                }
+                                if ($destinationResource.Contains("_metadata_$($propertyName)"))
+                                {
+                                    $Metadata = $destinationResource."_metadata_$($propertyName)"
+                                    $Level = $Metadata.Split('|')[0].Replace("### ", "")
+                                    $Information = $Metadata.Split('|')[1]
+                                    $newDrift.Add("_Metadata_Level", $Level)
+                                    $newDrift.Add("_Metadata_Info", $Information)
+                                }
+                                $drift.Properties += $newDrift
                             }
-                            if ($destinationResource.Contains("_metadata_$($propertyName)"))
-                            {
-                                $Metadata = $destinationResource."_metadata_$($propertyName)"
-                                $Level = $Metadata.Split('|')[0].Replace("### ", "")
-                                $Information = $Metadata.Split('|')[1]
-                                $newDrift.Add("_Metadata_Level", $Level)
-                                $newDrift.Add("_Metadata_Info", $Information)
-                            }
-                            $drift.Properties += $newDrift
                         }
                     }
                 }
@@ -440,27 +514,31 @@ function Compare-M365DSCConfigurations
                 # object. By scanning against the destination we will catch properties that are not null on the source but not null in destination;
                 foreach ($propertyName in $destinationResource.Keys)
                 {
-                    if (-not $sourceResource.Contains($propertyName))
+                    if ($propertyName -notin @("ResourceName", "Credential", "CertificatePath", "CertificatePassword", "TenantId", "ApplicationId", "CertificateThumbprint", "ApplicationSecret"))
                     {
-                        if ($null -eq $drift)
+                        if (-not [System.String]::IsNullOrEmpty($propertyName) -and
+                            -not $sourceResource.Contains($propertyName))
                         {
-                            $drift = @{
-                                ResourceName       = $sourceResource.ResourceName
-                                Key                = $keyName
-                                KeyValue           = $SourceKeyValue
-                                Properties         = @(@{
-                                    ParameterName      = $propertyName
-                                    ValueInSource      = $null
-                                    ValueInDestination = $destinationResource.$propertyName
-                                })
+                            if ($null -eq $drift)
+                            {
+                                $drift = @{
+                                    ResourceName = $sourceResource.ResourceName
+                                    Key          = $keyName
+                                    KeyValue     = $SourceKeyValue
+                                    Properties   = @(@{
+                                            ParameterName      = $propertyName
+                                            ValueInSource      = $null
+                                            ValueInDestination = $destinationResource.$propertyName
+                                        })
+                                }
                             }
-                        }
-                        else
-                        {
-                            $drift.Properties += @{
+                            else
+                            {
+                                $drift.Properties += @{
                                     ParameterName      = $propertyName
                                     ValueInSource      = $null
                                     ValueInDestination = $destinationResource.$propertyName
+                                }
                             }
                         }
                     }
@@ -468,7 +546,7 @@ function Compare-M365DSCConfigurations
 
                 if ($null -ne $drift)
                 {
-                    $Delta += ,$drift
+                    $Delta += , $drift
                     $drift = $null
                 }
             }
@@ -481,35 +559,35 @@ function Compare-M365DSCConfigurations
     }
     Write-Progress -Activity "Scanning Source..." -Completed
 
-     # Loop through all items in the destination array
+    # Loop through all items in the destination array
     $i = 1
     foreach ($destinationResource in $DestinationObject)
     {
         [System.Collections.HashTable]$currentDestinationResource = ([array]$destinationResource)[0]
         $key = Get-M365DSCResourceKey -Resource $currentDestinationResource
-        Write-Progress -Activity "Scanning Destination $Destination...[$i/$($DestinationObject.Count)]" -PercentComplete ($i/($DestinationObject.Count)*100)
-        $sourceResource = $SourceObject | Where-Object -FilterScript {$_.ResourceName -eq $currentDestinationResource.ResourceName -and $_.($key[0]) -eq $currentDestinationResource.($key[0])}
-        $currentDestinationKeyValue=$currentDestinationResource.($key[0])
+        Write-Progress -Activity "Scanning Destination $Destination...[$i/$($DestinationObject.Count)]" -PercentComplete ($i / ($DestinationObject.Count) * 100)
+        $sourceResource = $SourceObject | Where-Object -FilterScript { $_.ResourceName -eq $currentDestinationResource.ResourceName -and $_.($key[0]) -eq $currentDestinationResource.($key[0]) }
+        $currentDestinationKeyValue = $currentDestinationResource.($key[0])
 
         # Filter on the second key
         if ($key.Count -gt 1)
         {
-            [array]$sourceResource = $sourceResource | Where-Object -FilterScript {$_.ResourceName -eq $currentDestinationResource.ResourceName -and $_.($key[1]) -eq $currentDestinationResource.($key[1])}
-            $currentDestinationKeyValue=$currentDestinationResource.($key[0]),$currentDestinationResource.($key[1]) -join '\'
+            [array]$sourceResource = $sourceResource | Where-Object -FilterScript { $_.ResourceName -eq $currentDestinationResource.ResourceName -and $_.($key[1]) -eq $currentDestinationResource.($key[1]) }
+            $currentDestinationKeyValue = $currentDestinationResource.($key[0]), $currentDestinationResource.($key[1]) -join '\'
         }
         if ($null -eq $sourceResource)
         {
             $drift = @{
-                ResourceName       = $currentDestinationResource.ResourceName
-                Key                = $keyName
-                KeyValue           = $currentDestinationKeyValue
-                Properties         = @(@{
-                    ParameterName      = 'Ensure'
-                    ValueInSource      = 'Absent'
-                    ValueInDestination = 'Present'
-                })
+                ResourceName = $currentDestinationResource.ResourceName
+                Key          = $keyName
+                KeyValue     = $currentDestinationKeyValue
+                Properties   = @(@{
+                        ParameterName      = 'Ensure'
+                        ValueInSource      = 'Absent'
+                        ValueInDestination = 'Present'
+                    })
             }
-            $Delta += ,$drift
+            $Delta += , $drift
             $drift = $null
         }
         $i++
@@ -519,6 +597,13 @@ function Compare-M365DSCConfigurations
     return $Delta
 }
 
+<#
+.Description
+This function gets the key parameter for the specified resource
+
+.Functionality
+Internal, Hidden
+#>
 function Get-M365DSCResourceKey
 {
     [CmdletBinding()]
@@ -542,12 +627,12 @@ function Get-M365DSCResourceKey
         if ($Resource.ResourceName -eq 'TeamsChannel' -and -not [System.String]::IsNullOrEmpty($Resource.TeamName))
         {
             # Teams Channel displaynames are not tenant-unique (e.g. "General" is almost in every team), but should be unique per team
-            return @('TeamName','DisplayName')
+            return @('TeamName', 'DisplayName')
         }
         if ($Resource.ResourceName -eq 'TeamsTeam' -and -not [System.String]::IsNullOrEmpty($Resource.MailNickName))
         {
             # Teams names are not unique
-            return @('MailNickName','DisplayName')
+            return @('MailNickName', 'DisplayName')
         }
         return @("DisplayName")
     }
@@ -601,6 +686,41 @@ function Get-M365DSCResourceKey
     }
 }
 
+<#
+.Description
+This function creates a delta HTML report between two provided exported
+DSC configurations
+
+.Parameter Source
+The source DSC configuration to compare from.
+
+.Parameter Destination
+The destination DSC configuration to compare with.
+
+.Parameter OutputPath
+The output path of the delta report.
+
+.Parameter DriftOnly
+Specifies that only difference should be in the report.
+
+.Parameter IsBlueprintAssessment
+Specifies that the report is a comparison with a Blueprint.
+
+.Parameter HeaderFilePath
+Specifies that file that contains a custom header for the report.
+
+.Parameter Delta
+An array with difference, already compiled from another source.
+
+.Example
+New-M365DSCDeltaReport -Source 'C:\DSC\Source.ps1' -Destination 'C:\DSC\Destination.ps1' -OutputPath 'C:\Dsc\DeltaReport.html'
+
+.Example
+New-M365DSCDeltaReport -Source 'C:\DSC\Source.ps1' -Destination 'C:\DSC\Destination.ps1' -OutputPath 'C:\Dsc\DeltaReport.html' -DriftOnly $true
+
+.Functionality
+Public
+#>
 function New-M365DSCDeltaReport
 {
     [CmdletBinding()]
@@ -683,14 +803,14 @@ function New-M365DSCDeltaReport
     [void]$reportSB.AppendLine("<img src='http://Microsoft365DSC.com/Images/Promo.png' alt='Microsoft365DSC Slogan' width='500' />")
     [void]$ReportSB.AppendLine("</div>")
 
-    [array]$resourcesMissingInSource = $Delta | Where-Object -FilterScript {$_.Properties.ParameterName -eq 'Ensure' -and `
-                                    $_.Properties.ValueInSource -eq 'Absent'}
-                                    [array]$resourcesMissingInDestination = $Delta | Where-Object -FilterScript {$_.Properties.ParameterName -eq 'Ensure' -and `
-                                    $_.Properties.ValueInDestination -eq 'Absent'}
-    [array]$resourcesInDrift = $Delta | Where-Object -FilterScript {$_.Properties.ParameterName -ne 'Ensure'}
+    [array]$resourcesMissingInSource = $Delta | Where-Object -FilterScript { $_.Properties.ParameterName -eq '_IsInConfiguration_' -and `
+            $_.Properties.ValueInSource -eq 'Absent' }
+    [array]$resourcesMissingInDestination = $Delta | Where-Object -FilterScript { $_.Properties.ParameterName -eq '_IsInConfiguration_' -and `
+            $_.Properties.ValueInDestination -eq 'Absent' }
+    [array]$resourcesInDrift = $Delta | Where-Object -FilterScript { $_.Properties.ParameterName -ne '_IsInConfiguration_' }
 
     if ($resourcesMissingInSource.Count -eq 0 -and $resourcesMissingInDestination.Count -eq 0 -and `
-        $resourcesInDrift.Count -eq 0)
+            $resourcesInDrift.Count -eq 0)
     {
         [void]$reportSB.AppendLine("<p><strong>No discrepancies have been found!</strong></p>")
     }
@@ -838,3 +958,8 @@ function New-M365DSCDeltaReport
         return $reportSB.ToString()
     }
 }
+
+Export-ModuleMember -Function @(
+    'New-M365DSCDeltaReport',
+    'New-M365DSCReportFromConfiguration'
+)
