@@ -9,51 +9,51 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthActiveSync,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthAutodiscover,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthImap,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthMapi,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthOfflineAddressBook,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthOutlookService,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthPop,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthPowerShell,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthReportingWebServices,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthRpc,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthSmtp,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthWebServices,
 
         [Parameter()]
@@ -201,51 +201,51 @@ function Set-TargetResource
         $Identity,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthActiveSync,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthAutodiscover,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthImap,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthMapi,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthOfflineAddressBook,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthOutlookService,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthPop,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthPowerShell,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthReportingWebServices,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthRpc,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthSmtp,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthWebServices,
 
         [Parameter()]
@@ -316,7 +316,7 @@ function Set-TargetResource
     if ($Ensure -eq "Present" -and $currentAuthenticationPolicyConfig.Ensure -eq "Absent")
     {
         Write-Verbose -Message "Authentication Policy '$($Identity)' does not exist but it should. Create and configure it."
-        New-AuthenticationPolicy -Name $Identity @NewAuthenticationPolicyParams
+        New-AuthenticationPolicy -Name $Identity @NewAuthenticationPolicyParams | Out-Null
     }
     # CASE: Authentication Policy exists but it shouldn't;
     elseif ($Ensure -eq "Absent" -and $currentAuthenticationPolicyConfig.Ensure -eq "Present")
@@ -328,14 +328,14 @@ function Set-TargetResource
     elseif ($Ensure -eq "Present" -and $currentAuthenticationPolicyConfig.Ensure -eq "Present")
     {
         Write-Verbose -Message "Authentication Policy '$($Identity)' exists. Updating settings."
-        Set-AuthenticationPolicy -Identity $Identity @NewAuthenticationPolicyParams
+        Set-AuthenticationPolicy -Identity $Identity @NewAuthenticationPolicyParams | Out-Null
     }
 }
 
 function Test-TargetResource
 {
     [CmdletBinding()]
-    [OutputType([Switch])]
+    [OutputType([System.Boolean])]
     param
     (
         [Parameter(Mandatory = $true)]
@@ -343,51 +343,51 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthActiveSync,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthAutodiscover,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthImap,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthMapi,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthOfflineAddressBook,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthOutlookService,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthPop,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthPowerShell,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthReportingWebServices,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthRpc,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthSmtp,
 
         [Parameter()]
-        [Switch]
+        [System.Boolean]
         $AllowBasicAuthWebServices,
 
         [Parameter()]
