@@ -1011,6 +1011,16 @@ Configuration Master
             Credential                  = $GlobalAdmin
         }
 
+        TeamsFederationConfiguration FederationConfiguration
+        {
+            AllowFederatedUsers       = $True
+            AllowPublicUsers          = $True
+            AllowTeamsConsumer        = $False
+            AllowTeamsConsumerInbound = $False
+            Identity                  = "Global"
+            Credential                = $GlobalAdmin
+        }
+
         TeamsGuestCallingConfiguration GuestCallingConfig
         {
             Identity            = "Global"

@@ -98,6 +98,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Should -Invoke -CommandName Set-CsTenantFederationConfiguration -Exactly 1
             }
         }
+
+        Context -Name "ReverseDSC Tests" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Credential = $Credential
+                }
+            }
+
+            It "Should Reverse Engineer resource from the Export method" {
+                Export-TargetResource @testParams
+            }
+        }
     }
 }
 
