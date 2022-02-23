@@ -85,7 +85,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should return True for the AllowTeamsConsumer property from the Get method" {
+            It "Should return False for the AllowTeamsConsumer property from the Get method" {
                 (Get-TargetResource @testParams).AllowTeamsConsumer | Should -Be $false
             }
 
@@ -96,18 +96,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It "Updates the Teams Federations settings in the Set method" {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Set-CsTenantFederationConfiguration -Exactly 1
-            }
-        }
-
-        Context -Name "ReverseDSC Tests" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Credential = $Credential
-                }
-            }
-
-            It "Should Reverse Engineer resource from the Export method" {
-                Export-TargetResource @testParams
             }
         }
     }
