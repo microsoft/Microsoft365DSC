@@ -3065,10 +3065,21 @@ function New-M365DSCCmdletDocumentation
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $OutputPath
+        $OutputPath,
+
+        [Parameter()]
+        [System.String]
+        $ModulePath
     )
 
-    Import-Module Microsoft365Dsc -Force
+    if($null -eq $ModulePath){
+        Import-Module Microsoft365Dsc -Force
+    }
+    else
+    {
+        Get-Module Microsoft365DSC -ErrorAction SilentlyContinue | Remove-Module -ErrorAction SilentlyContinue
+        Import-Module $ModulePath -Force
+    }
 
     if ((Test-Path -Path $OutputPath) -eq $false)
     {
