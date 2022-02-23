@@ -86,7 +86,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return True for the AllowTeamsConsumer property from the Get method" {
-                (Get-TargetResource @testParams).AllowTeamsConsumer | Should -Be $true
+                (Get-TargetResource @testParams).AllowTeamsConsumer | Should -Be $false
             }
 
             It "Should return false from the Test method" {
