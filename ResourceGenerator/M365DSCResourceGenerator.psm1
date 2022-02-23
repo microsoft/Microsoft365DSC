@@ -156,10 +156,20 @@ function Get-ParameterBlockInformation
             $parameterAttribute = "[Parameter()]"
         }
 
-        $parameterType = Get-M365DSCDRGParameterType -Type $cmdletParameter.ParameterType.ToString()
+        if ($null -ne $cmdletParameter) {
+            $parameterType = Get-M365DSCDRGParameterType -Type $cmdletParameter.ParameterType.ToString()
+        }
+        else
+        {
+            $type = $property.Type
+            if ($type.Substring(0,3) -eq 'Edm') {
+                $type = $type.Replace('Edm','System')
+            }
+            $parameterType = Get-M365DSCDRGParameterType -Type $type
+        }
 
-        $parameterName = $_.Name
-        $parameterNameFirstLetter = $_.Name.Substring(0, 1)
+        $parameterName = $property.Name
+        $parameterNameFirstLetter = $property.Name.Substring(0, 1)
         $parameterNameFirstLetter = $parameterNameFirstLetter.ToUpper()
         $parameterNameCamelCaseString = $parameterName.Substring(1)
         $parameterName = "$($parameterNameFirstLetter)$($parameterNameCamelCaseString)"
@@ -186,7 +196,7 @@ function Get-M365DSCDRGParameterType
     $parameterType = ""
     switch ($Type.ToLower())
     {
-        "system.String"
+        "system.string"
         {
             $parameterType = "System.String"
         }
@@ -351,7 +361,7 @@ function New-M365DSCResource
         $outputTypeInformationChoices = @()
         for ($i = 0; $i -lt $typeInformation.Count; $i++)
         {
-            $outputTypeInformationChoices += [System.Management.Automation.Host.ChoiceDescription]("$($commandDetails[$i].Name) &$($i+1)")
+            $outputTypeInformationChoices += [System.Management.Automation.Host.ChoiceDescription]("$($commandDetails[$i].Name)")
         }
         $outputTypeChoice = $host.UI.PromptForChoice("Output Type Selection", "Please select an output type", $outputTypeInformationChoices, 0) + 1
         $outputType = $outputTypes[$outputTypeChoice - 1].OutputType
@@ -375,7 +385,7 @@ function New-M365DSCResource
         $typeInformationChoices = @()
         for ($i = 0; $i -lt $typeInformation.Count; $i++)
         {
-            $typeInformationChoices += [System.Management.Automation.Host.ChoiceDescription]("$($typeInformation[$i].Name) &$($i+1)")
+            $typeInformationChoices += [System.Management.Automation.Host.ChoiceDescription]("$($typeInformation[$i].Name)")
         }
         $typeChoice = $host.UI.PromptForChoice("Additional Type Information", "Please select an addtional type", $typeInformationChoices, 0) + 1
 
@@ -403,8 +413,8 @@ function New-M365DSCResource
                                      -Workload $Workload
 
     $parameterString = Get-ParameterBlockStringForModule -ParameterBlockInformation $parameterInformation
-    $hashtableResults = New-M365HashTableMapping -Properties $typeProperties `
-                            -UseAddtionalProperties $isAdditionalProperty `
+    $hashtableResults = New-M365HashTableMapping -Properties $parameterInformation `
+                            -DefaultParameterSetProperties $defaultParameterSetProperties `
                             -GraphNoun $GraphModuleCmdLetNoun `
                             -Workload $Workload
     $hashTableMapping = $hashtableResults.StringContent
@@ -736,8 +746,8 @@ function New-M365HashTableMapping
 
         # Parameter help description
         [Parameter()]
-        [System.Boolean]
-        $UseAddtionalProperties
+        [System.Object]
+        $DefaultParameterSetProperties
     )
 
     $newCmdlet = Get-Command "New-$GraphNoun"
@@ -749,14 +759,14 @@ function New-M365HashTableMapping
     $convertToVariable = ""
     foreach ($property in $properties)
     {
+        $cmdletParameter = $DefaultParameterSetProperties | Where-Object -FilterScript { $_.Name -eq $property.Name }
+        if ($null -eq $cmdletParameter) {
+            $UseAddtionalProperties = $true
+        }
         if ($property.Name -ne 'CreatedDateTime' -and $property.Name -ne 'LastModifiedDateTime')
         {
-            $paramType = $newCmdlet.Parameters.$($property.Name).ParameterType.ToString()
+            $paramType = $property.Type
             $parameterName = $property.Name
-            $parameterNameFirstLetter = $property.Name.Substring(0, 1)
-            $parameterNameFirstLetter = $parameterNameFirstLetter.ToUpper()
-            $parameterNameCamelCaseString = $parameterName.Substring(1)
-            $parameterName = "$($parameterNameFirstLetter)$($parameterNameCamelCaseString)"
 
             if ($paramType.StartsWith("Microsoft.Graph.PowerShell.Models."))
             {
@@ -791,7 +801,12 @@ function New-M365HashTableMapping
             {
                 if ($UseAddtionalProperties)
                 {
-                    $hashtable += "            $($parameterName) = `$getValue.AdditionalProperties.$($_propertyName) `r`n"
+                    $propertyName = $property.Name
+                    $propertyNameFirstLetter = $property.Name.Substring(0, 1)
+                    $propertyNameFirstLetter = $propertyNameFirstLetter.ToLower()
+                    $propertyNameCamelCaseString = $propertyName.Substring(1)
+                    $propertyName = "$($propertyNameFirstLetter)$($propertyNameCamelCaseString)"
+                    $hashtable += "            $($parameterName) = `$getValue.AdditionalProperties.$($propertyName) `r`n"
                 }
                 else
                 {

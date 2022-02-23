@@ -2,7 +2,7 @@
     Dependencies =@(
         @{
             ModuleName      = "DSCParser"
-            RequiredVersion = "1.3.0.2"
+            RequiredVersion = "1.3.0.3"
         },
         @{
             ModuleName      = "ExchangeOnlineManagement"
@@ -62,11 +62,11 @@
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
-            RequiredVersion = "2.0.139"
+            RequiredVersion = "2.0.142"
         },
         @{
             ModuleName      = "MicrosoftTeams"
-            RequiredVersion = "3.1.0"
+            RequiredVersion = "3.1.1"
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
@@ -78,7 +78,7 @@
         },
         @{
             ModuleName      = "ReverseDSC"
-            RequiredVersion = "2.0.0.9"
+            RequiredVersion = "2.0.0.10"
         }
     )
     }

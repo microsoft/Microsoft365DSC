@@ -74,26 +74,37 @@ function Get-TeamByName
         $TeamName
     )
 
-    $loopCounter = 0
-    do
+    try
     {
-        $team = Get-Team -DisplayName $TeamName | Where-Object -FilterScript {$_.DisplayName -eq $TeamName}
+        $loopCounter = 0
+        do
+        {
+            $team = Get-Team -DisplayName $TeamName | Where-Object -FilterScript {$_.DisplayName -eq $TeamName}
+            if ($null -eq $team)
+            {
+                Start-Sleep 5
+            }
+            $loopCounter += 1
+            if ($loopCounter -gt 5)
+            {
+                break
+            }
+        } while ($null -eq $team)
+
         if ($null -eq $team)
         {
-            Start-Sleep 5
+            throw "Team with Name $TeamName doesn't exist in tenant"
         }
-        $loopCounter += 1
-        if ($loopCounter -gt 5)
+        elseif ($teams.Length -gt 1)
         {
-            break
+            Write-Warning -Message "More than one Team with name {$TeamName} was found. This could prevent your configuration from compiling properly."
         }
-    } while ($null -eq $team)
-
-    if ($null -eq $team)
-    {
-        throw "Team with Name $TeamName doesn't exist in tenant"
+        return $team
     }
-    return $team
+    catch
+    {
+        return $null
+    }
 }
 
 <#
@@ -999,8 +1010,11 @@ function Export-M365DSCConfiguration
     }
     else
     {
-        $tenant = $Credential.UserName.Split('@')[1]
-        $data.Add("Tenant", $tenant)
+        if ($Credential)
+        {
+            $tenant = $Credential.UserName.Split('@')[1]
+            $data.Add("Tenant", $tenant)
+        }
     }
 
     Add-M365DSCTelemetryEvent -Data $data

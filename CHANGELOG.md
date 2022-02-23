@@ -1,8 +1,41 @@
 # Change log for Microsoft365DSC
 
+# 1.22.223.1
+
+* DEPENDENCIES
+  * Updated DSCParser to version 1.3.0.3.
+
+# 1.22.216.1
+
+* DEPENDENCIES
+  * Updated ReverseDSC to version 2.0.0.10.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.142.
+
+# 1.22.209.1
+
+* TeamsChannel
+  * Fix to allow channels to be extracted properly when two Teams
+    have the same name.
+    FIXES #1746
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 3.1.1;
+* MISC
+  * Fixed an issue with the Export where the Configuration Data file
+    always referenced a certificate file even when none were configured.
+    FIXES #1724
+
+# 1.22.202.1
+
+* IntuneAppProtectionPolicyiOS
+  * Fixes an issue where an error was thrown when no ExcludedGroups
+    were specified.
+    FIXES #1719
+* MISC
+  * Documentation updates
+
 # 1.22.126.1
 
-*TeamsTenantDialPlan
+* TeamsTenantDialPlan
   * Fixed an issue where the Export only extracted the first
     normalization rule.
     FIXES #1695
