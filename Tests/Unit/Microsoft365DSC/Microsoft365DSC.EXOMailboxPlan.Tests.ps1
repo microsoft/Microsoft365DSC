@@ -50,31 +50,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Ensure                   = 'Present'
-                    Identity                 = 'ExchangeOnlineEnterprise-6f6c267b-f8db-4020-b441-f7bd966a0ca0'
                     Credential               = $Credential
-                    IssueWarningQuota        = '98 GB'
-                    MaxReceiveSize           = '25 MB'
-                    MaxSendSize              = '25 MB'
-                    ProhibitSendQuota        = '99 GB'
-                    ProhibitSendReceiveQuota = '100 GB'
-                    RetainDeletedItemsFor    = '14.00:00:00'
-                    RetentionPolicy          = 'Default MRM Policy'
-                    RoleAssignmentPolicy     = 'Default Role Assignment Policy'
+                    Identity                 = "ExchangeOnlineEnterprise";
+                    IssueWarningQuota        = "98 GB (105,226,698,752 bytes)";
+                    MaxReceiveSize           = "25 MB (26,214,400 bytes)";
+                    MaxSendSize              = "25 MB (26,214,400 bytes)";
+                    ProhibitSendQuota        = "99 GB (106,300,440,576 bytes)";
+                    ProhibitSendReceiveQuota = "100 GB (107,374,182,400 bytes)";
+                    RetainDeletedItemsFor    = "14.00:00:00";
+                    RoleAssignmentPolicy     = "Default Role Assignment Policy";
                 }
 
                 Mock -CommandName Get-MailboxPlan -MockWith {
                     return @{
                         Ensure                   = 'Present'
-                        Identity                 = 'ExchangeOnlineEnterprise-6f6c267b-f8db-4020-b441-f7bd966a0ca0'
                         Credential               = $Credential
-                        IssueWarningQuota        = '98 GB'
-                        MaxReceiveSize           = '25 MB'
-                        MaxSendSize              = '25 MB'
-                        ProhibitSendQuota        = '99 GB'
-                        ProhibitSendReceiveQuota = '100 GB'
-                        RetainDeletedItemsFor    = '14.00:00:00'
-                        RetentionPolicy          = 'Default MRM Policy'
-                        RoleAssignmentPolicy     = 'Default Role Assignment Policy'
+                        Identity                 = "ExchangeOnlineEnterprise";
+                        IssueWarningQuota        = "98 GB (105,226,698,752 bytes)";
+                        MaxReceiveSize           = "25 MB (26,214,400 bytes)";
+                        MaxSendSize              = "25 MB (26,214,400 bytes)";
+                        ProhibitSendQuota        = "99 GB (106,300,440,576 bytes)";
+                        ProhibitSendReceiveQuota = "100 GB (107,374,182,400 bytes)";
+                        RetainDeletedItemsFor    = "14.00:00:00";
+                        RoleAssignmentPolicy     = "Default Role Assignment Policy";
                     }
                 }
             }
@@ -96,30 +94,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Ensure                   = 'Present'
-                    Identity                 = 'ExchangeOnlineEnterprise-6f6c267b-f8db-4020-b441-f7bd966a0ca0'
                     Credential               = $Credential
-                    IssueWarningQuota        = '98 GB'
-                    MaxReceiveSize           = '25 MB'
-                    MaxSendSize              = '25 MB'
-                    ProhibitSendQuota        = '99 GB'
-                    ProhibitSendReceiveQuota = '100 GB'
-                    RetainDeletedItemsFor    = '14.00:00:00'
-                    RetentionPolicy          = 'Default MRM Policy'
-                    RoleAssignmentPolicy     = 'Default Role Assignment Policy'
+                    Identity                 = "ExchangeOnlineEnterprise";
+                    IssueWarningQuota        = "98 GB (105,226,698,752 bytes)";
+                    MaxReceiveSize           = "25 MB (26,214,400 bytes)";
+                    MaxSendSize              = "25 MB (26,214,400 bytes)";
+                    ProhibitSendQuota        = "99 GB (106,300,440,576 bytes)";
+                    ProhibitSendReceiveQuota = "100 GB (107,374,182,400 bytes)";
+                    RetainDeletedItemsFor    = "14.00:00:00";
+                    RoleAssignmentPolicy     = "Default Role Assignment Policy";
                 }
                 Mock -CommandName Get-MailboxPlan -MockWith {
                     return @{
                         Ensure                   = 'Present'
-                        Identity                 = 'ExchangeOnlineEnterprise-6f6c267b-f8db-4020-b441-f7bd966a0ca0'
                         Credential               = $Credential
-                        IssueWarningQuota        = '98 GB'
-                        MaxReceiveSize           = '100 MB'
-                        MaxSendSize              = '25 MB'
-                        ProhibitSendQuota        = '99 GB'
-                        ProhibitSendReceiveQuota = '100 GB'
-                        RetainDeletedItemsFor    = '30.00:00:00'
-                        RetentionPolicy          = 'Other MRM Policy'
-                        RoleAssignmentPolicy     = 'Default Role Assignment Policy'
+                        Identity                 = "ExchangeOnlineEnterprise";
+                        IssueWarningQuota        = "98 GB (105,226,698,752 bytes)";
+                        MaxReceiveSize           = "25 MB (26,214,400 bytes)";
+                        MaxSendSize              = "25 MB (26,214,400 bytes)";
+                        ProhibitSendQuota        = "99 GB (106,300,440,576 bytes)";
+                        ProhibitSendReceiveQuota = "100 GB (107,374,182,400 bytes)";
+                        RetainDeletedItemsFor    = "30.00:00:00";
+                        RoleAssignmentPolicy     = "Default Role Assignment Policy";
                     }
                 }
             }
@@ -141,15 +137,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MailboxPlan -MockWith {
                     return @{
-                        Identity                 = 'ExchangeOnlineEnterprise-6f6c267b-f8db-4020-b441-f7bd966a0ca0'
-                        IssueWarningQuota        = '98 GB'
-                        MaxReceiveSize           = '25 MB'
-                        MaxSendSize              = '25 MB'
-                        ProhibitSendQuota        = '99 GB'
-                        ProhibitSendReceiveQuota = '100 GB'
-                        RetainDeletedItemsFor    = '14.00:00:00'
-                        RetentionPolicy          = 'Default MRM Policy'
-                        RoleAssignmentPolicy     = 'Default Role Assignment Policy'
+                        Identity                 = "ExchangeOnlineEnterprise";
+                        IssueWarningQuota        = "98 GB (105,226,698,752 bytes)";
+                        MaxReceiveSize           = "25 MB (26,214,400 bytes)";
+                        MaxSendSize              = "25 MB (26,214,400 bytes)";
+                        ProhibitSendQuota        = "99 GB (106,300,440,576 bytes)";
+                        ProhibitSendReceiveQuota = "100 GB (107,374,182,400 bytes)";
+                        RetainDeletedItemsFor    = "14.00:00:00";
+                        RoleAssignmentPolicy     = "Default Role Assignment Policy";
                     }
                 }
             }
