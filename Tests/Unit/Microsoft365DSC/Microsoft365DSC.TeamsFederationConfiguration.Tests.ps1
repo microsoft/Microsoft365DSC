@@ -61,6 +61,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowTeamsConsumer        = $False;
                     AllowTeamsConsumerInbound = $False;
                     Identity                  = "Global";
+                    Credential                = $Credential;
                 }
             }
 
