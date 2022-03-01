@@ -1153,6 +1153,10 @@ Internal
 function Get-M365DSCTenantDomain
 {
     param(
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $ApplicationId,
@@ -2115,6 +2119,24 @@ Specifies the path of the report that will be created.
 .Parameter Credentials
 Specifies the credentials that will be used for authentication.
 
+.Parameter ApplicationId
+Specifies the application id to be used for authentication.
+
+.Parameter ApplicationSecret
+Specifies the application secret of the application to be used for authentication.
+
+.Parameter TenantId
+Specifies the id of the tenant.
+
+.Parameter CertificateThumbprint
+Specifies the thumbprint to be used for authentication.
+
+.Parameter CertificatePassword
+Specifies the password of the PFX file which is used for authentication.
+
+.Parameter CertificatePath
+Specifies the path of the PFX file which is used for authentication.
+
 .Parameter HeaderFilePath
 Specifies that file that contains a custom header for the report.
 
@@ -2123,6 +2145,9 @@ Assert-M365DSCBlueprint -BluePrintUrl 'C:\DS\blueprint.m365' -OutputReportPath '
 
 .Example
 Assert-M365DSCBlueprint -BluePrintUrl 'C:\DS\blueprint.m365' -OutputReportPath 'C:\DSC\BlueprintReport.html' -Credentials $credentials -HeaderFilePath 'C:\DSC\ReportCustomHeader.html'
+
+.Example
+Assert-M365DSCBlueprint -BluePrintUrl 'C:\DS\blueprint.m365' -OutputReportPath 'C:\DSC\BlueprintReport.html' -ApplicationId $clientid -TenantId $tenantId -CertificateThumbprint $certthumbprint -HeaderFilePath 'C:\DSC\ReportCustomHeader.html'
 
 .Functionality
 Public
@@ -2139,9 +2164,29 @@ function Assert-M365DSCBlueprint
         [System.String]
         $OutputReportPath,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credentials,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
 
         [Parameter()]
         [System.String]
@@ -2208,7 +2253,13 @@ function Assert-M365DSCBlueprint
         Export-M365DSCConfiguration -Components $ResourcesInBluePrint `
             -Path $env:temp `
             -FileName $TempExportName `
-            -Credential $Credentials
+            -Credential $Credentials `
+            -ApplicationId $ApplicationId `
+            -ApplicationSecret $ApplicationSecret `
+            -TenantId $TenantId `
+            -CertificateThumbprint $CertificateThumbprint `
+            -CertificatePath $CertificatePath `
+            -CertificatePassword $CertificatePassword
 
         # Call the New-M365DSCDeltaReport configuration to generate the Delta Report between
         # the BluePrint and the extracted resources;
