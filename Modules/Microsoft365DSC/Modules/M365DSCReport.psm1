@@ -31,9 +31,16 @@ function New-M365DSCConfigurationToHTML
     {
         $TemplateFile = Get-Item $ConfigurationPath
         $fileContent = Get-Content $ConfigurationPath -Raw
-        $startPosition = $fileContent.IndexOf(" -ModuleVersion")
-        $endPosition = $fileContent.IndexOf("`r", $startPosition)
-        $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
+        try
+        {
+            $startPosition = $fileContent.IndexOf(" -ModuleVersion")
+            $endPosition = $fileContent.IndexOf("`r", $startPosition)
+            $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
+        }
+        catch
+        {
+            Write-Verbose "Error trying to remove Module Version"
+        }
         $ParsedContent = ConvertTo-DSCObject -Content $fileContent
         $TemplateName = $TemplateFile.Name.Split('.')[0]
     }
