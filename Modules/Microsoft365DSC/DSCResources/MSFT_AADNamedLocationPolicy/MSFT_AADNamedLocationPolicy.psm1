@@ -56,7 +56,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Getting configuration of AAD Named Location"
@@ -128,6 +136,8 @@ function Get-TargetResource
                 ApplicationId                     = $ApplicationId
                 TenantId                          = $TenantId
                 CertificateThumbprint             = $CertificateThumbprint
+                CertificatePath                   = $CertificatePath
+                CertificatePassword               = $CertificatePassword
                 Credential                        = $Credential
             }
 
@@ -198,6 +208,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [System.String]
@@ -345,6 +363,14 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
         $CertificateThumbprint
     )
 
@@ -372,6 +398,8 @@ function Test-TargetResource
     $ValuesToCheck.Remove("ApplicationId") | Out-Null
     $ValuesToCheck.Remove("TenantId") | Out-Null
     $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
+    $ValuesToCheck.Remove("CertificatePath") | Out-Null
+    $ValuesToCheck.Remove("CertificatePassword") | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -404,6 +432,14 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [System.String]
@@ -446,9 +482,11 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                Credential            = $Credential
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
                 DisplayName           = $AADNamedLocation.DisplayName
                 ID                    = $AADNamedLocation.ID
-                Credential            = $Credential
             }
             $Results = Get-TargetResource @Params
 
