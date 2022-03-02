@@ -1082,6 +1082,15 @@ function Get-SupervisoryReviewRule
         $AsJob
     )
 }
+function Get-TransportConfig
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Get-TransportRule
 {
     [CmdletBinding()]
@@ -8793,6 +8802,103 @@ function Set-SharingPolicy
         [Parameter()]
         [System.Object]
         $Enabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-TransportConfig
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $AddressBookPolicyRoutingEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ClearCategories,
+
+        [Parameter()]
+        [System.Object]
+        $ConvertDisclaimerWrapperToEml,
+
+        [Parameter()]
+        [System.Object]
+        $DSNConversionMode,
+
+        [Parameter()]
+        [System.Object]
+        $ExternalDelayDsnEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ExternalDsnLanguageDetectionEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ExternalDsnSendHtml,
+
+        [Parameter()]
+        [System.Object]
+        $ExternalPostmasterAddress,
+
+        [Parameter()]
+        [System.Object]
+        $HeaderPromotionModeSetting,
+
+        [Parameter()]
+        [System.Object]
+        $InternalDelayDsnEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $InternalDsnLanguageDetectionEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $InternalDsnSendHtml,
+
+        [Parameter()]
+        [System.Object]
+        $JournalingReportNdrTo,
+
+        [Parameter()]
+        [System.Object]
+        $JournalMessageExpirationDays,
+
+        [Parameter()]
+        [System.Object]
+        $MaxRecipientEnvelopeLimit,
+
+        [Parameter()]
+        [System.Object]
+        $ReplyAllStormBlockDurationHours,
+
+        [Parameter()]
+        [System.Object]
+        $ReplyAllStormDetectionMinimumRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $ReplyAllStormDetectionMinimumReplies,
+
+        [Parameter()]
+        [System.Object]
+        $ReplyAllStormProtectionEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $Rfc2231EncodingEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $SmtpClientAuthenticationDisabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
