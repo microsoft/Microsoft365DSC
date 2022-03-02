@@ -2,4 +2,4 @@
 
 ## Description
 
-Use this recourse to modify the settings of mailbox plans in the cloud-based service.
+Use this resource to modify the settings of mailbox plans in the cloud-based service.
