@@ -16,6 +16,7 @@ Configuration Example
     {
         EXOTransportConfig  'EXOTransportConfig '
         {
+            IsSingleInstance                        = "Yes";
             AddressBookPolicyRoutingEnabled         = $True;
             ClearCategories                         = $True;
             ConvertDisclaimerWrapperToEml           = $False;

@@ -1,6 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("EXOTransportConfig")]
 class MSFT_EXOTransportConfig : OMI_BaseResource
 {
+    [Key, Description("Specifies the resource is a single instance, the value must be 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
     [Write, Description("The AddressBookPolicyRoutingEnabled parameter controls how recipients are resolved in an organization that uses address book policies to create separate virtual organizations within the same Exchange organization.")] Boolean AddressBookPolicyRoutingEnabled;
     [Write, Description("Allow legacy TLS clients")] Boolean AllowLegacyTLSClients;
     [Write, Description("The ClearCategories parameter keeps or removes Microsoft Outlook message categories during content conversion.")] Boolean ClearCategories;

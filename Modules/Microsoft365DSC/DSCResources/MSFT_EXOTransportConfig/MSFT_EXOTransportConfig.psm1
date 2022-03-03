@@ -4,6 +4,11 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
+
         [Parameter()]
         [System.Boolean]
         $AddressBookPolicyRoutingEnabled,
@@ -169,6 +174,7 @@ function Get-TargetResource
         }
 
         $results = @{
+            IsSingleInstance                        = 'Yes'
             AddressBookPolicyRoutingEnabled         = $TransportConfigSettings.AddressBookPolicyRoutingEnabled
             AllowLegacyTLSClients                   = $TransportConfigSettings.AllowLegacyTLSClients
             ClearCategories                         = $TransportConfigSettings.ClearCategories
@@ -236,6 +242,11 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
+
         [Parameter()]
         [System.Boolean]
         $AddressBookPolicyRoutingEnabled,
@@ -401,6 +412,11 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
+
         [Parameter()]
         [System.Boolean]
         $AddressBookPolicyRoutingEnabled,
@@ -616,6 +632,7 @@ function Export-TargetResource
     try
     {
         $Params = @{
+            IsSingleInstance      = 'Yes'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId

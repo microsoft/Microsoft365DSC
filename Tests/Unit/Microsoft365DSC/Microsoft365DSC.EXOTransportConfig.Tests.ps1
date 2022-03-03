@@ -57,6 +57,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
+                    IsSingleInstance                        = "Yes";
                     ClearCategories                         = $True;
                     ConvertDisclaimerWrapperToEml           = $False;
                     DSNConversionMode                       = "PreserveDSNBody";
@@ -119,6 +120,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Values are not in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
+                    IsSingleInstance                        = "Yes";
                     ClearCategories                         = $True;
                     ConvertDisclaimerWrapperToEml           = $False;
                     DSNConversionMode                       = "PreserveDSNBody";
