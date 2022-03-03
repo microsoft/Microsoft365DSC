@@ -2,6 +2,9 @@
 
 # 1.22.223.1
 
+* EXOTransportConfig
+  * New resource for Exchange Online transport configuration.
+
 * DEPENDENCIES
   * Updated DSCParser to version 1.3.0.3.
 
