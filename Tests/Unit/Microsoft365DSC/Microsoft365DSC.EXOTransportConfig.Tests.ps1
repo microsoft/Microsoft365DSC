@@ -186,42 +186,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Error getting TransportConfig from EXO" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    IsSingleInstance                        = "Yes";
-                    ClearCategories                         = $True;
-                    ConvertDisclaimerWrapperToEml           = $False;
-                    DSNConversionMode                       = "PreserveDSNBody";
-                    ExternalDelayDsnEnabled                 = $True;
-                    ExternalDsnLanguageDetectionEnabled     = $True;
-                    ExternalDsnSendHtml                     = $True;
-                    ExternalPostmasterAddress               = "postmaster@contoso.com";
-                    HeaderPromotionModeSetting              = "NoCreate";
-                    InternalDelayDsnEnabled                 = $True;
-                    InternalDsnLanguageDetectionEnabled     = $True;
-                    InternalDsnSendHtml                     = $True;
-                    JournalingReportNdrTo                   = "<>";
-                    JournalMessageExpirationDays            = 0;
-                    MaxRecipientEnvelopeLimit               = "Unlimited";
-                    ReplyAllStormBlockDurationHours         = 6;
-                    ReplyAllStormDetectionMinimumRecipients = 2500;
-                    ReplyAllStormDetectionMinimumReplies    = 10;
-                    ReplyAllStormProtectionEnabled          = $True;
-                    Rfc2231EncodingEnabled                  = $False;
-                    SmtpClientAuthenticationDisabled        = $True;
-                    Credential                              = $Credential;
-                }
-
-                Mock -CommandName Get-TransportConfig -MockWith {
-                }
-            }
-
-            It 'Should throw an error' {
-                Get-TargetResource @testParams | Should -Throw 'There was an error retrieving values from the Get function in EXOTransportConfig.'
-            }
-        }
-
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
