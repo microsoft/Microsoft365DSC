@@ -2,6 +2,11 @@
 
 # 1.22.223.1
 
+* EXOAcceptedDomain
+  * Fixes an issue where True was never accepted as a value for MatchSubDomains
+    or OutboundOnly.
+    FIXES #1779
+
 * DEPENDENCIES
   * Updated DSCParser to version 1.3.0.3.
 
