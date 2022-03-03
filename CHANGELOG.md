@@ -2,6 +2,10 @@
 
 # 1.22.223.1
 
+* EXOOrganizationConfig
+  * Fixes an issue where AutoExpandingArchiveEnabled returned always False.
+    FIXES #1789
+
 * DEPENDENCIES
   * Updated DSCParser to version 1.3.0.3.
 
