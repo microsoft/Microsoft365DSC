@@ -2,6 +2,9 @@
 
 # 1.22.223.1
 
+* TeamsFederationConfiguration
+  * New resource for Teams Federation Configuration.
+
 * DEPENDENCIES
   * Updated DSCParser to version 1.3.0.3.
 
