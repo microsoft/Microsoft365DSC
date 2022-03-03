@@ -214,7 +214,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-TransportConfig -MockWith {
-                    return $null
                 }
             }
 
