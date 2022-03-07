@@ -25,6 +25,13 @@ class MSFT_IntuneAppProtectionPolicyiOS : OMI_BaseResource
     [Write, Description("N/A")] Boolean PrintBlocked;
     [Write, Description("N/A")] Boolean FingerprintBlocked;
     [Write, Description("N/A")] Boolean FaceIdBlocked;
+    [Write, Description("N/A")] Boolean IsAssigned;
+    [Write, Description("N/A")] String ManagedBrowser;
+    [Write, Description("N/A")] String MinimumRequiredAppVersion;
+    [Write, Description("N/A")] String MinimumRequiredOSVersion;
+    [Write, Description("N/A")] String MinimumRequiredSdkVersion;
+    [Write, Description("N/A")] String MinimumWarningAppVersion;
+    [Write, Description("N/A")] String MinimumWarningOSVersion;
     [Write, Description("N/A")] String AppDataEncryptionType;
     [Write, Description("List of Ids representing the iOS apps controlled by this protection policy.")] String Apps[];
     [Write, Description("List of IDs of the groups assigned to this iOS Protection Policy.")] String Assignments[];
