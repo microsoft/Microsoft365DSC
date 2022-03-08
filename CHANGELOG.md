@@ -11,6 +11,10 @@
 * EXOOrganizationConfig
   * Fixes an issue where AutoExpandingArchiveEnabled returned always False.
     FIXES #1789
+* O365Group
+  * Revamped to use Microsoft Graph in the Set;
+* TeamsChannel
+  * Fix to retrieve the team name without URL encoding.
 * TeamsTeam
   * Fixed issue where teams were not created when no owners were specified.
     If credentials are used, then the user will be used as owner.
