@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* EXOMailboxPlan
+  * New resource for Exchange Online Mailbox Plans.
 * EXOOrganizationConfig
   * Fixes an issue where AutoExpandingArchiveEnabled returned always False.
     FIXES #1789
