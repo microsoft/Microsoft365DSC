@@ -453,7 +453,7 @@ Configuration Master
         {
             O365Group O365DSCCoreTeam
             {
-                DisplayName  = "Office365DSC Core Team"
+                DisplayName  = "Microsoft365DSC Core Team"
                 MailNickName = "O365DSCCore"
                 ManagedBy    = "admin@$Domain"
                 Description  = "Group for all the Core Team members"

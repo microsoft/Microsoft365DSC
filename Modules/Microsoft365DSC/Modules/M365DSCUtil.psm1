@@ -2244,6 +2244,7 @@ function Test-M365DSCDependenciesForNewVersions
     $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
     $dependencies = $manifest.Dependencies
     $i = 1
+    Import-Module PowerShellGet -Force
     foreach ($dependency in $dependencies)
     {
         Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
@@ -2251,15 +2252,19 @@ function Test-M365DSCDependenciesForNewVersions
         {
             $moduleInGallery = Find-Module $dependency.ModuleName
             [array]$moduleInstalled = Get-Module $dependency.ModuleName -ListAvailable | Select-Object Version
-            $modules = $moduleInstalled | Sort-Object Version -Descending
+            if ($moduleInstalled)
+            {
+                $modules = $moduleInstalled | Sort-Object Version -Descending
+            }
             $moduleInstalled = $modules[0]
-            if ([Version]($moduleInGallery.Version) -gt [Version]($moduleInstalled[0].Version))
+            if (-not $modules -or [Version]($moduleInGallery.Version) -gt [Version]($moduleInstalled[0].Version))
             {
                 Write-Host "New version of {$($dependency.ModuleName)} is available {$($moduleInGallery.Version)}"
             }
         }
         catch
         {
+            Write-Host $_
             Write-Host "New version of {$($dependency.ModuleName)} is available"
         }
         $i++
