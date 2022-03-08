@@ -50,7 +50,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description        = "This is a test"
                     ManagedBy          = "JohnSmith@contoso.onmicrosoft.com"
                     Ensure             = "Present"
-                    Credential = $Credential
+                    Credential         = $Credential
                 }
 
                 Mock -CommandName Get-MgGroup -MockWith {
@@ -75,13 +75,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ManagedBy          = "Bob.Houle@contoso.onmicrosoft.com"
                     Description        = "This is a test"
                     Ensure             = "Present"
-                    Credential = $Credential
+                    Credential         = $Credential
                 }
 
                 Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         DisplayName  = "Test Group"
-                        ObjectId     = "a53dbbd6-7e9b-4df9-841a-a2c3071a1770"
+                        Id           = "a53dbbd6-7e9b-4df9-841a-a2c3071a1770"
                         Members      = @("John.Smith@contoso.onmcirosoft.com")
                         MailNickName = "TestGroup"
                         Owners       = @("Bob.Houle@contoso.onmcirosoft.com")
@@ -91,13 +91,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgGroupMember -MockWith {
                     return @{
-                        UserPrincipalName = "John.smith@contoso.onmicrosoft.com"
+                        AdditionalProperties = @{
+                            UserPrincipalName = "John.smith@contoso.onmicrosoft.com"
+                        }
                     }
                 }
 
                 Mock -CommandName Get-MgGroupOwner -MockWith {
                     return @{
-                        UserPrincipalName = "Bob.Houle@contoso.onmicrosoft.com"
+                        AdditionalProperties = @{
+                            UserPrincipalName = "Bob.Houle@contoso.onmicrosoft.com"
+                        }
                     }
                 }
             }
@@ -151,7 +155,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName  = "Test Group"
                         MailNickName = "TestGroup"
                         Description  = "This is a test"
-                        ObjectID     = "a53dbbd6-7e9b-4df9-841a-a2c3071a1770"
+                        ID           = "a53dbbd6-7e9b-4df9-841a-a2c3071a1770"
                     }
                 }
 
@@ -208,7 +212,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName  = "Test Group"
                         MailNickName = "TestGroup"
                         Description  = "This is a test"
-                        ObjectID     = "a53dbbd6-7e9b-4df9-841a-a2c3071a1770"
+                        ID           = "a53dbbd6-7e9b-4df9-841a-a2c3071a1770"
                     }
                 }
 
