@@ -20,6 +20,9 @@
     If credentials are used, then the user will be used as owner.
 * DEPENDENCIES
   * Updated DSCParser to version 1.3.0.3.
+* MISC
+  * Added a function to uninstall all outdated dependencies
+    and older versions of Microsoft365DSC
 
 # 1.22.216.1
 
