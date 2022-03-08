@@ -1,10 +1,12 @@
 # Change log for Microsoft365DSC
 
-# 1.22.223.1
+# UNRELEASED
 
 * EXOTransportConfig
   * New resource for Exchange Online transport configuration.
-
+* TeamsTeam
+  * Fixed issue where teams were not created when no owners were specified.
+    If credentials are used, then the user will be used as owner.
 * DEPENDENCIES
   * Updated DSCParser to version 1.3.0.3.
 

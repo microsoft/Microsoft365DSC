@@ -421,7 +421,7 @@ function Set-TargetResource
         {
             $CurrentParameters.Owner = [array](($Owner[0]).ToString())
         }
-
+        Write-Verbose -Message "Connection mode: $ConnectionMode"
         if ($ConnectionMode -eq "ServicePrincipal")
         {
             $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -457,10 +457,20 @@ function Set-TargetResource
         }
         else
         {
-            $OwnerValue = $Owner[0].ToString()
+            Write-Verbose -Message "Using Credentials to authenticate."
+            if (-not $Owner -or $Owner.Length -eq 0)
+            {
+                $OwnerValue = $Credential.UserName
+            }
+            else
+            {
+                $OwnerValue = $Owner[0].ToString()
+            }
             $CurrentParameters.Owner = [System.String]$OwnerValue
             $CurrentParameters.Remove("Credential") | Out-Null
+            Write-Verbose -Message "Creating team with Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentParameters)"
             $newTeam = New-Team @CurrentParameters
+            Write-Verbose -Message "Team {$DisplayName} was just created."
 
             for ($i = 1; $i -le $Owner.Length; $i++)
             {
