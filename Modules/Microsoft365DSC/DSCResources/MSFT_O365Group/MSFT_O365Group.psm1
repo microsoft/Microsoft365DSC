@@ -92,16 +92,16 @@ function Get-TargetResource
 
         try
         {
-            $membersList = Get-MgGroupMember -GroupId $ADGroup[0].ObjectId
+            $membersList = Get-MgGroupMember -GroupId $ADGroup[0].Id
             Write-Verbose -Message "Found Members for Group {$($ADGroup[0].DisplayName)}"
-            $owners = Get-MgGroupOwner -GroupId $ADGroup[0].ObjectId
+            $owners = Get-MgGroupOwner -GroupId $ADGroup[0].Id
             Write-Verbose -Message "Found Owners for Group {$($ADGroup[0].DisplayName)}"
             $ownersUPN = @()
             if ($null -ne $owners)
             {
                 # Need to cast as an array for the test to properly compare cases with
                 # a single owner;
-                $ownersUPN = [System.String[]]$owners.UserPrincipalName
+                $ownersUPN = [System.String[]]$owners.AdditionalProperties.userPrincipalName
 
                 # Also need to remove the owners from the members list for Test
                 # to handle the validation properly;
@@ -110,10 +110,10 @@ function Get-TargetResource
                 foreach ($member in $membersList)
                 {
                     if ($null -ne $ownersUPN -and $ownersUPN.Length -ge 1 -and `
-                            -not [System.String]::IsNullOrEmpty($member.UserPrincipalName) -and `
-                            -not $ownersUPN.Contains($member.UserPrincipalName))
+                            -not [System.String]::IsNullOrEmpty($member.AdditionalProperties.userPrincipalName) -and `
+                            -not $ownersUPN.Contains($member.AdditionalProperties.sserPrincipalName))
                     {
-                        $newMemberList += $member.UserPrincipalName
+                        $newMemberList += $member.AdditionalProperties.userPrincipalName
                     }
                 }
             }
@@ -267,6 +267,7 @@ function Set-TargetResource
             }
             Write-Verbose -Message "Initiating Group Creation"
             Write-Verbose -Message "Owner = $($groupParams.Owner)"
+            Write-Verbose -Message "Creating New Group with values: $(Convert-M365DscHashtableToString -Hashtable $groupParams)"
             New-UnifiedGroup @groupParams
             Write-Verbose -Message "Group Created"
             if ($ManagedBy.Length -gt 1)
@@ -274,7 +275,7 @@ function Set-TargetResource
                 for ($i = 1; $i -lt $ManagedBy.Length; $i++)
                 {
                     Write-Verbose -Message "Adding additional owner {$($ManagedBy[$i])} to group."
-                    if ("" -ne $Name)
+                    if (-not [System.String]::IsNullOrEmpty($Name))
                     {
                         Add-UnifiedGroupLinks -Identity $Name -LinkType Owner -Links $ManagedBy[$i]
                     }

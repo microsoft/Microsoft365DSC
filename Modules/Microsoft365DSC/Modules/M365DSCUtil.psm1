@@ -79,7 +79,7 @@ function Get-TeamByName
         $loopCounter = 0
         do
         {
-            $team = Get-Team -DisplayName $TeamName | Where-Object -FilterScript {$_.DisplayName -eq $TeamName}
+            $team = Get-Team -DisplayName $TeamName | Where-Object -FilterScript { $_.DisplayName -eq $TeamName }
             if ($null -eq $team)
             {
                 Start-Sleep 5
@@ -2359,6 +2359,69 @@ function Update-M365DSCDependencies
 
 <#
 .Description
+This function uninstalls all previous M365DSC dependencies and older versions of the module.
+.Example
+Uninstall-M365DSCOutdatedObjects
+.Functionality
+Public
+#>
+function Uninstall-M365DSCOutdatedDependencies
+{
+    [CmdletBinding()]
+    param(
+    )
+
+    $InformationPreference = 'Continue'
+
+    $microsoft365DscModules = Get-Module Microsoft365DSC -ListAvailable
+    $outdatedMicrosoft365DscModules = $microsoft365DscModules | Sort-Object Version | Select-Object -SkipLast 1
+
+    foreach ($module in $outdatedMicrosoft365DscModules)
+    {
+        try
+        {
+            Uninstall-Module -Name "$($module.Name)" -RequiredVersion "$($module.Version)"
+        }
+        catch
+        {
+            Write-Host "Could not uninstall $($module.Name) Version $($module.Version) "
+        }
+    }
+
+    $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
+    $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
+    $dependencies = $manifest.Dependencies
+    $i = 1
+    foreach ($dependency in $dependencies)
+    {
+        Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
+        try
+        {
+            $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -ne $dependency.RequiredVersion }
+            foreach ($foundModule in $found)
+            {
+                try
+                {
+                    Write-Information -Message "Uninstalling $($foundModule.Name) version {$($foundModule.Version)}"
+                    Uninstall-Module -Name "$($foundModule.Name)" -RequiredVersion "$($foundModule.Version)"
+                }
+                catch
+                {
+                    Write-Host "Could not uninstall $($foundModule.Name) Version $($foundModule.Version) "
+                }
+            }
+        }
+        catch
+        {
+            Write-Host "Could not uninstall {$($dependency.ModuleName)}"
+        }
+        $i++
+    }
+
+}
+
+<#
+.Description
 This function removes all empty values from a dictionary object
 
 .Functionality
@@ -3007,10 +3070,21 @@ function New-M365DSCCmdletDocumentation
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $OutputPath
+        $OutputPath,
+
+        [Parameter()]
+        [System.String]
+        $ModulePath
     )
 
-    Import-Module Microsoft365Dsc -Force
+    if($null -eq $ModulePath){
+        Import-Module Microsoft365Dsc -Force
+    }
+    else
+    {
+        Get-Module Microsoft365DSC -ErrorAction SilentlyContinue | Remove-Module -ErrorAction SilentlyContinue
+        Import-Module $ModulePath -Force
+    }
 
     if ((Test-Path -Path $OutputPath) -eq $false)
     {
@@ -3169,6 +3243,7 @@ Export-ModuleMember -Function @(
     'Test-M365DSCDependenciesForNewVersions',
     'Test-M365DSCNewVersionAvailable',
     'Test-M365DSCParameterState',
+    'Uninstall-M365DSCOutdatedDependencies',
     'Update-M365DSCDependencies',
     'Update-M365DSCExportAuthenticationResults'
 )
