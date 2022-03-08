@@ -98,6 +98,7 @@
         'Test-M365DSCAgent',
         'Test-M365DSCDependencies',
         'Test-M365DSCDependenciesForNewVersions',
+        'Uninstall-M365DSCOutdatedDependencies',
         'Update-M365DSCAllowedGraphScopes',
         'Update-M365DSCDependencies',
         'Update-M365DSCResourcesSettingsJSON')
