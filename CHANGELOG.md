@@ -1,10 +1,15 @@
 # Change log for Microsoft365DSC
 
-# 1.22.223.1
+# UNRELEASED
 
+* EXOOrganizationConfig
+  * Fixes an issue where AutoExpandingArchiveEnabled returned always False.
+    FIXES #1789
 * TeamsFederationConfiguration
   * New resource for Teams Federation Configuration.
-
+* TeamsTeam
+  * Fixed issue where teams were not created when no owners were specified.
+    If credentials are used, then the user will be used as owner.
 * DEPENDENCIES
   * Updated DSCParser to version 1.3.0.3.
 

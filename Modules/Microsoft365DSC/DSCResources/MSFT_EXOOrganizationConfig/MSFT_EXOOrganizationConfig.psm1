@@ -361,7 +361,7 @@ function Get-TargetResource
             AppsForOfficeEnabled                                      = $ConfigSettings.AppsForOfficeEnabled
             AsyncSendEnabled                                          = $ConfigSettings.AsyncSendEnabled
             AuditDisabled                                             = $ConfigSettings.AuditDisabled
-            AutoExpandingArchive                                      = $ConfigSettings.AutoExpandingArchive
+            AutoExpandingArchive                                      = $ConfigSettings.AutoExpandingArchiveEnabled
             BookingsEnabled                                           = $ConfigSettings.BookingsEnabled
             BookingsPaymentsEnabled                                   = $ConfigSettings.BookingsPaymentsEnabled
             BookingsSocialSharingRestricted                           = $ConfigSettings.BookingsSocialSharingRestricted
@@ -431,7 +431,7 @@ function Get-TargetResource
             TenantId                                                  = $TenantId
         }
 
-        if ($null -eq $ConfigSettings.AutoExpandingArchive)
+        if ($null -eq $ConfigSettings.AutoExpandingArchiveEnabled)
         {
             $results.AutoExpandingArchive = $false
         }

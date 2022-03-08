@@ -21,8 +21,10 @@ class MSFT_IntuneAppProtectionPolicyiOS : OMI_BaseResource
     [Write, Description("N/A")] String PinCharacterSet;
     [Write, Description("N/A")] String AllowedDataStorageLocations[];
     [Write, Description("N/A")] Boolean ContactSyncBlocked;
+    [Write, Description("N/A")] String PeriodBeforePinReset;
     [Write, Description("N/A")] Boolean PrintBlocked;
     [Write, Description("N/A")] Boolean FingerprintBlocked;
+    [Write, Description("N/A")] Boolean FaceIdBlocked;
     [Write, Description("N/A")] String AppDataEncryptionType;
     [Write, Description("List of Ids representing the iOS apps controlled by this protection policy.")] String Apps[];
     [Write, Description("List of IDs of the groups assigned to this iOS Protection Policy.")] String Assignments[];
