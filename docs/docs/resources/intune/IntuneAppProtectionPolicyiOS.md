@@ -24,8 +24,10 @@
 | **PinCharacterSet** | Write | String | N/A ||
 | **AllowedDataStorageLocations** | Write | StringArray[] | N/A ||
 | **ContactSyncBlocked** | Write | Boolean | N/A ||
+| **PeriodBeforePinReset** | Write | String | N/A ||
 | **PrintBlocked** | Write | Boolean | N/A ||
 | **FingerprintBlocked** | Write | Boolean | N/A ||
+| **FaceIdBlocked** | Write | Boolean | N/A ||
 | **AppDataEncryptionType** | Write | String | N/A ||
 | **Apps** | Write | StringArray[] | List of Ids representing the iOS apps controlled by this protection policy. ||
 | **Assignments** | Write | StringArray[] | List of IDs of the groups assigned to this iOS Protection Policy. ||

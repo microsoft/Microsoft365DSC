@@ -142,6 +142,12 @@ function Get-TargetResource
             {
                 $AvailableToOtherTenantsValue = $true
             }
+            $currentOauth2RequirePostResponseValue = $AADApp.Oauth2RequirePostResponse
+            if ([System.String]::IsNullOrEmpty($currentOauth2RequirePostResponseValue))
+            {
+                $currentOauth2RequirePostResponseValue = $false
+            }
+
             $result = @{
                 DisplayName                = $AADApp.DisplayName
                 AvailableToOtherTenants    = $AvailableToOtherTenantsValue
@@ -150,7 +156,7 @@ function Get-TargetResource
                 IdentifierUris             = $AADApp.IdentifierUris
                 KnownClientApplications    = $AADApp.Api.KnownClientApplications
                 LogoutURL                  = $AADApp.web.LogoutURL
-                Oauth2RequirePostResponse  = $AADApp.Oauth2RequirePostResponse
+                Oauth2RequirePostResponse  = $currentOauth2RequirePostResponseValue
                 PublicClient               = $isPublicClient
                 ReplyURLs                  = $AADApp.web.RedirectUris
                 ObjectId                   = $AADApp.Id
