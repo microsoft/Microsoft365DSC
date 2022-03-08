@@ -429,6 +429,7 @@ function New-M365DSCResource
     Write-TokenReplacement -Token "<ODataType>" -Value $selectedODataType.Name -FilePath $moduleFilePath
 
     Write-TokenReplacement -Token "<FilterScript>" -Value "`$_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.$($selectedODataType.Name)' -and ` `$_.displayName -eq `$(`$DisplayName)" -FilePath $moduleFilePath
+    Write-TokenReplacement -Token "<FilterScriptShort>" -Value "`$_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.$($selectedODataType.Name)' " -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<HashTableMapping>" -Value $hashTableMapping -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<#ComplexTypeContent#>" -Value $hashtableResults.ComplexTypeContent -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<#ConvertComplexToString#>" -Value $hashtableResults.ConvertToString -FilePath $moduleFilePath

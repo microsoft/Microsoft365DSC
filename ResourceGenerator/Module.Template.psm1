@@ -394,12 +394,8 @@ function Export-TargetResource
         [array]$getValue = <GetCmdLetName> `
             -ErrorAction Stop | Where-Object `
             -FilterScript {
-                <FilterScript>
+                <FilterScriptShort>
             }
-        if (-not $getValue)
-        {
-            [array]$getValue = <GetCmdLetName> -ErrorAction Stop
-        }
         #endregion
         ResourceGenerator#>
 
@@ -415,7 +411,7 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
-            Write-Host "    |---[$i/$($config.Count)] $($config.displayName)" -NoNewline
+            Write-Host "    |---[$i/$($getValue.Count)] $($config.displayName)" -NoNewline
             $params = @{
                 DisplayName           = $config.DisplayName
                 Ensure                = 'Present'
