@@ -692,6 +692,39 @@ function Get-Mailbox
         $AsJob
     )
 }
+function Get-MailboxPlan
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $SortBy,
+
+        [Parameter()]
+        [System.Object]
+        $Credential,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IgnoreDefaultScope,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Get-MailboxRegionalConfiguration
 {
     [CmdletBinding()]
@@ -6814,6 +6847,55 @@ function Set-Mailbox
         [Parameter()]
         [System.Object]
         $HiddenFromAddressListsEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-MailboxPlan
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $IssueWarningQuota,
+
+        [Parameter()]
+        [System.Object]
+        $MaxReceiveSize,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $MaxSendSize,
+
+        [Parameter()]
+        [System.Object]
+        $ProhibitSendQuota,
+
+        [Parameter()]
+        [System.Object]
+        $ProhibitSendReceiveQuota,
+
+        [Parameter()]
+        [System.Object]
+        $RetainDeletedItemsFor,
+
+        [Parameter()]
+        [System.Object]
+        $RetentionPolicy,
+
+        [Parameter()]
+        [System.Object]
+        $RoleAssignmentPolicy,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]

@@ -2,9 +2,19 @@
 
 # UNRELEASED
 
+* EXOAcceptedDomain
+  * Fixes an issue where True was never accepted as a value for parameters
+    MatchSubDomains or OutboundOnly.
+    FIXES #1779
+* EXOMailboxPlan
+  * New resource for Exchange Online Mailbox Plans.
 * EXOOrganizationConfig
   * Fixes an issue where AutoExpandingArchiveEnabled returned always False.
     FIXES #1789
+* O365Group
+  * Revamped to use Microsoft Graph in the Set;
+* TeamsChannel
+  * Fix to retrieve the team name without URL encoding.
 * TeamsFederationConfiguration
   * New resource for Teams Federation Configuration.
 * TeamsTeam
@@ -12,6 +22,10 @@
     If credentials are used, then the user will be used as owner.
 * DEPENDENCIES
   * Updated DSCParser to version 1.3.0.3.
+* MISC
+  * Added a function to uninstall all outdated dependencies
+    and older versions of Microsoft365DSC;
+  * M365DSCReport: Adds JSON as an export option.
 
 # 1.22.216.1
 
