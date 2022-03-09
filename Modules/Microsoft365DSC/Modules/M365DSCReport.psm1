@@ -133,6 +133,38 @@ function New-M365DSCConfigurationToHTML
     return $fullHTML
 }
 
+<#
+.Description
+This function creates a new JSON file from the specified exported configuration
+
+.Functionality
+Internal, Hidden
+#>
+function New-M365DSCConfigurationToJSON
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ConfigurationPath,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $OutputPath
+    )
+
+    $fileContent = Get-Content $ConfigurationPath -Raw
+
+    $startPosition = $fileContent.IndexOf(" -ModuleVersion")
+    $endPosition = $fileContent.IndexOf("`r", $startPosition)
+
+    $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
+    $ParsedContent = ConvertTo-DSCObject -Content $fileContent
+
+    $jsonContent = $ParsedContent | ConvertTo-Json
+    $jsonContent | Out-File -FilePath $OutputPath
+}
+
 
 <#
 .Description
@@ -320,6 +352,9 @@ New-M365DSCReportFromConfiguration -Type 'HTML' -ConfigurationPath 'C:\DSC\' -Ou
 .Example
 New-M365DSCReportFromConfiguration -Type 'Excel' -ConfigurationPath 'C:\DSC\' -OutputPath 'C:\Dsc\M365Report.xlsx'
 
+.Example
+New-M365DSCReportFromConfiguration -Type 'JSON' -ConfigurationPath 'C:\DSC\' -OutputPath 'C:\Dsc\M365Report.json'
+
 .Functionality
 Public
 #>
@@ -328,7 +363,7 @@ function New-M365DSCReportFromConfiguration
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Excel', 'HTML')]
+        [ValidateSet('Excel', 'HTML', 'JSON')]
         [System.String]
         $Type,
 
@@ -360,6 +395,10 @@ function New-M365DSCReportFromConfiguration
         "HTML"
         {
             New-M365DSCConfigurationToHTML -ConfigurationPath $ConfigurationPath -OutputPath $OutputPath
+        }
+        "JSON"
+        {
+            New-M365DSCConfigurationToJSON -ConfigurationPath $ConfigurationPath -OutputPath $OutputPath
         }
     }
 }
