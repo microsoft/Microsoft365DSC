@@ -123,7 +123,7 @@ class MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceOwneruseroverview1
 };
 
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceConfigurationPolicyAndroidDeviceOwner")]
-class MSFT_IntuneAndroidConfiguration : OMI_BaseResource
+class MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceOwner : OMI_BaseResource
 {
     [Write, Description("")] String Id;
     [Write, Description("")] String Description;
