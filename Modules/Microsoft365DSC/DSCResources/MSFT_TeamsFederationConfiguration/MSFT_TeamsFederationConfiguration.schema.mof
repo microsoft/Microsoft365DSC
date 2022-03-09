@@ -1,0 +1,10 @@
+[ClassVersion("1.0.0.0"), FriendlyName("TeamsFederationConfiguration")]
+class MSFT_TeamsFederationConfiguration : OMI_BaseResource
+{
+    [Key, Description("The only valid input is Global - the tenant wide configuration"), ValueMap{"Global"}, Values{"Global"}] string Identity;
+    [Write, Description("When set to True users will be potentially allowed to communicate with users from other domains.")] Boolean AllowFederatedUsers;
+    [Write, Description("When set to True users will be potentially allowed to communicate with users who have accounts on public IM and presence providers.")] Boolean AllowPublicUsers;
+    [Write, Description("Allows federation with people using Teams with an account that's not managed by an organization.")] Boolean AllowTeamsConsumer;
+    [Write, Description("Allows people using Teams with an account that's not managed by an organization, to discover and start communication with users in your organization.")] Boolean AllowTeamsConsumerInbound;
+    [Required, Description("Credentials of the Teams Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+};

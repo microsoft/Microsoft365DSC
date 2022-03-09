@@ -18,9 +18,7 @@
 * TeamsChannel
   * Fix to retrieve the team name without URL encoding.
 * TeamsFederationConfiguration
-  * Initial release.
-* M365DSCReport
-  * Adds JSON as an export option.
+  * New resource for Teams Federation Configuration.
 * TeamsTeam
   * Fixed issue where teams were not created when no owners were specified.
     If credentials are used, then the user will be used as owner.
@@ -29,7 +27,8 @@
   * Updated MicrosoftTeams to version 4.0.0.
 * MISC
   * Added a function to uninstall all outdated dependencies
-    and older versions of Microsoft365DSC
+    and older versions of Microsoft365DSC;
+  * M365DSCReport: Adds JSON as an export option.
 
 # 1.22.216.1
 
