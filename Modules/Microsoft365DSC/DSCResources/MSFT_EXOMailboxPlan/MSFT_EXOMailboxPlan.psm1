@@ -5,27 +5,45 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
         [System.String]
         $Identity,
 
         [Parameter()]
-        [ValidateSet('Authoritative', 'InternalRelay')]
         [System.String]
-        $DomainType = 'Authoritative',
+        $IssueWarningQuota,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $MaxReceiveSize,
+
+        [Parameter()]
+        [System.String]
+        $MaxSendSize,
+
+        [Parameter()]
+        [System.String]
+        $ProhibitSendQuota,
+
+        [Parameter()]
+        [System.String]
+        $ProhibitSendReceiveQuota,
+
+        [Parameter()]
+        [System.String]
+        $RetainDeletedItemsFor,
+
+        [Parameter()]
+        [System.String]
+        $RetentionPolicy,
+
+        [Parameter()]
+        [System.String]
+        $RoleAssignmentPolicy,
+
+        [Parameter()]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
-
-        [Parameter()]
-        [System.Boolean]
-        $MatchSubDomains = $false,
-
-        [Parameter()]
-        [System.Boolean]
-        $OutboundOnly = $false,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -50,9 +68,9 @@ function Get-TargetResource
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword
-
     )
-    Write-Verbose -Message "Getting configuration of Accepted Domain for $Identity"
+
+    Write-Verbose -Message "Getting configuration of MailboxPlan for $Identity"
 
     if ($Global:CurrentModeIsExport)
     {
@@ -78,38 +96,41 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = "Absent"
+    $nullResult = $PSBoundParameters
+    $nullResult.Ensure = 'Absent'
+
     try
     {
-        Write-Verbose -Message 'Getting all Accepted Domain'
-        $AllAcceptedDomains = Get-AcceptedDomain -ErrorAction Stop
+        $MailboxPlan = Get-MailboxPlan $Identity -ErrorAction Stop
 
-        Write-Verbose -Message 'Filtering Accepted Domain list by Identity'
-        $AcceptedDomain = $AllAcceptedDomains | Where-Object -FilterScript { $_.Identity -eq $Identity }
-
-        if ($null -eq $AcceptedDomain)
+        if ($null -eq $MailboxPlan)
         {
-            Write-Verbose -Message "AcceptedDomain configuration for $($Identity) does not exist."
-            return $nullReturn
+            Write-Verbose -Message "MailboxPlan $($Identity) does not exist."
+            return $nullResult
         }
         else
         {
             $result = @{
-                DomainType            = $AcceptedDomain.DomainType
-                Ensure                = 'Present'
-                Identity              = $AcceptedDomain.Identity
-                MatchSubDomains       = $AcceptedDomain.MatchSubDomains
-                OutboundOnly          = $AcceptedDomain.OutboundOnly
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePath       = $CertificatePath
-                CertificatePassword   = $CertificatePassword
+                Ensure                   = 'Present'
+                Identity                 = $Identity
+                IssueWarningQuota        = $MailboxPlan.IssueWarningQuota
+                MaxReceiveSize           = $MailboxPlan.MaxReceiveSize
+                MaxSendSize              = $MailboxPlan.MaxSendSize
+                ProhibitSendQuota        = $MailboxPlan.ProhibitSendQuota
+                ProhibitSendReceiveQuota = $MailboxPlan.ProhibitSendReceiveQuota
+                RetainDeletedItemsFor    = $MailboxPlan.RetainDeletedItemsFor
+                RetentionPolicy          = $MailboxPlan.RetentionPolicy
+                RoleAssignmentPolicy     = $MailboxPlan.RoleAssignmentPolicy
+                Credential               = $Credential
+                ApplicationId            = $ApplicationId
+                CertificateThumbprint    = $CertificateThumbprint
+                CertificatePath          = $CertificatePath
+                CertificatePassword      = $CertificatePassword
+                TenantId                 = $TenantId
             }
 
-            Write-Verbose -Message "Found AcceptedDomain configuration for $($Identity)"
+            Write-Verbose -Message "Found MailboxPlan $($Identity)"
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
         }
     }
@@ -135,7 +156,7 @@ function Get-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return $nullReturn
+        return $nullResult
     }
 }
 
@@ -145,29 +166,45 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
         [System.String]
         $Identity,
 
         [Parameter()]
-        [ValidateSet('Authoritative', 'InternalRelay')]
         [System.String]
-        $DomainType = 'Authoritative',
+        $IssueWarningQuota,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $MaxReceiveSize,
+
+        [Parameter()]
+        [System.String]
+        $MaxSendSize,
+
+        [Parameter()]
+        [System.String]
+        $ProhibitSendQuota,
+
+        [Parameter()]
+        [System.String]
+        $ProhibitSendReceiveQuota,
+
+        [Parameter()]
+        [System.String]
+        $RetainDeletedItemsFor,
+
+        [Parameter()]
+        [System.String]
+        $RetentionPolicy,
+
+        [Parameter()]
+        [System.String]
+        $RoleAssignmentPolicy,
+
+        [Parameter()]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
-
-        [Parameter()]
-        [ValidateScript( { $false -eq $_ })]
-        [System.Boolean]
-        $MatchSubDomains = $false,
-
-        [Parameter()]
-        [ValidateScript( { $false -eq $_ })]
-        [System.Boolean]
-        $OutboundOnly = $false,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -194,7 +231,7 @@ function Set-TargetResource
         $CertificatePassword
     )
 
-    Write-Verbose -Message "Setting configuration of Accepted Domain for $Identity"
+    Write-Verbose -Message "Setting configuration of MailboxPlan for $Identity"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -208,28 +245,29 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    if ($MatchSubDomains -eq $true -and $DomainType -ne "InternalRelay")
-    {
-        throw "MatchSubDomains can only be enabled on an InternalRelay domain."
-    }
-
-    if ($OutboundOnly -eq $true -and $DomainType -eq "ExternalRelay")
-    {
-        throw "OutboundOnly can only be enabled if the DomainType parameter is set to Authoritative or InternalRelay."
-    }
-
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $AcceptedDomainParams = @{
-        DomainType      = $DomainType
-        Identity        = $Identity
-        MatchSubDomains = $MatchSubDomains
-        OutboundOnly    = $OutboundOnly
-    }
+    $MailboxPlanParams = [System.Collections.Hashtable]($PSBoundParameters)
+    $MailboxPlanParams.Remove('Ensure') | Out-Null
+    $MailboxPlanParams.Remove('Credential') | Out-Null
+    $MailboxPlanParams.Remove('ApplicationId') | Out-Null
+    $MailboxPlanParams.Remove('TenantId') | Out-Null
+    $MailboxPlanParams.Remove('CertificateThumbprint') | Out-Null
+    $MailboxPlanParams.Remove('CertificatePath') | Out-Null
+    $MailboxPlanParams.Remove('CertificatePassword') | Out-Null
 
-    Write-Verbose -Message "Setting AcceptedDomain for $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $AcceptedDomainParams)"
-    Set-AcceptedDomain @AcceptedDomainParams
+    $MailboxPlan = Get-MailboxPlan $Identity
+
+    if ($null -ne $MailboxPlan)
+    {
+        Write-Verbose -Message "Setting MailboxPlan $Identity with values: $(Convert-M365DscHashtableToString -Hashtable $MailboxPlanParams)"
+        Set-MailboxPlan @MailboxPlanParams
+    }
+    else
+    {
+        throw "The specified Mailbox Plan {$($Identity)} doesn't exist"
+    }
 }
 
 function Test-TargetResource
@@ -239,27 +277,45 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
         [System.String]
         $Identity,
 
         [Parameter()]
-        [ValidateSet('Authoritative', 'InternalRelay')]
         [System.String]
-        $DomainType = 'Authoritative',
+        $IssueWarningQuota,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $MaxReceiveSize,
+
+        [Parameter()]
+        [System.String]
+        $MaxSendSize,
+
+        [Parameter()]
+        [System.String]
+        $ProhibitSendQuota,
+
+        [Parameter()]
+        [System.String]
+        $ProhibitSendReceiveQuota,
+
+        [Parameter()]
+        [System.String]
+        $RetainDeletedItemsFor,
+
+        [Parameter()]
+        [System.String]
+        $RetentionPolicy,
+
+        [Parameter()]
+        [System.String]
+        $RoleAssignmentPolicy,
+
+        [Parameter()]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
-
-        [Parameter()]
-        [System.Boolean]
-        $MatchSubDomains = $false,
-
-        [Parameter()]
-        [System.Boolean]
-        $OutboundOnly = $false,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -297,7 +353,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Accepted Domain for $Identity"
+    Write-Verbose -Message "Testing configuration of MailboxPlan for $Identity"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -306,6 +362,11 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('Credential') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -365,11 +426,9 @@ function Export-TargetResource
 
     try
     {
-        [array]$AllAcceptedDomains = Get-AcceptedDomain -ErrorAction Stop
+        [array]$MailboxPlans = Get-MailboxPlan -ErrorAction Stop
 
-        $dscContent = ""
-        $i = 1
-        if ($AllAcceptedDomains.Length -eq 0)
+        if ($MailboxPlans.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
@@ -377,19 +436,21 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
-        foreach ($domain in $AllAcceptedDomains)
+        $dscContent = ""
+        $i = 1
+        foreach ($MailboxPlan in $MailboxPlans)
         {
-            Write-Host "    |---[$i/$($AllAcceptedDomains.Count)] $($domain.Identity)" -NoNewline
-
+            Write-Host "    |---[$i/$($MailboxPlans.Count)] $($MailboxPlan.Identity.Split('-')[0])" -NoNewline
             $Params = @{
-                Identity              = $domain.Identity
+                Identity              = $MailboxPlan.DisplayName
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
-                Credential            = $Credential
             }
+
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
@@ -399,6 +460,7 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential
             $dscContent += $currentDSCBlock
+
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             Write-Host $Global:M365DSCEmojiGreenCheckMark
@@ -408,7 +470,6 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
         try
         {
             Write-Verbose -Message $_

@@ -85,12 +85,20 @@ function Get-TargetResource
         $ContactSyncBlocked,
 
         [Parameter()]
+        [System.String]
+        $PeriodBeforePinReset,
+
+        [Parameter()]
         [System.Boolean]
         $PrintBlocked,
 
         [Parameter()]
         [System.Boolean]
         $FingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $FaceIdBlocked,
 
         [Parameter()]
         [System.String]
@@ -217,6 +225,8 @@ function Get-TargetResource
             PinCharacterSet                         = $policy.PinCharacterSet
             AllowedDataStorageLocations             = $policy.AllowedDataStorageLocations
             ContactSyncBlocked                      = $policy.ContactSyncBlocked
+            PeriodBeforePinReset                    = $policy.PeriodBeforePinReset
+            FaceIdBlocked                           = $policy.FaceIdBlocked
             PrintBlocked                            = $policy.PrintBlocked
             FingerprintBlocked                      = $policy.FingerprintBlocked
             AppDataEncryptionType                   = $policy.AppDataEncryptionType
@@ -335,12 +345,20 @@ function Set-TargetResource
         $ContactSyncBlocked,
 
         [Parameter()]
+        [System.String]
+        $PeriodBeforePinReset,
+
+        [Parameter()]
         [System.Boolean]
         $PrintBlocked,
 
         [Parameter()]
         [System.Boolean]
         $FingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $FaceIdBlocked,
 
         [Parameter()]
         [System.String]
@@ -383,7 +401,6 @@ function Set-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -530,12 +547,20 @@ function Test-TargetResource
         $ContactSyncBlocked,
 
         [Parameter()]
+        [System.String]
+        $PeriodBeforePinReset,
+
+        [Parameter()]
         [System.Boolean]
         $PrintBlocked,
 
         [Parameter()]
         [System.Boolean]
         $FingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $FaceIdBlocked,
 
         [Parameter()]
         [System.String]
@@ -822,6 +847,8 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
         "minimumPinLength": $($Parameters.MinimumPinLength),
         "pinCharacterSet": "$($Parameters.PinCharacterSet)",
         "contactSyncBlocked": $($Parameters.ContactSyncBlocked.ToString().ToLower()),
+        "periodBeforePinReset": "$($Parameters.PeriodBeforePinReset)",
+        "faceIdBlocked": $($Parameters.FaceIdBlocked.ToString().ToLower()),
         "printBlocked": $($Parameters.PrintBlocked.ToString().ToLower()),
         "fingerprintBlocked": $($Parameters.FingerprintBlocked.ToString().ToLower()),
         "appDataEncryptionType": "$($Parameters.AppDataEncryptionType)",
@@ -957,7 +984,7 @@ function Set-M365DSCIntuneAppProtectionPolicyiOS
     try
     {
         $Url = "https://graph.microsoft.com/beta/deviceAppManagement/iosManagedAppProtections('$PolicyId')/"
-        Write-Verbose -Message "Creating new iOS App Protection policy with JSON payload: `r`n$JSONContent"
+        Write-Verbose -Message "Updating iOS App Protection policy with JSON payload: `r`n$JSONContent"
         Invoke-MgGraphRequest -Method PATCH `
             -Uri $Url `
             -Body $JSONContent `

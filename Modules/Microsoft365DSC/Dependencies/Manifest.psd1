@@ -2,7 +2,7 @@
     Dependencies =@(
         @{
             ModuleName      = "DSCParser"
-            RequiredVersion = "1.3.0.2"
+            RequiredVersion = "1.3.0.3"
         },
         @{
             ModuleName      = "ExchangeOnlineManagement"
@@ -66,7 +66,7 @@
         },
         @{
             ModuleName      = "MicrosoftTeams"
-            RequiredVersion = "3.1.1"
+            RequiredVersion = "4.0.0"
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
