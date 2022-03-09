@@ -11,6 +11,10 @@
 * EXOOrganizationConfig
   * Fixes an issue where AutoExpandingArchiveEnabled returned always False.
     FIXES #1789
+* O365Group
+  * Revamped to use Microsoft Graph in the Set;
+* TeamsChannel
+  * Fix to retrieve the team name without URL encoding.
 * M365DSCReport
   * Adds JSON as an export option.
 * TeamsTeam

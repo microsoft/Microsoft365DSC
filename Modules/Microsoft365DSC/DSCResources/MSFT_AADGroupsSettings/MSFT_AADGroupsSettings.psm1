@@ -99,8 +99,12 @@ function Get-TargetResource
             $GroupCreationValue = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'GroupCreationAllowedGroupId'}
             if (-not [System.String]::IsNullOrEmpty($GroupCreationValue.Value))
             {
-                $groupObject = Get-MgGroup -GroupId $GroupCreationValue.Value
-                $AllowedGroupName = $groupObject.DisplayName
+                $groupObject = Get-MgGroup -GroupId $GroupCreationValue.Value -ErrorAction SilentlyContinue
+                $AllowedGroupName = $null
+                if ($groupObject)
+                {
+                    $AllowedGroupName = $groupObject.DisplayName
+                }
             }
 
             $valueEnableGroupCreation = $Policy.Values | Where-Object -FilterScript {$_.Name -eq "EnableGroupCreation"}
