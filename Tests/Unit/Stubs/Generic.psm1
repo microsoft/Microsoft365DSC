@@ -25,7 +25,11 @@ function New-MgGroup
 
         [Parameter()]
         [System.String[]]
-        $GroupTypes
+        $GroupTypes,
+
+        [Parameter()]
+        [System.String]
+        $Visibility
     )
 }
 
@@ -36,6 +40,10 @@ function Get-MgGroup
         [Parameter()]
         [System.String]
         $GroupId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
 
         [Parameter()]
         [System.Boolean]
