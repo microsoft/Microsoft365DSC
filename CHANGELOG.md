@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.309.1
 
 * EXOAcceptedDomain
   * Fixes an issue where True was never accepted as a value for parameters
@@ -22,6 +22,7 @@
     If credentials are used, then the user will be used as owner.
 * DEPENDENCIES
   * Updated DSCParser to version 1.3.0.3.
+  * Updated MicrosoftTeams to version 4.0.0.
 * MISC
   * Added a function to uninstall all outdated dependencies
     and older versions of Microsoft365DSC
