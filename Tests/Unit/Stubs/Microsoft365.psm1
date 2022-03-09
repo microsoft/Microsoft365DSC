@@ -692,6 +692,39 @@ function Get-Mailbox
         $AsJob
     )
 }
+function Get-MailboxPlan
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $SortBy,
+
+        [Parameter()]
+        [System.Object]
+        $Credential,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IgnoreDefaultScope,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Get-MailboxRegionalConfiguration
 {
     [CmdletBinding()]
@@ -6829,6 +6862,55 @@ function Set-Mailbox
         $AsJob
     )
 }
+function Set-MailboxPlan
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $IssueWarningQuota,
+
+        [Parameter()]
+        [System.Object]
+        $MaxReceiveSize,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $MaxSendSize,
+
+        [Parameter()]
+        [System.Object]
+        $ProhibitSendQuota,
+
+        [Parameter()]
+        [System.Object]
+        $ProhibitSendReceiveQuota,
+
+        [Parameter()]
+        [System.Object]
+        $RetainDeletedItemsFor,
+
+        [Parameter()]
+        [System.Object]
+        $RetentionPolicy,
+
+        [Parameter()]
+        [System.Object]
+        $RoleAssignmentPolicy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Set-MailboxRegionalConfiguration
 {
     [CmdletBinding()]
@@ -11661,6 +11743,31 @@ function Get-CsTenantDialPlan
         $AsJob
     )
 }
+function Get-CsTenantFederationConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Grant-CsTeamsUpgradePolicy
 {
     [CmdletBinding()]
@@ -14080,6 +14187,43 @@ function Set-CsTenantDialPlan
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $AsJob
+    )
+}
+function Set-CsTenantFederationConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $AllowFederatedUsers,
+
+        [Parameter()]
+        [System.Object]
+        $AllowPublicUsers,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $AllowTeamsConsumer,
+
+        [Parameter()]
+        [System.Object]
+        $AllowTeamsConsumerInbound,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant
     )
 }
 #endregion

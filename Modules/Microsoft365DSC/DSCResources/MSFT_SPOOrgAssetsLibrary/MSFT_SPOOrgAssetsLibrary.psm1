@@ -123,7 +123,7 @@ function Get-TargetResource
         }
         else
         {
-            if ($ConnectionMode -eq 'Credential')
+            if ($ConnectionMode -eq 'Credentials')
             {
                 $tenantName = Get-M365TenantName -Credential $Credential
             }
