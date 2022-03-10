@@ -4,6 +4,8 @@
 
 * EXOTransportConfig
   * New resource for Exchange Online transport configuration.
+* EXOCASMailboxPlan
+  * Add support for DisplayName as identifier for CAS mailbox plan.
 
 # 1.22.309.1
 
