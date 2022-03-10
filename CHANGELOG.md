@@ -7,6 +7,12 @@
 
 # 1.22.309.1
 
+* EXOAcceptedDomain
+  * Fixes an issue where True was never accepted as a value for parameters
+    MatchSubDomains or OutboundOnly.
+    FIXES #1779
+* EXOMailboxPlan
+  * New resource for Exchange Online Mailbox Plans.
 * EXOOrganizationConfig
   * Fixes an issue where AutoExpandingArchiveEnabled returned always False.
     FIXES #1789
