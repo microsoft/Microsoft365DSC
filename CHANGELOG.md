@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOTransportConfig
+  * New resource for Exchange Online transport configuration.
+
 # 1.22.309.1
 
 * EXOAcceptedDomain
