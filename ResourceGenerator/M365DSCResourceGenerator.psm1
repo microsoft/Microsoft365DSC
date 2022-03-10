@@ -294,6 +294,99 @@ function New-M365CmdLetHelper
     }
 }
 
+function Get-M365DSCFakeValues
+{
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $ParametersInformation,
+
+        [Parameter()]
+        [System.Boolean]
+        $IntroduceDrift = $false
+    )
+
+    $result = @{}
+    foreach ($parameter in $parametersInformation)
+    {
+        switch ($parameter.Type)
+        {
+            "System.String" {
+                $result.Add($parameter.Name, "FakeStringValue")
+            }
+            "System.String[]" {
+                if ($IntroduceDrift)
+                {
+                    $result.Add($parameter.Name, @("FakeStringArrayValue1"))
+                }
+                else
+                {
+                    $result.Add($parameter.Name, @("FakeStringArrayValue1", "FakeStringArrayValue2"))
+                }
+            }
+            "System.Int32" {
+                if ($IntroduceDrift)
+                {
+                    $result.Add($parameter.Name, 7)
+                }
+                else
+                {
+                    $result.Add($parameter.Name, 25)
+                }
+            }
+            "System.Boolean" {
+                if ($IntroduceDrift)
+                {
+                    $result.Add($parameter.Name, $false)
+                }
+                else
+                {
+                    $result.Add($parameter.Name, $true)
+                }
+            }
+        }
+    }
+    return $result
+}
+
+function Get-M365DSCHashAsString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $Values
+    )
+    $sb = [System.Text.StringBuilder]::New()
+    foreach ($key in $Values.Keys)
+    {
+        switch ($Values.$key.GetType().Name)
+        {
+            "String" {
+                $sb.AppendLine("                        $key = `"$($Values.$key)`"") | Out-Null
+            }
+            "Int32" {
+                $sb.AppendLine("                        $key = $($Values.$key)") | Out-Null
+            }
+            "Boolean" {
+                $sb.AppendLine("                        $key = `$$($Values.$key)") | Out-Null
+            }
+            "String[]" {
+                $stringValue = ""
+                foreach ($item in $Values.$key)
+                {
+                    $stringValue += "`"$item`","
+                }
+                $stringValue = $stringValue.Substring(0, $stringValue.Length - 1)
+                $sb.AppendLine("                        $key = `@($stringValue)") | Out-Null
+            }
+        }
+    }
+    return $sb.ToString()
+}
+
 function New-M365DSCResource
 {
     param (
@@ -319,6 +412,11 @@ function New-M365DSCResource
         [Parameter()]
         [System.String]
         $Path = "c:\temp\newresource",
+
+        # Path to the new Resource
+        [Parameter()]
+        [System.String]
+        $UnitTestPath = "c:\temp\newresource",
 
         [Parameter()]
         [ValidateSet("v1.0", "beta")]
@@ -402,6 +500,7 @@ function New-M365DSCResource
 
     $null = New-M365DSCResourceFolder -ResourceName $ResourceName -Path $Path
     $moduleFilePath = New-M365DSCModuleFile -ResourceName $ResourceName -Path $Path
+    $unitTestPath = New-M365DSCUnitTest -ResourceName $ResourceName -Path $UnitTestPath
 
     $parameterInformation = Get-ParameterBlockInformation -Properties $typeProperties -DefaultParameterSetProperties $defaultParameterSetProperties
 
@@ -419,8 +518,22 @@ function New-M365DSCResource
                             -Workload $Workload
     $hashTableMapping = $hashtableResults.StringContent
 
-    Write-TokenReplacement -Token "<ParameterBlock>" -Value $parameterString -FilePath $moduleFilePath
+    #region UnitTests
+    $fakeValues = Get-M365DSCFakeValues -ParametersInformation $parameterInformation -IntroduceDrift $false
+    $fakeValuesString = Get-M365DSCHashAsString -Values $fakeValues
+    Write-TokenReplacement -Token "<FakeValues>" -value $fakeValuesString -FilePath $unitTestPath
+    $fakeDriftValues = Get-M365DSCFakeValues -ParametersInformation $parameterInformation -IntroduceDrift $true
+    $fakeDriftValuesString = Get-M365DSCHashAsString -Values $fakeDriftValues
+    Write-TokenReplacement -Token "<DriftValues>" -value $fakeDriftValuesString -FilePath $unitTestPath
+    Write-TokenReplacement -Token "<ResourceName>" -value $ResourceName -FilePath $unitTestPath
 
+    Write-TokenReplacement -Token "<GetCmdletName>" -value $GetcmdletName -FilePath $unitTestPath
+    Write-TokenReplacement -Token "<SetCmdletName>" -value "Update-$($GraphModuleCmdLetNoun)" -FilePath $unitTestPath
+    Write-TokenReplacement -Token "<RemoveCmdletName>" -value "Remove-$($GraphModuleCmdLetNoun)" -FilePath $unitTestPath
+    Write-TokenReplacement -Token "<NewCmdletName>" -value "New-$($GraphModuleCmdLetNoun)" -FilePath $unitTestPath
+    #endregion
+
+    Write-TokenReplacement -Token "<ParameterBlock>" -Value $parameterString -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<PrimaryKey>" -Value $typeProperties[0].Name -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<GetCmdLetName>" -Value "Get-$($GraphModuleCmdLetNoun)" -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<NewCmdLetName>" -Value "New-$($GraphModuleCmdLetNoun)" -FilePath $moduleFilePath
@@ -711,6 +824,23 @@ function New-M365DSCModuleFile
     )
     $filePath = "$Path\MSFT_$ResourceName\MSFT_$($ResourceName).psm1"
     Copy-Item -Path .\Module.Template.psm1 -Destination $filePath
+
+    return $filePath
+}
+
+function New-M365DSCUnitTest
+{
+    param (
+        [Parameter()]
+        [System.String]
+        $ResourceName,
+
+        [Parameter()]
+        [System.String]
+        $Path
+    )
+    $filePath = "$Path\Microsoft365DSC.$($ResourceName).Tests.ps1"
+    Copy-Item -Path .\UnitTest.Template.ps1 -Destination $filePath
 
     return $filePath
 }

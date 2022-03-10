@@ -233,7 +233,6 @@ function Set-TargetResource
             }
         }
 
-        $readOnlyParameters = @(<ReadOnlyParams>)
         foreach ($convertedParameter in $ConvertedParameters)
         {
             if (-not $readOnlyParameters.Contains($convertedParameter.Name))
