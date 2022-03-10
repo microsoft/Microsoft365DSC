@@ -186,6 +186,53 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name "Get command returns null" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    IsSingleInstance                        = "Yes";
+                    ClearCategories                         = $True;
+                    ConvertDisclaimerWrapperToEml           = $False;
+                    DSNConversionMode                       = "PreserveDSNBody";
+                    ExternalDelayDsnEnabled                 = $True;
+                    ExternalDsnLanguageDetectionEnabled     = $True;
+                    ExternalDsnSendHtml                     = $True;
+                    ExternalPostmasterAddress               = "postmaster@contoso.com";
+                    HeaderPromotionModeSetting              = "NoCreate";
+                    InternalDelayDsnEnabled                 = $True;
+                    InternalDsnLanguageDetectionEnabled     = $True;
+                    InternalDsnSendHtml                     = $True;
+                    JournalingReportNdrTo                   = "<>";
+                    JournalMessageExpirationDays            = 0;
+                    MaxRecipientEnvelopeLimit               = "Unlimited";
+                    ReplyAllStormBlockDurationHours         = 6;
+                    ReplyAllStormDetectionMinimumRecipients = 2500;
+                    ReplyAllStormDetectionMinimumReplies    = 10;
+                    ReplyAllStormProtectionEnabled          = $True;
+                    Rfc2231EncodingEnabled                  = $False;
+                    SmtpClientAuthenticationDisabled        = $True;
+                    Credential                              = $Credential;
+                }
+
+                Mock -CommandName Get-TransportConfig -MockWith {
+                    return $null
+                }
+            }
+
+            It 'Should return true from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It "Should call the Set method" {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName 'Set-TransportConfig' -Exactly 1
+            }
+
+            It "Should return Values from the Get method" {
+                Get-TargetResource @testParams
+                Should -Invoke -CommandName "Get-TransportConfig"
+            }
+        }
+
         Context -Name "ReverseDSC Tests" -Fixture {
             BeforeAll {
                 $testParams = @{
