@@ -86,7 +86,6 @@ function New-M365DSCResourceForGraphCmdLet
 
 function Get-DerivedType
 {
-
     param (
         [Parameter(Mandatory = $true)]
         [string]
@@ -326,6 +325,7 @@ function New-M365DSCResource
         [System.String]
         $APIVersion = 'v1.0'
     )
+    $Global:CIMInstancesAlreadyFound = @()
     $GetcmdletName = "Get-$GraphModuleCmdletNoun"
     $commandDetails = Find-MgGraphCommand -Command $GetcmdletName -ApiVersion $ApiVersion -ErrorAction SilentlyContinue
     $cmdletFound = Get-Command $GetcmdletName -ErrorAction SilentlyContinue
@@ -421,6 +421,7 @@ function New-M365DSCResource
 
     Write-TokenReplacement -Token "<ParameterBlock>" -Value $parameterString -FilePath $moduleFilePath
 
+    Write-TokenReplacement -Token "<PrimaryKey>" -Value $typeProperties[0].Name -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<GetCmdLetName>" -Value "Get-$($GraphModuleCmdLetNoun)" -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<NewCmdLetName>" -Value "New-$($GraphModuleCmdLetNoun)" -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<SetCmdLetName>" -Value "Set-$($GraphModuleCmdLetNoun)" -FilePath $moduleFilePath
@@ -470,50 +471,54 @@ function Get-M365DSCDRGCimInstancesSchemaStringContent
     $stringResult = ''
     foreach ($cimInstance in $CIMInstances)
     {
-        $stringResult += "[ClassVersion(`"1.0.0`")]`r`n"
-        $stringResult += 'class MSFT_' + $cimInstance.Name + "`r`n"
-        $stringResult += "{`r`n"
-
-        $nestedResults = ''
-        foreach ($property in $cimInstance.Properties)
+        if (-not $Global:CIMInstancesAlreadyFound.Contains($cimInstance.Name))
         {
-            if ($property.Type.StartsWith("microsoft.graph.powershell.models.") -and `
-                -not $Global:AlreadyFoundInstances.Contains($property.Type))
+            $Global:CIMInstancesAlreadyFound += $cimInstance.Name
+            $stringResult += "[ClassVersion(`"1.0.0`")]`r`n"
+            $stringResult += 'class MSFT_' + $cimInstance.Name + "`r`n"
+            $stringResult += "{`r`n"
+
+            $nestedResults = ''
+            foreach ($property in $cimInstance.Properties)
             {
-                $Global:AlreadyFoundInstances += $property.Type
-                if ($property.NestedCIM)
+                if ($property.Type.ToString().ToLower().StartsWith("microsoft.graph.powershell.models.") -and `
+                    -not $Global:AlreadyFoundInstances.Contains($property.Type))
                 {
-                    $nestedResults = Get-M365DSCDRGCimInstancesSchemaStringContent -CIMInstances $property.NestedCIM `
-                                         -Workload $Workload
+                    $Global:AlreadyFoundInstances += $property.Type
+                    if ($property.NestedCIM)
+                    {
+                        $nestedResults = Get-M365DSCDRGCimInstancesSchemaStringContent -CIMInstances $property.NestedCIM `
+                                             -Workload $Workload
+                    }
+                    else
+                    {
+                        $nestedResults = ''
+                    }
+                    $propertyType = $property.Type -replace "microsoft.graph.powershell.models.", ""
+                    $propertyType = $propertyType -replace "imicrosoftgraph", ""
+                    $propertyType = $propertyType -replace '[[\]]',''
+                    $propertyType = $workload + $propertyType
+                    $stringResult += "    [Write, Description(`"`"), EmbeddedInstance(`"MSFT_$propertyType`")] String $($property.Name)"
+                    if ($property.IsArray)
+                    {
+                        $stringResult += "[]"
+                    }
+                    $stringResult += ";`r`n"
                 }
-                else
+                elseif (-not $property.Type.StartsWith("microsoft.graph.powershell.models."))
                 {
-                    $nestedResults = ''
+                    $propertyType = Get-M365DSCDRGParameterTypeForSchema -Type $property.Type
+                    $stringResult += "    [Write, Description(`"`")] $($propertyType) $($property.Name)"
+                    if ($property.IsArray)
+                    {
+                        $stringResult += "[]"
+                    }
+                    $stringResult += ";`r`n"
                 }
-                $propertyType = $property.Type -replace "microsoft.graph.powershell.models.", ""
-                $propertyType = $propertyType -replace "imicrosoftgraph", ""
-                $propertyType = $propertyType -replace '[[\]]',''
-                $propertyType = $workload + $propertyType
-                $stringResult += "    [Write, Description(`"`"), EmbeddedInstance(`"MSFT_$propertyType`")] String $($property.Name)"
-                if ($property.IsArray)
-                {
-                    $stringResult += "[]"
-                }
-                $stringResult += ";`r`n"
             }
-            elseif (-not $property.Type.StartsWith("microsoft.graph.powershell.models."))
-            {
-                $propertyType = Get-M365DSCDRGParameterTypeForSchema -Type $property.Type
-                $stringResult += "    [Write, Description(`"`")] $($propertyType) $($property.Name)"
-                if ($property.IsArray)
-                {
-                    $stringResult += "[]"
-                }
-                $stringResult += ";`r`n"
-            }
+            $stringResult += "};`r`n"
+            $stringResult += $nestedResults
         }
-        $stringResult += "};`r`n"
-        $stringResult += $nestedResults
     }
 
     return $stringResult
@@ -617,7 +622,7 @@ function New-M365SchemaPropertySet
     $Properties | ForEach-Object -Process {
         if ($_.Name -ne 'LastModifiedDateTime' -and $_.Name -ne 'CreatedDateTime')
         {
-            if ($_.Type.ToString().StartsWith("microsoft.graph.powershell.models."))
+            if ($_.Type.ToString().ToLower().StartsWith("microsoft.graph.powershell.models."))
             {
                 $propertyType = $_.Type -replace "microsoft.graph.powershell.models.", ""
                 $propertyType = $propertyType -replace "imicrosoftgraph", ""
@@ -769,7 +774,7 @@ function New-M365HashTableMapping
             $paramType = $property.Type
             $parameterName = $property.Name
 
-            if ($paramType.StartsWith("Microsoft.Graph.PowerShell.Models."))
+            if ($paramType.ToLower().StartsWith("microsoft.graph.powershell.models."))
             {
                 $CimInstanceName = $paramType -replace "Microsoft.Graph.PowerShell.Models.IMicrosoftGraph", ""
                 $CimInstanceName = $CimInstanceName  -replace '[[\]]',''
