@@ -93,6 +93,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PeriodOnlineBeforeAccessCheck           = "PT30M";
                     PinCharacterSet                         = "alphanumericAndSymbol";
                     PinRequired                             = $True;
+                    DisableAppPinIfDevicePinIsSet           = $False;
                     PrintBlocked                            = $False;
                     SaveAsBlocked                           = $True;
                     SimplePinBlocked                        = $False;
@@ -167,6 +168,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PeriodOnlineBeforeAccessCheck           = "PT30M";
                     PinCharacterSet                         = "alphanumericAndSymbol";
                     PinRequired                             = $True;
+                    DisableAppPinIfDevicePinIsSet           = $False;
                     PrintBlocked                            = $False;
                     SaveAsBlocked                           = $True;
                     SimplePinBlocked                        = $False;
@@ -249,6 +251,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PeriodOnlineBeforeAccessCheck           = "PT30M";
                         PinCharacterSet                         = "alphanumericAndSymbol";
                         PinRequired                             = $True;
+                        DisableAppPinIfDevicePinIsSet           = $False;
                         PrintBlocked                            = $False;
                         SaveAsBlocked                           = $True;
                         SimplePinBlocked                        = $False;
@@ -308,6 +311,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PeriodOnlineBeforeAccessCheck           = "PT30M";
                     PinCharacterSet                         = "alphanumericAndSymbol";
                     PinRequired                             = $True;
+                    DisableAppPinIfDevicePinIsSet           = $False;
                     PrintBlocked                            = $False;
                     SaveAsBlocked                           = $True;
                     SimplePinBlocked                        = $False;
@@ -390,6 +394,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PeriodOnlineBeforeAccessCheck           = "PT30M";
                         PinCharacterSet                         = "alphanumericAndSymbol";
                         PinRequired                             = $True;
+                        DisableAppPinIfDevicePinIsSet           = $False;
                         PrintBlocked                            = $False;
                         SaveAsBlocked                           = $True;
                         SimplePinBlocked                        = $False;
@@ -440,6 +445,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PeriodOnlineBeforeAccessCheck           = "PT30M";
                     PinCharacterSet                         = "alphanumericAndSymbol";
                     PinRequired                             = $True;
+                    DisableAppPinIfDevicePinIsSet           = $False;
                     PrintBlocked                            = $False;
                     SaveAsBlocked                           = $True;
                     SimplePinBlocked                        = $False;
@@ -522,6 +528,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PeriodOnlineBeforeAccessCheck           = "PT30M";
                         PinCharacterSet                         = "alphanumericAndSymbol";
                         PinRequired                             = $True;
+                        DisableAppPinIfDevicePinIsSet           = $False;
                         PrintBlocked                            = $False;
                         SaveAsBlocked                           = $True;
                         SimplePinBlocked                        = $False;
@@ -627,6 +634,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PeriodOnlineBeforeAccessCheck           = "PT30M";
                         PinCharacterSet                         = "alphanumericAndSymbol";
                         PinRequired                             = $True;
+                        DisableAppPinIfDevicePinIsSet           = $False;
                         PrintBlocked                            = $False;
                         SaveAsBlocked                           = $True;
                         SimplePinBlocked                        = $False;

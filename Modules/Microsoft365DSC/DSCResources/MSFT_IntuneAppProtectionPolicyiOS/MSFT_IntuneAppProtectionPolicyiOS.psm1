@@ -89,6 +89,10 @@ function Get-TargetResource
         $PinRequired,
 
         [Parameter()]
+        [System.Boolean]
+        $DisableAppPinIfDevicePinIsSet,
+
+        [Parameter()]
         [System.UInt32]
         $MaximumPinRetries,
 
@@ -254,6 +258,7 @@ function Get-TargetResource
             SaveAsBlocked                           = $policy.SaveAsBlocked
             PeriodOfflineBeforeWipeIsEnforced       = $policy.PeriodOfflineBeforeWipeIsEnforced
             PinRequired                             = $policy.PinRequired
+            DisableAppPinIfDevicePinIsSet           = $policy.disableAppPinIfDevicePinIsSet
             MaximumPinRetries                       = $policy.MaximumPinRetries
             SimplePinBlocked                        = $policy.SimplePinBlocked
             MinimumPinLength                        = $policy.MinimumPinLength
@@ -382,6 +387,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $PinRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableAppPinIfDevicePinIsSet,
 
         [Parameter()]
         [System.UInt32]
@@ -612,6 +621,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $PinRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableAppPinIfDevicePinIsSet,
 
         [Parameter()]
         [System.UInt32]
@@ -940,6 +953,7 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
         "saveAsBlocked": $($Parameters.SaveAsBlocked.ToString().ToLower()),
         "periodOfflineBeforeWipeIsEnforced": "$($Parameters.PeriodOfflineBeforeWipeIsEnforced)",
         "pinRequired": $($Parameters.PinRequired.ToString().ToLower()),
+        "disableAppPinIfDevicePinIsSet": $($Parameters.DisableAppPinIfDevicePinIsSet.ToString().ToLower()),
         "maximumPinRetries": $($Parameters.MaximumPinRetries),
         "simplePinBlocked": $($Parameters.SimplePinBlocked.ToString().ToLower()),
         "minimumPinLength": $($Parameters.MinimumPinLength),
