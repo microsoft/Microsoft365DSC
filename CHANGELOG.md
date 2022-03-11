@@ -2,10 +2,12 @@
 
 # UNRELEASED
 
-* EXOTransportConfig
-  * New resource for Exchange Online transport configuration.
 * EXOCASMailboxPlan
   * Add support for DisplayName as identifier for CAS mailbox plan.
+* EXOTransportConfig
+  * New resource for Exchange Online transport configuration.
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to 1.9.3.
 
 # 1.22.309.1
 
