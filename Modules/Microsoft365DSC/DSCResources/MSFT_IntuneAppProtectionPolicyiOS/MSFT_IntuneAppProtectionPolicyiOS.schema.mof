@@ -15,6 +15,7 @@ class MSFT_IntuneAppProtectionPolicyiOS : OMI_BaseResource
     [Write, Description("Indicates whether users may use the Save As menu item to save a copy of protected files.")] Boolean SaveAsBlocked;
     [Write, Description("The amount of time an app is allowed to remain disconnected from the internet before all managed data it is wiped.")] String PeriodOfflineBeforeWipeIsEnforced;
     [Write, Description("Indicates whether an app-level pin is required.")] Boolean PinRequired;
+    [write, description("Indicates whether use of the app pin is required if the device pin is set.")] Boolean DisableAppPinIfDevicePinIsSet;
     [Write, Description("Maximum number of incorrect pin retry attempts before the managed app is either blocked or wiped.")] UInt32 MaximumPinRetries;
     [Write, Description("Block simple PIN and require complex PIN to be set.")] Boolean SimplePinBlocked;
     [Write, Description("Minimum pin length required for an app-level pin if PinRequired is set to True.")] UInt32 MinimumPinLength;
