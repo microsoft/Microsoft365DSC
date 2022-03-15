@@ -7,6 +7,7 @@
 * EXOTransportConfig
   * New resource for Exchange Online transport configuration.
 * DEPENDENCIES
+  * Updated DSCParser to 1.3.0.4.
   * Updated Microsoft.Graph.* to 1.9.3.
 
 # 1.22.309.1
