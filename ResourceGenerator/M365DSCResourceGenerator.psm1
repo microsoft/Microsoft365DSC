@@ -418,10 +418,19 @@ function New-M365DSCResource
         [System.String]
         $UnitTestPath = "c:\temp\newresource",
 
+        # Path to the new Resource
+        [Parameter()]
+        [System.String]
+        $ExampleFilePath = "c:\temp\newresource",
+
         [Parameter()]
         [ValidateSet("v1.0", "beta")]
         [System.String]
-        $APIVersion = 'v1.0'
+        $APIVersion = 'v1.0',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential
     )
     $Global:CIMInstancesAlreadyFound = @()
     $GetcmdletName = "Get-$GraphModuleCmdletNoun"
@@ -567,6 +576,16 @@ function New-M365DSCResource
     Write-TokenReplacement -Token "<FriendlyName>" -Value $ResourceName -FilePath $schemaFilePath
     Write-TokenReplacement -Token "<ResourceName>" -Value $ResourceName -FilePath $schemaFilePath
     Write-TokenReplacement -Token "<Properties>" -Value $schemaProperties -FilePath $schemaFilePath
+
+    #region Generate Examples
+    if ($null -ne $Credential)
+    {
+        Import-Module Microsoft365DSC -Force
+        New-M365DSCExampleFile -ResourceName $ResourceName `
+            -Path $ExampleFilePath `
+            -Credential $Credential
+    }
+    #endregion
 }
 
 function Get-M365DSCDRGCimInstancesSchemaStringContent
@@ -828,6 +847,50 @@ function New-M365DSCModuleFile
     return $filePath
 }
 
+function New-M365DSCExampleFile
+{
+    param(
+        [Parameter()]
+        [System.String]
+        $ResourceName,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $Path
+    )
+    Export-M365DSCConfiguration -Credential $Credential `
+        -Components $ResourceName -Path (Join-Path -Path $Path -ChildPath $ResourceName) `
+        -FileName "$ResourceName.ps1" `
+        -ConfigurationName "Example"
+    Remove-Item (Join-Path -Path (Join-Path -Path $Path -ChildPath $ResourceName) -ChildPath "ConfigurationData.psd1")
+    Remove-Item (Join-Path -Path (Join-Path -Path $Path -ChildPath $ResourceName) -ChildPath "*.cer")
+
+    # Cleanup
+    $unitTestFilePath = Join-Path -Path $Path -ChildPath "$ResourceName/$ResourceName.ps1"
+    $sr = [System.IO.StreamReader]::New($unitTestFilePath)
+    $sb = [System.Text.StringBuilder]::New()
+
+    while ($line = $sr.ReadLine())
+    {
+        if (-not $line.StartsWith('#'))
+        {
+            if ($line.Contains("Import-DscResource "))
+            {
+                $sb.AppendLine("    Import-DscResource -ModuleName 'Microsoft365DSC'") | Out-Null
+            }
+            else
+            {
+                $sb.AppendLine($line) | Out-Null
+            }
+        }
+    }
+    $sr.Close()
+    $sb.ToString() | Out-File $unitTestFilePath
+}
 function New-M365DSCUnitTest
 {
     param (
