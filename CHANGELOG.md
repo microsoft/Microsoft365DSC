@@ -1,5 +1,18 @@
 # Change log for Microsoft365DSC
 
+# 1.22.316.1
+
+* EXOCASMailboxPlan
+  * Add support for DisplayName as identifier for CAS mailbox plan.
+* EXOTransportSettings
+  * New resource for Exchange Online transport configuration.
+* IntuneAppProtectionPolicyiOS
+  * Add 7 additional parameters to the resource and added parameter
+    descriptions.
+* DEPENDENCIES
+  * Updated DSCParser to 1.3.0.4.
+  * Updated Microsoft.Graph.* to 1.9.3.
+
 # 1.22.309.1
 
 * EXOAcceptedDomain
