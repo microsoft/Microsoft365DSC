@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOAuthenticationPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

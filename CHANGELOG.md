@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOAuthenticationPolicy
+  * Initial release;
+
 # 1.22.316.1
 
 * EXOCASMailboxPlan
@@ -1566,7 +1571,3 @@ MISC
 * SPOSite
   * Added default value for Storage Quota;
   * Fixed an issue with site creation that could result in infinite loops;
-
-## UNRELEASED
-* IntuneDeviceConfigurationPolicyAndroidWorkProfile
-  * Initial release;
