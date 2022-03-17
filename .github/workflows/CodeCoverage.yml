@@ -17,6 +17,7 @@ jobs:
       - name: Run Test Harness
         shell: powershell
         run: |
+          Update-M365DSCDependencies
           Import-Module PnP.PowerShell -Force
           Install-Module Pester -Force
           [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);

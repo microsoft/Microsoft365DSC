@@ -50,7 +50,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description        = "This is a test"
                     ManagedBy          = "JohnSmith@contoso.onmicrosoft.com"
                     Ensure             = "Present"
-                    Credential = $Credential
+                    Credential         = $Credential
                 }
 
                 Mock -CommandName Get-MgGroup -MockWith {
@@ -75,13 +75,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ManagedBy          = "Bob.Houle@contoso.onmicrosoft.com"
                     Description        = "This is a test"
                     Ensure             = "Present"
-                    Credential = $Credential
+                    Credential         = $Credential
                 }
 
                 Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         DisplayName  = "Test Group"
-                        ObjectId     = "a53dbbd6-7e9b-4df9-841a-a2c3071a1770"
+                        Id           = "a53dbbd6-7e9b-4df9-841a-a2c3071a1770"
                         Members      = @("John.Smith@contoso.onmcirosoft.com")
                         MailNickName = "TestGroup"
                         Owners       = @("Bob.Houle@contoso.onmcirosoft.com")
@@ -91,15 +91,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgGroupMember -MockWith {
                     return @{
-                        UserPrincipalName = "John.smith@contoso.onmicrosoft.com"
+                        AdditionalProperties = @{
+                            UserPrincipalName = "John.smith@contoso.onmicrosoft.com"
+                        }
                     }
                 }
 
                 Mock -CommandName Get-MgGroupOwner -MockWith {
                     return @{
-                        UserPrincipalName = "Bob.Houle@contoso.onmicrosoft.com"
+                        AdditionalProperties = @{
+                            UserPrincipalName = "Bob.Houle@contoso.onmicrosoft.com"
+                        }
                     }
                 }
+            }
+
+            Mock -CommandName Get-MgUser -MockWith {
+                return @{
+                    Id = '12345-12345-12345-12345-12345'
+                }
+            }
+            Mock -CommandName New-MgGroupOwnerByRef -MockWith{
+
             }
 
             It "Should return absent from the Get method" {
@@ -127,10 +140,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-UnifiedGroupLinks
+                Mock -CommandName Get-MgGroupMember
                 {
                     return (@{
-                            LinkType = "Members"
                             Identity = "Test Group"
                             Name     = "GoodUser1"
                         },
@@ -146,41 +158,75 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         })
                 }
 
+                Mock -CommandName Get-MgGroupOwner
+                {
+                    return @(@{
+                        AdditionalProperties = @{
+                            UserPrincipalName     = "JohnSmith@contoso.onmicrosoft.com"
+                        }
+                    },
+                    @{
+                        AdditionalProperties = @{
+                            UserPrincipalName     = "JohnSmith@contoso.onmicrosoft.com"
+                        }
+                    })
+                }
+
+                Mock -CommandName Get-MgUser -MockWith {
+                    return @{
+                        Id = '12345-12345-12345-12345-12345'
+                    }
+                }
+
+                Mock -CommandName New-MgGroupOwnerByRef -MockWith{
+
+                }
+
                 Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         DisplayName  = "Test Group"
                         MailNickName = "TestGroup"
                         Description  = "This is a test"
-                        ObjectID     = "a53dbbd6-7e9b-4df9-841a-a2c3071a1770"
+                        ID           = "a53dbbd6-7e9b-4df9-841a-a2c3071a1770"
                     }
                 }
 
-                Mock -CommandName New-UnifiedGroup -MockWith {
+                Mock -CommandName New-MgGroup -MockWith {
 
                 }
 
-                Mock -CommandName Add-UnifiedGroupLinks -MockWith {
+                Mock -CommandName New-MgGroupMember -MockWith {
 
                 }
 
-                Mock -CommandName Remove-UnifiedGroupLinks -MockWith {
+                Mock -CommandName New-MgGroupMember -MockWith {
+
+                }
+
+                Mock -CommandName Invoke-MgGraphRequest -MockWith {
 
                 }
 
                 Mock -CommandName Get-MgGroupMember -MockWith {
                     return @(
                         @{
-                            UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
+                            AdditionalProperties = @{
+                                UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
+                            }
                         },
                         @{
-                            UserPrincipalName = "SecondUser@contoso.onmicrosoft.com"
+                            AdditionalProperties = @{
+                                UserPrincipalName = "SecondUser@contoso.onmicrosoft.com"
+                            }
                         }
                     )
                 }
 
                 Mock -CommandName Get-MgGroupOwner -MockWith {
                     return @{
-                        UserPrincipalName = "Bob.Houle@contoso.onmicrosoft.com"
+                        AdditionalProperties = @{
+                            UserPrincipalName = "Bob.Houle@contoso.onmicrosoft.com"
+                        }
                     }
                 }
             }
@@ -208,24 +254,30 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName  = "Test Group"
                         MailNickName = "TestGroup"
                         Description  = "This is a test"
-                        ObjectID     = "a53dbbd6-7e9b-4df9-841a-a2c3071a1770"
+                        ID           = "a53dbbd6-7e9b-4df9-841a-a2c3071a1770"
                     }
                 }
 
                 Mock -CommandName Get-MgGroupMember -MockWith {
                     return @(
                         @{
-                            UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
+                            AdditionalProperties = @{
+                                UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
+                            }
                         },
-                        @{
-                            UserPrincipalName = "SecondUser@contoso.onmicrosoft.com"
+                        @{                            
+                            AdditionalProperties = @{
+                                UserPrincipalName = "SecondUser@contoso.onmicrosoft.com"
+                            }
                         }
                     )
                 }
 
                 Mock -CommandName Get-MgGroupOwner -MockWith {
-                    return @{
-                        UserPrincipalName = "Bob.Houle@contoso.onmicrosoft.com"
+                    return @{                    
+                        AdditionalProperties = @{
+                            UserPrincipalName = "Bob.Houle@contoso.onmicrosoft.com"
+                        }
                     }
                 }
             }

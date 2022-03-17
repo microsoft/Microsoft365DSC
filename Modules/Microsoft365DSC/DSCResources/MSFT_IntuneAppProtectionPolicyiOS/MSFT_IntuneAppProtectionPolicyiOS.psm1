@@ -46,6 +46,34 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $IsAssigned,
+
+        [Parameter()]
+        [System.String]
+        $ManagedBrowser,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredOSVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningOSVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredSdkVersion,
+
+        [Parameter()]
+        [System.Boolean]
         $ManagedBrowserToOpenLinksRequired,
 
         [Parameter()]
@@ -59,6 +87,10 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $PinRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableAppPinIfDevicePinIsSet,
 
         [Parameter()]
         [System.UInt32]
@@ -85,12 +117,20 @@ function Get-TargetResource
         $ContactSyncBlocked,
 
         [Parameter()]
+        [System.String]
+        $PeriodBeforePinReset,
+
+        [Parameter()]
         [System.Boolean]
         $PrintBlocked,
 
         [Parameter()]
         [System.Boolean]
         $FingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $FaceIdBlocked,
 
         [Parameter()]
         [System.String]
@@ -207,16 +247,26 @@ function Get-TargetResource
             AllowedOutboundClipboardSharingLevel    = $policy.AllowedOutboundClipboardSharingLevel
             DataBackupBlocked                       = $policy.DataBackupBlocked
             DeviceComplianceRequired                = $policy.DeviceComplianceRequired
+            IsAssigned                              = $policy.IsAssigned
+            ManagedBrowser                          = $policy.ManagedBrowser
+            MinimumRequiredAppVersion               = $policy.MinimumRequiredAppVersion
+            MinimumRequiredOSVersion                = $policy.MinimumRequiredOSVersion
+            MinimumRequiredSdkVersion               = $policy.MinimumRequiredSDKVersion
+            MinimumWarningAppVersion                = $policy.MinimumWarningAppVersion
+            MinimumWarningOSVersion                 = $policy.MinimumWarningOSVersion
             ManagedBrowserToOpenLinksRequired       = $policy.ManagedBrowserToOpenLinksRequired
             SaveAsBlocked                           = $policy.SaveAsBlocked
             PeriodOfflineBeforeWipeIsEnforced       = $policy.PeriodOfflineBeforeWipeIsEnforced
             PinRequired                             = $policy.PinRequired
+            DisableAppPinIfDevicePinIsSet           = $policy.disableAppPinIfDevicePinIsSet
             MaximumPinRetries                       = $policy.MaximumPinRetries
             SimplePinBlocked                        = $policy.SimplePinBlocked
             MinimumPinLength                        = $policy.MinimumPinLength
             PinCharacterSet                         = $policy.PinCharacterSet
             AllowedDataStorageLocations             = $policy.AllowedDataStorageLocations
             ContactSyncBlocked                      = $policy.ContactSyncBlocked
+            PeriodBeforePinReset                    = $policy.PeriodBeforePinReset
+            FaceIdBlocked                           = $policy.FaceIdBlocked
             PrintBlocked                            = $policy.PrintBlocked
             FingerprintBlocked                      = $policy.FingerprintBlocked
             AppDataEncryptionType                   = $policy.AppDataEncryptionType
@@ -296,6 +346,34 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $IsAssigned,
+
+        [Parameter()]
+        [System.String]
+        $ManagedBrowser,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredOSVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningOSVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredSdkVersion,
+
+        [Parameter()]
+        [System.Boolean]
         $ManagedBrowserToOpenLinksRequired,
 
         [Parameter()]
@@ -309,6 +387,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $PinRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableAppPinIfDevicePinIsSet,
 
         [Parameter()]
         [System.UInt32]
@@ -335,12 +417,20 @@ function Set-TargetResource
         $ContactSyncBlocked,
 
         [Parameter()]
+        [System.String]
+        $PeriodBeforePinReset,
+
+        [Parameter()]
         [System.Boolean]
         $PrintBlocked,
 
         [Parameter()]
         [System.Boolean]
         $FingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $FaceIdBlocked,
 
         [Parameter()]
         [System.String]
@@ -383,7 +473,6 @@ function Set-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -491,6 +580,34 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $IsAssigned,
+
+        [Parameter()]
+        [System.String]
+        $ManagedBrowser,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningAppVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredOSVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWarningOSVersion,
+
+        [Parameter()]
+        [System.String]
+        $MinimumRequiredSdkVersion,
+
+        [Parameter()]
+        [System.Boolean]
         $ManagedBrowserToOpenLinksRequired,
 
         [Parameter()]
@@ -504,6 +621,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $PinRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableAppPinIfDevicePinIsSet,
 
         [Parameter()]
         [System.UInt32]
@@ -530,12 +651,20 @@ function Test-TargetResource
         $ContactSyncBlocked,
 
         [Parameter()]
+        [System.String]
+        $PeriodBeforePinReset,
+
+        [Parameter()]
         [System.Boolean]
         $PrintBlocked,
 
         [Parameter()]
         [System.Boolean]
         $FingerprintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $FaceIdBlocked,
 
         [Parameter()]
         [System.String]
@@ -813,15 +942,25 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
         "allowedOutboundClipboardSharingLevel": "$($Parameters.AllowedOutboundClipboardSharingLevel)",
         "dataBackupBlocked": $($Parameters.DataBackupBlocked.ToString().ToLower()),
         "deviceComplianceRequired": $($Parameters.DeviceComplianceRequired.ToString().ToLower()),
+        "IsAssigned": $($Parameters.IsAssigned.ToString().ToLower()),
+        "ManagedBrowser": $($Parameters.ManagedBrowser),
+        "MinimumRequiredAppVersion": $($Parameters.MinimumWarningAppVersion),
+        "MinimumRequiredOSVersion": $($Parameters.MinimumRequiredOSVersion),
+        "MinimumRequiredSdkVersion": $($Parameters.MinimumRequiredSdkVersion),
+        "MinimumWarningAppVersion": $($Parameters.MinimumWarningAppVersion),
+        "MinimumWarningOSVersion": $($Parameters.MinimumWarningOSVersion),
         "managedBrowserToOpenLinksRequired": $($Parameters.ManagedBrowserToOpenLinksRequired.ToString().ToLower()),
         "saveAsBlocked": $($Parameters.SaveAsBlocked.ToString().ToLower()),
         "periodOfflineBeforeWipeIsEnforced": "$($Parameters.PeriodOfflineBeforeWipeIsEnforced)",
         "pinRequired": $($Parameters.PinRequired.ToString().ToLower()),
+        "disableAppPinIfDevicePinIsSet": $($Parameters.DisableAppPinIfDevicePinIsSet.ToString().ToLower()),
         "maximumPinRetries": $($Parameters.MaximumPinRetries),
         "simplePinBlocked": $($Parameters.SimplePinBlocked.ToString().ToLower()),
         "minimumPinLength": $($Parameters.MinimumPinLength),
         "pinCharacterSet": "$($Parameters.PinCharacterSet)",
         "contactSyncBlocked": $($Parameters.ContactSyncBlocked.ToString().ToLower()),
+        "periodBeforePinReset": "$($Parameters.PeriodBeforePinReset)",
+        "faceIdBlocked": $($Parameters.FaceIdBlocked.ToString().ToLower()),
         "printBlocked": $($Parameters.PrintBlocked.ToString().ToLower()),
         "fingerprintBlocked": $($Parameters.FingerprintBlocked.ToString().ToLower()),
         "appDataEncryptionType": "$($Parameters.AppDataEncryptionType)",
@@ -957,7 +1096,7 @@ function Set-M365DSCIntuneAppProtectionPolicyiOS
     try
     {
         $Url = "https://graph.microsoft.com/beta/deviceAppManagement/iosManagedAppProtections('$PolicyId')/"
-        Write-Verbose -Message "Creating new iOS App Protection policy with JSON payload: `r`n$JSONContent"
+        Write-Verbose -Message "Updating iOS App Protection policy with JSON payload: `r`n$JSONContent"
         Invoke-MgGraphRequest -Method PATCH `
             -Uri $Url `
             -Body $JSONContent `

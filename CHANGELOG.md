@@ -1,9 +1,47 @@
 # Change log for Microsoft365DSC
 
-# 1.22.223.1
+# 1.22.316.1
 
+* EXOCASMailboxPlan
+  * Add support for DisplayName as identifier for CAS mailbox plan.
+* EXOTransportSettings
+  * New resource for Exchange Online transport configuration.
+* IntuneAppProtectionPolicyiOS
+  * Add 7 additional parameters to the resource and added parameter
+    descriptions.
+* DEPENDENCIES
+  * Updated DSCParser to 1.3.0.4.
+  * Updated Microsoft.Graph.* to 1.9.3.
+
+# 1.22.309.1
+
+* EXOAcceptedDomain
+  * Fixes an issue where True was never accepted as a value for parameters
+    MatchSubDomains or OutboundOnly.
+    FIXES #1779
+* EXOMailboxPlan
+  * New resource for Exchange Online Mailbox Plans.
+* EXOOrganizationConfig
+  * Fixes an issue where AutoExpandingArchiveEnabled returned always False.
+    FIXES #1789
+* IntuneDeviceConfigurationPolicyAndroidDeviceOwner
+  * Initial release.
+* O365Group
+  * Revamped to use Microsoft Graph in the Set;
+* TeamsChannel
+  * Fix to retrieve the team name without URL encoding.
+* TeamsFederationConfiguration
+  * New resource for Teams Federation Configuration.
+* TeamsTeam
+  * Fixed issue where teams were not created when no owners were specified.
+    If credentials are used, then the user will be used as owner.
 * DEPENDENCIES
   * Updated DSCParser to version 1.3.0.3.
+  * Updated MicrosoftTeams to version 4.0.0.
+* MISC
+  * Added a function to uninstall all outdated dependencies
+    and older versions of Microsoft365DSC;
+  * M365DSCReport: Adds JSON as an export option.
 
 # 1.22.216.1
 

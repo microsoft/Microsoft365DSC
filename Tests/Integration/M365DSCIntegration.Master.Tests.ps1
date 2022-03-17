@@ -453,7 +453,7 @@ Configuration Master
         {
             O365Group O365DSCCoreTeam
             {
-                DisplayName  = "Office365DSC Core Team"
+                DisplayName  = "Microsoft365DSC Core Team"
                 MailNickName = "O365DSCCore"
                 ManagedBy    = "admin@$Domain"
                 Description  = "Group for all the Core Team members"
@@ -1009,6 +1009,16 @@ Configuration Master
             LegalURL                    = "https://github.com/Microsoft/Microsoft365DSC/Legal"
             LogoURL                     = "https://github.com/Microsoft/Microsoft365DSC/Logo.png"
             Credential                  = $GlobalAdmin
+        }
+
+        TeamsFederationConfiguration FederationConfiguration
+        {
+            AllowFederatedUsers       = $True
+            AllowPublicUsers          = $True
+            AllowTeamsConsumer        = $False
+            AllowTeamsConsumerInbound = $False
+            Identity                  = "Global"
+            Credential                = $GlobalAdmin
         }
 
         TeamsGuestCallingConfiguration GuestCallingConfig

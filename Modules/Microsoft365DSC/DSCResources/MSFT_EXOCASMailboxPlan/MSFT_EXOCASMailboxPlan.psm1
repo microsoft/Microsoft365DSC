@@ -85,15 +85,7 @@ function Get-TargetResource
 
     try
     {
-        $CASMailboxPlans = Get-CASMailboxPlan -ErrorAction Stop
-        if ($Identity.Contains('-'))
-        {
-            $CASMailboxPlan = $CASMailboxPlans | Where-Object -FilterScript { $_.Identity -eq $Identity }
-        }
-        else
-        {
-            $CASMailboxPlan = $CASMailboxPlans | Where-Object -FilterScript { $_.Identity -like ($Identity + '-*') }
-        }
+        $CASMailboxPlan = Get-CASMailboxPlan -Identity $Identity -ErrorAction Stop
 
         if ($null -eq $CASMailboxPlan)
         {
@@ -399,7 +391,7 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($CASMailboxPlans.Count)] $($CASMailboxPlan.Identity.Split('-')[0])" -NoNewline
             $Params = @{
-                Identity              = $CASMailboxPlan.Identity
+                Identity              = $CASMailboxPlan.DisplayName
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
