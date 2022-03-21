@@ -9,23 +9,55 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
-        [Boolean]
-        $ActiveSyncEnabled = $true,
+        [System.Boolean]
+        $AllowBasicAuthActiveSync,
 
         [Parameter()]
-        [Boolean]
-        $ImapEnabled = $false,
+        [System.Boolean]
+        $AllowBasicAuthAutodiscover,
 
         [Parameter()]
-        [System.String]
-        $OwaMailboxPolicy = 'OwaMailboxPolicy-Default',
+        [System.Boolean]
+        $AllowBasicAuthImap,
 
         [Parameter()]
-        [Boolean]
-        $PopEnabled = $true,
+        [System.Boolean]
+        $AllowBasicAuthMapi,
 
         [Parameter()]
-        [ValidateSet('Present')]
+        [System.Boolean]
+        $AllowBasicAuthOfflineAddressBook,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBasicAuthOutlookService,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBasicAuthPop,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBasicAuthPowerShell,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBasicAuthReportingWebServices,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBasicAuthRpc,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBasicAuthSmtp,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBasicAuthWebServices,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
 
@@ -54,8 +86,7 @@ function Get-TargetResource
         $CertificatePassword
     )
 
-    Write-Verbose -Message "Getting configuration of CASMailboxPlan for $Identity"
-
+    Write-Verbose -Message "Getting Authentication Policy configuration for $Identity"
     if ($Global:CurrentModeIsExport)
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -80,37 +111,57 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = "Absent"
 
     try
     {
-        $CASMailboxPlan = Get-CASMailboxPlan -Identity $Identity -ErrorAction Stop
-
-        if ($null -eq $CASMailboxPlan)
+        try
         {
-            Write-Verbose -Message "CASMailboxPlan $($Identity) does not exist."
-            return $nullResult
+            $AllAuthenticationPolicies = Get-AuthenticationPolicy -ErrorAction Stop
+        }
+        catch
+        {
+            if ($_.Exception -like "The operation couldn't be performed because object*")
+            {
+                Write-Verbose "Could not obtain Authentication Policies for Tenant"
+                return $nullReturn
+            }
+        }
+
+        $AuthenticationPolicy = $AllAuthenticationPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+
+        if ($null -eq $AuthenticationPolicy)
+        {
+            Write-Verbose -Message "Authentication Policy $($Identity) does not exist."
+            return $nullReturn
         }
         else
         {
             $result = @{
-                Ensure                = 'Present'
-                Identity              = $Identity
-                ActiveSyncEnabled     = $CASMailboxPlan.ActiveSyncEnabled
-                ImapEnabled           = $CASMailboxPlan.ImapEnabled
-                OwaMailboxPolicy      = $CASMailboxPlan.OwaMailboxPolicy
-                PopEnabled            = $CASMailboxPlan.PopEnabled
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePath       = $CertificatePath
-                CertificatePassword   = $CertificatePassword
-                TenantId              = $TenantId
+                Identity                            = $AuthenticationPolicy.Identity
+                AllowBasicAuthActiveSync            = $AuthenticationPolicy.AllowBasicAuthActiveSync
+                AllowBasicAuthAutodiscover          = $AuthenticationPolicy.AllowBasicAuthAutodiscover
+                AllowBasicAuthImap                  = $AuthenticationPolicy.AllowBasicAuthImap
+                AllowBasicAuthMapi                  = $AuthenticationPolicy.AllowBasicAuthMapi
+                AllowBasicAuthOfflineAddressBook    = $AuthenticationPolicy.AllowBasicAuthOfflineAddressBook
+                AllowBasicAuthOutlookService        = $AuthenticationPolicy.AllowBasicAuthOutlookService
+                AllowBasicAuthPop                   = $AuthenticationPolicy.AllowBasicAuthPop
+                AllowBasicAuthPowerShell            = $AuthenticationPolicy.AllowBasicAuthPowerShell
+                AllowBasicAuthReportingWebServices  = $AuthenticationPolicy.AllowBasicAuthReportingWebServices
+                AllowBasicAuthRpc                   = $AuthenticationPolicy.AllowBasicAuthRpc
+                AllowBasicAuthSmtp                  = $AuthenticationPolicy.AllowBasicAuthSmtp
+                AllowBasicAuthWebServices           = $AuthenticationPolicy.AllowBasicAuthWebServices
+                Ensure                              = 'Present'
+                Credential                          = $Credential
+                ApplicationId                       = $ApplicationId
+                CertificateThumbprint               = $CertificateThumbprint
+                CertificatePath                     = $CertificatePath
+                CertificatePassword                 = $CertificatePassword
+                TenantId                            = $TenantId
             }
 
-            Write-Verbose -Message "Found CASMailboxPlan $($Identity)"
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            Write-Verbose -Message "Found Authentication Policy $($Identity)"
             return $result
         }
     }
@@ -136,7 +187,7 @@ function Get-TargetResource
         {
             Write-Verbose -Message $_
         }
-        return $nullResult
+        return $nullReturn
     }
 }
 
@@ -150,23 +201,55 @@ function Set-TargetResource
         $Identity,
 
         [Parameter()]
-        [Boolean]
-        $ActiveSyncEnabled = $true,
+        [System.Boolean]
+        $AllowBasicAuthActiveSync,
 
         [Parameter()]
-        [Boolean]
-        $ImapEnabled = $false,
+        [System.Boolean]
+        $AllowBasicAuthAutodiscover,
 
         [Parameter()]
-        [System.String]
-        $OwaMailboxPolicy = 'OwaMailboxPolicy-Default',
+        [System.Boolean]
+        $AllowBasicAuthImap,
 
         [Parameter()]
-        [Boolean]
-        $PopEnabled = $true,
+        [System.Boolean]
+        $AllowBasicAuthMapi,
 
         [Parameter()]
-        [ValidateSet('Present')]
+        [System.Boolean]
+        $AllowBasicAuthOfflineAddressBook,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBasicAuthOutlookService,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBasicAuthPop,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBasicAuthPowerShell,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBasicAuthReportingWebServices,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBasicAuthRpc,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBasicAuthSmtp,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBasicAuthWebServices,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
 
@@ -195,7 +278,9 @@ function Set-TargetResource
         $CertificatePassword
     )
 
-    Write-Verbose -Message "Setting configuration of CASMailboxPlan for $Identity"
+    Write-Verbose -Message "Setting Authentication Policy configuration for $Identity"
+
+    $currentAuthenticationPolicyConfig = Get-TargetResource @PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -212,26 +297,38 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $CASMailboxPlanParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $CASMailboxPlanParams.Remove('Ensure') | Out-Null
-    $CASMailboxPlanParams.Remove('Credential') | Out-Null
-    $CASMailboxPlanParams.Remove('ApplicationId') | Out-Null
-    $CASMailboxPlanParams.Remove('TenantId') | Out-Null
-    $CASMailboxPlanParams.Remove('CertificateThumbprint') | Out-Null
-    $CASMailboxPlanParams.Remove('CertificatePath') | Out-Null
-    $CASMailboxPlanParams.Remove('CertificatePassword') | Out-Null
-
-    $CASMailboxPlans = Get-CASMailboxPlan
-    $CASMailboxPlan = $CASMailboxPlans | Where-Object -FilterScript { $_.Identity -eq $Identity }
-
-    if ($null -ne $CASMailboxPlan)
-    {
-        Write-Verbose -Message "Setting CASMailboxPlan $Identity with values: $(Convert-M365DscHashtableToString -Hashtable $CASMailboxPlanParams)"
-        Set-CASMailboxPlan @CASMailboxPlanParams
+    $NewAuthenticationPolicyParams = @{
+        AllowBasicAuthActiveSync            = $AllowBasicAuthActiveSync
+        AllowBasicAuthAutodiscover          = $AllowBasicAuthAutodiscover
+        AllowBasicAuthImap                  = $AllowBasicAuthImap
+        AllowBasicAuthMapi                  = $AllowBasicAuthMapi
+        AllowBasicAuthOfflineAddressBook    = $AllowBasicAuthOfflineAddressBook
+        AllowBasicAuthOutlookService        = $AllowBasicAuthOutlookService
+        AllowBasicAuthPop                   = $AllowBasicAuthPop
+        AllowBasicAuthPowerShell            = $AllowBasicAuthPowerShell
+        AllowBasicAuthReportingWebServices  = $AllowBasicAuthReportingWebServices
+        AllowBasicAuthRpc                   = $AllowBasicAuthRpc
+        AllowBasicAuthSmtp                  = $AllowBasicAuthSmtp
+        AllowBasicAuthWebServices           = $AllowBasicAuthWebServices
     }
-    else
+
+    # CASE: Authentication Policy doesn't exist but should;
+    if ($Ensure -eq "Present" -and $currentAuthenticationPolicyConfig.Ensure -eq "Absent")
     {
-        throw "The specified CAS Mailbox Plan {$($Identity)} doesn't exist"
+        Write-Verbose -Message "Authentication Policy '$($Identity)' does not exist but it should. Create and configure it."
+        New-AuthenticationPolicy -Name $Identity @NewAuthenticationPolicyParams | Out-Null
+    }
+    # CASE: Authentication Policy exists but it shouldn't;
+    elseif ($Ensure -eq "Absent" -and $currentAuthenticationPolicyConfig.Ensure -eq "Present")
+    {
+        Write-Verbose -Message "Authentication Policy '$($Identity)' exists but it shouldn't. Remove it."
+        Remove-AuthenticationPolicy -Identity $Identity -Confirm:$false
+    }
+    # CASE: Authentication Policy exists and it should, but has different values than the desired one
+    elseif ($Ensure -eq "Present" -and $currentAuthenticationPolicyConfig.Ensure -eq "Present")
+    {
+        Write-Verbose -Message "Authentication Policy '$($Identity)' exists. Updating settings."
+        Set-AuthenticationPolicy -Identity $Identity @NewAuthenticationPolicyParams | Out-Null
     }
 }
 
@@ -246,23 +343,55 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
-        [Boolean]
-        $ActiveSyncEnabled = $true,
+        [System.Boolean]
+        $AllowBasicAuthActiveSync,
 
         [Parameter()]
-        [Boolean]
-        $ImapEnabled = $false,
+        [System.Boolean]
+        $AllowBasicAuthAutodiscover,
 
         [Parameter()]
-        [System.String]
-        $OwaMailboxPolicy = 'OwaMailboxPolicy-Default',
+        [System.Boolean]
+        $AllowBasicAuthImap,
 
         [Parameter()]
-        [Boolean]
-        $PopEnabled = $true,
+        [System.Boolean]
+        $AllowBasicAuthMapi,
 
         [Parameter()]
-        [ValidateSet('Present')]
+        [System.Boolean]
+        $AllowBasicAuthOfflineAddressBook,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBasicAuthOutlookService,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBasicAuthPop,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBasicAuthPowerShell,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBasicAuthReportingWebServices,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBasicAuthRpc,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBasicAuthSmtp,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBasicAuthWebServices,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
 
@@ -302,7 +431,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of CASMailboxPlan for $Identity"
+    Write-Verbose -Message "Testing Authentication Policy configuration for $Identity"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -375,9 +504,22 @@ function Export-TargetResource
 
     try
     {
-        [array]$CASMailboxPlans = Get-CASMailboxPlan -ErrorAction Stop
+        try
+        {
+            [array]$AllAuthenticationPolicies = Get-AuthenticationPolicy -ErrorAction SilentlyContinue
+        }
+        catch
+        {
+            if ($_.Exception -like "*The operation couldn't be performed because object*")
+            {
+                Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for Authentication Policies"
+                return ""
+            }
+            throw $_
+        }
 
-        if ($CASMailboxPlans.Length -eq 0)
+        $dscContent = ""
+        if ($AllAuthenticationPolicies.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
@@ -385,13 +527,13 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
-        $dscContent = ""
         $i = 1
-        foreach ($CASMailboxPlan in $CASMailboxPlans)
+        foreach ($AuthenticationPolicy in $AllAuthenticationPolicies)
         {
-            Write-Host "    |---[$i/$($CASMailboxPlans.Count)] $($CASMailboxPlan.Identity.Split('-')[0])" -NoNewline
+            Write-Host "    |---[$i/$($AllAuthenticationPolicies.Count)] $($AuthenticationPolicy.Identity)" -NoNewline
+
             $Params = @{
-                Identity              = $CASMailboxPlan.DisplayName
+                Identity              = $AuthenticationPolicy.Identity
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
@@ -399,7 +541,6 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
             }
-
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
@@ -408,8 +549,8 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
 
+            $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             Write-Host $Global:M365DSCEmojiGreenCheckMark
