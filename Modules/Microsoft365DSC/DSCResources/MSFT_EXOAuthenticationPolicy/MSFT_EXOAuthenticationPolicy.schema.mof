@@ -3,7 +3,7 @@ class MSFT_EXOAuthenticationPolicy : OMI_BaseResource
 {
     [Key, Description("The Identity parameter specifies the authentication policy you want to view or modify.")] String Identity;
     [write, Description("The AllowBasicAuthActiveSync switch specifies whether to allow Basic authentication with Exchange Active Sync.")] Boolean AllowBasicAuthActiveSync;
-    [write, Description("The AllowBasicAuthAutodiscover switch specifies whether to allow Basic authentication with Autodiscover.")] BooleanAllowBasicAuthAutodiscover;
+    [write, Description("The AllowBasicAuthAutodiscover switch specifies whether to allow Basic authentication with Autodiscover.")] Boolean AllowBasicAuthAutodiscover;
     [write, Description("The AllowBasicAuthImap switch specifies whether to allow Basic authentication with IMAP.")] Boolean AllowBasicAuthImap;
     [write, Description("The AllowBasicAuthMapi switch specifies whether to allow Basic authentication with MAPI.")] Boolean AllowBasicAuthMapi;
     [write, Description("The AllowBasicAuthOfflineAddressBook switch specifies whether to allow Basic authentication with Offline Address Books.")] Boolean AllowBasicAuthOfflineAdressBook;
