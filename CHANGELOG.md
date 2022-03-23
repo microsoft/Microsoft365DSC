@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* EXOAuthenticationPolicy
+  * Initial release;
 * EXOOrganizationConfig
   * Added support for CustomerLockboxEnabled and DisablePlusAddressInRecipients parameters.
     FIXES #1831
@@ -1572,7 +1574,3 @@ MISC
 * SPOSite
   * Added default value for Storage Quota;
   * Fixed an issue with site creation that could result in infinite loops;
-
-## UNRELEASED
-* IntuneDeviceConfigurationPolicyAndroidWorkProfile
-  * Initial release;
