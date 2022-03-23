@@ -133,7 +133,10 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = "* EXOAuthenticationPolicy
-            * Initial release;"
+            * Initial release;
+          * EXOOrganizationConfig
+            * Added support for CustomerLockboxEnabled and DisablePlusAddressInRecipients parameters.
+              FIXES #1831"
 
             # Flag to indicate whether the module requires explicit user acceptance for install/update
             # RequireLicenseAcceptance = $false
