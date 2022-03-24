@@ -83,6 +83,10 @@ function Get-TargetResource
         $ConnectorsEnabledForYammer,
 
         [Parameter()]
+        [System.Boolean]
+        $CustomerLockboxEnabled,
+
+        [Parameter()]
         [System.String]
         $DefaultAuthenticationPolicy,
 
@@ -121,6 +125,10 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $DirectReportsGroupAutoCreationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisablePlusAddressInRecipients,
 
         [Parameter()]
         [System.String]
@@ -372,6 +380,7 @@ function Get-TargetResource
             ConnectorsEnabledForSharepoint                            = $ConfigSettings.ConnectorsEnabledForSharepoint
             ConnectorsEnabledForTeams                                 = $ConfigSettings.ConnectorsEnabledForTeams
             ConnectorsEnabledForYammer                                = $ConfigSettings.ConnectorsEnabledForYammer
+            CustomerLockboxEnabled                                    = $ConfigSettings.CustomerLockboxEnabled
             DefaultAuthenticationPolicy                               = $ConfigSettings.DefaultAuthenticationPolicy
             DefaultGroupAccessType                                    = $ConfigSettings.DefaultGroupAccessType
             DefaultPublicFolderAgeLimit                               = $ConfigSettings.DefaultPublicFolderAgeLimit
@@ -381,6 +390,7 @@ function Get-TargetResource
             DefaultPublicFolderMovedItemRetention                     = $ConfigSettings.DefaultPublicFolderMovedItemRetention
             DefaultPublicFolderProhibitPostQuota                      = $ConfigSettings.DefaultPublicFolderProhibitPostQuota
             DirectReportsGroupAutoCreationEnabled                     = $ConfigSettings.DirectReportsGroupAutoCreationEnabled
+            DisablePlusAddressInRecipients                            = $ConfigSettings.DisablePlusAddressInRecipients
             DistributionGroupDefaultOU                                = $ConfigSettings.DistributionGroupDefaultOU
             DistributionGroupNameBlockedWordsList                     = $ConfigSettings.DistributionGroupNameBlockedWordsList
             DistributionGroupNamingPolicy                             = $ConfigSettings.DistributionGroupNamingPolicy
@@ -563,6 +573,10 @@ function Set-TargetResource
         $ConnectorsEnabledForYammer,
 
         [Parameter()]
+        [System.Boolean]
+        $CustomerLockboxEnabled,
+
+        [Parameter()]
         [System.String]
         $DefaultAuthenticationPolicy,
 
@@ -601,6 +615,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $DirectReportsGroupAutoCreationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisablePlusAddressInRecipients,
 
         [Parameter()]
         [System.String]
@@ -924,6 +942,10 @@ function Test-TargetResource
         $ConnectorsEnabledForYammer,
 
         [Parameter()]
+        [System.Boolean]
+        $CustomerLockboxEnabled,
+
+        [Parameter()]
         [System.String]
         $DefaultAuthenticationPolicy,
 
@@ -962,6 +984,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $DirectReportsGroupAutoCreationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisablePlusAddressInRecipients,
 
         [Parameter()]
         [System.String]
