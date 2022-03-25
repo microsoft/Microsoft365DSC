@@ -1,9 +1,12 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.323.1
 
 * EXOAuthenticationPolicy
   * Initial release;
+* EXOOrganizationConfig
+  * Added support for CustomerLockboxEnabled and DisablePlusAddressInRecipients parameters.
+    FIXES #1831
 
 # 1.22.316.1
 
