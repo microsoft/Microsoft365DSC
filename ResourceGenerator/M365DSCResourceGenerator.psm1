@@ -517,8 +517,13 @@ function New-M365DSCResource
         -Properties $parameterInformation `
         -Workload $Workload
     $Global:AlreadyFoundInstances = @()
-    $CimInstancesSchemaContent = Get-M365DSCDRGCimInstancesSchemaStringContent -CIMInstances $CimInstances `
+    
+    $CimInstancesSchemaContent = ''
+    if ($CimInstances)
+    {
+        $CimInstancesSchemaContent = Get-M365DSCDRGCimInstancesSchemaStringContent -CIMInstances $CimInstances `
                                      -Workload $Workload
+    }
 
     $parameterString = Get-ParameterBlockStringForModule -ParameterBlockInformation $parameterInformation
     $hashtableResults = New-M365HashTableMapping -Properties $parameterInformation `
