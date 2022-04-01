@@ -36,7 +36,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credential"
+                return "Credentials"
             }
 
             Mock -CommandName Get-PSSession -MockWith {
@@ -64,9 +64,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "AntiPhishPolicy creation." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Ensure             = 'Present'
+                    Ensure     = 'Present'
                     Credential = $Credential
-                    Identity           = 'TestPolicy'
+                    Identity   = 'TestPolicy'
                 }
 
                 Mock -CommandName Get-AntiPhishPolicy -MockWith {
@@ -94,7 +94,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Ensure                              = 'Present'
-                    Credential                  = $Credential
+                    Credential                          = $Credential
                     Identity                            = 'TestPolicy'
                     PhishThresholdLevel                 = '2'
                     AdminDisplayName                    = 'DSC Test Policy'
@@ -119,29 +119,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-AntiPhishPolicy -MockWith {
                     return @{
-                        Ensure                                = 'Present'
-                        Identity                              = 'TestPolicy'
-                        PhishThresholdLevel                   = '2'
-                        AdminDisplayName                      = 'DSC Test Policy'
-                        Enabled                               = $true
-                        EnableFirstContactSafetyTips          = $false
-                        EnableAuthenticationSafetyTip         = $true
-                        EnableMailboxIntelligence             = $true
-                        EnableOrganizationDomainsProtection   = $false
-                        EnableSimilarDomainsSafetyTips        = $false
-                        EnableSimilarUsersSafetyTips          = $false
-                        EnableTargetedDomainsProtection       = $false
-                        EnableTargetedUserProtection          = $false
-                        EnableUnusualCharactersSafetyTips     = $false
-                        EnableViaTag                          = $false
-                        IsDefault                             = $false
-                        TreatSoftPassAsAuthenticated          = $true
-                        AuthenticationFailAction              = 'Quarantine'
-                        TargetedDomainActionRecipients        = @('test@contoso.com', 'test@fabrikam.com')
-                        TargetedUserProtectionAction          = 'BccMessage'
-                        TargetedUserActionRecipients          = @('test@contoso.com', 'test@fabrikam.com')
-                        TargetedDomainsToProtect              = @('fabrikam.com', 'contoso.com')
-                        TargetedUsersToProtect                = @('fabrikam.com', 'contoso.com')
+                        Ensure                              = 'Present'
+                        Identity                            = 'TestPolicy'
+                        PhishThresholdLevel                 = '2'
+                        AdminDisplayName                    = 'DSC Test Policy'
+                        Enabled                             = $true
+                        EnableFirstContactSafetyTips        = $false
+                        EnableAuthenticationSafetyTip       = $true
+                        EnableMailboxIntelligence           = $true
+                        EnableOrganizationDomainsProtection = $false
+                        EnableSimilarDomainsSafetyTips      = $false
+                        EnableSimilarUsersSafetyTips        = $false
+                        EnableTargetedDomainsProtection     = $false
+                        EnableTargetedUserProtection        = $false
+                        EnableUnusualCharactersSafetyTips   = $false
+                        EnableViaTag                        = $false
+                        IsDefault                           = $false
+                        TreatSoftPassAsAuthenticated        = $true
+                        AuthenticationFailAction            = 'Quarantine'
+                        TargetedDomainActionRecipients      = @('test@contoso.com', 'test@fabrikam.com')
+                        TargetedUserProtectionAction        = 'BccMessage'
+                        TargetedUserActionRecipients        = @('test@contoso.com', 'test@fabrikam.com')
+                        TargetedDomainsToProtect            = @('fabrikam.com', 'contoso.com')
+                        TargetedUsersToProtect              = @('fabrikam.com', 'contoso.com')
                     }
                 }
             }
@@ -155,7 +155,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Ensure                              = 'Present'
-                    Credential                  = $Credential
+                    Credential                          = $Credential
                     Identity                            = 'TestPolicy'
                     PhishThresholdLevel                 = '2'
                     AdminDisplayName                    = 'DSC Test Policy'
@@ -223,9 +223,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "AntiPhishPolicy removal." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Ensure             = 'Absent'
+                    Ensure     = 'Absent'
                     Credential = $Credential
-                    Identity           = 'TestPolicy'
+                    Identity   = 'TestPolicy'
                 }
 
                 Mock -CommandName Get-AntiPhishPolicy -MockWith {

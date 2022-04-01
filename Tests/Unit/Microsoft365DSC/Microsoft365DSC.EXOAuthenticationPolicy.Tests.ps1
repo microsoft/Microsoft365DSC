@@ -36,7 +36,7 @@ $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credential"
+                return "Credentials"
             }
 
             Mock -CommandName Get-PSSession -MockWith {

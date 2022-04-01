@@ -79,7 +79,7 @@ function Get-TeamByName
         $loopCounter = 0
         do
         {
-            $team = Get-Team -DisplayName $TeamName | Where-Object -FilterScript {$_.DisplayName -eq [System.Net.WebUtility]::UrlDecode($TeamName)}
+            $team = Get-Team -DisplayName $TeamName | Where-Object -FilterScript { $_.DisplayName -eq [System.Net.WebUtility]::UrlDecode($TeamName) }
             if ($null -eq $team)
             {
                 Start-Sleep 5
@@ -130,11 +130,15 @@ function Convert-M365DscHashtableToString
         {
             if ($pair.Value -is [System.Array])
             {
-                $str = "$($pair.Key)=($($pair.Value -join ","))"
+                $str = "$($pair.Key)=$(Convert-SPDscArrayToString -Array $pair.Value)"
             }
             elseif ($pair.Value -is [System.Collections.Hashtable])
             {
                 $str = "$($pair.Key)={$(Convert-M365DscHashtableToString -Hashtable $pair.Value)}"
+            }
+            elseif ($pair.Value -is [Microsoft.Management.Infrastructure.CimInstance])
+            {
+                $str = "$($pair.Key)=$(Convert-SPDscCIMInstanceToString -CIMInstance $pair.Value)"
             }
             else
             {
@@ -164,6 +168,81 @@ function Convert-M365DscHashtableToString
 
     [array]::Sort($values)
     return ($values -join "; ")
+}
+
+<#
+.Description
+This function converts a parameter array to a string, for outputting to screen
+
+.Functionality
+Internal
+#>
+function Convert-SPDscArrayToString
+{
+    param
+    (
+        [Parameter()]
+        [System.Array]
+        $Array
+    )
+
+    $str = "("
+    for ($i = 0; $i -lt $Array.Count; $i++)
+    {
+        $item = $Array[$i]
+        if ($item -is [System.Collections.Hashtable])
+        {
+            $str += "{"
+            $str += Convert-SPDscHashtableToString -Hashtable $item
+            $str += "}"
+        }
+        elseif ($Array[$i] -is [Microsoft.Management.Infrastructure.CimInstance])
+        {
+            $str += Convert-SPDscCIMInstanceToString -CIMInstance $item
+        }
+        else
+        {
+            $str += $item
+        }
+
+        if ($i -lt ($Array.Count - 1))
+        {
+            $str += ","
+        }
+    }
+    $str += ")"
+
+    return $str
+}
+
+<#
+.Description
+This function converts a parameter CimInstance to a string, for outputting to screen
+
+.Functionality
+Internal
+#>
+function Convert-SPDscCIMInstanceToString
+{
+    param
+    (
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $CIMInstance
+    )
+
+    $str = "{"
+    foreach ($prop in $CIMInstance.CimInstanceProperties)
+    {
+        if ($str -notmatch "{$")
+        {
+            $str += "; "
+        }
+        $str += "$($prop.Name)=$($prop.Value)"
+    }
+    $str += "}"
+
+    return $str
 }
 
 
@@ -3077,7 +3156,8 @@ function New-M365DSCCmdletDocumentation
         $ModulePath
     )
 
-    if($null -eq $ModulePath){
+    if ($null -eq $ModulePath)
+    {
         Import-Module Microsoft365Dsc -Force
     }
     else
