@@ -7,6 +7,7 @@
 * MISC
   * Updated Convert-M365DscHashtableToString function to also convert
     Arrays and CimInstances to string.
+  * Updated permissions in settings.json files.
 
 # 1.22.323.1
 

@@ -1,10 +1,10 @@
 ﻿{
-  "resourceName": "EXOTransportConfig",
-  "description": "",
-  "permissions": [
-    {
-      "read": [],
-      "update": []
-    }
-  ]
+    "resourceName": "EXOTransportConfig",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
 }
