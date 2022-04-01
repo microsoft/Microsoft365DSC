@@ -1,0 +1,17 @@
+[ClassVersion("1.0.0")]
+class MSFT_TenantRule
+{
+    [Required, Description("Name of the trusted tenant.")] String TenantName;
+    [Required, Description("Direction of tenant trust."), ValueMap{"Inbound", "Outbound", "Both"}, Values{"Inbound", "Outbound", "Both"}] String Direction;
+};
+
+[ClassVersion("1.0.0.0"), FriendlyName("PPTenantIsolationSettings")]
+class MSFT_PPTenantIsolationSettings : OMI_BaseResource
+{
+    [Key, Description("Should be set to yes"),ValueMap{"Yes"},Values{"Yes"}] string IsSingleInstance;
+    [Write, Description("When set to true this will enable the tenant isolation settings.")] boolean Enabled;
+    [Write, Description("The exact list of tenant rules to be configured."),EmbeddedInstance("MSFT_TenantRule")] String Rules[];
+    [Write, Description("A list of tenant rules that has to be added."),EmbeddedInstance("MSFT_TenantRule")] String RulesToInclude[];
+    [Write, Description("A list of tenant rules that is now allowed to be added."),EmbeddedInstance("MSFT_TenantRule")] String RulesToExclude[];
+    [Write, Description("Credentials of the Power Platform Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+};

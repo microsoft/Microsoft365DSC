@@ -2,14 +2,14 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath "..\..\Unit" `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath "\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
@@ -19,7 +19,7 @@ $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
-        BeforeAll{
+        BeforeAll {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
@@ -36,7 +36,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credential"
+                return "Credentials"
             }
 
             Mock -CommandName Get-PSSession -MockWith {
@@ -52,12 +52,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Active Sync Device Access Rule should exist. Active Sync Device Access Rule is missing. Test should fail." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity           = 'ContosoPhone'
-                    AccessLevel        = 'Allow'
-                    Characteristic     = 'DeviceOS'
-                    QueryString        = 'iOS 6.1 10B145'
-                    Ensure             = 'Present'
-                    Credential = $Credential
+                    Identity       = 'ContosoPhone'
+                    AccessLevel    = 'Allow'
+                    Characteristic = 'DeviceOS'
+                    QueryString    = 'iOS 6.1 10B145'
+                    Ensure         = 'Present'
+                    Credential     = $Credential
                 }
 
                 Mock -CommandName Get-ActiveSyncDeviceAccessRule -MockWith {
@@ -70,12 +70,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
                 Mock -CommandName Set-ActiveSyncDeviceAccessRule -MockWith {
                     return @{
-                        Identity           = 'ContosoPhone'
-                        AccessLevel        = 'Allow'
-                        Characteristic     = 'DeviceOS'
-                        QueryString        = 'iOS 6.1 10B145'
-                        Ensure             = 'Present'
-                        Credential = $Credential
+                        Identity       = 'ContosoPhone'
+                        AccessLevel    = 'Allow'
+                        Characteristic = 'DeviceOS'
+                        QueryString    = 'iOS 6.1 10B145'
+                        Ensure         = 'Present'
+                        Credential     = $Credential
                     }
                 }
             }
@@ -96,12 +96,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Active Sync Device Access Rule should exist. Active Sync Device Access Rule exists. Test should pass." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity           = 'ContosoPhone'
-                    AccessLevel        = 'Allow'
-                    Characteristic     = 'DeviceOS'
-                    QueryString        = 'iOS 6.1 10B145'
-                    Ensure             = 'Present'
-                    Credential = $Credential
+                    Identity       = 'ContosoPhone'
+                    AccessLevel    = 'Allow'
+                    Characteristic = 'DeviceOS'
+                    QueryString    = 'iOS 6.1 10B145'
+                    Ensure         = 'Present'
+                    Credential     = $Credential
                 }
 
                 Mock -CommandName Get-ActiveSyncDeviceAccessRule -MockWith {
@@ -126,12 +126,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Active Sync Device Access Rule should exist. Active Sync Device Access Rule exists, AccessLevel mismatch. Test should fail." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity           = 'ContosoPhone'
-                    AccessLevel        = 'Allow'
-                    Characteristic     = 'DeviceOS'
-                    QueryString        = 'iOS 6.1 10B145'
-                    Ensure             = 'Present'
-                    Credential = $Credential
+                    Identity       = 'ContosoPhone'
+                    AccessLevel    = 'Allow'
+                    Characteristic = 'DeviceOS'
+                    QueryString    = 'iOS 6.1 10B145'
+                    Ensure         = 'Present'
+                    Credential     = $Credential
                 }
 
                 Mock -CommandName Get-ActiveSyncDeviceAccessRule -MockWith {
@@ -144,12 +144,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
                 Mock -CommandName Set-ActiveSyncDeviceAccessRule -MockWith {
                     return @{
-                        Identity           = 'ContosoPhone'
-                        AccessLevel        = 'Allow'
-                        Characteristic     = 'DeviceOS'
-                        QueryString        = 'iOS 6.1 10B145'
-                        Ensure             = 'Present'
-                        Credential = $Credential
+                        Identity       = 'ContosoPhone'
+                        AccessLevel    = 'Allow'
+                        Characteristic = 'DeviceOS'
+                        QueryString    = 'iOS 6.1 10B145'
+                        Ensure         = 'Present'
+                        Credential     = $Credential
                     }
                 }
             }

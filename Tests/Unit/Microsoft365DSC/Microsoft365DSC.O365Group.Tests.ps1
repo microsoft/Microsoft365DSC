@@ -37,7 +37,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credential"
+                return "Credentials"
             }
         }
 
@@ -265,7 +265,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
                             }
                         },
-                        @{                            
+                        @{
                             AdditionalProperties = @{
                                 UserPrincipalName = "SecondUser@contoso.onmicrosoft.com"
                             }
@@ -274,7 +274,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgGroupOwner -MockWith {
-                    return @{                    
+                    return @{
                         AdditionalProperties = @{
                             UserPrincipalName = "Bob.Houle@contoso.onmicrosoft.com"
                         }

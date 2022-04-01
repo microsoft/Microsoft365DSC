@@ -1,5 +1,13 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* PPTenantIsolationSettings
+  * New resource
+* MISC
+  * Updated Convert-M365DscHashtableToString function to also convert
+    Arrays and CimInstances to string.
+
 # 1.22.323.1
 
 * EXOAuthenticationPolicy
