@@ -18,12 +18,12 @@ Configuration Example
             IsSingleInstance = 'Yes'
             Enable           = $true
             Rules            = @(
-                MSFT_TenantRule
+                MSFT_PPTenantRule
                 {
                     TenantName = 'contoso.onmicrosoft.com'
                     Direction  = 'Outbound'
                 }
-                MSFT_TenantRule
+                MSFT_PPTenantRule
                 {
                     TenantName = 'fabrikam.onmicrosoft.com'
                     Direction  = 'Both'

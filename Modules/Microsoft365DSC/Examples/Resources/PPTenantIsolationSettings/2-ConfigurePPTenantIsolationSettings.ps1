@@ -18,14 +18,14 @@ Configuration Example
             IsSingleInstance = 'Yes'
             Enable           = $true
             RulesToInclude   = @(
-                MSFT_TenantRule
+                MSFT_PPTenantRule
                 {
                     TenantName = 'contoso.onmicrosoft.com'
                     Direction  = 'Inbound'
                 }
             )
             RulesToExclude   = @(
-                MSFT_TenantRule
+                MSFT_PPTenantRule
                 {
                     TenantName = 'fabrikam.onmicrosoft.com'
                     Direction  = 'Both'

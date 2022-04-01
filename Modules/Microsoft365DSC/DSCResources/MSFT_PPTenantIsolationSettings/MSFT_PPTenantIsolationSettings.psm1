@@ -673,10 +673,10 @@ function Get-M365DSCTenantIsolationRule
         $Rules
     )
 
-    $StringContent = "@(`r`n"
+    $StringContent = "@("
     foreach ($rule in $Rules)
     {
-        $StringContent += "            MSFT_TenantRule { `r`n"
+        $StringContent += "ule {r`n"
         $StringContent += "                TenantName          = '" + $rule.TenantName + "'`r`n"
         $StringContent += "                Direction           = '" + $rule.Direction + "'`r`n"
         $StringContent += "            }`r`n"
