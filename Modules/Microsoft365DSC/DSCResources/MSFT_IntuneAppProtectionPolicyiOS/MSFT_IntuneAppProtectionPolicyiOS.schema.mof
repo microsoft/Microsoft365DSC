@@ -11,7 +11,7 @@ class MSFT_IntuneAppProtectionPolicyiOS : OMI_BaseResource
     [Write, Description("The level to which the clipboard may be shared between apps on the managed device. Possible values are: allApps, managedAppsWithPasteIn, managedApps, blocked.")] String AllowedOutboundClipboardSharingLevel;
     [Write, Description("Indicates whether the backup of a managed app's data is blocked.")] Boolean DataBackupBlocked;
     [Write, Description("Indicates whether device compliance is required.")] Boolean DeviceComplianceRequired;
-    [Write, Description("Indicates whether internet links should be opened in the managed browser app, or any custom browser specified by CustomBrowserProtocol (for iOS) or CustomBrowserPackageId/CustomBrowserDisplayName (for Android)".)] Boolean ManagedBrowserToOpenLinksRequired;
+    [Write, Description("Indicates whether internet links should be opened in the managed browser app, or any custom browser specified by CustomBrowserProtocol (for iOS) or CustomBrowserPackageId/CustomBrowserDisplayName (for Android).")] Boolean ManagedBrowserToOpenLinksRequired;
     [Write, Description("Indicates whether users may use the Save As menu item to save a copy of protected files.")] Boolean SaveAsBlocked;
     [Write, Description("The amount of time an app is allowed to remain disconnected from the internet before all managed data it is wiped.")] String PeriodOfflineBeforeWipeIsEnforced;
     [Write, Description("Indicates whether an app-level pin is required.")] Boolean PinRequired;
