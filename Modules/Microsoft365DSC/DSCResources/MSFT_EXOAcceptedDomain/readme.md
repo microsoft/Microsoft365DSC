@@ -32,8 +32,7 @@ MatchSubDomains
 - Required: No
 - Description: MatchSubDomains enables mail to be sent by and received
   from users on any subdomain of this accepted domain.
-  This value must be false on Authoritative domains.
-  The EXOAcceptedDomain DSC Resource only accepts a value of $false
+  MatchSubDomains can only be enabled on an InternalRelay domain.
   The default value is false.
 
 OutboundOnly
@@ -42,8 +41,7 @@ OutboundOnly
 - Description: OutboundOnly specifies whether this accepted domain is an
   internal relay domain for the on-premises
   deployment for organizations that have coexistence with a cloud-based organization.
-  This value must be false on Authoritative domains.
-  The EXOAcceptedDomain DSC Resource only accepts a value of $false
+  OutboundOnly can only be enabled if the DomainType parameter is set to Authoritative or InternalRelay.
   The default value is false.
 
 ## Example
@@ -52,6 +50,8 @@ OutboundOnly
 EXOAcceptedDomain ExampleEmailDomain {
     Ensure              = 'Present'
     Identity            = 'example.contoso.com'
+    MatchSubDomains     = $false
+    OutboundOnly        = $false
     Credential          = $Credential
 }
 ```

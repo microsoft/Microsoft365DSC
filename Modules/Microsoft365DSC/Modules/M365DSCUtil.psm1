@@ -79,7 +79,7 @@ function Get-TeamByName
         $loopCounter = 0
         do
         {
-            $team = Get-Team -DisplayName $TeamName | Where-Object -FilterScript {$_.DisplayName -eq $TeamName}
+            $team = Get-Team -DisplayName $TeamName | Where-Object -FilterScript { $_.DisplayName -eq [System.Net.WebUtility]::UrlDecode($TeamName) }
             if ($null -eq $team)
             {
                 Start-Sleep 5
@@ -130,11 +130,15 @@ function Convert-M365DscHashtableToString
         {
             if ($pair.Value -is [System.Array])
             {
-                $str = "$($pair.Key)=($($pair.Value -join ","))"
+                $str = "$($pair.Key)=$(Convert-SPDscArrayToString -Array $pair.Value)"
             }
             elseif ($pair.Value -is [System.Collections.Hashtable])
             {
                 $str = "$($pair.Key)={$(Convert-M365DscHashtableToString -Hashtable $pair.Value)}"
+            }
+            elseif ($pair.Value -is [Microsoft.Management.Infrastructure.CimInstance])
+            {
+                $str = "$($pair.Key)=$(Convert-SPDscCIMInstanceToString -CIMInstance $pair.Value)"
             }
             else
             {
@@ -164,6 +168,81 @@ function Convert-M365DscHashtableToString
 
     [array]::Sort($values)
     return ($values -join "; ")
+}
+
+<#
+.Description
+This function converts a parameter array to a string, for outputting to screen
+
+.Functionality
+Internal
+#>
+function Convert-SPDscArrayToString
+{
+    param
+    (
+        [Parameter()]
+        [System.Array]
+        $Array
+    )
+
+    $str = "("
+    for ($i = 0; $i -lt $Array.Count; $i++)
+    {
+        $item = $Array[$i]
+        if ($item -is [System.Collections.Hashtable])
+        {
+            $str += "{"
+            $str += Convert-SPDscHashtableToString -Hashtable $item
+            $str += "}"
+        }
+        elseif ($Array[$i] -is [Microsoft.Management.Infrastructure.CimInstance])
+        {
+            $str += Convert-SPDscCIMInstanceToString -CIMInstance $item
+        }
+        else
+        {
+            $str += $item
+        }
+
+        if ($i -lt ($Array.Count - 1))
+        {
+            $str += ","
+        }
+    }
+    $str += ")"
+
+    return $str
+}
+
+<#
+.Description
+This function converts a parameter CimInstance to a string, for outputting to screen
+
+.Functionality
+Internal
+#>
+function Convert-SPDscCIMInstanceToString
+{
+    param
+    (
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $CIMInstance
+    )
+
+    $str = "{"
+    foreach ($prop in $CIMInstance.CimInstanceProperties)
+    {
+        if ($str -notmatch "{$")
+        {
+            $str += "; "
+        }
+        $str += "$($prop.Name)=$($prop.Value)"
+    }
+    $str += "}"
+
+    return $str
 }
 
 
@@ -1706,7 +1785,7 @@ function Get-M365TenantName
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
     Write-Verbose -Message "Getting SharePoint Online admin URL..."
-    $defaultDomain = Get-MgDomain | Where-Object { ($_.Id -like "*.onmicrosoft.com" -or $_.Id -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
+    [Array]$defaultDomain = Get-MgDomain | Where-Object { ($_.Id -like "*.onmicrosoft.com" -or $_.Id -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
 
     if ($defaultDomain[0].Id -like '*.onmicrosoft.com*')
     {
@@ -2244,6 +2323,7 @@ function Test-M365DSCDependenciesForNewVersions
     $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
     $dependencies = $manifest.Dependencies
     $i = 1
+    Import-Module PowerShellGet -Force
     foreach ($dependency in $dependencies)
     {
         Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
@@ -2251,15 +2331,19 @@ function Test-M365DSCDependenciesForNewVersions
         {
             $moduleInGallery = Find-Module $dependency.ModuleName
             [array]$moduleInstalled = Get-Module $dependency.ModuleName -ListAvailable | Select-Object Version
-            $modules = $moduleInstalled | Sort-Object Version -Descending
+            if ($moduleInstalled)
+            {
+                $modules = $moduleInstalled | Sort-Object Version -Descending
+            }
             $moduleInstalled = $modules[0]
-            if ([Version]($moduleInGallery.Version) -gt [Version]($moduleInstalled[0].Version))
+            if (-not $modules -or [Version]($moduleInGallery.Version) -gt [Version]($moduleInstalled[0].Version))
             {
                 Write-Host "New version of {$($dependency.ModuleName)} is available {$($moduleInGallery.Version)}"
             }
         }
         catch
         {
+            Write-Host $_
             Write-Host "New version of {$($dependency.ModuleName)} is available"
         }
         $i++
@@ -2350,6 +2434,69 @@ function Update-M365DSCDependencies
         }
         $i++
     }
+}
+
+<#
+.Description
+This function uninstalls all previous M365DSC dependencies and older versions of the module.
+.Example
+Uninstall-M365DSCOutdatedObjects
+.Functionality
+Public
+#>
+function Uninstall-M365DSCOutdatedDependencies
+{
+    [CmdletBinding()]
+    param(
+    )
+
+    $InformationPreference = 'Continue'
+
+    $microsoft365DscModules = Get-Module Microsoft365DSC -ListAvailable
+    $outdatedMicrosoft365DscModules = $microsoft365DscModules | Sort-Object Version | Select-Object -SkipLast 1
+
+    foreach ($module in $outdatedMicrosoft365DscModules)
+    {
+        try
+        {
+            Uninstall-Module -Name "$($module.Name)" -RequiredVersion "$($module.Version)"
+        }
+        catch
+        {
+            Write-Host "Could not uninstall $($module.Name) Version $($module.Version) "
+        }
+    }
+
+    $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
+    $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
+    $dependencies = $manifest.Dependencies
+    $i = 1
+    foreach ($dependency in $dependencies)
+    {
+        Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
+        try
+        {
+            $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -ne $dependency.RequiredVersion }
+            foreach ($foundModule in $found)
+            {
+                try
+                {
+                    Write-Information -Message "Uninstalling $($foundModule.Name) version {$($foundModule.Version)}"
+                    Uninstall-Module -Name "$($foundModule.Name)" -RequiredVersion "$($foundModule.Version)"
+                }
+                catch
+                {
+                    Write-Host "Could not uninstall $($foundModule.Name) Version $($foundModule.Version) "
+                }
+            }
+        }
+        catch
+        {
+            Write-Host "Could not uninstall {$($dependency.ModuleName)}"
+        }
+        $i++
+    }
+
 }
 
 <#
@@ -3002,10 +3149,22 @@ function New-M365DSCCmdletDocumentation
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $OutputPath
+        $OutputPath,
+
+        [Parameter()]
+        [System.String]
+        $ModulePath
     )
 
-    Import-Module Microsoft365Dsc -Force
+    if ($null -eq $ModulePath)
+    {
+        Import-Module Microsoft365Dsc -Force
+    }
+    else
+    {
+        Get-Module Microsoft365DSC -ErrorAction SilentlyContinue | Remove-Module -ErrorAction SilentlyContinue
+        Import-Module $ModulePath -Force
+    }
 
     if ((Test-Path -Path $OutputPath) -eq $false)
     {
@@ -3164,6 +3323,7 @@ Export-ModuleMember -Function @(
     'Test-M365DSCDependenciesForNewVersions',
     'Test-M365DSCNewVersionAvailable',
     'Test-M365DSCParameterState',
+    'Uninstall-M365DSCOutdatedDependencies',
     'Update-M365DSCDependencies',
     'Update-M365DSCExportAuthenticationResults'
 )

@@ -1,5 +1,70 @@
 
+function New-MgGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DisplayName,
 
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $MailEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecurityEnabled,
+
+        [Parameter()]
+        [System.String]
+        $MailNickName,
+
+        [Parameter()]
+        [System.String[]]
+        $GroupTypes,
+
+        [Parameter()]
+        [System.String]
+        $Visibility
+    )
+}
+
+function Get-MgGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $GroupId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Boolean]
+        $All
+    )
+}
+
+function New-MgGroupOwnerByRef
+{
+
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $GroupId,
+
+        [Parameter()]
+        [System.Object]
+        $BodyParameter
+    )
+}
 
 function Get-MgServicePrincipal
 {

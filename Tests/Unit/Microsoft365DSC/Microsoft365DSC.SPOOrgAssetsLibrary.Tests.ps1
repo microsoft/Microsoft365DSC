@@ -38,7 +38,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credential"
+                return "Credentials"
             }
 
             Mock -CommandName Get-PSSession -MockWith {
@@ -67,12 +67,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     LibraryUrl         = "https://contoso.sharepoint.com/sites/m365dsc/Branding"
                     CdnType            = "Public"
-                    Credential = $Credential;
+                    Credential         = $Credential;
                     Ensure             = "Present"
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
-                    return "Credential"
+                    return "Credentials"
                 }
 
                 Mock -CommandName Get-PnPTenantCdnEnabled -MockWith {
@@ -101,12 +101,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     LibraryUrl         = "https://contoso.sharepoint.com/sites/m365dsc/Branding"
                     CdnType            = "Public"
-                    Credential = $Credential;
+                    Credential         = $Credential;
                     Ensure             = "Absent"
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
-                    return "Credential"
+                    return "Credentials"
                 }
 
                 Mock -CommandName Get-PnPTenantCdnEnabled -MockWith {
@@ -144,12 +144,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     LibraryUrl         = "https://contoso.sharepoint.com/sites/m365dsc/Branding"
                     CdnType            = "Public"
-                    Credential = $Credential;
+                    Credential         = $Credential;
                     Ensure             = "Present"
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
-                    return "Credential"
+                    return "Credentials"
                 }
 
                 Mock -CommandName Get-M365TenantName -MockWith {
@@ -187,12 +187,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     LibraryUrl         = "https://contoso.sharepoint.com/sites/m365dsc/Branding"
                     CdnType            = "Public"
-                    Credential = $Credential;
+                    Credential         = $Credential;
                     Ensure             = "Present"
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
-                    return "Credential"
+                    return "Credentials"
                 }
 
                 Mock -CommandName Get-PNPOrgAssetsLibrary -MockWith {
@@ -203,7 +203,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             }
                         }
                         CdnType            = "Public"
-                        Credential = $Credential;
+                        Credential         = $Credential;
                         Ensure             = "Present"
                     }
                 }

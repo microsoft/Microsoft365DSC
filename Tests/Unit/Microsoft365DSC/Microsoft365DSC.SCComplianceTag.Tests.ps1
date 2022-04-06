@@ -2,14 +2,14 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath "..\..\Unit" `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath "\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
@@ -38,7 +38,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credential"
+                return "Credentials"
             }
 
             Mock -CommandName Import-PSSession -MockWith {
@@ -72,16 +72,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Rule doesn't already exist" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Name               = "TestRule"
-                    Comment            = "This is a test Rule"
-                    RetentionAction    = "Keep"
-                    RetentionDuration  = "1025"
-                    FilePlanProperty   = (New-CimInstance -ClassName MSFT_SCFilePlanProperty -Property @{
+                    Name              = "TestRule"
+                    Comment           = "This is a test Rule"
+                    RetentionAction   = "Keep"
+                    RetentionDuration = "1025"
+                    FilePlanProperty  = (New-CimInstance -ClassName MSFT_SCFilePlanProperty -Property @{
                             FilePlanPropertyDepartment = "Legal"
                         } -ClientOnly)
-                    Credential = $Credential
-                    RetentionType      = "ModificationAgeInDays"
-                    Ensure             = "Present"
+                    Credential        = $Credential
+                    RetentionType     = "ModificationAgeInDays"
+                    Ensure            = "Present"
                 }
 
                 Mock -CommandName Get-ComplianceTag -MockWith {
@@ -105,11 +105,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Rule already exists" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Name               = "TestRule"
-                    Comment            = "This is a test Rule"
-                    RetentionAction    = "Keep"
-                    RetentionDuration  = "1025"
-                    FilePlanProperty   = (New-CimInstance -ClassName MSFT_SCFilePlanProperty -Property @{
+                    Name              = "TestRule"
+                    Comment           = "This is a test Rule"
+                    RetentionAction   = "Keep"
+                    RetentionDuration = "1025"
+                    FilePlanProperty  = (New-CimInstance -ClassName MSFT_SCFilePlanProperty -Property @{
                             FilePlanPropertyDepartment  = "DemoDept"
                             FilePlanPropertyCitation    = "DemoCit"
                             FilePlanPropertyReferenceId = "DemoRef"
@@ -117,9 +117,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             FilePlanPropertyCategory    = "DemoCat"
                             FilePlanPropertySubcategory = "DemoSub"
                         } -ClientOnly)
-                    Credential = $Credential
-                    RetentionType      = "ModificationAgeInDays"
-                    Ensure             = "Present"
+                    Credential        = $Credential
+                    RetentionType     = "ModificationAgeInDays"
+                    Ensure            = "Present"
                 }
 
                 Mock -CommandName Get-ComplianceTag -MockWith {
@@ -156,16 +156,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Rule should not exist" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Ensure             = "Absent"
-                    Name               = "TestRule"
-                    Comment            = "This is a test Rule"
-                    RetentionAction    = "Keep"
-                    FilePlanProperty   = (New-CimInstance -ClassName MSFT_SCFilePlanProperty -Property @{
+                    Ensure            = "Absent"
+                    Name              = "TestRule"
+                    Comment           = "This is a test Rule"
+                    RetentionAction   = "Keep"
+                    FilePlanProperty  = (New-CimInstance -ClassName MSFT_SCFilePlanProperty -Property @{
                             FilePlanPropertyDepartment = "Legal"
                         } -ClientOnly)
-                    RetentionDuration  = "1025"
-                    Credential = $Credential
-                    RetentionType      = "ModificationAgeInDays"
+                    RetentionDuration = "1025"
+                    Credential        = $Credential
+                    RetentionType     = "ModificationAgeInDays"
                 }
 
                 Mock -CommandName Get-ComplianceTag -MockWith {
