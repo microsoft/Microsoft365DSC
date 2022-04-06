@@ -1,13 +1,19 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
+# 1.22.406.1
 
+* EXOMalwareFilterPolicy
+  * Add support for property QuarantineTag
 * PPTenantIsolationSettings
   * New resource
 * MISC
   * Updated Convert-M365DscHashtableToString function to also convert
     Arrays and CimInstances to string.
   * Updated permissions in settings.json files.
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.144.
+  * Updated MicrosoftTeams to 4.1.0.
+  * Updated PnP.PowerShell to 1.10.0.
 
 # 1.22.323.1
 
