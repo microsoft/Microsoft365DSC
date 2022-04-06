@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOQuarantinePolicy
+  * New resource
+
 # 1.22.406.1
 
 * EXOMalwareFilterPolicy
