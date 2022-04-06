@@ -1231,6 +1231,19 @@ function Get-PolicyTipConfig
         $AsJob
     )
 }
+function Get-QuarantinePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Get-RemoteDomain
 {
     [CmdletBinding()]
@@ -3375,6 +3388,43 @@ function New-PolicyTipConfig
         $AsJob
     )
 }
+function New-QuarantinePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $EndUserQuarantinePermissionsValue,
+
+        [Parameter()]
+        [System.Object]
+        $ESNEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $MultiLanguageCustomDisclaimer,
+
+        [Parameter()]
+        [System.Object]
+        $MultiLanguageSenderName,
+
+        [Parameter()]
+        [System.Object]
+        $MultiLanguageSetting,
+
+        [Parameter()]
+        [System.Object]
+        $OrganizationBrandingEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function New-RemoteDomain
 {
     [CmdletBinding()]
@@ -5066,6 +5116,23 @@ function Remove-PartnerApplication
     )
 }
 function Remove-PolicyTipConfig
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Remove-QuarantinePolicy
 {
     [CmdletBinding()]
     param(
@@ -8726,6 +8793,47 @@ function Set-PolicyTipConfig
         [Parameter()]
         [System.Object]
         $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-QuarantinePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $EndUserQuarantinePermissionsValue,
+
+        [Parameter()]
+        [System.Object]
+        $ESNEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $MultiLanguageCustomDisclaimer,
+
+        [Parameter()]
+        [System.Object]
+        $MultiLanguageSenderName,
+
+        [Parameter()]
+        [System.Object]
+        $MultiLanguageSetting,
+
+        [Parameter()]
+        [System.Object]
+        $OrganizationBrandingEnabled,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
