@@ -155,14 +155,11 @@ function New-M365DSCConfigurationToJSON
 
     $fileContent = Get-Content $ConfigurationPath -Raw
 
-    $startPosition = $fileContent.IndexOf(" -ModuleVersion")
-    $endPosition = $fileContent.IndexOf("`r", $startPosition)
+    $startPosition = $fileContent.IndexOf("Node")+14
+    $endPosition = $fileContent.Length
+    $jsonContent = $fileContent.substring($startPosition,$endPosition-$startPosition-79)
 
-    $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
-    $ParsedContent = ConvertTo-DSCObject -Content $fileContent
-
-    $jsonContent = $ParsedContent | ConvertTo-Json
-    $jsonContent | Out-File -FilePath $OutputPath
+    $jsonContent | out-file $OutputPath
 }
 
 
