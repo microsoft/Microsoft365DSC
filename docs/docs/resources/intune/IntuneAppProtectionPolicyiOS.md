@@ -48,9 +48,9 @@
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
 
-# IntuneDeviceConfigurationPolicyiOS
+# IntuneAppProtectionPolicyiOS
 
-This resource configures an Intune device configuration profile for an iOS Device.
+This resource configures an Intune app protection policy for an iOS Device.
 
 ## Examples
 
