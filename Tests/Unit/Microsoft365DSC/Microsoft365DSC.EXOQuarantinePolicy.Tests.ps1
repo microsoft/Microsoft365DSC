@@ -68,7 +68,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                            = 'Present'
                     Credential                        = $Credential
                     Identity                          = "DefaultFullAccessPolicy";
-                    EndUserQuarantinePermissionsValue = 87;
+                    OrganizationBrandingEnabled       = $False;
                     ESNEnabled                        = $False;
                 }
 
@@ -100,7 +100,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                            = 'Present'
                     Credential                        = $Credential
                     Identity                          = "DefaultFullAccessPolicy";
-                    EndUserQuarantinePermissionsValue = 87;
+                    OrganizationBrandingEnabled       = $True;
                     ESNEnabled                        = $False;
                 }
 
@@ -109,7 +109,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                            = 'Present'
                     Credential                        = $Credential
                     Identity                          = "DefaultFullAccessPolicy";
-                    EndUserQuarantinePermissionsValue = 87;
+                    OrganizationBrandingEnabled       = $True;
                     ESNEnabled                        = $False;
                     }
                 }
@@ -126,8 +126,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                            = 'Present'
                     Credential                        = $Credential
                     Identity                          = "DefaultFullAccessPolicy";
-                    EndUserQuarantinePermissionsValue = 23;
-                    ESNEnabled                        = $true;
+                    OrganizationBrandingEnabled       = $True;
+                    ESNEnabled                        = $True;
                 }
 
                 Mock -CommandName Get-QuarantinePolicy -MockWith {
@@ -135,7 +135,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                            = 'Present'
                     Credential                        = $Credential
                     Identity                          = "DefaultFullAccessPolicy";
-                    EndUserQuarantinePermissionsValue = 87;
+                    OrganizationBrandingEnabled       = $False;
                     ESNEnabled                        = $False;
                     }
                 }
