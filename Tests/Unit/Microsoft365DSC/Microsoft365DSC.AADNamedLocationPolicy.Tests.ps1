@@ -52,7 +52,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credential"
+                return "Credentials"
             }
 
 
@@ -64,12 +64,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The Policy should exist but it does not" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName        = "Company Network"
-                    Ensure             = "Present"
-                    IpRanges           = @("2.1.1.1/32", "1.2.2.2/32")
-                    IsTrusted          = $True
-                    OdataType          = "#microsoft.graph.ipNamedLocation"
-                    Credential = $credsGlobalAdmin
+                    DisplayName = "Company Network"
+                    Ensure      = "Present"
+                    IpRanges    = @("2.1.1.1/32", "1.2.2.2/32")
+                    IsTrusted   = $True
+                    OdataType   = "#microsoft.graph.ipNamedLocation"
+                    Credential  = $credsGlobalAdmin
                 }
 
                 Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
@@ -91,18 +91,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The Policy exists but it should not" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName        = "Company Network"
-                    Ensure             = "Absent"
-                    IpRanges           = @("2.1.1.1/32", "1.2.2.2/32")
-                    IsTrusted          = $True
-                    OdataType          = "#microsoft.graph.ipNamedLocation"
-                    Credential = $credsGlobalAdmin
+                    DisplayName = "Company Network"
+                    Ensure      = "Absent"
+                    IpRanges    = @("2.1.1.1/32", "1.2.2.2/32")
+                    IsTrusted   = $True
+                    OdataType   = "#microsoft.graph.ipNamedLocation"
+                    Credential  = $credsGlobalAdmin
                 }
 
                 Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
                     return @{
-                        DisplayName                       = "Company Network"
-                        Id                                = "046956df-2367-4dd4-b7fd-c6175ec11cd5"
+                        DisplayName          = "Company Network"
+                        Id                   = "046956df-2367-4dd4-b7fd-c6175ec11cd5"
                         AdditionalProperties = @{
                             ipRanges                          = @(@{cidrAddress = "2.1.1.1/32" }, @{cidrAddress = "1.2.2.2/32" })
                             isTrusted                         = $True
@@ -132,18 +132,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The Policy exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName        = "Company Network"
-                    Ensure             = "Present"
-                    IpRanges           = @("2.1.1.1/32", "1.2.2.2/32")
-                    IsTrusted          = $True
-                    OdataType          = "#microsoft.graph.ipNamedLocation"
-                    Credential = $credsGlobalAdmin
+                    DisplayName = "Company Network"
+                    Ensure      = "Present"
+                    IpRanges    = @("2.1.1.1/32", "1.2.2.2/32")
+                    IsTrusted   = $True
+                    OdataType   = "#microsoft.graph.ipNamedLocation"
+                    Credential  = $credsGlobalAdmin
                 }
 
                 Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
                     return @{
-                        DisplayName                       = "Company Network"
-                        Id                                = "046956df-2367-4dd4-b7fd-c6175ec11cd5"
+                        DisplayName          = "Company Network"
+                        Id                   = "046956df-2367-4dd4-b7fd-c6175ec11cd5"
                         AdditionalProperties = @{
                             ipRanges                          = @(@{cidrAddress = "2.1.1.1/32" }, @{cidrAddress = "1.2.2.2/32" })
                             isTrusted                         = $True
@@ -168,22 +168,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Values are not in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName        = "Company Network"
-                    Ensure             = "Present"
-                    IpRanges           = @("2.1.1.1/32", "1.2.2.2/32")
-                    IsTrusted          = $True
-                    OdataType          = "#microsoft.graph.ipNamedLocation"
-                    Credential = $credsGlobalAdmin
+                    DisplayName = "Company Network"
+                    Ensure      = "Present"
+                    IpRanges    = @("2.1.1.1/32", "1.2.2.2/32")
+                    IsTrusted   = $True
+                    OdataType   = "#microsoft.graph.ipNamedLocation"
+                    Credential  = $credsGlobalAdmin
                 }
 
                 Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
                     return @{
-                        DisplayName                       = "Company Network"
-                        Id                                = "046956df-2367-4dd4-b7fd-c6175ec11cd5"
+                        DisplayName          = "Company Network"
+                        Id                   = "046956df-2367-4dd4-b7fd-c6175ec11cd5"
                         AdditionalProperties = @{
-                            ipRanges                          = @(@{cidrAddress = "2.1.1.1/32" }, @{cidrAddress = "1.2.2.2/32" })
-                            isTrusted                         = $False
-                            '@odata.type'                     = "#microsoft.graph.ipNamedLocation"
+                            ipRanges      = @(@{cidrAddress = "2.1.1.1/32" }, @{cidrAddress = "1.2.2.2/32" })
+                            isTrusted     = $False
+                            '@odata.type' = "#microsoft.graph.ipNamedLocation"
                         }
                     }
                 }
@@ -211,8 +211,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
                     return @{
-                        DisplayName                       = "Company Network"
-                        Id                                = "046956df-2367-4dd4-b7fd-c6175ec11cd5"
+                        DisplayName          = "Company Network"
+                        Id                   = "046956df-2367-4dd4-b7fd-c6175ec11cd5"
                         AdditionalProperties = @{
                             ipRanges                          = @(@{cidrAddress = "2.1.1.1/32" }, @{cidrAddress = "1.2.2.2/32" })
                             isTrusted                         = $True

@@ -1,10 +1,10 @@
 ﻿{
-  "resourceName": "EXOMailboxPlan",
-  "description": "",
-  "permissions": [
-    {
-      "read": [],
-      "update": []
-    }
-  ]
+    "resourceName": "EXOMailboxPlan",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
 }
