@@ -2,6 +2,8 @@
 
 # Unreleased
 
+* EXOMalwareFilterPolicy
+  * Add support for property QuarantineTag
 * PPTenantIsolationSettings
   * New resource
 * MISC
