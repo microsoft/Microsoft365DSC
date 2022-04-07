@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+
+# Not released
+
+* Fixed issue on export of O365Groups resource
+
 # 1.22.406.1
 
 * EXOMalwareFilterPolicy
