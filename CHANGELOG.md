@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOAuthenticationPolicy
+  * Fix typo in AllowBasicAuthOfflineAddressBook (FIXES #1876)
+
 # 1.22.406.1
 
 * EXOMalwareFilterPolicy
