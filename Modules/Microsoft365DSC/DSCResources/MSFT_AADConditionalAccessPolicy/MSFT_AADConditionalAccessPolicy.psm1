@@ -82,6 +82,14 @@ function Get-TargetResource
         [System.String[]]
         $ExcludeDevices,
 
+        [Parameter()]
+        [System.String[]]
+        $DeviceFilterMode,
+
+        [Parameter()]
+        [SystemString[]]
+        $DeviceFilterRule,
+
         #Further conditions
         [Parameter()]
         [System.String[]]
