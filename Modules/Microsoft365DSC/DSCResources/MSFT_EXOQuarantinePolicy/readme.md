@@ -2,4 +2,4 @@
 
 ## Description
 
-Create or modify a new EXOQuarantinePolicy in your cloud-based organization.
+Create or modify a EXOQuarantinePolicy in your cloud-based organization.
