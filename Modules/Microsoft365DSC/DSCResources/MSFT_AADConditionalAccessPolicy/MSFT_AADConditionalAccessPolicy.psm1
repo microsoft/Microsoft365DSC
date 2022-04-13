@@ -604,6 +604,15 @@ function Get-TargetResource
                 }
             }
         }
+
+        if ($Policy.Conditions.Devices.DeviceFilter.Mode)
+        {
+            $DeviceFilterMode = [System.String]$Policy.Conditions.Devices.DeviceFilter.Mode
+        }
+        if ($Policy.Conditions.Devices.DeviceFilter.Rule)
+        {
+            $DeviceFilterRule = [System.String]$Policy.Conditions.Devices.DeviceFilter.Rule
+        }
         if ($Policy.SessionControls.CloudAppSecurity.IsEnabled)
         {
             $CloudAppSecurityType = [System.String]$Policy.SessionControls.CloudAppSecurity.CloudAppSecurityType
