@@ -9,7 +9,7 @@
 | **AllowBasicAuthAutodiscover** | Write | Boolean | The AllowBasicAuthAutodiscover switch specifies whether to allow Basic authentication with Autodiscover. ||
 | **AllowBasicAuthImap** | Write | Boolean | The AllowBasicAuthImap switch specifies whether to allow Basic authentication with IMAP. ||
 | **AllowBasicAuthMapi** | Write | Boolean | The AllowBasicAuthMapi switch specifies whether to allow Basic authentication with MAPI. ||
-| **AllowBasicAuthOfflineAdressBook** | Write | Boolean | The AllowBasicAuthOfflineAddressBook switch specifies whether to allow Basic authentication with Offline Address Books. ||
+| **AllowBasicAuthOfflineAddressBook** | Write | Boolean | The AllowBasicAuthOfflineAddressBook switch specifies whether to allow Basic authentication with Offline Address Books. ||
 | **AllowBasicAuthOutlookService** | Write | Boolean | The AllowBasicAuthOutlookService switch specifies whether to allow Basic authentication with the Outlook service. ||
 | **AllowBasicAuthPop** | Write | Boolean | The AllowBasicAuthPop switch specifies whether to allow Basic authentication with POP. ||
 | **AllowBasicAuthPowershell** | Write | Boolean | The AllowBasicAuthPowerShell switch specifies whether to allow Basic authentication with PowerShell. ||
