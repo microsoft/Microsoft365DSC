@@ -1,9 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
 
-# Not released
-
-* Fixed issue on export of O365Groups resource
+* EXOAuthenticationPolicy
+  * Fix typo in AllowBasicAuthOfflineAddressBook (FIXES #1876)
+* O365Groups
+  * Fixed issue on export of O365Groups resource.
 
 # 1.22.406.1
 
