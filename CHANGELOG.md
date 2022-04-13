@@ -4,6 +4,8 @@
 
 * EXOAuthenticationPolicy
   * Fix typo in AllowBasicAuthOfflineAddressBook (FIXES #1876)
+* EXOQuarantinePolicy
+  * New resource
 * O365Groups
   * Fixed issue on export of O365Groups resource.
 

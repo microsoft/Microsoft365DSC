@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOQuarantinePolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}
