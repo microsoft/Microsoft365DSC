@@ -234,7 +234,7 @@
 
 ### Description
 
-This resource configures the settings of Windows 10 compliance policies
+This resource configures the settings of Android WorkProfile Device policies
 in your cloud-based organization.
 
 ## Permissions Needed
