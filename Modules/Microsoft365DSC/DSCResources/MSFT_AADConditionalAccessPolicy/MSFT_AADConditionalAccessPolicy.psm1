@@ -87,7 +87,7 @@ function Get-TargetResource
         $DeviceFilterMode,
 
         [Parameter()]
-        [SystemString[]]
+        [System.String[]]
         $DeviceFilterRule,
 
         #Further conditions
@@ -604,15 +604,6 @@ function Get-TargetResource
                 }
             }
         }
-
-        if ($Policy.Conditions.Devices.DeviceFilter.Mode)
-        {
-            $DeviceFilterMode = [System.String]$Policy.Conditions.Devices.DeviceFilter.Mode
-        }
-        if ($Policy.Conditions.Devices.DeviceFilter.Rule)
-        {
-            $DeviceFilterRule = [System.String]$Policy.Conditions.Devices.DeviceFilter.Rule
-        }
         if ($Policy.SessionControls.CloudAppSecurity.IsEnabled)
         {
             $CloudAppSecurityType = [System.String]$Policy.SessionControls.CloudAppSecurity.CloudAppSecurityType
@@ -675,6 +666,10 @@ function Get-TargetResource
             #no translation needed, return empty string array if undefined
             ExcludeDevices                           = [System.String[]](@() + $Policy.Conditions.Devices.ExcludeDevices)
             #no translation needed, return empty string array if undefined
+            DeviceFilterMode                         = $Policy.Conditions.Devices.DeviceFilter.Mode
+            #no translation or conversion needed
+            DeviceFilterRule                         = $Policy.Conditions.Devices.DeviceFilter.Rule
+            #no translation or conversion needed
             UserRiskLevels                           = [System.String[]](@() + $Policy.Conditions.UserRiskLevels)
             #no translation needed, return empty string array if undefined
             SignInRiskLevels                         = [System.String[]](@() + $Policy.Conditions.SignInRiskLevels)
@@ -797,6 +792,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $ExcludeDevices,
+
+        [Parameter()]
+        [System.String[]]
+        $DeviceFilterMode,
+
+        [Parameter()]
+        [System.String[]]
+        $DeviceFilterRule,
 
         #Further conditions
         [Parameter()]
@@ -1527,6 +1530,31 @@ function Set-TargetResource
             $conditions.Devices.ExcludeDevices = $ExcludeDevices
             #no translation or conversion needed
         }
+        Write-Verbose -Message "Set-Targetresource: process device filter"
+        if ($DeviceFilterMode -and $DeviceFilterRule)
+        {
+            if (-not $conditions.Contains("Devices"))
+            {
+                $conditions.Add("Devices")
+                if (-not $conditions.Devices.Contains("DeviceFilter"))
+                {
+                    $conditions.Devices.Add("DeviceFilter")
+                    $conditions.Devices.DeviceFilter.Add("Mode", @())
+                    $conditions.Devices.DeviceFilter.Add("Rule", @())
+                }
+            }
+            else
+            {
+                if (-not $conditions.Devices.Contains("DeviceFilter"))
+                {
+                    $Conditions.Devices.Add("DeviceFilter")
+                    $conditions.Devices.DeviceFilter.Add("Mode", @())
+                    $conditions.Devices.DeviceFilter.Add("Rule", @())
+                }
+            }
+            $conditions.Devices.DeviceFilter.Mode = $DeviceFilterMode
+            $conditions.Devices.DeviceFilter.Rule = $DeviceFilterRule
+        }
         Write-Verbose -Message "Set-Targetresource: process risk levels and app types"
         Write-Verbose -Message "Set-Targetresource: UserRiskLevels: $UserRiskLevels"
         $Conditions.Add("UserRiskLevels", $UserRiskLevels)
@@ -1820,6 +1848,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $ExcludeDevices,
+
+        [Parameter()]
+        [System.String[]]
+        $DeviceFilterMode,
+
+        [Parameter()]
+        [System.String[]]
+        $DeviceFilterRule,
 
         #Further conditions
         [Parameter()]
