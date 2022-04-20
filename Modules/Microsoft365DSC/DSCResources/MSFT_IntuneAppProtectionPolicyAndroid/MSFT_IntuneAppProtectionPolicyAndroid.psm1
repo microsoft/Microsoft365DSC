@@ -220,7 +220,7 @@ function Get-TargetResource
         {
             foreach ($app in $policy.Apps)
             {
-                $appsArray += $app.mobileAppIdentifier.bundleId
+                $appsArray += $app.mobileAppIdentifier.packageId
             }
         }
 
