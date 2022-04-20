@@ -69,10 +69,6 @@ function Get-TargetResource
         $MinimumWarningOSVersion,
 
         [Parameter()]
-        [System.String]
-        $MinimumRequiredSdkVersion,
-
-        [Parameter()]
         [System.Boolean]
         $ManagedBrowserToOpenLinksRequired,
 
@@ -127,14 +123,6 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $FingerprintBlocked,
-
-        [Parameter()]
-        [System.Boolean]
-        $FaceIdBlocked,
-
-        [Parameter()]
-        [System.String]
-        $AppDataEncryptionType,
 
         [Parameter()]
         [System.String[]]
@@ -212,6 +200,7 @@ function Get-TargetResource
             throw "Multiple Policies with same displayname identified - Module currently only functions with unique names"
         }
 
+        # It may be possible to remove this once basic functionality is in place - output types differ to the graph module object though so implementing basic functionality first
         $policy = Get-M365DSCIntuneAppProtectionPolicyAndroid -PolicyId $policyInfo.Id
         Write-Verbose -Message "Found Android App Protection Policy {$DisplayName}"
 
@@ -260,7 +249,6 @@ function Get-TargetResource
             ManagedBrowser                          = $policy.ManagedBrowser
             MinimumRequiredAppVersion               = $policy.MinimumRequiredAppVersion
             MinimumRequiredOSVersion                = $policy.MinimumRequiredOSVersion
-            MinimumRequiredSdkVersion               = $policy.MinimumRequiredSDKVersion
             MinimumWarningAppVersion                = $policy.MinimumWarningAppVersion
             MinimumWarningOSVersion                 = $policy.MinimumWarningOSVersion
             ManagedBrowserToOpenLinksRequired       = $policy.ManagedBrowserToOpenLinksRequired
@@ -275,10 +263,8 @@ function Get-TargetResource
             AllowedDataStorageLocations             = $policy.AllowedDataStorageLocations
             ContactSyncBlocked                      = $policy.ContactSyncBlocked
             PeriodBeforePinReset                    = $policy.PeriodBeforePinReset
-            FaceIdBlocked                           = $policy.FaceIdBlocked
             PrintBlocked                            = $policy.PrintBlocked
             FingerprintBlocked                      = $policy.FingerprintBlocked
-            AppDataEncryptionType                   = $policy.AppDataEncryptionType
             Assignments                             = $assignmentsArray
             ExcludedGroups                          = $exclusionArray
             Apps                                    = $appsArray
@@ -378,10 +364,6 @@ function Set-TargetResource
         $MinimumWarningOSVersion,
 
         [Parameter()]
-        [System.String]
-        $MinimumRequiredSdkVersion,
-
-        [Parameter()]
         [System.Boolean]
         $ManagedBrowserToOpenLinksRequired,
 
@@ -436,14 +418,6 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $FingerprintBlocked,
-
-        [Parameter()]
-        [System.Boolean]
-        $FaceIdBlocked,
-
-        [Parameter()]
-        [System.String]
-        $AppDataEncryptionType,
 
         [Parameter()]
         [System.String[]]
@@ -612,10 +586,6 @@ function Test-TargetResource
         $MinimumWarningOSVersion,
 
         [Parameter()]
-        [System.String]
-        $MinimumRequiredSdkVersion,
-
-        [Parameter()]
         [System.Boolean]
         $ManagedBrowserToOpenLinksRequired,
 
@@ -670,14 +640,6 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $FingerprintBlocked,
-
-        [Parameter()]
-        [System.Boolean]
-        $FaceIdBlocked,
-
-        [Parameter()]
-        [System.String]
-        $AppDataEncryptionType,
 
         [Parameter()]
         [System.String[]]
@@ -962,10 +924,8 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
         "pinCharacterSet": "$($Parameters.PinCharacterSet)",
         "contactSyncBlocked": $($Parameters.ContactSyncBlocked.ToString().ToLower()),
         "periodBeforePinReset": "$($Parameters.PeriodBeforePinReset)",
-        "faceIdBlocked": $($Parameters.FaceIdBlocked.ToString().ToLower()),
         "printBlocked": $($Parameters.PrintBlocked.ToString().ToLower()),
         "fingerprintBlocked": $($Parameters.FingerprintBlocked.ToString().ToLower()),
-        "appDataEncryptionType": "$($Parameters.AppDataEncryptionType)",
         "allowedDataStorageLocations": $allowedDataStorageLocations
 "@
 
