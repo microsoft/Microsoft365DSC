@@ -477,26 +477,26 @@ function Set-TargetResource
     $setParams.Remove("Credential") | Out-Null
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating new iOS App Protection Policy {$DisplayName}"
-        $JsonContent = Get-M365DSCIntuneAppProtectionPolicyiOSJSON -Parameters $PSBoundParameters
+        Write-Verbose -Message "Creating new Android App Protection Policy {$DisplayName}"
+        $JsonContent = Get-M365DSCIntuneAppProtectionPolicyAndroidJSON -Parameters $PSBoundParameters
         Write-Verbose -Message "JSON: $JsonContent"
-        New-M365DSCIntuneAppProtectionPolicyiOS -JSONContent $JsonContent
+        New-M365DSCIntuneAppProtectionPolicyAndroid -JSONContent $JsonContent
 
-        $policyInfo = Get-MgDeviceAppManagementiosManagedAppProtection -Filter "displayName eq '$DisplayName'" `
+        $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
-        $assignmentJSON = Get-M365DSCIntuneAppProtectionPolicyiOSAssignmentJson -Assignments $Assignments `
+        $assignmentJSON = Get-M365DSCIntuneAppProtectionPolicyAndroidAssignmentJson -Assignments $Assignments `
             -Exclusions $ExcludedGroups
 
-        Set-M365DSCIntuneAppProtectionPolicyiOSAssignment -JsonContent $assignmentJSON `
+        Set-M365DSCIntuneAppProtectionPolicyAndroidAssignment -JsonContent $assignmentJSON `
             -PolicyId $policyInfo.Id
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating existing iOS App Protection Policy {$DisplayName}"
+        Write-Verbose -Message "Updating existing Android App Protection Policy {$DisplayName}"
         $policyInfo = Get-MgDeviceAppManagementiosManagedAppProtection -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
 
-        $JsonContent = Get-M365DSCIntuneAppProtectionPolicyiOSJSON -Parameters $PSBoundParameters `
+        $JsonContent = Get-M365DSCIntuneAppProtectionPolicyAndroidJSON -Parameters $PSBoundParameters `
             -IncludeApps $false
         Set-M365DSCIntuneAppProtectionPolicyiOS -JSONContent $JsonContent `
             -PolicyId ($policyInfo.id)
@@ -508,7 +508,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing iOS App Protection Policy {$DisplayName}"
+        Write-Verbose -Message "Removing Android App Protection Policy {$DisplayName}"
         $policyInfo = Get-MgDeviceAppManagementiosManagedAppProtection -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
         Remove-MgDeviceAppManagementiosManagedAppProtection -IosManagedAppProtectionId $policyInfo.id
@@ -848,7 +848,7 @@ function Get-M365DSCIntuneAppProtectionPolicyAndroid
     return $null
 }
 
-function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
+function Get-M365DSCIntuneAppProtectionPolicyAndroidJSON
 {
     [CmdletBinding()]
     [OutputType([System.String])]
@@ -888,8 +888,8 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
             `r`n{
                 "id":"$($app)",
                 "mobileAppIdentifier": {
-                    "@odata.type": "#microsoft.graph.iosMobileAppIdentifier",
-                    "bundleId": "$app"
+                    "@odata.type": "#microsoft.graph.androidMobileAppIdentifier",
+                    "packageId": "$app"
                 }
             },
 "@
@@ -902,7 +902,7 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
     #endregion
     $JsonContent = @"
     {
-        "@odata.type": "#microsoft.graph.iosManagedAppProtection",
+        "@odata.type": "#microsoft.graph.androidManagedAppProtection",
         "displayName": "$($Parameters.DisplayName)",
         "description": "$($Parameters.Description)",
         "periodOfflineBeforeAccessCheck": "$($Parameters.PeriodOfflineBeforeAccessCheck)",
@@ -979,7 +979,7 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSAppsJSON
     return $JsonContent
 }
 
-function Get-M365DSCIntuneAppProtectionPolicyiOSAssignmentJSON
+function Get-M365DSCIntuneAppProtectionPolicyAndroidAssignmentJSON
 {
     [CmdletBinding()]
     [OutputType([System.String])]
@@ -1016,7 +1016,7 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSAssignmentJSON
     return $JsonContent
 }
 
-function New-M365DSCIntuneAppProtectionPolicyiOS
+function New-M365DSCIntuneAppProtectionPolicyAndroid
 {
     [CmdletBinding()]
     param(
@@ -1027,7 +1027,7 @@ function New-M365DSCIntuneAppProtectionPolicyiOS
     try
     {
         $Url = 'https://graph.microsoft.com/beta/deviceAppManagement/managedAppPolicies'
-        Write-Verbose -Message "Creating new iOS App Protection policy with JSON payload: `r`n$JSONContent"
+        Write-Verbose -Message "Creating new Android App Protection policy with JSON payload: `r`n$JSONContent"
         Invoke-MgGraphRequest -Method POST `
             -Uri $Url `
             -Body $JSONContent `
@@ -1105,7 +1105,7 @@ function Set-M365DSCIntuneAppProtectionPolicyiOSApps
     }
 }
 
-function Set-M365DSCIntuneAppProtectionPolicyiOSAssignment
+function Set-M365DSCIntuneAppProtectionPolicyAndroidAssignment
 {
     [CmdletBinding()]
     param(
@@ -1119,7 +1119,7 @@ function Set-M365DSCIntuneAppProtectionPolicyiOSAssignment
     )
     try
     {
-        $Url = "https://graph.microsoft.com/beta/deviceAppManagement/iosManagedAppProtections('$PolicyId')/assign"
+        $Url = "https://graph.microsoft.com/beta/deviceAppManagement/androidManagedAppProtections('$PolicyId')/assign"
         Write-Verbose -Message "Group Assignment for iOS App Protection policy with JSON payload: `r`n$JSONContent"
         Invoke-MgGraphRequest -Method POST `
             -Uri $Url `
