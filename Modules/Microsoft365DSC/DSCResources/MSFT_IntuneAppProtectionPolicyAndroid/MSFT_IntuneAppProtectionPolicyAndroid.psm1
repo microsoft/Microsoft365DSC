@@ -196,7 +196,7 @@ function Get-TargetResource
 
     try
     {
-        $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'" `
+        $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'" -ExpandProperty Apps, assignments `
             -ErrorAction Stop
 
         if ($null -eq $policyInfo)
