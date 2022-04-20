@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOOutboundConnector
+  * Added support for test mode connectors.
+
 # 1.22.413.1
 
 * EXOAuthenticationPolicy
