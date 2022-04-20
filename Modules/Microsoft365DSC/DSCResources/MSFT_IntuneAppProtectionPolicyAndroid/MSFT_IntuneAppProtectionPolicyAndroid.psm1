@@ -205,6 +205,12 @@ function Get-TargetResource
             return $nullResult
         }
 
+        # handle multiple results - throw error - may be able to remediate to specify ID in configuration at later date
+        if ($policyInfo.gettype().isarray)
+        {
+            Write-Verbose -Message "Multiple Android Policies with name {$DisplayName} were found - Module will only function with unique names, please manually remediate"
+            throw "Multiple Policies with same displayname identified - Module currently only functions with unique names"
+        }
 
         $policy = Get-M365DSCIntuneAppProtectionPolicyAndroid -PolicyId $policyInfo.Id
         Write-Verbose -Message "Found Android App Protection Policy {$DisplayName}"
