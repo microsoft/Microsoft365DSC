@@ -25,15 +25,12 @@ class MSFT_IntuneAppProtectionPolicyAndroid : OMI_BaseResource
     [Write, Description("TimePeriod before the all-level pin must be reset if PinRequired is set to True.")] String PeriodBeforePinReset;
     [Write, Description("Indicates whether printing is allowed from managed apps.")] Boolean PrintBlocked;
     [Write, Description("Indicates whether use of the fingerprint reader is allowed in place of a pin if PinRequired is set to True.")] Boolean FingerprintBlocked;
-    [Write, Description("Indicates whether use of the FaceID is allowed in place of a pin if PinRequired is set to True.")] Boolean FaceIdBlocked;
     [Write, Description("Indicates if the policy is deployed to any inclusion groups or not. Inherited from targetedManagedAppProtection.")] Boolean IsAssigned;
     [Write, Description("Indicates in which managed browser(s) that internet links should be opened. When this property is configured, ManagedBrowserToOpenLinksRequired should be true. Possible values are: notConfigured, microsoftEdge."), ValueMap{"notConfigured","microsoftEdge"}, Values{"notConfigured","microsoftEdge"}] String ManagedBrowser;
     [Write, Description("Versions less than the specified version will block the managed app from accessing company data.")] String MinimumRequiredAppVersion;
     [Write, Description("Versions less than the specified version will block the managed app from accessing company data.")] String MinimumRequiredOSVersion;
-    [Write, Description("Versions less than the specified version will block the managed app from accessing company data.")] String MinimumRequiredSdkVersion;
     [Write, Description("Versions less than the specified version will result in warning message on the managed app")] String MinimumWarningAppVersion;
     [Write, Description("Versions less than the specified version will result in warning message on the managed app from accessing company data.")] String MinimumWarningOSVersion;
-    [Write, Description("Require app data to be encrypted.")] String AppDataEncryptionType;
     [Write, Description("List of IDs representing the Android apps controlled by this protection policy.")] String Apps[];
     [Write, Description("List of IDs of the groups assigned to this Android Protection Policy.")] String Assignments[];
     [Write, Description("List of IDs of the groups that are excluded from this Android Protection Policy.")] String ExcludedGroups[];
