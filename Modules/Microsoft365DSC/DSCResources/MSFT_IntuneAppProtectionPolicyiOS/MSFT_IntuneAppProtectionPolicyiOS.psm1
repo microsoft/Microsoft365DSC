@@ -942,13 +942,7 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
         "allowedOutboundClipboardSharingLevel": "$($Parameters.AllowedOutboundClipboardSharingLevel)",
         "dataBackupBlocked": $($Parameters.DataBackupBlocked.ToString().ToLower()),
         "deviceComplianceRequired": $($Parameters.DeviceComplianceRequired.ToString().ToLower()),
-        "IsAssigned": $($Parameters.IsAssigned.ToString().ToLower()),
-        "ManagedBrowser": $($Parameters.ManagedBrowser),
-        "MinimumRequiredAppVersion": $($Parameters.MinimumWarningAppVersion),
-        "MinimumRequiredOSVersion": $($Parameters.MinimumRequiredOSVersion),
-        "MinimumRequiredSdkVersion": $($Parameters.MinimumRequiredSdkVersion),
-        "MinimumWarningAppVersion": $($Parameters.MinimumWarningAppVersion),
-        "MinimumWarningOSVersion": $($Parameters.MinimumWarningOSVersion),
+        "managedBrowser": "$($Parameters.ManagedBrowser)"
         "managedBrowserToOpenLinksRequired": $($Parameters.ManagedBrowserToOpenLinksRequired.ToString().ToLower()),
         "saveAsBlocked": $($Parameters.SaveAsBlocked.ToString().ToLower()),
         "periodOfflineBeforeWipeIsEnforced": "$($Parameters.PeriodOfflineBeforeWipeIsEnforced)",
@@ -1065,6 +1059,7 @@ function New-M365DSCIntuneAppProtectionPolicyiOS
     try
     {
         $Url = 'https://graph.microsoft.com/beta/deviceAppManagement/managedAppPolicies'
+        Write-Verbose -Message "HANKIES"
         Write-Verbose -Message "Creating new iOS App Protection policy with JSON payload: `r`n$JSONContent"
         Invoke-MgGraphRequest -Method POST `
             -Uri $Url `
@@ -1073,11 +1068,13 @@ function New-M365DSCIntuneAppProtectionPolicyiOS
     }
     catch
     {
+        Write-Verbose -Message "SPANKY!"
         Write-Verbose -Message $_
         $tenantIdValue = $Credential.UserName.Split('@')[1]
         Add-M365DSCEvent -Message $_ -EntryType 'Error' `
             -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $tenantIdValue
+
     }
 }
 

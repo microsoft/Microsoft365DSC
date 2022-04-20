@@ -173,7 +173,7 @@ function Get-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    Write-Verbose -Message "Checking for the Intune iOS App Protection Policy {$DisplayName}"
+    Write-Verbose -Message "Checking for the Intune Android App Protection Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -182,7 +182,9 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
+    write-host 'resourcename:' $ResourceName
     $CommandName  = $MyInvocation.MyCommand
+    write-host 'commandname:' $commandname
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -194,17 +196,18 @@ function Get-TargetResource
 
     try
     {
-        $policyInfo = Get-MgDeviceAppManagementiosManagedAppProtection -Filter "displayName eq '$DisplayName'" `
+        $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
 
         if ($null -eq $policyInfo)
         {
-            Write-Verbose -Message "No iOS App Protection Policy {$DisplayName} was found"
+            Write-Verbose -Message "No Android App Protection Policy {$DisplayName} was found"
             return $nullResult
         }
 
-        $policy = Get-M365DSCintuneAppProtectionPolicyiOS -PolicyId $policyInfo.Id
-        Write-Verbose -Message "Found iOS App Protection Policy {$DisplayName}"
+
+        $policy = Get-M365DSCIntuneAppProtectionPolicyAndroid -PolicyId $policyInfo.Id
+        Write-Verbose -Message "Found Android App Protection Policy {$DisplayName}"
 
         $appsArray = @()
         if ($null -ne $policy.Apps)
@@ -850,7 +853,7 @@ function Export-TargetResource
     }
 }
 
-function Get-M365DSCIntuneAppProtectionPolicyiOS
+function Get-M365DSCIntuneAppProtectionPolicyAndroid
 {
     [CmdletBinding()]
     [OutputType([PSCustomObject])]
@@ -861,7 +864,7 @@ function Get-M365DSCIntuneAppProtectionPolicyiOS
     )
     try
     {
-        $Url = "https://graph.microsoft.com/beta/deviceAppManagement/iosManagedAppProtections('$PolicyId')/`?expand=apps,assignments"
+        $Url = "https://graph.microsoft.com/beta/deviceAppManagement/AndroidManagedAppProtections('$PolicyId')/`?expand=apps,assignments"
         $response = Invoke-MgGraphRequest -Method Get `
             -Uri $Url
         return $response
@@ -942,13 +945,6 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
         "allowedOutboundClipboardSharingLevel": "$($Parameters.AllowedOutboundClipboardSharingLevel)",
         "dataBackupBlocked": $($Parameters.DataBackupBlocked.ToString().ToLower()),
         "deviceComplianceRequired": $($Parameters.DeviceComplianceRequired.ToString().ToLower()),
-        "IsAssigned": $($Parameters.IsAssigned.ToString().ToLower()),
-        "ManagedBrowser": $($Parameters.ManagedBrowser),
-        "MinimumRequiredAppVersion": $($Parameters.MinimumWarningAppVersion),
-        "MinimumRequiredOSVersion": $($Parameters.MinimumRequiredOSVersion),
-        "MinimumRequiredSdkVersion": $($Parameters.MinimumRequiredSdkVersion),
-        "MinimumWarningAppVersion": $($Parameters.MinimumWarningAppVersion),
-        "MinimumWarningOSVersion": $($Parameters.MinimumWarningOSVersion),
         "managedBrowserToOpenLinksRequired": $($Parameters.ManagedBrowserToOpenLinksRequired.ToString().ToLower()),
         "saveAsBlocked": $($Parameters.SaveAsBlocked.ToString().ToLower()),
         "periodOfflineBeforeWipeIsEnforced": "$($Parameters.PeriodOfflineBeforeWipeIsEnforced)",
