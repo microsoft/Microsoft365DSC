@@ -689,7 +689,7 @@ function Test-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Write-Verbose -Message "Testing configuration of iOS App Protection Policy {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of Android App Protection Policy {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
