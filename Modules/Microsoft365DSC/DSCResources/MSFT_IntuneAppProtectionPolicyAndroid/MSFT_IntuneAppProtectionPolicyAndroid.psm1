@@ -1120,7 +1120,7 @@ function Set-M365DSCIntuneAppProtectionPolicyAndroidAssignment
     try
     {
         $Url = "https://graph.microsoft.com/beta/deviceAppManagement/androidManagedAppProtections('$PolicyId')/assign"
-        Write-Verbose -Message "Group Assignment for iOS App Protection policy with JSON payload: `r`n$JSONContent"
+        Write-Verbose -Message "Group Assignment for Android App Protection policy with JSON payload: `r`n$JSONContent"
         Invoke-MgGraphRequest -Method POST `
             -Uri $Url `
             -Body $JSONContent `
