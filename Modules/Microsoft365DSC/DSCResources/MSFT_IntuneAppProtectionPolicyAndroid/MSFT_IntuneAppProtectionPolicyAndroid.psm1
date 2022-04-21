@@ -755,7 +755,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$policies = Get-MgDeviceAppManagementiosManagedAppProtection -ErrorAction Stop
+        [array]$policies = Get-MgDeviceAppManagementAndroidManagedAppProtection -ErrorAction Stop
         $i = 1
         $dscContent = ''
         if ($policies.Length -eq 0)
