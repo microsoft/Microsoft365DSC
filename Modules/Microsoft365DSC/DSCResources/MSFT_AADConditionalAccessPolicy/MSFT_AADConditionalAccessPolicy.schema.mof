@@ -19,8 +19,8 @@ class MSFT_AADConditionalAccessPolicy : OMI_BaseResource
     [Write, Description("AAD Named Locations out of scope of the Policy.")] String ExcludeLocations[];
     [Write, Description("Client Device Compliance states in scope of the Policy.")] String IncludeDevices[];
     [Write, Description("Client Device Compliance states out of scope of the Policy.")] String ExcludeDevices[];
-    [Write, Description("Client Device Filter mode of the Policy.")] String DeviceFilterMode[];
-    [Write, Description("Client Device Filter rule of the Policy.")] String DeviceFilterRule[];
+    [Write, Description("Client Device Filter mode of the Policy.")] String DeviceFilterMode;
+    [Write, Description("Client Device Filter rule of the Policy.")] String DeviceFilterRule;
     [Write, Description("AAD Identity Protection User Risk Levels in scope of the Policy.")] String UserRiskLevels[];
     [Write, Description("AAD Identity Protection Sign-in Risk Levels in scope of the Policy.")] String SignInRiskLevels[];
     [Write, Description("Client App types in scope of the Policy.")] String ClientAppTypes[];

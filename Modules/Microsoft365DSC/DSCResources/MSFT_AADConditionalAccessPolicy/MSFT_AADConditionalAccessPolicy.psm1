@@ -666,9 +666,9 @@ function Get-TargetResource
             #no translation needed, return empty string array if undefined
             ExcludeDevices                           = [System.String[]](@() + $Policy.Conditions.Devices.ExcludeDevices)
             #no translation needed, return empty string array if undefined
-            DeviceFilterMode                         = $Policy.Conditions.Devices.DeviceFilter.Mode
+            DeviceFilterMode                         = [System.String[]](@() + $Policy.Conditions.Devices.DeviceFilter.Mode)
             #no translation or conversion needed
-            DeviceFilterRule                         = $Policy.Conditions.Devices.DeviceFilter.Rule
+            DeviceFilterRule                         = [System.String[]](@() + $Policy.Conditions.Devices.DeviceFilter.Rule)
             #no translation or conversion needed
             UserRiskLevels                           = [System.String[]](@() + $Policy.Conditions.UserRiskLevels)
             #no translation needed, return empty string array if undefined
@@ -1535,25 +1535,37 @@ function Set-TargetResource
         {
             if (-not $conditions.Contains("Devices"))
             {
-                $conditions.Add("Devices")
+                $conditions.Add("Devices", @{})
+                $conditions.Devices.Add("DeviceFilter", @{})
+                $conditions.Devices.DeviceFilter.Add("Mode", $DeviceFilterMode)
+                $conditions.Devices.DeviceFilter.Add("Rule", $DeviceFilterRule)
+            }
+            else {
                 if (-not $conditions.Devices.Contains("DeviceFilter"))
                 {
-                    $conditions.Devices.Add("DeviceFilter")
-                    $conditions.Devices.DeviceFilter.Add("Mode", @())
-                    $conditions.Devices.DeviceFilter.Add("Rule", @())
+                    $conditions.Devices.Add("DeviceFilter", @{})
+                    $conditions.Devices.DeviceFilter.Add("Mode", $DeviceFilterMode)
+                    $conditions.Devices.DeviceFilter.Add("Rule", $DeviceFilterRule)
+                }
+                else {
+                    if (-not $conditions.Devices.DeviceFilter.Contains("Mode"))
+                    {
+                        $conditions.Devices.DeviceFilter.Add("Mode", $DeviceFilterMode)
+                    }
+                    else {
+                        $conditions.Devices.DeviceFilter.Mode = $DeviceFilterMode
+                    }
+                    if (-not $conditions.Devices.DeviceFilter.Contains("Rule"))
+                    {
+                        $conditions.Devices.DeviceFilter.Add("Rule", $DeviceFilterRule)
+                    }
+                    else {
+                        $conditions.Devices.DeviceFilter.Rule = $DeviceFilterRule
+                    }
                 }
             }
-            else
-            {
-                if (-not $conditions.Devices.Contains("DeviceFilter"))
-                {
-                    $Conditions.Devices.Add("DeviceFilter")
-                    $conditions.Devices.DeviceFilter.Add("Mode", @())
-                    $conditions.Devices.DeviceFilter.Add("Rule", @())
-                }
-            }
-            $conditions.Devices.DeviceFilter.Mode = $DeviceFilterMode
-            $conditions.Devices.DeviceFilter.Rule = $DeviceFilterRule
+
+
         }
         Write-Verbose -Message "Set-Targetresource: process risk levels and app types"
         Write-Verbose -Message "Set-Targetresource: UserRiskLevels: $UserRiskLevels"
