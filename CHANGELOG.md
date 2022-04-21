@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOAuthenticationPolicy
+  * Fix schema.mof file (FIXES #1896)
+
 # 1.22.420.1
 
 * EXOOutboundConnector
