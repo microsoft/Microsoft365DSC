@@ -197,6 +197,7 @@ function Get-TargetResource
         if ($policyInfo.gettype().isarray)
         {
             Write-Verbose -Message "Multiple Android Policies with name {$DisplayName} were found - Module will only function with unique names, please manually remediate"
+            $nullResult.Ensure = 'ERROR'
             throw "Multiple Policies with same displayname identified - Module currently only functions with unique names"
         }
 
@@ -472,6 +473,14 @@ function Set-TargetResource
     #endregion
 
     $currentPolicy = Get-TargetResource @PSBoundParameters
+
+    if ($currentPolicy.Ensure -eq "ERROR")
+    {
+
+        Throw 'Error when searching for current policy details - Please check verbose output for further detail'
+
+    }
+
     $setParams = $PSBoundParameters
     $setParams.Remove("Ensure") | Out-Null
     $setParams.Remove("Credential") | Out-Null
@@ -692,6 +701,13 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of Android App Protection Policy {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+
+    if ($CurrentValues.Ensure -eq "ERROR")
+    {
+
+        Throw 'Error when searching for current policy details - Please check verbose output for further detail'
+
+    }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
