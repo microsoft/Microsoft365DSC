@@ -544,7 +544,7 @@ function Export-TargetResource
     try
     {
         $dscContent = ''
-        $groups = Get-MgGroup -All $true | Where-Object -FilterScript {
+        $groups = Get-MgGroup -All:$true | Where-Object -FilterScript {
             $_.MailNickName -ne "00000000-0000-0000-0000-000000000000"
         }
 

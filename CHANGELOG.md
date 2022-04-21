@@ -1,5 +1,23 @@
 # Change log for Microsoft365DSC
 
+# 1.22.420.1
+
+* EXOOutboundConnector
+  * Added support for test mode connectors.
+
+# 1.22.413.1
+
+* EXOAuthenticationPolicy
+  * Fix typo in AllowBasicAuthOfflineAddressBook (FIXES #1876)
+* EXOQuarantinePolicy
+  * New resource
+* O365Groups
+  * Fixed issue on export of O365Groups resource.
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to 1.9.5.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.145.
+  * Updated MicrosoftTeams to 4.2.0.
+
 # 1.22.406.1
 
 * EXOMalwareFilterPolicy
