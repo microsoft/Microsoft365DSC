@@ -493,16 +493,16 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing Android App Protection Policy {$DisplayName}"
-        $policyInfo = Get-MgDeviceAppManagementiosManagedAppProtection -Filter "displayName eq '$DisplayName'" `
+        $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
 
         $JsonContent = Get-M365DSCIntuneAppProtectionPolicyAndroidJSON -Parameters $PSBoundParameters `
             -IncludeApps $false
-        Set-M365DSCIntuneAppProtectionPolicyiOS -JSONContent $JsonContent `
+        Set-M365DSCIntuneAppProtectionPolicyAndroid -JSONContent $JsonContent `
             -PolicyId ($policyInfo.id)
 
-        $appJSON = Get-M365DSCIntuneAppProtectionPolicyiOSAppsJSON -Parameters $PSBoundParameters
-        Set-M365DSCIntuneAppProtectionPolicyiOSApps -JSONContent $appJSON `
+        $appJSON = Get-M365DSCIntuneAppProtectionPolicyAndroidAppsJSON -Parameters $PSBoundParameters
+        Set-M365DSCIntuneAppProtectionPolicyAndroidApps -JSONContent $appJSON `
             -PolicyId $policyInfo.Id
 
     }
@@ -937,7 +937,7 @@ function Get-M365DSCIntuneAppProtectionPolicyAndroidJSON
     return $JsonContent
 }
 
-function Get-M365DSCIntuneAppProtectionPolicyiOSAppsJSON
+function Get-M365DSCIntuneAppProtectionPolicyAndroidAppsJSON
 {
     [CmdletBinding()]
     [OutputType([System.String])]
@@ -958,8 +958,8 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSAppsJSON
             `r`n{
                 "id":"$($app)",
                 "mobileAppIdentifier": {
-                    "@odata.type": "#microsoft.graph.iosMobileAppIdentifier",
-                    "bundleId": "$app"
+                    "@odata.type": "#microsoft.graph.AndroidMobileAppIdentifier",
+                    "packageId": "$app"
                 }
             },
 "@
@@ -1043,7 +1043,7 @@ function New-M365DSCIntuneAppProtectionPolicyAndroid
     }
 }
 
-function Set-M365DSCIntuneAppProtectionPolicyiOS
+function Set-M365DSCIntuneAppProtectionPolicyAndroid
 {
     [CmdletBinding()]
     param(
@@ -1057,8 +1057,8 @@ function Set-M365DSCIntuneAppProtectionPolicyiOS
     )
     try
     {
-        $Url = "https://graph.microsoft.com/beta/deviceAppManagement/iosManagedAppProtections('$PolicyId')/"
-        Write-Verbose -Message "Updating iOS App Protection policy with JSON payload: `r`n$JSONContent"
+        $Url = "https://graph.microsoft.com/beta/deviceAppManagement/androidManagedAppProtections('$PolicyId')/"
+        Write-Verbose -Message "Updating Android App Protection policy with JSON payload: `r`n$JSONContent"
         Invoke-MgGraphRequest -Method PATCH `
             -Uri $Url `
             -Body $JSONContent `
@@ -1074,7 +1074,7 @@ function Set-M365DSCIntuneAppProtectionPolicyiOS
     }
 }
 
-function Set-M365DSCIntuneAppProtectionPolicyiOSApps
+function Set-M365DSCIntuneAppProtectionPolicyAndroidApps
 {
     [CmdletBinding()]
     param(
@@ -1089,7 +1089,7 @@ function Set-M365DSCIntuneAppProtectionPolicyiOSApps
     try
     {
         $Url = "https://graph.microsoft.com/beta/deviceAppManagement/managedAppPolicies/$PolicyId/targetApps"
-        Write-Verbose -Message "Updating Apps for iOS App Protection policy with JSON payload: `r`n$JSONContent"
+        Write-Verbose -Message "Updating Apps for Android App Protection policy with JSON payload: `r`n$JSONContent"
         Invoke-MgGraphRequest -Method POST `
             -Uri $Url `
             -Body $JSONContent `
