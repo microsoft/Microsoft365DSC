@@ -63,7 +63,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowedInboundDataTransferSources       = "managedApps";
                     AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                     AllowedOutboundDataTransferDestinations = "managedApps";
-                    Apps                                    = @("com.cisco.jabberimintune.android", "com.pervasent.boardpapers.android", "com.sharefile.mobile.intune.android");
+                    Apps                                    = @("com.cisco.im.intune.android", "com.penlink.penpoint.android", "com.slack.intune.android");
                     Assignments                             = @("6ee86c9f-2b3c-471d-ad38-ff4673ed723e");
                     ContactSyncBlocked                      = $False;
                     DataBackupBlocked                       = $False;
@@ -129,7 +129,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowedInboundDataTransferSources       = "managedApps";
                     AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                     AllowedOutboundDataTransferDestinations = "managedApps";
-                    Apps                                    = @("com.cisco.jabberimintune.android", "com.pervasent.boardpapers.android", "com.sharefile.mobile.intune.android");
+                    Apps                                    = @("com.cisco.im.intune.android", "com.penlink.penpoint.android", "com.slack.intune.android");
                     Assignments                             = @("6ee86c9f-2b3c-471d-ad38-ff4673ed723e");
                     ContactSyncBlocked                      = $False;
                     DataBackupBlocked                       = $False;
@@ -173,24 +173,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowedOutboundDataTransferDestinations = "managedApps";
                         Apps                                    = @(
                             @{
-                                id                  = "com.cisco.jabberimintune.android.android"
+                                id                  = "com.cisco.im.intune.android.android"
                                 mobileAppIdentifier = @{
                                     "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    bundleId      = "com.cisco.jabberimintune.android"
+                                    packageid      = "com.cisco.im.intune.android"
                                 }
                             },
                             @{
-                                id                  = "com.pervasent.boardpapers.android.android"
+                                id                  = "com.penlink.penpoint.android.android"
                                 mobileAppIdentifier = @{
                                     "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    bundleId      = "com.pervasent.boardpapers.android"
+                                    packageid      = "com.penlink.penpoint.android"
                                 }
                             },
                             @{
-                                id                  = "com.sharefile.mobile.intune.android.android"
+                                id                  = "com.slack.intune.android.android"
                                 mobileAppIdentifier = @{
                                     "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    bundleId      = "com.sharefile.mobile.intune.android"
+                                    packageid      = "com.slack.intune.android"
                                 }
                             }
                         )
@@ -254,7 +254,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowedInboundDataTransferSources       = "managedApps";
                     AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                     AllowedOutboundDataTransferDestinations = "managedApps";
-                    Apps                                    = @("com.cisco.jabberimintune.android", "com.pervasent.boardpapers.android", "com.sharefile.mobile.intune.android");
+                    Apps                                    = @("com.cisco.im.intune.android", "com.penlink.penpoint.android", "com.slack.intune.android");
                     Assignments                             = @("6ee86c9f-2b3c-471d-ad38-ff4673ed723e");
                     ContactSyncBlocked                      = $False;
                     DataBackupBlocked                       = $False;
@@ -298,24 +298,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowedOutboundDataTransferDestinations = "managedApps";
                         Apps                                    = @(
                             @{
-                                id                  = "com.cisco.jabberimintune.android.android"
+                                id                  = "com.cisco.im.intune.android.android"
                                 mobileAppIdentifier = @{
                                     "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    bundleId      = "com.cisco.jabberimintune.android"
+                                    packageid      = "com.cisco.im.intune.android"
                                 }
                             },
                             @{
-                                id                  = "com.pervasent.boardpapers.android.android"
+                                id                  = "com.penlink.penpoint.android.android"
                                 mobileAppIdentifier = @{
                                     "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    bundleId      = "com.pervasent.boardpapers.android"
+                                    packageid      = "com.penlink.penpoint.android"
                                 }
                             },
                             @{
-                                id                  = "com.sharefile.mobile.intune.android.android"
+                                id                  = "com.slack.intune.android.android"
                                 mobileAppIdentifier = @{
                                     "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    bundleId      = "com.sharefile.mobile.intune.android"
+                                    packageid      = "com.slack.intune.android"
                                 }
                             }
                         )
@@ -370,7 +370,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowedInboundDataTransferSources       = "managedApps";
                     AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                     AllowedOutboundDataTransferDestinations = "managedApps";
-                    Apps                                    = @("com.cisco.jabberimintune.android", "com.pervasent.boardpapers.android", "com.sharefile.mobile.intune.android");
+                    Apps                                    = @("com.cisco.im.intune.android", "com.penlink.penpoint.android", "com.slack.intune.android");
                     Assignments                             = @("6ee86c9f-2b3c-471d-ad38-ff4673ed723e");
                     ContactSyncBlocked                      = $False;
                     DataBackupBlocked                       = $False;
@@ -414,24 +414,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowedOutboundDataTransferDestinations = "managedApps";
                         Apps                                    = @(
                             @{
-                                id                  = "com.cisco.jabberimintune.android.android"
+                                id                  = "com.cisco.im.intune.android.android"
                                 mobileAppIdentifier = @{
                                     "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    bundleId      = "com.cisco.jabberimintune.android"
+                                    packageid      = "com.cisco.im.intune.android"
                                 }
                             },
                             @{
-                                id                  = "com.pervasent.boardpapers.android.android"
+                                id                  = "com.penlink.penpoint.android.android"
                                 mobileAppIdentifier = @{
                                     "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    bundleId      = "com.pervasent.boardpapers.android"
+                                    packageid      = "com.penlink.penpoint.android"
                                 }
                             },
                             @{
-                                id                  = "com.sharefile.mobile.intune.android.android"
+                                id                  = "com.slack.intune.android.android"
                                 mobileAppIdentifier = @{
                                     "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    bundleId      = "com.sharefile.mobile.intune.android"
+                                    packageid      = "com.slack.intune.android"
                                 }
                             }
                         )
@@ -511,24 +511,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowedOutboundDataTransferDestinations = "managedApps";
                         Apps                                    = @(
                             @{
-                                id                  = "com.cisco.jabberimintune.android.android"
+                                id                  = "com.cisco.im.intune.android.android"
                                 mobileAppIdentifier = @{
                                     "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    bundleId      = "com.cisco.jabberimintune.android"
+                                    packageid      = "com.cisco.im.intune.android"
                                 }
                             },
                             @{
-                                id                  = "com.pervasent.boardpapers.android.android"
+                                id                  = "com.penlink.penpoint.android.android"
                                 mobileAppIdentifier = @{
                                     "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    bundleId      = "com.pervasent.boardpapers.android"
+                                    packageid      = "com.penlink.penpoint.android"
                                 }
                             },
                             @{
-                                id                  = "com.sharefile.mobile.intune.android.android"
+                                id                  = "com.slack.intune.android.android"
                                 mobileAppIdentifier = @{
                                     "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    bundleId      = "com.sharefile.mobile.intune.android"
+                                    packageid      = "com.slack.intune.android"
                                 }
                             }
                         )
