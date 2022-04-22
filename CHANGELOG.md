@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneAppProtectionPolicyAndroid
+  * New resource - (fixes issue #1900 and #1432)
+
 # 1.22.420.1
 
 * EXOOutboundConnector
