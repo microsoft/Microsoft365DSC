@@ -60,6 +60,8 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of AAD Named Location"
+   
+
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -83,7 +85,7 @@ function Get-TargetResource
         {
             if ($Id)
             {
-                $NamedLocation = Get-MgIdentityConditionalAccessNamedLocation -NamedLocationId $Id
+                $NamedLocation = Get-MgIdentityConditionalAccessNamedLocation -NamedLocationId $Id -ErrorAction Stop
             }
         }
         catch
@@ -411,6 +413,7 @@ function Export-TargetResource
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
+    Select-MgProfile -Name 'Beta'
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
