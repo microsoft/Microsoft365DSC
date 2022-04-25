@@ -942,13 +942,9 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
         "allowedOutboundClipboardSharingLevel": "$($Parameters.AllowedOutboundClipboardSharingLevel)",
         "dataBackupBlocked": $($Parameters.DataBackupBlocked.ToString().ToLower()),
         "deviceComplianceRequired": $($Parameters.DeviceComplianceRequired.ToString().ToLower()),
-        "IsAssigned": $($Parameters.IsAssigned.ToString().ToLower()),
-        "ManagedBrowser": $($Parameters.ManagedBrowser),
-        "MinimumRequiredAppVersion": $($Parameters.MinimumWarningAppVersion),
-        "MinimumRequiredOSVersion": $($Parameters.MinimumRequiredOSVersion),
-        "MinimumRequiredSdkVersion": $($Parameters.MinimumRequiredSdkVersion),
-        "MinimumWarningAppVersion": $($Parameters.MinimumWarningAppVersion),
-        "MinimumWarningOSVersion": $($Parameters.MinimumWarningOSVersion),
+
+
+
         "managedBrowserToOpenLinksRequired": $($Parameters.ManagedBrowserToOpenLinksRequired.ToString().ToLower()),
         "saveAsBlocked": $($Parameters.SaveAsBlocked.ToString().ToLower()),
         "periodOfflineBeforeWipeIsEnforced": "$($Parameters.PeriodOfflineBeforeWipeIsEnforced)",
