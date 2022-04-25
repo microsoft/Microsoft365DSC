@@ -4,6 +4,8 @@
 
 * EXOAuthenticationPolicy
   * Fix schema.mof file (FIXES #1896)
+* IntuneAppProtectionPolicyAndroid
+  * New resource - (fixes issue #1900 and #1432)
 
 # 1.22.420.1
 
