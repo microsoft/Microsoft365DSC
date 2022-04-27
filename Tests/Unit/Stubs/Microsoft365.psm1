@@ -1,5 +1,250 @@
 
 #region ExchangeOnline
+function Get-AuthenticationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthActiveSync,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthAutodiscover,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthImap,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthMapi,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthOfflineAddressBook,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthOutlookService,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPop,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPowerShell,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthReportingWebServices,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthRpc,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthSmtp,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthWebServices
+    )
+}
+function Set-AuthenticationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthActiveSync,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthAutodiscover,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthImap,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthMapi,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthOfflineAddressBook,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthOutlookService,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPop,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPowerShell,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthReportingWebServices,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthRpc,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthSmtp,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthWebServices
+    )
+}
+function New-AuthenticationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthActiveSync,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthAutodiscover,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthImap,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthMapi,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthOfflineAddressBook,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthOutlookService,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPop,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPowerShell,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthReportingWebServices,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthRpc,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthSmtp,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthWebServices
+    )
+}
+function Remove-AuthenticationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthActiveSync,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthAutodiscover,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthImap,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthMapi,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthOfflineAddressBook,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthOutlookService,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPop,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthPowerShell,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthReportingWebServices,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthRpc,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthSmtp,
+
+        [Parameter()]
+        [Switch]
+        $AllowBasicAuthWebServices
+    )
+}
 function Add-AvailabilityAddressSpace
 {
     [CmdletBinding()]
@@ -692,6 +937,39 @@ function Get-Mailbox
         $AsJob
     )
 }
+function Get-MailboxPlan
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $SortBy,
+
+        [Parameter()]
+        [System.Object]
+        $Credential,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IgnoreDefaultScope,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Get-MailboxRegionalConfiguration
 {
     [CmdletBinding()]
@@ -953,6 +1231,19 @@ function Get-PolicyTipConfig
         $AsJob
     )
 }
+function Get-QuarantinePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Get-RemoteDomain
 {
     [CmdletBinding()]
@@ -1077,6 +1368,15 @@ function Get-SupervisoryReviewRule
         [System.Object]
         $Policy,
 
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Get-TransportConfig
+{
+    [CmdletBinding()]
+    param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $AsJob
@@ -3088,6 +3388,43 @@ function New-PolicyTipConfig
         $AsJob
     )
 }
+function New-QuarantinePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $EndUserQuarantinePermissionsValue,
+
+        [Parameter()]
+        [System.Object]
+        $ESNEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $MultiLanguageCustomDisclaimer,
+
+        [Parameter()]
+        [System.Object]
+        $MultiLanguageSenderName,
+
+        [Parameter()]
+        [System.Object]
+        $MultiLanguageSetting,
+
+        [Parameter()]
+        [System.Object]
+        $OrganizationBrandingEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function New-RemoteDomain
 {
     [CmdletBinding()]
@@ -4779,6 +5116,23 @@ function Remove-PartnerApplication
     )
 }
 function Remove-PolicyTipConfig
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Remove-QuarantinePolicy
 {
     [CmdletBinding()]
     param(
@@ -6820,6 +7174,55 @@ function Set-Mailbox
         $AsJob
     )
 }
+function Set-MailboxPlan
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $IssueWarningQuota,
+
+        [Parameter()]
+        [System.Object]
+        $MaxReceiveSize,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $MaxSendSize,
+
+        [Parameter()]
+        [System.Object]
+        $ProhibitSendQuota,
+
+        [Parameter()]
+        [System.Object]
+        $ProhibitSendReceiveQuota,
+
+        [Parameter()]
+        [System.Object]
+        $RetainDeletedItemsFor,
+
+        [Parameter()]
+        [System.Object]
+        $RetentionPolicy,
+
+        [Parameter()]
+        [System.Object]
+        $RoleAssignmentPolicy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Set-MailboxRegionalConfiguration
 {
     [CmdletBinding()]
@@ -8396,6 +8799,47 @@ function Set-PolicyTipConfig
         $AsJob
     )
 }
+function Set-QuarantinePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $EndUserQuarantinePermissionsValue,
+
+        [Parameter()]
+        [System.Object]
+        $ESNEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $MultiLanguageCustomDisclaimer,
+
+        [Parameter()]
+        [System.Object]
+        $MultiLanguageSenderName,
+
+        [Parameter()]
+        [System.Object]
+        $MultiLanguageSetting,
+
+        [Parameter()]
+        [System.Object]
+        $OrganizationBrandingEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Set-RemoteDomain
 {
     [CmdletBinding()]
@@ -8793,6 +9237,103 @@ function Set-SharingPolicy
         [Parameter()]
         [System.Object]
         $Enabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
+function Set-TransportConfig
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $AddressBookPolicyRoutingEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ClearCategories,
+
+        [Parameter()]
+        [System.Object]
+        $ConvertDisclaimerWrapperToEml,
+
+        [Parameter()]
+        [System.Object]
+        $DSNConversionMode,
+
+        [Parameter()]
+        [System.Object]
+        $ExternalDelayDsnEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ExternalDsnLanguageDetectionEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ExternalDsnSendHtml,
+
+        [Parameter()]
+        [System.Object]
+        $ExternalPostmasterAddress,
+
+        [Parameter()]
+        [System.Object]
+        $HeaderPromotionModeSetting,
+
+        [Parameter()]
+        [System.Object]
+        $InternalDelayDsnEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $InternalDsnLanguageDetectionEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $InternalDsnSendHtml,
+
+        [Parameter()]
+        [System.Object]
+        $JournalingReportNdrTo,
+
+        [Parameter()]
+        [System.Object]
+        $JournalMessageExpirationDays,
+
+        [Parameter()]
+        [System.Object]
+        $MaxRecipientEnvelopeLimit,
+
+        [Parameter()]
+        [System.Object]
+        $ReplyAllStormBlockDurationHours,
+
+        [Parameter()]
+        [System.Object]
+        $ReplyAllStormDetectionMinimumRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $ReplyAllStormDetectionMinimumReplies,
+
+        [Parameter()]
+        [System.Object]
+        $ReplyAllStormProtectionEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $Rfc2231EncodingEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $SmtpClientAuthenticationDisabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -11555,6 +12096,31 @@ function Get-CsTenantDialPlan
         $AsJob
     )
 }
+function Get-CsTenantFederationConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
+    )
+}
 function Grant-CsTeamsUpgradePolicy
 {
     [CmdletBinding()]
@@ -13974,6 +14540,43 @@ function Set-CsTenantDialPlan
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $AsJob
+    )
+}
+function Set-CsTenantFederationConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $AllowFederatedUsers,
+
+        [Parameter()]
+        [System.Object]
+        $AllowPublicUsers,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $AllowTeamsConsumer,
+
+        [Parameter()]
+        [System.Object]
+        $AllowTeamsConsumerInbound,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant
     )
 }
 #endregion

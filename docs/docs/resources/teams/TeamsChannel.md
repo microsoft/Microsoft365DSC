@@ -6,6 +6,7 @@
 | --- | --- | --- | --- | --- |
 | **DisplayName** | Key | String | Current channel name ||
 | **TeamName** | Key | String | Name of the team the Channel belongs to ||
+| **GroupID** | Write | String | Team group ID, only used to target a Team when duplicated display names occurs. ||
 | **NewDisplayName** | Write | String | Used to update current channel name ||
 | **Description** | Write | String | Channel description ||
 | **Ensure** | Write | String | Present ensures the Team channel exists, absent ensures it is removed |Present, Absent|

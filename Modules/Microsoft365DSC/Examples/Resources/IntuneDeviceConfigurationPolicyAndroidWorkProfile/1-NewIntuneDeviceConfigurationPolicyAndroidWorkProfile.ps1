@@ -17,7 +17,7 @@ Configuration Example
         {
             DisplayName                                    = "Android Work Profile - Device Restrictions - Standard";
             Ensure                                         = "Present";
-            GlobalAdminAccount                             = $Credsglobaladmin;
+            Credential                                     = $Credsglobaladmin;
             PasswordBlockFingerprintUnlock                 = $False;
             PasswordBlockTrustAgents                       = $False;
             PasswordMinimumLength                          = 6;

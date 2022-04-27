@@ -74,26 +74,37 @@ function Get-TeamByName
         $TeamName
     )
 
-    $loopCounter = 0
-    do
+    try
     {
-        $team = Get-Team -DisplayName $TeamName
+        $loopCounter = 0
+        do
+        {
+            $team = Get-Team -DisplayName $TeamName | Where-Object -FilterScript { $_.DisplayName -eq [System.Net.WebUtility]::UrlDecode($TeamName) }
+            if ($null -eq $team)
+            {
+                Start-Sleep 5
+            }
+            $loopCounter += 1
+            if ($loopCounter -gt 5)
+            {
+                break
+            }
+        } while ($null -eq $team)
+
         if ($null -eq $team)
         {
-            Start-Sleep 5
+            throw "Team with Name $TeamName doesn't exist in tenant"
         }
-        $loopCounter += 1
-        if ($loopCounter -gt 5)
+        elseif ($teams.Length -gt 1)
         {
-            break
+            Write-Warning -Message "More than one Team with name {$TeamName} was found. This could prevent your configuration from compiling properly."
         }
-    } while ($null -eq $team)
-
-    if ($null -eq $team)
-    {
-        throw "Team with Name $TeamName doesn't exist in tenant"
+        return $team
     }
-    return $team
+    catch
+    {
+        return $null
+    }
 }
 
 <#
@@ -119,11 +130,15 @@ function Convert-M365DscHashtableToString
         {
             if ($pair.Value -is [System.Array])
             {
-                $str = "$($pair.Key)=($($pair.Value -join ","))"
+                $str = "$($pair.Key)=$(Convert-SPDscArrayToString -Array $pair.Value)"
             }
             elseif ($pair.Value -is [System.Collections.Hashtable])
             {
                 $str = "$($pair.Key)={$(Convert-M365DscHashtableToString -Hashtable $pair.Value)}"
+            }
+            elseif ($pair.Value -is [Microsoft.Management.Infrastructure.CimInstance])
+            {
+                $str = "$($pair.Key)=$(Convert-SPDscCIMInstanceToString -CIMInstance $pair.Value)"
             }
             else
             {
@@ -153,6 +168,81 @@ function Convert-M365DscHashtableToString
 
     [array]::Sort($values)
     return ($values -join "; ")
+}
+
+<#
+.Description
+This function converts a parameter array to a string, for outputting to screen
+
+.Functionality
+Internal
+#>
+function Convert-SPDscArrayToString
+{
+    param
+    (
+        [Parameter()]
+        [System.Array]
+        $Array
+    )
+
+    $str = "("
+    for ($i = 0; $i -lt $Array.Count; $i++)
+    {
+        $item = $Array[$i]
+        if ($item -is [System.Collections.Hashtable])
+        {
+            $str += "{"
+            $str += Convert-SPDscHashtableToString -Hashtable $item
+            $str += "}"
+        }
+        elseif ($Array[$i] -is [Microsoft.Management.Infrastructure.CimInstance])
+        {
+            $str += Convert-SPDscCIMInstanceToString -CIMInstance $item
+        }
+        else
+        {
+            $str += $item
+        }
+
+        if ($i -lt ($Array.Count - 1))
+        {
+            $str += ","
+        }
+    }
+    $str += ")"
+
+    return $str
+}
+
+<#
+.Description
+This function converts a parameter CimInstance to a string, for outputting to screen
+
+.Functionality
+Internal
+#>
+function Convert-SPDscCIMInstanceToString
+{
+    param
+    (
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $CIMInstance
+    )
+
+    $str = "{"
+    foreach ($prop in $CIMInstance.CimInstanceProperties)
+    {
+        if ($str -notmatch "{$")
+        {
+            $str += "; "
+        }
+        $str += "$($prop.Name)=$($prop.Value)"
+    }
+    $str += "}"
+
+    return $str
 }
 
 
@@ -859,6 +949,15 @@ Specifies the password of the PFX file which is used for authentication.
 .Parameter CertificatePath
 Specifies the path of the PFX file which is used for authentication.
 
+.Example
+Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential
+
+.Example
+Export-M365DSCConfiguration -Mode 'Default' -ApplicationId '2560bb7c-bc85-415f-a799-841e10ec4f9a' -TenantId 'contoso.sharepoint.com' -ApplicationSecret 'abcdefghijkl'
+
+.Example
+Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential -Path 'C:\DSC\Config.ps1'
+
 .Functionality
 Public
 #>
@@ -942,21 +1041,11 @@ function Export-M365DSCConfiguration
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Event", "Extraction")
 
-    if (-not [System.String]::IsNullOrEmpty($TenantId))
-    {
-        $data.Add("Tenant", $TenantId)
-    }
-    else
-    {
-        $tenant = $Credential.UserName.Split('@')[1]
-        $data.Add("Tenant", $tenant)
-    }
     $data.Add("Path", [System.String]::IsNullOrEmpty($Path))
     $data.Add("FileName", $null -ne [System.String]::IsNullOrEmpty($FileName))
     $data.Add("Components", $null -ne $Components)
     $data.Add("Workloads", $null -ne $Workloads)
     $data.Add("MaxProcesses", $null -ne $MaxProcesses)
-    Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
     $outdatedOrMissingAssemblies = Test-M365DSCDependencies
@@ -994,6 +1083,20 @@ function Export-M365DSCConfiguration
         $Credential = Get-Credential
     }
 
+    if (-not [System.String]::IsNullOrEmpty($TenantId))
+    {
+        $data.Add("Tenant", $TenantId)
+    }
+    else
+    {
+        if ($Credential)
+        {
+            $tenant = $Credential.UserName.Split('@')[1]
+            $data.Add("Tenant", $tenant)
+        }
+    }
+
+    Add-M365DSCTelemetryEvent -Data $data
     if ($LaunchWebUI)
     {
         explorer "https://export.microsoft365dsc.com"
@@ -1097,6 +1200,9 @@ function Confirm-M365DSCDependencies
 <#
 .Description
 This function re-imports all M365DSC dependencies, if not properly done before
+
+.Example
+Import-M365DSCDependencies
 
 .Functionality
 Public
@@ -1679,7 +1785,7 @@ function Get-M365TenantName
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
     Write-Verbose -Message "Getting SharePoint Online admin URL..."
-    $defaultDomain = Get-MgDomain | Where-Object { ($_.Id -like "*.onmicrosoft.com" -or $_.Id -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
+    [Array]$defaultDomain = Get-MgDomain | Where-Object { ($_.Id -like "*.onmicrosoft.com" -or $_.Id -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
 
     if ($defaultDomain[0].Id -like '*.onmicrosoft.com*')
     {
@@ -1869,6 +1975,9 @@ function ConvertTo-SPOUserProfilePropertyInstanceString
 <#
 .Description
 This function downloads and installs the Dev branch of Microsoft365DSC on the local machine
+
+.Example
+Install-M365DSCDevBranch
 
 .Functionality
 Public
@@ -2088,6 +2197,12 @@ Specifies the credentials that will be used for authentication.
 .Parameter HeaderFilePath
 Specifies that file that contains a custom header for the report.
 
+.Example
+Assert-M365DSCBlueprint -BluePrintUrl 'C:\DS\blueprint.m365' -OutputReportPath 'C:\DSC\BlueprintReport.html'
+
+.Example
+Assert-M365DSCBlueprint -BluePrintUrl 'C:\DS\blueprint.m365' -OutputReportPath 'C:\DSC\BlueprintReport.html' -Credentials $credentials -HeaderFilePath 'C:\DSC\ReportCustomHeader.html'
+
 .Functionality
 Public
 #>
@@ -2194,6 +2309,9 @@ function Assert-M365DSCBlueprint
 .Description
 This function checks if new versions are available for the M365DSC dependencies
 
+.Example
+Test-M365DSCDependenciesForNewVersions
+
 .Functionality
 Public
 #>
@@ -2205,6 +2323,7 @@ function Test-M365DSCDependenciesForNewVersions
     $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
     $dependencies = $manifest.Dependencies
     $i = 1
+    Import-Module PowerShellGet -Force
     foreach ($dependency in $dependencies)
     {
         Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
@@ -2212,15 +2331,19 @@ function Test-M365DSCDependenciesForNewVersions
         {
             $moduleInGallery = Find-Module $dependency.ModuleName
             [array]$moduleInstalled = Get-Module $dependency.ModuleName -ListAvailable | Select-Object Version
-            $modules = $moduleInstalled | Sort-Object Version -Descending
+            if ($moduleInstalled)
+            {
+                $modules = $moduleInstalled | Sort-Object Version -Descending
+            }
             $moduleInstalled = $modules[0]
-            if ([Version]($moduleInGallery.Version) -gt [Version]($moduleInstalled[0].Version))
+            if (-not $modules -or [Version]($moduleInGallery.Version) -gt [Version]($moduleInstalled[0].Version))
             {
                 Write-Host "New version of {$($dependency.ModuleName)} is available {$($moduleInGallery.Version)}"
             }
         }
         catch
         {
+            Write-Host $_
             Write-Host "New version of {$($dependency.ModuleName)} is available"
         }
         $i++
@@ -2267,6 +2390,12 @@ This function installs all missing M365DSC dependencies
 .Parameter Force
 Specifies that all dependencies should be forcefully imported again.
 
+.Example
+Update-M365DSCDependencies
+
+.Example
+Update-M365DSCDependencies -Force
+
 .Functionality
 Public
 #>
@@ -2305,6 +2434,69 @@ function Update-M365DSCDependencies
         }
         $i++
     }
+}
+
+<#
+.Description
+This function uninstalls all previous M365DSC dependencies and older versions of the module.
+.Example
+Uninstall-M365DSCOutdatedObjects
+.Functionality
+Public
+#>
+function Uninstall-M365DSCOutdatedDependencies
+{
+    [CmdletBinding()]
+    param(
+    )
+
+    $InformationPreference = 'Continue'
+
+    $microsoft365DscModules = Get-Module Microsoft365DSC -ListAvailable
+    $outdatedMicrosoft365DscModules = $microsoft365DscModules | Sort-Object Version | Select-Object -SkipLast 1
+
+    foreach ($module in $outdatedMicrosoft365DscModules)
+    {
+        try
+        {
+            Uninstall-Module -Name "$($module.Name)" -RequiredVersion "$($module.Version)"
+        }
+        catch
+        {
+            Write-Host "Could not uninstall $($module.Name) Version $($module.Version) "
+        }
+    }
+
+    $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
+    $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
+    $dependencies = $manifest.Dependencies
+    $i = 1
+    foreach ($dependency in $dependencies)
+    {
+        Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
+        try
+        {
+            $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -ne $dependency.RequiredVersion }
+            foreach ($foundModule in $found)
+            {
+                try
+                {
+                    Write-Information -Message "Uninstalling $($foundModule.Name) version {$($foundModule.Version)}"
+                    Uninstall-Module -Name "$($foundModule.Name)" -RequiredVersion "$($foundModule.Version)"
+                }
+                catch
+                {
+                    Write-Host "Could not uninstall $($foundModule.Name) Version $($foundModule.Version) "
+                }
+            }
+        }
+        catch
+        {
+            Write-Host "Could not uninstall {$($dependency.ModuleName)}"
+        }
+        $i++
+    }
+
 }
 
 <#
@@ -2621,6 +2813,9 @@ function Get-M365DSCExportContentForResource
 This function check if the currently installed version of M365DSC is the most recent one,
 available in the PowerShell Gallery
 
+.Example
+Test-M365DSCNewVersionAvailable
+
 .Functionality
 Public
 #>
@@ -2743,6 +2938,9 @@ function Get-M365DSCComponentsForAuthenticationType
 .Description
 This function gets all available M365DSC resources in the module
 
+.Example
+Get-M365DSCAllResources
+
 .Functionality
 Public
 #>
@@ -2801,6 +2999,9 @@ This function returns the used workloads for the specified DSC resources
 
 .Parameter ResourceNames
 Specifies the resources for which the workloads should be determined.
+
+.Example
+Get-M365DSCWorkloadsListFromResourceNames -ResourceNames O365User
 
 .Functionality
 Public
@@ -2948,10 +3149,22 @@ function New-M365DSCCmdletDocumentation
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $OutputPath
+        $OutputPath,
+
+        [Parameter()]
+        [System.String]
+        $ModulePath
     )
 
-    Import-Module Microsoft365Dsc -Force
+    if ($null -eq $ModulePath)
+    {
+        Import-Module Microsoft365Dsc -Force
+    }
+    else
+    {
+        Get-Module Microsoft365DSC -ErrorAction SilentlyContinue | Remove-Module -ErrorAction SilentlyContinue
+        Import-Module $ModulePath -Force
+    }
 
     if ((Test-Path -Path $OutputPath) -eq $false)
     {
@@ -3000,6 +3213,13 @@ function New-M365DSCCmdletDocumentation
                 $null = $output.AppendLine("**$($cmd.OutputType)**")
                 $null = $output.AppendLine('')
             }
+            else
+            {
+                $null = $output.AppendLine('## Output')
+                $null = $output.AppendLine('')
+                $null = $output.AppendLine('This function does not generate any output.')
+                $null = $output.AppendLine('')
+            }
 
             $ast = $cmd.ScriptBlock.Ast
             $parameters = $null
@@ -3038,6 +3258,18 @@ function New-M365DSCCmdletDocumentation
             else
             {
                 $null = $output.AppendLine('This function does not have any input parameters.')
+            }
+
+            if ($helpInfo.examples.example.Count -ne 0)
+            {
+                $null = $output.AppendLine('## Examples')
+                $null = $output.AppendLine('')
+                foreach ($example in $helpInfo.examples.example)
+                {
+                    $null = $output.AppendLine($example.title)
+                    $null = $output.AppendLine("``$($example.code)``")
+                    $null = $output.AppendLine('')
+                }
             }
 
             $savePath = Join-Path -Path $OutputPath -ChildPath "$commandName.md"
@@ -3091,6 +3323,7 @@ Export-ModuleMember -Function @(
     'Test-M365DSCDependenciesForNewVersions',
     'Test-M365DSCNewVersionAvailable',
     'Test-M365DSCParameterState',
+    'Uninstall-M365DSCOutdatedDependencies',
     'Update-M365DSCDependencies',
     'Update-M365DSCExportAuthenticationResults'
 )

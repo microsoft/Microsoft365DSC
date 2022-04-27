@@ -99,8 +99,12 @@ function Get-TargetResource
             $GroupCreationValue = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'GroupCreationAllowedGroupId'}
             if (-not [System.String]::IsNullOrEmpty($GroupCreationValue.Value))
             {
-                $groupObject = Get-MgGroup -GroupId $GroupCreationValue.Value
-                $AllowedGroupName = $groupObject.DisplayName
+                $groupObject = Get-MgGroup -GroupId $GroupCreationValue.Value -ErrorAction SilentlyContinue
+                $AllowedGroupName = $null
+                if ($groupObject)
+                {
+                    $AllowedGroupName = $groupObject.DisplayName
+                }
             }
 
             $valueEnableGroupCreation = $Policy.Values | Where-Object -FilterScript {$_.Name -eq "EnableGroupCreation"}
@@ -116,7 +120,6 @@ function Get-TargetResource
                 AllowGuestsToBeGroupOwner     = [Boolean]::Parse($valueAllowGuestsToBeGroupOwner.Value)
                 AllowGuestsToAccessGroups     = [Boolean]::Parse($valueAllowGuestsToAccessGroups.Value)
                 GuestUsageGuidelinesUrl       = $valueGuestUsageGuidelinesUrl.Value
-                GroupCreationAllowedGroupName = $AllowedGroupName
                 AllowToAddGuests              = [Boolean]::Parse($valueAllowToAddGuests.Value)
                 UsageGuidelinesUrl            = $valueUsageGuidelinesUrl.Value
                 Ensure                        = "Present"
@@ -125,6 +128,11 @@ function Get-TargetResource
                 ApplicationSecret             = $ApplicationSecret
                 CertificateThumbprint         = $CertificateThumbprint
                 Credential                    = $Credential
+            }
+
+            if (-not [System.String]::IsNullOrEmpty($AllowedGroupName))
+            {
+                $result.Add("GroupCreationAllowedGroupName", $AllowedGroupName)
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -253,42 +261,50 @@ function Set-TargetResource
         $groupId = $null
         if ($null -ne $groupObject)
         {
-            $groupId = $groupObject.ObjectId
+            $groupId = $groupObject.Id
         }
         $index = 0
         foreach ($property in $Policy.Values)
         {
             if ($property.Name -eq 'EnableGroupCreation')
             {
-                $Policy.Values[$index].Value = [System.Boolean]$EnableGroupCreation
+                $entry = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'EnableGroupCreation'}
+                $entry.Value = [System.Boolean]$EnableGroupCreation
             }
             elseif ($property.Name -eq 'AllowGuestsToBeGroupOwner')
             {
-                $Policy.Values[$index].Value = [System.Boolean]$AllowGuestsToBeGroupOwner
+                $entry = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'AllowGuestsToBeGroupOwner'}
+                $entry.Value = [System.Boolean]$AllowGuestsToBeGroupOwner
             }
             elseif ($property.Name -eq 'AllowGuestsToAccessGroups')
             {
-                $Policy.Values[$index].Value = [System.Boolean]$AllowGuestsToAccessGroups
+                $entry = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'AllowGuestsToAccessGroups'}
+                $entry.Value = [System.Boolean]$AllowGuestsToAccessGroups
             }
             elseif ($property.Name -eq 'GuestUsageGuidelinesUrl')
             {
-                $Policy.Values[$index].Value = $GuestUsageGuidelinesUrl
+                $entry = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'GuestUsageGuidelinesUrl'}
+                $entry.Value = $GuestUsageGuidelinesUrl
             }
             elseif ($property.Name -eq 'GroupCreationAllowedGroupId')
             {
-                $Policy.Values[$index].Value = $groupId
+                $entry = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'GroupCreationAllowedGroupId'}
+                $entry.Value = $groupId
             }
             elseif ($property.Name -eq 'AllowToAddGuests')
             {
-                $Policy.Values[$index].Value = [System.Boolean]$AllowToAddGuests
+                $entry = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'AllowToAddGuests'}
+                $entry.Value = [System.Boolean]$AllowToAddGuests
             }
             elseif ($property.Name -eq 'UsageGuidelinesUrl')
             {
-                $Policy.Values[$index].Value = $UsageGuidelinesUrl
+                $entry = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'UsageGuidelinesUrl'}
+                $entry.Value = $UsageGuidelinesUrl
             }
             $index++;
         }
 
+        Write-Verbose -Message "Updating Policy's Values with $($Policy.Values | Out-String)"
         Update-MgDirectorySetting -DirectorySettingId $Policy.id -Values $Policy.Values | Out-Null
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
