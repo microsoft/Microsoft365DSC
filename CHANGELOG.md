@@ -2,8 +2,12 @@
 
 # UNRELEASED
 
+* EXOAuthenticationPolicy
+  * Fix schema.mof file (FIXES #1896)
 * IntuneAppProtectionPolicyAndroid
   * New resource - (fixes issue #1900 and #1432)
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.146.
 
 # 1.22.420.1
 
