@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.427.1
 
 * AADApplication
   * Fix for Permissions with 'Role,Scope' types.
@@ -8,6 +8,8 @@
   * Fix schema.mof file (FIXES #1896)
 * IntuneAppProtectionPolicyAndroid
   * New resource - (fixes issue #1900 and #1432)
+* IntuneAppProtectionPolicyiOS
+  * Fixes #1877
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.146.
 * MISC
