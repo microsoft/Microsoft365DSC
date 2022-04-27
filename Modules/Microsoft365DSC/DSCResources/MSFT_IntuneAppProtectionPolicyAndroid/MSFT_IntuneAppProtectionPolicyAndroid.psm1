@@ -484,11 +484,50 @@ function Set-TargetResource
     $setParams = $PSBoundParameters
     $setParams.Remove("Ensure") | Out-Null
     $setParams.Remove("Credential") | Out-Null
+    # could we do this better?  I'm sure we could
+    $setParams.Remove("ApplicationID") | Out-Null
+    $setParams.Remove("ApplicationSecret") | Out-Null
+    $setParams.Remove("TenantID") | Out-Null
+    $setParams.Remove("CertificateThumbprint") | Out-Null
+
+    # removing known problematic values until i can fix them...
+    $setParams.Remove("PeriodOfflineBeforeAccessCheck") | out-null
+    $setParams.Remove("PeriodOnlineBeforeAccessCheck") | out-null
+    $setParams.Remove("PeriodOfflineBeforeWipeIsEnforced") | out-null
+    #$setParams.Remove("PeriodBeforePinReset") | out-null
+    $setParams.Remove("Apps") | out-null
+    $setParams.Remove("Assignments") | out-null
+
+
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Android App Protection Policy {$DisplayName}"
+
+        # construct command
+        $graphparams = get-inputParamsList
+        foreach ($param in $setParams.keys)
+        {
+            write-verbose "########################### $param ########################"
+            if ( $graphparams.containskey($param) )
+            {
+
+                write-host 'we have a match with:' $param 'Type is:' $graphparams.$param.ParameterType.name
+
+            }
+            else
+            {
+                write-verbose -message "Cannot specify this in graph cmdlet: $param"
+            }
+        }
+
+        #let's try to splat it.. if I can rememeber how to splat
+        Write-Verbose -Message 'Setting up policy via graph...'
+        New-MgDeviceAppMgtAndroidManagedAppProtection @setParams
+
+
         $JsonContent = Get-M365DSCIntuneAppProtectionPolicyAndroidJSON -Parameters $PSBoundParameters
         Write-Verbose -Message "JSON: $JsonContent"
+        <#
         New-M365DSCIntuneAppProtectionPolicyAndroid -JSONContent $JsonContent
 
         $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'" `
@@ -498,6 +537,7 @@ function Set-TargetResource
 
         Set-M365DSCIntuneAppProtectionPolicyAndroidAssignment -JsonContent $assignmentJSON `
             -PolicyId $policyInfo.Id
+        #>
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
@@ -1151,5 +1191,17 @@ function Set-M365DSCIntuneAppProtectionPolicyAndroidAssignment
             -TenantId $tenantIdValue
     }
 }
+
+
+function get-inputParamsList
+{
+
+    # it seems a daft function at the moment but I'm hoping wI can use it to set up dynamic parameters for the functions at some point and I'll probably need to work on it then
+    $Graphparams = (get-command New-MgDeviceAppMgtAndroidManagedAppProtection).Parameters
+
+    return $Graphparams
+
+}
+
 
 Export-ModuleMember -Function *-TargetResource
