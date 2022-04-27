@@ -1,5 +1,21 @@
 # Change log for Microsoft365DSC
 
+# 1.22.427.1
+
+* AADApplication
+  * Fix for Permissions with 'Role,Scope' types.
+* EXOAuthenticationPolicy
+  * Fix schema.mof file (FIXES #1896)
+* IntuneAppProtectionPolicyAndroid
+  * New resource - (fixes issue #1900 and #1432)
+* IntuneAppProtectionPolicyiOS
+  * Fixes #1877
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.146.
+* MISC
+  * Performance updates when doing exports (using StringBuilder over
+    appending to string).
+
 # 1.22.420.1
 
 * EXOOutboundConnector

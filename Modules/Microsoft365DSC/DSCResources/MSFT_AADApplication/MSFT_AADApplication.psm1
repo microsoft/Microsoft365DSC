@@ -792,7 +792,7 @@ function Get-M365DSCAzureADAppPermissions
                     }
                 }
             }
-            elseif ($resourceAccess.Type -eq 'Role')
+            elseif ($resourceAccess.Type -eq 'Role' -or $resourceAccess.Type -eq 'Role,Scope')
             {
                 $currentPermission.Add("Type", "AppOnly")
                 $role = $SourceAPI.AppRoles | Where-Object -FilterScript {$_.Id -eq $resourceAccess.Id}
