@@ -26,7 +26,6 @@ class MSFT_IntuneAppProtectionPolicyiOS : OMI_BaseResource
     [Write, Description("Indicates whether printing is allowed from managed apps.")] Boolean PrintBlocked;
     [Write, Description("Indicates whether use of the fingerprint reader is allowed in place of a pin if PinRequired is set to True.")] Boolean FingerprintBlocked;
     [Write, Description("Indicates whether use of the FaceID is allowed in place of a pin if PinRequired is set to True.")] Boolean FaceIdBlocked;
-    [Write, Description("Indicates if the policy is deployed to any inclusion groups or not. Inherited from targetedManagedAppProtection.")] Boolean IsAssigned;
     [Write, Description("Indicates in which managed browser(s) that internet links should be opened. When this property is configured, ManagedBrowserToOpenLinksRequired should be true. Possible values are: notConfigured, microsoftEdge.")] String ManagedBrowser;
     [Write, Description("Versions less than the specified version will block the managed app from accessing company data.")] String MinimumRequiredAppVersion;
     [Write, Description("Versions less than the specified version will block the managed app from accessing company data.")] String MinimumRequiredOSVersion;
