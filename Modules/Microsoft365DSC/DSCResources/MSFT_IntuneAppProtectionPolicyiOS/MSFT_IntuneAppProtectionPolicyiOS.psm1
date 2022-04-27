@@ -45,10 +45,6 @@ function Get-TargetResource
         $DeviceComplianceRequired,
 
         [Parameter()]
-        [System.Boolean]
-        $IsAssigned,
-
-        [Parameter()]
         [System.String]
         $ManagedBrowser,
 
@@ -247,7 +243,6 @@ function Get-TargetResource
             AllowedOutboundClipboardSharingLevel    = $policy.AllowedOutboundClipboardSharingLevel
             DataBackupBlocked                       = $policy.DataBackupBlocked
             DeviceComplianceRequired                = $policy.DeviceComplianceRequired
-            IsAssigned                              = $policy.IsAssigned
             ManagedBrowser                          = $policy.ManagedBrowser
             MinimumRequiredAppVersion               = $policy.MinimumRequiredAppVersion
             MinimumRequiredOsVersion                = $policy.MinimumRequiredOsVersion
@@ -343,10 +338,6 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $DeviceComplianceRequired,
-
-        [Parameter()]
-        [System.Boolean]
-        $IsAssigned,
 
         [Parameter()]
         [System.String]
@@ -579,10 +570,6 @@ function Test-TargetResource
         $DeviceComplianceRequired,
 
         [Parameter()]
-        [System.Boolean]
-        $IsAssigned,
-
-        [Parameter()]
         [System.String]
         $ManagedBrowser,
 
@@ -770,7 +757,7 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
-    #Ensure the proper dependencies are installed in the current environment.
+    #Ensure the proper dependencies are installed in the current environment
     Confirm-M365DSCDependencies
 
     #region Telemetry
