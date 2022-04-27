@@ -109,7 +109,11 @@ function Get-TargetResource
     try
     {
         #Get-OMEConfiguration do NOT accept ErrorAction parameter
-        $OMEConfigurations = Get-OMEConfiguration
+        $OMEConfigurations = Get-OMEConfiguration 2>&1
+        if($null -ne ($OMEConfigurations |Where-Object {$_.gettype().Name -like "*ErrorRecord*"}))
+        {
+            throw $OMEConfigurations
+        }
 
         $OMEConfiguration = $OMEConfigurations | Where-Object -FilterScript { $_.Identity -eq $Identity }
         if ($null -eq $OMEConfiguration)
@@ -462,7 +466,14 @@ function Export-TargetResource
     #endregion
     try
     {
-        [array]$OMEConfigurations = Get-OMEConfiguration
+        #Using 2>&1 to redirect Error stream to variable because Set-Perimeter do not inlude ErrorAction
+        $OMEConfigurations = Get-OMEConfiguration 2>&1
+        if($null -ne ($OMEConfigurations |Where-Object {$_.gettype().Name -like "*ErrorRecord*"}))
+        {
+            throw $OMEConfigurations
+        }
+
+        [Array]$OMEConfigurations=$OMEConfigurations
         $dscContent = ""
 
         if ($OMEConfigurations.Length -eq 0)

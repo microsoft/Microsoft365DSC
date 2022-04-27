@@ -51,7 +51,7 @@ function Get-TargetResource
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Checking for the MEM Endpoint Protection Application Control Policy {$DisplayName}"
+    Write-Verbose -Message "Checking for the Intune Endpoint Protection Application Control Policy {$DisplayName}"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters -ProfileName 'beta' -ErrorAction Stop
     $context=Get-MgContext
@@ -210,7 +210,7 @@ function Set-TargetResource
         Write-Verbose -Message "Creating new Endpoint Protection Application Control Policy {$DisplayName}"
         $PSBoundParameters.Remove('DisplayName') | Out-Null
         $PSBoundParameters.Remove('Description') | Out-Null
-        $Settings = Get-M365DSCMEMEndpointProtectionPolicyWindowsSettings -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        $Settings = Get-M365DSCIntuneEndpointProtectionPolicyWindowsSettings -Properties ([System.Collections.Hashtable]$PSBoundParameters)
         New-MgDeviceManagementIntent -DisplayName $DisplayName `
             -Description $Description `
             -TemplateId "63be6324-e3c9-4c97-948a-e7f4b96f0f20" `
@@ -226,7 +226,7 @@ function Set-TargetResource
 
         $PSBoundParameters.Remove('DisplayName') | Out-Null
         $PSBoundParameters.Remove('Description') | Out-Null
-        $Settings = Get-M365DSCMEMEndpointProtectionPolicyWindowsSettings -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        $Settings = Get-M365DSCIntuneEndpointProtectionPolicyWindowsSettings -Properties ([System.Collections.Hashtable]$PSBoundParameters)
         $currentSettings=Get-MgDeviceManagementIntentSetting -DeviceManagementIntentId $appControlPolicy.Id -ErrorAction Stop
         Update-MgDeviceManagementIntent -ErrorAction Stop `
             -Description $Description `
@@ -458,7 +458,7 @@ function Export-TargetResource
     }
 }
 
-function Get-M365DSCMEMEndpointProtectionPolicyWindowsSettings
+function Get-M365DSCIntuneEndpointProtectionPolicyWindowsSettings
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]

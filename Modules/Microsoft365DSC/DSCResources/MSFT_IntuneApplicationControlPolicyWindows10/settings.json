@@ -1,6 +1,6 @@
 {
-    "resourceName": "MEMEndpointProtectionApplicationControlPolicyWindows10",
-    "description": "This resource configures a MEM Endpoint Protection Application Control policy for an Windows 10 Device.",
+    "resourceName": "IntuneApplicationControlPolicyWindows10",
+    "description": "This resource configures a Intune Endpoint Protection Application Control policy for an Windows 10 Device.",
     "permissions": [
         {
             "read": [
