@@ -38,7 +38,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credential"
+                return "Credentials"
             }
             $existingValueXML = "<?xml version=`"1.0`" encoding=`"ISO-8859-1`"?>
             <SearchConfigurationSettings xmlns:i=`"http://www.w3.org/2001/XMLSchema-instance`" xmlns=`"http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Portability`">

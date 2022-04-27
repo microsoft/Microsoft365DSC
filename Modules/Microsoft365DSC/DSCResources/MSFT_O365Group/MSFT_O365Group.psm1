@@ -92,16 +92,16 @@ function Get-TargetResource
 
         try
         {
-            $membersList = Get-MgGroupMember -GroupId $ADGroup[0].ObjectId
+            $membersList = Get-MgGroupMember -GroupId $ADGroup[0].Id
             Write-Verbose -Message "Found Members for Group {$($ADGroup[0].DisplayName)}"
-            $owners = Get-MgGroupOwner -GroupId $ADGroup[0].ObjectId
+            $owners = Get-MgGroupOwner -GroupId $ADGroup[0].Id
             Write-Verbose -Message "Found Owners for Group {$($ADGroup[0].DisplayName)}"
             $ownersUPN = @()
             if ($null -ne $owners)
             {
                 # Need to cast as an array for the test to properly compare cases with
                 # a single owner;
-                $ownersUPN = [System.String[]]$owners.UserPrincipalName
+                $ownersUPN = [System.String[]]$owners.AdditionalProperties.userPrincipalName
 
                 # Also need to remove the owners from the members list for Test
                 # to handle the validation properly;
@@ -110,10 +110,10 @@ function Get-TargetResource
                 foreach ($member in $membersList)
                 {
                     if ($null -ne $ownersUPN -and $ownersUPN.Length -ge 1 -and `
-                            -not [System.String]::IsNullOrEmpty($member.UserPrincipalName) -and `
-                            -not $ownersUPN.Contains($member.UserPrincipalName))
+                            -not [System.String]::IsNullOrEmpty($member.AdditionalProperties.userPrincipalName) -and `
+                            -not $ownersUPN.Contains($member.AdditionalProperties.sserPrincipalName))
                     {
-                        $newMemberList += $member.UserPrincipalName
+                        $newMemberList += $member.AdditionalProperties.userPrincipalName
                     }
                 }
             }
@@ -236,7 +236,7 @@ function Set-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     $currentGroup = Get-TargetResource @PSBoundParameters
@@ -255,56 +255,54 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Creating Office 365 Group {$DisplayName}"
             $groupParams = @{
-                DisplayName = $DisplayName
-                Notes       = $Description
-                Owner       = $ManagedBy
+                DisplayName     = $DisplayName
+                Description     = $Description
+                MailEnabled     = $true
+                SecurityEnabled = $true
             }
 
-            $groupParams.Owner = $ManagedBy[0]
             if ("" -ne $MailNickName)
             {
-                $groupParams.Add("Name", $MailNickName)
+                $groupParams.Add("mailNickName", $MailNickName)
             }
             Write-Verbose -Message "Initiating Group Creation"
-            Write-Verbose -Message "Owner = $($groupParams.Owner)"
-            New-UnifiedGroup @groupParams
+            Write-Verbose -Message "Owner = $($groupParams.Owners)"
+            Write-Verbose -Message "Creating New Group with values: $(Convert-M365DscHashtableToString -Hashtable $groupParams)"
+            New-MgGroup @groupParams -GroupTypes @("Unified")
             Write-Verbose -Message "Group Created"
-            if ($ManagedBy.Length -gt 1)
-            {
-                for ($i = 1; $i -lt $ManagedBy.Length; $i++)
-                {
-                    Write-Verbose -Message "Adding additional owner {$($ManagedBy[$i])} to group."
-                    if ("" -ne $Name)
-                    {
-                        Add-UnifiedGroupLinks -Identity $Name -LinkType Owner -Links $ManagedBy[$i]
-                    }
-                    else
-                    {
-                        Add-UnifiedGroupLinks -Identity $DisplayName -LinkType Owner -Links $ManagedBy[$i]
-                    }
-                }
-            }
         }
 
-        if ("" -ne $MailNickName)
+        [array]$ADGroup = Get-MgGroup -All:$true | Where-Object -FilterScript { $_.MailNickName -eq $MailNickName }
+        if ($null -eq $ADGroup)
         {
-            $groupLinks = Get-UnifiedGroupLinks -Identity $MailNickName -LinkType "Members"
-        }
-        else
-        {
-            $groupLinks = Get-UnifiedGroupLinks -Identity $DisplayName -LinkType "Members"
-        }
-        $curMembers = @()
-        foreach ($link in $groupLinks)
-        {
-            if ($link.Name -and $link.Name -ne $currentGroup.ManagedBy)
+            Write-Verbose -Message "Retrieving AzureADGroup by DisplayName {$DisplayName}"
+            [array]$ADGroup = Get-MgGroup -All:$true | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
+            if ($null -eq $ADGroup)
             {
-                $curMembers += $link.Name
+                Write-Verbose -Message "Office 365 Group {$DisplayName} was not found."
+                return $nullReturn
             }
+            elseif ($ADGroup.Length -gt 1)
+            {
+                $Message = "Multiple O365 groups were found with DisplayName {$DisplayName}. Please specify the MailNickName parameter to uniquely identify the group."
+                New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+            }
+        }
+        Write-Verbose -Message "Found Existing Instance of Group {$($ADGroup.DisplayName)}"
+
+        #region Members
+        $membersList = Get-MgGroupMember -GroupId $ADGroup[0].Id
+
+        $curMembers = @()
+        foreach ($member in $membersList)
+        {
+            $curMembers += $member.AdditionalProperties.userPrincipalName
         }
 
         if ($null -ne $CurrentParameters.Members)
         {
+            Write-Verbose -Message "Current Members: $($curMembers | Out-String)"
+            Write-Verbose -Message "Desired Members: $($CurrentParameters.Members | Out-String)"
             $difference = Compare-Object -ReferenceObject $curMembers -DifferenceObject $CurrentParameters.Members
 
             if ($null -ne $difference.InputObject)
@@ -329,48 +327,90 @@ function Set-TargetResource
                     }
                 }
 
-                if ($membersToAdd.Count -gt 0)
+                foreach ($member in $membersToAdd)
                 {
-                    if ("" -ne $MailNickName)
-                    {
-                        Write-Verbose "Adding members {$($membersToAdd.ToString())}"
-                        Add-UnifiedGroupLinks -Identity $MailNickName -LinkType Members -Links $membersToAdd
-                    }
-                    else
-                    {
-                        Write-Verbose "Adding members {$($membersToAdd.ToString())} with DisplayName"
-                        Add-UnifiedGroupLinks -Identity $DisplayName -LinkType Members -Links $membersToAdd
-                    }
+                    Write-Verbose "Adding members {$member}"
+                    $userId = (Get-MgUser -UserId $member).Id
+                    New-MgGroupMember -GroupId $ADGroup[0].Id -DirectoryObjectId $userId
                 }
 
-                if ($membersToRemove.Count -gt 0)
+                foreach ($member in $membersToRemove)
                 {
-                    if ("" -ne $name)
-                    {
-                        Remove-UnifiedGroupLinks -Identity $MailNickName -LinkType Members -Links $membersToRemove
-                    }
-                    else
-                    {
-                        Remove-UnifiedGroupLinks -Identity $DisplayName -LinkType Members -Links $membersToRemove
-                    }
+                    Write-Verbose "Removing members {$member}"
+                    $userId = (Get-MgUser -UserId $member).Id
+
+                    # There are no cmldet to remove members from group available at the time of writing this resource (March 8th 2022)
+                    $url = "https://graph.microsoft.com/v1.0/groups/$($ADGroup[0].Id)/members/$userId/`$ref"
+                    Invoke-MgGraphRequest -Method DELETE -Uri $url | Out-Null
                 }
             }
         }
+        #endregion
+
+        #region Owners
+        $ownersList = Get-MgGroupOwner -GroupId $ADGroup[0].Id
+
+        $curOwners = @()
+        foreach ($owner in $ownersList)
+        {
+            $curOwners += $owner.AdditionalProperties.userPrincipalName
+        }
+
+        if ($null -ne $CurrentParameters.ManagedBy)
+        {
+            Write-Verbose -Message "Current Owners: $($curOwners | Out-String)"
+            Write-Verbose -Message "Desired Owners: $($CurrentParameters.ManagedBy | Out-String)"
+            $difference = Compare-Object -ReferenceObject $curOwners -DifferenceObject $CurrentParameters.ManagedBy
+
+            if ($null -ne $difference.InputObject)
+            {
+                Write-Verbose -Message "Detected a difference in the current list of members and the desired one"
+                $ownersToRemove = @()
+                $ownersToAdd = @()
+                foreach ($diff in $difference)
+                {
+                    if ($diff.SideIndicator -eq "<=")
+                    {
+                            Write-Verbose "Will be removing Member: {$($diff.InputObject)}"
+                            $ownersToRemove += $diff.InputObject
+                    }
+                    elseif ($diff.SideIndicator -eq "=>")
+                    {
+                        Write-Verbose "Will be adding Owner: {$($diff.InputObject)}"
+                        $ownersToAdd += $diff.InputObject
+                    }
+                }
+
+                foreach ($owner in $ownersToAdd)
+                {
+                    Write-Verbose -Message "Adding Owner {$owner}"
+                    $userId = (Get-MgUser -UserId $owner).Id
+                    $newGroupOwner = @{
+                        "@odata.id"= "https://graph.microsoft.com/v1.0/users/{$userId}"
+                    }
+
+                    New-MgGroupOwnerByRef -GroupId $ADGroup[0].Id -BodyParameter $newGroupOwner
+                }
+
+                foreach ($owner in $ownersToRemove)
+                {
+                    Write-Verbose "Removing owner {$owner}"
+                    $userId = (Get-MgUser -UserId $owner).Id
+
+                    # There are no cmldet to remove members from group available at the time of writing this resource (March 8th 2022)
+                    $url = "https://graph.microsoft.com/v1.0/groups/$($ADGroup[0].Id)/owners/$userId/`$ref"
+                    Invoke-MgGraphRequest -Method DELETE -Uri $url | Out-Null
+                }
+            }
+        }
+        #endregion
     }
     elseif ($Ensure -eq "Absent")
     {
-        try
-        {
-            [array]$existingO365Group = Get-UnifiedGroup -Identity $currentGroup.MailNickName
-        }
-        catch
-        {
-            Write-Error -Message "Could not find group $($currrentGroup.MailNickName)"
-        }
-        if ($existingO365Group.Length -eq 1)
+        if ($ADGroup.Length -eq 1)
         {
             Write-Verbose -Message "Removing O365Group $($existingO365Group.Name)"
-            Remove-UnifiedGroup -Identity $existingO365Group.Name -confirm:$false -Force
+            Remove-MgGroup -GroupId $ADGroup[0].Id -confirm:$false | Out-Null
         }
         else
         {
@@ -504,7 +544,7 @@ function Export-TargetResource
     try
     {
         $dscContent = ''
-        $groups = Get-MgGroup -All $true | Where-Object -FilterScript {
+        $groups = Get-MgGroup -All:$true | Where-Object -FilterScript {
             $_.MailNickName -ne "00000000-0000-0000-0000-000000000000"
         }
 

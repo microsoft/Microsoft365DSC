@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "TeamsFederationConfiguration",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

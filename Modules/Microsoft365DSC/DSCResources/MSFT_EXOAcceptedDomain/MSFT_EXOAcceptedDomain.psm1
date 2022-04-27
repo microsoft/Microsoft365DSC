@@ -20,12 +20,10 @@ function Get-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [ValidateScript( { $false -eq $_ })]
         [System.Boolean]
         $MatchSubDomains = $false,
 
         [Parameter()]
-        [ValidateScript( { $false -eq $_ })]
         [System.Boolean]
         $OutboundOnly = $false,
 
@@ -73,7 +71,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -203,12 +201,22 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
+
+    if ($MatchSubDomains -eq $true -and $DomainType -ne "InternalRelay")
+    {
+        throw "MatchSubDomains can only be enabled on an InternalRelay domain."
+    }
+
+    if ($OutboundOnly -eq $true -and $DomainType -eq "ExternalRelay")
+    {
+        throw "OutboundOnly can only be enabled if the DomainType parameter is set to Authoritative or InternalRelay."
+    }
 
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
@@ -246,12 +254,10 @@ function Test-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [ValidateScript( { $false -eq $_ })]
         [System.Boolean]
         $MatchSubDomains = $false,
 
         [Parameter()]
-        [ValidateScript( { $false -eq $_ })]
         [System.Boolean]
         $OutboundOnly = $false,
 
@@ -284,7 +290,7 @@ function Test-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -350,7 +356,7 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters

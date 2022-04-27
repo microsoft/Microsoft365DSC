@@ -1,5 +1,141 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOAuthenticationPolicy
+  * Fix schema.mof file (FIXES #1896)
+* IntuneAppProtectionPolicyAndroid
+  * New resource - (fixes issue #1900 and #1432)
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.146.
+
+# 1.22.420.1
+
+* EXOOutboundConnector
+  * Added support for test mode connectors.
+
+# 1.22.413.1
+
+* EXOAuthenticationPolicy
+  * Fix typo in AllowBasicAuthOfflineAddressBook (FIXES #1876)
+* EXOQuarantinePolicy
+  * New resource
+* O365Groups
+  * Fixed issue on export of O365Groups resource.
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to 1.9.5.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.145.
+  * Updated MicrosoftTeams to 4.2.0.
+
+# 1.22.406.1
+
+* EXOMalwareFilterPolicy
+  * Add support for property QuarantineTag
+* PPTenantIsolationSettings
+  * New resource
+* MISC
+  * Updated Convert-M365DscHashtableToString function to also convert
+    Arrays and CimInstances to string.
+  * Updated permissions in settings.json files.
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.144.
+  * Updated MicrosoftTeams to 4.1.0.
+  * Updated PnP.PowerShell to 1.10.0.
+
+# 1.22.323.1
+
+* EXOAuthenticationPolicy
+  * Initial release;
+* EXOOrganizationConfig
+  * Added support for CustomerLockboxEnabled and DisablePlusAddressInRecipients parameters.
+    FIXES #1831
+
+# 1.22.316.1
+
+* EXOCASMailboxPlan
+  * Add support for DisplayName as identifier for CAS mailbox plan.
+* EXOTransportSettings
+  * New resource for Exchange Online transport configuration.
+* IntuneAppProtectionPolicyiOS
+  * Add 7 additional parameters to the resource and added parameter
+    descriptions.
+* DEPENDENCIES
+  * Updated DSCParser to 1.3.0.4.
+  * Updated Microsoft.Graph.* to 1.9.3.
+
+# 1.22.309.1
+
+* EXOAcceptedDomain
+  * Fixes an issue where True was never accepted as a value for parameters
+    MatchSubDomains or OutboundOnly.
+    FIXES #1779
+* EXOMailboxPlan
+  * New resource for Exchange Online Mailbox Plans.
+* EXOOrganizationConfig
+  * Fixes an issue where AutoExpandingArchiveEnabled returned always False.
+    FIXES #1789
+* IntuneDeviceConfigurationPolicyAndroidDeviceOwner
+  * Initial release.
+* O365Group
+  * Revamped to use Microsoft Graph in the Set;
+* TeamsChannel
+  * Fix to retrieve the team name without URL encoding.
+* TeamsFederationConfiguration
+  * New resource for Teams Federation Configuration.
+* TeamsTeam
+  * Fixed issue where teams were not created when no owners were specified.
+    If credentials are used, then the user will be used as owner.
+* DEPENDENCIES
+  * Updated DSCParser to version 1.3.0.3.
+  * Updated MicrosoftTeams to version 4.0.0.
+* MISC
+  * Added a function to uninstall all outdated dependencies
+    and older versions of Microsoft365DSC;
+  * M365DSCReport: Adds JSON as an export option.
+
+# 1.22.216.1
+
+* DEPENDENCIES
+  * Updated ReverseDSC to version 2.0.0.10.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.142.
+
+# 1.22.209.1
+
+* TeamsChannel
+  * Fix to allow channels to be extracted properly when two Teams
+    have the same name.
+    FIXES #1746
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 3.1.1;
+* MISC
+  * Fixed an issue with the Export where the Configuration Data file
+    always referenced a certificate file even when none were configured.
+    FIXES #1724
+
+# 1.22.202.1
+
+* IntuneAppProtectionPolicyiOS
+  * Fixes an issue where an error was thrown when no ExcludedGroups
+    were specified.
+    FIXES #1719
+* MISC
+  * Documentation updates
+
+# 1.22.126.1
+
+* TeamsTenantDialPlan
+  * Fixed an issue where the Export only extracted the first
+    normalization rule.
+    FIXES #1695
+* DEPENDENCIES
+  * Updated all Microsoft.Graph * to 1.9.2;
+  * Updated Microsoft.Teams to version 3.1.0;
+* MISC
+  * Update automatic cmdlet documentation generation functions and prereqs.
+  * Adding cmdlet documentation to website
+  * Fixed an issue with the Export-M365DSCConfiguration cmdlet where it
+    would throw an error if no parameters were passed.
+
 # 1.22.119.2
 
 * EXOOrganizationConfig
@@ -1480,7 +1616,3 @@ MISC
 * SPOSite
   * Added default value for Storage Quota;
   * Fixed an issue with site creation that could result in infinite loops;
-
-## UNRELEASED
-* IntuneDeviceConfigurationPolicyAndroidWorkProfile
-  * Initial release;

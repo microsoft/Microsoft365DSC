@@ -1,0 +1,277 @@
+[ClassVersion("1.0.0")]
+class MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceOwnerapplicabilityruledevicemode
+{
+    [Write, Description("")] String DeviceMode;
+    [Write, Description("")] String Name;
+    [Write, Description("")] String RuleType;
+};
+[ClassVersion("1.0.0")]
+class MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceOwnerapplicabilityruleosedition
+{
+    [Write, Description("")] String Name;
+    [Write, Description("")] String OSEditionTypes[];
+    [Write, Description("")] String RuleType;
+};
+[ClassVersion("1.0.0")]
+class MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceOwnerapplicabilityruleosversion
+{
+    [Write, Description("")] String MaxOSVersion;
+    [Write, Description("")] String MinOSVersion;
+    [Write, Description("")] String Name;
+    [Write, Description("")] String RuleType;
+};
+[ClassVersion("1.0.0")]
+class MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceOwnerAassignment1
+{
+    [Write, Description("")] String Intent;
+    [Write, Description("")] String Source;
+    [Write, Description("")] String SourceId;
+    [Write, Description(""), EmbeddedInstance("MSFT_Intunedeviceandappmanagementassignmenttarget1")] String Target;
+};
+[ClassVersion("1.0.0")]
+class MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceOwnerappmanagementassignmenttarget1
+{
+    [Write, Description("")] String DeviceAndAppManagementAssignmentFilterId;
+    [Write, Description("")] String DeviceAndAppManagementAssignmentFilterType;
+};
+[ClassVersion("1.0.0")]
+class MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceOwnerdevicesummary
+{
+    [Write, Description("")] UInt32 CompliantDeviceCount;
+    [Write, Description("")] UInt32 ConflictDeviceCount;
+    [Write, Description("")] UInt32 ErrorDeviceCount;
+    [Write, Description("")] String InstancePath;
+    [Write, Description("")] UInt32 NonCompliantDeviceCount;
+    [Write, Description("")] UInt32 NotApplicableDeviceCount;
+    [Write, Description("")] UInt32 RemediatedDeviceCount;
+    [Write, Description("")] String SettingName;
+    [Write, Description("")] UInt32 UnknownDeviceCount;
+};
+[ClassVersion("1.0.0")]
+class MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceOwnerdevicestatus1
+{
+    [Write, Description("")] String ComplianceGracePeriodExpirationDateTime;
+    [Write, Description("")] String DeviceDisplayName;
+    [Write, Description("")] String DeviceModel;
+    [Write, Description("")] String LastReportedDateTime;
+    [Write, Description("")] UInt32 Platform;
+    [Write, Description("")] String Status;
+    [Write, Description("")] String UserName;
+    [Write, Description("")] String UserPrincipalName;
+};
+[ClassVersion("1.0.0")]
+class MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceOwnerdeviceoverview1
+{
+    [Write, Description("")] UInt32 ConfigurationVersion;
+    [Write, Description("")] UInt32 ConflictCount;
+    [Write, Description("")] UInt32 ErrorCount;
+    [Write, Description("")] UInt32 FailedCount;
+    [Write, Description("")] String LastUpdateDateTime;
+    [Write, Description("")] UInt32 NotApplicableCount;
+    [Write, Description("")] UInt32 NotApplicablePlatformCount;
+    [Write, Description("")] UInt32 PendingCount;
+    [Write, Description("")] UInt32 SuccessCount;
+};
+[ClassVersion("1.0.0")]
+class MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceOwnergroupassignment
+{
+    [Write, Description(""), EmbeddedInstance("MSFT_Intunedeviceconfiguration1")] String DeviceConfiguration;
+    [Write, Description("")] Boolean ExcludeGroup;
+    [Write, Description("")] String TargetGroupId;
+};
+[ClassVersion("1.0.0")]
+class MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceOwner1
+{
+    [Write, Description(""), EmbeddedInstance("MSFT_Intunedeviceconfigurationassignment1")] String Assignments[];
+    [Write, Description("")] String CreatedDateTime;
+    [Write, Description("")] String Description;
+    [Write, Description(""), EmbeddedInstance("MSFT_Intunedevicemanagementapplicabilityruledevicemode")] String DeviceManagementApplicabilityRuleDeviceMode;
+    [Write, Description(""), EmbeddedInstance("MSFT_Intunedevicemanagementapplicabilityruleosedition")] String DeviceManagementApplicabilityRuleOSEdition;
+    [Write, Description(""), EmbeddedInstance("MSFT_Intunedevicemanagementapplicabilityruleosversion")] String DeviceManagementApplicabilityRuleOSVersion;
+    [Write, Description(""), EmbeddedInstance("MSFT_Intunesettingstatedevicesummary")] String DeviceSettingStateSummaries[];
+    [Write, Description(""), EmbeddedInstance("MSFT_Intunedeviceconfigurationdeviceoverview1")] String DeviceStatusOverview;
+    [Write, Description(""), EmbeddedInstance("MSFT_Intunedeviceconfigurationdevicestatus1")] String DeviceStatuses[];
+    [Write, Description("")] String DisplayName;
+    [Write, Description(""), EmbeddedInstance("MSFT_Intunedeviceconfigurationgroupassignment")] String GroupAssignments[];
+    [Write, Description("")] String LastModifiedDateTime;
+    [Write, Description("")] String RoleScopeTagIds[];
+    [Write, Description("")] Boolean SupportsScopeTags;
+    [Write, Description(""), EmbeddedInstance("MSFT_Intunedeviceconfigurationuseroverview1")] String UserStatusOverview;
+    [Write, Description(""), EmbeddedInstance("MSFT_Intunedeviceconfigurationuserstatus")] String UserStatuses[];
+    [Write, Description("")] UInt32 Version;
+};
+[ClassVersion("1.0.0")]
+class MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceOwneruserstatus
+{
+    [Write, Description("")] UInt32 DevicesCount;
+    [Write, Description("")] String LastReportedDateTime;
+    [Write, Description("")] String Status;
+    [Write, Description("")] String UserDisplayName;
+    [Write, Description("")] String UserPrincipalName;
+};
+[ClassVersion("1.0.0")]
+class MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceOwneruseroverview1
+{
+    [Write, Description("")] UInt32 ConfigurationVersion;
+    [Write, Description("")] UInt32 ConflictCount;
+    [Write, Description("")] UInt32 ErrorCount;
+    [Write, Description("")] UInt32 FailedCount;
+    [Write, Description("")] String LastUpdateDateTime;
+    [Write, Description("")] UInt32 NotApplicableCount;
+    [Write, Description("")] UInt32 PendingCount;
+    [Write, Description("")] UInt32 SuccessCount;
+};
+
+[ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceConfigurationPolicyAndroidDeviceOwner")]
+class MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceOwner : OMI_BaseResource
+{
+    [Write, Description("")] String Id;
+    [Write, Description("")] String Description;
+    [Write, Description(""), EmbeddedInstance("MSFT_Intunedevicemanagementapplicabilityruledevicemode")] String DeviceManagementApplicabilityRuleDeviceMode;
+    [Write, Description(""), EmbeddedInstance("MSFT_Intunedevicemanagementapplicabilityruleosedition")] String DeviceManagementApplicabilityRuleOsEdition;
+    [Write, Description(""), EmbeddedInstance("MSFT_Intunedevicemanagementapplicabilityruleosversion")] String DeviceManagementApplicabilityRuleOsVersion;
+    [Write, Description("")] String DisplayName;
+    [Write, Description("")] String RoleScopeTagIds[];
+    [Write, Description("")] Boolean SupportsScopeTags;
+    [Write, Description("")] UInt32 Version;
+    [Write, Description("")] Boolean AccountsBlockModification;
+    [Write, Description("")] Boolean AppsAllowInstallFromUnknownSources;
+    [Write, Description("")] String AppsAutoUpdatePolicy;
+    [Write, Description("")] String AppsDefaultPermissionPolicy;
+    [Write, Description("")] Boolean AppsRecommendSkippingFirstUseHints;
+    [Write, Description("")] String AzureAdSharedDeviceDataClearApps;
+    [Write, Description("")] Boolean BluetoothBlockConfiguration;
+    [Write, Description("")] Boolean BluetoothBlockContactSharing;
+    [Write, Description("")] Boolean CameraBlocked;
+    [Write, Description("")] Boolean CellularBlockWiFiTethering;
+    [Write, Description("")] Boolean CertificateCredentialConfigurationDisabled;
+    [Write, Description("")] Boolean CrossProfilePoliciesAllowCopyPaste;
+    [Write, Description("")] String CrossProfilePoliciesAllowDataSharing;
+    [Write, Description("")] Boolean CrossProfilePoliciesShowWorkContactsInPersonalProfile;
+    [Write, Description("")] Boolean DataRoamingBlocked;
+    [Write, Description("")] Boolean DateTimeConfigurationBlocked;
+    [Write, Description("")] String EnrollmentProfile;
+    [Write, Description("")] Boolean FactoryResetBlocked;
+    [Write, Description("")] String FactoryResetDeviceAdministratorEmails;
+    [Write, Description("")] String GlobalProxy;
+    [Write, Description("")] Boolean GoogleAccountsBlocked;
+    [Write, Description("")] Boolean KioskCustomizationDeviceSettingsBlocked;
+    [Write, Description("")] Boolean KioskCustomizationPowerButtonActionsBlocked;
+    [Write, Description("")] String KioskCustomizationStatusBar;
+    [Write, Description("")] Boolean KioskCustomizationSystemErrorWarnings;
+    [Write, Description("")] String KioskCustomizationSystemNavigation;
+    [Write, Description("")] Boolean KioskModeAppOrderEnabled;
+    [Write, Description("")] String KioskModeAppPositions;
+    [Write, Description("")] String KioskModeApps;
+    [Write, Description("")] Boolean KioskModeAppsInFolderOrderedByName;
+    [Write, Description("")] Boolean KioskModeBluetoothConfigurationEnabled;
+    [Write, Description("")] Boolean KioskModeDebugMenuEasyAccessEnabled;
+    [Write, Description("")] String KioskModeExitCode;
+    [Write, Description("")] Boolean KioskModeFlashlightConfigurationEnabled;
+    [Write, Description("")] String KioskModeFolderIcon;
+    [Write, Description("")] UInt32 KioskModeGridHeight;
+    [Write, Description("")] UInt32 KioskModeGridWidth;
+    [Write, Description("")] String KioskModeIconSize;
+    [Write, Description("")] Boolean KioskModeLockHomeScreen;
+    [Write, Description("")] String KioskModeManagedFolders;
+    [Write, Description("")] Boolean KioskModeManagedHomeScreenAutoSignout;
+    [Write, Description("")] UInt32 KioskModeManagedHomeScreenInactiveSignOutDelayInSeconds;
+    [Write, Description("")] UInt32 KioskModeManagedHomeScreenInactiveSignOutNoticeInSeconds;
+    [Write, Description("")] String KioskModeManagedHomeScreenPinComplexity;
+    [Write, Description("")] Boolean KioskModeManagedHomeScreenPinRequired;
+    [Write, Description("")] Boolean KioskModeManagedHomeScreenPinRequiredToResume;
+    [Write, Description("")] String KioskModeManagedHomeScreenSignInBackground;
+    [Write, Description("")] String KioskModeManagedHomeScreenSignInBrandingLogo;
+    [Write, Description("")] Boolean KioskModeManagedHomeScreenSignInEnabled;
+    [Write, Description("")] Boolean KioskModeManagedSettingsEntryDisabled;
+    [Write, Description("")] Boolean KioskModeMediaVolumeConfigurationEnabled;
+    [Write, Description("")] String KioskModeScreenOrientation;
+    [Write, Description("")] Boolean KioskModeScreenSaverConfigurationEnabled;
+    [Write, Description("")] Boolean KioskModeScreenSaverDetectMediaDisabled;
+    [Write, Description("")] UInt32 KioskModeScreenSaverDisplayTimeInSeconds;
+    [Write, Description("")] String KioskModeScreenSaverImageUrl;
+    [Write, Description("")] UInt32 KioskModeScreenSaverStartDelayInSeconds;
+    [Write, Description("")] Boolean KioskModeShowAppNotificationBadge;
+    [Write, Description("")] Boolean KioskModeShowDeviceInfo;
+    [Write, Description("")] Boolean KioskModeVirtualHomeButtonEnabled;
+    [Write, Description("")] String KioskModeVirtualHomeButtonType;
+    [Write, Description("")] String KioskModeWallpaperUrl;
+    [Write, Description("")] String KioskModeWifiAllowedSsids;
+    [Write, Description("")] Boolean KioskModeWiFiConfigurationEnabled;
+    [Write, Description("")] Boolean MicrophoneForceMute;
+    [Write, Description("")] Boolean MicrosoftLauncherConfigurationEnabled;
+    [Write, Description("")] Boolean MicrosoftLauncherCustomWallpaperAllowUserModification;
+    [Write, Description("")] Boolean MicrosoftLauncherCustomWallpaperEnabled;
+    [Write, Description("")] String MicrosoftLauncherCustomWallpaperImageUrl;
+    [Write, Description("")] Boolean MicrosoftLauncherDockPresenceAllowUserModification;
+    [Write, Description("")] String MicrosoftLauncherDockPresenceConfiguration;
+    [Write, Description("")] Boolean MicrosoftLauncherFeedAllowUserModification;
+    [Write, Description("")] Boolean MicrosoftLauncherFeedEnabled;
+    [Write, Description("")] String MicrosoftLauncherSearchBarPlacementConfiguration;
+    [Write, Description("")] Boolean NetworkEscapeHatchAllowed;
+    [Write, Description("")] Boolean NfcBlockOutgoingBeam;
+    [Write, Description("")] Boolean PasswordBlockKeyguard;
+    [Write, Description("")] String PasswordBlockKeyguardFeatures;
+    [Write, Description("")] UInt32 PasswordExpirationDays;
+    [Write, Description("")] UInt32 PasswordMinimumLength;
+    [Write, Description("")] UInt32 PasswordMinimumLetterCharacters;
+    [Write, Description("")] UInt32 PasswordMinimumLowerCaseCharacters;
+    [Write, Description("")] UInt32 PasswordMinimumNonLetterCharacters;
+    [Write, Description("")] UInt32 PasswordMinimumNumericCharacters;
+    [Write, Description("")] UInt32 PasswordMinimumSymbolCharacters;
+    [Write, Description("")] UInt32 PasswordMinimumUpperCaseCharacters;
+    [Write, Description("")] UInt32 PasswordMinutesOfInactivityBeforeScreenTimeout;
+    [Write, Description("")] UInt32 PasswordPreviousPasswordCountToBlock;
+    [Write, Description("")] String PasswordRequiredType;
+    [Write, Description("")] UInt32 PasswordSignInFailureCountBeforeFactoryReset;
+    [Write, Description("")] Boolean PersonalProfileAppsAllowInstallFromUnknownSources;
+    [Write, Description("")] Boolean PersonalProfileCameraBlocked;
+    [Write, Description("")] String PersonalProfilePersonalApplications;
+    [Write, Description("")] String PersonalProfilePlayStoreMode;
+    [Write, Description("")] Boolean PersonalProfileScreenCaptureBlocked;
+    [Write, Description("")] String PlayStoreMode;
+    [Write, Description("")] Boolean ScreenCaptureBlocked;
+    [Write, Description("")] Boolean SecurityDeveloperSettingsEnabled;
+    [Write, Description("")] Boolean SecurityRequireVerifyApps;
+    [Write, Description("")] Boolean StatusBarBlocked;
+    [Write, Description("")] String StayOnModes;
+    [Write, Description("")] Boolean StorageAllowUsb;
+    [Write, Description("")] Boolean StorageBlockExternalMedia;
+    [Write, Description("")] Boolean StorageBlockUsbFileTransfer;
+    [Write, Description("")] String SystemUpdateFreezePeriods;
+    [Write, Description("")] String SystemUpdateInstallType;
+    [Write, Description("")] UInt32 SystemUpdateWindowEndMinutesAfterMidnight;
+    [Write, Description("")] UInt32 SystemUpdateWindowStartMinutesAfterMidnight;
+    [Write, Description("")] Boolean SystemWindowsBlocked;
+    [Write, Description("")] Boolean UsersBlockAdd;
+    [Write, Description("")] Boolean UsersBlockRemove;
+    [Write, Description("")] Boolean VolumeBlockAdjustment;
+    [Write, Description("")] Boolean VpnAlwaysOnLockdownMode;
+    [Write, Description("")] String VpnAlwaysOnPackageIdentifier;
+    [Write, Description("")] Boolean WifiBlockEditConfigurations;
+    [Write, Description("")] Boolean WifiBlockEditPolicyDefinedConfigurations;
+    [Write, Description("")] UInt32 WorkProfilePasswordExpirationDays;
+    [Write, Description("")] UInt32 WorkProfilePasswordMinimumLength;
+    [Write, Description("")] UInt32 WorkProfilePasswordMinimumLetterCharacters;
+    [Write, Description("")] UInt32 WorkProfilePasswordMinimumLowerCaseCharacters;
+    [Write, Description("")] UInt32 WorkProfilePasswordMinimumNonLetterCharacters;
+    [Write, Description("")] UInt32 WorkProfilePasswordMinimumNumericCharacters;
+    [Write, Description("")] UInt32 WorkProfilePasswordMinimumSymbolCharacters;
+    [Write, Description("")] UInt32 WorkProfilePasswordMinimumUpperCaseCharacters;
+    [Write, Description("")] UInt32 WorkProfilePasswordPreviousPasswordCountToBlock;
+    [Write, Description("")] String WorkProfilePasswordRequiredType;
+    [Write, Description("")] UInt32 WorkProfilePasswordSignInFailureCountBeforeFactoryReset;
+    [Write, Description(""), EmbeddedInstance("MSFT_Intunedeviceconfigurationassignment1")] String Assignments[];
+    [Write, Description(""), EmbeddedInstance("MSFT_Intunesettingstatedevicesummary")] String DeviceSettingStateSummaries[];
+    [Write, Description(""), EmbeddedInstance("MSFT_Intunedeviceconfigurationdevicestatus1")] String DeviceStatuses[];
+    [Write, Description(""), EmbeddedInstance("MSFT_Intunedeviceconfigurationdeviceoverview1")] String DeviceStatusOverview;
+    [Write, Description(""), EmbeddedInstance("MSFT_Intunedeviceconfigurationgroupassignment")] String GroupAssignments[];
+    [Write, Description(""), EmbeddedInstance("MSFT_Intunedeviceconfigurationuserstatus")] String UserStatuses[];
+    [Write, Description(""), EmbeddedInstance("MSFT_Intunedeviceconfigurationuseroverview1")] String UserStatusOverview;
+    [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
+    [Write, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Secret of the Azure Active Directory tenant used for authentication.")] String ApplicationSecret;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+};

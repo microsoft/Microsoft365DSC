@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOMailboxPlan",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

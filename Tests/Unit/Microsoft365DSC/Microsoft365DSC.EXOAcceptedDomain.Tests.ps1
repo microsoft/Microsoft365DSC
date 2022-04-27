@@ -2,14 +2,14 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath "..\..\Unit" `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath "\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
@@ -36,7 +36,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credential"
+                return "Credentials"
             }
 
             Mock -CommandName Get-PSSession -MockWith {
@@ -52,10 +52,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Authoritative Accepted Domain should exist.  Domain is missing. Test should fail." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DomainType         = 'Authoritative'
-                    Ensure             = 'Present'
+                    DomainType = 'Authoritative'
+                    Ensure     = 'Present'
                     Credential = $Credential
-                    Identity           = 'contoso.com'
+                    Identity   = 'contoso.com'
                 }
 
                 Mock -CommandName Get-MgDomain -MockWith {
@@ -75,10 +75,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
                 Mock -CommandName Set-AcceptedDomain -MockWith {
                     return @{
-                        DomainType         = 'Authoritative'
-                        Ensure             = 'Present'
+                        DomainType = 'Authoritative'
+                        Ensure     = 'Present'
                         Credential = $Credential
-                        Identity           = 'contoso.com'
+                        Identity   = 'contoso.com'
                     }
                 }
             }
@@ -99,12 +99,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Verified domain doesn't exist in the tenant." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DomainType         = 'Authoritative'
-                    Ensure             = 'Absent'
-                    MatchSubDomain     = $false
-                    OutboundOnly       = $false
-                    Credential = $Credential
-                    Identity           = 'contoso.com'
+                    DomainType     = 'Authoritative'
+                    Ensure         = 'Absent'
+                    MatchSubDomain = $false
+                    OutboundOnly   = $false
+                    Credential     = $Credential
+                    Identity       = 'contoso.com'
                 }
 
                 Mock -CommandName Get-AcceptedDomain -MockWith {
@@ -132,12 +132,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Authoritative Accepted Domain should exist.  Domain exists. Test should pass." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DomainType         = 'Authoritative'
-                    Ensure             = 'Present'
-                    MatchSubDomain     = $false
-                    OutboundOnly       = $false
-                    Credential = $Credential
-                    Identity           = 'contoso.com'
+                    DomainType     = 'Authoritative'
+                    Ensure         = 'Present'
+                    MatchSubDomain = $false
+                    OutboundOnly   = $false
+                    Credential     = $Credential
+                    Identity       = 'contoso.com'
                 }
 
                 Mock -CommandName Get-MgDomain -MockWith {
@@ -170,10 +170,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Authoritative Accepted Domain should exist.  Domain exists, DomainType and MatchSubDomains mismatch. Test should fail." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DomainType         = 'Authoritative'
-                    Ensure             = 'Present'
+                    DomainType = 'Authoritative'
+                    Ensure     = 'Present'
                     Credential = $Credential
-                    Identity           = 'contoso.com'
+                    Identity   = 'contoso.com'
                 }
 
                 Mock -CommandName Get-MgDomain -MockWith {
@@ -194,10 +194,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
                 Mock -CommandName Set-AcceptedDomain -MockWith {
                     return @{
-                        DomainType         = 'Authoritative'
-                        Ensure             = 'Present'
+                        DomainType = 'Authoritative'
+                        Ensure     = 'Present'
                         Credential = $Credential
-                        Identity           = 'contoso.com'
+                        Identity   = 'contoso.com'
                     }
                 }
             }

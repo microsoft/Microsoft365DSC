@@ -8,6 +8,9 @@ both for reading and updating.
 .Parameter ResourceNameList
 An array of resource names for which the permissions should be determined.
 
+.Example
+Get-M365DSCCompiledPermissionList -ResourceNameList @('O365User', 'AADApplication')
+
 .Functionality
 Public
 #>
@@ -87,6 +90,12 @@ Specifies that the permissions should be determined for all resources.
 
 .Parameter Type
 For which action should the permissions be updated: Read or Update.
+
+.Example
+Update-M365DSCAllowedGraphScopes -ResourceNameList @('O365User', 'AADApplication') -Type 'Read'
+
+.Example
+Update-M365DSCAllowedGraphScopes -All -Type 'Update' -Environment 'Global'
 
 .Functionality
 Public
@@ -170,6 +179,9 @@ It is compiling a permissions list based on all used Graph cmdlets in the resour
 retrieving the permissions for these cmdlets from the Graph. Then it updates the
 settings.json file
 
+.Example
+Update-M365DSCResourcesSettingsJSON
+
 .Functionality
 Public
 #>
@@ -185,6 +197,8 @@ function Update-M365DSCResourcesSettingsJSON
     Write-Verbose "Getting all psm1 files"
     $files = Get-ChildItem -Path "$dscResourcesRoot\*.psm1" -Recurse
     Write-Verbose "  Found $($files.Count) psm1 files"
+
+    $ignoredCmdlets = @("Get-MgContext")
 
     foreach ($file in $files)
     {
@@ -213,10 +227,13 @@ function Update-M365DSCResourcesSettingsJSON
                 $functionPermissions = @()
                 foreach ($cmdlet in $cmdlets)
                 {
-                    $commands = Find-MgGraphCommand -Command $cmdlet
+                    if ($cmdlet -notin $ignoredCmdlets)
+                    {
+                        $commands = Find-MgGraphCommand -Command $cmdlet
 
-                    $cmdletPermissions = $commands[0].Permissions
-                    $functionPermissions += $cmdletPermissions.Name
+                        $cmdletPermissions = $commands[0].Permissions
+                        $functionPermissions += $cmdletPermissions.Name
+                    }
                 }
                 $cleanFunctionPermissions = $functionPermissions | Sort-Object | Select-Object -Unique
 

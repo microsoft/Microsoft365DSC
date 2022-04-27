@@ -37,7 +37,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credential"
+                return "Credentials"
             }
 
             Mock -CommandName Grant-CsTeamsUpgradePolicy -MockWith {

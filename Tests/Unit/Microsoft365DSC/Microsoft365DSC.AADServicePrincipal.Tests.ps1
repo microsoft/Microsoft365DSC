@@ -2,14 +2,14 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath "..\..\Unit" `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath "\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
@@ -45,7 +45,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credential"
+                return "Credentials"
             }
         }
 
@@ -53,22 +53,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The service principal should exist but it does not" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    AppId                         = "b4f08c68-7276-4cb8-b9ae-e75fca5ff834"
-                    DisplayName                   = "App1"
-                    AlternativeNames              = "AlternativeName1","AlternativeName2"
-                    AccountEnabled                = $true
-                    AppRoleAssignmentRequired     = $false
-                    ErrorUrl                      = ""
-                    Homepage                      = "https://app1.contoso.com"
-                    LogoutUrl                     = "https://app1.contoso.com/logout"
-                    PublisherName                 = "Contoso"
-                    ReplyURLs                     = "https://app1.contoso.com"
-                    SamlMetadataURL               = ""
-                    ServicePrincipalNames         = "b4f08c68-7276-4cb8-b9ae-e75fca5ff834", "https://app1.contoso.com"
-                    ServicePrincipalType          = "Application"
-                    Tags                          = "{WindowsAzureActiveDirectoryIntegratedApp}"
-                    Ensure                        = "Present"
-                    Credential            = $credsGlobalAdmin
+                    AppId                     = "b4f08c68-7276-4cb8-b9ae-e75fca5ff834"
+                    DisplayName               = "App1"
+                    AlternativeNames          = "AlternativeName1", "AlternativeName2"
+                    AccountEnabled            = $true
+                    AppRoleAssignmentRequired = $false
+                    ErrorUrl                  = ""
+                    Homepage                  = "https://app1.contoso.com"
+                    LogoutUrl                 = "https://app1.contoso.com/logout"
+                    PublisherName             = "Contoso"
+                    ReplyURLs                 = "https://app1.contoso.com"
+                    SamlMetadataURL           = ""
+                    ServicePrincipalNames     = "b4f08c68-7276-4cb8-b9ae-e75fca5ff834", "https://app1.contoso.com"
+                    ServicePrincipalType      = "Application"
+                    Tags                      = "{WindowsAzureActiveDirectoryIntegratedApp}"
+                    Ensure                    = "Present"
+                    Credential                = $credsGlobalAdmin
                 }
 
                 Mock -CommandName Get-MgServicePrincipal -MockWith {
@@ -92,22 +92,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The application exists but it should not" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    AppId                         = "b4f08c68-7276-4cb8-b9ae-e75fca5ff834"
-                    DisplayName                   = "App1"
-                    AlternativeNames              = "AlternativeName1","AlternativeName2"
-                    AccountEnabled                = $true
-                    AppRoleAssignmentRequired     = $false
-                    ErrorUrl                      = ""
-                    Homepage                      = "https://app1.contoso.com"
-                    LogoutUrl                     = "https://app1.contoso.com/logout"
-                    PublisherName                 = "Contoso"
-                    ReplyURLs                     = "https://app1.contoso.com"
-                    SamlMetadataURL               = ""
-                    ServicePrincipalNames         = "b4f08c68-7276-4cb8-b9ae-e75fca5ff834", "https://app1.contoso.com"
-                    ServicePrincipalType          = "Application"
-                    Tags                          = "{WindowsAzureActiveDirectoryIntegratedApp}"
-                    Ensure                        = "Absent"
-                    Credential            = $credsGlobalAdmin
+                    AppId                     = "b4f08c68-7276-4cb8-b9ae-e75fca5ff834"
+                    DisplayName               = "App1"
+                    AlternativeNames          = "AlternativeName1", "AlternativeName2"
+                    AccountEnabled            = $true
+                    AppRoleAssignmentRequired = $false
+                    ErrorUrl                  = ""
+                    Homepage                  = "https://app1.contoso.com"
+                    LogoutUrl                 = "https://app1.contoso.com/logout"
+                    PublisherName             = "Contoso"
+                    ReplyURLs                 = "https://app1.contoso.com"
+                    SamlMetadataURL           = ""
+                    ServicePrincipalNames     = "b4f08c68-7276-4cb8-b9ae-e75fca5ff834", "https://app1.contoso.com"
+                    ServicePrincipalType      = "Application"
+                    Tags                      = "{WindowsAzureActiveDirectoryIntegratedApp}"
+                    Ensure                    = "Absent"
+                    Credential                = $credsGlobalAdmin
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -119,7 +119,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $AADSP | Add-Member -MemberType NoteProperty -Name AppId -Value "b4f08c68-7276-4cb8-b9ae-e75fca5ff834"
                     $AADSP | Add-Member -MemberType NoteProperty -Name Id -Value "5dcb2237-c61b-4258-9c85-eae2aaeba9d6"
                     $AADSP | Add-Member -MemberType NoteProperty -Name DisplayName -Value "App1"
-                    $AADSP | Add-Member -MemberType NoteProperty -Name AlternativeNames -Value "AlternativeName1","AlternativeName2"
+                    $AADSP | Add-Member -MemberType NoteProperty -Name AlternativeNames -Value "AlternativeName1", "AlternativeName2"
                     $AADSP | Add-Member -MemberType NoteProperty -Name AccountEnabled -Value $true
                     $AADSP | Add-Member -MemberType NoteProperty -Name AppRoleAssignmentRequired -Value $false
                     $AADSP | Add-Member -MemberType NoteProperty -Name ErrorUrl -Value ""
@@ -152,22 +152,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The app exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    AppId                         = "b4f08c68-7276-4cb8-b9ae-e75fca5ff834"
-                    DisplayName                   = "App1"
-                    AlternativeNames              = "AlternativeName1","AlternativeName2"
-                    AccountEnabled                = $true
-                    AppRoleAssignmentRequired     = $false
-                    ErrorUrl                      = ""
-                    Homepage                      = "https://app1.contoso.com"
-                    LogoutUrl                     = "https://app1.contoso.com/logout"
-                    PublisherName                 = "Contoso"
-                    ReplyURLs                     = "https://app1.contoso.com"
-                    SamlMetadataURL               = ""
-                    ServicePrincipalNames         = "b4f08c68-7276-4cb8-b9ae-e75fca5ff834", "https://app1.contoso.com"
-                    ServicePrincipalType          = "Application"
-                    Tags                          = "{WindowsAzureActiveDirectoryIntegratedApp}"
-                    Ensure                        = "Present"
-                    Credential            = $credsGlobalAdmin
+                    AppId                     = "b4f08c68-7276-4cb8-b9ae-e75fca5ff834"
+                    DisplayName               = "App1"
+                    AlternativeNames          = "AlternativeName1", "AlternativeName2"
+                    AccountEnabled            = $true
+                    AppRoleAssignmentRequired = $false
+                    ErrorUrl                  = ""
+                    Homepage                  = "https://app1.contoso.com"
+                    LogoutUrl                 = "https://app1.contoso.com/logout"
+                    PublisherName             = "Contoso"
+                    ReplyURLs                 = "https://app1.contoso.com"
+                    SamlMetadataURL           = ""
+                    ServicePrincipalNames     = "b4f08c68-7276-4cb8-b9ae-e75fca5ff834", "https://app1.contoso.com"
+                    ServicePrincipalType      = "Application"
+                    Tags                      = "{WindowsAzureActiveDirectoryIntegratedApp}"
+                    Ensure                    = "Present"
+                    Credential                = $credsGlobalAdmin
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -179,7 +179,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $AADSP | Add-Member -MemberType NoteProperty -Name AppId -Value "b4f08c68-7276-4cb8-b9ae-e75fca5ff834"
                     $AADSP | Add-Member -MemberType NoteProperty -Name Id -Value "5dcb2237-c61b-4258-9c85-eae2aaeba9d6"
                     $AADSP | Add-Member -MemberType NoteProperty -Name DisplayName -Value "App1"
-                    $AADSP | Add-Member -MemberType NoteProperty -Name AlternativeNames -Value "AlternativeName1","AlternativeName2"
+                    $AADSP | Add-Member -MemberType NoteProperty -Name AlternativeNames -Value "AlternativeName1", "AlternativeName2"
                     $AADSP | Add-Member -MemberType NoteProperty -Name AccountEnabled -Value $true
                     $AADSP | Add-Member -MemberType NoteProperty -Name AppRoleAssignmentRequired -Value $false
                     $AADSP | Add-Member -MemberType NoteProperty -Name ErrorUrl -Value ""
@@ -208,22 +208,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Values are not in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    AppId                         = "b4f08c68-7276-4cb8-b9ae-e75fca5ff834"
-                    DisplayName                   = "App1"
-                    AlternativeNames              = "AlternativeName1","AlternativeName2","AlternativeName3" #drift
-                    AccountEnabled                = $true
-                    AppRoleAssignmentRequired     = $false
-                    ErrorUrl                      = ""
-                    Homepage                      = "https://app1.contoso.com"
-                    LogoutUrl                     = "https://app1.contoso.com/logout"
-                    PublisherName                 = "Contoso"
-                    ReplyURLs                     = "https://app1.contoso.com"
-                    SamlMetadataURL               = ""
-                    ServicePrincipalNames         = "b4f08c68-7276-4cb8-b9ae-e75fca5ff834", "https://app1.contoso.com"
-                    ServicePrincipalType          = "Application"
-                    Tags                          = "{WindowsAzureActiveDirectoryIntegratedApp}"
-                    Ensure                        = "Present"
-                    Credential            = $credsGlobalAdmin
+                    AppId                     = "b4f08c68-7276-4cb8-b9ae-e75fca5ff834"
+                    DisplayName               = "App1"
+                    AlternativeNames          = "AlternativeName1", "AlternativeName2", "AlternativeName3" #drift
+                    AccountEnabled            = $true
+                    AppRoleAssignmentRequired = $false
+                    ErrorUrl                  = ""
+                    Homepage                  = "https://app1.contoso.com"
+                    LogoutUrl                 = "https://app1.contoso.com/logout"
+                    PublisherName             = "Contoso"
+                    ReplyURLs                 = "https://app1.contoso.com"
+                    SamlMetadataURL           = ""
+                    ServicePrincipalNames     = "b4f08c68-7276-4cb8-b9ae-e75fca5ff834", "https://app1.contoso.com"
+                    ServicePrincipalType      = "Application"
+                    Tags                      = "{WindowsAzureActiveDirectoryIntegratedApp}"
+                    Ensure                    = "Present"
+                    Credential                = $credsGlobalAdmin
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -234,7 +234,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $AADSP = New-Object PSCustomObject
                     $AADSP | Add-Member -MemberType NoteProperty -Name AppId -Value "b4f08c68-7276-4cb8-b9ae-e75fca5ff834"
                     $AADSP | Add-Member -MemberType NoteProperty -Name Id -Value "5dcb2237-c61b-4258-9c85-eae2aaeba9d6"
-                    $AADSP | Add-Member -MemberType NoteProperty -Name AlternativeNames -Value "AlternativeName1","AlternativeName2"
+                    $AADSP | Add-Member -MemberType NoteProperty -Name AlternativeNames -Value "AlternativeName1", "AlternativeName2"
                     $AADSP | Add-Member -MemberType NoteProperty -Name AccountEnabled -Value $true
                     $AADSP | Add-Member -MemberType NoteProperty -Name AppRoleAssignmentRequired -Value $false
                     $AADSP | Add-Member -MemberType NoteProperty -Name ErrorUrl -Value ""
@@ -280,7 +280,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $AADSP | Add-Member -MemberType NoteProperty -Name AppId -Value "b4f08c68-7276-4cb8-b9ae-e75fca5ff834"
                     $AADSP | Add-Member -MemberType NoteProperty -Name Id -Value "5dcb2237-c61b-4258-9c85-eae2aaeba9d6"
                     $AADSP | Add-Member -MemberType NoteProperty -Name DisplayName -Value "App1"
-                    $AADSP | Add-Member -MemberType NoteProperty -Name AlternativeNames -Value "AlternativeName1","AlternativeName2"
+                    $AADSP | Add-Member -MemberType NoteProperty -Name AlternativeNames -Value "AlternativeName1", "AlternativeName2"
                     $AADSP | Add-Member -MemberType NoteProperty -Name AccountEnabled -Value $true
                     $AADSP | Add-Member -MemberType NoteProperty -Name AppRoleAssignmentRequired -Value $false
                     $AADSP | Add-Member -MemberType NoteProperty -Name ErrorUrl -Value ""
