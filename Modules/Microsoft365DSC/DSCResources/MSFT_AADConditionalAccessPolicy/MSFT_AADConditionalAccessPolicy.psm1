@@ -83,11 +83,12 @@ function Get-TargetResource
         $ExcludeDevices,
 
         [Parameter()]
-        [System.String[]]
+        [ValidateSet('include', 'exclude')]
+        [System.String]
         $DeviceFilterMode,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $DeviceFilterRule,
 
         #Further conditions
@@ -666,9 +667,9 @@ function Get-TargetResource
             #no translation needed, return empty string array if undefined
             ExcludeDevices                           = [System.String[]](@() + $Policy.Conditions.Devices.ExcludeDevices)
             #no translation needed, return empty string array if undefined
-            DeviceFilterMode                         = [System.String[]](@() + $Policy.Conditions.Devices.DeviceFilter.Mode)
+            DeviceFilterMode                         = [System.String]$Policy.Conditions.Devices.DeviceFilter.Mode
             #no translation or conversion needed
-            DeviceFilterRule                         = [System.String[]](@() + $Policy.Conditions.Devices.DeviceFilter.Rule)
+            DeviceFilterRule                         = [System.String]$Policy.Conditions.Devices.DeviceFilter.Rule
             #no translation or conversion needed
             UserRiskLevels                           = [System.String[]](@() + $Policy.Conditions.UserRiskLevels)
             #no translation needed, return empty string array if undefined
@@ -794,11 +795,12 @@ function Set-TargetResource
         $ExcludeDevices,
 
         [Parameter()]
-        [System.String[]]
+        [ValidateSet('include', 'exclude')]
+        [System.String]
         $DeviceFilterMode,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $DeviceFilterRule,
 
         #Further conditions
@@ -1564,9 +1566,8 @@ function Set-TargetResource
                     }
                 }
             }
-
-
         }
+
         Write-Verbose -Message "Set-Targetresource: process risk levels and app types"
         Write-Verbose -Message "Set-Targetresource: UserRiskLevels: $UserRiskLevels"
         $Conditions.Add("UserRiskLevels", $UserRiskLevels)
@@ -1862,11 +1863,12 @@ function Test-TargetResource
         $ExcludeDevices,
 
         [Parameter()]
-        [System.String[]]
+        [ValidateSet('include', 'exclude')]
+        [System.String]
         $DeviceFilterMode,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $DeviceFilterRule,
 
         #Further conditions

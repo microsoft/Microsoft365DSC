@@ -22,6 +22,8 @@
 | **ExcludeLocations** | Write | StringArray[] | AAD Named Locations out of scope of the Policy. ||
 | **IncludeDevices** | Write | StringArray[] | Client Device Compliance states in scope of the Policy. ||
 | **ExcludeDevices** | Write | StringArray[] | Client Device Compliance states out of scope of the Policy. ||
+| **DeviceFilterMode** | Write | String | Client Device filter mode. | include, exclude |
+| **DeviceFilterRule** | Write | String | Client Device filter rule ||
 | **UserRiskLevels** | Write | StringArray[] | AAD Identity Protection User Risk Levels in scope of the Policy. ||
 | **SignInRiskLevels** | Write | StringArray[] | AAD Identity Protection Sign-in Risk Levels in scope of the Policy. ||
 | **ClientAppTypes** | Write | StringArray[] | Client App types in scope of the Policy. ||
@@ -107,6 +109,8 @@ Configuration Example
             DisplayName                = "Allin-example"
             ExcludeApplications        = @("803ee9ca-3f7f-4824-bd6e-0b99d720c35c", "00000012-0000-0000-c000-000000000000", "00000007-0000-0000-c000-000000000000", "Office365")
             ExcludeDevices             = @("Compliant", "DomainJoined")
+            DeviceFilterMode           = "exclude";
+            DeviceFilterRule           = 'device.isCompliant -eq True -or device.trustType -eq "ServerAD"';
             ExcludeGroups              = @()
             ExcludeLocations           = @("Blocked Countries")
             ExcludePlatforms           = @("Windows", "WindowsPhone", "MacOS")
