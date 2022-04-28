@@ -1301,7 +1301,7 @@ function Set-TargetResource
             #translate role names to template guid if defined
             $rolelookup = @{}
             foreach ($role in Get-MgDirectoryRoleTemplate)
-            { $rolelookup[$role.DisplayName] = $role.ObjectId
+            { $rolelookup[$role.DisplayName] = $role.Id
             }
             foreach ($IncludeRole in $IncludeRoles)
             {
