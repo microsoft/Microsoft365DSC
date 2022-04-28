@@ -421,7 +421,7 @@ function Set-TargetResource
         $FingerprintBlocked,
 
         [Parameter()]
-        [System.String[]]
+        [System.Array[]]
         $Apps,
 
         [Parameter()]
@@ -481,22 +481,22 @@ function Set-TargetResource
 
     }
 
-    $setParams = $PSBoundParameters
-    $setParams.Remove("Ensure") | Out-Null
-    $setParams.Remove("Credential") | Out-Null
+    $setParams = @{}
+    $PSBoundParameters.Remove("Ensure") | Out-Null
+    $PSBoundParameters.Remove("Credential") | Out-Null
     # could we do this better?  I'm sure we could
-    $setParams.Remove("ApplicationID") | Out-Null
-    $setParams.Remove("ApplicationSecret") | Out-Null
-    $setParams.Remove("TenantID") | Out-Null
-    $setParams.Remove("CertificateThumbprint") | Out-Null
+    $PSBoundParameters.Remove("ApplicationID") | Out-Null
+    $PSBoundParameters.Remove("ApplicationSecret") | Out-Null
+    $PSBoundParameters.Remove("TenantID") | Out-Null
+    $PSBoundParameters.Remove("CertificateThumbprint") | Out-Null
 
     # removing known problematic values until i can fix them...
-    $setParams.Remove("PeriodOfflineBeforeAccessCheck") | out-null
-    $setParams.Remove("PeriodOnlineBeforeAccessCheck") | out-null
-    $setParams.Remove("PeriodOfflineBeforeWipeIsEnforced") | out-null
-    #$setParams.Remove("PeriodBeforePinReset") | out-null
-    $setParams.Remove("Apps") | out-null
-    $setParams.Remove("Assignments") | out-null
+    #$PSBoundParameters.Remove("PeriodOfflineBeforeAccessCheck") | out-null
+    #$PSBoundParameters.Remove("PeriodOnlineBeforeAccessCheck") | out-null
+    #$PSBoundParameters.Remove("PeriodOfflineBeforeWipeIsEnforced") | out-null
+    #$PSBoundParameters.Remove("PeriodBeforePinReset") | out-null
+    $PSBoundParameters.Remove("Apps") | out-null
+    $PSBoundParameters.Remove("Assignments") | out-null
 
 
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
@@ -505,13 +505,49 @@ function Set-TargetResource
 
         # construct command
         $graphparams = get-inputParamsList
-        foreach ($param in $setParams.keys)
+        foreach ($param in $PSBoundParameters.keys)
         {
             write-verbose "########################### $param ########################"
             if ( $graphparams.containskey($param) )
             {
 
                 write-host 'we have a match with:' $param 'Type is:' $graphparams.$param.ParameterType.name
+                # we need to see if our input is valid (timespan is particulalry important as the direct graph values seem to be different)
+                switch ($graphparams.$param.ParameterType.name)
+                {
+                    'TimeSpan'
+                    {
+                        write-verbose 'we need to see if this can be interpreted as a timespan'
+                        $setParams.add($param, (set-TimeSpan -duration $PSBoundParameters.$param))
+                        #[TimeSpan]$PSBoundParameters.$param
+                    }
+
+                    'string'
+                    {
+                        write-verbose 'Adding value as entered...'
+                        $setParams.add($param, $PSBoundParameters.$param)
+                    }
+
+                    default
+                    {
+
+                        if ($graphparams.$param.ParameterType.name.endswith('[]'))
+                        {
+                            write-verbose -message 'Array required...'
+                            write-host $PSBoundParameters.$param.gettype() 'count:' $PSBoundParameters.$param.count
+                            write-host $PSBoundParameters.$param
+                            $setParams.add($param, $PSBoundParameters.$param)
+                        }
+                        else
+                        {
+                            write-verbose 'Adding value as entered...'
+                            $setParams.add($param, $PSBoundParameters.$param)
+                        }
+                    }
+
+
+                }
+
 
             }
             else
@@ -520,12 +556,14 @@ function Set-TargetResource
             }
         }
 
+        write-verbose $setParams.PeriodBeforePinReset
         #let's try to splat it.. if I can rememeber how to splat
         Write-Verbose -Message 'Setting up policy via graph...'
         New-MgDeviceAppMgtAndroidManagedAppProtection @setParams
 
 
-        $JsonContent = Get-M365DSCIntuneAppProtectionPolicyAndroidJSON -Parameters $PSBoundParameters
+        #$JsonContent = Get-M365DSCIntuneAppProtectionPolicyAndroidJSON -Parameters $PSBoundParameters
+        $JsonContent = Get-M365DSCIntuneAppProtectionPolicyAndroidJSON -Parameters $setParams
         Write-Verbose -Message "JSON: $JsonContent"
         <#
         New-M365DSCIntuneAppProtectionPolicyAndroid -JSONContent $JsonContent
@@ -1200,6 +1238,36 @@ function get-inputParamsList
     $Graphparams = (get-command New-MgDeviceAppMgtAndroidManagedAppProtection).Parameters
 
     return $Graphparams
+
+}
+
+function set-Timespan
+{
+    param(
+        [string]$duration
+    )
+
+    write-verbose -message "converting to timespan - I hope: $duration"
+
+    try
+    {
+        if ($duration.startswith('P'))
+        {
+            write-verbose -message 'looks like a iso8601 string'
+            $timespan = [System.Xml.XmlConvert]::ToTimeSpan($duration)
+        }
+        else
+        {
+            write-verbose -message 'assuming it can be converted straight to a timespan'
+            $timespan = [TimeSpan]$duration
+        }
+    }
+    catch
+    {
+        throw "Problem converting input to a timespan - If configuration document is using iso8601 string (e.g. PT15M) try using new-timespan (e.g. new-timespan -minutes 15)"
+    }
+
+    return $timespan
 
 }
 
