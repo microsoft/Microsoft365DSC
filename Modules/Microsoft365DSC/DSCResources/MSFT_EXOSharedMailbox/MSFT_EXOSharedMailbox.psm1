@@ -157,7 +157,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $Aliases,
+        $Aliases = @(),
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
