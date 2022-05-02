@@ -32,7 +32,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $EFSkipIPs,
+        $EFSkipIPs = @(),
 
         [Parameter()]
         [System.Boolean]
@@ -40,7 +40,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $EFUsers,
+        $EFUsers = @(),
 
         [Parameter()]
         [System.Boolean]
@@ -240,7 +240,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $EFSkipIPs,
+        $EFSkipIPs = @(),
 
         [Parameter()]
         [System.Boolean]
@@ -248,7 +248,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $EFUsers,
+        $EFUsers = @(),
 
         [Parameter()]
         [System.Boolean]
@@ -392,7 +392,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $EFSkipIPs,
+        $EFSkipIPs = @(),
 
         [Parameter()]
         [System.Boolean]
@@ -400,7 +400,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $EFUsers,
+        $EFUsers = @(),
 
         [Parameter()]
         [System.Boolean]
