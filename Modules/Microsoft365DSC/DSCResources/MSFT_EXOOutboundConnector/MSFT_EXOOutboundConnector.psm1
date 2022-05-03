@@ -130,7 +130,7 @@ function Get-TargetResource
     $nullReturn.Ensure = 'Absent'
     try
     {
-        $OutBoundConnectors = Get-OutBoundConnector -ErrorAction Stop
+        $OutBoundConnectors = Get-OutBoundConnector -IncludeTestModeConnectors:$true -ErrorAction Stop
 
         $OutBoundConnector = $OutBoundConnectors | Where-Object -FilterScript { $_.Identity -eq $Identity }
         if ($null -eq $OutBoundConnector)
@@ -549,7 +549,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$OutboundConnectors = Get-OutboundConnector -ErrorAction Stop
+        [array]$OutboundConnectors = Get-OutboundConnector -IncludeTestModeConnectors:$true -ErrorAction Stop
         if ($OutBoundConnectors.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark

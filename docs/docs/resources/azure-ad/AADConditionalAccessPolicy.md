@@ -22,6 +22,8 @@
 | **ExcludeLocations** | Write | StringArray[] | AAD Named Locations out of scope of the Policy. ||
 | **IncludeDevices** | Write | StringArray[] | Client Device Compliance states in scope of the Policy. ||
 | **ExcludeDevices** | Write | StringArray[] | Client Device Compliance states out of scope of the Policy. ||
+| **DeviceFilterMode** | Write | String | Client Device Filter mode of the Policy. |include, exclude|
+| **DeviceFilterRule** | Write | String | Client Device Filter rule of the Policy. ||
 | **UserRiskLevels** | Write | StringArray[] | AAD Identity Protection User Risk Levels in scope of the Policy. ||
 | **SignInRiskLevels** | Write | StringArray[] | AAD Identity Protection Sign-in Risk Levels in scope of the Policy. ||
 | **ClientAppTypes** | Write | StringArray[] | Client App types in scope of the Policy. ||

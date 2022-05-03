@@ -1,0 +1,18 @@
+{
+    "resourceName": "IntuneAppProtectionPolicyAndroid",
+    "description": "This resource configures an Intune app protection policy for an Android Device.",
+    "permissions": [
+        {
+            "read": [
+                {
+                    "name":"DeviceManagementApps.Read.All"
+                }
+            ],
+            "update": [
+                {
+                    "name": "DeviceManagementApps.ReadWrite.All"
+                }
+            ]
+        }
+    ]
+}

@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "IntuneAppProtectionPolicyiOS" -GenericStubModule $GenericStubPath
+    -DscResource "IntuneAppProtectionPolicyAndroid" -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -41,17 +41,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            Mock -CommandName Set-M365DSCIntuneAppProtectionPolicyiOS -MockWith {
+            Mock -CommandName Set-M365DSCIntuneAppProtectionPolicyAndroid -MockWith {
             }
-            Mock -CommandName Set-M365DSCIntuneAppProtectionPolicyiOSAssignment -MockWith {
+            Mock -CommandName Set-M365DSCIntuneAppProtectionPolicyAndroidAssignment -MockWith {
             }
-            Mock -CommandName Set-M365DSCIntuneAppProtectionPolicyiOSApps -MockWith {
+            Mock -CommandName Set-M365DSCIntuneAppProtectionPolicyAndroidApps -MockWith {
             }
-            Mock -CommandName New-M365DSCIntuneAppProtectionPolicyiOS -MockWith {
+            Mock -CommandName New-M365DSCIntuneAppProtectionPolicyAndroid -MockWith {
             }
             Mock -CommandName Remove-IntuneAppProtectionPolicy -MockWith {
             }
-            Mock -CommandName Remove-MgDeviceAppManagementiosManagedAppProtection -MockWith {
+            Mock -CommandName Remove-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
             }
         }
 
@@ -63,8 +63,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowedInboundDataTransferSources       = "managedApps";
                     AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                     AllowedOutboundDataTransferDestinations = "managedApps";
-                    AppDataEncryptionType                   = "whenDeviceLocked";
-                    Apps                                    = @("com.cisco.jabberimintune.ios", "com.pervasent.boardpapers.ios", "com.sharefile.mobile.intune.ios");
+                    Apps                                    = @("com.cisco.im.intune.android", "com.penlink.penpoint.android", "com.slack.intune.android");
                     Assignments                             = @("6ee86c9f-2b3c-471d-ad38-ff4673ed723e");
                     ContactSyncBlocked                      = $False;
                     DataBackupBlocked                       = $False;
@@ -73,15 +72,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                             = "DSC Policy";
                     Ensure                                  = "Present"
                     ExcludedGroups                          = @("3eacc231-d77b-4efb-bb5f-310f68bd6198");
-                    FaceIdBlocked                           = $False;
                     FingerprintBlocked                      = $False;
                     Credential                      = $Credential;
-                    ManagedBrowser                          = "microsoftEdge";
-                    MinimumRequiredAppVersion               = "0.2";
-                    MinimumRequiredOSVersion                = "0.2";
-                    MinimumRequiredSdkVersion               = "0.1";
-                    MinimumWarningAppVersion                = "0.1";
-                    MinimumWarningOSVersion                 = "0.1";
                     ManagedBrowserToOpenLinksRequired       = $True;
                     MaximumPinRetries                       = 5;
                     MinimumPinLength                        = 4;
@@ -98,7 +90,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SimplePinBlocked                        = $False;
                 }
                 $Global:Count = 0
-                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtection -MockWith {
+                Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
                     if ($Global:Count -eq 0)
                     {
                         $Global:Count++
@@ -109,7 +101,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         return @{
                             displayName   = "DSC Policy"
                             id            = "12345-12345-12345-12345-12345"
-                            '@odata.type' = "#microsoft.graph.iosManagedAppProtection"
+                            '@odata.type' = "#microsoft.graph.androidManagedAppProtection"
                         }
                     }
                 }
@@ -126,7 +118,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It "Should create the Policy from the Set method" {
                 $Global:Count = 0
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-M365DSCIntuneAppProtectionPolicyiOS" -Exactly 1
+                Should -Invoke -CommandName "New-M365DSCIntuneAppProtectionPolicyAndroid" -Exactly 1
             }
         }
 
@@ -137,8 +129,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowedInboundDataTransferSources       = "managedApps";
                     AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                     AllowedOutboundDataTransferDestinations = "managedApps";
-                    AppDataEncryptionType                   = "whenDeviceLocked";
-                    Apps                                    = @("com.cisco.jabberimintune.ios", "com.pervasent.boardpapers.ios", "com.sharefile.mobile.intune.ios");
+                    Apps                                    = @("com.cisco.im.intune.android", "com.penlink.penpoint.android", "com.slack.intune.android");
                     Assignments                             = @("6ee86c9f-2b3c-471d-ad38-ff4673ed723e");
                     ContactSyncBlocked                      = $False;
                     DataBackupBlocked                       = $False;
@@ -147,15 +138,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                             = "DSC Policy";
                     Ensure                                  = "Present"
                     ExcludedGroups                          = @("3eacc231-d77b-4efb-bb5f-310f68bd6198");
-                    FaceIdBlocked                           = $False;
                     FingerprintBlocked                      = $False;
                     Credential                      = $Credential;
-                    ManagedBrowser                          = "microsoftEdge";
-                    MinimumRequiredAppVersion               = "0.2";
-                    MinimumRequiredOSVersion                = "0.2";
-                    MinimumRequiredSdkVersion               = "0.1";
-                    MinimumWarningAppVersion                = "0.1";
-                    MinimumWarningOSVersion                 = "0.1";
                     ManagedBrowserToOpenLinksRequired       = $False; #Drift
                     MaximumPinRetries                       = 5;
                     MinimumPinLength                        = 4;
@@ -172,42 +156,41 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SimplePinBlocked                        = $False;
                 }
 
-                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtection -MockWith {
+                Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
                     return @{
                         displayName   = "DSC Policy"
                         id            = "12345-12345-12345-12345-12345"
-                        '@odata.type' = "#microsoft.graph.iosManagedAppProtection"
+                        '@odata.type' = "#microsoft.graph.androidManagedAppProtection"
                     }
                 }
 
-                Mock -CommandName Get-M365DSCIntuneAppProtectionPolicyiOS -MockWith {
+                Mock -CommandName Get-M365DSCIntuneAppProtectionPolicyAndroid -MockWith {
                     return @{
-                        '@odata.type'                           = "#microsoft.graph.iosManagedAppProtection"
+                        '@odata.type'                           = "#microsoft.graph.androidManagedAppProtection"
                         AllowedDataStorageLocations             = @("sharePoint");
                         AllowedInboundDataTransferSources       = "managedApps";
                         AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                         AllowedOutboundDataTransferDestinations = "managedApps";
-                        AppDataEncryptionType                   = "whenDeviceLocked";
                         Apps                                    = @(
                             @{
-                                id                  = "com.cisco.jabberimintune.ios.ios"
+                                id                  = "com.cisco.im.intune.android.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.cisco.jabberimintune.ios"
+                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+                                    packageid      = "com.cisco.im.intune.android"
                                 }
                             },
                             @{
-                                id                  = "com.pervasent.boardpapers.ios.ios"
+                                id                  = "com.penlink.penpoint.android.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.pervasent.boardpapers.ios"
+                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+                                    packageid      = "com.penlink.penpoint.android"
                                 }
                             },
                             @{
-                                id                  = "com.sharefile.mobile.intune.ios.ios"
+                                id                  = "com.slack.intune.android.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.sharefile.mobile.intune.ios"
+                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+                                    packageid      = "com.slack.intune.android"
                                 }
                             }
                         )
@@ -230,14 +213,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description                             = "";
                         DeviceComplianceRequired                = $True;
                         DisplayName                             = "DSC Policy";
-                        FaceIdBlocked                           = $False;
                         FingerprintBlocked                      = $False;
-                        ManagedBrowser                          = "microsoftEdge";
-                        MinimumRequiredAppVersion               = "0.2";
-                        MinimumRequiredOSVersion                = "0.2";
-                        MinimumRequiredSdkVersion               = "0.1";
-                        MinimumWarningAppVersion                = "0.1";
-                        MinimumWarningOSVersion                 = "0.1";
                         ManagedBrowserToOpenLinksRequired       = $True;
                         MaximumPinRetries                       = 5;
                         MinimumPinLength                        = 4;
@@ -267,7 +243,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should update the App Configuration Policy from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-M365DSCIntuneAppProtectionPolicyiOS -Exactly 1
+                Should -Invoke -CommandName Set-M365DSCIntuneAppProtectionPolicyAndroid -Exactly 1
             }
         }
 
@@ -278,8 +254,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowedInboundDataTransferSources       = "managedApps";
                     AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                     AllowedOutboundDataTransferDestinations = "managedApps";
-                    AppDataEncryptionType                   = "whenDeviceLocked";
-                    Apps                                    = @("com.cisco.jabberimintune.ios", "com.pervasent.boardpapers.ios", "com.sharefile.mobile.intune.ios");
+                    Apps                                    = @("com.cisco.im.intune.android", "com.penlink.penpoint.android", "com.slack.intune.android");
                     Assignments                             = @("6ee86c9f-2b3c-471d-ad38-ff4673ed723e");
                     ContactSyncBlocked                      = $False;
                     DataBackupBlocked                       = $False;
@@ -288,14 +263,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                             = "DSC Policy";
                     Ensure                                  = "Present"
                     ExcludedGroups                          = @("3eacc231-d77b-4efb-bb5f-310f68bd6198");
-                    FaceIdBlocked                           = $False;
                     FingerprintBlocked                      = $False;
-                    ManagedBrowser                          = "microsoftEdge";
-                    MinimumRequiredAppVersion               = "0.2";
-                    MinimumRequiredOSVersion                = "0.2";
-                    MinimumRequiredSdkVersion               = "0.1";
-                    MinimumWarningAppVersion                = "0.1";
-                    MinimumWarningOSVersion                 = "0.1";
                     Credential                      = $Credential;
                     ManagedBrowserToOpenLinksRequired       = $True;
                     MaximumPinRetries                       = 5;
@@ -313,42 +281,41 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SimplePinBlocked                        = $False;
                 }
 
-                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtection -MockWith {
+                Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
                     return @{
                         displayName   = "DSC Policy"
                         id            = "12345-12345-12345-12345-12345"
-                        '@odata.type' = "#microsoft.graph.iosManagedAppProtection"
+                        '@odata.type' = "#microsoft.graph.androidManagedAppProtection"
                     }
                 }
 
-                Mock -CommandName Get-M365DSCIntuneAppProtectionPolicyiOS -MockWith {
+                Mock -CommandName Get-M365DSCIntuneAppProtectionPolicyAndroid -MockWith {
                     @{
-                        '@odata.type'                           = "#microsoft.graph.iosManagedAppProtection"
+                        '@odata.type'                           = "#microsoft.graph.androidManagedAppProtection"
                         AllowedDataStorageLocations             = @("sharePoint");
                         AllowedInboundDataTransferSources       = "managedApps";
                         AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                         AllowedOutboundDataTransferDestinations = "managedApps";
-                        AppDataEncryptionType                   = "whenDeviceLocked";
                         Apps                                    = @(
                             @{
-                                id                  = "com.cisco.jabberimintune.ios.ios"
+                                id                  = "com.cisco.im.intune.android.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.cisco.jabberimintune.ios"
+                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+                                    packageid      = "com.cisco.im.intune.android"
                                 }
                             },
                             @{
-                                id                  = "com.pervasent.boardpapers.ios.ios"
+                                id                  = "com.penlink.penpoint.android.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.pervasent.boardpapers.ios"
+                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+                                    packageid      = "com.penlink.penpoint.android"
                                 }
                             },
                             @{
-                                id                  = "com.sharefile.mobile.intune.ios.ios"
+                                id                  = "com.slack.intune.android.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.sharefile.mobile.intune.ios"
+                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+                                    packageid      = "com.slack.intune.android"
                                 }
                             }
                         )
@@ -371,14 +338,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description                             = "";
                         DeviceComplianceRequired                = $True;
                         DisplayName                             = "DSC Policy";
-                        FaceIdBlocked                           = $False;
                         FingerprintBlocked                      = $False;
-                        ManagedBrowser                          = "microsoftEdge";
-                        MinimumRequiredAppVersion               = "0.2";
-                        MinimumRequiredOSVersion                = "0.2";
-                        MinimumRequiredSdkVersion               = "0.1";
-                        MinimumWarningAppVersion                = "0.1";
-                        MinimumWarningOSVersion                 = "0.1";
                         ManagedBrowserToOpenLinksRequired       = $True;
                         MaximumPinRetries                       = 5;
                         MinimumPinLength                        = 4;
@@ -410,8 +370,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowedInboundDataTransferSources       = "managedApps";
                     AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                     AllowedOutboundDataTransferDestinations = "managedApps";
-                    AppDataEncryptionType                   = "whenDeviceLocked";
-                    Apps                                    = @("com.cisco.jabberimintune.ios", "com.pervasent.boardpapers.ios", "com.sharefile.mobile.intune.ios");
+                    Apps                                    = @("com.cisco.im.intune.android", "com.penlink.penpoint.android", "com.slack.intune.android");
                     Assignments                             = @("6ee86c9f-2b3c-471d-ad38-ff4673ed723e");
                     ContactSyncBlocked                      = $False;
                     DataBackupBlocked                       = $False;
@@ -420,15 +379,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                             = "DSC Policy";
                     Ensure                                  = "Absent"
                     ExcludedGroups                          = @("3eacc231-d77b-4efb-bb5f-310f68bd6198");
-                    FaceIdBlocked                           = $False;
                     FingerprintBlocked                      = $False;
                     Credential                      = $Credential;
-                    ManagedBrowser                          = "microsoftEdge";
-                    MinimumRequiredAppVersion               = "0.2";
-                    MinimumRequiredOSVersion                = "0.2";
-                    MinimumRequiredSdkVersion               = "0.1";
-                    MinimumWarningAppVersion                = "0.1";
-                    MinimumWarningOSVersion                 = "0.1";
                     ManagedBrowserToOpenLinksRequired       = $True;
                     MaximumPinRetries                       = 5;
                     MinimumPinLength                        = 4;
@@ -445,42 +397,41 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SimplePinBlocked                        = $False;
                 }
 
-                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtection -MockWith {
+                Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
                     return @{
                         displayName   = "DSC Policy"
                         id            = "12345-12345-12345-12345-12345"
-                        '@odata.type' = "#microsoft.graph.iosManagedAppProtection"
+                        '@odata.type' = "#microsoft.graph.androidManagedAppProtection"
                     }
                 }
 
-                Mock -CommandName Get-M365DSCIntuneAppProtectionPolicyiOS -MockWith {
+                Mock -CommandName Get-M365DSCIntuneAppProtectionPolicyAndroid -MockWith {
                     @{
-                        '@odata.type'                           = "#microsoft.graph.iosManagedAppProtection"
+                        '@odata.type'                           = "#microsoft.graph.androidManagedAppProtection"
                         AllowedDataStorageLocations             = @("sharePoint");
                         AllowedInboundDataTransferSources       = "managedApps";
                         AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                         AllowedOutboundDataTransferDestinations = "managedApps";
-                        AppDataEncryptionType                   = "whenDeviceLocked";
                         Apps                                    = @(
                             @{
-                                id                  = "com.cisco.jabberimintune.ios.ios"
+                                id                  = "com.cisco.im.intune.android.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.cisco.jabberimintune.ios"
+                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+                                    packageid      = "com.cisco.im.intune.android"
                                 }
                             },
                             @{
-                                id                  = "com.pervasent.boardpapers.ios.ios"
+                                id                  = "com.penlink.penpoint.android.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.pervasent.boardpapers.ios"
+                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+                                    packageid      = "com.penlink.penpoint.android"
                                 }
                             },
                             @{
-                                id                  = "com.sharefile.mobile.intune.ios.ios"
+                                id                  = "com.slack.intune.android.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.sharefile.mobile.intune.ios"
+                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+                                    packageid      = "com.slack.intune.android"
                                 }
                             }
                         )
@@ -503,14 +454,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description                             = "";
                         DeviceComplianceRequired                = $True;
                         DisplayName                             = "DSC Policy";
-                        FaceIdBlocked                           = $False;
                         FingerprintBlocked                      = $False;
-                        ManagedBrowser                          = "microsoftEdge";
-                        MinimumRequiredAppVersion               = "0.2";
-                        MinimumRequiredOSVersion                = "0.2";
-                        MinimumRequiredSdkVersion               = "0.1";
-                        MinimumWarningAppVersion                = "0.1";
-                        MinimumWarningOSVersion                 = "0.1";
                         ManagedBrowserToOpenLinksRequired       = $True;
                         MaximumPinRetries                       = 5;
                         MinimumPinLength                        = 4;
@@ -540,7 +484,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should remove the App Configuration Policy from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgDeviceAppManagementiosManagedAppProtection -Exactly 1
+                Should -Invoke -CommandName Remove-MgDeviceAppManagementAndroidManagedAppProtection -Exactly 1
             }
         }
 
@@ -550,42 +494,41 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgDeviceAppManagementiosManagedAppProtection -MockWith {
+                Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
                     return @{
                         displayName   = "DSC Policy"
                         id            = "12345-12345-12345-12345-12345"
-                        '@odata.type' = "#microsoft.graph.iosManagedAppProtection"
+                        '@odata.type' = "#microsoft.graph.androidManagedAppProtection"
                     }
                 }
 
-                Mock -CommandName Get-M365DSCIntuneAppProtectionPolicyiOS -MockWith {
+                Mock -CommandName Get-M365DSCIntuneAppProtectionPolicyAndroid -MockWith {
                     @{
-                        '@odata.type'                           = "#microsoft.graph.iosManagedAppProtection"
+                        '@odata.type'                           = "#microsoft.graph.androidManagedAppProtection"
                         AllowedDataStorageLocations             = @("sharePoint");
                         AllowedInboundDataTransferSources       = "managedApps";
                         AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                         AllowedOutboundDataTransferDestinations = "managedApps";
-                        AppDataEncryptionType                   = "whenDeviceLocked";
                         Apps                                    = @(
                             @{
-                                id                  = "com.cisco.jabberimintune.ios.ios"
+                                id                  = "com.cisco.im.intune.android.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.cisco.jabberimintune.ios"
+                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+                                    packageid      = "com.cisco.im.intune.android"
                                 }
                             },
                             @{
-                                id                  = "com.pervasent.boardpapers.ios.ios"
+                                id                  = "com.penlink.penpoint.android.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.pervasent.boardpapers.ios"
+                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+                                    packageid      = "com.penlink.penpoint.android"
                                 }
                             },
                             @{
-                                id                  = "com.sharefile.mobile.intune.ios.ios"
+                                id                  = "com.slack.intune.android.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.iosMobileAppIdentifier"
-                                    bundleId      = "com.sharefile.mobile.intune.ios"
+                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+                                    packageid      = "com.slack.intune.android"
                                 }
                             }
                         )
@@ -608,14 +551,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description                             = "";
                         DeviceComplianceRequired                = $True;
                         DisplayName                             = "DSC Policy";
-                        FaceIdBlocked                           = $False;
                         FingerprintBlocked                      = $False;
-                        ManagedBrowser                          = "microsoftEdge";
-                        MinimumRequiredAppVersion               = "0.2";
-                        MinimumRequiredOSVersion                = "0.2";
-                        MinimumRequiredSdkVersion               = "0.1";
-                        MinimumWarningAppVersion                = "0.1";
-                        MinimumWarningOSVersion                 = "0.1";
                         ManagedBrowserToOpenLinksRequired       = $True;
                         MaximumPinRetries                       = 5;
                         MinimumPinLength                        = 4;
