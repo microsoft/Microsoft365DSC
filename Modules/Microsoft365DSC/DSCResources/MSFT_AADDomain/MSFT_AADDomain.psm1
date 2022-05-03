@@ -3,7 +3,7 @@ function Get-TargetResource
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
-    (
+    (<#ResourceGenerator
         #region resource generator code
         [Parameter()]
         [System.String]
@@ -75,7 +75,7 @@ function Get-TargetResource
 
 
         #endregion
-        
+        ResourceGenerator#>
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -107,8 +107,8 @@ function Get-TargetResource
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
-            -ProfileName 'v1.0'
-        Select-MgProfile 'v1.0' -ErrorAction Stop
+            -ProfileName '<#APIVersion#>'
+        Select-MgProfile '<#APIVersion#>' -ErrorAction Stop
     }
     catch
     {
@@ -131,24 +131,24 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        
+        <#ResourceGenerator
         #region resource generator code
-        $getValue = Get-MgDomain `
+        $getValue = <GetCmdLetName> `
             -ErrorAction Stop | Where-Object `
             -FilterScript {
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.domain' -and  $_.displayName -eq $($DisplayName)
+                <FilterScript>
             }
 
         if (-not $getValue)
         {
-            [array]$getValue = Get-MgDomain `
+            [array]$getValue = <GetCmdLetName> `
                 -ErrorAction Stop | Where-Object `
             -FilterScript {
                 $_.id -eq $id
             }
         }
         #endregion
-        
+        ResourceGenerator#>
 
         if ($null -eq $getValue)
         {
@@ -158,23 +158,10 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found something with id {$id}"
         $results = @{
-            
+            <#ResourceGenerator
             #region resource generator code
-            Id = $getValue.Id 
-            AuthenticationType = $getValue.AuthenticationType 
-            AvailabilityStatus = $getValue.AvailabilityStatus 
-            IsAdminManaged = $getValue.IsAdminManaged 
-            IsDefault = $getValue.IsDefault 
-            IsInitial = $getValue.IsInitial 
-            IsRoot = $getValue.IsRoot 
-            IsVerified = $getValue.IsVerified 
-            Manufacturer = $getValue.Manufacturer 
-            Model = $getValue.Model 
-            PasswordNotificationWindowInDays = $getValue.PasswordNotificationWindowInDays 
-            PasswordValidityPeriodInDays = $getValue.PasswordValidityPeriodInDays 
-            SupportedServices = $getValue.SupportedServices 
-
-            
+<HashTableMapping>
+            ResourceGenerator#>
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -182,23 +169,7 @@ function Get-TargetResource
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
         }
-        if ($getValue.State)
-        {
-            $results.Add("State", (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.State))
-        }
-        if ($getValue.DomainNameReferences)
-        {
-            $results.Add("DomainNameReferences", (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.DomainNameReferences))
-        }
-        if ($getValue.ServiceConfigurationRecords)
-        {
-            $results.Add("ServiceConfigurationRecords", (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.ServiceConfigurationRecords))
-        }
-        if ($getValue.VerificationDnsRecords)
-        {
-            $results.Add("VerificationDnsRecords", (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.VerificationDnsRecords))
-        }
-
+<#ComplexTypeContent#>
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -232,7 +203,7 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        
+        <#ResourceGenerator
         #region resource generator code
                 [Parameter()]
         [System.String]
@@ -304,7 +275,7 @@ function Set-TargetResource
 
 
         #endregion
-        
+        ResourceGenerator#>
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -336,7 +307,7 @@ function Set-TargetResource
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
-            -ProfileName 'v1.0'
+            -ProfileName '<#APIVersion#>'
     }
     catch
     {
@@ -370,11 +341,11 @@ function Set-TargetResource
         $CreateParameters.Remove("Id") | Out-Null
 
         $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        
+        <#ResourceGenerator
         #region resource generator code
-        New-MgDomain @CreateParameters
+        <NewCmdLetName> @CreateParameters
         #endregion
-        
+        ResourceGenerator#>
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -410,28 +381,28 @@ function Set-TargetResource
         {
             $UpdateParameters.Add("AdditionalProperties", $AdditionalProperties)
         }#>
-        
+        <#ResourceGenerator
         #region resource generator code
         Write-Verbose -Message ($UpdateParameters | Out-String)
-        Update-MgDomain @UpdateParameters `
-            -DomainId $currentInstance.Id
+        <UpdateCmdLetName> @UpdateParameters `
+            -<#UpdateKeyIdentifier#> $currentInstance.Id
         #endregion
-        
+        ResourceGenerator#>
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing {$DisplayName}"
 
-        
+        <#ResourceGenerator
         #region resource generator code
         #endregion
-        
+        ResourceGenerator#>
 
-        
+        <#ResourceGenerator
         #region resource generator code
-        Remove-MgDomain -DomainId $currentInstance.Id
+        <RemoveCmdLetName> -<#UpdateKeyIdentifier#> $currentInstance.Id
         #endregion
-        
+        ResourceGenerator#>
     }
 }
 
@@ -441,7 +412,7 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        
+        <#ResourceGenerator
         #region resource generator code
                 [Parameter()]
         [System.String]
@@ -513,7 +484,7 @@ function Test-TargetResource
 
 
         #endregion
-        
+        ResourceGenerator#>
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -605,7 +576,7 @@ function Export-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName 'v1.0'
+        -ProfileName '<#APIVersion#>'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -621,21 +592,21 @@ function Export-TargetResource
 
     try
     {
-        
+        <#ResourceGenerator
         #region resource generator code
-        [array]$getValue = Get-MgDomain `
+        [array]$getValue = <GetCmdLetName> `
             -ErrorAction Stop | Where-Object `
             -FilterScript {
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.domain' 
+                <FilterScriptShort>
             }
 
         if (-not $getValue)
         {
-            [array]$getValue = Get-MgDomain `
+            [array]$getValue = <GetCmdLetName> `
                 -ErrorAction Stop
         }
         #endregion
-        
+        ResourceGenerator#>
 
         $i = 1
         $dscContent = ''
@@ -663,69 +634,13 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-                    if ($Results.State)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.State -CIMInstanceName MicrosoftGraphdomainstate
-            if ($complexTypeStringResult)
-            {
-                $Results.State = $complexTypeStringResult            }
-            else
-            {
-                $Results.Remove('State') | Out-Null            }
-        }
-        if ($Results.DomainNameReferences)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.DomainNameReferences -CIMInstanceName MicrosoftGraphdirectoryobject
-            if ($complexTypeStringResult)
-            {
-                $Results.DomainNameReferences = $complexTypeStringResult            }
-            else
-            {
-                $Results.Remove('DomainNameReferences') | Out-Null            }
-        }
-        if ($Results.ServiceConfigurationRecords)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.ServiceConfigurationRecords -CIMInstanceName MicrosoftGraphdomaindnsrecord
-            if ($complexTypeStringResult)
-            {
-                $Results.ServiceConfigurationRecords = $complexTypeStringResult            }
-            else
-            {
-                $Results.Remove('ServiceConfigurationRecords') | Out-Null            }
-        }
-        if ($Results.VerificationDnsRecords)
-        {
-            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.VerificationDnsRecords -CIMInstanceName MicrosoftGraphdomaindnsrecord
-            if ($complexTypeStringResult)
-            {
-                $Results.VerificationDnsRecords = $complexTypeStringResult            }
-            else
-            {
-                $Results.Remove('VerificationDnsRecords') | Out-Null            }
-        }
-
+            <#ConvertComplexToString#>
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-                    if ($Results.State)
-        {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "State"
-        }
-        if ($Results.DomainNameReferences)
-        {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "DomainNameReferences"
-        }
-        if ($Results.ServiceConfigurationRecords)
-        {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ServiceConfigurationRecords"
-        }
-        if ($Results.VerificationDnsRecords)
-        {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "VerificationDnsRecords"
-        }
-
+            <#ConvertComplexToVariable#>
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -835,7 +750,7 @@ function Get-M365DSCAdditionalProperties
         $Properties
     )
 
-    $results = @{"@odata.type" = "#microsoft.graph.domain" }
+    $results = @{"@odata.type" = "#microsoft.graph.<ODataType>" }
     foreach ($property in $properties.Keys)
     {
         if ($property -ne 'Verbose')
