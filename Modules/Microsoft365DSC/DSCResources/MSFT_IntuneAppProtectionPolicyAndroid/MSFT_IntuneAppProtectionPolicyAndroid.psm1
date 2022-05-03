@@ -495,7 +495,7 @@ function Set-TargetResource
     #$PSBoundParameters.Remove("PeriodOnlineBeforeAccessCheck") | out-null
     #$PSBoundParameters.Remove("PeriodOfflineBeforeWipeIsEnforced") | out-null
     #$PSBoundParameters.Remove("PeriodBeforePinReset") | out-null
-    $PSBoundParameters.Remove("Apps") | out-null
+    #$PSBoundParameters.Remove("Apps") | out-null
     $PSBoundParameters.Remove("Assignments") | out-null
 
 
@@ -526,6 +526,31 @@ function Set-TargetResource
                     {
                         write-verbose 'Adding value as entered...'
                         $setParams.add($param, $PSBoundParameters.$param)
+                    }
+
+                    'IMicrosoftGraphManagedMobileApp[]'
+                    {
+                            # This parameter accepts an array of json snippets
+                            write-verbose -message 'Constructing Apps Object...'
+                            write-host $PSBoundParameters.$param.gettype() 'count:' $PSBoundParameters.$param.count
+                            $apparray = @()
+
+                            $PSBoundParameters.$param | foreach {
+
+                                write-verbose -message ('value: ' + $_)
+
+                                $appsValue = @"
+                                        {
+                                        "id":"$($_)",
+                                        "mobileAppIdentifier": {
+                                            "@odata.type": "#microsoft.graph.AndroidMobileAppIdentifier",
+                                            "packageId": "$_"
+                                        }
+                                    }
+"@
+                                $apparray+= $appsValue
+                            }
+                            $setParams.add($param, $apparray)
                     }
 
                     default
