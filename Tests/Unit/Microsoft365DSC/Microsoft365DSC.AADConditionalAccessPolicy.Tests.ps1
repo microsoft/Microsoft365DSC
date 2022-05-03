@@ -84,6 +84,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SignInRiskLevels           = @("High")
                     State                      = "disabled"
                     UserRiskLevels             = @("High")
+                    DeviceFilterMode           = "exclude";
+                    DeviceFilterRule           = 'device.isCompliant -eq True -or device.trustType -eq "ServerAD"';
                 }
 
                 Mock -CommandName Get-MGIdentityConditionalAccessPolicy -MockWith {
@@ -165,6 +167,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SignInRiskLevels                         = @("High")
                     State                                    = "disabled"
                     UserRiskLevels                           = @("High")
+                    DeviceFilterMode                         = "exclude";
+                    DeviceFilterRule                         = 'device.isCompliant -eq True -or device.trustType -eq "ServerAD"';
                 }
 
                 Mock -CommandName Get-MgIdentityConditionalAccessPolicy -MockWith {
@@ -302,6 +306,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SignInRiskLevels                         = @("High")
                     State                                    = "disabled"
                     UserRiskLevels                           = @("High")
+                    DeviceFilterMode                         = "exclude";
+                    DeviceFilterRule                         = 'device.isCompliant -eq True -or device.trustType -eq "ServerAD"';
                 }
 
                 Mock -CommandName Get-MgIdentityConditionalAccessPolicy -MockWith {
@@ -334,6 +340,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Devices          = @{
                                 IncludeDevices = @("All")
                                 ExcludeDevices = @("Compliant", "DomainJoined")
+                                DeviceFilter = @{
+                                    Mode = @("exclude")
+                                    Rule = @('device.isCompliant -eq True -or device.trustType -eq "ServerAD"')
+                                }
                             }
                             ClientAppTypes   = @("Browser", "MobileAppsAndDesktopClients")
                             SignInRiskLevels = @("High")
@@ -434,6 +444,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SignInRiskLevels                         = @("High")
                     State                                    = "disabled"
                     UserRiskLevels                           = @("High")
+                    DeviceFilterMode                         = "exclude";
+                    DeviceFilterRule                         = 'device.isCompliant -eq True -or device.trustType -eq "ServerAD"';
                 }
 
                 Mock -CommandName Get-MgIdentityConditionalAccessPolicy -MockWith {

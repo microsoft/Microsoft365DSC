@@ -9,67 +9,37 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
-        $AllAcceptedDomains,
-
-        [Parameter()]
-        [System.Boolean]
-        $CloudServicesMailEnabled,
+        [System.String]
+        $ClassificationID,
 
         [Parameter()]
         [System.String]
-        $Comment,
+        $DisplayName,
 
         [Parameter()]
-        [ValidateSet('Default', 'Migrated', 'HybridWizard')]
+        [ValidateSet("Highest","Higher","High","MediumHigh","Medium","MediumLow","Low","Lower","Lowest")]
         [System.String]
-        $ConnectorSource,
-
-        [Parameter()]
-        [ValidateSet('OnPremises', 'Partner')]
-        [System.String]
-        $ConnectorType,
-
-        [Parameter()]
-        [System.Boolean]
-        $Enabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $IsTransportRuleScoped,
-
-        [Parameter()]
-        [System.String[]]
-        $RecipientDomains = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $RouteAllMessagesViaOnPremises,
-
-        [Parameter()]
-        [System.String[]]
-        $SmartHosts = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $TestMode,
+        $DisplayPrecedence="Medium",
 
         [Parameter()]
         [System.String]
-        $TlsDomain,
-
-        [Parameter()]
-        [ValidateSet('EncryptionOnly', 'CertificateValidation', 'DomainValidation')]
-        [System.String]
-        $TlsSettings,
+        $Name,
 
         [Parameter()]
         [System.Boolean]
-        $UseMxRecord,
+        $PermissionMenuVisible,
 
         [Parameter()]
-        [System.String[]]
-        $ValidationRecipients = @(),
+        [System.String]
+        $RecipientDescription,
+
+        [Parameter()]
+        [System.Boolean]
+        $RetainClassificationEnabled,
+
+        [Parameter()]
+        [System.String]
+        $SenderDescription,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -99,9 +69,9 @@ function Get-TargetResource
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword
-    )
-    Write-Verbose -Message "Getting configuration of OutBoundConnector for $($Identity)"
+        )
 
+    Write-Verbose -Message "Getting Message Classification Configuration for $($Identity)"
     if ($Global:CurrentModeIsExport)
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -128,52 +98,39 @@ function Get-TargetResource
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = 'Absent'
+
     try
     {
-        $OutBoundConnectors = Get-OutBoundConnector -IncludeTestModeConnectors:$true -ErrorAction Stop
+        $MessageClassifications = Get-MessageClassification -ErrorAction Stop
 
-        $OutBoundConnector = $OutBoundConnectors | Where-Object -FilterScript { $_.Identity -eq $Identity }
-        if ($null -eq $OutBoundConnector)
+        $MessageClassification = $MessageClassifications | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        if ($null -eq $MessageClassification)
         {
-            Write-Verbose -Message "OutBoundConnector $($Identity) does not exist."
+            Write-Verbose -Message "Message Classification policy $($Identity) does not exist."
             return $nullReturn
         }
         else
         {
-            $ConnectorSourceValue = $OutBoundConnector.ConnectorSource
-            if ($ConnectorSourceValue -eq 'AdminUI' -or `
-                    [System.String]::IsNullOrEmpty($ConnectorSourceValue))
-            {
-                $ConnectorSourceValue = 'Default'
-            }
-
             $result = @{
-                Identity                      = $Identity
-                AllAcceptedDomains            = $OutBoundConnector.AllAcceptedDomains
-                CloudServicesMailEnabled      = $OutBoundConnector.CloudServicesMailEnabled
-                Comment                       = $OutBoundConnector.Comment
-                ConnectorSource               = $ConnectorSourceValue
-                ConnectorType                 = $OutBoundConnector.ConnectorType
-                Enabled                       = $OutBoundConnector.Enabled
-                IsTransportRuleScoped         = $OutBoundConnector.IsTransportRuleScoped
-                RecipientDomains              = $OutBoundConnector.RecipientDomains
-                RouteAllMessagesViaOnPremises = $OutBoundConnector.RouteAllMessagesViaOnPremises
-                SmartHosts                    = $OutBoundConnector.SmartHosts
-                TestMode                      = $OutBoundConnector.TestMode
-                TlsDomain                     = $OutBoundConnector.TlsDomain
-                TlsSettings                   = $OutBoundConnector.TlsSettings
-                UseMxRecord                   = $OutBoundConnector.UseMxRecord
-                ValidationRecipients          = $OutBoundConnector.ValidationRecipients
-                Credential            = $Credential
-                Ensure                        = 'Present'
-                ApplicationId                 = $ApplicationId
-                CertificateThumbprint         = $CertificateThumbprint
-                CertificatePath               = $CertificatePath
-                CertificatePassword           = $CertificatePassword
-                TenantId                      = $TenantId
+                Identity                     = $Identity
+                ClassificationID             = $MessageClassification.ClassificationID
+                DisplayName                  = $MessageClassification.DisplayName
+                DisplayPrecedence            = $MessageClassification.DisplayPrecedence
+                Name                         = $MessageClassification.Name
+                PermissionMenuVisible        = $MessageClassification.PermissionMenuVisible
+                RecipientDescription         = $MessageClassification.RecipientDescription
+                RetainClassificationEnabled  = $MessageClassification.RetainClassificationEnabled
+                SenderDescription            = $MessageClassification.SenderDescription
+                Credential                   = $Credential
+                Ensure                       = 'Present'
+                ApplicationId                = $ApplicationId
+                CertificateThumbprint        = $CertificateThumbprint
+                CertificatePath              = $CertificatePath
+                CertificatePassword          = $CertificatePassword
+                TenantId                     = $TenantId
             }
 
-            Write-Verbose -Message "Found OutBoundConnector $($Identity)"
+            Write-Verbose -Message "Found Message Classification policy $($Identity)"
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
         }
@@ -207,7 +164,6 @@ function Get-TargetResource
 function Set-TargetResource
 {
     [CmdletBinding()]
-
     param
     (
         [Parameter(Mandatory = $true)]
@@ -215,72 +171,42 @@ function Set-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
-        $AllAcceptedDomains,
-
-        [Parameter()]
-        [System.Boolean]
-        $CloudServicesMailEnabled,
+        [System.String]
+        $ClassificationID,
 
         [Parameter()]
         [System.String]
-        $Comment,
+        $DisplayName,
 
         [Parameter()]
-        [ValidateSet('Default', 'Migrated', 'HybridWizard')]
+        [ValidateSet("Highest","Higher","High","MediumHigh","Medium","MediumLow","Low","Lower","Lowest")]
         [System.String]
-        $ConnectorSource,
-
-        [Parameter()]
-        [ValidateSet('OnPremises', 'Partner')]
-        [System.String]
-        $ConnectorType,
-
-        [Parameter()]
-        [System.Boolean]
-        $Enabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $IsTransportRuleScoped,
-
-        [Parameter()]
-        [System.String[]]
-        $RecipientDomains = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $RouteAllMessagesViaOnPremises,
-
-        [Parameter()]
-        [System.String[]]
-        $SmartHosts = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $TestMode,
+        $DisplayPrecedence="Medium",
 
         [Parameter()]
         [System.String]
-        $TlsDomain,
-
-        [Parameter()]
-        [ValidateSet('EncryptionOnly', 'CertificateValidation', 'DomainValidation')]
-        [System.String]
-        $TlsSettings,
+        $Name,
 
         [Parameter()]
         [System.Boolean]
-        $UseMxRecord,
+        $PermissionMenuVisible,
 
         [Parameter()]
-        [System.String[]]
-        $ValidationRecipients = @(),
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = 'Present',
+        $RecipientDescription,
+
+        [Parameter()]
+        [System.Boolean]
+        $RetainClassificationEnabled,
+
+        [Parameter()]
+        [System.String]
+        $SenderDescription,
+
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
+        $Ensure = "Present",
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -306,6 +232,7 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -318,46 +245,37 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Setting configuration of OutBoundConnector for $($Identity)"
+    Write-Verbose -Message "Setting configuration of Message Classification for $($Identity)"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $OutBoundConnectors = Get-OutBoundConnector
-    $OutBoundConnector = $OutBoundConnectors | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    $OutBoundConnectorParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $OutBoundConnectorParams.Remove('Ensure') | Out-Null
-    $OutBoundConnectorParams.Remove('Credential') | Out-Null
-    $OutBoundConnectorParams.Remove('ApplicationId') | Out-Null
-    $OutBoundConnectorParams.Remove('TenantId') | Out-Null
-    $OutBoundConnectorParams.Remove('CertificateThumbprint') | Out-Null
-    $OutBoundConnectorParams.Remove('CertificatePath') | Out-Null
-    $OutBoundConnectorParams.Remove('CertificatePassword') | Out-Null
+    $MessageClassifications = Get-MessageClassification
+    $MessageClassification = $MessageClassifications | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    $MessageClassificationParams = [System.Collections.Hashtable]($PSBoundParameters)
+    $MessageClassificationParams.Remove('Ensure') | Out-Null
+    $MessageClassificationParams.Remove('Credential') | Out-Null
+    $MessageClassificationParams.Remove('ApplicationId') | Out-Null
+    $MessageClassificationParams.Remove('TenantId') | Out-Null
+    $MessageClassificationParams.Remove('CertificateThumbprint') | Out-Null
+    $MessageClassificationParams.Remove('CertificatePath') | Out-Null
+    $MessageClassificationParams.Remove('CertificatePassword') | Out-Null
 
-
-    if (('Present' -eq $Ensure ) -and ($null -eq $OutBoundConnector))
+    if (('Present' -eq $Ensure ) -and ($null -eq $MessageClassification))
     {
-        Write-Verbose -Message "Creating OutBoundConnector $($Identity)."
-        $OutBoundConnectorParams.Add("Name", $Identity)
-        $OutBoundConnectorParams.Remove('Identity') | Out-Null
-        $OutBoundConnectorParams.Remove("ValidationRecipients") | Out-Null
-        New-OutBoundConnector @OutBoundConnectorParams
-
-        if ($null -ne $ValidationRecipients)
-        {
-            Write-Verbose -Message "Updating ValidationRecipients"
-            Set-OutboundConnector -Identity $Identity -ValidationRecipients $ValidationRecipients -Confirm:$false
-        }
+        $MessageClassificationParams.Remove('Identity') | Out-Null
+        Write-Verbose -Message "Creating Message Classification policy  $($Identity)."
+        New-MessageClassification @MessageClassificationParams
     }
-    elseif (('Present' -eq $Ensure ) -and ($Null -ne $OutBoundConnector))
+    elseif (('Present' -eq $Ensure ) -and ($Null -ne $MessageClassification))
     {
-        Write-Verbose -Message "Setting OutBoundConnector $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $OutBoundConnectorParams)"
-        Set-OutBoundConnector @OutBoundConnectorParams -Confirm:$false
+        Write-Verbose -Message "Setting Message Classication policy $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $MessageClassificationParams)"
+        Set-MessageClassification @MessageClassificationParams -Confirm:$false
     }
-    elseif (('Absent' -eq $Ensure ) -and ($null -ne $OutBoundConnector))
+    elseif (('Absent' -eq $Ensure ) -and ($null -ne $MessageClassification))
     {
-        Write-Verbose -Message "Removing OutBoundConnector $($Identity)"
-        Remove-OutBoundConnector -Identity $Identity -Confirm:$false
+        Write-Verbose -Message "Removing Message Classification policy $($Identity)"
+        Remove-MessageClassification -Identity $Identity -Confirm:$false
     }
 }
 
@@ -372,67 +290,37 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
-        $AllAcceptedDomains,
-
-        [Parameter()]
-        [System.Boolean]
-        $CloudServicesMailEnabled,
+        [System.String]
+        $ClassificationID,
 
         [Parameter()]
         [System.String]
-        $Comment,
+        $DisplayName,
 
         [Parameter()]
-        [ValidateSet('Default', 'Migrated', 'HybridWizard')]
+        [ValidateSet("Highest","Higher","High","MediumHigh","Medium","MediumLow","Low","Lower","Lowest")]
         [System.String]
-        $ConnectorSource,
-
-        [Parameter()]
-        [ValidateSet('OnPremises', 'Partner')]
-        [System.String]
-        $ConnectorType,
-
-        [Parameter()]
-        [System.Boolean]
-        $Enabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $IsTransportRuleScoped,
-
-        [Parameter()]
-        [System.String[]]
-        $RecipientDomains = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $RouteAllMessagesViaOnPremises,
-
-        [Parameter()]
-        [System.String[]]
-        $SmartHosts = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $TestMode,
+        $DisplayPrecedence="Medium",
 
         [Parameter()]
         [System.String]
-        $TlsDomain,
-
-        [Parameter()]
-        [ValidateSet('EncryptionOnly', 'CertificateValidation', 'DomainValidation')]
-        [System.String]
-        $TlsSettings,
+        $Name,
 
         [Parameter()]
         [System.Boolean]
-        $UseMxRecord,
+        $PermissionMenuVisible,
 
         [Parameter()]
-        [System.String[]]
-        $ValidationRecipients = @(),
+        [System.String]
+        $RecipientDescription,
+
+        [Parameter()]
+        [System.Boolean]
+        $RetainClassificationEnabled,
+
+        [Parameter()]
+        [System.String]
+        $SenderDescription,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -475,7 +363,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of OutBoundConnector for $($Identity)"
+    Write-Verbose -Message "Testing configuration of Message Classification policy for $($Identity)"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -500,13 +388,51 @@ function Test-TargetResource
     return $TestResult
 }
 
-
 function Export-TargetResource
 {
     [CmdletBinding()]
     [OutputType([System.String])]
     param
     (
+
+        [Parameter()]
+        [System.String]
+        $ClassificationID,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [ValidateSet("Highest","Higher","High","MediumHigh","Medium","MediumLow","Low","Lower","Lowest")]
+        [System.String]
+        $DisplayPrecedence="Medium",
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Boolean]
+        $PermissionMenuVisible,
+
+        [Parameter()]
+        [System.String]
+        $RecipientDescription,
+
+        [Parameter()]
+        [System.Boolean]
+        $RetainClassificationEnabled,
+
+        [Parameter()]
+        [System.String]
+        $SenderDescription,
+
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
+        $Ensure = "Present",
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -531,9 +457,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' -InboundParameters $PSBoundParameters -SkipModuleReload $true
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -545,12 +469,14 @@ function Export-TargetResource
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
-    #endregion
 
+    #endregion
     try
     {
-        [array]$OutboundConnectors = Get-OutboundConnector -IncludeTestModeConnectors:$true -ErrorAction Stop
-        if ($OutBoundConnectors.Length -eq 0)
+
+        [Array]$MessageClassifications = Get-MessageClassification -ErrorAction Stop
+        $dscContent = ""
+        if ($MessageClassifications.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
@@ -558,21 +484,21 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
-        $dscContent = ""
         $i = 1
-        foreach ($OutboundConnector in $OutboundConnectors)
+        foreach ($MessageClassification in $MessageClassifications)
         {
-            Write-Host "    |---[$i/$($OutboundConnectors.Length)] $($OutboundConnector.Identity)" -NoNewline
+            Write-Host "    |---[$i/$($MessageClassifications.Length)] $($MessageClassification.Identity)" -NoNewline
 
             $Params = @{
-                Identity              = $OutboundConnector.Identity
-                Credential    = $Credential
+                Identity              = $MessageClassification.Identity
+                Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
             }
+
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
