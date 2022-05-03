@@ -15,28 +15,28 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $DisplayName,
-        
+
         [Parameter()]
         [ValidateSet("Highest","Higher","High","MediumHigh","Medium","MediumLow","Low","Lower","Lowest")]
         [System.String]
         $DisplayPrecedence="Medium",
-        
+
         [Parameter()]
         [System.String]
         $Name,
-        
+
         [Parameter()]
         [System.Boolean]
         $PermissionMenuVisible,
-        
+
         [Parameter()]
         [System.String]
         $RecipientDescription,
-        
+
         [Parameter()]
         [System.Boolean]
         $RetainClassificationEnabled,
-        
+
         [Parameter()]
         [System.String]
         $SenderDescription,
@@ -72,7 +72,6 @@ function Get-TargetResource
         )
 
     Write-Verbose -Message "Getting Message Classification Configuration for $($Identity)"
-
     if ($Global:CurrentModeIsExport)
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -114,8 +113,8 @@ function Get-TargetResource
         {
             $result = @{
                 Identity                     = $Identity
-                ClassificationID             = $MessageClassification.ClassificationID 
-                DisplayName                  = $MessageClassification.DisplayName 
+                ClassificationID             = $MessageClassification.ClassificationID
+                DisplayName                  = $MessageClassification.DisplayName
                 DisplayPrecedence            = $MessageClassification.DisplayPrecedence
                 Name                         = $MessageClassification.Name
                 PermissionMenuVisible        = $MessageClassification.PermissionMenuVisible
@@ -131,7 +130,7 @@ function Get-TargetResource
                 TenantId                     = $TenantId
             }
 
-            Write-Verbose -Message "Found OME Configuration $($Identity)"
+            Write-Verbose -Message "Found Message Classification policy $($Identity)"
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
         }
@@ -178,28 +177,28 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $DisplayName,
-        
+
         [Parameter()]
         [ValidateSet("Highest","Higher","High","MediumHigh","Medium","MediumLow","Low","Lower","Lowest")]
         [System.String]
         $DisplayPrecedence="Medium",
-        
+
         [Parameter()]
         [System.String]
         $Name,
-        
+
         [Parameter()]
         [System.Boolean]
         $PermissionMenuVisible,
-        
+
         [Parameter()]
         [System.String]
         $RecipientDescription,
-        
+
         [Parameter()]
         [System.Boolean]
         $RetainClassificationEnabled,
-        
+
         [Parameter()]
         [System.String]
         $SenderDescription,
@@ -262,14 +261,15 @@ function Set-TargetResource
     $MessageClassificationParams.Remove('CertificatePath') | Out-Null
     $MessageClassificationParams.Remove('CertificatePassword') | Out-Null
 
-    if (('Present' -eq $Ensure ) -and ($null -eq $OMEConfiguration))
+    if (('Present' -eq $Ensure ) -and ($null -eq $MessageClassification))
     {
-        Write-Verbose -Message "Creating Message Classification policy $($Identity)."
+        $MessageClassificationParams.Remove('Identity') | Out-Null
+        Write-Verbose -Message "Creating Message Classification policy  $($Identity)."
         New-MessageClassification @MessageClassificationParams
     }
     elseif (('Present' -eq $Ensure ) -and ($Null -ne $MessageClassification))
     {
-        Write-Verbose -Message "Setting Message Classication policy $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $OMEConfigurationParams)"
+        Write-Verbose -Message "Setting Message Classication policy $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $MessageClassificationParams)"
         Set-MessageClassification @MessageClassificationParams -Confirm:$false
     }
     elseif (('Absent' -eq $Ensure ) -and ($null -ne $MessageClassification))
@@ -296,28 +296,28 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $DisplayName,
-        
+
         [Parameter()]
         [ValidateSet("Highest","Higher","High","MediumHigh","Medium","MediumLow","Low","Lower","Lowest")]
         [System.String]
         $DisplayPrecedence="Medium",
-        
+
         [Parameter()]
         [System.String]
         $Name,
-        
+
         [Parameter()]
         [System.Boolean]
         $PermissionMenuVisible,
-        
+
         [Parameter()]
         [System.String]
         $RecipientDescription,
-        
+
         [Parameter()]
         [System.Boolean]
         $RetainClassificationEnabled,
-        
+
         [Parameter()]
         [System.String]
         $SenderDescription,
@@ -394,9 +394,6 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
 
         [Parameter()]
         [System.String]
@@ -405,28 +402,28 @@ function Export-TargetResource
         [Parameter()]
         [System.String]
         $DisplayName,
-        
+
         [Parameter()]
         [ValidateSet("Highest","Higher","High","MediumHigh","Medium","MediumLow","Low","Lower","Lowest")]
         [System.String]
         $DisplayPrecedence="Medium",
-        
+
         [Parameter()]
         [System.String]
         $Name,
-        
+
         [Parameter()]
         [System.Boolean]
         $PermissionMenuVisible,
-        
+
         [Parameter()]
         [System.String]
         $RecipientDescription,
-        
+
         [Parameter()]
         [System.Boolean]
         $RetainClassificationEnabled,
-        
+
         [Parameter()]
         [System.String]
         $SenderDescription,
@@ -478,10 +475,8 @@ function Export-TargetResource
     {
 
         [Array]$MessageClassifications = Get-MessageClassification -ErrorAction Stop
-
         $dscContent = ""
-
-        if ($OMEConfigurations.Length -eq 0)
+        if ($MessageClassifications.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
