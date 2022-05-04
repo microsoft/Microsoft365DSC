@@ -492,185 +492,174 @@ function Set-TargetResource
 
     $assignmentsArray = @()
 
-    # removing known problematic values until i can fix them...
-    #$PSBoundParameters.Remove("PeriodOfflineBeforeAccessCheck") | out-null
-    #$PSBoundParameters.Remove("PeriodOnlineBeforeAccessCheck") | out-null
-    #$PSBoundParameters.Remove("PeriodOfflineBeforeWipeIsEnforced") | out-null
-    #$PSBoundParameters.Remove("PeriodBeforePinReset") | out-null
-    #$PSBoundParameters.Remove("Apps") | out-null
-    #$PSBoundParameters.Remove("Assignments") | out-null
-
-
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
+        $graphparams = get-inputParamsList -commandName 'New-MgDeviceAppMgtAndroidManagedAppProtection'
         Write-Verbose -Message "Creating new Android App Protection Policy {$DisplayName}"
-
-        # construct command
-        $graphparams = get-inputParamsList
-        foreach ($param in $PSBoundParameters.keys)
-        {
-            write-verbose "########################### $param ########################"
-            if ( $graphparams.containskey($param) )
-            {
-
-                write-host 'we have a match with:' $param 'Type is:' $graphparams.$param.ParameterType.name
-                # we need to see if our input is valid (timespan is particulalry important as the direct graph values seem to be different)
-                switch ($graphparams.$param.ParameterType.name)
-                {
-                    'TimeSpan'
-                    {
-                        write-verbose 'we need to see if this can be interpreted as a timespan'
-                        $setParams.add($param, (set-TimeSpan -duration $PSBoundParameters.$param))
-                        #[TimeSpan]$PSBoundParameters.$param
-                    }
-
-                    'string'
-                    {
-                        write-verbose 'Adding value as entered...'
-                        $setParams.add($param, $PSBoundParameters.$param)
-                    }
-
-                    'IMicrosoftGraphManagedMobileApp[]'
-                    {
-                            # This parameter accepts an array of json snippets
-                            write-verbose -message "Constructing Apps Object for $param..."
-                            write-verbose -message ($PSBoundParameters.$param.gettype())
-                            write-verbose -message (' count: ' + $PSBoundParameters.$param.count)
-                            $apparray = @()
-
-                            $PSBoundParameters.$param | foreach {
-
-                                write-verbose -message ('value: ' + $_)
-
-                                $appsValue = @"
-                                        {
-                                        "id":"$($_)",
-                                        "mobileAppIdentifier": {
-                                            "@odata.type": "#microsoft.graph.AndroidMobileAppIdentifier",
-                                            "packageId": "$_"
-                                        }
-                                    }
-"@
-                                $apparray+= $appsValue
-                            }
-                            $setParams.add($param, $apparray)
-                    }
-
-                    'IMicrosoftGraphTargetedManagedAppPolicyAssignment1[]'
-                    {
-                        # could be either assignments or excludedgroups but we only get here with assignments (at the moment)
-                        # because we may need to complete it twice we don't add this to the params list until the end
-                        write-verbose -message "Collecting Role Assignments Data for $param..."
-                        write-verbose -message ($PSBoundParameters.$param.gettype())
-                        write-verbose -message (' count: ' + $PSBoundParameters.$param.count)
-
-                        $PSBoundParameters.$param | foreach {
-                            $assignmentsArray += @{
-                                                    'ID' = $_;
-                                                    'Type' = 'incl';
-                                                    'ODataType' = 'GroupAssignmentTarget'
-                                                }
-                            }
-                    }
-
-                    default
-                    {
-
-                        if ($graphparams.$param.ParameterType.name.endswith('[]'))
-                        {
-                            write-verbose -message 'Array required...'
-                            write-host $PSBoundParameters.$param.gettype() 'count:' $PSBoundParameters.$param.count
-                            write-host $PSBoundParameters.$param
-                            $setParams.add($param, $PSBoundParameters.$param)
-                        }
-                        else
-                        {
-                            write-verbose 'Adding value as entered...'
-                            $setParams.add($param, $PSBoundParameters.$param)
-                        }
-                    }
-
-
-                }
-
-
-            }
-            else
-            {
-                if ($param -eq 'excludedgroups')
-                {
-                    write-verbose -message "Collecting Role Assignments Data for $param..."
-                    write-verbose -message ($PSBoundParameters.$param.gettype())
-                    write-verbose -message (' count: ' + $PSBoundParameters.$param.count)
-                    $PSBoundParameters.$param | foreach {
-                        $assignmentsArray += @{
-                                                'ID' = $_;
-                                                'Type' = 'excl';
-                                                'ODataType' = 'exclusionGroupAssignmentTarget'
-                                            }
-                        }
-
-                }
-                else
-                {
-                    write-verbose -message "Cannot specify this in graph cmdlet: $param"
-                }
-            }
-        }
-
-        # check if included or excluded groups gathered and assign
-        if ($assignmentsArray.count -gt 0)
-        {
-            write-verbose -message "Setting group assignments..."
-            $AssignmentsCombined= @()
-
-            $assignmentsArray | foreach {
-
-                $JsonContent = @"
-                                {
-                                "id":"$($_.id)_$($_.Type))",
-                                "target": {
-                                            "@odata.type": "#microsoft.graph.$($_.ODataType)",
-                                            "groupId": "$($_.id)"
-                                        }
-                                }
-"@
-                $AssignmentsCombined+= $JsonContent
-
-                write-verbose $JsonContent
-            }
-
-
-
-            $setParams.add('Assignments', $AssignmentsCombined)
-
-
-        }
-
-        write-verbose $setParams.PeriodBeforePinReset
-        #let's try to splat it.. if I can rememeber how to splat
-        Write-Verbose -Message 'Setting up policy via graph...'
-        New-MgDeviceAppMgtAndroidManagedAppProtection @setParams
-
-
-        #$JsonContent = Get-M365DSCIntuneAppProtectionPolicyAndroidJSON -Parameters $PSBoundParameters
-        $JsonContent = Get-M365DSCIntuneAppProtectionPolicyAndroidJSON -Parameters $setParams
-        Write-Verbose -Message "JSON: $JsonContent"
-        <#
-        New-M365DSCIntuneAppProtectionPolicyAndroid -JSONContent $JsonContent
-
-        $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'" `
-            -ErrorAction Stop
-        $assignmentJSON = Get-M365DSCIntuneAppProtectionPolicyAndroidAssignmentJson -Assignments $Assignments `
-            -Exclusions $ExcludedGroups
-
-        Set-M365DSCIntuneAppProtectionPolicyAndroidAssignment -JsonContent $assignmentJSON `
-            -PolicyId $policyInfo.Id
-        #>
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing Android App Protection Policy {$DisplayName}"
+        $setParams.add('AndroidManagedAppProtectionId', (Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'").id)
+        $graphparams = get-inputParamsList -commandName 'Update-MgDeviceAppMgtAndroidManagedAppProtection'
+    }
+    elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present'){}
+
+
+    # construct command
+    foreach ($param in $PSBoundParameters.keys)
+    {
+        write-verbose "########################### $param ########################"
+        if ( $graphparams.containskey($param) )
+        {
+
+            write-host 'we have a match with:' $param 'Type is:' $graphparams.$param.ParameterType.name
+            # we need to see if our input is valid (timespan is particulalry important as the direct graph values seem to be different)
+            switch ($graphparams.$param.ParameterType.name)
+            {
+                'TimeSpan'
+                {
+                    write-verbose 'we need to see if this can be interpreted as a timespan'
+                    $setParams.add($param, (set-TimeSpan -duration $PSBoundParameters.$param))
+                    #[TimeSpan]$PSBoundParameters.$param
+                }
+
+                'string'
+                {
+                    write-verbose 'Adding value as entered...'
+                    $setParams.add($param, $PSBoundParameters.$param)
+                }
+
+                'IMicrosoftGraphManagedMobileApp[]'
+                {
+                        # This parameter accepts an array of json snippets
+                        write-verbose -message "Constructing Apps Object for $param..."
+                        write-verbose -message ($PSBoundParameters.$param.gettype())
+                        write-verbose -message (' count: ' + $PSBoundParameters.$param.count)
+                        $apparray = @()
+
+                        $PSBoundParameters.$param | foreach {
+
+                            write-verbose -message ('value: ' + $_)
+
+                            $appsValue = @"
+                                    {
+                                    "id":"$($_)",
+                                    "mobileAppIdentifier": {
+                                        "@odata.type": "#microsoft.graph.AndroidMobileAppIdentifier",
+                                        "packageId": "$_"
+                                    }
+                                }
+"@
+                            $apparray+= $appsValue
+                        }
+                        $setParams.add($param, $apparray)
+                }
+
+                'IMicrosoftGraphTargetedManagedAppPolicyAssignment1[]'
+                {
+                    # could be either assignments or excludedgroups but we only get here with assignments (at the moment)
+                    # because we may need to complete it twice we don't add this to the params list until the end
+                    write-verbose -message "Collecting Role Assignments Data for $param..."
+                    write-verbose -message ($PSBoundParameters.$param.gettype())
+                    write-verbose -message (' count: ' + $PSBoundParameters.$param.count)
+
+                    $PSBoundParameters.$param | foreach {
+                        $assignmentsArray += @{
+                                                'ID' = $_;
+                                                'Type' = 'incl';
+                                                'ODataType' = 'GroupAssignmentTarget'
+                                            }
+                        }
+                }
+
+                default
+                {
+
+                    if ($graphparams.$param.ParameterType.name.endswith('[]'))
+                    {
+                        write-verbose -message 'Array required...'
+                        write-host $PSBoundParameters.$param.gettype() 'count:' $PSBoundParameters.$param.count
+                        write-host $PSBoundParameters.$param
+                        $setParams.add($param, $PSBoundParameters.$param)
+                    }
+                    else
+                    {
+                        write-verbose 'Adding value as entered...'
+                        $setParams.add($param, $PSBoundParameters.$param)
+                    }
+                }
+
+
+            }
+
+
+        }
+        else
+        {
+            if ($param -eq 'excludedgroups')
+            {
+                write-verbose -message "Collecting Role Assignments Data for $param..."
+                write-verbose -message ($PSBoundParameters.$param.gettype())
+                write-verbose -message (' count: ' + $PSBoundParameters.$param.count)
+                $PSBoundParameters.$param | foreach {
+                    $assignmentsArray += @{
+                                            'ID' = $_;
+                                            'Type' = 'excl';
+                                            'ODataType' = 'exclusionGroupAssignmentTarget'
+                                        }
+                    }
+
+            }
+            else
+            {
+                write-verbose -message "Cannot specify this in graph cmdlet: $param"
+            }
+        }
+    }
+
+    # check if included or excluded groups gathered and assign
+    if ($assignmentsArray.count -gt 0)
+    {
+        write-verbose -message "Setting group assignments..."
+        $AssignmentsCombined= @()
+
+        $assignmentsArray | foreach {
+
+            $JsonContent = @"
+                            {
+                            "id":"$($_.id)_$($_.Type))",
+                            "target": {
+                                        "@odata.type": "#microsoft.graph.$($_.ODataType)",
+                                        "groupId": "$($_.id)"
+                                    }
+                            }
+"@
+            $AssignmentsCombined+= $JsonContent
+
+            write-verbose $JsonContent
+        }
+
+        $setParams.add('Assignments', $AssignmentsCombined)
+    }
+
+    if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message 'Setting up policy via graph...'
+        New-MgDeviceAppMgtAndroidManagedAppProtection @setParams
+
+    }
+
+    elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message 'Setting up policy via graph...'
+
+        #remove problematic values now
+        $setParams.Remove("Assignments") | Out-Null
+        $setParams.Remove("Apps") | Out-Null
+
+        Update-MgDeviceAppMgtAndroidManagedAppProtection @setParams
+        <#
         $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
 
@@ -682,6 +671,7 @@ function Set-TargetResource
         $appJSON = Get-M365DSCIntuneAppProtectionPolicyAndroidAppsJSON -Parameters $PSBoundParameters
         Set-M365DSCIntuneAppProtectionPolicyAndroidApps -JSONContent $appJSON `
             -PolicyId $policyInfo.Id
+            #>
 
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
@@ -1324,9 +1314,12 @@ function Set-M365DSCIntuneAppProtectionPolicyAndroidAssignment
 
 function get-inputParamsList
 {
+        param(
+            [string]$commandName
+        )
 
     # it seems a daft function at the moment but I'm hoping wI can use it to set up dynamic parameters for the functions at some point and I'll probably need to work on it then
-    $Graphparams = (get-command New-MgDeviceAppMgtAndroidManagedAppProtection).Parameters
+    $Graphparams = (get-command $commandName).Parameters
 
     return $Graphparams
 
