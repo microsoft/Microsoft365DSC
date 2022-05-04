@@ -425,11 +425,11 @@ function Set-TargetResource
         $Apps,
 
         [Parameter()]
-        [System.String[]]
+        [System.Array[]]
         $Assignments,
 
         [Parameter()]
-        [System.String[]]
+        [System.Array[]]
         $ExcludedGroups,
 
         [Parameter(Mandatory = $true)]
@@ -490,13 +490,15 @@ function Set-TargetResource
     $PSBoundParameters.Remove("TenantID") | Out-Null
     $PSBoundParameters.Remove("CertificateThumbprint") | Out-Null
 
+    $assignmentsArray = @()
+
     # removing known problematic values until i can fix them...
     #$PSBoundParameters.Remove("PeriodOfflineBeforeAccessCheck") | out-null
     #$PSBoundParameters.Remove("PeriodOnlineBeforeAccessCheck") | out-null
     #$PSBoundParameters.Remove("PeriodOfflineBeforeWipeIsEnforced") | out-null
     #$PSBoundParameters.Remove("PeriodBeforePinReset") | out-null
     #$PSBoundParameters.Remove("Apps") | out-null
-    $PSBoundParameters.Remove("Assignments") | out-null
+    #$PSBoundParameters.Remove("Assignments") | out-null
 
 
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
@@ -531,8 +533,9 @@ function Set-TargetResource
                     'IMicrosoftGraphManagedMobileApp[]'
                     {
                             # This parameter accepts an array of json snippets
-                            write-verbose -message 'Constructing Apps Object...'
-                            write-host $PSBoundParameters.$param.gettype() 'count:' $PSBoundParameters.$param.count
+                            write-verbose -message "Constructing Apps Object for $param..."
+                            write-verbose -message ($PSBoundParameters.$param.gettype())
+                            write-verbose -message (' count: ' + $PSBoundParameters.$param.count)
                             $apparray = @()
 
                             $PSBoundParameters.$param | foreach {
@@ -551,6 +554,23 @@ function Set-TargetResource
                                 $apparray+= $appsValue
                             }
                             $setParams.add($param, $apparray)
+                    }
+
+                    'IMicrosoftGraphTargetedManagedAppPolicyAssignment1[]'
+                    {
+                        # could be either assignments or excludedgroups but we only get here with assignments (at the moment)
+                        # because we may need to complete it twice we don't add this to the params list until the end
+                        write-verbose -message "Collecting Role Assignments Data for $param..."
+                        write-verbose -message ($PSBoundParameters.$param.gettype())
+                        write-verbose -message (' count: ' + $PSBoundParameters.$param.count)
+
+                        $PSBoundParameters.$param | foreach {
+                            $assignmentsArray += @{
+                                                    'ID' = $_;
+                                                    'Type' = 'incl';
+                                                    'ODataType' = 'GroupAssignmentTarget'
+                                                }
+                            }
                     }
 
                     default
@@ -577,8 +597,54 @@ function Set-TargetResource
             }
             else
             {
-                write-verbose -message "Cannot specify this in graph cmdlet: $param"
+                if ($param -eq 'excludedgroups')
+                {
+                    write-verbose -message "Collecting Role Assignments Data for $param..."
+                    write-verbose -message ($PSBoundParameters.$param.gettype())
+                    write-verbose -message (' count: ' + $PSBoundParameters.$param.count)
+                    $PSBoundParameters.$param | foreach {
+                        $assignmentsArray += @{
+                                                'ID' = $_;
+                                                'Type' = 'excl';
+                                                'ODataType' = 'exclusionGroupAssignmentTarget'
+                                            }
+                        }
+
+                }
+                else
+                {
+                    write-verbose -message "Cannot specify this in graph cmdlet: $param"
+                }
             }
+        }
+
+        # check if included or excluded groups gathered and assign
+        if ($assignmentsArray.count -gt 0)
+        {
+            write-verbose -message "Setting group assignments..."
+            $AssignmentsCombined= @()
+
+            $assignmentsArray | foreach {
+
+                $JsonContent = @"
+                                {
+                                "id":"$($_.id)_$($_.Type))",
+                                "target": {
+                                            "@odata.type": "#microsoft.graph.$($_.ODataType)",
+                                            "groupId": "$($_.id)"
+                                        }
+                                }
+"@
+                $AssignmentsCombined+= $JsonContent
+
+                write-verbose $JsonContent
+            }
+
+
+
+            $setParams.add('Assignments', $AssignmentsCombined)
+
+
         }
 
         write-verbose $setParams.PeriodBeforePinReset
