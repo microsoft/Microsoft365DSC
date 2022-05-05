@@ -1,9 +1,12 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.504.1
 
 * EXOInboundConnector
   * Added support for EFSkipIPs, EFSkipLastIP and EFUsers properties. (FIXES #1917)
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.147.
+  * Updated MicrosoftTeams to version 4.3.0.
 
 # 1.22.427.1
 
