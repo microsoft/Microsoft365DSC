@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOInboundConnector
+  * Added support for EFSkipIPs, EFSkipLastIP and EFUsers properties. (FIXES #1917)
+
 # 1.22.427.1
 
 * AADApplication
