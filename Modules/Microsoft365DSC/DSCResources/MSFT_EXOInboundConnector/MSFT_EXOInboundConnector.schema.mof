@@ -8,6 +8,9 @@ class MSFT_EXOInboundConnector : OMI_BaseResource
     [Write, Description("The Comment parameter specifies an optional comment.")] String Comment;
     [Write, Description("The ConnectorSource parameter specifies how the connector is created. DO NOT CHANGE THIS! values are Default (the default) | Migrated | HybridWizard"), ValueMap{"Default","Migrated","HybridWizard"}, Values{"Default","Migrated","HybridWizard"}] String ConnectorSource;
     [Write, Description("The ConnectorType parameter specifies a category for the domains that are serviced by the connector. Valid values are Partner and OnPremises"),ValueMap{"Partner","OnPremises"},Values{"Partner","OnPremises"}] String ConnectorType;
+    [Write, Description("The EFSkipIPs parameter specifies the source IP addresses to skip in Enhanced Filtering for Connectors when the EFSkipLastIP parameter value is $false.")] String EFSkipIPs[];
+    [Write, Description("The EFSkipLastIP parameter specifies the behavior of Enhanced Filtering for Connectors.")] Boolean EFSkipLastIP;
+    [Write, Description("The EFUsers parameter specifies the recipients that Enhanced Filtering for Connectors applies to.")] String EFUsers[];
     [Write, Description("Specifies whether connector is enabled.")] Boolean Enabled;
     [Write, Description("The RequireTLS parameter specifies that all messages received by this connector require TLS transmission. Valid values for this parameter are $true or $false. The default value is $false. When the RequireTLS parameter is set to $true, all messages received by this connector require TLS transmission.")] Boolean RequireTls;
     [Write, Description("The RestrictDomainsToCertificate parameter specifies that Office 365 should identify incoming messages that are eligible for this connector by verifying that the remote server authenticates using a TLS certificate that has the TlsSenderCertificateName in the Subject.")] Boolean RestrictDomainsToCertificate;
