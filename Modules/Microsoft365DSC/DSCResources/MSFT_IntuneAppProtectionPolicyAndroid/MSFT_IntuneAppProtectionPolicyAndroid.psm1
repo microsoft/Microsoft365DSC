@@ -521,7 +521,6 @@ function Set-TargetResource
                 {
                     write-verbose 'we need to see if this can be interpreted as a timespan'
                     $setParams.add($param, (set-TimeSpan -duration $PSBoundParameters.$param))
-                    #[TimeSpan]$PSBoundParameters.$param
                 }
 
                 'string'
@@ -551,6 +550,7 @@ function Set-TargetResource
                                     }
                                 }
 "@
+
                             $apparray+= $appsValue
                         }
                         $setParams.add($param, $apparray)
@@ -637,7 +637,7 @@ function Set-TargetResource
 "@
             $AssignmentsCombined+= $JsonContent
 
-            write-verbose $JsonContent
+            #write-verbose $JsonContent
         }
 
         $setParams.add('Assignments', $AssignmentsCombined)
@@ -652,13 +652,17 @@ function Set-TargetResource
 
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
-        Write-Verbose -Message 'Setting up policy via graph...'
+        Write-Verbose -Message 'Amending policy via graph...'
 
-        #remove problematic values now
+        # Set apps array
+        $appsarray = $setParams.apps
+        # remove problematic values now
         $setParams.Remove("Assignments") | Out-Null
         $setParams.Remove("Apps") | Out-Null
 
         Update-MgDeviceAppMgtAndroidManagedAppProtection @setParams
+        # set the apps (fails via primary cmdlet)
+        Invoke-MgTargetDeviceAppMgtManagedAppPolicyApp -ManagedAppPolicyId $setParams.AndroidManagedAppProtectionId -Apps $appsarray
         <#
         $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
@@ -668,9 +672,10 @@ function Set-TargetResource
         Set-M365DSCIntuneAppProtectionPolicyAndroid -JSONContent $JsonContent `
             -PolicyId ($policyInfo.id)
 
+        write-verbose -message 'trying the old apps setup option'
         $appJSON = Get-M365DSCIntuneAppProtectionPolicyAndroidAppsJSON -Parameters $PSBoundParameters
         Set-M365DSCIntuneAppProtectionPolicyAndroidApps -JSONContent $appJSON `
-            -PolicyId $policyInfo.Id
+            -PolicyId $setParams.AndroidManagedAppProtectionId
             #>
 
     }
