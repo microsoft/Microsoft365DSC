@@ -191,7 +191,7 @@ function Set-TargetResource
 
         New-CsTeamsUpdateManagementPolicy @newParams | Out-Null
     }
-    elseif ($CurrentValues.Ensure -eq 'Present' -and $Ensure -eq 'Absent')
+    elseif ($CurrentValues.Ensure -eq 'Present' -and $Ensure -eq 'Present')
     {
         Write-Verbose "Updating existing Teams Update Management Policy {$Identity}"
         $setParams = $PSBoundParameters

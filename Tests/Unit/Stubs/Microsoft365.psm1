@@ -12594,6 +12594,10 @@ function New-CsTeamsMessagingPolicy
     param(
         [Parameter()]
         [System.Boolean]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowOwnerDeleteMessage,
 
         [Parameter()]
@@ -12991,6 +12995,10 @@ function Remove-CsTeamsMessagingPolicy
         [Parameter()]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force,
 
         [Parameter()]
         [System.String]
@@ -13934,6 +13942,10 @@ function Set-CsTeamsMessagingPolicy
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Boolean]
+        $Force,
+
         [Parameter()]
         [System.Boolean]
         $AllowOwnerDeleteMessage,
