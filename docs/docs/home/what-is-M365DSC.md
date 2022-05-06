@@ -10,7 +10,7 @@ Microsoft365DSC is build as a module for the [PowerShell Desired State Configura
 
 Using PowerShell Desired State Configuration (DSC) syntax, write a complete definition of how you want your Microsoft 365 tenant to be configured. The Microsoft365DSC module allows Microsoft 365 administrators to define how the configuration of the various workloads (SharePoint, Exchange, Security & Compliance, Teams, etc.), and apply the configuration in an automated way. For example, administrator that wishes to deploy a new Search Managed Property to their SharePoint Online workload, can do so with similar lines of code (all code examples ca be found on the [Resources List](https://github.com/microsoft/Microsoft365DSC/wiki/Resources-List) wiki page):
 
-```powershell
+```PowerShell
 SPOSearchManagedProperty SearchMP
 {
     Searchable                  = $True

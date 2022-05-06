@@ -29,6 +29,7 @@ function New-M365DSCConfigurationToHTML
 
     if ([System.String]::IsNullOrEmpty($ParsedContent))
     {
+        Write-Output "Loading file '$ConfigurationPath'"
         $TemplateFile = Get-Item $ConfigurationPath
         $fileContent = Get-Content $ConfigurationPath -Raw
         try
@@ -48,11 +49,22 @@ function New-M365DSCConfigurationToHTML
     {
         $TemplateName = "Configuration Report"
     }
-    $fullHTML = "<h1>" + $TemplateName + "</h1>"
+
+    Write-Output "Generating HTML report"
+    $fullHTML = "<!DOCTYPE html>"
+    $fullHTML += "<html>"
+    $fullHTML += "<body>"
+    $fullHTML += "<h1>" + $TemplateName + "</h1>"
     $fullHTML += "<div style='width:100%;text-align:center;'>"
     $fullHTML += "<h2>Template Details</h2>"
+
+    $totalCount = $parsedContent.Count
+    $currentCount = 0
     foreach ($resource in $parsedContent)
     {
+        $percentage = [math]::Round(($currentCount / $totalCount) * 100, 2)
+        Write-Progress -Activity 'Processing generated DSC Object' -Status ("{0:N2} completed - $($resource.ResourceName)" -f $percentage) -PercentComplete $percentage
+
         $partHTML = "<div width='100%' style='text-align:center;'><table width='80%' style='margin-left:auto; margin-right:auto;'>"
         $partHTML += "<tr><th rowspan='" + ($resource.Keys.Count) + "' width='20%'>"
         $partHTML += "<img src='" + (Get-IconPath -ResourceName $resource.ResourceName) + "' />"
@@ -82,7 +94,7 @@ function New-M365DSCConfigurationToHTML
                     if ($resource.$property.GetType().Name -eq 'Object[]')
                     {
                         if ($resource.$property -and ($resource.$property[0].GetType().Name -eq 'Hashtable' -or
-                        $resource.$property[0].GetType().Name -eq 'OrderedDictionary'))
+                                $resource.$property[0].GetType().Name -eq 'OrderedDictionary'))
                         {
                             $value = ""
                             foreach ($entry in $resource.$property)
@@ -123,14 +135,20 @@ function New-M365DSCConfigurationToHTML
         }
 
         $partHTML += "</table></div><br />"
-        $fullHtml += $partHTML
+        $fullHTML += $partHTML
+        $fullHTML += "</body>"
+        $fullHTML += "</html>"
+
+        $currentCount++
     }
 
     if (-not [System.String]::IsNullOrEmpty($OutputPath))
     {
+        Write-Output "Saving HTML report"
         $fullHtml | Out-File $OutputPath
     }
-    return $fullHTML
+
+    Write-Output "Completed generating HTML report"
 }
 
 <#

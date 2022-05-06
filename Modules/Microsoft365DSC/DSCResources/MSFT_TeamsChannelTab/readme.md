@@ -23,3 +23,5 @@ required the following Application permissions:
     * TeamsTab.Read.All
 
 NOTE: All permisions listed above require admin consent.
+
+More information: https://docs.microsoft.com/en-us/microsoftteams/platform/tabs/what-are-tabs

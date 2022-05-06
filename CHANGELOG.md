@@ -1,5 +1,13 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* MISC
+  * Updated permissions for SharePoint in settings.json files.
+  * Added links to documentation to Teams Readme files
+  * Added and corrected some Exchange examples
+  * Added progress indicator to the Report generation
+
 # 1.22.504.1
 
 * EXOInboundConnector
