@@ -229,61 +229,35 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    try
-    {
-        $DataEncryptionPolicies = Get-DataEncryptionPolicy -ErrorAction Stop
-        $DataEncryptionPolicy = $DataEncryptionPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
-        $DataEncryptionPolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
-        $DataEncryptionPolicyParams.Remove('Ensure') | Out-Null
-        $DataEncryptionPolicyParams.Remove('Credential') | Out-Null
-        $DataEncryptionPolicyParams.Remove('ApplicationId') | Out-Null
-        $DataEncryptionPolicyParams.Remove('TenantId') | Out-Null
-        $DataEncryptionPolicyParams.Remove('CertificateThumbprint') | Out-Null
-        $DataEncryptionPolicyParams.Remove('CertificatePath') | Out-Null
-        $DataEncryptionPolicyParams.Remove('CertificatePassword') | Out-Null
+    $DataEncryptionPolicies = Get-DataEncryptionPolicy
+    $DataEncryptionPolicy = $DataEncryptionPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    $DataEncryptionPolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
+    $DataEncryptionPolicyParams.Remove('Ensure') | Out-Null
+    $DataEncryptionPolicyParams.Remove('Credential') | Out-Null
+    $DataEncryptionPolicyParams.Remove('ApplicationId') | Out-Null
+    $DataEncryptionPolicyParams.Remove('TenantId') | Out-Null
+    $DataEncryptionPolicyParams.Remove('CertificateThumbprint') | Out-Null
+    $DataEncryptionPolicyParams.Remove('CertificatePath') | Out-Null
+    $DataEncryptionPolicyParams.Remove('CertificatePassword') | Out-Null
 
-        if (('Present' -eq $Ensure ) -and ($null -eq $DataEncryptionPolicy))
-        {
-            Write-Verbose -Message "Creating Data encryption policy $($Identity)."
-            $DataEncryptionPolicyParams.Remove('Identity') | Out-Null
-            $DataEncryptionPolicyParams.Remove('PermanentDataPurgeContact') | Out-Null
-            $DataEncryptionPolicyParams.Remove('PermanentDataPurgeReason') | Out-Null
-            New-DataEncryptionPolicy @DataEncryptionPolicyParams -ErrorAction Stop
-            Write-Verbose -Message "Data encryption policy created successfully."
-        }
-        elseif (('Present' -eq $Ensure ) -and ($null -ne $DataEncryptionPolicy))
-        {
-            $DataEncryptionPolicyParams.Remove('AzureKeyIDs') | Out-Null
-            Write-Verbose -Message "Setting Data encryption policy $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $DataEncryptionPolicyParams)"
-            Set-DataEncryptionPolicy @DataEncryptionPolicyParams -Confirm:$false -ErrorAction Stop
-            Write-Verbose -Message "Data encryption policy updated successfully."
-
-        }
-    }
-    catch
+    if (('Present' -eq $Ensure ) -and ($null -eq $DataEncryptionPolicy))
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ""
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
-        return ""
+        Write-Verbose -Message "Creating Data encryption policy $($Identity)."
+        $DataEncryptionPolicyParams.Remove('Identity') | Out-Null
+        $DataEncryptionPolicyParams.Remove('PermanentDataPurgeContact') | Out-Null
+        $DataEncryptionPolicyParams.Remove('PermanentDataPurgeReason') | Out-Null
+        New-DataEncryptionPolicy @DataEncryptionPolicyParams
+        Write-Verbose -Message "Data encryption policy created successfully."
     }
+    elseif (('Present' -eq $Ensure ) -and ($null -ne $DataEncryptionPolicy))
+    {
+        $DataEncryptionPolicyParams.Remove('AzureKeyIDs') | Out-Null
+        Write-Verbose -Message "Setting Data encryption policy $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $DataEncryptionPolicyParams)"
+        Set-DataEncryptionPolicy @DataEncryptionPolicyParams -Confirm:$false
+        Write-Verbose -Message "Data encryption policy updated successfully."
+
+    }
+
 }
 
 function Test-TargetResource
