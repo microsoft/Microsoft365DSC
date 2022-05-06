@@ -4,7 +4,7 @@ Microsoft365DSC makes it very easy to generate user friendly reports from any co
 
 ## Generate Report
 
-To generate reports, simply use the <a href="../../cmdlets/New-M365DSCReportFromConfiguration/">New-M365DSCReportFromConfiguration</a> and specify what type of report you want using the **Type** parameter (specify HTML, Excel or JSON). The cmdlet also requires you to specify the full path to the .ps1 configuration file you want to generate the report from using the **-ConfigurationPath** parameter and specify where you wish to store the generated report using the **-OutputPath** parameter.
+To generate reports, simply use the <a href="../../cmdlets/New-M365DSCReportFromConfiguration/">New-M365DSCReportFromConfiguration</a> cmdlet and specify what type of report you want using the **Type** parameter (specify HTML, Excel or JSON). The cmdlet also requires you to specify the full path to the .ps1 configuration file you want to generate the report from using the **-ConfigurationPath** parameter and specify where you wish to store the generated report using the **-OutputPath** parameter.
 
 ## Excel Report
 
