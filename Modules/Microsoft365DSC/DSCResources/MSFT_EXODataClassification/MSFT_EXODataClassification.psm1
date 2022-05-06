@@ -100,17 +100,10 @@ function Get-TargetResource
 
             $currentDefaultCultureName=([system.globalization.cultureinfo]$DataClassification.DefaultCulture).Name
             $DataClassificationLocale=$currentDefaultCultureName
-            if ([String]::IsNullOrEmpty($Locale))
+            $DataClassificationIsDefault=$false
+            if (([String]::IsNullOrEmpty($Locale)) -or ($Locale -eq $currentDefaultCultureName))
             {
                 $DataClassificationIsDefault=$true
-            }
-            elseif($Locale -eq $currentDefaultCultureName)
-            {
-                $DataClassificationIsDefault=$true
-            }
-            else
-            {
-                $DataClassificationIsDefault=$false
             }
 
             $result = @{
