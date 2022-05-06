@@ -11,11 +11,13 @@ When using PnP PowerShell for the first time you have to consent the PnP Managem
 Register-PnPManagementShellAccess
 ```
 
+For more information, check out the [SharePoint PnP PowerShell Permissions](../../user-guide/get-started/authentication-and-permissions/#sharepoint-pnp-powershell-permissions) section on the **Authentication and Permissions** page.
+
 ## Microsoft Graph
 
 For the Microsoft Graph PowerShell module you need to specify scopes to make sure you can export the different modules.
 
-We made this a lot easier for you with the `Get-M365DSCCompiledPermissionList` cmdlet. You can enter the module you want to export and it will return the correct scope.
+We made this a lot easier for you with the `Get-M365DSCCompiledPermissionList` cmdlet. You can enter the resource you want to export and it will return the correct scope.
 
 For instance, when you want to export the `AADTenantDetails` module, you can use the following example to get the correct scope(s).
 
@@ -31,3 +33,5 @@ Name                           Value
 ReadPermissions                {Organization.Read.All}
 UpdatePermissions              {Organization.ReadWrite.All}
 ```
+
+For more information, check out the [Microsoft Graph Permissions](../../user-guide/get-started/authentication-and-permissions/#microsoft-graph-permissions) section on the **Authentication and Permissions** page.

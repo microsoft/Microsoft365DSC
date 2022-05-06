@@ -14,6 +14,9 @@ Set-M365DSCTelemetryOption -Enabled $false
 
 Organizations can also decide to capture telemetry from Microsoft365DSC using their own Application Insights account (without sending any data back to Microsoft). The **Set-M365DSCTelemetryOption** cmdlet lets you specify what Application Insights account you wish to send telemetry back to using the **-InstrumentationKey** parameter.
 
- ![image](https://user-images.githubusercontent.com/2547149/149800998-71bf37ff-ff82-4627-8893-7465d689f0fe.png)
+<figure markdown>
+  ![Configuring a custom telemetry store](../../Images/CustomTelemetryStore.png)
+  <figcaption>Configuring a custom telemetry store</figcaption>
+</figure>
 
 Users can also specify a custom name for their solution using the **-ProjectName** parameter. This will ensure that every telemetry reported back to the Application Insights account gets tagged with the project name under **customDimensions.ProjectName**.
