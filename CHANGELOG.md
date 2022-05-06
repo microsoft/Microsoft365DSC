@@ -2,8 +2,15 @@
 
 # Unreleased
 
+* TeamsUpdateManagementPolicy
+  * Initial release.
 * DEPENDENCIES
   * Updated ReverseDSC to version 2.0.0.11.
+* MISC
+  * Updated permissions for SharePoint in settings.json files.
+  * Added links to documentation to Teams Readme files
+  * Added and corrected some Exchange examples
+  * Added progress indicator to the Report generation
 
 # 1.22.504.1
 
