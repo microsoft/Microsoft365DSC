@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* DEPENDENCIES
+  * Updated ReverseDSC to version 2.0.0.11.
+
 # 1.22.504.1
 
 * EXOInboundConnector
