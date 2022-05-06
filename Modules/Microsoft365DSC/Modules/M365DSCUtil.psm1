@@ -130,15 +130,15 @@ function Convert-M365DscHashtableToString
         {
             if ($pair.Value -is [System.Array])
             {
-                $str = "$($pair.Key)=$(Convert-M365DSCDscArrayToString -Array $pair.Value)"
+                $str = "$($pair.Key)=$(Convert-M365DSCArrayToString -Array $pair.Value)"
             }
             elseif ($pair.Value -is [System.Collections.Hashtable])
             {
-                $str = "$($pair.Key)={$(Convert-M365DscHashtableToString -Hashtable $pair.Value)}"
+                $str = "$($pair.Key)={$(Convert-M365DSCHashtableToString -Hashtable $pair.Value)}"
             }
             elseif ($pair.Value -is [Microsoft.Management.Infrastructure.CimInstance])
             {
-                $str = "$($pair.Key)=$(Convert-M365DSCDscCIMInstanceToString -CIMInstance $pair.Value)"
+                $str = "$($pair.Key)=$(Convert-M365DSCCIMInstanceToString -CIMInstance $pair.Value)"
             }
             else
             {
