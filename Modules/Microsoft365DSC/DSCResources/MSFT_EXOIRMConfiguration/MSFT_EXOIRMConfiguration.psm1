@@ -315,36 +315,10 @@ function Set-TargetResource
 
     if (('Present' -eq $Ensure ) -and ($Null -ne $IRMConfigurationParams))
     {
-        try
-        {
-            Write-Verbose -Message "Setting IRM Configuration with values: $(Convert-M365DscHashtableToString -Hashtable $IRMConfigurationParams)"
-            Set-IRMConfiguration  @IRMConfigurationParams -Confirm:$false -ErrorAction Stop
+        Write-Verbose -Message "Setting IRM Configuration with values: $(Convert-M365DscHashtableToString -Hashtable $IRMConfigurationParams)"
+        Set-IRMConfiguration  @IRMConfigurationParams -Confirm:$false
 
-            Write-Verbose -Message "IRM Configuration updated successfully"
-        }
-        catch
-        {
-            try
-            {
-                Write-Verbose -Message $_
-                $tenantIdValue = ""
-                if (-not [System.String]::IsNullOrEmpty($TenantId))
-                {
-                    $tenantIdValue = $TenantId
-                }
-                elseif ($null -ne $Credential)
-                {
-                    $tenantIdValue = $Credential.UserName.Split('@')[1]
-                }
-                Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                    -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                    -TenantId $tenantIdValue
-            }
-            catch
-            {
-                Write-Verbose -Message $_
-            }
-        }
+        Write-Verbose -Message "IRM Configuration updated successfully"
     }
 }
 
