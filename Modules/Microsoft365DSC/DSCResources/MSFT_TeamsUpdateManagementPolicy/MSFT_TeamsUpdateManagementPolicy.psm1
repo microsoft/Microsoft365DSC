@@ -27,6 +27,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.UInt32]
+        [ValidateRange(0,6)]
         $UpdateDayOfWeek,
 
         [Parameter()]
@@ -144,6 +145,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.UInt32]
+        [ValidateRange(0,6)]
         $UpdateDayOfWeek,
 
         [Parameter()]
@@ -237,6 +239,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.UInt32]
+        [ValidateRange(0,6)]
         $UpdateDayOfWeek,
 
         [Parameter()]

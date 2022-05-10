@@ -42,16 +42,18 @@ function New-M365DSCStubFiles
     $folderPath = Join-Path $PSScriptRoot -ChildPath "../DSCResources"
     Write-Host $FolderPath
     $workloads = @(
-        <#'ExchangeOnline', 'SecurityComplianceCenter', 'PnP', 'PowerPlatforms',#> @{Name = 'MicrosoftTeams'; ModuleName = "MicrosoftTeams"}<#, 'MicrosoftGraph'#>
+        @{Name = 'ExchangeOnline';           ModuleName = "ExchangeOnlineManagement"},
+        @{Name = 'SecurityComplianceCenter'; ModuleName = "ExchangeOnlineManagement"},
+        @{Name = 'PnP';                      ModuleName = 'PnP.PowerShell'},
+        @{Name = 'PowerPlatforms';           ModuleName = 'Microsoft.PowerApps.Administration.PowerShell'},
+        @{Name = 'MicrosoftTeams';           ModuleName = "MicrosoftTeams"}
     )
-    foreach ($workload in $workloads)
+    foreach ($Module in $workloads)
     {
         Write-Host "Connecting to {$($workload.Name)}"
         $ConnectionMode = New-M365DSCConnection -Workload ($workload.Name) `
             -InboundParameters $PSBoundParameters
-    }
-    foreach ($Module in $workloads)
-    {
+
         Write-Host "Generating Stubs for {$($Module.Name)}..."
         $CurrentModuleName = $Module.ModuleName
         if ($null -eq $CurrentModuleName)
