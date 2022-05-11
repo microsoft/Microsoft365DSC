@@ -232,9 +232,9 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Shared Mailbox '$($DisplayName)' does not exist but it should. Creating it."
         $emails = ""
-        foreach ($alias in $Aliases)
+        foreach ($secondaryAlias in $Aliases)
         {
-            $emails += $alias + ","
+            $emails += $secondaryAlias + ","
         }
         $emails += $PrimarySMTPAddress
         $proxyAddresses = $emails -Split ','
