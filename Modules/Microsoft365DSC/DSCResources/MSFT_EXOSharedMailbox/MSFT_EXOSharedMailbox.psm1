@@ -214,9 +214,9 @@ function Set-TargetResource
     $currentMailbox = Get-TargetResource @PSBoundParameters
 
     #region Validation
-    foreach ($alias in $Aliases)
+    foreach ($secondaryAlias in $Aliases)
     {
-        if ($alias.ToLower() -eq $PrimarySMTPAddress.ToLower())
+        if ($secondaryAlias.ToLower() -eq $PrimarySMTPAddress.ToLower())
         {
             throw "You cannot have the Aliases list contain the PrimarySMTPAddress"
         }
@@ -274,9 +274,9 @@ function Set-TargetResource
             if ($null -ne $aliasesToAdd)
             {
                 $emailsToAdd = ''
-                foreach ($alias in $aliasesToAdd)
+                foreach ($secondaryAlias in $aliasesToAdd)
                 {
-                    $emailsToAdd += $alias.InputObject + ","
+                    $emailsToAdd += $secondaryAlias.InputObject + ","
                 }
                 $emailsToAdd += $PrimarySMTPAddress
                 $proxyAddresses = $emailsToAdd -Split ','
@@ -289,9 +289,9 @@ function Set-TargetResource
             if ($null -ne $aliasesToRemove)
             {
                 $emailsToRemoved = ''
-                foreach ($alias in $aliasesToRemove)
+                foreach ($secondaryAlias in $aliasesToRemove)
                 {
-                    $emailsToRemoved += $alias.InputObject + ","
+                    $emailsToRemoved += $secondaryAlias.InputObject + ","
                 }
                 $emailsToRemoved += $PrimarySMTPAddress
                 $proxyAddresses = $emailsToRemoved -Split ','
