@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADConditionalAccessPolicy
+  * Fixed export to remove the DeviceFilterMode property
+    when empty.
+
 # 1.22.511.1
 
 * AADNamedLocationPolicy
