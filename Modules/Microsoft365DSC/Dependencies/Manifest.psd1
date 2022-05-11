@@ -62,11 +62,11 @@
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
-            RequiredVersion = "2.0.146"
+            RequiredVersion = "2.0.147"
         },
         @{
             ModuleName      = "MicrosoftTeams"
-            RequiredVersion = "4.2.0"
+            RequiredVersion = "4.3.0"
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
@@ -78,7 +78,7 @@
         },
         @{
             ModuleName      = "ReverseDSC"
-            RequiredVersion = "2.0.0.10"
+            RequiredVersion = "2.0.0.11"
         }
     )
     }

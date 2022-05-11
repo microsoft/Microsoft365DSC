@@ -1,5 +1,25 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* TeamsUpdateManagementPolicy
+  * Initial release.
+* DEPENDENCIES
+  * Updated ReverseDSC to version 2.0.0.11.
+* MISC
+  * Updated permissions for SharePoint in settings.json files.
+  * Added links to documentation to Teams Readme files
+  * Added and corrected some Exchange examples
+  * Added progress indicator to the Report generation
+
+# 1.22.504.1
+
+* EXOInboundConnector
+  * Added support for EFSkipIPs, EFSkipLastIP and EFUsers properties. (FIXES #1917)
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.147.
+  * Updated MicrosoftTeams to version 4.3.0.
+
 # 1.22.427.1
 
 * AADApplication

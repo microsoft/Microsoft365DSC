@@ -14,3 +14,5 @@ To authenticate via Azure Active Directory, this resource required the following
     * Group.ReadAll
 
 NOTE: All permisions listed above require admin consent.
+
+More information: https://docs.microsoft.com/en-us/microsoftteams/teams-channels-overview
