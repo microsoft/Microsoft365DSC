@@ -89,7 +89,8 @@ function Get-TargetResource
     try
     {
         $DataClassifications = Get-DataClassification -ErrorAction Stop
-        $DataClassification = $DataClassifications | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        $DataClassification = $DataClassifications | Where-Object `
+            -FilterScript { $_.Identity -eq $Identity }
         if ($null -eq $DataClassification)
         {
             Write-Verbose -Message "Data classification $($Identity) does not exist."
@@ -229,7 +230,8 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     $DataClassifications = Get-DataClassification -ErrorAction Stop
-    $DataClassification = $DataClassifications | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    $DataClassification = $DataClassifications | Where-Object `
+        -FilterScript { $_.Identity -eq $Identity }
     $DataClassificationParams = [System.Collections.Hashtable]($PSBoundParameters)
     $DataClassificationParams.Remove('Ensure') | Out-Null
     $DataClassificationParams.Remove('Credential') | Out-Null
@@ -255,7 +257,9 @@ function Set-TargetResource
     }
     elseif (('Present' -eq $Ensure ) -and ($Null -ne $DataClassification))
     {
-        Write-Verbose -Message "Setting Data classification policy $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $DataClassificationParams)"
+        $verboseMessage= "Setting Data classification policy $($Identity) with values:"+ `
+            " $(Convert-M365DscHashtableToString -Hashtable $DataClassificationParams)"
+        Write-Verbose -Message $verboseMessage
         if (-Not [String]::IsNullOrEmpty($Locale))
         {
             $DataClassificationParams.Locale=New-Object system.globalization.cultureinfo($Locale)
@@ -402,7 +406,9 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' -InboundParameters $PSBoundParameters -SkipModuleReload $true
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
