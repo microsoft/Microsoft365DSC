@@ -93,7 +93,9 @@ function Get-TargetResource
     try
     {
         $DataEncryptionPolicies = Get-DataEncryptionPolicy -ErrorAction Stop
-        $DataEncryptionPolicy = $DataEncryptionPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        $DataEncryptionPolicy = $DataEncryptionPolicies | Where-Object `
+            -FilterScript { $_.Identity -eq $Identity }
+
         if ($null -eq $DataEncryptionPolicy)
         {
             Write-Verbose -Message "Data encryption policy $($Identity) does not exist."
@@ -252,7 +254,9 @@ function Set-TargetResource
     elseif (('Present' -eq $Ensure ) -and ($null -ne $DataEncryptionPolicy))
     {
         $DataEncryptionPolicyParams.Remove('AzureKeyIDs') | Out-Null
-        Write-Verbose -Message "Setting Data encryption policy $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $DataEncryptionPolicyParams)"
+        $verboseMessage="Setting Data encryption policy $($Identity) with values:" + `
+            " $(Convert-M365DscHashtableToString -Hashtable $DataEncryptionPolicyParams)"
+        Write-Verbose -Message $verboseMessage
         Set-DataEncryptionPolicy @DataEncryptionPolicyParams -Confirm:$false
         Write-Verbose -Message "Data encryption policy updated successfully."
 
@@ -390,7 +394,9 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' -InboundParameters $PSBoundParameters -SkipModuleReload $true
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -406,7 +412,6 @@ function Export-TargetResource
     #endregion
     try
     {
-        #Using 2>&1 to redirect Error stream to variable because Set-Perimeter do not inlude ErrorAction
         [Array]$DataEncryptionPolicies = Get-DataEncryptionPolicy -ErrorAction Stop
 
         $dscContent = ""
