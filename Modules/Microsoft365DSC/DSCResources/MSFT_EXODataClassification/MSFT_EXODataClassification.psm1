@@ -9,28 +9,24 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.Uri[]]
-        $AzureKeyIDs,
-
-        [Parameter()]
         [System.String]
         $Description,
 
         [Parameter()]
+        [System.Collections.ArrayList]
+        $Fingerprints,
+
+        [Parameter()]
         [System.Boolean]
-        $Enabled,
+        $IsDefault,
+
+        [Parameter()]
+        [System.String]
+        $Locale,
 
         [Parameter()]
         [System.String]
         $Name,
-
-        [Parameter()]
-        [System.String]
-        $PermanentDataPurgeContact,
-
-        [Parameter()]
-        [System.String]
-        $PermanentDataPurgeReason,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -61,7 +57,7 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    Write-Verbose -Message "Getting Data encryption policy for $($Identity)"
+    Write-Verbose -Message "Getting Data classification policy for $($Identity)"
 
     if ($Global:CurrentModeIsExport)
     {
@@ -92,36 +88,42 @@ function Get-TargetResource
 
     try
     {
-        $DataEncryptionPolicies = Get-DataEncryptionPolicy -ErrorAction Stop
-        $DataEncryptionPolicy = $DataEncryptionPolicies | Where-Object `
+        $DataClassifications = Get-DataClassification -ErrorAction Stop
+        $DataClassification = $DataClassifications | Where-Object `
             -FilterScript { $_.Identity -eq $Identity }
-
-        if ($null -eq $DataEncryptionPolicy)
+        if ($null -eq $DataClassification)
         {
-            Write-Verbose -Message "Data encryption policy $($Identity) does not exist."
-            $nullReturn.Identity = $null
+            Write-Verbose -Message "Data classification $($Identity) does not exist."
             return $nullReturn
         }
         else
         {
-            $result = @{
-                Identity                     = $Identity
-                AzureKeyIDs                  = $DataEncryptionPolicy.AzureKeyIDs
-                Description                  = $DataEncryptionPolicy.Description
-                Enabled                      = $DataEncryptionPolicy.Enabled
-                Name                         = $DataEncryptionPolicy.Name
-                PermanentDataPurgeContact    = $DataEncryptionPolicy.PermanentDataPurgeContact
-                PermanentDataPurgeReason     = $DataEncryptionPolicy.PermanentDataPurgeReason
-                Credential                   = $Credential
-                Ensure                       = 'Present'
-                ApplicationId                = $ApplicationId
-                CertificateThumbprint        = $CertificateThumbprint
-                CertificatePath              = $CertificatePath
-                CertificatePassword          = $CertificatePassword
-                TenantId                     = $TenantId
+
+            $currentDefaultCultureName=([system.globalization.cultureinfo]$DataClassification.DefaultCulture).Name
+            $DataClassificationLocale=$currentDefaultCultureName
+            $DataClassificationIsDefault=$false
+            if (([String]::IsNullOrEmpty($Locale)) -or ($Locale -eq $currentDefaultCultureName))
+            {
+                $DataClassificationIsDefault=$true
             }
 
-            Write-Verbose -Message "Found Data encryption policy $($Identity)"
+            $result = @{
+                Identity                    = $Identity
+                Description                 = $DataClassification.Description
+                Fingerprints                = $DataClassification.Fingerprints
+                IsDefault                   = $DataClassificationIsDefault
+                Locale                      = $DataClassificationLocale
+                Name                        = $DataClassification.Name
+                Credential                  = $Credential
+                Ensure                      = 'Present'
+                ApplicationId               = $ApplicationId
+                CertificateThumbprint       = $CertificateThumbprint
+                CertificatePath             = $CertificatePath
+                CertificatePassword         = $CertificatePassword
+                TenantId                    = $TenantId
+            }
+
+            Write-Verbose -Message "Found Data classification policy $($Identity)"
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
         }
@@ -162,28 +164,24 @@ function Set-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.Uri[]]
-        $AzureKeyIDs,
-
-        [Parameter()]
         [System.String]
         $Description,
 
         [Parameter()]
+        [System.Collections.ArrayList]
+        $Fingerprints,
+
+        [Parameter()]
         [System.Boolean]
-        $Enabled,
+        $IsDefault,
+
+        [Parameter()]
+        [System.String]
+        $Locale,
 
         [Parameter()]
         [System.String]
         $Name,
-
-        [Parameter()]
-        [System.String]
-        $PermanentDataPurgeContact,
-
-        [Parameter()]
-        [System.String]
-        $PermanentDataPurgeReason,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -226,42 +224,60 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Setting configuration of Data encryption policy for $($Identity)"
+    Write-Verbose -Message "Setting configuration of Data classification policy for $($Identity)"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $DataEncryptionPolicies = Get-DataEncryptionPolicy
-    $DataEncryptionPolicy = $DataEncryptionPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    $DataEncryptionPolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $DataEncryptionPolicyParams.Remove('Ensure') | Out-Null
-    $DataEncryptionPolicyParams.Remove('Credential') | Out-Null
-    $DataEncryptionPolicyParams.Remove('ApplicationId') | Out-Null
-    $DataEncryptionPolicyParams.Remove('TenantId') | Out-Null
-    $DataEncryptionPolicyParams.Remove('CertificateThumbprint') | Out-Null
-    $DataEncryptionPolicyParams.Remove('CertificatePath') | Out-Null
-    $DataEncryptionPolicyParams.Remove('CertificatePassword') | Out-Null
+    $DataClassifications = Get-DataClassification -ErrorAction Stop
+    $DataClassification = $DataClassifications | Where-Object `
+        -FilterScript { $_.Identity -eq $Identity }
+    $DataClassificationParams = [System.Collections.Hashtable]($PSBoundParameters)
+    $DataClassificationParams.Remove('Ensure') | Out-Null
+    $DataClassificationParams.Remove('Credential') | Out-Null
+    $DataClassificationParams.Remove('ApplicationId') | Out-Null
+    $DataClassificationParams.Remove('TenantId') | Out-Null
+    $DataClassificationParams.Remove('CertificateThumbprint') | Out-Null
+    $DataClassificationParams.Remove('CertificatePath') | Out-Null
+    $DataClassificationParams.Remove('CertificatePassword') | Out-Null
 
-    if (('Present' -eq $Ensure ) -and ($null -eq $DataEncryptionPolicy))
+
+    if (('Present' -eq $Ensure ) -and ($null -eq $DataClassification))
     {
-        Write-Verbose -Message "Creating Data encryption policy $($Identity)."
-        $DataEncryptionPolicyParams.Remove('Identity') | Out-Null
-        $DataEncryptionPolicyParams.Remove('PermanentDataPurgeContact') | Out-Null
-        $DataEncryptionPolicyParams.Remove('PermanentDataPurgeReason') | Out-Null
-        New-DataEncryptionPolicy @DataEncryptionPolicyParams
-        Write-Verbose -Message "Data encryption policy created successfully."
+        Write-Verbose -Message "Creating Data classification policy $($Identity)."
+        $DataClassificationParams.Remove('Identity') | Out-Null
+        $DataClassificationParams.Remove('IsDefault') | Out-Null
+        if (-Not [String]::IsNullOrEmpty($DataClassificationParams.Locale))
+        {
+            $DataClassificationParams.Locale=New-Object system.globalization.cultureinfo($DataClassificationParams.Locale)
+        }
+
+        New-DataClassification @DataClassificationParams
+        Write-Verbose -Message "Data classification policy created successfully."
     }
-    elseif (('Present' -eq $Ensure ) -and ($null -ne $DataEncryptionPolicy))
+    elseif (('Present' -eq $Ensure ) -and ($Null -ne $DataClassification))
     {
-        $DataEncryptionPolicyParams.Remove('AzureKeyIDs') | Out-Null
-        $verboseMessage="Setting Data encryption policy $($Identity) with values:" + `
-            " $(Convert-M365DscHashtableToString -Hashtable $DataEncryptionPolicyParams)"
+        $verboseMessage= "Setting Data classification policy $($Identity) with values:"+ `
+            " $(Convert-M365DscHashtableToString -Hashtable $DataClassificationParams)"
         Write-Verbose -Message $verboseMessage
-        Set-DataEncryptionPolicy @DataEncryptionPolicyParams -Confirm:$false
-        Write-Verbose -Message "Data encryption policy updated successfully."
-
+        if (-Not [String]::IsNullOrEmpty($Locale))
+        {
+            $DataClassificationParams.Locale=New-Object system.globalization.cultureinfo($Locale)
+        }
+        $DataClassificationParams.Remove('IsDefault') | Out-Null
+        if ($null -eq $IsDefault)
+        {
+            $IsDefault=$false
+        }
+        Set-DataClassification @DataClassificationParams -IsDefault:$IsDefault -Confirm:$false
+        Write-Verbose -Message "Data classification policy updated successfully."
     }
-
+    elseif (('Absent' -eq $Ensure ) -and ($null -ne $DataClassification))
+    {
+        Write-Verbose -Message "Removing Data classification policy $($Identity)"
+        Remove-DataClassification -Identity $Identity -Confirm:$false
+        Write-Verbose -Message "Data classification policy removed successfully."
+    }
 }
 
 function Test-TargetResource
@@ -275,28 +291,24 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.Uri[]]
-        $AzureKeyIDs,
-
-        [Parameter()]
         [System.String]
         $Description,
 
         [Parameter()]
+        [System.Collections.ArrayList]
+        $Fingerprints,
+
+        [Parameter()]
         [System.Boolean]
-        $Enabled,
+        $IsDefault,
+
+        [Parameter()]
+        [System.String]
+        $Locale,
 
         [Parameter()]
         [System.String]
         $Name,
-
-        [Parameter()]
-        [System.String]
-        $PermanentDataPurgeContact,
-
-        [Parameter()]
-        [System.String]
-        $PermanentDataPurgeReason,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -339,7 +351,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Data encryption policy for $($Identity)"
+    Write-Verbose -Message "Testing configuration of Data classification policy for $($Identity)"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -412,11 +424,10 @@ function Export-TargetResource
     #endregion
     try
     {
-        [Array]$DataEncryptionPolicies = Get-DataEncryptionPolicy -ErrorAction Stop
-
+        [Array]$DataClassifications = Get-DataClassification -ErrorAction Stop
         $dscContent = ""
 
-        if ($DataEncryptionPolicies.Length -eq 0)
+        if ($DataClassifications.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
@@ -425,12 +436,12 @@ function Export-TargetResource
             Write-Host "`r`n" -NoNewline
         }
         $i = 1
-        foreach ($DataEncryptionPolicy in $DataEncryptionPolicies)
+        foreach ($DataClassification in $DataClassifications)
         {
-            Write-Host "    |---[$i/$($DataEncryptionPolicies.Length)] $($DataEncryptionPolicy.Identity)" -NoNewline
+            Write-Host "    |---[$i/$($DataClassifications.Length)] $($DataClassification.Name)" -NoNewline
 
             $Params = @{
-                Identity              = $DataEncryptionPolicy.Identity
+                Identity              = $DataClassification.Identity
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
