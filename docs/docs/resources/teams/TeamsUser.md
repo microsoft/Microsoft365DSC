@@ -30,8 +30,6 @@ To authenticate via Azure Active Directory, this resource required the following
 
 NOTE: All permisions listed above require admin consent.
 
-More information: https://docs.microsoft.com/en-us/microsoftteams/assign-roles-permissions
-
 ## Examples
 
 ### Example 1

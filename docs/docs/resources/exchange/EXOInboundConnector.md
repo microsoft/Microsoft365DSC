@@ -10,9 +10,6 @@
 | **Comment** | Write | String | The Comment parameter specifies an optional comment. ||
 | **ConnectorSource** | Write | String | The ConnectorSource parameter specifies how the connector is created. DO NOT CHANGE THIS! values are Default (the default) | Migrated | HybridWizard |Default, Migrated, HybridWizard|
 | **ConnectorType** | Write | String | The ConnectorType parameter specifies a category for the domains that are serviced by the connector. Valid values are Partner and OnPremises |Partner, OnPremises|
-| **EFSkipIPs** | Write | StringArray[] | The EFSkipIPs parameter specifies the source IP addresses to skip in Enhanced Filtering for Connectors when the EFSkipLastIP parameter value is $false. ||
-| **EFSkipLastIP** | Write | Boolean | The EFSkipLastIP parameter specifies the behavior of Enhanced Filtering for Connectors. ||
-| **EFUsers** | Write | StringArray[] | The EFUsers parameter specifies the recipients that Enhanced Filtering for Connectors applies to. ||
 | **Enabled** | Write | Boolean | Specifies whether connector is enabled. ||
 | **RequireTls** | Write | Boolean | The RequireTLS parameter specifies that all messages received by this connector require TLS transmission. Valid values for this parameter are $true or $false. The default value is $false. When the RequireTLS parameter is set to $true, all messages received by this connector require TLS transmission. ||
 | **RestrictDomainsToCertificate** | Write | Boolean | The RestrictDomainsToCertificate parameter specifies that Office 365 should identify incoming messages that are eligible for this connector by verifying that the remote server authenticates using a TLS certificate that has the TlsSenderCertificateName in the Subject. ||
@@ -33,6 +30,6 @@
 
 ### Description
 
-This resource configures an Inbound connector in your cloud-based organization.
+Create a new Inbound connector in your cloud-based organization.
 
 

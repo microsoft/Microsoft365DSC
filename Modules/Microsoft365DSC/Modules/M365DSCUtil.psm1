@@ -130,15 +130,15 @@ function Convert-M365DscHashtableToString
         {
             if ($pair.Value -is [System.Array])
             {
-                $str = "$($pair.Key)=$(Convert-M365DSCArrayToString -Array $pair.Value)"
+                $str = "$($pair.Key)=$(Convert-SPDscArrayToString -Array $pair.Value)"
             }
             elseif ($pair.Value -is [System.Collections.Hashtable])
             {
-                $str = "$($pair.Key)={$(Convert-M365DSCHashtableToString -Hashtable $pair.Value)}"
+                $str = "$($pair.Key)={$(Convert-M365DscHashtableToString -Hashtable $pair.Value)}"
             }
             elseif ($pair.Value -is [Microsoft.Management.Infrastructure.CimInstance])
             {
-                $str = "$($pair.Key)=$(Convert-M365DSCCIMInstanceToString -CIMInstance $pair.Value)"
+                $str = "$($pair.Key)=$(Convert-SPDscCIMInstanceToString -CIMInstance $pair.Value)"
             }
             else
             {
@@ -177,7 +177,7 @@ This function converts a parameter array to a string, for outputting to screen
 .Functionality
 Internal
 #>
-function Convert-M365DscArrayToString
+function Convert-SPDscArrayToString
 {
     param
     (
@@ -193,12 +193,12 @@ function Convert-M365DscArrayToString
         if ($item -is [System.Collections.Hashtable])
         {
             $str += "{"
-            $str += Convert-M365DDSCHashtableToString -Hashtable $item
+            $str += Convert-SPDscHashtableToString -Hashtable $item
             $str += "}"
         }
         elseif ($Array[$i] -is [Microsoft.Management.Infrastructure.CimInstance])
         {
-            $str += Convert-M365DSCCIMInstanceToString -CIMInstance $item
+            $str += Convert-SPDscCIMInstanceToString -CIMInstance $item
         }
         else
         {
@@ -222,7 +222,7 @@ This function converts a parameter CimInstance to a string, for outputting to sc
 .Functionality
 Internal
 #>
-function Convert-M365DscCIMInstanceToString
+function Convert-SPDscCIMInstanceToString
 {
     param
     (

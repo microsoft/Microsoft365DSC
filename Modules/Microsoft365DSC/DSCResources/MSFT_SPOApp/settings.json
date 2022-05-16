@@ -6,17 +6,11 @@
             "read": [
                 {
                     "name": "DeviceManagementServiceConfig.Read.All"
-                },
-                {
-                    "name": "Sites.FullControl.All"
                 }
             ],
             "update": [
                 {
                     "name": "DeviceManagementServiceConfig.ReadWrite.All"
-                },
-                {
-                    "name": "Sites.FullControl.All"
                 }
             ]
         }

@@ -870,17 +870,87 @@ function Set-TargetResource
         Confirm   = $false
     }
 
-    $SetOwaMailboxPolicyParams = $PSBoundParameters
-    $SetOwaMailboxPolicyParams.Remove("Credential") | Out-Null
-    $SetOwaMailboxPolicyParams.Remove("ApplicationId") | Out-Null
-    $SetOwaMailboxPolicyParams.Remove("TenantId") | Out-Null
-    $SetOwaMailboxPolicyParams.Remove("ApplicationSecret") | Out-Null
-    $SetOwaMailboxPolicyParams.Remove("CertificateThumbprint") | Out-Null
-    $SetOwaMailboxPolicyParams.Remove("CertificatePath") | Out-Null
-    $SetOwaMailboxPolicyParams.Remove("CertificatePassword") | Out-Null
-    $SetOwaMailboxPolicyParams.Remove("Ensure") | Out-Null
-    $SetOwaMailboxPolicyParams.Add("Identity", $Name)
-    $SetOwaMailboxPolicyParams.Remove("Name") | Out-Null
+    $SetOwaMailboxPolicyParams = @{
+        Identity                                             = $Name
+        ActionForUnknownFileAndMIMETypes                     = $ActionForUnknownFileAndMIMETypes
+        ActiveSyncIntegrationEnabled                         = $ActiveSyncIntegrationEnabled
+        AdditionalStorageProvidersAvailable                  = $AdditionalStorageProvidersAvailable
+        AllAddressListsEnabled                               = $AllAddressListsEnabled
+        AllowCopyContactsToDeviceAddressBook                 = $AllowCopyContactsToDeviceAddressBook
+        AllowedFileTypes                                     = $AllowedFileTypes
+        AllowedMimeTypes                                     = $AllowedMimeTypes
+        BlockedFileTypes                                     = $BlockedFileTypes
+        BlockedMimeTypes                                     = $BlockedMimeTypes
+        ClassicAttachmentsEnabled                            = $ClassicAttachmentsEnabled
+        ConditionalAccessPolicy                              = $ConditionalAccessPolicy
+        DefaultTheme                                         = $DefaultTheme
+        DirectFileAccessOnPrivateComputersEnabled            = $DirectFileAccessOnPrivateComputersEnabled
+        DirectFileAccessOnPublicComputersEnabled             = $DirectFileAccessOnPublicComputersEnabled
+        DisableFacebook                                      = $DisableFacebook
+        DisplayPhotosEnabled                                 = $DisplayPhotosEnabled
+        ExplicitLogonEnabled                                 = $ExplicitLogonEnabled
+        ExternalImageProxyEnabled                            = $ExternalImageProxyEnabled
+        ExternalSPMySiteHostURL                              = $ExternalSPMySiteHostURL
+        ForceSaveAttachmentFilteringEnabled                  = $ForceSaveAttachmentFilteringEnabled
+        ForceSaveFileTypes                                   = $ForceSaveFileTypes
+        ForceSaveMimeTypes                                   = $ForceSaveMimeTypes
+        ForceWacViewingFirstOnPrivateComputers               = $ForceWacViewingFirstOnPrivateComputers
+        ForceWacViewingFirstOnPublicComputers                = $ForceWacViewingFirstOnPublicComputers
+        FreCardsEnabled                                      = $FreCardsEnabled
+        GlobalAddressListEnabled                             = $GlobalAddressListEnabled
+        GroupCreationEnabled                                 = $GroupCreationEnabled
+        InstantMessagingEnabled                              = $InstantMessagingEnabled
+        InstantMessagingType                                 = $InstantMessagingType
+        InterestingCalendarsEnabled                          = $InterestingCalendarsEnabled
+        InternalSPMySiteHostURL                              = $InternalSPMySiteHostURL
+        IRMEnabled                                           = $IRMEnabled
+        IsDefault                                            = $IsDefault
+        JournalEnabled                                       = $JournalEnabled
+        LocalEventsEnabled                                   = $LocalEventsEnabled
+        LogonAndErrorLanguage                                = $LogonAndErrorLanguage
+        NotesEnabled                                         = $NotesEnabled
+        NpsSurveysEnabled                                    = $NpsSurveysEnabled
+        OrganizationEnabled                                  = $OrganizationEnabled
+        OnSendAddinsEnabled                                  = $OnSendAddinsEnabled
+        OutboundCharset                                      = $OutboundCharset
+        OutlookBetaToggleEnabled                             = $OutlookBetaToggleEnabled
+        OWALightEnabled                                      = $OWALightEnabled
+        PersonalAccountCalendarsEnabled                      = $PersonalAccountCalendarsEnabled
+        PhoneticSupportEnabled                               = $PhoneticSupportEnabled
+        PlacesEnabled                                        = $PlacesEnabled
+        PremiumClientEnabled                                 = $PremiumClientEnabled
+        PrintWithoutDownloadEnabled                          = $PrintWithoutDownloadEnabled
+        PublicFoldersEnabled                                 = $PublicFoldersEnabled
+        RecoverDeletedItemsEnabled                           = $RecoverDeletedItemsEnabled
+        ReferenceAttachmentsEnabled                          = $ReferenceAttachmentsEnabled
+        RemindersAndNotificationsEnabled                     = $RemindersAndNotificationsEnabled
+        ReportJunkEmailEnabled                               = $ReportJunkEmailEnabled
+        RulesEnabled                                         = $RulesEnabled
+        SatisfactionEnabled                                  = $SatisfactionEnabled
+        SaveAttachmentsToCloudEnabled                        = $SaveAttachmentsToCloudEnabled
+        SearchFoldersEnabled                                 = $SearchFoldersEnabled
+        SetPhotoEnabled                                      = $SetPhotoEnabled
+        SetPhotoURL                                          = $SetPhotoURL
+        SignaturesEnabled                                    = $SignaturesEnabled
+        SkipCreateUnifiedGroupCustomSharepointClassification = $SkipCreateUnifiedGroupCustomSharepointClassification
+        TeamSnapCalendarsEnabled                             = $TeamSnapCalendarsEnabled
+        TextMessagingEnabled                                 = $TextMessagingEnabled
+        ThemeSelectionEnabled                                = $ThemeSelectionEnabled
+        UMIntegrationEnabled                                 = $UMIntegrationEnabled
+        UseGB18030                                           = $UseGB18030
+        UseISO885915                                         = $UseISO885915
+        UserVoiceEnabled                                     = $UserVoiceEnabled
+        WacEditingEnabled                                    = $WacEditingEnabled
+        WacExternalServicesEnabled                           = $WacExternalServicesEnabled
+        WacOMEXEnabled                                       = $WacOMEXEnabled
+        WacViewingOnPrivateComputersEnabled                  = $WacViewingOnPrivateComputersEnabled
+        WacViewingOnPublicComputersEnabled                   = $WacViewingOnPublicComputersEnabled
+        WeatherEnabled                                       = $WeatherEnabled
+        WebPartsFrameOptionsType                             = $WebPartsFrameOptionsType
+        Confirm                                              = $false
+    }
+    # Removes empty properties from Splat to prevent function throwing errors if parameter is null or empty
+    Remove-EmptyValue -Splat $SetOwaMailboxPolicyParams
 
     # CASE: OWA Mailbox Policy doesn't exist but should;
     if ($Ensure -eq "Present" -and $currentOwaMailboxPolicyConfig.Ensure -eq "Absent")

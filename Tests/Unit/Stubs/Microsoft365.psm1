@@ -11515,16 +11515,24 @@ function Get-CsOnlinePSTNGateway
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $Filter,
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Get-CsOnlinePstnUsage
@@ -11532,16 +11540,24 @@ function Get-CsOnlinePstnUsage
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $Filter,
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Get-CsOnlineUser
@@ -11549,15 +11565,15 @@ function Get-CsOnlineUser
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $SkipUserPolicies,
+        [System.Object]
+        $Credential,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $LdapFilter,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Filter,
 
         [Parameter()]
@@ -11569,7 +11585,7 @@ function Get-CsOnlineUser
         $OnOfficeCommunicationServer,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
@@ -11577,20 +11593,28 @@ function Get-CsOnlineUser
         $OU,
 
         [Parameter()]
+        [System.Object]
+        $DomainController,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $UnassignedUser,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
-
-        [Parameter()]
-        [System.UInt32]
+        [System.Object]
         $ResultSize,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $UsePreferredDC
+        $UsePreferredDC,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipUserPolicies,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Get-CsOnlineVoiceRoute
@@ -11598,16 +11622,24 @@ function Get-CsOnlineVoiceRoute
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $Filter,
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Get-CsOnlineVoiceRoutingPolicy
@@ -11615,16 +11647,24 @@ function Get-CsOnlineVoiceRoutingPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $Filter,
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Get-CsTeamsCallingPolicy
@@ -11632,16 +11672,24 @@ function Get-CsTeamsCallingPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $Filter,
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Get-CsTeamsChannelsPolicy
@@ -11649,16 +11697,24 @@ function Get-CsTeamsChannelsPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $Filter,
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Get-CsTeamsClientConfiguration
@@ -11666,16 +11722,24 @@ function Get-CsTeamsClientConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $Filter,
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Get-CsTeamsEmergencyCallingPolicy
@@ -11683,16 +11747,24 @@ function Get-CsTeamsEmergencyCallingPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $Filter,
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Get-CsTeamsEmergencyCallRoutingPolicy
@@ -11700,16 +11772,24 @@ function Get-CsTeamsEmergencyCallRoutingPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $Filter,
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Get-CsTeamsGuestCallingConfiguration
@@ -11717,16 +11797,24 @@ function Get-CsTeamsGuestCallingConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $Filter,
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Get-CsTeamsGuestMeetingConfiguration
@@ -11734,16 +11822,24 @@ function Get-CsTeamsGuestMeetingConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $Filter,
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Get-CsTeamsGuestMessagingConfiguration
@@ -11751,16 +11847,24 @@ function Get-CsTeamsGuestMessagingConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $Filter,
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Get-CsTeamsMeetingBroadcastConfiguration
@@ -11772,16 +11876,24 @@ function Get-CsTeamsMeetingBroadcastConfiguration
         $ExposeSDNConfigurationJsonBlob,
 
         [Parameter()]
-        [System.String]
-        $Filter,
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Get-CsTeamsMeetingBroadcastPolicy
@@ -11789,16 +11901,24 @@ function Get-CsTeamsMeetingBroadcastPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $Filter,
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Get-CsTeamsMeetingConfiguration
@@ -11806,16 +11926,24 @@ function Get-CsTeamsMeetingConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $Filter,
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Get-CsTeamsMeetingPolicy
@@ -11823,16 +11951,24 @@ function Get-CsTeamsMeetingPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $Filter,
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Get-CsTeamsMessagingPolicy
@@ -11840,33 +11976,24 @@ function Get-CsTeamsMessagingPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $Filter,
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
-    )
-}
-function Get-CsTeamsUpdateManagementPolicy
-{
-    [CmdletBinding()]
-    param(
+        [System.Object]
+        $Tenant,
+
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Filter,
 
         [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Get-CsTeamsUpgradeConfiguration
@@ -11874,16 +12001,24 @@ function Get-CsTeamsUpgradeConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $Filter,
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Get-CsTeamsUpgradePolicy
@@ -11891,16 +12026,24 @@ function Get-CsTeamsUpgradePolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $Filter,
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Get-CsTenant
@@ -11908,20 +12051,24 @@ function Get-CsTenant
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Filter,
 
         [Parameter()]
-        [System.UInt32]
-        $ResultSize,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
+        [System.Object]
+        $Identity,
 
         [Parameter()]
         [System.Object]
-        $Identity
+        $DomainController,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Get-CsTenantDialPlan
@@ -11929,16 +12076,24 @@ function Get-CsTenantDialPlan
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $Filter,
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Get-CsTenantFederationConfiguration
@@ -11946,16 +12101,24 @@ function Get-CsTenantFederationConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $Filter,
+        [System.Management.Automation.SwitchParameter]
+        $LocalStore,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Grant-CsTeamsUpgradePolicy
@@ -11967,15 +12130,15 @@ function Grant-CsTeamsUpgradePolicy
         $PassThru,
 
         [Parameter()]
-        [System.String]
-        $PolicyName,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Object]
         $Identity,
 
         [Parameter()]
@@ -11983,12 +12146,20 @@ function Grant-CsTeamsUpgradePolicy
         $Global,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
         $MigrateMeetingsToTeams,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $DomainController,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function New-CsOnlineVoiceRoute
@@ -11996,19 +12167,19 @@ function New-CsOnlineVoiceRoute
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
+        [System.Object]
         $BridgeSourcePhoneNumber,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Description,
 
         [Parameter()]
-        [System.Int32]
+        [System.Object]
         $Priority,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Name,
 
         [Parameter()]
@@ -12020,11 +12191,19 @@ function New-CsOnlineVoiceRoute
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.SwitchParameter]
+        $InMemory,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
         $NumberPattern,
 
         [Parameter()]
@@ -12032,8 +12211,12 @@ function New-CsOnlineVoiceRoute
         $OnlinePstnUsages,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function New-CsOnlineVoiceRoutingPolicy
@@ -12041,7 +12224,7 @@ function New-CsOnlineVoiceRoutingPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
+        [System.Object]
         $RouteType,
 
         [Parameter()]
@@ -12049,20 +12232,32 @@ function New-CsOnlineVoiceRoutingPolicy
         $OnlinePstnUsages,
 
         [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $Description,
+        [System.Object]
+        $Tenant,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Management.Automation.SwitchParameter]
+        $InMemory,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function New-CsTeamsCallingPolicy
@@ -12070,100 +12265,100 @@ function New-CsTeamsCallingPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowWebPSTNCalling,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Description,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
-        $PreventTollBypass,
+        [System.Management.Automation.SwitchParameter]
+        $InMemory,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $AllowCloudRecordingForCalls,
+
+        [Parameter()]
+        [System.Object]
+        $LiveCaptionsEnabledTypeForCalling,
+
+        [Parameter()]
+        [System.Object]
+        $AllowCallGroups,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $SafeTransferEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $SpamFilteringEnabledType,
+
+        [Parameter()]
+        [System.Object]
+        $BusyOnBusyEnabledType,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowCloudRecordingForCalls,
-
-        [Parameter()]
-        [System.String]
-        $LiveCaptionsEnabledTypeForCalling,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCallGroups,
-
-        [Parameter()]
-        [System.String]
-        $SafeTransferEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowNetworkConfigurationSettingsLookup,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowSIPDevicesCalling,
-
-        [Parameter()]
-        [System.String]
-        $BusyOnBusyEnabledType,
-
-        [Parameter()]
-        [System.String]
+        [System.Object]
         $AllowVoicemail,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowDelegation,
-
-        [Parameter()]
-        [System.String]
+        [System.Object]
         $MusicOnHoldEnabledType,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
+        $PreventTollBypass,
+
+        [Parameter()]
+        [System.Object]
         $AllowCallForwardingToUser,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowPrivateCalling,
-
-        [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowCallForwardingToPhone,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
+        [System.Object]
+        $AllowPrivateCalling,
 
         [Parameter()]
-        [System.String]
-        $AllowCallRedirect,
-
-        [Parameter()]
-        [System.Int64]
+        [System.Object]
         $CallRecordingExpirationDays,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
+        $AllowDelegation,
+
+        [Parameter()]
+        [System.Object]
         $AutoAnswerEnabledType,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowTranscriptionForCalling,
 
         [Parameter()]
-        [System.String]
-        $SpamFilteringEnabledType
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function New-CsTeamsChannelsPolicy
@@ -12171,44 +12366,56 @@ function New-CsTeamsChannelsPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
-        $AllowSharedChannelCreation,
+        [System.Object]
+        $AllowPrivateChannelCreation,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Description,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowChannelSharingToExternalUser,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowOrgWideTeamCreation,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowPrivateChannelCreation,
+        [System.Object]
+        $Tenant,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
+        $InMemory,
+
+        [Parameter()]
+        [System.Object]
+        $AllowSharedChannelCreation,
+
+        [Parameter()]
+        [System.Object]
         $AllowPrivateTeamDiscovery,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
+        [System.Object]
+        $AllowOrgWideTeamCreation,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowUserToParticipateInExternalSharedChannel
+        [System.Object]
+        $AllowUserToParticipateInExternalSharedChannel,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function New-CsTeamsEmergencyCallingPolicy
@@ -12216,11 +12423,11 @@ function New-CsTeamsEmergencyCallingPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Description,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $NotificationGroup,
 
         [Parameter()]
@@ -12228,28 +12435,36 @@ function New-CsTeamsEmergencyCallingPolicy
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $NotificationDialOutNumber,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $EnhancedEmergencyServiceDisclaimer,
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $InMemory,
 
         [Parameter()]
         [System.Object]
         $NotificationMode,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
         [Parameter()]
-        [System.String]
-        $ExternalLocationLookupMode
+        [System.Object]
+        $ExternalLocationLookupMode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function New-CsTeamsEmergencyCallRoutingPolicy
@@ -12257,7 +12472,11 @@ function New-CsTeamsEmergencyCallRoutingPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
+        [System.Object]
+        $EmergencyNumbers,
+
+        [Parameter()]
+        [System.Object]
         $Description,
 
         [Parameter()]
@@ -12266,19 +12485,27 @@ function New-CsTeamsEmergencyCallRoutingPolicy
 
         [Parameter()]
         [System.Object]
-        $EmergencyNumbers,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowEnhancedEmergencyServices,
-
-        [Parameter()]
-        [System.String]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $InMemory,
+
+        [Parameter()]
+        [System.Object]
+        $AllowEnhancedEmergencyServices,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function New-CsTeamsEmergencyNumber
@@ -12286,20 +12513,20 @@ function New-CsTeamsEmergencyNumber
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
+        [System.Object]
         $EmergencyDialString,
 
         [Parameter()]
-        [System.String]
-        $OnlinePSTNUsage,
-
-        [Parameter()]
-        [System.String]
+        [System.Object]
         $EmergencyDialMask,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $OnlinePSTNUsage,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function New-CsTeamsMeetingBroadcastPolicy
@@ -12307,36 +12534,48 @@ function New-CsTeamsMeetingBroadcastPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Description,
 
         [Parameter()]
-        [System.String]
-        $BroadcastAttendeeVisibilityMode,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBroadcastTranscription,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
+        [System.Object]
         $BroadcastRecordingMode,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowBroadcastScheduling,
+        [System.Object]
+        $BroadcastAttendeeVisibilityMode,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
+        [System.Object]
+        $AllowBroadcastTranscription,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm
+        $InMemory,
+
+        [Parameter()]
+        [System.Object]
+        $AllowBroadcastScheduling,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function New-CsTeamsMeetingPolicy
@@ -12344,175 +12583,151 @@ function New-CsTeamsMeetingPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
+        [System.Object]
         $TeamsCameraFarEndPTZMode,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $AllowTrackingInReport,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowMeetingCoach,
+        [System.Object]
+        $MeetingRecordingExpirationDays,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowMeetNow,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowIPAudio,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowWhiteboard,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowAnonymousUsersToDialOut,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $StreamingAttendeeMode,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowNetworkConfigurationSettingsLookup,
-
-        [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowTranscription,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $RoomAttributeUserOverride,
 
         [Parameter()]
-        [System.String]
-        $RoomPeopleNameUserOverride,
-
-        [Parameter()]
-        [System.String]
+        [System.Object]
         $AllowUserToJoinExternalMeeting,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowExternalParticipantGiveRequestControl,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowAnonymousUsersToStartMeeting,
 
         [Parameter()]
-        [System.String]
-        $AllowTasksFromTranscript,
+        [System.Object]
+        $MeetingInviteLanguage2,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowMeetingRegistration,
 
         [Parameter()]
-        [System.String]
-        $ChannelRecordingDownload,
-
-        [Parameter()]
-        [System.String]
+        [System.Object]
         $RecordingStorageMode,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $ScreenSharingMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
+        $RoomPeopleNameUserOverride,
+
+        [Parameter()]
+        [System.Object]
         $AllowPrivateMeetNow,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $AllowEngagementReport,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowPSTNUsersToBypassLobby,
-
-        [Parameter()]
-        [System.String]
-        $PreferredMeetingProviderForIslandsMode,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowOrganizersToOverrideLobbySettings,
-
-        [Parameter()]
-        [System.String]
-        $LiveCaptionsEnabledType,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
-
-        [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowNDIStreaming,
 
         [Parameter()]
-        [System.String]
-        $IPAudioMode,
+        [System.Object]
+        $AllowPSTNUsersToBypassLobby,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
+        $PreferredMeetingProviderForIslandsMode,
+
+        [Parameter()]
+        [System.Object]
+        $AllowOrganizersToOverrideLobbySettings,
+
+        [Parameter()]
+        [System.Object]
+        $LiveCaptionsEnabledType,
+
+        [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Object]
+        $AllowMeetingCoach,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $MeetingInviteLanguage1,
+
+        [Parameter()]
+        [System.Object]
         $AllowScreenContentDigitization,
 
         [Parameter()]
-        [System.String]
-        $BlockedAnonymousJoinClientTypes,
-
-        [Parameter()]
-        [System.Int64]
-        $NewMeetingRecordingExpirationDays,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowAnonymousUsersToJoinMeeting,
-
-        [Parameter()]
-        [System.String]
-        $MeetingInviteLanguages,
-
-        [Parameter()]
-        [System.String]
+        [System.Object]
         $WhoCanRegister,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $AutoAdmittedUsers,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowCloudRecording,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowIPVideo,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $SpeakerAttributionMode,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $AllowCartCaptionsScheduling,
-
-        [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowOutlookAddIn,
 
         [Parameter()]
@@ -12520,72 +12735,84 @@ function New-CsTeamsMeetingPolicy
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
+        $IPAudioMode,
+
+        [Parameter()]
+        [System.Object]
         $DesignatedPresenterRoleMode,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $MeetingChatEnabledType,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowSharedNotes,
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowParticipantGiveRequestControl,
 
         [Parameter()]
-        [System.UInt32]
+        [System.Object]
         $MediaBitRateKb,
 
         [Parameter()]
-        [System.String]
+        [System.Management.Automation.SwitchParameter]
+        $InMemory,
+
+        [Parameter()]
+        [System.Object]
         $EnrollUserOverride,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
+        $AllowSharedNotes,
+
+        [Parameter()]
+        [System.Object]
         $AllowPowerPointSharing,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowPrivateMeetingScheduling,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowMeetingReactions,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowChannelMeetingScheduling,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $VideoFiltersMode,
 
         [Parameter()]
-        [System.String]
-        $InfoShownInReportMode,
-
-        [Parameter()]
-        [System.String]
+        [System.Object]
         $LiveStreamingMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowBreakoutRooms,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowRecordingStorageOutsideRegion,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowCarbonSummary,
 
         [Parameter()]
-        [System.String]
-        $IPVideoMode
+        [System.Object]
+        $IPVideoMode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function New-CsTeamsMessagingPolicy
@@ -12593,173 +12820,124 @@ function New-CsTeamsMessagingPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
-        $Force,
-
-        [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowOwnerDeleteMessage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowSmartReply,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowUserChat,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
+        $InMemory,
+
+        [Parameter()]
+        [System.Object]
         $AllowGiphy,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
         $AllowUserDeleteMessage,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $ChannelsInChatListEnabledType,
 
         [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowStickers,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowFullChatPermissionUserToDeleteAnyMessage,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUrlPreviews,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowGiphyDisplay,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCommunicationComplianceEndUserReporting,
-
-        [Parameter()]
-        [System.String]
-        $ChatPermissionRole,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowImmersiveReader,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserTranslation,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserEditMessage,
-
-        [Parameter()]
-        [System.String]
-        $AudioMessageEnabledType,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowRemoveUser,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowPasteInternetImage,
-
-        [Parameter()]
-        [System.String]
-        $ReadReceiptsEnabledType,
-
-        [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowMemes,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowFluidCollaborate,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowPriorityMessages,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowVideoMessages,
-
-        [Parameter()]
-        [System.String]
-        $GiphyRatingType,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowSmartCompose,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserDeleteChat
-    )
-}
-function New-CsTeamsUpdateManagementPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
+        [System.Object]
         $Description,
 
         [Parameter()]
-        [System.String]
-        $UpdateTime,
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
         [Parameter()]
-        [System.DateTime]
-        $UpdateTimeOfDay,
+        [System.Object]
+        $AllowStickers,
 
         [Parameter()]
-        [System.Int64]
-        $UpdateDayOfWeek,
+        [System.Object]
+        $AllowSmartCompose,
+
+        [Parameter()]
+        [System.Object]
+        $AllowFullChatPermissionUserToDeleteAnyMessage,
+
+        [Parameter()]
+        [System.Object]
+        $AllowUrlPreviews,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $AllowImmersiveReader,
+
+        [Parameter()]
+        [System.Object]
+        $AllowUserTranslation,
+
+        [Parameter()]
+        [System.Object]
+        $AllowUserEditMessage,
+
+        [Parameter()]
+        [System.Object]
+        $AudioMessageEnabledType,
+
+        [Parameter()]
+        [System.Object]
+        $AllowRemoveUser,
+
+        [Parameter()]
+        [System.Object]
+        $AllowPasteInternetImage,
+
+        [Parameter()]
+        [System.Object]
+        $ReadReceiptsEnabledType,
+
+        [Parameter()]
+        [System.Object]
+        $ChatPermissionRole,
+
+        [Parameter()]
+        [System.Object]
+        $AllowGiphyDisplay,
+
+        [Parameter()]
+        [System.Object]
+        $AllowFluidCollaborate,
+
+        [Parameter()]
+        [System.Object]
+        $AllowPriorityMessages,
+
+        [Parameter()]
+        [System.Object]
+        $GiphyRatingType,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowManagedUpdates,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowPreview,
-
-        [Parameter()]
-        [System.String]
-        $AllowPublicPreview,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        $AsJob
     )
 }
 function New-CsTenantDialPlan
@@ -12767,11 +12945,11 @@ function New-CsTenantDialPlan
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $OptimizeDeviceDialing,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Description,
 
         [Parameter()]
@@ -12783,20 +12961,32 @@ function New-CsTenantDialPlan
         $NormalizationRules,
 
         [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $ExternalAccessPrefix,
-
-        [Parameter()]
-        [System.String]
+        [System.Object]
         $SimpleName,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $ExternalAccessPrefix,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $InMemory,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function New-CsVoiceNormalizationRule
@@ -12804,19 +12994,19 @@ function New-CsVoiceNormalizationRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Description,
 
         [Parameter()]
-        [System.Int32]
+        [System.Object]
         $Priority,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Name,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Pattern,
 
         [Parameter()]
@@ -12824,28 +13014,36 @@ function New-CsVoiceNormalizationRule
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Parent,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Translation,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $InMemory,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
+        [System.Object]
+        $IsInternalExtension,
 
         [Parameter()]
-        [System.Boolean]
-        $IsInternalExtension
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Remove-CsOnlineVoiceRoute
@@ -12857,12 +13055,20 @@ function Remove-CsOnlineVoiceRoute
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Remove-CsOnlineVoiceRoutingPolicy
@@ -12874,12 +13080,20 @@ function Remove-CsOnlineVoiceRoutingPolicy
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Remove-CsTeamsCallingPolicy
@@ -12891,12 +13105,20 @@ function Remove-CsTeamsCallingPolicy
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Remove-CsTeamsChannelsPolicy
@@ -12908,12 +13130,20 @@ function Remove-CsTeamsChannelsPolicy
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Remove-CsTeamsEmergencyCallingPolicy
@@ -12925,12 +13155,20 @@ function Remove-CsTeamsEmergencyCallingPolicy
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Remove-CsTeamsEmergencyCallRoutingPolicy
@@ -12942,12 +13180,20 @@ function Remove-CsTeamsEmergencyCallRoutingPolicy
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Remove-CsTeamsMeetingBroadcastPolicy
@@ -12959,12 +13205,20 @@ function Remove-CsTeamsMeetingBroadcastPolicy
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Remove-CsTeamsMeetingPolicy
@@ -12976,12 +13230,20 @@ function Remove-CsTeamsMeetingPolicy
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Remove-CsTeamsMessagingPolicy
@@ -12993,33 +13255,20 @@ function Remove-CsTeamsMessagingPolicy
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Force,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
-    )
-}
-function Remove-CsTeamsUpdateManagementPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        $AsJob
     )
 }
 function Remove-CsTenantDialPlan
@@ -13031,12 +13280,20 @@ function Remove-CsTenantDialPlan
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Set-CsOnlinePstnUsage
@@ -13052,12 +13309,24 @@ function Set-CsOnlinePstnUsage
         $Usage,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Set-CsOnlineVoiceRoute
@@ -13065,15 +13334,15 @@ function Set-CsOnlineVoiceRoute
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
+        [System.Object]
         $BridgeSourcePhoneNumber,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Description,
 
         [Parameter()]
-        [System.Int32]
+        [System.Object]
         $Priority,
 
         [Parameter()]
@@ -13085,11 +13354,15 @@ function Set-CsOnlineVoiceRoute
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
         $NumberPattern,
 
         [Parameter()]
@@ -13097,8 +13370,16 @@ function Set-CsOnlineVoiceRoute
         $OnlinePstnUsages,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Set-CsOnlineVoiceRoutingPolicy
@@ -13106,7 +13387,7 @@ function Set-CsOnlineVoiceRoutingPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
+        [System.Object]
         $RouteType,
 
         [Parameter()]
@@ -13114,20 +13395,32 @@ function Set-CsOnlineVoiceRoutingPolicy
         $OnlinePstnUsages,
 
         [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $Description,
+        [System.Object]
+        $Tenant,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Set-CsTeamsCallingPolicy
@@ -13135,100 +13428,100 @@ function Set-CsTeamsCallingPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowWebPSTNCalling,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Description,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $PreventTollBypass,
+
+        [Parameter()]
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $AllowCloudRecordingForCalls,
+
+        [Parameter()]
+        [System.Object]
+        $LiveCaptionsEnabledTypeForCalling,
+
+        [Parameter()]
+        [System.Object]
+        $AllowCallGroups,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $SafeTransferEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $SpamFilteringEnabledType,
+
+        [Parameter()]
+        [System.Object]
+        $BusyOnBusyEnabledType,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowCloudRecordingForCalls,
-
-        [Parameter()]
-        [System.String]
-        $LiveCaptionsEnabledTypeForCalling,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCallGroups,
-
-        [Parameter()]
-        [System.String]
-        $SafeTransferEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowNetworkConfigurationSettingsLookup,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowSIPDevicesCalling,
-
-        [Parameter()]
-        [System.String]
-        $BusyOnBusyEnabledType,
-
-        [Parameter()]
-        [System.String]
+        [System.Object]
         $AllowVoicemail,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowDelegation,
-
-        [Parameter()]
-        [System.String]
+        [System.Object]
         $MusicOnHoldEnabledType,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowCallForwardingToUser,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowPrivateCalling,
-
-        [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowCallForwardingToPhone,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
+        [System.Object]
+        $AllowPrivateCalling,
 
         [Parameter()]
-        [System.String]
-        $AllowCallRedirect,
-
-        [Parameter()]
-        [System.Int64]
+        [System.Object]
         $CallRecordingExpirationDays,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
+        $AllowDelegation,
+
+        [Parameter()]
+        [System.Object]
         $AutoAnswerEnabledType,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowTranscriptionForCalling,
 
         [Parameter()]
-        [System.String]
-        $SpamFilteringEnabledType
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Set-CsTeamsChannelsPolicy
@@ -13236,44 +13529,56 @@ function Set-CsTeamsChannelsPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
-        $AllowSharedChannelCreation,
+        [System.Object]
+        $AllowPrivateChannelCreation,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Description,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowChannelSharingToExternalUser,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowOrgWideTeamCreation,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowPrivateChannelCreation,
+        [System.Object]
+        $Tenant,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowPrivateTeamDiscovery,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
+        [System.Object]
+        $AllowSharedChannelCreation,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowUserToParticipateInExternalSharedChannel
+        [System.Object]
+        $AllowOrgWideTeamCreation,
+
+        [Parameter()]
+        [System.Object]
+        $AllowUserToParticipateInExternalSharedChannel,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Set-CsTeamsClientConfiguration
@@ -13281,76 +13586,88 @@ function Set-CsTeamsClientConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowEmailIntoChannel,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $RestrictedSenderList,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Object]
+        $AllowGoogleDrive,
+
+        [Parameter()]
+        [System.Object]
+        $AllowScopedPeopleSearchandAccess,
+
+        [Parameter()]
+        [System.Object]
+        $AllowSkypeBusinessInterop,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $AllowShareFile,
+
+        [Parameter()]
+        [System.Object]
+        $AllowGuestUser,
+
+        [Parameter()]
+        [System.Object]
+        $AllowOrganizationTab,
+
+        [Parameter()]
+        [System.Object]
+        $ResourceAccountContentAccess,
+
+        [Parameter()]
+        [System.Object]
+        $AllowRoleBasedChatPermissions,
+
+        [Parameter()]
+        [System.Object]
+        $AllowEgnyte,
+
+        [Parameter()]
+        [System.Object]
+        $AllowBox,
+
+        [Parameter()]
+        [System.Object]
+        $AllowResourceAccountSendMessage,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowGoogleDrive,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowSkypeBusinessInterop,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowScopedPeopleSearchandAccess,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowGuestUser,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowShareFile,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowDropBox,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowOrganizationTab,
-
-        [Parameter()]
-        [System.String]
-        $ResourceAccountContentAccess,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowRoleBasedChatPermissions,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowEgnyte,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBox,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowResourceAccountSendMessage,
-
-        [Parameter()]
-        [System.String]
+        [System.Object]
         $ContentPin,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $AllowDropBox,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Set-CsTeamsEmergencyCallingPolicy
@@ -13358,40 +13675,48 @@ function Set-CsTeamsEmergencyCallingPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Description,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $NotificationGroup,
+
+        [Parameter()]
+        [System.Object]
+        $ExternalLocationLookupMode,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $NotificationDialOutNumber,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $EnhancedEmergencyServiceDisclaimer,
+        [System.Object]
+        $Tenant,
 
         [Parameter()]
         [System.Object]
         $NotificationMode,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
         [Parameter()]
-        [System.String]
-        $ExternalLocationLookupMode
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Set-CsTeamsEmergencyCallRoutingPolicy
@@ -13399,7 +13724,11 @@ function Set-CsTeamsEmergencyCallRoutingPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
+        [System.Object]
+        $EmergencyNumbers,
+
+        [Parameter()]
+        [System.Object]
         $Description,
 
         [Parameter()]
@@ -13408,19 +13737,27 @@ function Set-CsTeamsEmergencyCallRoutingPolicy
 
         [Parameter()]
         [System.Object]
-        $EmergencyNumbers,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowEnhancedEmergencyServices,
-
-        [Parameter()]
-        [System.String]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $AllowEnhancedEmergencyServices,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Set-CsTeamsGuestCallingConfiguration
@@ -13432,16 +13769,28 @@ function Set-CsTeamsGuestCallingConfiguration
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
         $AllowPrivateCalling,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Set-CsTeamsGuestMeetingConfiguration
@@ -13449,15 +13798,15 @@ function Set-CsTeamsGuestMeetingConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $ScreenSharingMode,
-
-        [Parameter()]
-        [System.String]
+        [System.Object]
         $LiveCaptionsEnabledType,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
+        $ScreenSharingMode,
+
+        [Parameter()]
+        [System.Object]
         $AllowMeetNow,
 
         [Parameter()]
@@ -13465,20 +13814,32 @@ function Set-CsTeamsGuestMeetingConfiguration
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowTranscription,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
+        [System.Object]
+        $Tenant,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowIPVideo
+        [System.Object]
+        $AllowIPVideo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Set-CsTeamsGuestMessagingConfiguration
@@ -13486,52 +13847,60 @@ function Set-CsTeamsGuestMessagingConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $GiphyRatingType,
+        [System.Object]
+        $AllowMemes,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowUserChat,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserDeleteChat,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowGiphy,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowStickers,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserEditMessage,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserDeleteMessage,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowImmersiveReader,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
+        [System.Object]
+        $AllowGiphy,
+
+        [Parameter()]
+        [System.Object]
+        $AllowStickers,
+
+        [Parameter()]
+        [System.Object]
+        $AllowUserEditMessage,
+
+        [Parameter()]
+        [System.Object]
+        $AllowUserDeleteMessage,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $AllowUserChat,
+
+        [Parameter()]
+        [System.Object]
+        $GiphyRatingType,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowMemes
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Set-CsTeamsMeetingBroadcastConfiguration
@@ -13539,15 +13908,19 @@ function Set-CsTeamsMeetingBroadcastConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $SupportURL,
+
+        [Parameter()]
+        [System.Object]
         $AllowSdnProviderForBroadcastMeeting,
 
         [Parameter()]
-        [System.String]
-        $SdnRuntimeConfiguration,
-
-        [Parameter()]
-        [System.String]
+        [System.Object]
         $SdnProviderName,
 
         [Parameter()]
@@ -13555,28 +13928,36 @@ function Set-CsTeamsMeetingBroadcastConfiguration
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $SupportURL,
+        [System.Object]
+        $Tenant,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
+        [System.Object]
+        $SdnRuntimeConfiguration,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $SdnApiToken,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $SdnApiTemplateUrl,
 
         [Parameter()]
-        [System.String]
-        $SdnLicenseId
+        [System.Object]
+        $SdnLicenseId,
+
+        [Parameter()]
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Set-CsTeamsMeetingBroadcastPolicy
@@ -13584,36 +13965,48 @@ function Set-CsTeamsMeetingBroadcastPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Description,
 
         [Parameter()]
-        [System.String]
-        $BroadcastAttendeeVisibilityMode,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowBroadcastTranscription,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
+        [System.Object]
         $BroadcastRecordingMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
+        $BroadcastAttendeeVisibilityMode,
+
+        [Parameter()]
+        [System.Object]
+        $AllowBroadcastTranscription,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
         $AllowBroadcastScheduling,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Set-CsTeamsMeetingConfiguration
@@ -13621,15 +14014,15 @@ function Set-CsTeamsMeetingConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.UInt32]
+        [System.Object]
         $ClientVideoPortRange,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $DisableAnonymousJoin,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
@@ -13637,56 +14030,68 @@ function Set-CsTeamsMeetingConfiguration
         $Confirm,
 
         [Parameter()]
-        [System.String]
-        $HelpURL,
+        [System.Object]
+        $Instance,
 
         [Parameter()]
-        [System.Boolean]
-        $EnableQoS,
-
-        [Parameter()]
-        [System.UInt32]
+        [System.Object]
         $ClientAppSharingPortRange,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $EnableQoS,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
         $DisableAppInteractionForAnonymousUsers,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $LogoURL,
 
         [Parameter()]
-        [System.UInt32]
+        [System.Object]
         $ClientAppSharingPort,
 
         [Parameter()]
-        [System.String]
-        $CustomFooterText,
-
-        [Parameter()]
-        [System.UInt32]
+        [System.Object]
         $ClientVideoPort,
 
         [Parameter()]
-        [System.UInt32]
+        [System.Object]
         $ClientAudioPortRange,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $ClientMediaPortRangeEnabled,
 
         [Parameter()]
-        [System.UInt32]
+        [System.Object]
         $ClientAudioPort,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
+        [System.Object]
+        $CustomFooterText,
 
         [Parameter()]
-        [System.String]
-        $LegalURL
+        [System.Object]
+        $HelpURL,
+
+        [Parameter()]
+        [System.Object]
+        $LegalURL,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Set-CsTeamsMeetingPolicy
@@ -13694,175 +14099,151 @@ function Set-CsTeamsMeetingPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
+        [System.Object]
         $TeamsCameraFarEndPTZMode,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $AllowTrackingInReport,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowMeetingCoach,
+        [System.Object]
+        $MeetingRecordingExpirationDays,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowMeetNow,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowIPAudio,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowWhiteboard,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowAnonymousUsersToDialOut,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $StreamingAttendeeMode,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowNetworkConfigurationSettingsLookup,
-
-        [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowTranscription,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $RoomAttributeUserOverride,
 
         [Parameter()]
-        [System.String]
-        $RoomPeopleNameUserOverride,
-
-        [Parameter()]
-        [System.String]
+        [System.Object]
         $AllowUserToJoinExternalMeeting,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowExternalParticipantGiveRequestControl,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowAnonymousUsersToStartMeeting,
 
         [Parameter()]
-        [System.String]
-        $AllowTasksFromTranscript,
+        [System.Object]
+        $MeetingInviteLanguage2,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowMeetingRegistration,
 
         [Parameter()]
-        [System.String]
-        $ChannelRecordingDownload,
-
-        [Parameter()]
-        [System.String]
+        [System.Object]
         $RecordingStorageMode,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $ScreenSharingMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
+        $RoomPeopleNameUserOverride,
+
+        [Parameter()]
+        [System.Object]
         $AllowPrivateMeetNow,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $AllowEngagementReport,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowPSTNUsersToBypassLobby,
-
-        [Parameter()]
-        [System.String]
-        $PreferredMeetingProviderForIslandsMode,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowOrganizersToOverrideLobbySettings,
-
-        [Parameter()]
-        [System.String]
-        $LiveCaptionsEnabledType,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
-
-        [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowNDIStreaming,
 
         [Parameter()]
-        [System.String]
-        $IPAudioMode,
+        [System.Object]
+        $AllowPSTNUsersToBypassLobby,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
+        $PreferredMeetingProviderForIslandsMode,
+
+        [Parameter()]
+        [System.Object]
+        $AllowOrganizersToOverrideLobbySettings,
+
+        [Parameter()]
+        [System.Object]
+        $LiveCaptionsEnabledType,
+
+        [Parameter()]
+        [System.Object]
+        $Description,
+
+        [Parameter()]
+        [System.Object]
+        $AllowMeetingCoach,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $MeetingInviteLanguage1,
+
+        [Parameter()]
+        [System.Object]
         $AllowScreenContentDigitization,
 
         [Parameter()]
-        [System.String]
-        $BlockedAnonymousJoinClientTypes,
-
-        [Parameter()]
-        [System.Int64]
-        $NewMeetingRecordingExpirationDays,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowAnonymousUsersToJoinMeeting,
-
-        [Parameter()]
-        [System.String]
-        $MeetingInviteLanguages,
-
-        [Parameter()]
-        [System.String]
+        [System.Object]
         $WhoCanRegister,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $AutoAdmittedUsers,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowCloudRecording,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowIPVideo,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $SpeakerAttributionMode,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $AllowCartCaptionsScheduling,
-
-        [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowOutlookAddIn,
 
         [Parameter()]
@@ -13870,72 +14251,84 @@ function Set-CsTeamsMeetingPolicy
         $Confirm,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
+        $IPAudioMode,
+
+        [Parameter()]
+        [System.Object]
         $DesignatedPresenterRoleMode,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $MeetingChatEnabledType,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowSharedNotes,
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowParticipantGiveRequestControl,
 
         [Parameter()]
-        [System.UInt32]
+        [System.Object]
         $MediaBitRateKb,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $EnrollUserOverride,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
+        $AllowSharedNotes,
+
+        [Parameter()]
+        [System.Object]
         $AllowPowerPointSharing,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowPrivateMeetingScheduling,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowMeetingReactions,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowChannelMeetingScheduling,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $VideoFiltersMode,
 
         [Parameter()]
-        [System.String]
-        $InfoShownInReportMode,
-
-        [Parameter()]
-        [System.String]
+        [System.Object]
         $LiveStreamingMode,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowBreakoutRooms,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowRecordingStorageOutsideRegion,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowCarbonSummary,
 
         [Parameter()]
-        [System.String]
-        $IPVideoMode
+        [System.Object]
+        $IPVideoMode,
+
+        [Parameter()]
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Set-CsTeamsMessagingPolicy
@@ -13943,173 +14336,124 @@ function Set-CsTeamsMessagingPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
-        $Force,
-
-        [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowOwnerDeleteMessage,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowSmartReply,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowUserChat,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowGiphy,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Object]
         $AllowUserDeleteMessage,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $ChannelsInChatListEnabledType,
 
         [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowStickers,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowFullChatPermissionUserToDeleteAnyMessage,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUrlPreviews,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowGiphyDisplay,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCommunicationComplianceEndUserReporting,
-
-        [Parameter()]
-        [System.String]
-        $ChatPermissionRole,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowImmersiveReader,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserTranslation,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserEditMessage,
-
-        [Parameter()]
-        [System.String]
-        $AudioMessageEnabledType,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowRemoveUser,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowPasteInternetImage,
-
-        [Parameter()]
-        [System.String]
-        $ReadReceiptsEnabledType,
-
-        [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $AllowMemes,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowFluidCollaborate,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowPriorityMessages,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowVideoMessages,
-
-        [Parameter()]
-        [System.String]
-        $GiphyRatingType,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowSmartCompose,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowUserDeleteChat
-    )
-}
-function Set-CsTeamsUpdateManagementPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
+        [System.Object]
         $Description,
 
         [Parameter()]
-        [System.String]
-        $UpdateTime,
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
         [Parameter()]
-        [System.DateTime]
-        $UpdateTimeOfDay,
+        [System.Object]
+        $AllowStickers,
 
         [Parameter()]
-        [System.Int64]
-        $UpdateDayOfWeek,
+        [System.Object]
+        $AllowSmartCompose,
+
+        [Parameter()]
+        [System.Object]
+        $AllowFullChatPermissionUserToDeleteAnyMessage,
+
+        [Parameter()]
+        [System.Object]
+        $AllowUrlPreviews,
+
+        [Parameter()]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
+        $AllowImmersiveReader,
+
+        [Parameter()]
+        [System.Object]
+        $AllowUserTranslation,
+
+        [Parameter()]
+        [System.Object]
+        $AllowUserEditMessage,
+
+        [Parameter()]
+        [System.Object]
+        $AudioMessageEnabledType,
+
+        [Parameter()]
+        [System.Object]
+        $AllowRemoveUser,
+
+        [Parameter()]
+        [System.Object]
+        $AllowPasteInternetImage,
+
+        [Parameter()]
+        [System.Object]
+        $ReadReceiptsEnabledType,
+
+        [Parameter()]
+        [System.Object]
+        $ChatPermissionRole,
+
+        [Parameter()]
+        [System.Object]
+        $AllowGiphyDisplay,
+
+        [Parameter()]
+        [System.Object]
+        $AllowFluidCollaborate,
+
+        [Parameter()]
+        [System.Object]
+        $AllowPriorityMessages,
+
+        [Parameter()]
+        [System.Object]
+        $GiphyRatingType,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowManagedUpdates,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowPreview,
-
-        [Parameter()]
-        [System.String]
-        $AllowPublicPreview,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        $AsJob
     )
 }
 function Set-CsTeamsUpgradeConfiguration
@@ -14117,7 +14461,7 @@ function Set-CsTeamsUpgradeConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
+        [System.Object]
         $SfBMeetingJoinUx,
 
         [Parameter()]
@@ -14125,16 +14469,28 @@ function Set-CsTeamsUpgradeConfiguration
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $DownloadTeams,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Set-CsTenantDialPlan
@@ -14142,11 +14498,11 @@ function Set-CsTenantDialPlan
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Boolean]
+        [System.Object]
         $OptimizeDeviceDialing,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Description,
 
         [Parameter()]
@@ -14158,20 +14514,32 @@ function Set-CsTenantDialPlan
         $NormalizationRules,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $Identity,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
         $ExternalAccessPrefix,
 
         [Parameter()]
-        [System.String]
+        [System.Object]
+        $Tenant,
+
+        [Parameter()]
+        [System.Object]
         $SimpleName,
 
         [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Instance,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsJob
     )
 }
 function Set-CsTenantFederationConfiguration
@@ -14179,57 +14547,39 @@ function Set-CsTenantFederationConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.Object]
+        $AllowFederatedUsers,
+
+        [Parameter()]
+        [System.Object]
+        $AllowPublicUsers,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Boolean]
-        $SharedSipAddressSpace,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowTeamsConsumerInbound,
-
-        [Parameter()]
         [System.Object]
-        $BlockedDomains,
-
-        [Parameter()]
-        [System.Boolean]
-        $TreatDiscoveredPartnersAsUnverified,
-
-        [Parameter()]
-        [System.Boolean]
         $AllowTeamsConsumer,
 
         [Parameter()]
         [System.Object]
-        $AllowedDomainsAsAList,
+        $AllowTeamsConsumerInbound,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
         [Parameter()]
         [System.Object]
-        $AllowedDomains,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowPublicUsers,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowFederatedUsers
+        $Tenant
     )
 }
 #endregion
-
-
 #region PnP
 function Add-PnPApp
 {

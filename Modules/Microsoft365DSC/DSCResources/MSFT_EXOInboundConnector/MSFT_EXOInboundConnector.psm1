@@ -31,18 +31,6 @@ function Get-TargetResource
         $ConnectorType,
 
         [Parameter()]
-        [System.String[]]
-        $EFSkipIPs = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $EFSkipLastIP,
-
-        [Parameter()]
-        [System.String[]]
-        $EFUsers = @(),
-
-        [Parameter()]
         [System.Boolean]
         $Enabled,
 
@@ -122,7 +110,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName = $MyInvocation.MyCommand
+    $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -156,9 +144,6 @@ function Get-TargetResource
                 Comment                      = $InboundConnector.Comment
                 ConnectorSource              = $ConnectorSourceValue
                 ConnectorType                = $InboundConnector.ConnectorType
-                EFSkipIPs                    = $InboundConnector.EFSkipIPs
-                EFSkipLastIP                 = $InboundConnector.EFSkipLastIP
-                EFUsers                      = $InboundConnector.EFUsers
                 Enabled                      = $InboundConnector.Enabled
                 RequireTls                   = $InboundConnector.RequireTls
                 RestrictDomainsToCertificate = $InboundConnector.RestrictDomainsToCertificate
@@ -167,7 +152,7 @@ function Get-TargetResource
                 SenderIPAddresses            = $InboundConnector.SenderIPAddresses
                 TlsSenderCertificateName     = $InboundConnector.TlsSenderCertificateName
                 TreatMessagesAsInternal      = $InboundConnector.TreatMessagesAsInternal
-                Credential                   = $Credential
+                Credential           = $Credential
                 Ensure                       = 'Present'
                 ApplicationId                = $ApplicationId
                 CertificateThumbprint        = $CertificateThumbprint
@@ -239,18 +224,6 @@ function Set-TargetResource
         $ConnectorType,
 
         [Parameter()]
-        [System.String[]]
-        $EFSkipIPs = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $EFSkipLastIP,
-
-        [Parameter()]
-        [System.String[]]
-        $EFUsers = @(),
-
-        [Parameter()]
         [System.Boolean]
         $Enabled,
 
@@ -316,7 +289,7 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName = $MyInvocation.MyCommand
+    $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -391,18 +364,6 @@ function Test-TargetResource
         $ConnectorType,
 
         [Parameter()]
-        [System.String[]]
-        $EFSkipIPs = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $EFSkipLastIP,
-
-        [Parameter()]
-        [System.String[]]
-        $EFUsers = @(),
-
-        [Parameter()]
         [System.Boolean]
         $Enabled,
 
@@ -468,7 +429,7 @@ function Test-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName = $MyInvocation.MyCommand
+    $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -539,7 +500,7 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName = $MyInvocation.MyCommand
+    $CommandName  = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters

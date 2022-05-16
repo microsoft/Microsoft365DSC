@@ -2,4 +2,4 @@
 
 ## Description
 
-This resource configures an Inbound connector in your cloud-based organization.
+Create a new Inbound connector in your cloud-based organization.
