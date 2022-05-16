@@ -192,40 +192,8 @@ function Set-TargetResource
 
     if (('Present' -eq $Ensure ) -and ($Null -ne $PerimeterConfigurationParams))
     {
-        try
-        {
-            Write-Verbose -Message "Setting Perimeter Configuration with values: $(Convert-M365DscHashtableToString -Hashtable $PerimeterConfigurationParams)"
-
-            #Using 2>&1 to redirect Error stream to variable because Set-Perimeter do not inlude ErrorAction
-            $errorOutput=Set-PerimeterConfig  @PerimeterConfigurationParams -Confirm:$false 2>&1
-            if($null -ne ($errorOutput |Where-Object {$_.gettype().Name -like "*ErrorRecord*"}))
-            {
-                throw $errorOutput
-            }
-        }
-        catch
-        {
-            try
-            {
-                    Write-Verbose -Message $errorOutput
-                    $tenantIdValue = ""
-                    if (-not [System.String]::IsNullOrEmpty($TenantId))
-                    {
-                        $tenantIdValue = $TenantId
-                    }
-                    elseif ($null -ne $Credential)
-                    {
-                        $tenantIdValue = $Credential.UserName.Split('@')[1]
-                    }
-                    Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                        -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                        -TenantId $tenantIdValue
-            }
-            catch
-            {
-                Write-Verbose -Message $_
-            }
-        }
+        Write-Verbose -Message "Setting Perimeter Configuration with values: $(Convert-M365DscHashtableToString -Hashtable $PerimeterConfigurationParams)"
+        Set-PerimeterConfig  @PerimeterConfigurationParams -Confirm:$false
     }
 }
 
