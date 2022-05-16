@@ -65,7 +65,7 @@ To acquire the latest
 bits of the module from a machine that has internet connectivity,
 run the following PowerShell line:
 
-```PowerShell
+```powershell
 Install-Module -Name Microsoft365DSC -Force
 ```
 
@@ -80,6 +80,6 @@ where the telemetry entries were captured by default. Users can
 opt-out to prevent telemetry from being sent back to the Microsoft365DSC team
 by running the following command:
 
-```PowerShell
+```powershell
 Set-M365DSCTelemetryOption -Enabled $False
 ```

@@ -61,11 +61,16 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters -ProfileName "beta"
+    $MaximumFunctionCount = 32000
+    Select-MgProfile -Name Beta | Out-Null
+
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = "Absent"
     try
     {
-        $Policy = Get-MgDirectorySetting | Where-Object -FilterScript {$_.DisplayName -eq 'Group.Unified'}
+        $Policy = Get-MgDirectorySetting  | Where-Object -FilterScript {$_.DisplayName -eq 'Group.Unified'}
 
         if ($null -eq $Policy)
         {

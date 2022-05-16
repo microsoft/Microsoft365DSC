@@ -3,16 +3,8 @@
     "description": "",
     "permissions": [
         {
-            "read": [
-                {
-                    "name": "Sites.FullControl.All"
-                }
-            ],
-            "update": [
-                {
-                    "name": "Sites.FullControl.All"
-                }
-            ]
+            "read": [],
+            "update": []
         }
     ]
 }

@@ -21,9 +21,6 @@
                 },
                 {
                     "name": "GroupMember.Read.All"
-                },
-                {
-                    "name": "Sites.FullControl.All"
                 }
             ],
             "update": [
@@ -44,9 +41,6 @@
                 },
                 {
                     "name": "GroupMember.Read.All"
-                },
-                {
-                    "name": "Sites.FullControl.All"
                 }
             ]
         }
