@@ -594,6 +594,7 @@ function Export-TargetResource
 
         $Params = @{
             IsSingleInstance = 'Yes'
+            Credential       = $Credential
         }
 
         $Results = Get-TargetResource @Params
