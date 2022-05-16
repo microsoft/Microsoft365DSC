@@ -5,6 +5,9 @@
 * AADConditionalAccessPolicy
   * Fixed export to remove the DeviceFilterMode property
     when empty.
+* PPTenantIsolationSettings
+  * Fixed an issue where credentials weren't passed properly
+    during the export.
 
 # 1.22.511.1
 
