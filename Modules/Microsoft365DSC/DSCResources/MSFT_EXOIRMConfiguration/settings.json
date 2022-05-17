@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOIRMConfiguration",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOOMEConfiguration",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

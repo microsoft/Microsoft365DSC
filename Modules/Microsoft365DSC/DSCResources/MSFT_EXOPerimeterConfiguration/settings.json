@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOPerimeterConfiguration",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}
