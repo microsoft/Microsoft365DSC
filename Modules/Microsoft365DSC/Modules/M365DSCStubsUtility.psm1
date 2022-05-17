@@ -38,21 +38,23 @@ function New-M365DSCStubFiles
         }
     }
 
-    $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
-    $manifest = Import-PowerShellDataFile "$currentPath/Microsoft365DSC.psd1"
-    $dependencies = $manifest.RequiredModules
     $Content = ''
     $folderPath = Join-Path $PSScriptRoot -ChildPath "../DSCResources"
     Write-Host $FolderPath
-    $workloads = @('ExchangeOnline', 'SecurityComplianceCenter', 'PnP', 'PowerPlatforms', 'MicrosoftTeams', 'MicrosoftGraph')
-    foreach ($workload in $workloads)
+    $workloads = @(
+        @{Name = 'ExchangeOnline';           ModuleName = "ExchangeOnlineManagement"},
+        @{Name = 'SecurityComplianceCenter'; ModuleName = "ExchangeOnlineManagement"},
+        @{Name = 'PnP';                      ModuleName = 'PnP.PowerShell'},
+        @{Name = 'PowerPlatforms';           ModuleName = 'Microsoft.PowerApps.Administration.PowerShell'},
+        @{Name = 'MicrosoftTeams';           ModuleName = "MicrosoftTeams"}
+    )
+    foreach ($Module in $workloads)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload $workload `
+        Write-Host "Connecting to {$($workload.Name)}"
+        $ConnectionMode = New-M365DSCConnection -Workload ($workload.Name) `
             -InboundParameters $PSBoundParameters
-    }
-    foreach ($Module in $dependencies.ModuleName)
-    {
-        Write-Host "Generating Stubs for {$($Module.Platform)}..."
+
+        Write-Host "Generating Stubs for {$($Module.Name)}..."
         $CurrentModuleName = $Module.ModuleName
         if ($null -eq $CurrentModuleName)
         {
@@ -63,7 +65,7 @@ function New-M365DSCStubFiles
         else
         {
             Import-Module $CurrentModuleName -Force -Global -ErrorAction SilentlyContinue
-            $ConnectionMode = New-M365DSCConnection -Workload $Module.Platform `
+            $ConnectionMode = New-M365DSCConnection -Workload $Module.Name `
                 -InboundParameters $PSBoundParameters
         }
 

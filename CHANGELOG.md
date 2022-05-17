@@ -1,5 +1,44 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADConditionalAccessPolicy
+  * Fixed export to remove the DeviceFilterMode property
+    when empty.
+* PPTenantIsolationSettings
+  * Fixed an issue where credentials weren't passed properly
+    during the export.
+
+# 1.22.511.1
+
+* AADNamedLocationPolicy
+ * Added error handling in the Get-TargetResource function.
+* EXOIRMConfiguration
+  * Initial release.
+* EXOMessageClassification
+  * Initial release.
+* EXOOMEConfiguration
+  * Initial release.
+* EXOOwaMailboxPolicy
+  * Fix where the update scenario was not setting the proper
+    values. (FIXES #1868)
+* EXOPerimeterConfiguration
+  * Initial release.
+* EXOResourceConfiguration
+  * Initial release.
+* IntuneApplicationControlPolicyWindows10
+  * Initial release.
+* TeamsUpdateManagementPolicy
+  * Initial release.
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* modules to version 1.9.6.
+  * Updated ReverseDSC to version 2.0.0.11.
+* MISC
+  * Updated permissions for SharePoint in settings.json files.
+  * Added links to documentation to Teams Readme files
+  * Added and corrected some Exchange examples
+  * Added progress indicator to the Report generation
+
 # 1.22.504.1
 
 * EXOInboundConnector
