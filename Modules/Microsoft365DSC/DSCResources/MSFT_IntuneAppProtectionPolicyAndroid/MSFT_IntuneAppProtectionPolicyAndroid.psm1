@@ -125,6 +125,11 @@ function Get-TargetResource
         $FingerprintBlocked,
 
         [Parameter()]
+        [ValidateSet('allApps', 'allMicrosoftApps', 'allCoreMicrosoftApps', 'selectedPublicApps' )]
+        [System.String[]]
+        $AppGroupType,
+
+        [Parameter()]
         [System.String[]]
         $Apps,
 
@@ -421,6 +426,11 @@ function Set-TargetResource
         $FingerprintBlocked,
 
         [Parameter()]
+        [ValidateSet('allApps', 'allMicrosoftApps', 'allCoreMicrosoftApps', 'selectedPublicApps' )]
+        [System.String]
+        $AppGroupType,
+
+        [Parameter()]
         [System.Array[]]
         $Apps,
 
@@ -490,7 +500,39 @@ function Set-TargetResource
     $PSBoundParameters.Remove("TenantID") | Out-Null
     $PSBoundParameters.Remove("CertificateThumbprint") | Out-Null
 
+    # validate apps values -
+    #   if appgrouptype and apps are blank we set appgrouptype to all apps,
+    #   if aggrouptype is not blank but not selectedPublicApps and apps is not blank - wipe out apps values
+    #   if apps are present but no appgrouptype is specified set appgrouptype to selectedpublicapps (it would set to this when configured anyway)
+    if ($AppGroupType -eq '')
+    {
+        if ($apps.count -eq 0 )
+        {
+            write-verbose -message 'setting allapps value and removing apps value'
+            $AppGroupType = 'allApps'
+            #$setParams.add('AppGroupType', 'allApps')
+            $PSBoundParameters.Remove("apps") | Out-Null
+        }
+        else
+        {
+            write-verbose -message 'setting selectedpublicapps value'
+            $AppGroupType = 'selectedPublicApps'
+            #$setParams.add('AppGroupType', 'selectedpublicapps')
+        }
+    }
+    else
+    {
+        if ( $AppGroupType -ne 'selectedpublicapps' )
+        {
+            write-verbose -message 'removing superfluous apps value'
+            $PSBoundParameters.Remove("apps") | Out-Null
+
+        }
+        # this still allows a configuration of selected public apps with no applications specified - but this may be a valid configuration for some use cases
+    }
+
     $assignmentsArray = @()
+    $appsarray = @()
 
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
@@ -535,7 +577,7 @@ function Set-TargetResource
                         write-verbose -message "Constructing Apps Object for $param..."
                         write-verbose -message ($PSBoundParameters.$param.gettype())
                         write-verbose -message (' count: ' + $PSBoundParameters.$param.count)
-                        $apparray = @()
+                        #$apparray = @()
 
                         $PSBoundParameters.$param | foreach {
 
@@ -551,9 +593,9 @@ function Set-TargetResource
                                 }
 "@
 
-                            $apparray+= $appsValue
+                            $appsarray+= $appsValue
                         }
-                        $setParams.add($param, $apparray)
+                        #$setParams.add($param, $apparray)
                 }
 
                 'IMicrosoftGraphTargetedManagedAppPolicyAssignment1[]'
@@ -646,7 +688,11 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message 'Setting up policy via graph...'
-        New-MgDeviceAppMgtAndroidManagedAppProtection @setParams
+        #$appsarray = $setParams.apps
+        $setParams.Remove("Apps") | Out-Null
+        $newpolicy = New-MgDeviceAppMgtAndroidManagedAppProtection @setParams
+        $setParams.add('AndroidManagedAppProtectionId', $newpolicy.Id)
+        #$policyid = $newpolicy.Id
 
     }
 
@@ -655,14 +701,17 @@ function Set-TargetResource
         Write-Verbose -Message 'Amending policy via graph...'
 
         # Set apps array
-        $appsarray = $setParams.apps
+        #$appsarray = $setParams.apps
         # remove problematic values now
         $setParams.Remove("Assignments") | Out-Null
         $setParams.Remove("Apps") | Out-Null
 
         Update-MgDeviceAppMgtAndroidManagedAppProtection @setParams
+        #$policyid = $setParams.AndroidManagedAppProtectionId
         # set the apps (fails via primary cmdlet)
-        Invoke-MgTargetDeviceAppMgtManagedAppPolicyApp -ManagedAppPolicyId $setParams.AndroidManagedAppProtectionId -Apps $appsarray
+        #Invoke-MgTargetDeviceAppMgtManagedAppPolicyApp -ManagedAppPolicyId $setParams.AndroidManagedAppProtectionId -Apps $appsarray
+        #Invoke-MgTargetDeviceAppMgtTargetedManagedAppConfigurationApp -TargetedManagedAppConfigurationId $policyid -Apps $appsarray -AppGroupType $AppGroupType
+
         <#
         $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
@@ -686,6 +735,14 @@ function Set-TargetResource
             -ErrorAction Stop
         Remove-MgDeviceAppManagementAndroidManagedAppProtection -AndroidManagedAppProtectionId $policyInfo.id
     }
+
+    if ( ($AppGroupType -ne '') -and ($ensure -ne 'absent'))
+    {
+        write-verbose -message "Setting Application values of type: $AppGroupType"
+        #write-host ($appsarray | out-string)
+        Invoke-MgTargetDeviceAppMgtTargetedManagedAppConfigurationApp -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Apps $appsarray -AppGroupType $AppGroupType
+    }
+
 }
 
 function Test-TargetResource
@@ -813,6 +870,11 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $FingerprintBlocked,
+
+        [Parameter()]
+        [ValidateSet('allApps', 'allMicrosoftApps', 'allCoreMicrosoftApps', 'selectedPublicApps' )]
+        [System.String[]]
+        $AppGroupType,
 
         [Parameter()]
         [System.String[]]
