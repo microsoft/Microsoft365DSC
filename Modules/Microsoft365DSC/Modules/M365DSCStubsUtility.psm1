@@ -50,8 +50,8 @@ function New-M365DSCStubFiles
     )
     foreach ($Module in $workloads)
     {
-        Write-Host "Connecting to {$($workload.Name)}"
-        $ConnectionMode = New-M365DSCConnection -Workload ($workload.Name) `
+        Write-Host "Connecting to {$($Module.Name)}"
+        $ConnectionMode = New-M365DSCConnection -Workload ($Module.Name) `
             -InboundParameters $PSBoundParameters
 
         Write-Host "Generating Stubs for {$($Module.Name)}..."
