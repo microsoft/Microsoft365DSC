@@ -157,7 +157,11 @@ function Get-TargetResource
     {
         $SPOSharingSettings = Get-PnPTenant -ErrorAction Stop
         $MySite = Get-PnPTenantSite | Where-Object{$_.Url -match "-my.sharepoint.com/"}
-        $MySiteSharingCapability = (Get-PnPTenantSite -Identity $MySite.Url).SharingCapability
+
+        if ($null -ne $MySite)
+        {
+            $MySiteSharingCapability = (Get-PnPTenantSite -Identity $MySite.Url).SharingCapability
+        }
 
         if ($null -ne $SPOSharingSettings.SharingAllowedDomainList)
         {
