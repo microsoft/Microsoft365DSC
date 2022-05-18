@@ -126,7 +126,7 @@ function Get-TargetResource
 
         [Parameter()]
         [ValidateSet('allApps', 'allMicrosoftApps', 'allCoreMicrosoftApps', 'selectedPublicApps' )]
-        [System.String[]]
+        [System.String]
         $AppGroupType,
 
         [Parameter()]
@@ -500,35 +500,12 @@ function Set-TargetResource
     $PSBoundParameters.Remove("TenantID") | Out-Null
     $PSBoundParameters.Remove("CertificateThumbprint") | Out-Null
 
-    # validate apps values -
-    #   if appgrouptype and apps are blank we set appgrouptype to all apps,
-    #   if aggrouptype is not blank but not selectedPublicApps and apps is not blank - wipe out apps values
-    #   if apps are present but no appgrouptype is specified set appgrouptype to selectedpublicapps (it would set to this when configured anyway)
+    #if $AppGroupType is blank set a value based on $apps value
     if ($AppGroupType -eq '')
     {
-        if ($apps.count -eq 0 )
-        {
-            write-verbose -message 'setting allapps value and removing apps value'
-            $AppGroupType = 'allApps'
-            #$setParams.add('AppGroupType', 'allApps')
-            $PSBoundParameters.Remove("apps") | Out-Null
-        }
-        else
-        {
-            write-verbose -message 'setting selectedpublicapps value'
-            $AppGroupType = 'selectedPublicApps'
-            #$setParams.add('AppGroupType', 'selectedpublicapps')
-        }
-    }
-    else
-    {
-        if ( $AppGroupType -ne 'selectedpublicapps' )
-        {
-            write-verbose -message 'removing superfluous apps value'
-            $PSBoundParameters.Remove("apps") | Out-Null
-
-        }
-        # this still allows a configuration of selected public apps with no applications specified - but this may be a valid configuration for some use cases
+        if ($apps.count -eq 0 ) { $AppGroupType = 'allApps' }
+        else { $AppGroupType = 'selectedPublicApps' }
+        write-verbose -message "setting AppGroupType to $AppGroupType"
     }
 
     $assignmentsArray = @()
@@ -549,25 +526,20 @@ function Set-TargetResource
 
 
     # construct command
+    write-verbose -message "Preparing input parameters..."
     foreach ($param in $PSBoundParameters.keys)
     {
-        write-verbose "########################### $param ########################"
         if ( $graphparams.containskey($param) )
         {
-
-            write-host 'we have a match with:' $param 'Type is:' $graphparams.$param.ParameterType.name
-            # we need to see if our input is valid (timespan is particulalry important as the direct graph values seem to be different)
             switch ($graphparams.$param.ParameterType.name)
             {
                 'TimeSpan'
                 {
-                    write-verbose 'we need to see if this can be interpreted as a timespan'
                     $setParams.add($param, (set-TimeSpan -duration $PSBoundParameters.$param))
                 }
 
                 'string'
                 {
-                    write-verbose 'Adding value as entered...'
                     $setParams.add($param, $PSBoundParameters.$param)
                 }
 
@@ -575,14 +547,7 @@ function Set-TargetResource
                 {
                         # This parameter accepts an array of json snippets
                         write-verbose -message "Constructing Apps Object for $param..."
-                        write-verbose -message ($PSBoundParameters.$param.gettype())
-                        write-verbose -message (' count: ' + $PSBoundParameters.$param.count)
-                        #$apparray = @()
-
                         $PSBoundParameters.$param | foreach {
-
-                            write-verbose -message ('value: ' + $_)
-
                             $appsValue = @"
                                     {
                                     "id":"$($_)",
@@ -602,9 +567,6 @@ function Set-TargetResource
                 {
                     # Configure details for assigned groups - json array created later
                     write-verbose -message "Collecting Role Assignments Data for $param..."
-                    write-verbose -message ($PSBoundParameters.$param.gettype())
-                    write-verbose -message (' count: ' + $PSBoundParameters.$param.count)
-
                     $PSBoundParameters.$param | foreach {
                         $assignmentsArray += @{
                                                 'ID' = $_;
@@ -619,30 +581,21 @@ function Set-TargetResource
 
                     if ($graphparams.$param.ParameterType.name.endswith('[]'))
                     {
-                        write-verbose -message 'Array required...'
-                        write-host $PSBoundParameters.$param.gettype() 'count:' $PSBoundParameters.$param.count
-                        write-host $PSBoundParameters.$param
                         $setParams.add($param, $PSBoundParameters.$param)
                     }
                     else
                     {
-                        write-verbose 'Adding value as entered...'
                         $setParams.add($param, $PSBoundParameters.$param)
                     }
                 }
-
-
             }
-
-
         }
+
         else
         {
             if ($param -eq 'excludedgroups')
             {
                 write-verbose -message "Collecting Role Assignments Data for $param..."
-                write-verbose -message ($PSBoundParameters.$param.gettype())
-                write-verbose -message (' count: ' + $PSBoundParameters.$param.count)
                 $PSBoundParameters.$param | foreach {
                     $assignmentsArray += @{
                                             'ID' = $_;
@@ -652,6 +605,7 @@ function Set-TargetResource
                     }
 
             }
+
             else
             {
                 write-verbose -message "Cannot specify this in graph cmdlet: $param"
@@ -675,8 +629,6 @@ function Set-TargetResource
                         }
 "@
         $AssignmentsCombined+= $JsonContent
-
-        #write-verbose $JsonContent
     }
 
     $setParams.add('Assignments', $AssignmentsCombined)
@@ -685,10 +637,9 @@ function Set-TargetResource
     {
         Write-Verbose -Message 'Setting up policy via graph...'
         #$appsarray = $setParams.apps
-        $setParams.Remove("Apps") | Out-Null
+        #$setParams.Remove("Apps") | Out-Null
         $newpolicy = New-MgDeviceAppMgtAndroidManagedAppProtection @setParams
         $setParams.add('AndroidManagedAppProtectionId', $newpolicy.Id)
-        #$policyid = $newpolicy.Id
 
     }
 
@@ -698,7 +649,7 @@ function Set-TargetResource
 
         # remove problematic values now
         $setParams.Remove("Assignments") | Out-Null
-        $setParams.Remove("Apps") | Out-Null
+        #$setParams.Remove("Apps") | Out-Null
 
         Update-MgDeviceAppMgtAndroidManagedAppProtection @setParams
 
@@ -850,7 +801,7 @@ function Test-TargetResource
 
         [Parameter()]
         [ValidateSet('allApps', 'allMicrosoftApps', 'allCoreMicrosoftApps', 'selectedPublicApps' )]
-        [System.String[]]
+        [System.String]
         $AppGroupType,
 
         [Parameter()]
@@ -1085,19 +1036,14 @@ function set-Timespan
     param(
         [string]$duration
     )
-
-    write-verbose -message "converting to timespan - I hope: $duration"
-
     try
     {
         if ($duration.startswith('P'))
         {
-            write-verbose -message 'looks like a iso8601 string'
             $timespan = [System.Xml.XmlConvert]::ToTimeSpan($duration)
         }
         else
         {
-            write-verbose -message 'assuming it can be converted straight to a timespan'
             $timespan = [TimeSpan]$duration
         }
     }
@@ -1105,9 +1051,7 @@ function set-Timespan
     {
         throw "Problem converting input to a timespan - If configuration document is using iso8601 string (e.g. PT15M) try using new-timespan (e.g. new-timespan -minutes 15)"
     }
-
     return $timespan
-
 }
 
 
