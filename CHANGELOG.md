@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* SPOSharingSettings
+  * decoupeling from SPOSharingSettings: add SharingCapability for "-my sites" aka: OneDrive
 * AADConditionalAccessPolicy
   * Fixed export to remove the DeviceFilterMode property
     when empty.
