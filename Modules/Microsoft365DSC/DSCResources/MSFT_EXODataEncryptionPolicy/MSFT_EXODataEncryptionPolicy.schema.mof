@@ -8,7 +8,7 @@ class MSFT_EXODataEncryptionPolicy : OMI_BaseResource
     [Write, Description("The Name parameter specifies the unique name for the data encryption policy.")] String Name;
     [Write, Description("The PermanentDataPurgeContact parameter specifies a contact for the purge of all data that's encrypted by the data encryption policy.")] String PermanentDataPurgeContact;
     [Write, Description("The PermanentDataPurgeReason parameter specifies a descriptive reason for the purge of all data that's encrypted by the data encryption policy")] String PermanentDataPurgeReason;
-    [Write, Description("Specifies if this Outbound connector should exist."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Specifies if this policy should exist."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
