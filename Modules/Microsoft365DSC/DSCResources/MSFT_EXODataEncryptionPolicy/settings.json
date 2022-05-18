@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXODataEncryptionPolicy",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

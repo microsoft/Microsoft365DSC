@@ -1,5 +1,32 @@
 This section explains how you can take a Microsoft365DSC configuration file you have written (or captured using the snapshot feature) and apply the settings it defines onto a Microsoft 365 tenant. It is very important to understand that at this stage, we are using PowerShell Desired State (DSC) out-of-the-box and that the process of applying a DSC configuration is not something specific to Microsoft365DSC.
 
+## Creating your own DSC Configuration
+
+Microsoft365DSC is build on top of the PowerShell Desired State Configuration framework. Before you get started with Microsoft365DSC, it is therefore important to know the basics and best practices of <a href="https://docs.microsoft.com/en-us/powershell/dsc/overview/dscforengineers?view=dsc-1.1" target="_blank">PowerShell Desired State Configuration</a> (DSC). Here a small introduction into PowerShell DSC:
+
+PowerShell DSC is a declarative approach for configuring servers and environments. It is based on the <a href="https://en.wikipedia.org/wiki/Open_Management_Infrastructure" target="_blank">Open Management Infrastructure</a> (implemented in Windows as WMI). PowerShell offers a way to declare a desired state in PowerShell syntax, compile this to a so called MOF file and publish that to a target machine.
+
+On that target machine the <a href="https://docs.microsoft.com/en-us/powershell/dsc/managing-nodes/metaconfig?view=dsc-1.1" target="_blank">Local Configuration Manager</a> will to the heavy lifting and make sure you server __gets into the desired state__, it is detected when the server __deviates from the desired state__ or even automatically __corrected back to the desired state__.
+
+By default PowerShell offers several <a href="https://docs.microsoft.com/en-us/powershell/dsc/resources/resources?view=dsc-1.1#windows-built-in-resources" target="_blank">resources</a> out-of-the-box, but these can be extended by <a href="https://docs.microsoft.com/en-us/powershell/dsc/configurations/install-additional-dsc-resources?view=dsc-1.1" target="_blank">installing modules</a> like Microsoft365DSC.
+
+To create and deploy your own Desired State:
+
+1. You create a <a href="https://docs.microsoft.com/en-us/powershell/dsc/configurations/configurations?view=dsc-1.1" target="_blank">DSC Configuration</a>
+2. You compile your PowerShell configuration <a href="https://docs.microsoft.com/en-us/powershell/dsc/configurations/write-compile-apply-configuration?view=dsc-1.1#compile-the-configuration" target="_blank">to a MOF file</a> (see <a href="#compiling-and-validating-the-configuration">paragraph below</a>)
+3. Last you <a href="https://docs.microsoft.com/en-us/powershell/dsc/configurations/write-compile-apply-configuration?view=dsc-1.1#apply-the-configuration" target="_blank">apply the MOF file</a> to your target server (see <a href="#deploying-the-configuration">paragraph below</a>)
+
+We highly recommend that you watch the <a href="https://docs.microsoft.com/en-us/shows/getting-started-with-powershell-dsc/" target="_blank">"Getting Started with PowerShell Desired State Configuration"</a> training on Microsoft Learn.
+
+For more information and more advanced topics, please make sure you review the following articles:
+
+- <a href="https://docs.microsoft.com/en-us/powershell/dsc/configurations/add-parameters-to-a-configuration?view=dsc-1.1" target="_blank">Add Parameters to a Configuration</a>
+- <a href="https://docs.microsoft.com/en-us/powershell/dsc/configurations/separatingenvdata?view=dsc-1.1" target="_blank">Separating configuration and environment data</a>
+- <a href="https://docs.microsoft.com/en-us/powershell/dsc/configurations/configdata?view=dsc-1.1" target="_blank">Using configuration data in DSC</a>
+- <a href="https://devblogs.microsoft.com/powershell/want-to-secure-credentials-in-windows-powershell-desired-state-configuration" target="_blank">Want to secure credentials in Windows PowerShell Desired State Configuration?</a>
+- <a href="https://docs.microsoft.com/en-us/powershell/dsc/pull-server/securemof?view=dsc-1.1" target="_blank">Securing the MOF File</a>
+- [Securing your Compiled Configuration](../securing-configurations) (Next chapter in this guide)
+
 ## Compiling and Validating the Configuration
 
 The first step in trying to deploy a DSC configuration is to compile the configuration file into what is called a Managed Object Format (MOF) file. To do so, simply execute the .ps1 file that contains your configuration. The process of compiling your configuration will also perform some level of validation on the configuration such as ensuring that every component defined in the file has all of their mandatory parameters defined and that there are no typos in components or property names. If the compilation process is successful, you should see a mention that the .mof file was created. This file gets created in the same location where your configuration file is located by default and will create a new folder based on the name of the configuration object defined within your file.
