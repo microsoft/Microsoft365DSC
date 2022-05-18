@@ -510,6 +510,14 @@ function Set-TargetResource
 
     $assignmentsArray = @()
     $appsarray = @()
+    $AssignmentsCombined= @()
+
+    $ComplexParameters = @(
+        'AppGroupType',
+        'Apps',
+        'Assignments',
+        'ExcludedGroups'
+    )
 
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
@@ -529,7 +537,7 @@ function Set-TargetResource
     write-verbose -message "Preparing input parameters..."
     foreach ($param in $PSBoundParameters.keys)
     {
-        if ( $graphparams.containskey($param) )
+        if ( $graphparams.containskey($param) -and !($ComplexParameters -contains $param) )
         {
             switch ($graphparams.$param.ParameterType.name)
             {
@@ -543,8 +551,23 @@ function Set-TargetResource
                     $setParams.add($param, $PSBoundParameters.$param)
                 }
 
-                'IMicrosoftGraphManagedMobileApp[]'
+                default
                 {
+                    $setParams.add($param, $PSBoundParameters.$param)
+                }
+            }
+        }
+
+        else
+        {
+
+            if($ComplexParameters -contains $param)
+            {
+                switch ($param)
+                {
+
+                    'Apps'
+                    {
                         # This parameter accepts an array of json snippets
                         write-verbose -message "Constructing Apps Object for $param..."
                         $PSBoundParameters.$param | foreach {
@@ -560,52 +583,46 @@ function Set-TargetResource
 
                             $appsarray+= $appsValue
                         }
-                        #$setParams.add($param, $apparray)
-                }
 
-                'IMicrosoftGraphTargetedManagedAppPolicyAssignment1[]'
-                {
-                    # Configure details for assigned groups - json array created later
-                    write-verbose -message "Collecting Role Assignments Data for $param..."
-                    $PSBoundParameters.$param | foreach {
-                        $assignmentsArray += @{
-                                                'ID' = $_;
-                                                'Type' = 'incl';
-                                                'ODataType' = 'GroupAssignmentTarget'
-                                            }
+                    }
+
+                    'Assignments'
+                    {
+                        write-verbose -message "Collecting Role Assignments Data for $param..."
+                        $PSBoundParameters.$param | foreach {
+
+                            $JsonContent = @"
+                            {
+                            "id":"$($_)_incl",
+                            "target": {
+                                        "@odata.type": "#microsoft.graph.GroupAssignmentTarget",
+                                        "groupId": "$($_)"
+                                    }
+                            }
+"@
+                            $AssignmentsCombined+= $JsonContent
                         }
-                }
-
-                default
-                {
-
-                    if ($graphparams.$param.ParameterType.name.endswith('[]'))
-                    {
-                        $setParams.add($param, $PSBoundParameters.$param)
                     }
-                    else
+
+                    'ExcludedGroups'
                     {
-                        $setParams.add($param, $PSBoundParameters.$param)
+                        write-verbose -message "Collecting Role Assignments Data for $param..."
+                        $PSBoundParameters.$param | foreach {
+
+                            $JsonContent = @"
+                            {
+                            "id":"$($_)_excl",
+                            "target": {
+                                        "@odata.type": "#microsoft.graph.exclusionGroupAssignmentTarget",
+                                        "groupId": "$($_)"
+                                    }
+                            }
+"@
+                            $AssignmentsCombined+= $JsonContent
+                        }
                     }
                 }
             }
-        }
-
-        else
-        {
-            if ($param -eq 'excludedgroups')
-            {
-                write-verbose -message "Collecting Role Assignments Data for $param..."
-                $PSBoundParameters.$param | foreach {
-                    $assignmentsArray += @{
-                                            'ID' = $_;
-                                            'Type' = 'excl';
-                                            'ODataType' = 'exclusionGroupAssignmentTarget'
-                                        }
-                    }
-
-            }
-
             else
             {
                 write-verbose -message "Cannot specify this in graph cmdlet: $param"
@@ -613,31 +630,10 @@ function Set-TargetResource
         }
     }
 
-    # check if included or excluded groups gathered and create array of json values
-    write-verbose -message "Setting group assignments..."
-    $AssignmentsCombined= @()
-
-    $assignmentsArray | foreach {
-
-        $JsonContent = @"
-                        {
-                        "id":"$($_.id)_$($_.Type))",
-                        "target": {
-                                    "@odata.type": "#microsoft.graph.$($_.ODataType)",
-                                    "groupId": "$($_.id)"
-                                }
-                        }
-"@
-        $AssignmentsCombined+= $JsonContent
-    }
-
-    $setParams.add('Assignments', $AssignmentsCombined)
-
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message 'Setting up policy via graph...'
-        #$appsarray = $setParams.apps
-        #$setParams.Remove("Apps") | Out-Null
+        $setParams.add('Assignments', $AssignmentsCombined)
         $newpolicy = New-MgDeviceAppMgtAndroidManagedAppProtection @setParams
         $setParams.add('AndroidManagedAppProtectionId', $newpolicy.Id)
 
@@ -646,10 +642,6 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message 'Amending policy via graph...'
-
-        # remove problematic values now
-        $setParams.Remove("Assignments") | Out-Null
-        #$setParams.Remove("Apps") | Out-Null
 
         Update-MgDeviceAppMgtAndroidManagedAppProtection @setParams
 
