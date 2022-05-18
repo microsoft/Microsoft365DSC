@@ -600,8 +600,7 @@ function Set-TargetResource
 
                 'IMicrosoftGraphTargetedManagedAppPolicyAssignment1[]'
                 {
-                    # could be either assignments or excludedgroups but we only get here with assignments (at the moment)
-                    # because we may need to complete it twice we don't add this to the params list until the end
+                    # Configure details for assigned groups - json array created later
                     write-verbose -message "Collecting Role Assignments Data for $param..."
                     write-verbose -message ($PSBoundParameters.$param.gettype())
                     write-verbose -message (' count: ' + $PSBoundParameters.$param.count)
@@ -697,39 +696,14 @@ function Set-TargetResource
     {
         Write-Verbose -Message 'Amending policy via graph...'
 
-        # Set apps array
-        #$appsarray = $setParams.apps
         # remove problematic values now
-        #$Assignmentsarray = $setParams.Assignments
-        # $AssignmentsCombined should exist at this point
         $setParams.Remove("Assignments") | Out-Null
         $setParams.Remove("Apps") | Out-Null
 
         Update-MgDeviceAppMgtAndroidManagedAppProtection @setParams
 
-        # one of these will set the assignments
-        #Set-MgDeviceAppMgtManagedAppPolicyMicrosoftGraphTargetedManagedAppProtection -ManagedAppPolicyId $setParams.AndroidManagedAppProtectionId -Assignments $Assignmentsarray
+        # Assignments need to be set using a different cmdlet - $AssignmentsCombined should exist at this point
         set-MgDeviceAppMgtTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Assignments $AssignmentsCombined
-
-        #$policyid = $setParams.AndroidManagedAppProtectionId
-        # set the apps (fails via primary cmdlet)
-        #Invoke-MgTargetDeviceAppMgtManagedAppPolicyApp -ManagedAppPolicyId $setParams.AndroidManagedAppProtectionId -Apps $appsarray
-        #Invoke-MgTargetDeviceAppMgtTargetedManagedAppConfigurationApp -TargetedManagedAppConfigurationId $policyid -Apps $appsarray -AppGroupType $AppGroupType
-
-        <#
-        $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'" `
-            -ErrorAction Stop
-
-        $JsonContent = Get-M365DSCIntuneAppProtectionPolicyAndroidJSON -Parameters $PSBoundParameters `
-            -IncludeApps $false
-        Set-M365DSCIntuneAppProtectionPolicyAndroid -JSONContent $JsonContent `
-            -PolicyId ($policyInfo.id)
-
-        write-verbose -message 'trying the old apps setup option'
-        $appJSON = Get-M365DSCIntuneAppProtectionPolicyAndroidAppsJSON -Parameters $PSBoundParameters
-        Set-M365DSCIntuneAppProtectionPolicyAndroidApps -JSONContent $appJSON `
-            -PolicyId $setParams.AndroidManagedAppProtectionId
-            #>
 
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
@@ -743,7 +717,6 @@ function Set-TargetResource
     if ( ($AppGroupType -ne '') -and ($ensure -ne 'absent'))
     {
         write-verbose -message "Setting Application values of type: $AppGroupType"
-        #write-host ($appsarray | out-string)
         Invoke-MgTargetDeviceAppMgtTargetedManagedAppConfigurationApp -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Apps $appsarray -AppGroupType $AppGroupType
     }
 
@@ -1093,295 +1066,6 @@ function Get-M365DSCIntuneAppProtectionPolicyAndroid
     }
     return $null
 }
-
-function Get-M365DSCIntuneAppProtectionPolicyAndroidJSON
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Collections.Hashtable]
-        $Parameters,
-
-        [Parameter()]
-        [System.Boolean]
-        $IncludeApps = $true
-    )
-
-    #region AllowedDataStorageLocations
-    $allowedDataStorageLocations = "["
-    $foundOne = $false
-    foreach ($allowedLocation in $Parameters.AllowedDataStorageLocations)
-    {
-        $foundOne = $true
-        $allowedDataStorageLocations += "`r`n`"$allowedLocation`","
-    }
-    if ($foundOne)
-    {
-        $allowedDataStorageLocations = $allowedDataStorageLocations.TrimEnd(',') + " `r`n"
-    }
-    $allowedDataStorageLocations += "],"
-    #endregion
-
-    #region Apps
-    $appsValue = "["
-    $foundOne = $false
-    foreach ($app in $Parameters.Apps)
-    {
-        $foundOne = $true
-
-        $appsValue += @"
-            `r`n{
-                "id":"$($app)",
-                "mobileAppIdentifier": {
-                    "@odata.type": "#microsoft.graph.androidMobileAppIdentifier",
-                    "packageId": "$app"
-                }
-            },
-"@
-    }
-    if ($foundOne)
-    {
-        $appsValue = $appsValue.TrimEnd(',') + " `r`n"
-    }
-    $appsValue += "]"
-    #endregion
-    $JsonContent = @"
-    {
-        "@odata.type": "#microsoft.graph.androidManagedAppProtection",
-        "displayName": "$($Parameters.DisplayName)",
-        "description": "$($Parameters.Description)",
-        "periodOfflineBeforeAccessCheck": "$($Parameters.PeriodOfflineBeforeAccessCheck)",
-        "periodOnlineBeforeAccessCheck": "$($Parameters.PeriodOnlineBeforeAccessCheck)",
-        "allowedInboundDataTransferSources": "$($Parameters.AllowedInboundDataTransferSources)",
-        "allowedOutboundDataTransferDestinations": "$($Parameters.AllowedOutboundDataTransferDestinations)",
-        "organizationalCredentialsRequired": $($Parameters.OrganizationalCredentialsRequired.ToString().ToLower()),
-        "allowedOutboundClipboardSharingLevel": "$($Parameters.AllowedOutboundClipboardSharingLevel)",
-        "dataBackupBlocked": $($Parameters.DataBackupBlocked.ToString().ToLower()),
-        "deviceComplianceRequired": $($Parameters.DeviceComplianceRequired.ToString().ToLower()),
-        "managedBrowserToOpenLinksRequired": $($Parameters.ManagedBrowserToOpenLinksRequired.ToString().ToLower()),
-        "saveAsBlocked": $($Parameters.SaveAsBlocked.ToString().ToLower()),
-        "periodOfflineBeforeWipeIsEnforced": "$($Parameters.PeriodOfflineBeforeWipeIsEnforced)",
-        "pinRequired": $($Parameters.PinRequired.ToString().ToLower()),
-        "disableAppPinIfDevicePinIsSet": $($Parameters.DisableAppPinIfDevicePinIsSet.ToString().ToLower()),
-        "maximumPinRetries": $($Parameters.MaximumPinRetries),
-        "simplePinBlocked": $($Parameters.SimplePinBlocked.ToString().ToLower()),
-        "minimumPinLength": $($Parameters.MinimumPinLength),
-        "pinCharacterSet": "$($Parameters.PinCharacterSet)",
-        "contactSyncBlocked": $($Parameters.ContactSyncBlocked.ToString().ToLower()),
-        "periodBeforePinReset": "$($Parameters.PeriodBeforePinReset)",
-        "printBlocked": $($Parameters.PrintBlocked.ToString().ToLower()),
-        "fingerprintBlocked": $($Parameters.FingerprintBlocked.ToString().ToLower()),
-        "allowedDataStorageLocations": $allowedDataStorageLocations
-"@
-
-    if ($IncludeApps)
-    {
-        $JSOnContent += "`"apps`":$appsValue`r`n"
-    }
-    $JsonContent += "}"
-    return $JsonContent
-}
-
-function Get-M365DSCIntuneAppProtectionPolicyAndroidAppsJSON
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Collections.Hashtable]
-        $Parameters
-    )
-
-    #region Apps
-    $appsValue = "["
-    $foundOne = $false
-    foreach ($app in $Parameters.Apps)
-    {
-        $foundOne = $true
-
-        $appsValue += @"
-            `r`n{
-                "id":"$($app)",
-                "mobileAppIdentifier": {
-                    "@odata.type": "#microsoft.graph.AndroidMobileAppIdentifier",
-                    "packageId": "$app"
-                }
-            },
-"@
-    }
-    if ($foundOne)
-    {
-        $appsValue = $appsValue.TrimEnd(',') + " `r`n"
-    }
-    $appsValue += "]"
-    #endregion
-
-    $JsonContent = @"
-    {
-        "apps": $appsValue
-    }
-"@
-    return $JsonContent
-}
-
-function Get-M365DSCIntuneAppProtectionPolicyAndroidAssignmentJSON
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.String[]]
-        $Assignments,
-
-        [Parameter(Mandatory = $false)]
-        [System.String[]]
-        $Exclusions
-    )
-
-    $JsonContent = "{`r`n"
-    $JsonContent += "`"assignments`":[`r`n"
-    foreach ($assignment in $Assignments)
-    {
-        $JsonContent += "    {`"target`":{`r`n"
-        $JsonContent += "        `"groupId`":`"$assignment`",`r`n"
-        $JsonContent += "        `"@odata.type`":`"#microsoft.graph.groupAssignmentTarget`"`r`n"
-        $JsonContent += "    }},"
-    }
-    foreach ($exclusion in $Exclusions)
-    {
-        $JsonContent += "    {`"target`":{`r`n"
-        $JsonContent += "        `"groupId`":`"$exclusion`",`r`n"
-        $JsonContent += "        `"@odata.type`":`"#microsoft.graph.exclusionGroupAssignmentTarget`"`r`n"
-        $JsonContent += "    }},"
-    }
-    $JsonContent = $JsonContent.TrimEnd(',')
-    $JsonContent += "]`r`n"
-    $JsonContent += "`r`n}"
-
-    return $JsonContent
-}
-
-function New-M365DSCIntuneAppProtectionPolicyAndroid
-{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $JSONContent
-    )
-    try
-    {
-        $Url = 'https://graph.microsoft.com/beta/deviceAppManagement/managedAppPolicies'
-        Write-Verbose -Message "Creating new Android App Protection policy with JSON payload: `r`n$JSONContent"
-        Invoke-MgGraphRequest -Method POST `
-            -Uri $Url `
-            -Body $JSONContent `
-            -Headers @{"Content-Type" = "application/json" } | Out-Null
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-        $tenantIdValue = $Credential.UserName.Split('@')[1]
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $tenantIdValue
-    }
-}
-
-function Set-M365DSCIntuneAppProtectionPolicyAndroid
-{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $JSONContent,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $PolicyId
-    )
-    try
-    {
-        $Url = "https://graph.microsoft.com/beta/deviceAppManagement/androidManagedAppProtections('$PolicyId')/"
-        Write-Verbose -Message "Updating Android App Protection policy with JSON payload: `r`n$JSONContent"
-        Invoke-MgGraphRequest -Method PATCH `
-            -Uri $Url `
-            -Body $JSONContent `
-            -Headers @{"Content-Type" = "application/json" } | Out-Null
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-        $tenantIdValue = $Credential.UserName.Split('@')[1]
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $tenantIdValue
-    }
-}
-
-function Set-M365DSCIntuneAppProtectionPolicyAndroidApps
-{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $JSONContent,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $PolicyId
-    )
-    try
-    {
-        $Url = "https://graph.microsoft.com/beta/deviceAppManagement/managedAppPolicies/$PolicyId/targetApps"
-        Write-Verbose -Message "Updating Apps for Android App Protection policy with JSON payload: `r`n$JSONContent"
-        Invoke-MgGraphRequest -Method POST `
-            -Uri $Url `
-            -Body $JSONContent `
-            -Headers @{"Content-Type" = "application/json" } | Out-Null
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-        $tenantIdValue = $Credential.UserName.Split('@')[1]
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $tenantIdValue
-    }
-}
-
-function Set-M365DSCIntuneAppProtectionPolicyAndroidAssignment
-{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $JSONContent,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $PolicyId
-    )
-    try
-    {
-        $Url = "https://graph.microsoft.com/beta/deviceAppManagement/androidManagedAppProtections('$PolicyId')/assign"
-        Write-Verbose -Message "Group Assignment for Android App Protection policy with JSON payload: `r`n$JSONContent"
-        Invoke-MgGraphRequest -Method POST `
-            -Uri $Url `
-            -Body $JSONContent `
-            -Headers @{"Content-Type" = "application/json" } | Out-Null
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-        $tenantIdValue = $Credential.UserName.Split('@')[1]
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $tenantIdValue
-    }
-}
-
 
 function get-inputParamsList
 {
