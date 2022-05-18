@@ -13,7 +13,7 @@
   * Fixed an issue where credentials weren't passed properly
     during the export.
 * SPOSharingSettings
-  * Decoupeling from SPOSharingSettings: add SharingCapability for "-my sites" aka: OneDrive
+  * Decoupling from SPOSharingSettings: add SharingCapability for "-my sites" aka: OneDrive
 
 # 1.22.511.1
 
