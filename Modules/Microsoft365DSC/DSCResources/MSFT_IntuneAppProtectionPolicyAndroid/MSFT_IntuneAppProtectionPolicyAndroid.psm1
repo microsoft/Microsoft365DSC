@@ -660,30 +660,27 @@ function Set-TargetResource
         }
     }
 
-    # check if included or excluded groups gathered and assign
-    if ($assignmentsArray.count -gt 0)
-    {
-        write-verbose -message "Setting group assignments..."
-        $AssignmentsCombined= @()
+    # check if included or excluded groups gathered and create array of json values
+    write-verbose -message "Setting group assignments..."
+    $AssignmentsCombined= @()
 
-        $assignmentsArray | foreach {
+    $assignmentsArray | foreach {
 
-            $JsonContent = @"
-                            {
-                            "id":"$($_.id)_$($_.Type))",
-                            "target": {
-                                        "@odata.type": "#microsoft.graph.$($_.ODataType)",
-                                        "groupId": "$($_.id)"
-                                    }
-                            }
+        $JsonContent = @"
+                        {
+                        "id":"$($_.id)_$($_.Type))",
+                        "target": {
+                                    "@odata.type": "#microsoft.graph.$($_.ODataType)",
+                                    "groupId": "$($_.id)"
+                                }
+                        }
 "@
-            $AssignmentsCombined+= $JsonContent
+        $AssignmentsCombined+= $JsonContent
 
-            #write-verbose $JsonContent
-        }
-
-        $setParams.add('Assignments', $AssignmentsCombined)
+        #write-verbose $JsonContent
     }
+
+    $setParams.add('Assignments', $AssignmentsCombined)
 
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
@@ -703,10 +700,17 @@ function Set-TargetResource
         # Set apps array
         #$appsarray = $setParams.apps
         # remove problematic values now
+        #$Assignmentsarray = $setParams.Assignments
+        # $AssignmentsCombined should exist at this point
         $setParams.Remove("Assignments") | Out-Null
         $setParams.Remove("Apps") | Out-Null
 
         Update-MgDeviceAppMgtAndroidManagedAppProtection @setParams
+
+        # one of these will set the assignments
+        #Set-MgDeviceAppMgtManagedAppPolicyMicrosoftGraphTargetedManagedAppProtection -ManagedAppPolicyId $setParams.AndroidManagedAppProtectionId -Assignments $Assignmentsarray
+        set-MgDeviceAppMgtTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Assignments $AssignmentsCombined
+
         #$policyid = $setParams.AndroidManagedAppProtectionId
         # set the apps (fails via primary cmdlet)
         #Invoke-MgTargetDeviceAppMgtManagedAppPolicyApp -ManagedAppPolicyId $setParams.AndroidManagedAppProtectionId -Apps $appsarray
