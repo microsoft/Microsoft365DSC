@@ -40,8 +40,6 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
             -ProfileName '<#APIVersion#>'
-        Write-Verbose -Message "1 - There are currently {$((dir function: | measure).Count) functions}"
-        Write-Verbose -Message "Here1 - Loading Profile {<#APIVersion#>}"
         Select-MgProfile '<#APIVersion#>' -ErrorAction Stop
     }
     catch
@@ -78,7 +76,7 @@ function Get-TargetResource
             [array]$getValue = <GetCmdLetName> `
                 -ErrorAction Stop | Where-Object `
             -FilterScript {
-                $_.displayName -eq $DisplayName
+                $_.<PrimaryKey> -eq $<PrimaryKey>
             }
         }
         #endregion
@@ -86,11 +84,11 @@ function Get-TargetResource
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Nothing with displayName {$DisplayName} was found"
+            Write-Verbose -Message "Nothing with <PrimaryKey> {$<PrimaryKey>} was found"
             return $nullResult
         }
 
-        Write-Verbose -Message "Found something with displayName {$DisplayName}"
+        Write-Verbose -Message "Found something with <PrimaryKey> {$<PrimaryKey>}"
         $results = @{
             <#ResourceGenerator
             #region resource generator code
@@ -174,12 +172,10 @@ function Set-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
             -ProfileName '<#APIVersion#>'
-        Write-Verbose -Message "2 - There are currently {$((dir function: | measure).Count) functions}"
-        Write-Verbose -Message "Here2"
     }
     catch
     {
-        Write-Verbose -Message "Reloading2"
+        Write-Verbose -Message $_
     }
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -239,7 +235,10 @@ function Set-TargetResource
 
         foreach ($convertedParameter in $ConvertedParameters)
         {
-            $UpdateParameters[$convertedParameter.Name] = $convertedParameter.Value
+            if (-not $readOnlyParameters.Contains($convertedParameter.Name))
+            {
+                $UpdateParameters[$convertedParameter.Name] = $convertedParameter.Value
+            }
         }
         <#
         if ($AdditionalProperties)
@@ -321,7 +320,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of {$<PrimaryKey>}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -396,6 +395,12 @@ function Export-TargetResource
             -FilterScript {
                 <FilterScriptShort>
             }
+
+        if (-not $getValue)
+        {
+            [array]$getValue = <GetCmdLetName> `
+                -ErrorAction Stop
+        }
         #endregion
         ResourceGenerator#>
 
@@ -411,9 +416,9 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
-            Write-Host "    |---[$i/$($getValue.Count)] $($config.displayName)" -NoNewline
+            Write-Host "    |---[$i/$($getValue.Count)] $($config.<PrimaryKey>)" -NoNewline
             $params = @{
-                DisplayName           = $config.DisplayName
+                <PrimaryKey>           = $config.<PrimaryKey>
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -421,6 +426,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
             }
+
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
