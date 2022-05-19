@@ -564,20 +564,24 @@ function Set-TargetResource
                 switch ($param)
                 {
 
+                    'AppGroupType'
+                    {
+                        $configstring += ('AppGroupType:' + $AppGroupType + "`r`n")
+                    }
+
                     'Apps'
                     {
-                        # This parameter accepts an array of json snippets
-                        #write-verbose -message "Constructing Apps Object for $param..."
-                        $configstring += ('AppGroupType:' + $AppGroupType + "`r`n")
-                        $PSBoundParameters.$param | foreach {
-                            $appsarray+= set-JSONstring -id $_ -type $param
+                        if ($AppGroupType -eq 'selectedPublicApps' )
+                        {
+                            $PSBoundParameters.$param | foreach {
+                                $appsarray+= set-JSONstring -id $_ -type $param
+                            }
+                            $configstring += ($param + ":`r`n" +($PSBoundParameters.$param | out-string) + "`r`n" )
                         }
-                        $configstring += ($param + ":`r`n" +($PSBoundParameters.$param | out-string) + "`r`n" )
                     }
 
                     'Assignments'
                     {
-                        #write-verbose -message "Collecting Role Assignments Data for $param..."
                         $PSBoundParameters.$param | foreach {
                             $assignmentsArray+= set-JSONstring -id $_ -type $param
                         }
@@ -586,7 +590,6 @@ function Set-TargetResource
 
                     'ExcludedGroups'
                     {
-                        #write-verbose -message "Collecting Role Assignments Data for $param..."
                         $PSBoundParameters.$param | foreach {
                             $assignmentsArray+= set-JSONstring -id $_ -type $param
                         }
@@ -601,13 +604,6 @@ function Set-TargetResource
         }
     }
 
-    <#
-    $configstring = ''
-    foreach ($key in $setParams.keys)
-    {
-        $configstring += ($key + ':' + ($setParams.$key | out-string))
-    }
-    #>
     write-verbose -message $configstring
 
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
