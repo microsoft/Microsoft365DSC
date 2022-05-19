@@ -570,17 +570,7 @@ function Set-TargetResource
                         # This parameter accepts an array of json snippets
                         write-verbose -message "Constructing Apps Object for $param..."
                         $PSBoundParameters.$param | foreach {
-                            $appsValue = @"
-                                    {
-                                    "id":"$($_)",
-                                    "mobileAppIdentifier": {
-                                        "@odata.type": "#microsoft.graph.AndroidMobileAppIdentifier",
-                                        "packageId": "$_"
-                                    }
-                                }
-"@
-
-                            $appsarray+= $appsValue
+                            $appsarray+= set-JSONstring -id $_ -type $param
                         }
 
                     }
@@ -589,17 +579,7 @@ function Set-TargetResource
                     {
                         write-verbose -message "Collecting Role Assignments Data for $param..."
                         $PSBoundParameters.$param | foreach {
-
-                            $JsonContent = @"
-                            {
-                            "id":"$($_)_incl",
-                            "target": {
-                                        "@odata.type": "#microsoft.graph.GroupAssignmentTarget",
-                                        "groupId": "$($_)"
-                                    }
-                            }
-"@
-                            $assignmentsArray+= $JsonContent
+                            $assignmentsArray+= set-JSONstring -id $_ -type $param
                         }
                     }
 
@@ -607,17 +587,7 @@ function Set-TargetResource
                     {
                         write-verbose -message "Collecting Role Assignments Data for $param..."
                         $PSBoundParameters.$param | foreach {
-
-                            $JsonContent = @"
-                            {
-                            "id":"$($_)_excl",
-                            "target": {
-                                        "@odata.type": "#microsoft.graph.exclusionGroupAssignmentTarget",
-                                        "groupId": "$($_)"
-                                    }
-                            }
-"@
-                            $assignmentsArray+= $JsonContent
+                            $assignmentsArray+= set-JSONstring -id $_ -type $param
                         }
                     }
                 }
@@ -1043,6 +1013,62 @@ function set-Timespan
         throw "Problem converting input to a timespan - If configuration document is using iso8601 string (e.g. PT15M) try using new-timespan (e.g. new-timespan -minutes 15)"
     }
     return $timespan
+}
+
+function set-JSONstring
+{
+    param(
+        [string]$id,
+        [string]$type
+    )
+
+    $JsonContent = ''
+
+    switch ($type)
+    {
+
+        'Apps'
+        {
+            $JsonContent = @"
+                    {
+                    "id":"$($id)",
+                    "mobileAppIdentifier": {
+                        "@odata.type": "#microsoft.graph.AndroidMobileAppIdentifier",
+                        "packageId": "$id"
+                    }
+                }
+"@
+
+        }
+        'Assignments'
+        {
+            $JsonContent = @"
+            {
+            "id":"$($id)_incl",
+            "target": {
+                        "@odata.type": "#microsoft.graph.groupAssignmentTarget",
+                        "groupId": "$($id)"
+                    }
+            }
+"@
+        }
+        'ExcludedGroups'
+        {
+            $JsonContent = @"
+            {
+            "id":"$($id)_excl",
+            "target": {
+                        "@odata.type": "#microsoft.graph.exclusionGroupAssignmentTarget",
+                        "groupId": "$($id)"
+                    }
+            }
+"@
+
+        }
+    }
+
+    return $JsonContent
+
 }
 
 
