@@ -510,7 +510,6 @@ function Set-TargetResource
 
     $assignmentsArray = @()
     $appsarray = @()
-    $AssignmentsCombined= @()
 
     $ComplexParameters = @(
         'AppGroupType',
@@ -600,7 +599,7 @@ function Set-TargetResource
                                     }
                             }
 "@
-                            $AssignmentsCombined+= $JsonContent
+                            $assignmentsArray+= $JsonContent
                         }
                     }
 
@@ -618,7 +617,7 @@ function Set-TargetResource
                                     }
                             }
 "@
-                            $AssignmentsCombined+= $JsonContent
+                            $assignmentsArray+= $JsonContent
                         }
                     }
                 }
@@ -633,7 +632,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message 'Setting up policy via graph...'
-        $setParams.add('Assignments', $AssignmentsCombined)
+        $setParams.add('Assignments', $assignmentsArray)
         $newpolicy = New-MgDeviceAppMgtAndroidManagedAppProtection @setParams
         $setParams.add('AndroidManagedAppProtectionId', $newpolicy.Id)
 
@@ -645,8 +644,8 @@ function Set-TargetResource
 
         Update-MgDeviceAppMgtAndroidManagedAppProtection @setParams
 
-        # Assignments need to be set using a different cmdlet - $AssignmentsCombined should exist at this point
-        set-MgDeviceAppMgtTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Assignments $AssignmentsCombined
+        # Assignments need to be set using a different cmdlet - $assignmentsArray should exist at this point
+        set-MgDeviceAppMgtTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Assignments $assignmentsArray
 
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
