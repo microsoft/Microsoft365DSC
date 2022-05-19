@@ -10,6 +10,9 @@
 | **Comment** | Write | String | The Comment parameter specifies an optional comment. ||
 | **ConnectorSource** | Write | String | The ConnectorSource parameter specifies how the connector is created. DO NOT CHANGE THIS! values are Default (the default) | Migrated | HybridWizard |Default, Migrated, HybridWizard|
 | **ConnectorType** | Write | String | The ConnectorType parameter specifies a category for the domains that are serviced by the connector. Valid values are Partner and OnPremises |Partner, OnPremises|
+| **EFSkipIPs** | Write | StringArray[] | The EFSkipIPs parameter specifies the source IP addresses to skip in Enhanced Filtering for Connectors when the EFSkipLastIP parameter value is $false. ||
+| **EFSkipLastIP** | Write | Boolean | The EFSkipLastIP parameter specifies the behavior of Enhanced Filtering for Connectors. ||
+| **EFUsers** | Write | StringArray[] | The EFUsers parameter specifies the recipients that Enhanced Filtering for Connectors applies to. ||
 | **Enabled** | Write | Boolean | Specifies whether connector is enabled. ||
 | **RequireTls** | Write | Boolean | The RequireTLS parameter specifies that all messages received by this connector require TLS transmission. Valid values for this parameter are $true or $false. The default value is $false. When the RequireTLS parameter is set to $true, all messages received by this connector require TLS transmission. ||
 | **RestrictDomainsToCertificate** | Write | Boolean | The RestrictDomainsToCertificate parameter specifies that Office 365 should identify incoming messages that are eligible for this connector by verifying that the remote server authenticates using a TLS certificate that has the TlsSenderCertificateName in the Subject. ||
@@ -30,6 +33,44 @@
 
 ### Description
 
-Create a new Inbound connector in your cloud-based organization.
+This resource configures an Inbound connector in your cloud-based organization.
 
+## Examples
+
+### Example 1
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsGlobalAdmin
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOInboundConnector 'ConfigureInboundConnector'
+        {
+            Identity                     = "Contoso Inbound Connector"
+            CloudServicesMailEnabled     = $True
+            Comment                      = "Inbound connector for Contoso"
+            ConnectorSource              = "Default"
+            ConnectorType                = "OnPremises"
+            Enabled                      = $True
+            RequireTls                   = $True
+            SenderDomains                = "*.contoso.com"
+            TlsSenderCertificateName     = "contoso.com"
+            TreatMessagesAsInternal      = $True
+            Ensure                       = "Present"
+            Credential                   = $credsGlobalAdmin
+        }
+    }
+}
+```
 

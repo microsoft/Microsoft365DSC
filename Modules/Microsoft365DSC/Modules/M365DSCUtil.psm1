@@ -130,15 +130,15 @@ function Convert-M365DscHashtableToString
         {
             if ($pair.Value -is [System.Array])
             {
-                $str = "$($pair.Key)=$(Convert-SPDscArrayToString -Array $pair.Value)"
+                $str = "$($pair.Key)=$(Convert-M365DSCArrayToString -Array $pair.Value)"
             }
             elseif ($pair.Value -is [System.Collections.Hashtable])
             {
-                $str = "$($pair.Key)={$(Convert-M365DscHashtableToString -Hashtable $pair.Value)}"
+                $str = "$($pair.Key)={$(Convert-M365DSCHashtableToString -Hashtable $pair.Value)}"
             }
             elseif ($pair.Value -is [Microsoft.Management.Infrastructure.CimInstance])
             {
-                $str = "$($pair.Key)=$(Convert-SPDscCIMInstanceToString -CIMInstance $pair.Value)"
+                $str = "$($pair.Key)=$(Convert-M365DSCCIMInstanceToString -CIMInstance $pair.Value)"
             }
             else
             {
@@ -177,7 +177,7 @@ This function converts a parameter array to a string, for outputting to screen
 .Functionality
 Internal
 #>
-function Convert-SPDscArrayToString
+function Convert-M365DscArrayToString
 {
     param
     (
@@ -193,12 +193,12 @@ function Convert-SPDscArrayToString
         if ($item -is [System.Collections.Hashtable])
         {
             $str += "{"
-            $str += Convert-SPDscHashtableToString -Hashtable $item
+            $str += Convert-M365DDSCHashtableToString -Hashtable $item
             $str += "}"
         }
         elseif ($Array[$i] -is [Microsoft.Management.Infrastructure.CimInstance])
         {
-            $str += Convert-SPDscCIMInstanceToString -CIMInstance $item
+            $str += Convert-M365DSCCIMInstanceToString -CIMInstance $item
         }
         else
         {
@@ -222,7 +222,7 @@ This function converts a parameter CimInstance to a string, for outputting to sc
 .Functionality
 Internal
 #>
-function Convert-SPDscCIMInstanceToString
+function Convert-M365DscCIMInstanceToString
 {
     param
     (
@@ -3288,6 +3288,140 @@ function New-M365DSCCmdletDocumentation
     Write-Host -Object " "
 }
 
+<#
+.Description
+This function creates an example from the resource schema, using ReverseDSC code.
+
+.Parameter ResourceName
+Specifies the resource name for which the example should be generated.
+
+.Functionality
+Internal, Hidden
+#>
+function Create-M365DSCResourceExample
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ResourceName
+    )
+
+    $resource = Get-DscResource -Name $ResourceName
+
+    $params = Get-DSCFakeParameters -ModulePath $resource.Path
+
+    $params.Credential = '$credsGlobalAdmin'
+
+    if ($params.ContainsKey("ApplicationId"))
+    {
+        $params.Remove("ApplicationId")
+    }
+
+    if ($params.ContainsKey("TenantId"))
+    {
+        $params.Remove("TenantId")
+    }
+
+    if ($params.ContainsKey("ApplicationSecret"))
+    {
+        $params.Remove("ApplicationSecret")
+    }
+
+    if ($params.ContainsKey("CertificateThumbprint"))
+    {
+        $params.Remove("CertificateThumbprint")
+    }
+
+    if ($params.ContainsKey("CertificatePath"))
+    {
+        $params.Remove("CertificatePath")
+    }
+
+    if ($params.ContainsKey("CertificatePassword"))
+    {
+        $params.Remove("CertificatePassword")
+    }
+
+    [string]$userName = 'admin@contoso.onmicrosoft.com'
+    [string]$userPassword = 'dummypassword'
+    [securestring]$secStringPassword = ConvertTo-SecureString $userPassword -AsPlainText -Force
+    [pscredential]$credObject = New-Object System.Management.Automation.PSCredential ($userName, $secStringPassword)
+
+    $resourceExample = Get-M365DSCExportContentForResource -ResourceName $ResourceName -ModulePath $resource.Path -Results $params -ConnectionMode Credentials -Credential $credObject
+
+    $resourceExample = $resourceExample.TrimEnd() -replace ";",""
+
+    $exampleText = @"
+<#
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+#>
+
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = `$true)]
+        [PSCredential]
+        `$credsGlobalAdmin
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+$resourceExample
+    }
+}
+"@
+
+    return $exampleText
+}
+
+<#
+.Description
+This function creates an example from the resource schema, using ReverseDSC code.
+
+.Parameter ResourceName
+Specifies the resource name for which the example should be generated.
+
+.Functionality
+Internal
+#>
+function New-M365DSCMissingResourcesExample
+{
+    $location = $PSScriptRoot
+
+    $m365Resources = Get-DscResource -Module Microsoft365DSC | Select-Object -ExpandProperty Name
+
+    $examplesPath = Join-Path $location -ChildPath "..\Examples\Resources"
+    $examples = Get-ChildItem -Path $examplesPath | Where-Object { $_.PsIsContainer } | Select-Object -ExpandProperty Name
+
+    [array]$differences = Compare-Object -ReferenceObject $m365Resources -DifferenceObject $examples
+
+    $count = 1
+    $total = $differences.Count
+
+    foreach ($difference in $differences)
+    {
+        Write-Host "[$count/$total] Processing $($difference.InputObject)"
+        $path = Join-Path -Path '.\Modules\Microsoft365DSC\Examples\Resources' -ChildPath $difference.InputObject
+        switch ($difference.SideIndicator)
+        {
+            "<=" {
+                Write-Host "  - Example missing, generating!"
+                $null = New-Item -Path $path -ItemType Directory
+                $exampleFile = Join-Path -Path $path -ChildPath "1-Configure.ps1"
+                Set-Content -Path $exampleFile -Value (Create-M365DSCResourceExample -ResourceName $difference.InputObject)
+            }
+            "=>" {
+                Write-Host "  - No resource for existing example, removing!"
+                Remove-Item -Path $path -Force -Confirm:$false
+            }
+        }
+        $count++
+    }
+}
 
 Export-ModuleMember -Function @(
     'Assert-M365DSCBlueprint',
@@ -3315,6 +3449,7 @@ Export-ModuleMember -Function @(
     'New-EXOSafeLinksRule',
     'New-M365DSCCmdletDocumentation',
     'New-M365DSCConnection',
+    'New-M365DSCMissingResourcesExample',
     'Remove-EmptyValue',
     'Remove-NullEntriesFromHashtable',
     'Set-EXOSafeAttachmentRule',
