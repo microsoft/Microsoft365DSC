@@ -14229,7 +14229,6 @@ function Set-CsTenantFederationConfiguration
 }
 #endregion
 
-
 #region PnP
 function Add-PnPApp
 {
@@ -14312,11 +14311,11 @@ function Add-PnPSiteDesign
     param(
         [Parameter()]
         [System.String]
-        $Description,
+        $ThumbnailUrl,
 
         [Parameter()]
         [System.String]
-        $PreviewImageUrl,
+        $Description,
 
         [Parameter()]
         [PnP.PowerShell.Commands.Enums.SiteWebTemplate]
@@ -14331,12 +14330,20 @@ function Add-PnPSiteDesign
         $Title,
 
         [Parameter()]
+        [System.String]
+        $PreviewImageUrl,
+
+        [Parameter()]
         [PnP.PowerShell.Commands.Base.PnPConnection]
         $Connection,
 
         [Parameter()]
         [System.String]
         $PreviewImageAltText,
+
+        [Parameter()]
+        [System.Guid]
+        $DesignPackageId,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -14450,11 +14457,15 @@ function Get-PnPFile
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Force,
+        $AsListItem,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AsListItem,
+        $AsFile,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AsMemoryStream,
 
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
@@ -14486,7 +14497,7 @@ function Get-PnPFile
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AsFile
+        $Force
     )
 }
 function Get-PnPGroup
@@ -14613,6 +14624,10 @@ function Get-PnPSearchConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
+        [PnP.PowerShell.Commands.Search.BookmarkStatus]
+        $BookmarkStatus,
+
+        [Parameter()]
         [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
         $Web,
 
@@ -14623,6 +14638,10 @@ function Get-PnPSearchConfiguration
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PnPConnection]
         $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PromotedResultsToBookmarkCSV,
 
         [Parameter()]
         [PnP.PowerShell.Commands.Search.OutputFormat]
@@ -14919,12 +14938,16 @@ function New-PnPGroup
         $Description,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AutoAcceptRequestToJoinLeave,
+        [PnP.PowerShell.Commands.Enums.AssociatedGroupType]
+        $SetAssociatedGroup,
 
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
         $Web,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AutoAcceptRequestToJoinLeave,
 
         [Parameter()]
         [System.String]
@@ -14953,10 +14976,6 @@ function New-PnPGroup
         [Parameter()]
         [System.String]
         $RequestToJoinEmail,
-
-        [Parameter()]
-        [PnP.PowerShell.Commands.Enums.AssociatedGroupType]
-        $SetAssociatedGroup,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -15028,6 +15047,10 @@ function Register-PnPHubSite
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.String[]]
+        $Principals,
+
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
         $Site,
@@ -15319,20 +15342,12 @@ function Set-PnPGroup
         $Description,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.AssociatedGroupType]
-        $SetAssociatedGroup,
-
-        [Parameter()]
         [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
         $Web,
 
         [Parameter()]
         [System.String]
         $AddRole,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowMembersEditMembership,
 
         [Parameter()]
         [System.String]
@@ -15344,27 +15359,35 @@ function Set-PnPGroup
 
         [Parameter()]
         [System.Boolean]
-        $AutoAcceptRequestToJoinLeave,
-
-        [Parameter()]
-        [System.Boolean]
         $OnlyAllowMembersViewMembership,
-
-        [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
-        $Identity,
 
         [Parameter()]
         [System.String]
         $RemoveRole,
 
         [Parameter()]
+        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMembersEditMembership,
+
+        [Parameter()]
         [PnP.PowerShell.Commands.Base.PnPConnection]
         $Connection,
 
         [Parameter()]
+        [System.Boolean]
+        $AutoAcceptRequestToJoinLeave,
+
+        [Parameter()]
         [System.String]
         $RequestToJoinEmail,
+
+        [Parameter()]
+        [PnP.PowerShell.Commands.Enums.AssociatedGroupType]
+        $SetAssociatedGroup,
 
         [Parameter()]
         [System.Boolean]
@@ -15434,6 +15457,10 @@ function Set-PnPHubSite
         $LogoUrl,
 
         [Parameter()]
+        [System.Guid]
+        $SiteDesignId,
+
+        [Parameter()]
         [System.String]
         $Title,
 
@@ -15447,7 +15474,11 @@ function Set-PnPHubSite
 
         [Parameter()]
         [System.Guid]
-        $SiteDesignId
+        $ParentHubSiteId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $EnablePermissionsSync
     )
 }
 function Set-PnPPropertyBagValue
@@ -15513,6 +15544,10 @@ function Set-PnPSite
         $Connection,
 
         [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]]
+        $SharingCapability,
+
+        [Parameter()]
         [System.Nullable`1[System.Management.Automation.SwitchParameter]]
         $DisableFlows,
 
@@ -15523,10 +15558,6 @@ function Set-PnPSite
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $DisableSharingForNonOwners,
-
-        [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]]
-        $Sharing,
 
         [Parameter()]
         [System.Nullable`1[System.Management.Automation.SwitchParameter]]
@@ -15619,11 +15650,11 @@ function Set-PnPSiteDesign
     param(
         [Parameter()]
         [System.String]
-        $Description,
+        $ThumbnailUrl,
 
         [Parameter()]
         [System.String]
-        $PreviewImageUrl,
+        $Description,
 
         [Parameter()]
         [PnP.PowerShell.Commands.Enums.SiteWebTemplate]
@@ -15642,6 +15673,10 @@ function Set-PnPSiteDesign
         $SiteScriptIds,
 
         [Parameter()]
+        [System.String]
+        $PreviewImageUrl,
+
+        [Parameter()]
         [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
         $Identity,
 
@@ -15652,6 +15687,10 @@ function Set-PnPSiteDesign
         [Parameter()]
         [System.String]
         $PreviewImageAltText,
+
+        [Parameter()]
+        [System.Nullable`1[System.Guid]]
+        $DesignPackageId,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -15729,8 +15768,8 @@ function Set-PnPTenant
         $UsePersistentCookiesForExplorerView,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.SharePoint.Client.AnonymousLinkType]]
-        $FileAnonymousLinkType,
+        [System.Int32]
+        $MinCompatibilityLevel,
 
         [Parameter()]
         [System.Nullable`1[System.Int32]]
@@ -15746,11 +15785,7 @@ function Set-PnPTenant
 
         [Parameter()]
         [System.Boolean]
-        $DisallowInfectedFileDownload,
-
-        [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]]
-        $SharingCapability,
+        $CommentsOnListItemsDisabled,
 
         [Parameter()]
         [System.Boolean]
@@ -15766,11 +15801,27 @@ function Set-PnPTenant
 
         [Parameter()]
         [System.Boolean]
+        $AllowFilesWithKeepLabelToBeDeletedODB,
+
+        [Parameter()]
+        [System.Boolean]
         $ShowAllUsersClaim,
 
         [Parameter()]
         [System.Boolean]
+        $ViewInFileExplorerEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $RequireAcceptingAccountMatchInvitedAccount,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType]]
+        $DefaultLinkPermission,
+
+        [Parameter()]
+        [System.Boolean]
+        $StopNew2013Workflows,
 
         [Parameter()]
         [System.Boolean]
@@ -15794,11 +15845,11 @@ function Set-PnPTenant
 
         [Parameter()]
         [System.Boolean]
-        $EnableGuestSignInAcceleration,
+        $SearchResolveExactEmailOrUPN,
 
         [Parameter()]
         [System.Boolean]
-        $SearchResolveExactEmailOrUPN,
+        $AllowFilesWithKeepLabelToBeDeletedSPO,
 
         [Parameter()]
         [System.Boolean]
@@ -15822,6 +15873,10 @@ function Set-PnPTenant
 
         [Parameter()]
         [System.Boolean]
+        $ShowPeoplePickerSuggestionsForGuestUsers,
+
+        [Parameter()]
+        [System.Boolean]
         $SocialBarOnSitePagesDisabled,
 
         [Parameter()]
@@ -15831,6 +15886,14 @@ function Set-PnPTenant
         [Parameter()]
         [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SensitiveByDefaultState]]
         $MarkNewFilesSensitiveByDefault,
+
+        [Parameter()]
+        [System.String]
+        $SharingBlockedDomainList,
+
+        [Parameter()]
+        [System.Guid[]]
+        $DisabledModernListTemplateIds,
 
         [Parameter()]
         [System.String]
@@ -15845,10 +15908,6 @@ function Set-PnPTenant
         $BccExternalSharingInvitationsList,
 
         [Parameter()]
-        [System.Int32]
-        $MinCompatibilityLevel,
-
-        [Parameter()]
         [System.String]
         $SignInAccelerationDomain,
 
@@ -15859,6 +15918,10 @@ function Set-PnPTenant
         [Parameter()]
         [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingDomainRestrictionModes]]
         $SharingDomainRestrictionMode,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $EmailAttestationReAuthDays,
 
         [Parameter()]
         [System.Boolean]
@@ -15874,7 +15937,7 @@ function Set-PnPTenant
 
         [Parameter()]
         [System.Boolean]
-        $CommentsOnListItemsDisabled,
+        $IsFluidEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -15902,14 +15965,6 @@ function Set-PnPTenant
 
         [Parameter()]
         [System.Boolean]
-        $DisplayStartASiteOption,
-
-        [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType]]
-        $DefaultLinkPermission,
-
-        [Parameter()]
-        [System.Boolean]
         $ApplyAppEnforcedRestrictionsToAdHocRecipients,
 
         [Parameter()]
@@ -15925,8 +15980,8 @@ function Set-PnPTenant
         $IPAddressEnforcement,
 
         [Parameter()]
-        [System.String]
-        $SharingBlockedDomainList,
+        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]]
+        $SharingCapability,
 
         [Parameter()]
         [System.Boolean]
@@ -15937,12 +15992,12 @@ function Set-PnPTenant
         $IPAddressAllowList,
 
         [Parameter()]
-        [System.Boolean]
-        $ShowPeoplePickerSuggestionsForGuestUsers,
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
         [Parameter()]
         [System.Boolean]
-        $AllowEditing,
+        $DisallowInfectedFileDownload,
 
         [Parameter()]
         [System.Boolean]
@@ -15950,7 +16005,27 @@ function Set-PnPTenant
 
         [Parameter()]
         [System.Boolean]
+        $AllowEditing,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableAddToOneDrive,
+
+        [Parameter()]
+        [System.Boolean]
+        $InformationBarriersSuspension,
+
+        [Parameter()]
+        [System.Boolean]
         $PreventExternalUsersFromResharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisablePersonalListCreation,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.SharePoint.Client.SharingState]]
+        $ODBMembersCanShare,
 
         [Parameter()]
         [System.Boolean]
@@ -15959,6 +16034,10 @@ function Set-PnPTenant
         [Parameter()]
         [System.Boolean]
         $LegacyAuthProtocolsEnabled,
+
+        [Parameter()]
+        [System.Nullable`1[Microsoft.SharePoint.Client.AnonymousLinkType]]
+        $FileAnonymousLinkType,
 
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PnPConnection]
@@ -15977,6 +16056,10 @@ function Set-PnPTenant
         $UserVoiceForFeedbackEnabled,
 
         [Parameter()]
+        [System.Guid[]]
+        $EnableModernListTemplateIds,
+
+        [Parameter()]
         [System.Nullable`1[System.Int64]]
         $OneDriveStorageQuota,
 
@@ -15985,12 +16068,12 @@ function Set-PnPTenant
         $MaxCompatibilityLevel,
 
         [Parameter()]
-        [System.Nullable`1[System.Int32]]
-        $EmailAttestationReAuthDays,
+        [System.Boolean]
+        $EnableGuestSignInAcceleration,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.SharePoint.Client.SharingState]]
-        $ODBMembersCanShare
+        [System.Boolean]
+        $DisplayStartASiteOption
     )
 }
 function Set-PnPTenantCdnEnabled
@@ -16040,6 +16123,10 @@ function Set-PnPTenantSite
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.UInt32]
+        $LocaleId,
+
+        [Parameter()]
         [PnP.PowerShell.Commands.Base.PnPConnection]
         $Connection,
 
@@ -16050,6 +16137,10 @@ function Set-PnPTenantSite
         [Parameter()]
         [Microsoft.Online.SharePoint.TenantAdministration.FlowsPolicy]
         $DisableFlows,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AllowSelfServiceUpgrade,
 
         [Parameter()]
         [System.String]
@@ -16080,8 +16171,8 @@ function Set-PnPTenantSite
         $ExternalUserExpirationInDays,
 
         [Parameter()]
-        [System.Int64]
-        $StorageQuotaWarningLevel,
+        [System.String]
+        $SensitivityLabel,
 
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PipeBinds.SPOSitePipeBind]
@@ -16092,8 +16183,8 @@ function Set-PnPTenantSite
         $DefaultLinkToExistingAccessReset,
 
         [Parameter()]
-        [System.String]
-        $SensitivityLabel,
+        [System.Nullable`1[System.Int32]]
+        $AnonymousLinkExpirationInDays,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -16109,7 +16200,7 @@ function Set-PnPTenantSite
 
         [Parameter()]
         [System.Boolean]
-        $DefaultLinkToExistingAccess,
+        $AllowDownloadingNonWebViewableFiles,
 
         [Parameter()]
         [System.Guid[]]
@@ -16137,7 +16228,7 @@ function Set-PnPTenantSite
 
         [Parameter()]
         [System.Boolean]
-        $AllowDownloadingNonWebViewableFiles,
+        $DefaultLinkToExistingAccess,
 
         [Parameter()]
         [Microsoft.Online.SharePoint.TenantAdministration.RestrictedToRegion]
@@ -16156,10 +16247,6 @@ function Set-PnPTenantSite
         $DisableAppViews,
 
         [Parameter()]
-        [System.String]
-        $SharingBlockedDomainList,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $StorageQuotaReset,
 
@@ -16168,8 +16255,8 @@ function Set-PnPTenantSite
         $Owners,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.SiteUserInfoVisibilityPolicyValue]
-        $OverrideBlockUserInfoVisibility,
+        [PnP.PowerShell.Commands.Enums.InformationBarriersMode]
+        $InformationBarriersMode,
 
         [Parameter()]
         [Microsoft.Online.SharePoint.TenantManagement.SPOLimitedAccessFileType]
@@ -16180,8 +16267,8 @@ function Set-PnPTenantSite
         $BlockDownloadLinksFileType,
 
         [Parameter()]
-        [System.Nullable`1[System.Int32]]
-        $AnonymousLinkExpirationInDays,
+        [Microsoft.Online.SharePoint.TenantAdministration.SiteUserInfoVisibilityPolicyValue]
+        $OverrideBlockUserInfoVisibility,
 
         [Parameter()]
         [Microsoft.Online.SharePoint.TenantManagement.SharingDomainRestrictionModes]
@@ -16196,8 +16283,8 @@ function Set-PnPTenantSite
         $OverrideTenantAnonymousLinkExpirationPolicy,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AllowSelfServiceUpgrade,
+        [System.String]
+        $SharingBlockedDomainList,
 
         [Parameter()]
         [System.Int64]
@@ -16206,10 +16293,6 @@ function Set-PnPTenantSite
         [Parameter()]
         [System.String]
         $SharingAllowedDomainList,
-
-        [Parameter()]
-        [System.UInt32]
-        $LocaleId,
 
         [Parameter()]
         [System.Boolean]
@@ -16225,7 +16308,11 @@ function Set-PnPTenantSite
 
         [Parameter()]
         [Microsoft.Online.SharePoint.TenantAdministration.CompanyWideSharingLinksPolicy]
-        $DisableCompanyWideSharingLinks
+        $DisableCompanyWideSharingLinks,
+
+        [Parameter()]
+        [System.Int64]
+        $StorageQuotaWarningLevel
     )
 }
 function Set-PnPTenantSyncClientRestriction
@@ -16281,6 +16368,221 @@ function Unregister-PnPHubSite
         [Parameter()]
         [PnP.PowerShell.Commands.Base.PnPConnection]
         $Connection
+    )
+}
+#endregion
+#region
+function Get-AdminPowerApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ApiVersion,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.String[]]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $EnvironmentName,
+
+        [Parameter()]
+        [System.String]
+        $AppName
+    )
+}
+function Get-AdminPowerAppEnvironment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Capacity,
+
+        [Parameter()]
+        [System.String]
+        $InstanceId,
+
+        [Parameter()]
+        [System.Boolean]
+        $ReturnCdsDatabaseType,
+
+        [Parameter()]
+        [System.String]
+        $ApiVersion,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Default,
+
+        [Parameter()]
+        [System.String[]]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $EnvironmentName,
+
+        [Parameter()]
+        [System.String]
+        $EnvironmentSku,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $GetProtectedEnvironment,
+
+        [Parameter()]
+        [System.String]
+        $CreatedBy
+    )
+}
+function Get-PowerAppTenantIsolationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApiVersion
+    )
+}
+function Get-TenantSettings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ApiVersion
+    )
+}
+function New-AdminPowerAppEnvironment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $TimeoutInMinutes,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProvisionDatabase,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $LanguageName,
+
+        [Parameter()]
+        [System.String]
+        $RegionName,
+
+        [Parameter()]
+        [System.String]
+        $LocationName,
+
+        [Parameter()]
+        [System.String]
+        $CurrencyName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $ApiVersion,
+
+        [Parameter()]
+        [System.String[]]
+        $Templates,
+
+        [Parameter()]
+        [System.String]
+        $SecurityGroupId,
+
+        [Parameter()]
+        [System.String]
+        $EnvironmentSku,
+
+        [Parameter()]
+        [System.Boolean]
+        $WaitUntilFinished,
+
+        [Parameter()]
+        [System.String]
+        $DomainName
+    )
+}
+function Remove-AdminPowerApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ApiVersion,
+
+        [Parameter()]
+        [System.String]
+        $EnvironmentName,
+
+        [Parameter()]
+        [System.String]
+        $AppName
+    )
+}
+function Remove-AdminPowerAppEnvironment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $EnvironmentName,
+
+        [Parameter()]
+        [System.String]
+        $ApiVersion
+    )
+}
+function Set-PowerAppTenantIsolationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApiVersion,
+
+        [Parameter()]
+        [System.Object]
+        $TenantIsolationPolicy
+    )
+}
+function Set-TenantSettings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ApiVersion,
+
+        [Parameter()]
+        [System.Object]
+        $RequestBody
     )
 }
 #endregion
