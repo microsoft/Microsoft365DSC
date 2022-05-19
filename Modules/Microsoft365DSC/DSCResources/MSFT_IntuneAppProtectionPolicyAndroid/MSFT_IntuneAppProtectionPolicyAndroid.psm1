@@ -486,15 +486,12 @@ function Set-TargetResource
 
     if ($currentPolicy.Ensure -eq "ERROR")
     {
-
         Throw 'Error when searching for current policy details - Please check verbose output for further detail'
-
     }
 
     $setParams = @{}
     $PSBoundParameters.Remove("Ensure") | Out-Null
     $PSBoundParameters.Remove("Credential") | Out-Null
-    # could we do this better?  I'm sure we could
     $PSBoundParameters.Remove("ApplicationID") | Out-Null
     $PSBoundParameters.Remove("ApplicationSecret") | Out-Null
     $PSBoundParameters.Remove("TenantID") | Out-Null
@@ -510,6 +507,7 @@ function Set-TargetResource
 
     $assignmentsArray = @()
     $appsarray = @()
+    $configstring = "`r`nConfiguration To Be Applied:`r`n"
 
     $ComplexParameters = @(
         'AppGroupType',
@@ -531,7 +529,6 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present'){}
 
-
     # construct command
     write-verbose -message "Preparing input parameters..."
     foreach ($param in $PSBoundParameters.keys)
@@ -543,23 +540,25 @@ function Set-TargetResource
                 'TimeSpan'
                 {
                     $setParams.add($param, (set-TimeSpan -duration $PSBoundParameters.$param))
+                    $configstring += ($param + ':' + ($setParams.$param.tostring()) + "`r`n")
                 }
 
                 'string'
                 {
                     $setParams.add($param, $PSBoundParameters.$param)
+                    $configstring += ($param + ':' + $setParams.$param + "`r`n")
                 }
 
                 default
                 {
                     $setParams.add($param, $PSBoundParameters.$param)
+                    $configstring += ($param + ':' + $setParams.$param + "`r`n")
                 }
             }
         }
 
         else
         {
-
             if($ComplexParameters -contains $param)
             {
                 switch ($param)
@@ -568,27 +567,30 @@ function Set-TargetResource
                     'Apps'
                     {
                         # This parameter accepts an array of json snippets
-                        write-verbose -message "Constructing Apps Object for $param..."
+                        #write-verbose -message "Constructing Apps Object for $param..."
+                        $configstring += ('AppGroupType:' + $AppGroupType + "`r`n")
                         $PSBoundParameters.$param | foreach {
                             $appsarray+= set-JSONstring -id $_ -type $param
                         }
-
+                        $configstring += ($param + ":`r`n" +($PSBoundParameters.$param | out-string) + "`r`n" )
                     }
 
                     'Assignments'
                     {
-                        write-verbose -message "Collecting Role Assignments Data for $param..."
+                        #write-verbose -message "Collecting Role Assignments Data for $param..."
                         $PSBoundParameters.$param | foreach {
                             $assignmentsArray+= set-JSONstring -id $_ -type $param
                         }
+                        $configstring += ($param + ":`r`n" +($PSBoundParameters.$param | out-string) + "`r`n" )
                     }
 
                     'ExcludedGroups'
                     {
-                        write-verbose -message "Collecting Role Assignments Data for $param..."
+                        #write-verbose -message "Collecting Role Assignments Data for $param..."
                         $PSBoundParameters.$param | foreach {
                             $assignmentsArray+= set-JSONstring -id $_ -type $param
                         }
+                        $configstring += ($param + ":`r`n" +($PSBoundParameters.$param | out-string) + "`r`n" )
                     }
                 }
             }
@@ -598,6 +600,15 @@ function Set-TargetResource
             }
         }
     }
+
+    <#
+    $configstring = ''
+    foreach ($key in $setParams.keys)
+    {
+        $configstring += ($key + ':' + ($setParams.$key | out-string))
+    }
+    #>
+    write-verbose -message $configstring
 
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
