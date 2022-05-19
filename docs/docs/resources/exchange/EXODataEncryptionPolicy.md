@@ -11,7 +11,7 @@
 | **Name** | Write | String | The Name parameter specifies the unique name for the data encryption policy. ||
 | **PermanentDataPurgeContact** | Write | String | The PermanentDataPurgeContact parameter specifies a contact for the purge of all data that's encrypted by the data encryption policy. ||
 | **PermanentDataPurgeReason** | Write | String | The PermanentDataPurgeReason parameter specifies a descriptive reason for the purge of all data that's encrypted by the data encryption policy ||
-| **Ensure** | Write | String | Specifies if this Outbound connector should exist. |Present, Absent|
+| **Ensure** | Write | String | Specifies if this policy should exist. |Present, Absent|
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin ||
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||

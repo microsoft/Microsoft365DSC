@@ -71,6 +71,7 @@ Configuration Example
     {
         IntuneAppProtectionPolicyiOS 'MyCustomiOSPolicy'
         {
+            DisplayName                             = "My DSC iOS App Protection Policy"
             AllowedDataStorageLocations             = @("sharePoint")
             AllowedInboundDataTransferSources       = "managedApps"
             AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn"
@@ -82,7 +83,6 @@ Configuration Example
             DataBackupBlocked                       = $False
             Description                             = ""
             DeviceComplianceRequired                = $True
-            DisplayName                             = "My DSC iOS App Protection Policy"
             ExcludedGroups                          = @("3eacc231-d77b-4efb-bb5f-310f68bd6198")
             FingerprintBlocked                      = $False
             ManagedBrowserToOpenLinksRequired       = $True

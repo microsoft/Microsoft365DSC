@@ -15,6 +15,11 @@ function Get-TargetResource
         $SharingCapability,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet("ExistingExternalUserSharingOnly", "ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
+        $MySiteSharingCapability,
+
+        [Parameter()]
         [System.boolean]
         $ShowEveryoneClaim,
 
@@ -151,6 +156,12 @@ function Get-TargetResource
     try
     {
         $SPOSharingSettings = Get-PnPTenant -ErrorAction Stop
+        $MySite = Get-PnPTenantSite | Where-Object{$_.Url -match "-my.sharepoint.com/"}
+
+        if ($null -ne $MySite)
+        {
+            $MySiteSharingCapability = (Get-PnPTenantSite -Identity $MySite.Url).SharingCapability
+        }
 
         if ($null -ne $SPOSharingSettings.SharingAllowedDomainList)
         {
@@ -165,6 +176,7 @@ function Get-TargetResource
         return @{
             IsSingleInstance                           = 'Yes'
             SharingCapability                          = $SPOSharingSettings.SharingCapability
+            MySiteSharingCapability                    = $MySiteSharingCapability
             ShowEveryoneClaim                          = $SPOSharingSettings.ShowEveryoneClaim
             ShowAllUsersClaim                          = $SPOSharingSettings.ShowAllUsersClaim
             ShowEveryoneExceptExternalUsersClaim       = $SPOSharingSettings.ShowEveryoneExceptExternalUsersClaim
@@ -237,6 +249,11 @@ function Set-TargetResource
         [System.String]
         [ValidateSet("ExistingExternalUserSharingOnly", "ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
         $SharingCapability,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("ExistingExternalUserSharingOnly", "ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
+        $MySiteSharingCapability,
 
         [Parameter()]
         [System.boolean]
@@ -381,6 +398,11 @@ function Set-TargetResource
     $CurrentParameters.Remove("CertificatePassword") | Out-Null
     $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
     $CurrentParameters.Remove("ApplicationSecret") | Out-Null
+    [bool]$SetMySharingCapability = $false
+    if ($null -ne $CurrentParameters["MySiteSharingCapability"]){
+        $SetMySharingCapability = $true
+    }
+    $CurrentParameters.Remove("MySiteSharingCapability") | Out-Null
 
     if ($null -eq $SharingAllowedDomainList -and $null -eq $SharingBlockedDomainList -and
         ($null -ne $RequireAcceptingAccountMatchInvitedAccount -and $RequireAcceptingAccountMatchInvitedAccount -eq $false))
@@ -453,7 +475,12 @@ function Set-TargetResource
         }
         $CurrentParameters["SharingBlockedDomainList"] = $blocked.Trim()
     }
+
     Set-PnPTenant @CurrentParameters | Out-Null
+    if ($SetMySharingCapability){
+        $mysite = Get-PnPTenantSite | Where-Object{$_.Url -match "-my.sharepoint.com/"}
+        Set-PnPTenantSite -Identity $mysite.Url -SharingCapability $MySiteSharingCapability
+    }
 }
 function Test-TargetResource
 {
@@ -470,6 +497,11 @@ function Test-TargetResource
         [System.String]
         [ValidateSet("ExistingExternalUserSharingOnly", "ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
         $SharingCapability,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("ExistingExternalUserSharingOnly", "ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
+        $MySiteSharingCapability,
 
         [Parameter()]
         [System.boolean]
@@ -605,30 +637,18 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("IsSingleInstance", `
-            "SharingCapability", `
-            "ShowEveryoneClaim", `
-            "ShowAllUsersClaim", `
-            "ShowEveryoneExceptExternalUsersClaim", `
-            "ProvisionSharedWithEveryoneFolder", `
-            "EnableGuestSignInAcceleration", `
-            "BccExternalSharingInvitations", `
-            "BccExternalSharingInvitationsList", `
-            "RequireAnonymousLinksExpireInDays", `
-            "SharingAllowedDomainList", `
-            "SharingBlockedDomainList", `
-            "SharingDomainRestrictionMode", `
-            "DefaultSharingLinkType", `
-            "PreventExternalUsersFromResharing", `
-            "ShowPeoplePickerSuggestionsForGuestUsers", `
-            "FileAnonymousLinkType", `
-            "FolderAnonymousLinkType", `
-            "NotifyOwnersWhenItemsReshared", `
-            "RequireAcceptingAccountMatchInvitedAccount", `
-            "DefaultLinkPermission")
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

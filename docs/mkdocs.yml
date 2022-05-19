@@ -9,6 +9,7 @@ nav:
           - 'Introduction': 'user-guide/get-started/introduction.md'
           - 'Prerequisites': 'user-guide/get-started/prerequisites.md'
           - 'Authentication and Permissions': 'user-guide/get-started/authentication-and-permissions.md'
+          - 'Authentication Examples': 'user-guide/get-started/authentication-examples.md'
           - 'How to Install': 'user-guide/get-started/how-to-install.md'
           - 'Taking a Snapshot of Existing Tenant': 'user-guide/get-started/snapshot-of-existing-tenant.md'
           - 'Deploying Configurations': 'user-guide/get-started/deploying-configurations.md'
@@ -20,6 +21,7 @@ nav:
           - 'Integrating with Azure DevOps': 'user-guide/get-started/integrating-with-azure-devops.md'
           - 'Support': 'user-guide/get-started/support.md'
           - 'Telemetry': 'user-guide/get-started/telemetry.md'
+          - 'Troubleshooting': 'user-guide/get-started/troubleshooting.md'
       - Advanced: 'user-guide/advanced/create-blueprint.md'
       - Cmdlets:
           - 'Assert-M365DSCBlueprint': 'user-guide/cmdlets/Assert-M365DSCBlueprint.md'

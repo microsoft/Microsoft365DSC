@@ -1,13 +1,19 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.518.1
 
 * AADConditionalAccessPolicy
   * Fixed export to remove the DeviceFilterMode property
     when empty.
+* EXODataClassification
+  * Initial release
+* EXODataEncryptionPolicy
+  * Initial release
 * PPTenantIsolationSettings
   * Fixed an issue where credentials weren't passed properly
     during the export.
+* SPOSharingSettings
+  * Decoupling from SPOSharingSettings: add SharingCapability for "-my sites" aka: OneDrive
 
 # 1.22.511.1
 

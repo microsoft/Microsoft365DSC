@@ -34,4 +34,45 @@
 
 Create a new Inbound connector in your cloud-based organization.
 
+## Examples
+
+### Example 1
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsGlobalAdmin
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOOutboundConnector 'ConfigureOutboundConnector'
+        {
+            Identity                      = "Contoso Outbound Connector"
+            AllAcceptedDomains            = $True
+            CloudServicesMailEnabled      = $True
+            Comment                       = "Outbound connector to Contoso"
+            ConnectorSource               = "Default"
+            ConnectorType                 = "OnPremises"
+            Enabled                       = $True
+            IsTransportRuleScoped         = $True
+            RecipientDomains              = "*.contoso.com"
+            RouteAllMessagesViaOnPremises = $True
+            TlsDomain                     = "*.contoso.com"
+            TlsSettings                   = "DomainValidation"
+            UseMxRecord                   = $True
+            Ensure                        = "Present"
+            Credential                    = $credsGlobalAdmin
+        }
+    }
+}
+```
 

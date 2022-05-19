@@ -22,4 +22,36 @@
 
 Create a new EXOIntraOrganizationConnector in your cloud-based organization.
 
+## Examples
+
+### Example 1
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsGlobalAdmin
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOIntraOrganizationConnector 'ConfigureIntraOrganizationConnector'
+        {
+            Identity             = "MainCloudConnector"
+            DiscoveryEndpoint    = "https://ExternalDiscovery.Contoso.com"
+            TargetAddressDomains = "Cloud1.contoso.com","Cloud2.contoso.com"
+            Enabled              = $True
+            Ensure               = "Present"
+            Credential           = $credsGlobalAdmin
+        }
+    }
+}
+```
 

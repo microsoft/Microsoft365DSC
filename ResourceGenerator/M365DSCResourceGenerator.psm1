@@ -86,7 +86,6 @@ function New-M365DSCResourceForGraphCmdLet
 
 function Get-DerivedType
 {
-
     param (
         [Parameter(Mandatory = $true)]
         [string]
@@ -295,6 +294,99 @@ function New-M365CmdLetHelper
     }
 }
 
+function Get-M365DSCFakeValues
+{
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $ParametersInformation,
+
+        [Parameter()]
+        [System.Boolean]
+        $IntroduceDrift = $false
+    )
+
+    $result = @{}
+    foreach ($parameter in $parametersInformation)
+    {
+        switch ($parameter.Type)
+        {
+            "System.String" {
+                $result.Add($parameter.Name, "FakeStringValue")
+            }
+            "System.String[]" {
+                if ($IntroduceDrift)
+                {
+                    $result.Add($parameter.Name, @("FakeStringArrayValue1"))
+                }
+                else
+                {
+                    $result.Add($parameter.Name, @("FakeStringArrayValue1", "FakeStringArrayValue2"))
+                }
+            }
+            "System.Int32" {
+                if ($IntroduceDrift)
+                {
+                    $result.Add($parameter.Name, 7)
+                }
+                else
+                {
+                    $result.Add($parameter.Name, 25)
+                }
+            }
+            "System.Boolean" {
+                if ($IntroduceDrift)
+                {
+                    $result.Add($parameter.Name, $false)
+                }
+                else
+                {
+                    $result.Add($parameter.Name, $true)
+                }
+            }
+        }
+    }
+    return $result
+}
+
+function Get-M365DSCHashAsString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $Values
+    )
+    $sb = [System.Text.StringBuilder]::New()
+    foreach ($key in $Values.Keys)
+    {
+        switch ($Values.$key.GetType().Name)
+        {
+            "String" {
+                $sb.AppendLine("                        $key = `"$($Values.$key)`"") | Out-Null
+            }
+            "Int32" {
+                $sb.AppendLine("                        $key = $($Values.$key)") | Out-Null
+            }
+            "Boolean" {
+                $sb.AppendLine("                        $key = `$$($Values.$key)") | Out-Null
+            }
+            "String[]" {
+                $stringValue = ""
+                foreach ($item in $Values.$key)
+                {
+                    $stringValue += "`"$item`","
+                }
+                $stringValue = $stringValue.Substring(0, $stringValue.Length - 1)
+                $sb.AppendLine("                        $key = `@($stringValue)") | Out-Null
+            }
+        }
+    }
+    return $sb.ToString()
+}
+
 function New-M365DSCResource
 {
     param (
@@ -321,11 +413,26 @@ function New-M365DSCResource
         [System.String]
         $Path = "c:\temp\newresource",
 
+        # Path to the new Resource
+        [Parameter()]
+        [System.String]
+        $UnitTestPath = "c:\temp\newresource",
+
+        # Path to the new Resource
+        [Parameter()]
+        [System.String]
+        $ExampleFilePath = "c:\temp\newresource",
+
         [Parameter()]
         [ValidateSet("v1.0", "beta")]
         [System.String]
-        $APIVersion = 'v1.0'
+        $APIVersion = 'v1.0',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential
     )
+    $Global:CIMInstancesAlreadyFound = @()
     $GetcmdletName = "Get-$GraphModuleCmdletNoun"
     $commandDetails = Find-MgGraphCommand -Command $GetcmdletName -ApiVersion $ApiVersion -ErrorAction SilentlyContinue
     $cmdletFound = Get-Command $GetcmdletName -ErrorAction SilentlyContinue
@@ -402,6 +509,7 @@ function New-M365DSCResource
 
     $null = New-M365DSCResourceFolder -ResourceName $ResourceName -Path $Path
     $moduleFilePath = New-M365DSCModuleFile -ResourceName $ResourceName -Path $Path
+    $unitTestPath = New-M365DSCUnitTest -ResourceName $ResourceName -Path $UnitTestPath
 
     $parameterInformation = Get-ParameterBlockInformation -Properties $typeProperties -DefaultParameterSetProperties $defaultParameterSetProperties
 
@@ -409,8 +517,13 @@ function New-M365DSCResource
         -Properties $parameterInformation `
         -Workload $Workload
     $Global:AlreadyFoundInstances = @()
-    $CimInstancesSchemaContent = Get-M365DSCDRGCimInstancesSchemaStringContent -CIMInstances $CimInstances `
+    
+    $CimInstancesSchemaContent = ''
+    if ($CimInstances)
+    {
+        $CimInstancesSchemaContent = Get-M365DSCDRGCimInstancesSchemaStringContent -CIMInstances $CimInstances `
                                      -Workload $Workload
+    }
 
     $parameterString = Get-ParameterBlockStringForModule -ParameterBlockInformation $parameterInformation
     $hashtableResults = New-M365HashTableMapping -Properties $parameterInformation `
@@ -419,8 +532,23 @@ function New-M365DSCResource
                             -Workload $Workload
     $hashTableMapping = $hashtableResults.StringContent
 
-    Write-TokenReplacement -Token "<ParameterBlock>" -Value $parameterString -FilePath $moduleFilePath
+    #region UnitTests
+    $fakeValues = Get-M365DSCFakeValues -ParametersInformation $parameterInformation -IntroduceDrift $false
+    $fakeValuesString = Get-M365DSCHashAsString -Values $fakeValues
+    Write-TokenReplacement -Token "<FakeValues>" -value $fakeValuesString -FilePath $unitTestPath
+    $fakeDriftValues = Get-M365DSCFakeValues -ParametersInformation $parameterInformation -IntroduceDrift $true
+    $fakeDriftValuesString = Get-M365DSCHashAsString -Values $fakeDriftValues
+    Write-TokenReplacement -Token "<DriftValues>" -value $fakeDriftValuesString -FilePath $unitTestPath
+    Write-TokenReplacement -Token "<ResourceName>" -value $ResourceName -FilePath $unitTestPath
 
+    Write-TokenReplacement -Token "<GetCmdletName>" -value $GetcmdletName -FilePath $unitTestPath
+    Write-TokenReplacement -Token "<SetCmdletName>" -value "Update-$($GraphModuleCmdLetNoun)" -FilePath $unitTestPath
+    Write-TokenReplacement -Token "<RemoveCmdletName>" -value "Remove-$($GraphModuleCmdLetNoun)" -FilePath $unitTestPath
+    Write-TokenReplacement -Token "<NewCmdletName>" -value "New-$($GraphModuleCmdLetNoun)" -FilePath $unitTestPath
+    #endregion
+
+    Write-TokenReplacement -Token "<ParameterBlock>" -Value $parameterString -FilePath $moduleFilePath
+    Write-TokenReplacement -Token "<PrimaryKey>" -Value $typeProperties[0].Name -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<GetCmdLetName>" -Value "Get-$($GraphModuleCmdLetNoun)" -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<NewCmdLetName>" -Value "New-$($GraphModuleCmdLetNoun)" -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<SetCmdLetName>" -Value "Set-$($GraphModuleCmdLetNoun)" -FilePath $moduleFilePath
@@ -453,6 +581,16 @@ function New-M365DSCResource
     Write-TokenReplacement -Token "<FriendlyName>" -Value $ResourceName -FilePath $schemaFilePath
     Write-TokenReplacement -Token "<ResourceName>" -Value $ResourceName -FilePath $schemaFilePath
     Write-TokenReplacement -Token "<Properties>" -Value $schemaProperties -FilePath $schemaFilePath
+
+    #region Generate Examples
+    if ($null -ne $Credential)
+    {
+        Import-Module Microsoft365DSC -Force
+        New-M365DSCExampleFile -ResourceName $ResourceName `
+            -Path $ExampleFilePath `
+            -Credential $Credential
+    }
+    #endregion
 }
 
 function Get-M365DSCDRGCimInstancesSchemaStringContent
@@ -470,50 +608,54 @@ function Get-M365DSCDRGCimInstancesSchemaStringContent
     $stringResult = ''
     foreach ($cimInstance in $CIMInstances)
     {
-        $stringResult += "[ClassVersion(`"1.0.0`")]`r`n"
-        $stringResult += 'class MSFT_' + $cimInstance.Name + "`r`n"
-        $stringResult += "{`r`n"
-
-        $nestedResults = ''
-        foreach ($property in $cimInstance.Properties)
+        if (-not $Global:CIMInstancesAlreadyFound.Contains($cimInstance.Name))
         {
-            if ($property.Type.StartsWith("microsoft.graph.powershell.models.") -and `
-                -not $Global:AlreadyFoundInstances.Contains($property.Type))
+            $Global:CIMInstancesAlreadyFound += $cimInstance.Name
+            $stringResult += "[ClassVersion(`"1.0.0`")]`r`n"
+            $stringResult += 'class MSFT_' + $cimInstance.Name + "`r`n"
+            $stringResult += "{`r`n"
+
+            $nestedResults = ''
+            foreach ($property in $cimInstance.Properties)
             {
-                $Global:AlreadyFoundInstances += $property.Type
-                if ($property.NestedCIM)
+                if ($property.Type.ToString().ToLower().StartsWith("microsoft.graph.powershell.models.") -and `
+                    -not $Global:AlreadyFoundInstances.Contains($property.Type))
                 {
-                    $nestedResults = Get-M365DSCDRGCimInstancesSchemaStringContent -CIMInstances $property.NestedCIM `
-                                         -Workload $Workload
+                    $Global:AlreadyFoundInstances += $property.Type
+                    if ($property.NestedCIM)
+                    {
+                        $nestedResults = Get-M365DSCDRGCimInstancesSchemaStringContent -CIMInstances $property.NestedCIM `
+                                             -Workload $Workload
+                    }
+                    else
+                    {
+                        $nestedResults = ''
+                    }
+                    $propertyType = $property.Type -replace "microsoft.graph.powershell.models.", ""
+                    $propertyType = $propertyType -replace "imicrosoftgraph", ""
+                    $propertyType = $propertyType -replace '[[\]]',''
+                    $propertyType = $workload + $propertyType
+                    $stringResult += "    [Write, Description(`"`"), EmbeddedInstance(`"MSFT_$propertyType`")] String $($property.Name)"
+                    if ($property.IsArray)
+                    {
+                        $stringResult += "[]"
+                    }
+                    $stringResult += ";`r`n"
                 }
-                else
+                elseif (-not $property.Type.StartsWith("microsoft.graph.powershell.models."))
                 {
-                    $nestedResults = ''
+                    $propertyType = Get-M365DSCDRGParameterTypeForSchema -Type $property.Type
+                    $stringResult += "    [Write, Description(`"`")] $($propertyType) $($property.Name)"
+                    if ($property.IsArray)
+                    {
+                        $stringResult += "[]"
+                    }
+                    $stringResult += ";`r`n"
                 }
-                $propertyType = $property.Type -replace "microsoft.graph.powershell.models.", ""
-                $propertyType = $propertyType -replace "imicrosoftgraph", ""
-                $propertyType = $propertyType -replace '[[\]]',''
-                $propertyType = $workload + $propertyType
-                $stringResult += "    [Write, Description(`"`"), EmbeddedInstance(`"MSFT_$propertyType`")] String $($property.Name)"
-                if ($property.IsArray)
-                {
-                    $stringResult += "[]"
-                }
-                $stringResult += ";`r`n"
             }
-            elseif (-not $property.Type.StartsWith("microsoft.graph.powershell.models."))
-            {
-                $propertyType = Get-M365DSCDRGParameterTypeForSchema -Type $property.Type
-                $stringResult += "    [Write, Description(`"`")] $($propertyType) $($property.Name)"
-                if ($property.IsArray)
-                {
-                    $stringResult += "[]"
-                }
-                $stringResult += ";`r`n"
-            }
+            $stringResult += "};`r`n"
+            $stringResult += $nestedResults
         }
-        $stringResult += "};`r`n"
-        $stringResult += $nestedResults
     }
 
     return $stringResult
@@ -617,7 +759,7 @@ function New-M365SchemaPropertySet
     $Properties | ForEach-Object -Process {
         if ($_.Name -ne 'LastModifiedDateTime' -and $_.Name -ne 'CreatedDateTime')
         {
-            if ($_.Type.ToString().StartsWith("microsoft.graph.powershell.models."))
+            if ($_.Type.ToString().ToLower().StartsWith("microsoft.graph.powershell.models."))
             {
                 $propertyType = $_.Type -replace "microsoft.graph.powershell.models.", ""
                 $propertyType = $propertyType -replace "imicrosoftgraph", ""
@@ -710,6 +852,67 @@ function New-M365DSCModuleFile
     return $filePath
 }
 
+function New-M365DSCExampleFile
+{
+    param(
+        [Parameter()]
+        [System.String]
+        $ResourceName,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $Path
+    )
+    Export-M365DSCConfiguration -Credential $Credential `
+        -Components $ResourceName -Path (Join-Path -Path $Path -ChildPath $ResourceName) `
+        -FileName "$ResourceName.ps1" `
+        -ConfigurationName "Example"
+    Remove-Item (Join-Path -Path (Join-Path -Path $Path -ChildPath $ResourceName) -ChildPath "ConfigurationData.psd1")
+    Remove-Item (Join-Path -Path (Join-Path -Path $Path -ChildPath $ResourceName) -ChildPath "*.cer")
+
+    # Cleanup
+    $unitTestFilePath = Join-Path -Path $Path -ChildPath "$ResourceName/$ResourceName.ps1"
+    $sr = [System.IO.StreamReader]::New($unitTestFilePath)
+    $sb = [System.Text.StringBuilder]::New()
+
+    while ($line = $sr.ReadLine())
+    {
+        if (-not $line.StartsWith('#'))
+        {
+            if ($line.Contains("Import-DscResource "))
+            {
+                $sb.AppendLine("    Import-DscResource -ModuleName 'Microsoft365DSC'") | Out-Null
+            }
+            else
+            {
+                $sb.AppendLine($line) | Out-Null
+            }
+        }
+    }
+    $sr.Close()
+    $sb.ToString() | Out-File $unitTestFilePath
+}
+function New-M365DSCUnitTest
+{
+    param (
+        [Parameter()]
+        [System.String]
+        $ResourceName,
+
+        [Parameter()]
+        [System.String]
+        $Path
+    )
+    $filePath = "$Path\Microsoft365DSC.$($ResourceName).Tests.ps1"
+    Copy-Item -Path .\UnitTest.Template.ps1 -Destination $filePath
+
+    return $filePath
+}
+
 function New-M365DSCSchemaFile
 {
 
@@ -769,7 +972,7 @@ function New-M365HashTableMapping
             $paramType = $property.Type
             $parameterName = $property.Name
 
-            if ($paramType.StartsWith("Microsoft.Graph.PowerShell.Models."))
+            if ($paramType.ToLower().StartsWith("microsoft.graph.powershell.models."))
             {
                 $CimInstanceName = $paramType -replace "Microsoft.Graph.PowerShell.Models.IMicrosoftGraph", ""
                 $CimInstanceName = $CimInstanceName  -replace '[[\]]',''
