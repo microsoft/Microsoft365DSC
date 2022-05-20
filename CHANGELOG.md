@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant module to version 1.0.84.
+
 # 1.22.518.1
 
 * AADConditionalAccessPolicy
