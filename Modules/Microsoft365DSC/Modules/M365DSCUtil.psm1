@@ -2469,11 +2469,13 @@ function Uninstall-M365DSCOutdatedDependencies
 
     $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
     $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
-    $dependencies = $manifest.Dependencies
+
+    $allDependenciesExceptAuth = $manifest.Dependencies | Where-Object { $_.ModuleName -ne "Microsoft.Graph.Authentication" }
+
     $i = 1
-    foreach ($dependency in $dependencies)
+    foreach ($dependency in $allDependenciesExceptAuth)
     {
-        Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
+        Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $allDependenciesExceptAuth.Count * 100)
         try
         {
             $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -ne $dependency.RequiredVersion }
@@ -2497,6 +2499,28 @@ function Uninstall-M365DSCOutdatedDependencies
         $i++
     }
 
+    $authModule = $manifest.Dependencies | Where-Object { $_.ModuleName -eq "Microsoft.Graph.Authentication" }
+    try
+    {
+        Write-Information -Message "Checking Microsoft.Graph.Authentication"
+        $found = Get-Module $authModule.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -ne $authModule.RequiredVersion }
+        foreach ($foundModule in $found)
+        {
+            try
+            {
+                Write-Information -Message "Uninstalling $($foundModule.Name) version {$($foundModule.Version)}"
+                Uninstall-Module -Name "$($foundModule.Name)" -RequiredVersion "$($foundModule.Version)" -Force
+            }
+            catch
+            {
+                Write-Host "Could not uninstall $($foundModule.Name) Version $($foundModule.Version) "
+            }
+        }
+    }
+    catch
+    {
+        Write-Host "Could not uninstall {$($dependency.ModuleName)}"
+    }
 }
 
 <#
