@@ -524,10 +524,10 @@ function Compare-M365DSCConfigurations
                 # The resource instance exists in both the source and the destination. Compare each property;
                 foreach ($propertyName in $sourceResource.Keys)
                 {
-                    if ($propertyName -notin @("ResourceName", "Credential", "CertificatePath", "CertificatePassword", "TenantId", "ApplicationId", "CertificateThumbprint", "ApplicationSecret"))
+                    if ($propertyName -notin @("ResourceName", "ResourceId", "Credential", "CertificatePath", "CertificatePassword", "TenantId", "ApplicationId", "CertificateThumbprint", "ApplicationSecret"))
                     {
                         # Needs to be a separate nested if statement otherwise the ReferenceObject an be null and it will error out;
-                        if ([System.String]::IsNullOrEmpty($destinationResource.$propertyName) -or (-not [System.String]::IsNullOrEmpty($propertyName) -and
+                        if ($destinationResource.ContainsKey($propertyName) -eq $false -or (-not [System.String]::IsNullOrEmpty($propertyName) -and
                                 $null -ne (Compare-Object -ReferenceObject ($sourceResource.$propertyName)`
                                         -DifferenceObject ($destinationResource.$propertyName))))
                         {
@@ -578,7 +578,7 @@ function Compare-M365DSCConfigurations
                 # object. By scanning against the destination we will catch properties that are not null on the source but not null in destination;
                 foreach ($propertyName in $destinationResource.Keys)
                 {
-                    if ($propertyName -notin @("ResourceName", "Credential", "CertificatePath", "CertificatePassword", "TenantId", "ApplicationId", "CertificateThumbprint", "ApplicationSecret"))
+                    if ($propertyName -notin @("ResourceName", "ResourceId", "Credential", "CertificatePath", "CertificatePassword", "TenantId", "ApplicationId", "CertificateThumbprint", "ApplicationSecret"))
                     {
                         if (-not [System.String]::IsNullOrEmpty($propertyName) -and
                             -not $sourceResource.Contains($propertyName))
@@ -817,6 +817,30 @@ function New-M365DSCDeltaReport
         [Array]
         $Delta
     )
+
+    if ((Test-Path -Path $Source) -eq $false)
+    {
+        Write-Error "Cannot find file specified in parameter Source: $Source. Please make sure the file exists!"
+        return
+    }
+
+    if ((Test-Path -Path $Destination) -eq $false)
+    {
+        Write-Error "Cannot find file specified in parameter Destination: $Destination. Please make sure the file exists!"
+        return
+    }
+
+    if ((Test-Path -Path $OutputPath) -eq $false)
+    {
+        Write-Warning "File specified in parameter OutputPath already exists and will be overwritten: $OutputPath"
+        Write-Warning "Make sure you specify a file that not exists, if you don't want the file to be overwritten!"
+    }
+
+    if ($PSBoundParameters.ContainsKey("HeaderFilePath") -and (Test-Path -Path $HeaderFilePath) -eq $false)
+    {
+        Write-Error "Cannot find file specified in parameter HeaderFilePath: $HeaderFilePath. Please make sure the file exists!"
+        return
+    }
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
