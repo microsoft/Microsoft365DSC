@@ -1,5 +1,15 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* MISC
+  * Fixed issue in generating a Delta report, where the Resource names were also
+    compared, which in case of an export are generated GUIDs.
+  * Fixed issue where empty strings or arrays would result in a Delta reports
+    with drifted parameters, even though both configs are empty.
+  * Added logic to New-M365DSCDeltaReport to check if the files specified in the
+    Source, Destination and HeaderFilePath parameters actually exist.
+
 # 1.22.518.1
 
 * AADConditionalAccessPolicy
