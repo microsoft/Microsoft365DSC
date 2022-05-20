@@ -1,7 +1,9 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
+# UNRELEASED
 
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant module to version 1.0.84.
 * MISC
   * Fixed issue in generating a Delta report, where the Resource names were also
     compared, which in case of an export are generated GUIDs.
