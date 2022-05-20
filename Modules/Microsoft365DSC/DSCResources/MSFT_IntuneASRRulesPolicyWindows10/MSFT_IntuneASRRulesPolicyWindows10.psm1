@@ -17,42 +17,42 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $ProcessCreationType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "enable","auditMode", "disable")]
+        [ValidateSet("notConfigured","userDefined", "enable","auditMode")]
         [System.String]
         $AdvancedRansomewareProtectionType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $BlockPersistenceThroughWmiType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $ScriptObfuscatedMacroCodeType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $OfficeMacroCodeAllowWin32ImportsType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $OfficeAppsLaunchChildProcessType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "enable","auditMode", "blockDiskModification", "auditDiskModification")]
+        [ValidateSet("userDefined", "enable","auditMode", "blockDiskModification", "auditDiskModification")]
         [System.String]
         $GuardMyFoldersType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $UntrustedUSBProcessType,
 
@@ -61,22 +61,22 @@ function Get-TargetResource
         $AttackSurfaceReductionExcludedPaths,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $UntrustedExecutableType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("notConfigured", "enable","auditMode", "warn", "disable")]
         [System.String]
         $OfficeCommunicationAppsLaunchChildProcess,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $EmailContentExecutionType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $ScriptDownloadedPayloadExecutionType,
 
@@ -85,22 +85,22 @@ function Get-TargetResource
         $AdditionalGuardedFolders,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("notConfigured","userDefined", "enable","auditMode", "warn")]
         [System.String]
         $AdobeReaderLaunchChildProcess,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $OfficeAppsExecutableContentCreationOrLaunchType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("notConfigured","userDefined", "enable","auditMode", "warn")]
         [System.String]
         $PreventCredentialStealingType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined","block","auditMode", "warn", "disable")]
         [System.String]
         $OfficeAppsOtherProcessInjectionType,
 
@@ -244,42 +244,42 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $ProcessCreationType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "enable","auditMode", "disable")]
+        [ValidateSet("notConfigured","userDefined", "enable","auditMode")]
         [System.String]
         $AdvancedRansomewareProtectionType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $BlockPersistenceThroughWmiType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $ScriptObfuscatedMacroCodeType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $OfficeMacroCodeAllowWin32ImportsType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $OfficeAppsLaunchChildProcessType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "enable","auditMode", "blockDiskModification", "auditDiskModification")]
+        [ValidateSet("userDefined", "enable","auditMode", "blockDiskModification", "auditDiskModification")]
         [System.String]
         $GuardMyFoldersType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $UntrustedUSBProcessType,
 
@@ -288,22 +288,22 @@ function Set-TargetResource
         $AttackSurfaceReductionExcludedPaths,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $UntrustedExecutableType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("notConfigured", "enable","auditMode", "warn", "disable")]
         [System.String]
         $OfficeCommunicationAppsLaunchChildProcess,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $EmailContentExecutionType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $ScriptDownloadedPayloadExecutionType,
 
@@ -312,22 +312,22 @@ function Set-TargetResource
         $AdditionalGuardedFolders,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("notConfigured","userDefined", "enable","auditMode", "warn")]
         [System.String]
         $AdobeReaderLaunchChildProcess,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $OfficeAppsExecutableContentCreationOrLaunchType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("notConfigured","userDefined", "enable","auditMode", "warn")]
         [System.String]
         $PreventCredentialStealingType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined","block","auditMode", "warn", "disable")]
         [System.String]
         $OfficeAppsOtherProcessInjectionType,
 
@@ -433,7 +433,8 @@ function Set-TargetResource
         }
         $Uri="https://graph.microsoft.com/beta/deviceManagement/intents/$Identity/updateSettings"
         $body=@{"settings"=$settings}
-        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body ($body|ConvertTo-Json) -ContentType "application/json" -ErrorAction Stop
+        write-verbose -message ($body|ConvertTo-Json -Depth 20)
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body ($body|ConvertTo-Json -Depth 20) -ContentType "application/json" -ErrorAction Stop
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
@@ -461,42 +462,42 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $ProcessCreationType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "enable","auditMode", "disable")]
+        [ValidateSet("notConfigured","userDefined", "enable","auditMode")]
         [System.String]
         $AdvancedRansomewareProtectionType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $BlockPersistenceThroughWmiType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $ScriptObfuscatedMacroCodeType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $OfficeMacroCodeAllowWin32ImportsType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $OfficeAppsLaunchChildProcessType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "enable","auditMode", "blockDiskModification", "auditDiskModification")]
+        [ValidateSet("userDefined", "enable","auditMode", "blockDiskModification", "auditDiskModification")]
         [System.String]
         $GuardMyFoldersType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $UntrustedUSBProcessType,
 
@@ -505,22 +506,22 @@ function Test-TargetResource
         $AttackSurfaceReductionExcludedPaths,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $UntrustedExecutableType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("notConfigured", "enable","auditMode", "warn", "disable")]
         [System.String]
         $OfficeCommunicationAppsLaunchChildProcess,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $EmailContentExecutionType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $ScriptDownloadedPayloadExecutionType,
 
@@ -529,22 +530,22 @@ function Test-TargetResource
         $AdditionalGuardedFolders,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("notConfigured","userDefined", "enable","auditMode", "warn")]
         [System.String]
         $AdobeReaderLaunchChildProcess,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined", "block","auditMode", "warn", "disable")]
         [System.String]
         $OfficeAppsExecutableContentCreationOrLaunchType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("notConfigured","userDefined", "enable","auditMode", "warn")]
         [System.String]
         $PreventCredentialStealingType,
 
         [Parameter()]
-        [ValidateSet("notConfigured","userDefined", "block","auditMode", "warn", "disable")]
+        [ValidateSet("userDefined","block","auditMode", "warn", "disable")]
         [System.String]
         $OfficeAppsOtherProcessInjectionType,
 
@@ -731,188 +732,6 @@ function Export-TargetResource
         }
         return ""
     }
-}
-
-function Compare-M365DSCComplexObject
-{
-    [CmdletBinding()]
-    [OutputType([System.Boolean])]
-    param(
-        [Parameter(Mandatory = 'true')]
-        [PSCustomObject]
-        $Source,
-        [Parameter(Mandatory = 'true')]
-        [PSCustomObject]
-        $Target
-    )
-
-    $sourceProperties=($Source|Get-Member -MemberType Property)
-    $sourceProperties=$sourceProperties|Where-Object `
-        -FilterScript {$_.name -ne "PSComputerName"}
-    foreach ($property in $sourceProperties)
-    {
-        #Recursive call for complex object
-        if($property.definition -like "*CimInstance#InstanceArray*")
-        {
-            if(($null -ne $Source."$($property.name)") -and ($null -ne $Target."$($property.name)"))
-            {
-                $compareResult= Compare-M365DSCComplexObject `
-                    -Source ($Source."$($property.name)") `
-                    -Target ($Target."$($property.name)")
-
-                if(-not $compareResult)
-                {
-                    return $false
-                }
-
-            }
-            elseif (($null -eq $Source."$($property.name)") -xor ($null -eq $Target."$($property.name)"))
-            {
-                return $false
-            }
-        }
-        #Simple object comparison
-        else
-        {
-            $referenceObject=$Target."$($property.name)"
-            $differenceObject=$Source."$($property.name)"
-
-            if (($null -eq $referenceObject) -xor ($null -eq $differenceObject))
-            {
-                return $false
-            }
-            elseif(($null -ne $referenceObject) -and ($null -ne $differenceObject))
-            {
-                $compareResult = Compare-Object `
-                    -ReferenceObject ($referenceObject) `
-                    -DifferenceObject ($differenceObject)
-
-                if ($null -ne $compareResult)
-                {
-                    return $false
-                }
-            }
-        }
-    }
-
-    return $true
-}
-function Convert-M365DSCComplexParamToHashtable
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param(
-        [Parameter(Mandatory = 'true')]
-        $DSCComplexParams
-    )
-
-    [Array]$paramNames=($DSCComplexParams|Get-Member -MemberType Property).Name
-    $paramNames=$paramNames|Where-Object `
-        -FilterScript {$_ -ne "PSComputerName"}
-
-    $settings=@{}
-    foreach ($paramName in $paramNames)
-    {
-        if($null -ne $DSCComplexParams."$paramName")
-        {
-            if (($DSCComplexParams."$paramName".gettype()).Name -eq "CimInstance")
-            {
-                $settings.Add($paramName,(Convert-M365DSCComplexParamToHashtable -DSCComplexParams $DSCComplexParams."$paramName"))
-            }
-            else
-            {
-                $settings.Add($paramName,$DSCComplexParams."$paramName")
-            }
-        }
-        else
-        {
-            $settings.Add($paramName,$null)
-        }
-    }
-
-    return $settings
-}
-function Get-M365DSCIntuneBitlockerPolicySettingsAsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = 'true')]
-        [PSCustomObject]
-        $Policy,
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $PolicyType
-    )
-
-    $policyProperties=($Policy|Get-Member -MemberType NoteProperty).Name
-    $StringContent = ""
-    $StringContent += "$($PolicyType) { `r`n"
-    foreach ($property in $policyProperties)
-    {
-        if($null -ne $Policy."$property")
-        {
-            $StringContent += "                $($property)                = '"
-            if($property -eq "RecoveryOptions")
-            {
-                $Policy."$property"=Get-M365DSCIntuneBitlockerPolicySettingsAsString `
-                    -Policy $Policy."$property" `
-                    -PolicyType "MSFT_IntuneBitlockerRecoveryOptionsSetting"
-            }
-            $StringContent += $Policy."$property"
-            $StringContent += "'`r`n"
-        }
-
-
-    }
-    $StringContent += "            }`r`n"
-    $StringContent += "            "
-    return $StringContent
-}
-function Convert-M365DSCStringParamToVariable
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param (
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $DSCBlock,
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $ParameterName
-    )
-
-    $paramLines=$DSCBlock.split(";")
-
-    $paramLine=$paramLines|Where-Object -FilterScript {$_ -like "*$ParameterName*=*"}
-    $newline= $paramLine.replace("= `"MSFT","= MSFT").Substring(0,$paramLine.length-3)
-
-    $sublines=$newline.split("`r`n")
-    foreach($subline in $sublines)
-    {
-        if( $subline -like "*= 'MSFT*")
-        {
-        $newsubline= $subline.replace("= 'MSFT","= MSFT")
-        $newline=$newline.replace($subline,$newsubline)
-        }
-        elseif($subline -like "*= 'True'*")
-        {
-        $newsubline= $subline.replace("= 'True'","= `$True")
-        $newline=$newline.replace($subline,$newsubline)
-        }
-        elseif($subline -like "*= 'False'*")
-        {
-        $newsubline= $subline.replace("= 'False'","= `$False")
-        $newline=$newline.replace($subline,$newsubline)
-        }
-        elseif($subline.trim() -eq "'")
-        {
-        $newsubline= $subline.replace("'","")
-        $newline=$newline.replace($subline,$newsubline)
-        }
-    }
-
-    return $DSCBlock -replace $paramLine,$newline
 }
 
 function Get-M365DSCIntuneDeviceConfigurationSettings
