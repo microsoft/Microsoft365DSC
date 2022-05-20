@@ -9,6 +9,7 @@
     with drifted parameters, even though both configs are empty.
   * Added logic to New-M365DSCDeltaReport to check if the files specified in the
     Source, Destination and HeaderFilePath parameters actually exist.
+  * Fixed issue where Excel wasn't closed after creating the report.
 
 # 1.22.518.1
 

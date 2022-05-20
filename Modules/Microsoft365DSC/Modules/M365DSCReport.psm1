@@ -347,7 +347,7 @@ function New-M365DSCConfigurationToExcel
     $usedRange = $report.UsedRange
     $usedRange.EntireColumn.AutoFit() | Out-Null
     $workbook.SaveAs($OutputPath)
-    #$excel.Quit()
+    $excel.Quit()
 }
 
 <#
