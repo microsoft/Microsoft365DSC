@@ -32,3 +32,5 @@ $creds = Get-Credential
 
 New-M365DSCResource -ResourceName AADDomain -Workload MicrosoftGraph -GraphModuleCmdletNoun 'MgDomain' -Path $ResourcePath -UnitTestPath $UnitTestPath -ExampleFilePath $ExamplePath -Credential $creds
 ```
+
+We are currently looking for users to help us test and improve the DRG. If you are interested in helping out, please try it out with the instructions above and report any issues or questions in the Issues section of the GitHub repository (https://GitHub.com/Microsoft/Microsoft365DSC) mentioning that the item is related to the DRG testing. 
