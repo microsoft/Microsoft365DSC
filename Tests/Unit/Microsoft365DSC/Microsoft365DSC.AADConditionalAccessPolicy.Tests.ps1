@@ -35,7 +35,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credential"
+                return "Credentials"
             }
 
             Mock -CommandName New-MgIdentityConditionalAccessPolicy -MockWith {
@@ -84,6 +84,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SignInRiskLevels           = @("High")
                     State                      = "disabled"
                     UserRiskLevels             = @("High")
+                    DeviceFilterMode           = "exclude";
+                    DeviceFilterRule           = 'device.isCompliant -eq True -or device.trustType -eq "ServerAD"';
                 }
 
                 Mock -CommandName Get-MGIdentityConditionalAccessPolicy -MockWith {
@@ -165,6 +167,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SignInRiskLevels                         = @("High")
                     State                                    = "disabled"
                     UserRiskLevels                           = @("High")
+                    DeviceFilterMode                         = "exclude";
+                    DeviceFilterRule                         = 'device.isCompliant -eq True -or device.trustType -eq "ServerAD"';
                 }
 
                 Mock -CommandName Get-MgIdentityConditionalAccessPolicy -MockWith {
@@ -302,6 +306,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SignInRiskLevels                         = @("High")
                     State                                    = "disabled"
                     UserRiskLevels                           = @("High")
+                    DeviceFilterMode                         = "exclude";
+                    DeviceFilterRule                         = 'device.isCompliant -eq True -or device.trustType -eq "ServerAD"';
                 }
 
                 Mock -CommandName Get-MgIdentityConditionalAccessPolicy -MockWith {
@@ -334,6 +340,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Devices          = @{
                                 IncludeDevices = @("All")
                                 ExcludeDevices = @("Compliant", "DomainJoined")
+                                DeviceFilter = @{
+                                    Mode = @("exclude")
+                                    Rule = @('device.isCompliant -eq True -or device.trustType -eq "ServerAD"')
+                                }
                             }
                             ClientAppTypes   = @("Browser", "MobileAppsAndDesktopClients")
                             SignInRiskLevels = @("High")
@@ -415,7 +425,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExcludePlatforms                         = @("Windows", "WindowsPhone", "MacOS")
                     ExcludeRoles                             = @("Compliance Administrator")
                     ExcludeUsers                             = "alexw@contoso.com"
-                    Credential                       = $Credsglobaladmin
+                    Credential                               = $Credsglobaladmin
                     GrantControlOperator                     = "AND"
                     Id                                       = "bcc0cf19-ee89-46f0-8e12-4b89123ee6f9"
                     IncludeApplications                      = @("All")
@@ -434,6 +444,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SignInRiskLevels                         = @("High")
                     State                                    = "disabled"
                     UserRiskLevels                           = @("High")
+                    DeviceFilterMode                         = "exclude";
+                    DeviceFilterRule                         = 'device.isCompliant -eq True -or device.trustType -eq "ServerAD"';
                 }
 
                 Mock -CommandName Get-MgIdentityConditionalAccessPolicy -MockWith {

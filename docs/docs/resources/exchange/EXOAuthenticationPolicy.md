@@ -9,7 +9,7 @@
 | **AllowBasicAuthAutodiscover** | Write | Boolean | The AllowBasicAuthAutodiscover switch specifies whether to allow Basic authentication with Autodiscover. ||
 | **AllowBasicAuthImap** | Write | Boolean | The AllowBasicAuthImap switch specifies whether to allow Basic authentication with IMAP. ||
 | **AllowBasicAuthMapi** | Write | Boolean | The AllowBasicAuthMapi switch specifies whether to allow Basic authentication with MAPI. ||
-| **AllowBasicAuthOfflineAdressBook** | Write | Boolean | The AllowBasicAuthOfflineAddressBook switch specifies whether to allow Basic authentication with Offline Address Books. ||
+| **AllowBasicAuthOfflineAddressBook** | Write | Boolean | The AllowBasicAuthOfflineAddressBook switch specifies whether to allow Basic authentication with Offline Address Books. ||
 | **AllowBasicAuthOutlookService** | Write | Boolean | The AllowBasicAuthOutlookService switch specifies whether to allow Basic authentication with the Outlook service. ||
 | **AllowBasicAuthPop** | Write | Boolean | The AllowBasicAuthPop switch specifies whether to allow Basic authentication with POP. ||
 | **AllowBasicAuthPowershell** | Write | Boolean | The AllowBasicAuthPowerShell switch specifies whether to allow Basic authentication with PowerShell. ||
@@ -17,9 +17,6 @@
 | **AllowBasicAuthRpc** | Write | Boolean | The AllowBasicAuthRpc switch specifies whether to allow Basic authentication with RPC. ||
 | **AllowBasicAuthSmtp** | Write | Boolean | The AllowBasicAuthSmtp switch specifies whether to allow Basic authentication with SMTP. ||
 | **AllowBasicAuthWebServices** | Write | Boolean | The AllowBasicAuthWebServices switch specifies whether to allow Basic authentication with Exchange Web Services (EWS). ||
-| **AccessRight** | Write | String | The AccessRight parameter specifies the permission that you want to assign in the authentication policy. |RestrictAccess, DenyAccess|
-| **AppID** | Write | StringArray[] | The AppID parameter specifies the GUID of the apps to include in the policy. ||
-| **PolicyScopeGroupId** | Write | String | The PolicyScopeGroupID parameter specifies the recipient to define in the policy. You can use any value that uniquely identifies the recipient. ||
 | **Ensure** | Write | String | Specify if the authentication Policy should exist or not. |Present, Absent|
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin ||
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||

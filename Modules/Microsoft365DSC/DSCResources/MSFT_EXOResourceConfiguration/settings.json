@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOResourceConfiguration",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

@@ -198,6 +198,8 @@ function Update-M365DSCResourcesSettingsJSON
     $files = Get-ChildItem -Path "$dscResourcesRoot\*.psm1" -Recurse
     Write-Verbose "  Found $($files.Count) psm1 files"
 
+    $ignoredCmdlets = @("Get-MgContext")
+
     foreach ($file in $files)
     {
         $readPermissions = @()
@@ -225,10 +227,13 @@ function Update-M365DSCResourcesSettingsJSON
                 $functionPermissions = @()
                 foreach ($cmdlet in $cmdlets)
                 {
-                    $commands = Find-MgGraphCommand -Command $cmdlet
+                    if ($cmdlet -notin $ignoredCmdlets)
+                    {
+                        $commands = Find-MgGraphCommand -Command $cmdlet
 
-                    $cmdletPermissions = $commands[0].Permissions
-                    $functionPermissions += $cmdletPermissions.Name
+                        $cmdletPermissions = $commands[0].Permissions
+                        $functionPermissions += $cmdletPermissions.Name
+                    }
                 }
                 $cleanFunctionPermissions = $functionPermissions | Sort-Object | Select-Object -Unique
 

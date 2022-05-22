@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXOMessageClassification",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}

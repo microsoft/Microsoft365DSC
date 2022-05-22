@@ -36,4 +36,45 @@
 
 This resource configures the Organization Relationship in Exchange Online.
 
+## Examples
+
+### Example 1
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsGlobalAdmin
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOOrganizationRelationship 'ConfigureOrganizationRelationship'
+        {
+            Name                  = "Contoso"
+            ArchiveAccessEnabled  = $True
+            DeliveryReportEnabled = $True
+            DomainNames           = "mail.contoso.com"
+            Enabled               = $True
+            FreeBusyAccessEnabled = $True
+            FreeBusyAccessLevel   = "AvailabilityOnly"
+            MailboxMoveEnabled    = $True
+            MailTipsAccessEnabled = $True
+            MailTipsAccessLevel   = "None"
+            PhotosEnabled         = $True
+            TargetApplicationUri  = "mail.contoso.com"
+            TargetAutodiscoverEpr = "https://mail.contoso.com/autodiscover/autodiscover.svc/wssecurity"
+            Ensure                = "Present"
+            Credential            = $credsGlobalAdmin
+        }
+    }
+}
+```
 

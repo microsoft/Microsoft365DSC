@@ -38,7 +38,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credential"
+                return "Credentials"
             }
 
             Mock -CommandName Set-M365DSCIntuneAppProtectionPolicyiOS -MockWith {
@@ -76,7 +76,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     FaceIdBlocked                           = $False;
                     FingerprintBlocked                      = $False;
                     Credential                      = $Credential;
-                    IsAssigned                              = $False;
                     ManagedBrowser                          = "microsoftEdge";
                     MinimumRequiredAppVersion               = "0.2";
                     MinimumRequiredOSVersion                = "0.2";
@@ -151,7 +150,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     FaceIdBlocked                           = $False;
                     FingerprintBlocked                      = $False;
                     Credential                      = $Credential;
-                    IsAssigned                              = $False;
                     ManagedBrowser                          = "microsoftEdge";
                     MinimumRequiredAppVersion               = "0.2";
                     MinimumRequiredOSVersion                = "0.2";
@@ -234,7 +232,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName                             = "DSC Policy";
                         FaceIdBlocked                           = $False;
                         FingerprintBlocked                      = $False;
-                        IsAssigned                              = $False;
                         ManagedBrowser                          = "microsoftEdge";
                         MinimumRequiredAppVersion               = "0.2";
                         MinimumRequiredOSVersion                = "0.2";
@@ -293,7 +290,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExcludedGroups                          = @("3eacc231-d77b-4efb-bb5f-310f68bd6198");
                     FaceIdBlocked                           = $False;
                     FingerprintBlocked                      = $False;
-                    IsAssigned                              = $False;
                     ManagedBrowser                          = "microsoftEdge";
                     MinimumRequiredAppVersion               = "0.2";
                     MinimumRequiredOSVersion                = "0.2";
@@ -377,7 +373,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName                             = "DSC Policy";
                         FaceIdBlocked                           = $False;
                         FingerprintBlocked                      = $False;
-                        IsAssigned                              = $False;
                         ManagedBrowser                          = "microsoftEdge";
                         MinimumRequiredAppVersion               = "0.2";
                         MinimumRequiredOSVersion                = "0.2";
@@ -428,7 +423,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     FaceIdBlocked                           = $False;
                     FingerprintBlocked                      = $False;
                     Credential                      = $Credential;
-                    IsAssigned                              = $False;
                     ManagedBrowser                          = "microsoftEdge";
                     MinimumRequiredAppVersion               = "0.2";
                     MinimumRequiredOSVersion                = "0.2";
@@ -511,7 +505,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName                             = "DSC Policy";
                         FaceIdBlocked                           = $False;
                         FingerprintBlocked                      = $False;
-                        IsAssigned                              = $False;
                         ManagedBrowser                          = "microsoftEdge";
                         MinimumRequiredAppVersion               = "0.2";
                         MinimumRequiredOSVersion                = "0.2";
@@ -617,7 +610,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName                             = "DSC Policy";
                         FaceIdBlocked                           = $False;
                         FingerprintBlocked                      = $False;
-                        IsAssigned                              = $False;
                         ManagedBrowser                          = "microsoftEdge";
                         MinimumRequiredAppVersion               = "0.2";
                         MinimumRequiredOSVersion                = "0.2";

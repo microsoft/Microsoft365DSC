@@ -79,7 +79,7 @@ function Get-TeamByName
         $loopCounter = 0
         do
         {
-            $team = Get-Team -DisplayName $TeamName | Where-Object -FilterScript {$_.DisplayName -eq [System.Net.WebUtility]::UrlDecode($TeamName)}
+            $team = Get-Team -DisplayName $TeamName | Where-Object -FilterScript { $_.DisplayName -eq [System.Net.WebUtility]::UrlDecode($TeamName) }
             if ($null -eq $team)
             {
                 Start-Sleep 5
@@ -130,11 +130,15 @@ function Convert-M365DscHashtableToString
         {
             if ($pair.Value -is [System.Array])
             {
-                $str = "$($pair.Key)=($($pair.Value -join ","))"
+                $str = "$($pair.Key)=$(Convert-M365DSCArrayToString -Array $pair.Value)"
             }
             elseif ($pair.Value -is [System.Collections.Hashtable])
             {
-                $str = "$($pair.Key)={$(Convert-M365DscHashtableToString -Hashtable $pair.Value)}"
+                $str = "$($pair.Key)={$(Convert-M365DSCHashtableToString -Hashtable $pair.Value)}"
+            }
+            elseif ($pair.Value -is [Microsoft.Management.Infrastructure.CimInstance])
+            {
+                $str = "$($pair.Key)=$(Convert-M365DSCCIMInstanceToString -CIMInstance $pair.Value)"
             }
             else
             {
@@ -164,6 +168,81 @@ function Convert-M365DscHashtableToString
 
     [array]::Sort($values)
     return ($values -join "; ")
+}
+
+<#
+.Description
+This function converts a parameter array to a string, for outputting to screen
+
+.Functionality
+Internal
+#>
+function Convert-M365DscArrayToString
+{
+    param
+    (
+        [Parameter()]
+        [System.Array]
+        $Array
+    )
+
+    $str = "("
+    for ($i = 0; $i -lt $Array.Count; $i++)
+    {
+        $item = $Array[$i]
+        if ($item -is [System.Collections.Hashtable])
+        {
+            $str += "{"
+            $str += Convert-M365DDSCHashtableToString -Hashtable $item
+            $str += "}"
+        }
+        elseif ($Array[$i] -is [Microsoft.Management.Infrastructure.CimInstance])
+        {
+            $str += Convert-M365DSCCIMInstanceToString -CIMInstance $item
+        }
+        else
+        {
+            $str += $item
+        }
+
+        if ($i -lt ($Array.Count - 1))
+        {
+            $str += ","
+        }
+    }
+    $str += ")"
+
+    return $str
+}
+
+<#
+.Description
+This function converts a parameter CimInstance to a string, for outputting to screen
+
+.Functionality
+Internal
+#>
+function Convert-M365DscCIMInstanceToString
+{
+    param
+    (
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $CIMInstance
+    )
+
+    $str = "{"
+    foreach ($prop in $CIMInstance.CimInstanceProperties)
+    {
+        if ($str -notmatch "{$")
+        {
+            $str += "; "
+        }
+        $str += "$($prop.Name)=$($prop.Value)"
+    }
+    $str += "}"
+
+    return $str
 }
 
 
@@ -2390,11 +2469,13 @@ function Uninstall-M365DSCOutdatedDependencies
 
     $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
     $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
-    $dependencies = $manifest.Dependencies
+
+    $allDependenciesExceptAuth = $manifest.Dependencies | Where-Object { $_.ModuleName -ne "Microsoft.Graph.Authentication" }
+
     $i = 1
-    foreach ($dependency in $dependencies)
+    foreach ($dependency in $allDependenciesExceptAuth)
     {
-        Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
+        Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $allDependenciesExceptAuth.Count * 100)
         try
         {
             $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -ne $dependency.RequiredVersion }
@@ -2418,6 +2499,28 @@ function Uninstall-M365DSCOutdatedDependencies
         $i++
     }
 
+    $authModule = $manifest.Dependencies | Where-Object { $_.ModuleName -eq "Microsoft.Graph.Authentication" }
+    try
+    {
+        Write-Information -Message "Checking Microsoft.Graph.Authentication"
+        $found = Get-Module $authModule.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -ne $authModule.RequiredVersion }
+        foreach ($foundModule in $found)
+        {
+            try
+            {
+                Write-Information -Message "Uninstalling $($foundModule.Name) version {$($foundModule.Version)}"
+                Uninstall-Module -Name "$($foundModule.Name)" -RequiredVersion "$($foundModule.Version)" -Force
+            }
+            catch
+            {
+                Write-Host "Could not uninstall $($foundModule.Name) Version $($foundModule.Version) "
+            }
+        }
+    }
+    catch
+    {
+        Write-Host "Could not uninstall {$($dependency.ModuleName)}"
+    }
 }
 
 <#
@@ -3077,7 +3180,8 @@ function New-M365DSCCmdletDocumentation
         $ModulePath
     )
 
-    if($null -eq $ModulePath){
+    if ($null -eq $ModulePath)
+    {
         Import-Module Microsoft365Dsc -Force
     }
     else
@@ -3208,6 +3312,140 @@ function New-M365DSCCmdletDocumentation
     Write-Host -Object " "
 }
 
+<#
+.Description
+This function creates an example from the resource schema, using ReverseDSC code.
+
+.Parameter ResourceName
+Specifies the resource name for which the example should be generated.
+
+.Functionality
+Internal, Hidden
+#>
+function Create-M365DSCResourceExample
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ResourceName
+    )
+
+    $resource = Get-DscResource -Name $ResourceName
+
+    $params = Get-DSCFakeParameters -ModulePath $resource.Path
+
+    $params.Credential = '$credsGlobalAdmin'
+
+    if ($params.ContainsKey("ApplicationId"))
+    {
+        $params.Remove("ApplicationId")
+    }
+
+    if ($params.ContainsKey("TenantId"))
+    {
+        $params.Remove("TenantId")
+    }
+
+    if ($params.ContainsKey("ApplicationSecret"))
+    {
+        $params.Remove("ApplicationSecret")
+    }
+
+    if ($params.ContainsKey("CertificateThumbprint"))
+    {
+        $params.Remove("CertificateThumbprint")
+    }
+
+    if ($params.ContainsKey("CertificatePath"))
+    {
+        $params.Remove("CertificatePath")
+    }
+
+    if ($params.ContainsKey("CertificatePassword"))
+    {
+        $params.Remove("CertificatePassword")
+    }
+
+    [string]$userName = 'admin@contoso.onmicrosoft.com'
+    [string]$userPassword = 'dummypassword'
+    [securestring]$secStringPassword = ConvertTo-SecureString $userPassword -AsPlainText -Force
+    [pscredential]$credObject = New-Object System.Management.Automation.PSCredential ($userName, $secStringPassword)
+
+    $resourceExample = Get-M365DSCExportContentForResource -ResourceName $ResourceName -ModulePath $resource.Path -Results $params -ConnectionMode Credentials -Credential $credObject
+
+    $resourceExample = $resourceExample.TrimEnd() -replace ";",""
+
+    $exampleText = @"
+<#
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+#>
+
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = `$true)]
+        [PSCredential]
+        `$credsGlobalAdmin
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+$resourceExample
+    }
+}
+"@
+
+    return $exampleText
+}
+
+<#
+.Description
+This function creates an example from the resource schema, using ReverseDSC code.
+
+.Parameter ResourceName
+Specifies the resource name for which the example should be generated.
+
+.Functionality
+Internal
+#>
+function New-M365DSCMissingResourcesExample
+{
+    $location = $PSScriptRoot
+
+    $m365Resources = Get-DscResource -Module Microsoft365DSC | Select-Object -ExpandProperty Name
+
+    $examplesPath = Join-Path $location -ChildPath "..\Examples\Resources"
+    $examples = Get-ChildItem -Path $examplesPath | Where-Object { $_.PsIsContainer } | Select-Object -ExpandProperty Name
+
+    [array]$differences = Compare-Object -ReferenceObject $m365Resources -DifferenceObject $examples
+
+    $count = 1
+    $total = $differences.Count
+
+    foreach ($difference in $differences)
+    {
+        Write-Host "[$count/$total] Processing $($difference.InputObject)"
+        $path = Join-Path -Path '.\Modules\Microsoft365DSC\Examples\Resources' -ChildPath $difference.InputObject
+        switch ($difference.SideIndicator)
+        {
+            "<=" {
+                Write-Host "  - Example missing, generating!"
+                $null = New-Item -Path $path -ItemType Directory
+                $exampleFile = Join-Path -Path $path -ChildPath "1-Configure.ps1"
+                Set-Content -Path $exampleFile -Value (Create-M365DSCResourceExample -ResourceName $difference.InputObject)
+            }
+            "=>" {
+                Write-Host "  - No resource for existing example, removing!"
+                Remove-Item -Path $path -Force -Confirm:$false
+            }
+        }
+        $count++
+    }
+}
 
 Export-ModuleMember -Function @(
     'Assert-M365DSCBlueprint',
@@ -3235,6 +3473,7 @@ Export-ModuleMember -Function @(
     'New-EXOSafeLinksRule',
     'New-M365DSCCmdletDocumentation',
     'New-M365DSCConnection',
+    'New-M365DSCMissingResourcesExample',
     'Remove-EmptyValue',
     'Remove-NullEntriesFromHashtable',
     'Set-EXOSafeAttachmentRule',

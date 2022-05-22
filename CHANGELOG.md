@@ -1,5 +1,120 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant module to version 1.0.84.
+* MISC
+  * Fixed issue in generating a Delta report, where the Resource names were also
+    compared, which in case of an export are generated GUIDs.
+  * Fixed issue where empty strings or arrays would result in a Delta reports
+    with drifted parameters, even though both configs are empty.
+  * Added logic to New-M365DSCDeltaReport to check if the files specified in the
+    Source, Destination and HeaderFilePath parameters actually exist.
+  * Fixed issue where Excel wasn't closed after creating the report.
+
+# 1.22.518.1
+
+* AADConditionalAccessPolicy
+  * Fixed export to remove the DeviceFilterMode property
+    when empty.
+* EXODataClassification
+  * Initial release
+* EXODataEncryptionPolicy
+  * Initial release
+* PPTenantIsolationSettings
+  * Fixed an issue where credentials weren't passed properly
+    during the export.
+* SPOSharingSettings
+  * Decoupling from SPOSharingSettings: add SharingCapability for "-my sites" aka: OneDrive
+
+# 1.22.511.1
+
+* AADNamedLocationPolicy
+ * Added error handling in the Get-TargetResource function.
+* EXOIRMConfiguration
+  * Initial release.
+* EXOMessageClassification
+  * Initial release.
+* EXOOMEConfiguration
+  * Initial release.
+* EXOOwaMailboxPolicy
+  * Fix where the update scenario was not setting the proper
+    values. (FIXES #1868)
+* EXOPerimeterConfiguration
+  * Initial release.
+* EXOResourceConfiguration
+  * Initial release.
+* IntuneApplicationControlPolicyWindows10
+  * Initial release.
+* TeamsUpdateManagementPolicy
+  * Initial release.
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* modules to version 1.9.6.
+  * Updated ReverseDSC to version 2.0.0.11.
+* MISC
+  * Updated permissions for SharePoint in settings.json files.
+  * Added links to documentation to Teams Readme files
+  * Added and corrected some Exchange examples
+  * Added progress indicator to the Report generation
+
+# 1.22.504.1
+
+* EXOInboundConnector
+  * Added support for EFSkipIPs, EFSkipLastIP and EFUsers properties. (FIXES #1917)
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.147.
+  * Updated MicrosoftTeams to version 4.3.0.
+
+# 1.22.427.1
+
+* AADApplication
+  * Fix for Permissions with 'Role,Scope' types.
+* EXOAuthenticationPolicy
+  * Fix schema.mof file (FIXES #1896)
+* IntuneAppProtectionPolicyAndroid
+  * New resource - (fixes issue #1900 and #1432)
+* IntuneAppProtectionPolicyiOS
+  * Fixes #1877
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.146.
+* MISC
+  * Performance updates when doing exports (using StringBuilder over
+    appending to string).
+
+# 1.22.420.1
+
+* EXOOutboundConnector
+  * Added support for test mode connectors.
+
+# 1.22.413.1
+
+* EXOAuthenticationPolicy
+  * Fix typo in AllowBasicAuthOfflineAddressBook (FIXES #1876)
+* EXOQuarantinePolicy
+  * New resource
+* O365Groups
+  * Fixed issue on export of O365Groups resource.
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* to 1.9.5.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.145.
+  * Updated MicrosoftTeams to 4.2.0.
+
+# 1.22.406.1
+
+* EXOMalwareFilterPolicy
+  * Add support for property QuarantineTag
+* PPTenantIsolationSettings
+  * New resource
+* MISC
+  * Updated Convert-M365DscHashtableToString function to also convert
+    Arrays and CimInstances to string.
+  * Updated permissions in settings.json files.
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.144.
+  * Updated MicrosoftTeams to 4.1.0.
+  * Updated PnP.PowerShell to 1.10.0.
+
 # 1.22.323.1
 
 * EXOAuthenticationPolicy

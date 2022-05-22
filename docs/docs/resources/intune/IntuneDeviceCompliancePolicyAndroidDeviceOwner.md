@@ -240,7 +240,7 @@ Configuration Example
             PasswordPreviousPasswordCountToBlock               = 13
             StorageRequireEncryption                           = $True
             Ensure                                             = "Present"
-            Credential                                         = $Credsglobaladmin
+            Credential                                         = $credsGlobalAdmin
         }
     }
 }

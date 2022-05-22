@@ -2,14 +2,14 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath "..\..\Unit" `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath "\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
@@ -37,7 +37,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credential"
+                return "Credentials"
             }
 
             Mock -CommandName Get-PSSession -MockWith {
@@ -59,7 +59,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ConditionalStateOrProvince = 'US'
                     IncludedRecipients         = 'AllRecipients'
                     Ensure                     = 'Present'
-                    Credential         = $Credential
+                    Credential                 = $Credential
                 }
 
                 Mock -CommandName Get-AddressList -MockWith {
@@ -80,7 +80,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ConditionalStateOrProvince = 'US'
                         IncludedRecipients         = 'AllRecipients'
                         Ensure                     = 'Present'
-                        Credential         = $Credential
+                        Credential                 = $Credential
                     }
                 }
             }
@@ -107,7 +107,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ConditionalStateOrProvince = 'US'
                     IncludedRecipients         = 'AllRecipients'
                     Ensure                     = 'Present'
-                    Credential         = $Credential
+                    Credential                 = $Credential
                 }
 
                 Mock -CommandName Get-AddressList -MockWith {
@@ -139,7 +139,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ConditionalStateOrProvince = 'US'
                     IncludedRecipients         = 'AllRecipients'
                     Ensure                     = 'Present'
-                    Credential         = $Credential
+                    Credential                 = $Credential
                 }
 
                 Mock -CommandName Get-AddressList -MockWith {
@@ -159,7 +159,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ConditionalDepartment      = 'HR'
                         ConditionalStateOrProvince = 'US'
                         IncludedRecipients         = 'AllRecipients'
-                        Credential         = $Credential
+                        Credential                 = $Credential
                     }
                 }
             }

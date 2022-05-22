@@ -37,8 +37,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
+            Mock -CommandName Get-PnPTenantSite -MockWith {
+
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credential"
+                return "Credentials"
             }
         }
 
@@ -46,7 +50,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "SPOSharing settings are not configured" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Credential                         = $Credential
+                    Credential                                 = $Credential
                     IsSingleInstance                           = "Yes"
                     SharingCapability                          = 'ExternalUserSharingOnly'
                     ShowEveryoneClaim                          = $false

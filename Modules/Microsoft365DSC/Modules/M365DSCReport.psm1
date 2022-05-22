@@ -29,6 +29,7 @@ function New-M365DSCConfigurationToHTML
 
     if ([System.String]::IsNullOrEmpty($ParsedContent))
     {
+        Write-Output "Loading file '$ConfigurationPath'"
         $TemplateFile = Get-Item $ConfigurationPath
         $fileContent = Get-Content $ConfigurationPath -Raw
         try
@@ -48,11 +49,22 @@ function New-M365DSCConfigurationToHTML
     {
         $TemplateName = "Configuration Report"
     }
-    $fullHTML = "<h1>" + $TemplateName + "</h1>"
+
+    Write-Output "Generating HTML report"
+    $fullHTML = "<!DOCTYPE html>"
+    $fullHTML += "<html>"
+    $fullHTML += "<body>"
+    $fullHTML += "<h1>" + $TemplateName + "</h1>"
     $fullHTML += "<div style='width:100%;text-align:center;'>"
     $fullHTML += "<h2>Template Details</h2>"
+
+    $totalCount = $parsedContent.Count
+    $currentCount = 0
     foreach ($resource in $parsedContent)
     {
+        $percentage = [math]::Round(($currentCount / $totalCount) * 100, 2)
+        Write-Progress -Activity 'Processing generated DSC Object' -Status ("{0:N2} completed - $($resource.ResourceName)" -f $percentage) -PercentComplete $percentage
+
         $partHTML = "<div width='100%' style='text-align:center;'><table width='80%' style='margin-left:auto; margin-right:auto;'>"
         $partHTML += "<tr><th rowspan='" + ($resource.Keys.Count) + "' width='20%'>"
         $partHTML += "<img src='" + (Get-IconPath -ResourceName $resource.ResourceName) + "' />"
@@ -82,7 +94,7 @@ function New-M365DSCConfigurationToHTML
                     if ($resource.$property.GetType().Name -eq 'Object[]')
                     {
                         if ($resource.$property -and ($resource.$property[0].GetType().Name -eq 'Hashtable' -or
-                        $resource.$property[0].GetType().Name -eq 'OrderedDictionary'))
+                                $resource.$property[0].GetType().Name -eq 'OrderedDictionary'))
                         {
                             $value = ""
                             foreach ($entry in $resource.$property)
@@ -123,14 +135,20 @@ function New-M365DSCConfigurationToHTML
         }
 
         $partHTML += "</table></div><br />"
-        $fullHtml += $partHTML
+        $fullHTML += $partHTML
+        $fullHTML += "</body>"
+        $fullHTML += "</html>"
+
+        $currentCount++
     }
 
     if (-not [System.String]::IsNullOrEmpty($OutputPath))
     {
+        Write-Output "Saving HTML report"
         $fullHtml | Out-File $OutputPath
     }
-    return $fullHTML
+
+    Write-Output "Completed generating HTML report"
 }
 
 <#
@@ -329,7 +347,7 @@ function New-M365DSCConfigurationToExcel
     $usedRange = $report.UsedRange
     $usedRange.EntireColumn.AutoFit() | Out-Null
     $workbook.SaveAs($OutputPath)
-    #$excel.Quit()
+    $excel.Quit()
 }
 
 <#
@@ -506,10 +524,10 @@ function Compare-M365DSCConfigurations
                 # The resource instance exists in both the source and the destination. Compare each property;
                 foreach ($propertyName in $sourceResource.Keys)
                 {
-                    if ($propertyName -notin @("ResourceName", "Credential", "CertificatePath", "CertificatePassword", "TenantId", "ApplicationId", "CertificateThumbprint", "ApplicationSecret"))
+                    if ($propertyName -notin @("ResourceName", "ResourceId", "Credential", "CertificatePath", "CertificatePassword", "TenantId", "ApplicationId", "CertificateThumbprint", "ApplicationSecret"))
                     {
                         # Needs to be a separate nested if statement otherwise the ReferenceObject an be null and it will error out;
-                        if ([System.String]::IsNullOrEmpty($destinationResource.$propertyName) -or (-not [System.String]::IsNullOrEmpty($propertyName) -and
+                        if ($destinationResource.ContainsKey($propertyName) -eq $false -or (-not [System.String]::IsNullOrEmpty($propertyName) -and
                                 $null -ne (Compare-Object -ReferenceObject ($sourceResource.$propertyName)`
                                         -DifferenceObject ($destinationResource.$propertyName))))
                         {
@@ -560,7 +578,7 @@ function Compare-M365DSCConfigurations
                 # object. By scanning against the destination we will catch properties that are not null on the source but not null in destination;
                 foreach ($propertyName in $destinationResource.Keys)
                 {
-                    if ($propertyName -notin @("ResourceName", "Credential", "CertificatePath", "CertificatePassword", "TenantId", "ApplicationId", "CertificateThumbprint", "ApplicationSecret"))
+                    if ($propertyName -notin @("ResourceName", "ResourceId", "Credential", "CertificatePath", "CertificatePassword", "TenantId", "ApplicationId", "CertificateThumbprint", "ApplicationSecret"))
                     {
                         if (-not [System.String]::IsNullOrEmpty($propertyName) -and
                             -not $sourceResource.Contains($propertyName))
@@ -799,6 +817,30 @@ function New-M365DSCDeltaReport
         [Array]
         $Delta
     )
+
+    if ((Test-Path -Path $Source) -eq $false)
+    {
+        Write-Error "Cannot find file specified in parameter Source: $Source. Please make sure the file exists!"
+        return
+    }
+
+    if ((Test-Path -Path $Destination) -eq $false)
+    {
+        Write-Error "Cannot find file specified in parameter Destination: $Destination. Please make sure the file exists!"
+        return
+    }
+
+    if ((Test-Path -Path $OutputPath) -eq $false)
+    {
+        Write-Warning "File specified in parameter OutputPath already exists and will be overwritten: $OutputPath"
+        Write-Warning "Make sure you specify a file that not exists, if you don't want the file to be overwritten!"
+    }
+
+    if ($PSBoundParameters.ContainsKey("HeaderFilePath") -and (Test-Path -Path $HeaderFilePath) -eq $false)
+    {
+        Write-Error "Cannot find file specified in parameter HeaderFilePath: $HeaderFilePath. Please make sure the file exists!"
+        return
+    }
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

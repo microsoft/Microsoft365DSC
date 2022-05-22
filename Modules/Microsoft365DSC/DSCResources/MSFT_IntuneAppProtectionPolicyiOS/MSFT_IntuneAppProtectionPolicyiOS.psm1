@@ -45,10 +45,6 @@ function Get-TargetResource
         $DeviceComplianceRequired,
 
         [Parameter()]
-        [System.Boolean]
-        $IsAssigned,
-
-        [Parameter()]
         [System.String]
         $ManagedBrowser,
 
@@ -62,7 +58,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $MinimumRequiredOSVersion,
+        $MinimumRequiredOsVersion,
 
         [Parameter()]
         [System.String]
@@ -247,13 +243,12 @@ function Get-TargetResource
             AllowedOutboundClipboardSharingLevel    = $policy.AllowedOutboundClipboardSharingLevel
             DataBackupBlocked                       = $policy.DataBackupBlocked
             DeviceComplianceRequired                = $policy.DeviceComplianceRequired
-            IsAssigned                              = $policy.IsAssigned
             ManagedBrowser                          = $policy.ManagedBrowser
             MinimumRequiredAppVersion               = $policy.MinimumRequiredAppVersion
-            MinimumRequiredOSVersion                = $policy.MinimumRequiredOSVersion
+            MinimumRequiredOsVersion                = $policy.MinimumRequiredOsVersion
             MinimumRequiredSdkVersion               = $policy.MinimumRequiredSDKVersion
             MinimumWarningAppVersion                = $policy.MinimumWarningAppVersion
-            MinimumWarningOSVersion                 = $policy.MinimumWarningOSVersion
+            MinimumWarningOsVersion                 = $policy.MinimumWarningOsVersion
             ManagedBrowserToOpenLinksRequired       = $policy.ManagedBrowserToOpenLinksRequired
             SaveAsBlocked                           = $policy.SaveAsBlocked
             PeriodOfflineBeforeWipeIsEnforced       = $policy.PeriodOfflineBeforeWipeIsEnforced
@@ -345,10 +340,6 @@ function Set-TargetResource
         $DeviceComplianceRequired,
 
         [Parameter()]
-        [System.Boolean]
-        $IsAssigned,
-
-        [Parameter()]
         [System.String]
         $ManagedBrowser,
 
@@ -362,11 +353,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $MinimumRequiredOSVersion,
+        $MinimumRequiredOsVersion,
 
         [Parameter()]
         [System.String]
-        $MinimumWarningOSVersion,
+        $MinimumWarningOsVersion,
 
         [Parameter()]
         [System.String]
@@ -579,10 +570,6 @@ function Test-TargetResource
         $DeviceComplianceRequired,
 
         [Parameter()]
-        [System.Boolean]
-        $IsAssigned,
-
-        [Parameter()]
         [System.String]
         $ManagedBrowser,
 
@@ -596,11 +583,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $MinimumRequiredOSVersion,
+        $MinimumRequiredOsVersion,
 
         [Parameter()]
         [System.String]
-        $MinimumWarningOSVersion,
+        $MinimumWarningOsVersion,
 
         [Parameter()]
         [System.String]
@@ -770,7 +757,7 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
-    #Ensure the proper dependencies are installed in the current environment.
+    #Ensure the proper dependencies are installed in the current environment
     Confirm-M365DSCDependencies
 
     #region Telemetry
@@ -942,13 +929,6 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
         "allowedOutboundClipboardSharingLevel": "$($Parameters.AllowedOutboundClipboardSharingLevel)",
         "dataBackupBlocked": $($Parameters.DataBackupBlocked.ToString().ToLower()),
         "deviceComplianceRequired": $($Parameters.DeviceComplianceRequired.ToString().ToLower()),
-        "IsAssigned": $($Parameters.IsAssigned.ToString().ToLower()),
-        "ManagedBrowser": $($Parameters.ManagedBrowser),
-        "MinimumRequiredAppVersion": $($Parameters.MinimumWarningAppVersion),
-        "MinimumRequiredOSVersion": $($Parameters.MinimumRequiredOSVersion),
-        "MinimumRequiredSdkVersion": $($Parameters.MinimumRequiredSdkVersion),
-        "MinimumWarningAppVersion": $($Parameters.MinimumWarningAppVersion),
-        "MinimumWarningOSVersion": $($Parameters.MinimumWarningOSVersion),
         "managedBrowserToOpenLinksRequired": $($Parameters.ManagedBrowserToOpenLinksRequired.ToString().ToLower()),
         "saveAsBlocked": $($Parameters.SaveAsBlocked.ToString().ToLower()),
         "periodOfflineBeforeWipeIsEnforced": "$($Parameters.PeriodOfflineBeforeWipeIsEnforced)",
@@ -957,6 +937,12 @@ function Get-M365DSCIntuneAppProtectionPolicyiOSJSON
         "maximumPinRetries": $($Parameters.MaximumPinRetries),
         "simplePinBlocked": $($Parameters.SimplePinBlocked.ToString().ToLower()),
         "minimumPinLength": $($Parameters.MinimumPinLength),
+        "managedBrowser": "$($Parameters.ManagedBrowser)",
+        "minimumRequiredAppVersion": "$($Parameters.MinimumWarningAppVersion)",
+        "minimumRequiredOsVersion": "$($Parameters.MinimumRequiredOsVersion)",
+        "minimumRequiredSdkVersion": "$($Parameters.MinimumRequiredSdkVersion)",
+        "minimumWarningAppVersion": "$($Parameters.MinimumWarningAppVersion)",
+        "minimumWarningOsVersion": "$($Parameters.MinimumWarningOsVersion)",
         "pinCharacterSet": "$($Parameters.PinCharacterSet)",
         "contactSyncBlocked": $($Parameters.ContactSyncBlocked.ToString().ToLower()),
         "periodBeforePinReset": "$($Parameters.PeriodBeforePinReset)",

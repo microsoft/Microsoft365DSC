@@ -56,7 +56,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credential"
+                return "Credentials"
             }
         }
 
@@ -69,7 +69,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Definition            = @('{"TokenIssuancePolicy":{"Version": 1,"SigningAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1","TokenResponseSigningPolicy": "TokenOnly","SamlTokenVersion": "2.0"}}')
                     IsOrganizationDefault = $false
                     Ensure                = "Present"
-                    Credential    = $credsGlobalAdmin
+                    Credential            = $credsGlobalAdmin
                 }
 
                 Mock -CommandName Get-MgPolicyTokenLifetimePolicy -MockWith {
@@ -97,7 +97,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsOrganizationDefault = $false
                     Description           = "My token"
                     Ensure                = "Absent"
-                    Credential    = $credsGlobalAdmin
+                    Credential            = $credsGlobalAdmin
                 }
 
                 Mock -CommandName Get-MgPolicyTokenLifetimePolicy -MockWith {
@@ -134,7 +134,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsOrganizationDefault = $false
                     Description           = "My token"
                     Ensure                = "Present"
-                    Credential    = $credsGlobalAdmin
+                    Credential            = $credsGlobalAdmin
                 }
 
                 Mock -CommandName Get-MgPolicyTokenLifetimePolicy -MockWith {
@@ -167,7 +167,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsOrganizationDefault = $true
                     Description           = "My token"
                     Ensure                = "Present"
-                    Credential    = $credsGlobalAdmin
+                    Credential            = $credsGlobalAdmin
                 }
 
                 Mock -CommandName Get-MgPolicyTokenLifetimePolicy -MockWith {

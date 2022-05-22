@@ -1,0 +1,10 @@
+﻿{
+    "resourceName": "EXODataClassification",
+    "description": "",
+    "permissions": [
+        {
+            "read": [],
+            "update": []
+        }
+    ]
+}
