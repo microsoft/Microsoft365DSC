@@ -14,7 +14,7 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production', 'Standard', 'Trial', 'Sandbox')]
+        [ValidateSet('Production', 'Standard', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams')]
         $EnvironmentSKU,
 
         [Parameter()]
@@ -48,7 +48,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -70,11 +70,11 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found PowerApps Environment {$DisplayName}"
         return @{
-            DisplayName        = $DisplayName
-            Location           = $environment.Location
-            EnvironmentSKU     = $environment.EnvironmentType
-            Ensure             = 'Present'
-            Credential = $Credential
+            DisplayName    = $DisplayName
+            Location       = $environment.Location
+            EnvironmentSKU = $environment.EnvironmentType
+            Ensure         = 'Present'
+            Credential     = $Credential
         }
     }
     catch
@@ -118,7 +118,7 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production', 'Standard', 'Trial', 'Sandbox')]
+        [ValidateSet('Production', 'Standard', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams')]
         $EnvironmentSKU,
 
         [Parameter()]
@@ -150,7 +150,7 @@ function Set-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -205,7 +205,7 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production', 'Standard', 'Trial', 'Sandbox')]
+        [ValidateSet('Production', 'Standard', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams')]
         $EnvironmentSKU,
 
         [Parameter()]
@@ -234,7 +234,7 @@ function Test-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -289,7 +289,7 @@ function Export-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    $CommandName  = $MyInvocation.MyCommand
+    $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -305,13 +305,13 @@ function Export-TargetResource
         foreach ($environment in $environments)
         {
             Write-Host "    |---[$i/$($environments.Count)] $($environment.DisplayName)" -NoNewline
-            if ($environment.EnvironmentType -ne 'Default')
+            if ($environment.EnvironmentType -ne 'Default' -and $environment.EnvironmentType -ne 'NotSpecified' -and $environment.EnvironmentType -ne 'Developer')
             {
                 $Params = @{
                     DisplayName           = $environment.DisplayName
                     Location              = $environment.Location
                     EnvironmentSku        = $environment.EnvironmentType
-                    Credential    = $Credential
+                    Credential            = $Credential
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
@@ -327,7 +327,7 @@ function Export-TargetResource
                 $dscContent += $currentDSCBlock
 
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
-                            -FileName $Global:PartialExportFileName
+                    -FileName $Global:PartialExportFileName
             }
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
