@@ -328,8 +328,13 @@ function Export-TargetResource
 
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
             }
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            else
+            {
+                Write-Host "`r`n    |---Skipping $($environment.DisplayName) because of environment sku $($environment.EnvironmentType) " -NoNewline
+                Write-Host $Global:M365DSCEmojiRedX
+            }
             $i++
         }
         return $dscContent
