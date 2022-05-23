@@ -12,6 +12,9 @@
   * Added logic to New-M365DSCDeltaReport to check if the files specified in the
     Source, Destination and HeaderFilePath parameters actually exist.
   * Fixed issue where Excel wasn't closed after creating the report.
+* PPowerAppsEnvironment
+  * Fixed issue on export to exclude EnvironmenTypes of Notspecified and Developer
+  * Updated validation set of EnvironmentTypes to latest values
 
 # 1.22.518.1
 
