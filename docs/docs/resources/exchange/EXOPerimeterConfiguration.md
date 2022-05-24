@@ -20,4 +20,34 @@
 
 Modify the perimeter Configuration policy in your cloud-based organization.
 
+## Examples
+
+### Example 1
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsGlobalAdmin
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOPerimeterConfiguration 'ConfigurePerimeterConfiguration'
+        {
+            Identity             = "Global"
+            GatewayIPAddresses   = "123.0.0.1"
+            Ensure               = "Present"
+            Credential           = $credsGlobalAdmin
+        }
+    }
+}
+```
 
