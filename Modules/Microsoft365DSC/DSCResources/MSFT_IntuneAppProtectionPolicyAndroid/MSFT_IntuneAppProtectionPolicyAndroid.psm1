@@ -167,7 +167,8 @@ function Get-TargetResource
         $CertificateThumbprint
     )
     Write-Verbose -Message "Checking for the Intune Android App Protection Policy {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+    # beta profile as previous graph call used beta and it returns more data
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -ProfileName beta `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -206,81 +207,57 @@ function Get-TargetResource
             throw "Multiple Policies with same displayname identified - Module currently only functions with unique names"
         }
 
-        # It may be possible to remove this once basic functionality is in place - output types differ to the graph module object though so implementing basic functionality first
-        $policy = Get-M365DSCIntuneAppProtectionPolicyAndroid -PolicyId $policyInfo.Id
         Write-Verbose -Message "Found Android App Protection Policy {$DisplayName}"
 
         $appsArray = @()
-        if ($null -ne $policy.Apps)
+        if ($null -ne $policyInfo.Apps)
         {
-            foreach ($app in $policy.Apps)
+            foreach ($app in $policyInfo.Apps)
             {
-                $appsArray += $app.mobileAppIdentifier.packageId
+                $appsArray += $app.MobileAppIdentifier.AdditionalProperties.packageId
             }
         }
 
         $assignmentsArray = @()
-        if ($null -ne $policy.Assignments)
-        {
-            $allAssignments = $policy.Assignments.target | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.groupAssignmentTarget' }
-
-            foreach ($assignment in $allAssignments)
-            {
-                $assignmentsArray += $assignment.groupId
-            }
-        }
-
         $exclusionArray = @()
-        if ($null -ne $policy.Assignments)
+        if ($null -ne $policyInfo.Assignments)
         {
-            $allExclusions = $policy.Assignments.target | Where-Object -FilterScript { $_.'@odata.type' -eq '#microsoft.graph.exclusionGroupAssignmentTarget' }
-
-            foreach ($exclusion in $allExclusions)
+            foreach ($assignment in $policyInfo.Assignments)
             {
-                $exclusionArray += $exclusion.groupId
+                write-host '#######'  $assignment.Target.AdditionalProperties.'@odata.type'
+                switch ($assignment.Target.AdditionalProperties.'@odata.type')
+                {
+                    '#microsoft.graph.groupAssignmentTarget'
+                    {
+                        $assignmentsArray += $assignment.Target.AdditionalProperties.groupId
+                    }
+
+                    '#microsoft.graph.exclusionGroupAssignmentTarget'
+                    {
+                        $exclusionArray += $assignment.Target.AdditionalProperties.groupId
+                    }
+                }
             }
         }
-        return @{
-            DisplayName                             = $policyInfo.DisplayName
-            Description                             = $policy.Description
-            PeriodOfflineBeforeAccessCheck          = $policy.PeriodOfflineBeforeAccessCheck
-            PeriodOnlineBeforeAccessCheck           = $policy.PeriodOnlineBeforeAccessCheck
-            AllowedInboundDataTransferSources       = $policy.AllowedInboundDataTransferSources
-            AllowedOutboundDataTransferDestinations = $policy.AllowedOutboundDataTransferDestinations
-            OrganizationalCredentialsRequired       = $policy.OrganizationalCredentialsRequired
-            AllowedOutboundClipboardSharingLevel    = $policy.AllowedOutboundClipboardSharingLevel
-            DataBackupBlocked                       = $policy.DataBackupBlocked
-            DeviceComplianceRequired                = $policy.DeviceComplianceRequired
-            IsAssigned                              = $policy.IsAssigned
-            ManagedBrowser                          = $policy.ManagedBrowser
-            MinimumRequiredAppVersion               = $policy.MinimumRequiredAppVersion
-            MinimumRequiredOSVersion                = $policy.MinimumRequiredOSVersion
-            MinimumWarningAppVersion                = $policy.MinimumWarningAppVersion
-            MinimumWarningOSVersion                 = $policy.MinimumWarningOSVersion
-            ManagedBrowserToOpenLinksRequired       = $policy.ManagedBrowserToOpenLinksRequired
-            SaveAsBlocked                           = $policy.SaveAsBlocked
-            PeriodOfflineBeforeWipeIsEnforced       = $policy.PeriodOfflineBeforeWipeIsEnforced
-            PinRequired                             = $policy.PinRequired
-            DisableAppPinIfDevicePinIsSet           = $policy.disableAppPinIfDevicePinIsSet
-            MaximumPinRetries                       = $policy.MaximumPinRetries
-            SimplePinBlocked                        = $policy.SimplePinBlocked
-            MinimumPinLength                        = $policy.MinimumPinLength
-            PinCharacterSet                         = $policy.PinCharacterSet
-            AllowedDataStorageLocations             = $policy.AllowedDataStorageLocations
-            ContactSyncBlocked                      = $policy.ContactSyncBlocked
-            PeriodBeforePinReset                    = $policy.PeriodBeforePinReset
-            PrintBlocked                            = $policy.PrintBlocked
-            FingerprintBlocked                      = $policy.FingerprintBlocked
-            Assignments                             = $assignmentsArray
-            ExcludedGroups                          = $exclusionArray
-            Apps                                    = $appsArray
-            Ensure                                  = "Present"
-            Credential                              = $Credential
-            ApplicationId                           = $ApplicationId
-            ApplicationSecret                       = $ApplicationSecret
-            TenantId                                = $TenantId
-            CertificateThumbprint                   = $CertificateThumbprint
+
+        $ComplexParameters = @{
+            'Apps' = $appsArray;
+            'Assignments' = $assignmentsArray;
+            'ExcludedGroups' = $exclusionArray
         }
+        $policy = @{}
+        foreach ($property in ($policyInfo | get-member -MemberType properties))
+        {
+            if (!($ComplexParameters.keys -contains $property.name))
+            {
+                $policy.add($property.name, $policyInfo.($property.name) )
+            }
+        }
+
+        $ComplexParameters.keys | foreach { $policy.add($_, $ComplexParameters.$_ ) }
+        $policy.add('Ensure', 'Present' )
+
+        return $policy
     }
     catch
     {
@@ -834,16 +811,30 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+
+
+    #$ValuesToCheck = $PSBoundParameters
+    $PSBoundParameters.Remove('Credential') | Out-Null
+    $PSBoundParameters.Remove('ApplicationId') | Out-Null
+    $PSBoundParameters.Remove('TenantId') | Out-Null
+    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
+    $PSBoundParameters.Remove("CertificateThumbprint") | Out-Null
+    $ValuesToCheck = @{}
+
+    $PSBoundParameters.keys | foreach {
+        if ($currentvalues.$_ -ne $null)
+        {
+            if ($currentvalues.$_.gettype().name -eq 'TimeSpan') { $ValuesToCheck.$_ = set-timespan -duration $PSBoundParameters.$_ }
+            else{ $ValuesToCheck.$_ = $PSBoundParameters.$_ }
+        }
+    }
+
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+        -DesiredValues $ValuesToCheck `
+        -ValuesToCheck $ValuesToCheck.Keys `
+        -verbose
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
