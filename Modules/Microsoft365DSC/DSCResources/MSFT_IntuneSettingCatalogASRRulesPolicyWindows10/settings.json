@@ -1,0 +1,18 @@
+{
+    "resourceName": "IntuneSettingCatalogASRRulesPolicyWindows10",
+    "description": "This resource configures a Intune Endpoint Protection Attack Surface Reduction rules policy for a Windows 10 Device.",
+    "permissions": [
+        {
+            "read": [
+                {
+                    "name": "DeviceManagementConfiguration.Read.All"
+                }
+            ],
+            "update": [
+                {
+                    "name": "DeviceManagementConfiguration.ReadWrite.All"
+                }
+            ]
+        }
+    ]
+}
