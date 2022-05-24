@@ -950,33 +950,6 @@ function Export-TargetResource
     }
 }
 
-function Get-M365DSCIntuneAppProtectionPolicyAndroid
-{
-    [CmdletBinding()]
-    [OutputType([PSCustomObject])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $PolicyId
-    )
-    try
-    {
-        $Url = "https://graph.microsoft.com/beta/deviceAppManagement/AndroidManagedAppProtections('$PolicyId')/`?expand=apps,assignments"
-        $response = Invoke-MgGraphRequest -Method Get `
-            -Uri $Url
-        return $response
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-        $tenantIdValue = $Credential.UserName.Split('@')[1]
-        Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $tenantIdValue
-    }
-    return $null
-}
-
 function get-inputParamsList
 {
         param(
