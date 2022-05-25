@@ -1,7 +1,12 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.525.1
 
+* IntuneASRRulesPolicyWindows10
+  * Initial release;
+* PPowerAppsEnvironment
+  * Fixed issue on export to exclude EnvironmenTypes of Notspecified and Developer
+  * Updated validation set of EnvironmentTypes to latest values
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant module to version 1.0.84.
 * MISC
@@ -12,9 +17,6 @@
   * Added logic to New-M365DSCDeltaReport to check if the files specified in the
     Source, Destination and HeaderFilePath parameters actually exist.
   * Fixed issue where Excel wasn't closed after creating the report.
-* PPowerAppsEnvironment
-  * Fixed issue on export to exclude EnvironmenTypes of Notspecified and Developer
-  * Updated validation set of EnvironmentTypes to latest values
 
 # 1.22.518.1
 
