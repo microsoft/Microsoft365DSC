@@ -46,30 +46,6 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $IsAssigned,
-
-        [Parameter()]
-        [System.String]
-        $ManagedBrowser,
-
-        [Parameter()]
-        [System.String]
-        $MinimumRequiredAppVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumWarningAppVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumRequiredOSVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumWarningOSVersion,
-
-        [Parameter()]
-        [System.Boolean]
         $ManagedBrowserToOpenLinksRequired,
 
         [Parameter()]
@@ -324,30 +300,6 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $IsAssigned,
-
-        [Parameter()]
-        [System.String]
-        $ManagedBrowser,
-
-        [Parameter()]
-        [System.String]
-        $MinimumRequiredAppVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumWarningAppVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumRequiredOSVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumWarningOSVersion,
-
-        [Parameter()]
-        [System.Boolean]
         $ManagedBrowserToOpenLinksRequired,
 
         [Parameter()]
@@ -548,7 +500,7 @@ function Set-TargetResource
                 if ($appshash.AppGroupType -eq 'selectedPublicApps' )
                 {
                     $appshash.App | foreach {
-                        $appsarray+= set-JSONstring -id $_ -type $param
+                        if ($_ -ne $null) {$appsarray+= set-JSONstring -id $_ -type $param}
                     }
                     $configstring += ($param + ":`r`n" +($appshash.App | out-string) + "`r`n" )
                 }
@@ -557,15 +509,15 @@ function Set-TargetResource
             'Assignments'
             {
                 $PSBoundParameters.$param | foreach {
-                    $assignmentsArray+= set-JSONstring -id $_ -type $param
+                    if ($_ -ne $null) {$assignmentsArray+= set-JSONstring -id $_ -type $param}
                 }
-                $configstring += ($param + ":`r`n" +($PSBoundParameters.$param | out-string) + "`r`n" )
+                $configstring += ( $param + ":`r`n" +($PSBoundParameters.$param | out-string) + "`r`n" )
             }
 
             'ExcludedGroups'
             {
                 $PSBoundParameters.$param | foreach {
-                    $assignmentsArray+= set-JSONstring -id $_ -type $param
+                    if ($_ -ne $null) {$assignmentsArray+= set-JSONstring -id $_ -type $param}
                 }
                 $configstring += ($param + ":`r`n" +($PSBoundParameters.$param | out-string) + "`r`n" )
             }
@@ -586,10 +538,9 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message 'Amending policy via graph...'
-
         Update-MgDeviceAppMgtAndroidManagedAppProtection @setParams
 
-        # Assignments need to be set using a different cmdlet - $assignmentsArray should exist at this point
+        Write-Verbose -Message 'Setting Group Assignments...'
         set-MgDeviceAppMgtTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Assignments $assignmentsArray
 
     }
@@ -654,30 +605,6 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $DeviceComplianceRequired,
-
-        [Parameter()]
-        [System.Boolean]
-        $IsAssigned,
-
-        [Parameter()]
-        [System.String]
-        $ManagedBrowser,
-
-        [Parameter()]
-        [System.String]
-        $MinimumRequiredAppVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumWarningAppVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumRequiredOSVersion,
-
-        [Parameter()]
-        [System.String]
-        $MinimumWarningOSVersion,
 
         [Parameter()]
         [System.Boolean]
@@ -807,13 +734,31 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $((Convert-M365DscHashtableToString -Hashtable $CurrentValues) -replace ';', "`r`n")"
     Write-Verbose -Message "Target Values: $((Convert-M365DscHashtableToString -Hashtable $PSBoundParameters) -replace ';', "`r`n")"
 
+    $ValuesToCheck = @{}
+
+    $credentialParams = @(
+        'Credential',
+        'ApplicationId',
+        'TenantId',
+        'ApplicationSecret',
+        'CertificateThumbprint'
+    )
+
+    ($allparams = (get-command Test-TargetResource).Parameters).keys | foreach {
+
+        if(!($PSBoundParameters.keys -contains $allparams.$_.name) -and ($allparams.$_.Aliases.count -eq 0) -and !($credentialParams -contains $_) )
+        {
+            write-host 'Unspecified Item' $allparams.$_.name  "setting to '' "
+            $ValuesToCheck.add( ($allparams.$_.name) , '')
+        }
+    }
+
     #$ValuesToCheck = $PSBoundParameters
     $PSBoundParameters.Remove('Credential') | Out-Null
     $PSBoundParameters.Remove('ApplicationId') | Out-Null
     $PSBoundParameters.Remove('TenantId') | Out-Null
     $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
     $PSBoundParameters.Remove("CertificateThumbprint") | Out-Null
-    $ValuesToCheck = @{}
 
     $PSBoundParameters.keys | foreach {
         if ($currentvalues.$_ -ne $null)
