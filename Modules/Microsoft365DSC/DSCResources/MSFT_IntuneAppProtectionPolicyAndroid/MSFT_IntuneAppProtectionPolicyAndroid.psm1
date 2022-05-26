@@ -474,13 +474,7 @@ function Set-TargetResource
     $PSBoundParameters.Remove("TenantID") | Out-Null
     $PSBoundParameters.Remove("CertificateThumbprint") | Out-Null
 
-    #if $AppGroupType is blank set a value based on $apps value
-    if ($AppGroupType -eq '')
-    {
-        if ($apps.count -eq 0 ) { $AppGroupType = 'allApps' }
-        else { $AppGroupType = 'selectedPublicApps' }
-        write-verbose -message "setting AppGroupType to $AppGroupType"
-    }
+    $AppsHash = set-AppsHash -AppGroupType $AppGroupType -apps $apps
 
     $assignmentsArray = @()
     $appsarray = @()
@@ -536,47 +530,44 @@ function Set-TargetResource
 
         else
         {
-            if($ComplexParameters -contains $param)
+            write-verbose -message "Cannot specify this in graph cmdlet: $param"
+        }
+    }
+
+    foreach ($param in $ComplexParameters)
+    {
+        switch ($param)
+        {
+            'AppGroupType'
             {
-                switch ($param)
+                $configstring += ('AppGroupType:' + $appshash.AppGroupType + "`r`n")
+            }
+
+            'Apps'
+            {
+                if ($appshash.AppGroupType -eq 'selectedPublicApps' )
                 {
-
-                    'AppGroupType'
-                    {
-                        $configstring += ('AppGroupType:' + $AppGroupType + "`r`n")
+                    $appshash.App | foreach {
+                        $appsarray+= set-JSONstring -id $_ -type $param
                     }
-
-                    'Apps'
-                    {
-                        if ($AppGroupType -eq 'selectedPublicApps' )
-                        {
-                            $PSBoundParameters.$param | foreach {
-                                $appsarray+= set-JSONstring -id $_ -type $param
-                            }
-                            $configstring += ($param + ":`r`n" +($PSBoundParameters.$param | out-string) + "`r`n" )
-                        }
-                    }
-
-                    'Assignments'
-                    {
-                        $PSBoundParameters.$param | foreach {
-                            $assignmentsArray+= set-JSONstring -id $_ -type $param
-                        }
-                        $configstring += ($param + ":`r`n" +($PSBoundParameters.$param | out-string) + "`r`n" )
-                    }
-
-                    'ExcludedGroups'
-                    {
-                        $PSBoundParameters.$param | foreach {
-                            $assignmentsArray+= set-JSONstring -id $_ -type $param
-                        }
-                        $configstring += ($param + ":`r`n" +($PSBoundParameters.$param | out-string) + "`r`n" )
-                    }
+                    $configstring += ($param + ":`r`n" +($appshash.App | out-string) + "`r`n" )
                 }
             }
-            else
+
+            'Assignments'
             {
-                write-verbose -message "Cannot specify this in graph cmdlet: $param"
+                $PSBoundParameters.$param | foreach {
+                    $assignmentsArray+= set-JSONstring -id $_ -type $param
+                }
+                $configstring += ($param + ":`r`n" +($PSBoundParameters.$param | out-string) + "`r`n" )
+            }
+
+            'ExcludedGroups'
+            {
+                $PSBoundParameters.$param | foreach {
+                    $assignmentsArray+= set-JSONstring -id $_ -type $param
+                }
+                $configstring += ($param + ":`r`n" +($PSBoundParameters.$param | out-string) + "`r`n" )
             }
         }
     }
@@ -610,10 +601,10 @@ function Set-TargetResource
         Remove-MgDeviceAppManagementAndroidManagedAppProtection -AndroidManagedAppProtectionId $policyInfo.id
     }
 
-    if ( ($AppGroupType -ne '') -and ($ensure -ne 'absent'))
+    if ( $ensure -ne 'Absent')
     {
-        write-verbose -message "Setting Application values of type: $AppGroupType"
-        Invoke-MgTargetDeviceAppMgtTargetedManagedAppConfigurationApp -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Apps $appsarray -AppGroupType $AppGroupType
+        write-verbose -message ("Setting Application values of type: " + $AppsHash.AppGroupType)
+        Invoke-MgTargetDeviceAppMgtTargetedManagedAppConfigurationApp -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Apps $appsarray -AppGroupType $AppsHash.AppGroupType
     }
 
 }
@@ -801,6 +792,11 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
+    $AppsHash = set-AppsHash -AppGroupType $AppGroupType -apps $apps
+    $PSBoundParameters.AppGroupType = $AppsHash.AppGroupType
+    $PSBoundParameters.Apps = $AppsHash.Apps
+    if ($CurrentValues.AppGroupType -ne 'SelectedPublicApps') { $CurrentValues.Apps = @() }
+
     if ($CurrentValues.Ensure -eq "ERROR")
     {
 
@@ -808,10 +804,8 @@ function Test-TargetResource
 
     }
 
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-
-
+    Write-Verbose -Message "Current Values: $((Convert-M365DscHashtableToString -Hashtable $CurrentValues) -replace ';', "`r`n")"
+    Write-Verbose -Message "Target Values: $((Convert-M365DscHashtableToString -Hashtable $PSBoundParameters) -replace ';', "`r`n")"
 
     #$ValuesToCheck = $PSBoundParameters
     $PSBoundParameters.Remove('Credential') | Out-Null
@@ -867,7 +861,7 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -ProfileName v1.0 `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -952,11 +946,10 @@ function Export-TargetResource
 
 function get-inputParamsList
 {
-        param(
-            [string]$commandName
-        )
+    param(
+        [string]$commandName
+    )
 
-    # it seems a daft function at the moment but I'm hoping wI can use it to set up dynamic parameters for the functions at some point and I'll probably need to work on it then
     $Graphparams = (get-command $commandName).Parameters
 
     return $Graphparams
@@ -1040,6 +1033,34 @@ function set-JSONstring
 
     return $JsonContent
 
+}
+
+function set-AppsHash
+{
+    param (
+        [string]$AppGroupType,
+        [array]$Apps
+    )
+
+   if ($AppGroupType -eq '')
+    {
+        if ($apps.count -eq 0 ) { $AppGroupType = 'allApps' }
+        else { $AppGroupType = 'selectedPublicApps' }
+        write-verbose -message "setting AppGroupType to $AppGroupType"
+    }
+
+    $appsarray = @()
+    if ($AppGroupType -eq 'selectedPublicApps' )
+    {
+        $appsarray = $apps
+    }
+
+    $AppsHash = @{
+        'AppGroupType' = $AppGroupType;
+        'Apps' = $appsarray
+    }
+
+    return $AppsHash
 }
 
 
