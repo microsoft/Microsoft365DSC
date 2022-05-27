@@ -731,9 +731,6 @@ function Test-TargetResource
 
     }
 
-    Write-Verbose -Message "Current Values: $((Convert-M365DscHashtableToString -Hashtable $CurrentValues) -replace ';', "`r`n")"
-    Write-Verbose -Message "Target Values: $((Convert-M365DscHashtableToString -Hashtable $PSBoundParameters) -replace ';', "`r`n")"
-
     $ValuesToCheck = @{}
 
     $credentialParams = @(
@@ -748,7 +745,7 @@ function Test-TargetResource
 
         if(!($PSBoundParameters.keys -contains $allparams.$_.name) -and ($allparams.$_.Aliases.count -eq 0) -and !($credentialParams -contains $_) )
         {
-            write-host 'Unspecified Item' $allparams.$_.name  "setting to '' "
+            write-host 'Unspecified Parameter:' $allparams.$_.name  "setting to '' "
             $ValuesToCheck.add( ($allparams.$_.name) , '')
         }
     }
@@ -766,8 +763,12 @@ function Test-TargetResource
             if ($currentvalues.$_.gettype().name -eq 'TimeSpan') { $ValuesToCheck.$_ = set-timespan -duration $PSBoundParameters.$_ }
             else{ $ValuesToCheck.$_ = $PSBoundParameters.$_ }
         }
+        else{ $ValuesToCheck.$_ = $PSBoundParameters.$_ }
     }
 
+
+    Write-Verbose -Message "Current Values: $((Convert-M365DscHashtableToString -Hashtable $CurrentValues) -replace ';', "`r`n")"
+    Write-Verbose -Message "Target Values: $((Convert-M365DscHashtableToString -Hashtable $ValuesToCheck) -replace ';', "`r`n")"
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
