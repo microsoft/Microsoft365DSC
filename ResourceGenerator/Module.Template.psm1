@@ -650,6 +650,10 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
         {
             $returnValue= "                " + $Key + " = '" + $Value + "'`r`n"
         }
+        "*.DateTime"
+        {
+            $returnValue= "                " + $Key + " = '" + $Value + "'`r`n"
+        }
         "*[[\]]"
         {
             $returnValue= "                " + $key + " = @("
@@ -666,6 +670,10 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
                 switch -Wildcard ($item.GetType().Fullname )
                 {
                     "*.String"
+                    {
+                        $returnValue += "$whitespace'$item'$newline"
+                    }
+                    "*.DateTime"
                     {
                         $returnValue += "$whitespace'$item'$newline"
                     }
