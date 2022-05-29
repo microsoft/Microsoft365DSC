@@ -39,7 +39,13 @@ function Get-TargetResource
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
-            -ProfileName '<#APIVersion#>'
+            -ProfileName 'v1.0'
+        $context=Get-MgContext
+        if($null -eq $context)
+        {
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters -ProfileName 'beta'
+        }
         Select-MgProfile '<#APIVersion#>' -ErrorAction Stop
     }
     catch
@@ -171,7 +177,14 @@ function Set-TargetResource
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
-            -ProfileName '<#APIVersion#>'
+            -ProfileName 'v1.0'
+        $context=Get-MgContext
+        if($null -eq $context)
+        {
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters -ProfileName 'beta'
+        }
+        Select-MgProfile '<#APIVersion#>' -ErrorAction Stop
     }
     catch
     {
@@ -197,12 +210,23 @@ function Set-TargetResource
     $PSBoundParameters.Remove('ApplicationId') | Out-Null
     $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
     $PSBoundParameters.Remove('TenantId') | Out-Null
+    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
+
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating {$DisplayName}"
-        $CreateParameters = $PSBoundParameters
+        $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters.Remove("Id") | Out-Null
+        $CreateParameters.Remove("Verbose") | Out-Null
+
+        foreach($key in $PSBoundParameters.Keys)
+        {
+            if($PSBoundParameters[$key].getType().Fullname -like "*CimInstance*")
+            {
+                $CreateParameters[$key]=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters[$key]
+            }
+        }
 
         $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
         <#ResourceGenerator
@@ -214,40 +238,19 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating {$DisplayName}"
-        [System.Collections.Hashtable]$UpdateParameters = $PSBoundParameters
+        $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
         $UpdateParameters.Remove("Id") | Out-Null
-        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        $UpdateParameters.Remove("Verbose") | Out-Null
 
-        $ConvertedParameters = @()
-        foreach ($key in $UpdateParameters.Keys)
+        foreach($key in $PSBoundParameters.Keys)
         {
-            if (($UpdateParameters[$key]).GetType().Name -eq 'CimInstance')
+            if($PSBoundParameters[$key].getType().Fullname -like "*CimInstance*")
             {
-                Write-Verbose -Message "Converting complex property {$key} to Hashtable"
-                $hashtableValue = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters[$key]
-                $currentParameter = @{
-                    Name = $key
-                    Value = $hashtableValue
-                }
-                $ConvertedParameters += $currentParameter
+                $UpdateParameters[$key]=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters[$key]
             }
         }
-
-        foreach ($convertedParameter in $ConvertedParameters)
-        {
-            if (-not $readOnlyParameters.Contains($convertedParameter.Name))
-            {
-                $UpdateParameters[$convertedParameter.Name] = $convertedParameter.Value
-            }
-        }
-        <#
-        if ($AdditionalProperties)
-        {
-            $UpdateParameters.Add("AdditionalProperties", $AdditionalProperties)
-        }#>
         <#ResourceGenerator
         #region resource generator code
-        Write-Verbose -Message ($UpdateParameters | Out-String)
         <UpdateCmdLetName> @UpdateParameters `
             -<#UpdateKeyIdentifier#> $currentInstance.Id
         #endregion
@@ -323,24 +326,56 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of {$<PrimaryKey>}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+    $testResult=$true
 
-    $ValuesToCheck = $PSBoundParameters
+    foreach($key in $PSBoundParameters.Keys)
+    {
+        if($PSBoundParameters[$key].getType().Name -like "*CimInstance*")
+        {
+            $testResult=Compare-M365DSCComplexObject `
+                -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters[$key]) `
+                -Target (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $CurrentValues.$key)
+
+            if(-Not $testResult)
+            {
+                $testResult=$false
+                break;
+            }
+            $ValuesToCheck.Remove($key)|Out-Null
+        }
+    }
+
     $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
-    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
-    Write-Verbose -Message "Test-TargetResource returned $TestResult"
+    #Convert any DateTime to String
+    foreach ($key in $ValuesToCheck.Keys)
+    {
+        if(($null -ne $CurrentValues[$key]) `
+            -and ($CurrentValues[$key].getType().Name -eq 'DateTime'))
+        {
+            $CurrentValues[$key]=$CurrentValues[$key].toString()
+        }
+    }
 
-    return $TestResult
+    if($testResult)
+    {
+        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $ValuesToCheck.Keys -verbose
+    }
+
+    Write-Verbose -Message "Test-TargetResource returned $testResult"
+
+    return $testResult
 }
 
 function Export-TargetResource
@@ -372,7 +407,14 @@ function Export-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName '<#APIVersion#>'
+        -ProfileName 'v1.0'
+    $context=Get-MgContext
+    if($null -eq $context)
+    {
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters -ProfileName 'beta'
+    }
+    Select-MgProfile '<#APIVersion#>' -ErrorAction Stop
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -503,9 +545,16 @@ function Get-M365DSCDRGComplexTypeToString
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $CIMInstanceName
+        $CIMInstanceName,
+
+        [System.String]
+        $Whitespace=""
     )
     if ($null -eq $ComplexObject)
+    {
+        return $null
+    }
+    if(-Not (Test-M365DSCComplexObjectHasValues -ComplexObject $ComplexObject))
     {
         return $null
     }
@@ -517,17 +566,30 @@ function Get-M365DSCDRGComplexTypeToString
         {
             $keyNotNull++
 
-            if ($ComplexObject[$key].GetType().Name -eq 'Boolean')
+            if ($ComplexObject[$key].GetType().FullName -like "Microsoft.Graph.PowerShell.Models.*")
             {
-                $currentProperty += "                " + $key + " = `$" + $ComplexObject[$key].ToString() + "`r`n"
+                $hashPropertyType=$ComplexObject[$key].GetType().Name.tolower()
+                $hashProperty=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key]
+
+                if (Test-M365DSCComplexObjectHasValues -ComplexObject $hashProperty)
+                {
+                    $Whitespace+="            "
+                    $currentProperty += "                " + $key + " = "
+                    $currentProperty += Get-M365DSCDRGComplexTypeToString `
+                                    -ComplexObject $hashProperty `
+                                    -CIMInstanceName $hashPropertyType `
+                                    -Whitespace $Whitespace
+                }
+
             }
             else
             {
-                $currentProperty += "                " + $key + " = '" + $ComplexObject[$key] + "'`r`n"
+                $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $ComplexObject[$key]
             }
+
         }
     }
-    $currentProperty += "            }"
+    $currentProperty += "            }`r`n"
 
     if ($keyNotNull -eq 0)
     {
@@ -536,6 +598,104 @@ function Get-M365DSCDRGComplexTypeToString
     return $currentProperty
 }
 
+function Test-M365DSCComplexObjectHasValues
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $ComplexObject
+    )
+    $keys=$ComplexObject.keys
+    $hasValue=$false
+    foreach($key in $keys)
+    {
+        if($ComplexObject[$key])
+        {
+            if($ComplexObject[$key].GetType().FullName -like "Microsoft.Graph.PowerShell.Models.*")
+            {
+                $hasValue=Test-M365DSCComplexObjectHasValues -ComplexObject (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key] )
+            }
+            else
+            {
+                $hasValue=$true
+                return $hasValue
+            }
+        }
+    }
+    return $hasValue
+}
+Function Get-M365DSCDRGSimpleObjectTypeToString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $Key,
+
+        [Parameter(Mandatory = 'true')]
+        $Value
+    )
+
+    $returnValue=""
+    switch -Wildcard ($Value.GetType().Fullname )
+    {
+        "*.Boolean"
+        {
+            $returnValue= "                " + $Key + " = `$" + $Value.ToString() + "`r`n"
+        }
+        "*.String"
+        {
+            $returnValue= "                " + $Key + " = '" + $Value + "'`r`n"
+        }
+        "*[[\]]"
+        {
+            $returnValue= "                " + $key + " = @("
+            $whitespace=""
+            $newline=""
+            if($Value.count -gt 1)
+            {
+                $returnValue += "`r`n"
+                $whitespace="                    "
+                $newline="`r`n"
+            }
+            foreach ($item in $Value)
+            {
+                switch -Wildcard ($item.GetType().Fullname )
+                {
+                    "*.String"
+                    {
+                        $returnValue += "$whitespace'$item'$newline"
+                    }
+                    "Microsoft.Graph.PowerShell.Models.*"
+                    {
+                        #$currentProperty += "                " + $key + " = '"
+                    }
+                    Default
+                    {
+                        $returnValue += "$whitespace$item$newline"
+                    }
+                }
+            }
+            if($Value.count -gt 1)
+            {
+                $returnValue += "                )`r`n"
+            }
+            else
+            {
+                $returnValue += ")`r`n"
+
+            }
+        }
+        Default
+        {
+            $returnValue= "                " + $Key + " = " + $Value + "`r`n"
+        }
+    }
+    return $returnValue
+}
 function Get-M365DSCAdditionalProperties
 {
     [CmdletBinding()]
@@ -558,5 +718,116 @@ function Get-M365DSCAdditionalProperties
     }
     return $results
 }
+function Compare-M365DSCComplexObject
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param(
+        [Parameter(Mandatory = 'true')]
+        [System.Collections.Hashtable]
+        $Source,
+        [Parameter(Mandatory = 'true')]
+        [System.Collections.Hashtable]
+        $Target
+    )
 
+    $keys= $Source.Keys|Where-Object -FilterScript {$_ -ne "PSComputerName"}
+    foreach ($key in $keys)
+    {
+        #Marking Target[key] to null if empty complex object or array
+        if($null -ne $Target[$key])
+        {
+            switch -Wildcard ($Target[$key].getType().Fullname )
+            {
+                "Microsoft.Graph.PowerShell.Models.*"
+                {
+                    $hashProperty=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Target[$key]
+                    if(-not (Test-M365DSCComplexObjectHasValues -ComplexObject $hashProperty))
+                    {
+                        $Target[$key]=$null
+                    }
+                }
+                "*[[\]]"
+                {
+                    if($Target[$key].count -eq 0)
+                    {
+                        $Target[$key]=$null
+                    }
+                }
+            }
+        }
+
+        #One of the item is null
+        if (($null -eq $Source[$key]) -xor ($null -eq $Target[$key]))
+        {
+            return $false
+        }
+        #Both source and target aren't null or empty
+        if(($null -ne $Source[$key]) -and ($null -ne $Target[$key]))
+        {
+            if($Source[$key].getType().FullName -like "*CimInstance*")
+            {
+                #Recursive call for complex object
+                $compareResult= Compare-M365DSCComplexObject `
+                    -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Source[$key]) `
+                    -Target (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Target[$key])
+
+                if(-not $compareResult)
+                {
+                    return $false
+                }
+            }
+            else
+            {
+                #Simple object comparison
+                $referenceObject=$Target[$key]
+                $differenceObject=$Source[$key]
+
+                $compareResult = Compare-Object `
+                    -ReferenceObject ($referenceObject) `
+                    -DifferenceObject ($differenceObject)
+
+                if ($null -ne $compareResult)
+                {
+                    return $false
+                }
+
+            }
+        }
+    }
+
+    return $true
+}
+
+function Convert-M365DSCDRGComplexTypeToHashtable
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = 'true')]
+        [System.Object]
+        $ComplexObject
+    )
+
+    $hashComplexObject = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject
+    $results=$hashComplexObject.clone()
+    $results.remove('PSComputerName')|out-null
+    $keys=$hashComplexObject.Keys|Where-Object -FilterScript {$_ -ne 'PSComputerName'}
+    foreach ($key in $keys)
+    {
+        if(($null -ne $hashComplexObject[$key]) -and ($hashComplexObject[$key].getType().Fullname -like "*CimInstance*"))
+        {
+            if(Test-M365DSCComplexObjectHasValues -ComplexObject (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $hashComplexObject[$key]))
+            {
+                $results[$key]=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $hashComplexObject[$key]
+            }
+        }
+        if($null -eq $hashComplexObject[$key])
+        {
+            $results.remove($key)|out-null
+        }
+
+    }
+    return $results
+}
 Export-ModuleMember -Function *-TargetResource
