@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# 1.22.601.1
+
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 4.4.1
+
 # 1.22.525.1
 
 * IntuneASRRulesPolicyWindows10
