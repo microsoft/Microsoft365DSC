@@ -160,11 +160,30 @@ function Get-ParameterBlockInformation
         }
         else
         {
+            <#
             $type = $property.Type
-            if ($type.Substring(0,3) -eq 'Edm') {
-                $type = $type.Replace('Edm','System')
-            }
-            $parameterType = Get-M365DSCDRGParameterType -Type $type
+            switch -Wildcard ($type)
+            {
+                "Edm.*"
+                {
+                    $type = $type.Replace('Edm','System')
+                }
+                "C(*)"
+                {
+                    $typeName=$type.replace("C(","").replace(")","")
+                    $typeDefinition=(Invoke-Expression "[Microsoft.Graph.PowerShell.Models.IMicrosoftGraph$typeName]" -ErrorAction SilentlyContinue)
+                    $type=$null
+                    if($typeDefinition)
+                    {
+                        $type=$typeDefinition.Fullname
+                    }
+                }
+            }#>
+            $parameterType=$null
+            <#if($type)
+            {
+                $parameterType = Get-M365DSCDRGParameterType -Type $type
+            }#>
         }
 
         $parameterName = $property.Name
@@ -173,14 +192,15 @@ function Get-ParameterBlockInformation
         $parameterNameCamelCaseString = $parameterName.Substring(1)
         $parameterName = "$($parameterNameFirstLetter)$($parameterNameCamelCaseString)"
 
-        $parameterBlock.Add(@{
-                IsMandatory = $isMandatory
-                Attribute   = $parameterAttribute
-                Type        = $parameterType
-                Name        = $parameterName
-            }) | Out-Null
-
-
+        if($parameterType)
+        {
+            $parameterBlock.Add(@{
+                    IsMandatory = $isMandatory
+                    Attribute   = $parameterAttribute
+                    Type        = $parameterType
+                    Name        = $parameterName
+                })| Out-Null
+        }
     }
     return $parameterBlock
 }
@@ -513,9 +533,12 @@ function New-M365DSCResource
 
     $parameterInformation = Get-ParameterBlockInformation -Properties $typeProperties -DefaultParameterSetProperties $defaultParameterSetProperties
 
+    $script:DiscoveredComplexTypes=@()
     $CimInstances = Get-M365DSCDRGCimInstances -ResourceName $ResourceName `
         -Properties $parameterInformation `
         -Workload $Workload
+
+    $script:DiscoveredComplexTypes=$null
 
     $Global:AlreadyFoundInstances = @()
 
@@ -557,7 +580,7 @@ function New-M365DSCResource
     Write-TokenReplacement -Token "<RemoveCmdLetName>" -Value "Remove-$($GraphModuleCmdLetNoun)" -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<ODataType>" -Value $selectedODataType.Name -FilePath $moduleFilePath
 
-    Write-TokenReplacement -Token "<FilterScript>" -Value "`$_.displayName -eq `$(`$DisplayName)" -FilePath $moduleFilePath
+    Write-TokenReplacement -Token "<FilterScript>" -Value "DisplayName" -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<FilterScriptShort>" -Value "`$_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.$($selectedODataType.Name)' " -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<HashTableMapping>" -Value $hashTableMapping -FilePath $moduleFilePath
     Write-TokenReplacement -Token "<#ComplexTypeContent#>" -Value $hashtableResults.ComplexTypeContent -FilePath $moduleFilePath
@@ -695,7 +718,8 @@ function Get-M365DSCDRGCimInstances
     $results = @()
     foreach ($cimInstance in $cimInstances)
     {
-        $DiscoveredComplexTypes += $cimInstance.Type
+
+
         $IsArray = $false
         $currentInstance = @{}
         $originalType = $cimInstance.Type
@@ -706,6 +730,12 @@ function Get-M365DSCDRGCimInstances
             $IsArray = $true
             $cimInstanceName = $cimInstanceName -replace '[[\]]',''
             $originalType = $cimInstance.Type.ToString() -replace '[[\]]',''
+        }
+
+        $DiscoveredComplexTypeName = "microsoft.graph.powershell.models.imicrosoftgraph$cimInstanceName"
+        if($DiscoveredComplexTypeName -notin $DiscoveredComplexTypes)
+        {
+            $script:DiscoveredComplexTypes+=$DiscoveredComplexTypeName
         }
         $currentInstance.Add("IsArray",$IsArray)
 
@@ -739,7 +769,7 @@ function Get-M365DSCDRGCimInstances
 
                 if ($propertyType.StartsWith("microsoft.graph.powershell.models."))
                 {
-                    if ($DiscoveredComplexTypes -notcontains $propertyType)
+                    if ($script:DiscoveredComplexTypes -notcontains $propertyType)
                     {
                         $subProperties = @{Type = $propertyType}
                         $subResult = Get-M365DSCDRGCimInstances -Workload $Workload `
@@ -1013,7 +1043,12 @@ function New-M365HashTableMapping
 
                 $convertToVariable += "        if (`$Results.$parameterName)`r`n"
                 $convertToVariable += "        {`r`n"
-                $convertToVariable += "            `$currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock `$currentDSCBlock -ParameterName `"$parameterName`"`r`n"
+                $convertToVariable += "            `$isCIMArray=`$false`r`n"
+                $convertToVariable += "            if(`$Results.$parameterName.getType().Fullname -like `"*[[\]]`")`r`n"
+                $convertToVariable += "            {`r`n"
+                $convertToVariable += "                `$isCIMArray=`$true`r`n"
+                $convertToVariable += "            }`r`n"
+                $convertToVariable += "            `$currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock `$currentDSCBlock -ParameterName `"$parameterName`" -isCIMArray:`$isCIMArray`r`n"
                 $convertToVariable += "        }`r`n"
             }
             else
