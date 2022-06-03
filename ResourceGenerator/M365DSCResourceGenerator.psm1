@@ -733,7 +733,7 @@ function Get-M365DSCDRGCimInstances
         }
 
         $DiscoveredComplexTypeName = "microsoft.graph.powershell.models.imicrosoftgraph$cimInstanceName"
-        if($DiscoveredComplexTypeName -notin $DiscoveredComplexTypes)
+        if($DiscoveredComplexTypeName -notin $script:DiscoveredComplexTypes)
         {
             $script:DiscoveredComplexTypes+=$DiscoveredComplexTypeName
         }
