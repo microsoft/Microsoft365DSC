@@ -3,8 +3,16 @@
     "description": "",
     "permissions": [
         {
-            "read": [],
-            "update": []
+            "read": [
+                {
+                    "name": "Domain.Read.All"
+                }
+            ],
+            "update": [
+                {
+                    "name": "Domain.Read.All"
+                }
+            ]
         }
     ]
 }

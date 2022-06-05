@@ -14,6 +14,9 @@
                     "name": "Directory.ReadWrite.All"
                 },
                 {
+                    "name": "Domain.Read.All"
+                },
+                {
                     "name": "Group.Read.All"
                 },
                 {
@@ -35,6 +38,9 @@
                 },
                 {
                     "name": "Directory.ReadWrite.All"
+                },
+                {
+                    "name": "Domain.Read.All"
                 },
                 {
                     "name": "Group.Read.All"
