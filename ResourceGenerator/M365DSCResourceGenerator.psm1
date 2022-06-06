@@ -109,6 +109,7 @@ function Get-DerivedType
     # Clean JSON
     $cleanJsonString = $rawJson.TrimStart("const json = ")
     $cleanJsonString = $CleanJsonString -replace ",}", "}"
+    $cleanJsonString = $CleanJsonString -replace ": ]", ": []"
     $targetIndex = $cleanJsonString.IndexOf(";")
     $cleanJsonString = $cleanJsonString.Remove($targetIndex)
     $entityRelationships = $cleanJsonString | ConvertFrom-Json
