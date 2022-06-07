@@ -193,7 +193,7 @@ function Convert-M365DscArrayToString
         if ($item -is [System.Collections.Hashtable])
         {
             $str += "{"
-            $str += Convert-M365DDSCHashtableToString -Hashtable $item
+            $str += Convert-M365DSCHashtableToString -Hashtable $item
             $str += "}"
         }
         elseif ($Array[$i] -is [Microsoft.Management.Infrastructure.CimInstance])
