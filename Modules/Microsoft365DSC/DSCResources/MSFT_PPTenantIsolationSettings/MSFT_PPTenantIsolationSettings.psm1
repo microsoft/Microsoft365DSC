@@ -42,11 +42,13 @@ function Get-TargetResource
         throw $message
     }
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatforms' `
-        -InboundParameters $PSBoundParameters
-
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
+
+    $tenantid = (Get-MgContext).TenantId
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatforms' `
+    -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -62,8 +64,6 @@ function Get-TargetResource
 
     try
     {
-        $tenantid = (Get-MgContext).TenantId
-
         $tenantIsolationPolicy = Get-PowerAppTenantIsolationPolicy -TenantId $tenantid
 
         [Array]$allowedTenants = $tenantIsolationPolicy.properties.allowedTenants | ForEach-Object {

@@ -28,7 +28,7 @@ The following table provides an overview of what authentication methods are supp
 | _Office 365*_ | Microsoft.Graph.Authentication<br /> (Connect-MgGraph) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Check](../../Images/check.png) |
 | _OneDrive_ | PnP.PowerShell (Connect-PnPOnline) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) |
 | _Power Apps_ | Microsoft.PowerApps.<br />Administration.PowerShell | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Check](../../Images/check.png) |
-| _Planner*_ | Microsoft.Graph.Authentication<br /> (Connect-MgGraph) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Check](../../Images/check.png) |
+| _Planner*_ | Microsoft.Graph.Authentication<br /> (Connect-MgGraph) | ![Check](../../Images/cross.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Check](../../Images/check.png) |
 | _Security & Compliance Center_ | ExchangeOnlineManagement<br /> (Connect-IPPSSession) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Cross](../../Images/cross.png) | ![Cross](../../Images/cross.png) |
 | _SharePoint Online_ | PnP.PowerShell<br /> (Connect-PnPOnline) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) |
 | _Teams_ | MicrosoftTeams<br /> (Connect-MicrosoftTeams) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Cross](../../Images/cross.png) |

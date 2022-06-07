@@ -16,6 +16,6 @@ This function does not have any input parameters.
 
 -------------------------- EXAMPLE 1 --------------------------
 
-`Uninstall-M365DSCOutdatedObjects`
+`Uninstall-M365DSCOutdatedDependencies`
 
 
