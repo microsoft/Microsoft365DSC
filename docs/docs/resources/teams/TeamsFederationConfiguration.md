@@ -4,12 +4,12 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Identity** | Key | String | The only valid input is Global - the tenant wide configuration |Global|
-| **AllowFederatedUsers** | Write | Boolean | When set to True users will be potentially allowed to communicate with users from other domains. ||
-| **AllowPublicUsers** | Write | Boolean | When set to True users will be potentially allowed to communicate with users who have accounts on public IM and presence providers. ||
-| **AllowTeamsConsumer** | Write | Boolean | Allows federation with people using Teams with an account that's not managed by an organization. ||
-| **AllowTeamsConsumerInbound** | Write | Boolean | Allows people using Teams with an account that's not managed by an organization, to discover and start communication with users in your organization. ||
-| **Credential** | Required | PSCredential | Credentials of the Teams Admin ||
+| **Identity** | Key | String | The only valid input is Global - the tenant wide configuration | `Global` |
+| **AllowFederatedUsers** | Write | Boolean | When set to True users will be potentially allowed to communicate with users from other domains. | |
+| **AllowPublicUsers** | Write | Boolean | When set to True users will be potentially allowed to communicate with users who have accounts on public IM and presence providers. | |
+| **AllowTeamsConsumer** | Write | Boolean | Allows federation with people using Teams with an account that's not managed by an organization. | |
+| **AllowTeamsConsumerInbound** | Write | Boolean | Allows people using Teams with an account that's not managed by an organization, to discover and start communication with users in your organization. | |
+| **Credential** | Required | PSCredential | Credentials of the Teams Admin | |
 
 ## Description
 
@@ -17,6 +17,32 @@ This resource is used to configure the Teams Federation Configuration (CsTenantF
 In the Teams admin center this is available in 'External access' in the Users section.
 
 More information: https://docs.microsoft.com/en-us/microsoftteams/manage-external-access
+
+## Permissions
+
+### Microsoft Graph
+
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
+
+#### Delegated permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
+
+#### Application permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
 
 ## Examples
 

@@ -1,10 +1,26 @@
 ﻿{
     "resourceName": "EXOMessageClassification",
     "description": "",
-    "permissions": [
-        {
-            "read": [],
-            "update": []
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        },
+        "exchange": {
+            "requiredroles": [
+                "User Options",
+                "Data Loss Prevention",
+                "Transport Rules",
+                "View-Only Configuration",
+                "Mail Recipients"
+            ],
+            "requiredrolegroups": "Organization Management"
         }
-    ]
+    }
 }

@@ -99,8 +99,10 @@
         'Test-M365DSCDependenciesForNewVersions',
         'Uninstall-M365DSCOutdatedDependencies',
         'Update-M365DSCAllowedGraphScopes',
+        'Update-M365DSCAzureAdApplication',
         'Update-M365DSCDependencies',
-        'Update-M365DSCResourcesSettingsJSON')
+        'Update-M365DSCResourcesSettingsJSON'
+    )
 
     # Variables to export from this module
     # VariablesToExport = @()

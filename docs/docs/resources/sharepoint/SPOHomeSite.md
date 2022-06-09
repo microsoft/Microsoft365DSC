@@ -4,16 +4,16 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **IsSingleInstance** | Key | String | Specifies the resource is a single instance, the value must be 'Yes' |Yes|
-| **Url** | Write | String | The URL of the home site collection ||
-| **Ensure** | Write | String | Present ensures the site collection is registered as home site, absent ensures it is unregistered |Present, Absent|
-| **Credential** | Write | PSCredential | Credentials of the account to authenticate with. ||
-| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
-| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory application to authenticate with. ||
-| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||
-| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for certificatePassword ||
-| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. ||
-| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
+| **IsSingleInstance** | Key | String | Specifies the resource is a single instance, the value must be 'Yes' | `Yes` |
+| **Url** | Write | String | The URL of the home site collection | |
+| **Ensure** | Write | String | Present ensures the site collection is registered as home site, absent ensures it is unregistered | `Present`, `Absent` |
+| **Credential** | Write | PSCredential | Credentials of the account to authenticate with. | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com | |
+| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for certificatePassword | |
+| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 
 ## Description
 
@@ -27,18 +27,31 @@ SharePoint Home.
 > test run can lead to incorrect status results.
 > For more details about setting the home site, go to> aka.ms/homesites
 
-## Azure AD Permissions
+## Permissions
 
-To authenticate via Azure Active Directory, this resource required the following Application permissions:
+### Microsoft Graph
 
-* **Automate**
-  * SharePoint
-    * Sites.FullControl.All
-* **Export**
-  * SharePoint
-    * Sites.FullControl.All
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
 
-NOTE: All permisions listed above require admin consent.
+#### Delegated permissions
+
+- **Read**
+
+    - Sites.FullControl.All
+
+- **Update**
+
+    - Sites.FullControl.All
+
+#### Application permissions
+
+- **Read**
+
+    - Sites.FullControl.All
+
+- **Update**
+
+    - Sites.FullControl.All
 
 ## Examples
 

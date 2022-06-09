@@ -27,10 +27,8 @@ This function does not generate any output.
 
 `New-M365DSCDeltaReport -Source 'C:\DSC\Source.ps1' -Destination 'C:\DSC\Destination.ps1' -OutputPath 'C:\Dsc\DeltaReport.html'`
 
-
 -------------------------- EXAMPLE 2 --------------------------
 
 `New-M365DSCDeltaReport -Source 'C:\DSC\Source.ps1' -Destination 'C:\DSC\Destination.ps1' -OutputPath 'C:\Dsc\DeltaReport.html' -DriftOnly $true`
-
 
 

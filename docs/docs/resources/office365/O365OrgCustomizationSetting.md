@@ -4,18 +4,16 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **IsSingleInstance** | Key | String | Specifies the resource is a single instance, the value must be 'Yes' |Yes|
-| **Ensure** | Write | String | Since there is only one setting availble, this must be set to 'Present' |Present|
-| **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin ||
-| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
-| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
-| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
-| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword ||
-| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. ||
+| **IsSingleInstance** | Key | String | Specifies the resource is a single instance, the value must be 'Yes' | `Yes` |
+| **Ensure** | Write | String | Since there is only one setting availble, this must be set to 'Present' | `Present` |
+| **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
+| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
+| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 
-# O365OrgCustomizationSetting
-
-### Description
+## Description
 
 This resource configures the tenant settings so that the tenant runs in a fully
 configurable mode. Usually tenants are created in a mode, that limits options to
@@ -25,33 +23,31 @@ Running this resource will set the property to false.
 
 Currently there is no setting available to undo Enable-OrganizationCustomization.
 
-## Parameters
+## Permissions
 
-IsSingleInstance
+### Microsoft Graph
 
-- Required: Yes
-- Description: Single instance resource, the value must be 'Yes'
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
 
-Ensure
+#### Delegated permissions
 
-- Required: No (Defaults to 'Present')
-- Description: `Present` is the only value accepted.
-  Configurations using `Ensure = 'Absent'` will throw an Error!
+- **Read**
 
-Credential
+    - None
 
-- Required: Yes
-- Description: Credentials of the account to authenticate with
+- **Update**
 
-## Example
+    - None
 
-```PowerShell
-        O365OrgCustomizationSettting EnableOgranizationCustomization {
-            IsSingleInstance    = 'Yes'
-            Ensure              = 'Present'
-            Credential  = $Credential
-        }
-```
+#### Application permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
 
 ## Examples
 

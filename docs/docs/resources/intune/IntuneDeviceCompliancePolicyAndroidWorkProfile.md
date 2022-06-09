@@ -4,56 +4,43 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **DisplayName** | Key | String | Display name of the AndroidWorkProfile device compliance policy. ||
-| **Description** | Write | String | Description of the AndroidWorkProfile device compliance policy. ||
-| **PasswordRequired** | Write | Boolean | PasswordRequired of the AndroidWorkProfile device compliance policy. ||
-| **PasswordMinimumLength** | Write | UInt32 | PasswordMinimumLength of the AndroidWorkProfile device compliance policy. ||
-| **PasswordRequiredType** | Write | String | PasswordRequiredType of the AndroidWorkProfile device compliance policy. |deviceDefault, alphabetic, alphanumeric, alphanumericWithSymbols, lowSecurityBiometric, numeric, numericComplex, any|
-| **PasswordMinutesOfInactivityBeforeLock** | Write | UInt32 | PasswordMinutesOfInactivityBeforeLock of the AndroidWorkProfile device compliance policy. ||
-| **PasswordExpirationDays** | Write | UInt32 | PasswordExpirationDays of the AndroidWorkProfile device compliance policy. ||
-| **PasswordPreviousPasswordBlockCount** | Write | UInt32 | PasswordPreviousPasswordBlockCount of the AndroidWorkProfile device compliance policy. ||
-| **PasswordSignInFailureCountBeforeFactoryReset** | Write | UInt32 | PasswordSignInFailureCountBeforeFactoryReset of the AndroidWorkProfile device compliance policy. ||
-| **SecurityPreventInstallAppsFromUnknownSources** | Write | Boolean | SecurityPreventInstallAppsFromUnknownSources of the AndroidWorkProfile device compliance policy. ||
-| **SecurityDisableUsbDebugging** | Write | Boolean | SecurityDisableUsbDebugging of the AndroidWorkProfile device compliance policy. ||
-| **SecurityRequireVerifyApps** | Write | Boolean | SecurityRequireVerifyApps of the AndroidWorkProfile device compliance policy. ||
-| **DeviceThreatProtectionEnabled** | Write | Boolean | DeviceThreatProtectionEnabled of the AndroidWorkProfile device compliance policy. ||
-| **DeviceThreatProtectionRequiredSecurityLevel** | Write | String | DeviceThreatProtectionRequiredSecurityLevel of the AndroidWorkProfile device compliance policy. |unavailable, secured, low, medium, high, notSet|
-| **AdvancedThreatProtectionRequiredSecurityLevel** | Write | String | AdvancedThreatProtectionRequiredSecurityLevel of the AndroidWorkProfile device compliance policy. |unavailable, secured, low, medium, high, notSet|
-| **SecurityBlockJailbrokenDevices** | Write | Boolean | SecurityBlockJailbrokenDevices of the AndroidWorkProfile device compliance policy. ||
-| **OsMinimumVersion** | Write | String | OsMinimumVersion of the AndroidWorkProfile device compliance policy. ||
-| **OsMaximumVersion** | Write | String | OsMaximumVersion of the AndroidWorkProfile device compliance policy. ||
-| **MinAndroidSecurityPatchLevel** | Write | String | MinAndroidSecurityPatchLevel of the AndroidWorkProfile device compliance policy. ||
-| **StorageRequireEncryption** | Write | Boolean | StorageRequireEncryption of the AndroidWorkProfile device compliance policy. ||
-| **SecurityRequireSafetyNetAttestationBasicIntegrity** | Write | Boolean | SecurityRequireSafetyNetAttestationBasicIntegrity of the AndroidWorkProfile device compliance policy. ||
-| **SecurityRequireSafetyNetAttestationCertifiedDevice** | Write | Boolean | SecurityRequireSafetyNetAttestationCertifiedDevice of the AndroidWorkProfile device compliance policy. ||
-| **SecurityRequireGooglePlayServices** | Write | Boolean | SecurityRequireGooglePlayServices of the AndroidWorkProfile device compliance policy. ||
-| **SecurityRequireUpToDateSecurityProviders** | Write | Boolean | SecurityRequireUpToDateSecurityProviders of the AndroidWorkProfile device compliance policy. ||
-| **SecurityRequireCompanyPortalAppIntegrity** | Write | Boolean | SecurityRequireCompanyPortalAppIntegrity of the AndroidWorkProfile device compliance policy. ||
-| **RoleScopeTagIds** | Write | String | RoleScopeTagIds of the AndroidWorkProfile device compliance policy. ||
-| **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. |Present, Absent|
-| **Credential** | Write | PSCredential | Credentials of the Intune Admin ||
-| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
-| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
-| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory tenant used for authentication. ||
-| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
+| **DisplayName** | Key | String | Display name of the AndroidWorkProfile device compliance policy. | |
+| **Description** | Write | String | Description of the AndroidWorkProfile device compliance policy. | |
+| **PasswordRequired** | Write | Boolean | PasswordRequired of the AndroidWorkProfile device compliance policy. | |
+| **PasswordMinimumLength** | Write | UInt32 | PasswordMinimumLength of the AndroidWorkProfile device compliance policy. | |
+| **PasswordRequiredType** | Write | String | PasswordRequiredType of the AndroidWorkProfile device compliance policy. | `deviceDefault`, `alphabetic`, `alphanumeric`, `alphanumericWithSymbols`, `lowSecurityBiometric`, `numeric`, `numericComplex`, `any` |
+| **PasswordMinutesOfInactivityBeforeLock** | Write | UInt32 | PasswordMinutesOfInactivityBeforeLock of the AndroidWorkProfile device compliance policy. | |
+| **PasswordExpirationDays** | Write | UInt32 | PasswordExpirationDays of the AndroidWorkProfile device compliance policy. | |
+| **PasswordPreviousPasswordBlockCount** | Write | UInt32 | PasswordPreviousPasswordBlockCount of the AndroidWorkProfile device compliance policy. | |
+| **PasswordSignInFailureCountBeforeFactoryReset** | Write | UInt32 | PasswordSignInFailureCountBeforeFactoryReset of the AndroidWorkProfile device compliance policy. | |
+| **SecurityPreventInstallAppsFromUnknownSources** | Write | Boolean | SecurityPreventInstallAppsFromUnknownSources of the AndroidWorkProfile device compliance policy. | |
+| **SecurityDisableUsbDebugging** | Write | Boolean | SecurityDisableUsbDebugging of the AndroidWorkProfile device compliance policy. | |
+| **SecurityRequireVerifyApps** | Write | Boolean | SecurityRequireVerifyApps of the AndroidWorkProfile device compliance policy. | |
+| **DeviceThreatProtectionEnabled** | Write | Boolean | DeviceThreatProtectionEnabled of the AndroidWorkProfile device compliance policy. | |
+| **DeviceThreatProtectionRequiredSecurityLevel** | Write | String | DeviceThreatProtectionRequiredSecurityLevel of the AndroidWorkProfile device compliance policy. | `unavailable`, `secured`, `low`, `medium`, `high`, `notSet` |
+| **AdvancedThreatProtectionRequiredSecurityLevel** | Write | String | AdvancedThreatProtectionRequiredSecurityLevel of the AndroidWorkProfile device compliance policy. | `unavailable`, `secured`, `low`, `medium`, `high`, `notSet` |
+| **SecurityBlockJailbrokenDevices** | Write | Boolean | SecurityBlockJailbrokenDevices of the AndroidWorkProfile device compliance policy. | |
+| **OsMinimumVersion** | Write | String | OsMinimumVersion of the AndroidWorkProfile device compliance policy. | |
+| **OsMaximumVersion** | Write | String | OsMaximumVersion of the AndroidWorkProfile device compliance policy. | |
+| **MinAndroidSecurityPatchLevel** | Write | String | MinAndroidSecurityPatchLevel of the AndroidWorkProfile device compliance policy. | |
+| **StorageRequireEncryption** | Write | Boolean | StorageRequireEncryption of the AndroidWorkProfile device compliance policy. | |
+| **SecurityRequireSafetyNetAttestationBasicIntegrity** | Write | Boolean | SecurityRequireSafetyNetAttestationBasicIntegrity of the AndroidWorkProfile device compliance policy. | |
+| **SecurityRequireSafetyNetAttestationCertifiedDevice** | Write | Boolean | SecurityRequireSafetyNetAttestationCertifiedDevice of the AndroidWorkProfile device compliance policy. | |
+| **SecurityRequireGooglePlayServices** | Write | Boolean | SecurityRequireGooglePlayServices of the AndroidWorkProfile device compliance policy. | |
+| **SecurityRequireUpToDateSecurityProviders** | Write | Boolean | SecurityRequireUpToDateSecurityProviders of the AndroidWorkProfile device compliance policy. | |
+| **SecurityRequireCompanyPortalAppIntegrity** | Write | Boolean | SecurityRequireCompanyPortalAppIntegrity of the AndroidWorkProfile device compliance policy. | |
+| **RoleScopeTagIds** | Write | String | RoleScopeTagIds of the AndroidWorkProfile device compliance policy. | |
+| **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
+| **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
+| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory tenant used for authentication. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 
-# IntuneDeviceCompliancePolicyAndroidWorkProfile
-
-### Description
+## Description
 
 This resource configures the settings of Android Work Profile device compliance policies
 in your cloud-based organization.
-
-## Permissions Needed
-
-To authenticate via Azure Active Directory, this resource requires the following Delegated permissions:
-
-* **Automate**
-  * DeviceManagementConfiguration.ReadWrite.All (Delegated)
-* **Export**
-  * DeviceManagementConfiguration.Read.All (Delegated)
-
-NOTE: All permisions listed above require admin consent.
 
 ## Parameters
 
@@ -174,34 +161,8 @@ Select the oldest security patch level a device can have. Devices that aren't at
 
 _By default, no date is configured._
 
-## Example
+## Permissions
 
-```PowerShell
-IntuneDeviceCompliancePolicyAndroidDeviceOwner f7d82525-b7c0-475c-9d5e-16fafdfa487a
-        {
-            Description                                        = "";
-            DeviceThreatProtectionEnabled                      = $False;
-            DeviceThreatProtectionRequiredSecurityLevel        = "unavailable";
-            DisplayName                                        = "DeviceOwner";
-            Ensure                                             = "Present";
-            Credential                                         = $Credsglobaladmin;
-            PasswordExpirationDays                             = 90;
-            PasswordMinimumLength                              = 6;
-            PasswordMinutesOfInactivityBeforeLock              = 5;
-            PasswordRequired                                   = $True;
-            PasswordRequiredType                               = "numericComplex";
-            SecurityBlockJailbrokenDevices                     = $True;
-            SecurityDisableUsbDebugging                        = $False;
-            SecurityPreventInstallAppsFromUnknownSources       = $False;
-            SecurityRequireCompanyPortalAppIntegrity           = $False;
-            SecurityRequireGooglePlayServices                  = $False;
-            SecurityRequireSafetyNetAttestationBasicIntegrity  = $False;
-            SecurityRequireSafetyNetAttestationCertifiedDevice = $False;
-            SecurityRequireUpToDateSecurityProviders           = $False;
-            SecurityRequireVerifyApps                          = $False;
-            StorageRequireEncryption                           = $True;
-        }
-```
 
 ## Examples
 

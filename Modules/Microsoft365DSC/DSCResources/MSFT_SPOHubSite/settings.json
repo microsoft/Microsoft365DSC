@@ -1,60 +1,56 @@
 ﻿{
     "resourceName": "SPOHubSite",
     "description": "",
-    "permissions": [
-        {
-            "read": [
-                {
-                    "name": "Directory.AccessAsUser.All"
-                },
-                {
-                    "name": "Directory.Read.All"
-                },
-                {
-                    "name": "Directory.ReadWrite.All"
-                },
-                {
-                    "name": "Domain.Read.All"
-                },
-                {
-                    "name": "Group.Read.All"
-                },
-                {
-                    "name": "Group.ReadWrite.All"
-                },
-                {
-                    "name": "GroupMember.Read.All"
-                },
-                {
-                    "name": "Sites.FullControl.All"
-                }
-            ],
-            "update": [
-                {
-                    "name": "Directory.AccessAsUser.All"
-                },
-                {
-                    "name": "Directory.Read.All"
-                },
-                {
-                    "name": "Directory.ReadWrite.All"
-                },
-                {
-                    "name": "Domain.Read.All"
-                },
-                {
-                    "name": "Group.Read.All"
-                },
-                {
-                    "name": "Group.ReadWrite.All"
-                },
-                {
-                    "name": "GroupMember.Read.All"
-                },
-                {
-                    "name": "Sites.FullControl.All"
-                }
-            ]
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Domain.Read.All"
+                    },
+                    {
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "Sites.FullControl.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Domain.Read.All"
+                    },
+                    {
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "Sites.FullControl.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Domain.Read.All"
+                    },
+                    {
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "Sites.FullControl.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Domain.Read.All"
+                    },
+                    {
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "Sites.FullControl.All"
+                    }
+                ]
+            }
         }
-    ]
+    }
 }

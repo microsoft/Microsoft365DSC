@@ -6,17 +6,6 @@
 This resource configures the settings of Windows 10 compliance policies
 in your cloud-based organization.
 
-## Permissions Needed
-
-To authenticate via Azure Active Directory, this resource requires the following Delegated permissions:
-
-* **Automate**
-  * DeviceManagementConfiguration.ReadWrite.All (Delegated)
-* **Export**
-  * DeviceManagementConfiguration.Read.All (Delegated)
-
-NOTE: All permisions listed above require admin consent.
-
 ## Parameters
 
 ### Device Health
@@ -200,50 +189,3 @@ Special consideration for Surface Hubs running Windows 10 Team OS:
 Surface Hubs that run Windows 10 Team OS do not support the Microsoft Defender for Endpoint and Password compliance policies at this time. Therefore, for Surface Hubs that run Windows 10 Team OS set the following two settings to their _(default)_ of _Not configured_:
 * In the category Password, set Require a password to unlock mobile devices to the _(default)_ of Not configured.
 * In the category Microsoft Defender for Endpoint, set Require the device to be at or under the machine risk score to the _(default)_ of Not configured.
-
-## Example
-
-```PowerShell
-
-        IntuneDeviceCompliancePolicyWindows10 MyCustomWindows10Policy
-        {
-            DisplayName                                 = "Windows 10 DSC Policy";
-            Description                                 = "Test policy";
-            PasswordRequired                            = $False;
-            PasswordBlockSimple                         = $False;
-            PasswordRequiredToUnlockFromIdle            = $True;
-            PasswordMinutesOfInactivityBeforeLock       = 15;
-            PasswordExpirationDays                      = 365;
-            PasswordMinimumLength                       = 6;
-            PasswordMinutesOfInactivityBeforeLock       = 5;
-            PasswordPreviousPasswordBlockCount          = 13;
-            PasswordMinimumCharacterSetCount            = 1;
-            PasswordRequiredType                        = "Devicedefault";
-            RequireHealthyDeviceReport                  = $True;
-            OsMinimumVersion                            = 10;
-            OsMaximumVersion                            = 10.19;
-            MobileOsMinimumVersion                      = 10;
-            MobileOsMaximumVersion                      = 10.19;
-            EarlyLaunchAntiMalwareDriverEnabled         = $False;
-            BitLockerEnabled                            = $False;
-            SecureBootEnabled                           = $True;
-            CodeIntegrityEnabled                        = $True;
-            StorageRequireEncryption                    = $True;
-            ActiveFirewallRequired                      = $True;
-            DefenderEnabled                             = $True;
-            DefenderVersion                             = "";
-            SignatureOutOfDate                          = $True;
-            RtpEnabled                                  = $True;
-            AntivirusRequired                           = $True;
-            AntiSpywareRequired                         = $True;
-            DeviceThreatProtectionEnabled               = $True;
-            DeviceThreatProtectionRequiredSecurityLevel = "Medium";
-            ConfigurationManagerComplianceRequired      = $False;
-            TPMRequired                                 = $False;
-            deviceCompliancePolicyScript                = $null;
-            ValidOperatingSystemBuildRanges             = [];
-            Ensure                                      = 'Present';
-            Credential                          = $Credential;
-        }
-
-```

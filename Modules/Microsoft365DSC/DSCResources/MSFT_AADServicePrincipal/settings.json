@@ -1,33 +1,32 @@
 ﻿{
     "resourceName": "AADServicePrincipal",
     "description": "This resource configures an Azure Active Directory ServicePrincipal.",
-    "permissions": [
-        {
-            "read": [
-                {
-                    "name": "Application.Read.All"
-                },
-                {
-                    "name": "Application.ReadWrite.All"
-                },
-                {
-                    "name": "Directory.AccessAsUser.All"
-                },
-                {
-                    "name": "Directory.Read.All"
-                },
-                {
-                    "name": "Directory.ReadWrite.All"
-                }
-            ],
-            "update": [
-                {
-                    "name": "Application.ReadWrite.All"
-                },
-                {
-                    "name": "Directory.AccessAsUser.All"
-                }
-            ]
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Application.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Application.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Application.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Application.ReadWrite.All"
+                    }
+                ]
+            }
         }
-    ]
+    }
 }

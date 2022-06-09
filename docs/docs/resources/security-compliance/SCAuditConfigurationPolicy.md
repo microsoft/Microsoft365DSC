@@ -4,16 +4,40 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Workload** | Key | String | Workload associated with the policy. |Exchange, SharePoint, OneDriveForBusiness|
-| **Ensure** | Write | String | Specify if this policy should exist or not. |Present, Absent|
-| **Credential** | Required | PSCredential | Credentials of the Global Admin ||
+| **Workload** | Key | String | Workload associated with the policy. | `Exchange`, `SharePoint`, `OneDriveForBusiness` |
+| **Ensure** | Write | String | Specify if this policy should exist or not. | `Present`, `Absent` |
+| **Credential** | Required | PSCredential | Credentials of the Global Admin | |
 
-# SCAuditConfigurationPolicy
-
-### Description
+## Description
 
 This resource configures an Audit ConfigurationPolicy
 in Security and Compliance Center.
+
+## Permissions
+
+### Microsoft Graph
+
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
+
+#### Delegated permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
+
+#### Application permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
 
 ## Examples
 

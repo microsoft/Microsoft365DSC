@@ -1,30 +1,32 @@
 ﻿{
     "resourceName": "PlannerBucket",
     "description": "",
-    "permissions": [
-        {
-            "read": [
-                {
-                    "name": "Group.Read.All"
-                },
-                {
-                    "name": "Group.ReadWrite.All"
-                },
-                {
-                    "name": "Tasks.Read"
-                },
-                {
-                    "name": "Tasks.ReadWrite"
-                }
-            ],
-            "update": [
-                {
-                    "name": "Group.ReadWrite.All"
-                },
-                {
-                    "name": "Tasks.ReadWrite"
-                }
-            ]
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Tasks.Read"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Tasks.ReadWrite"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "NotSupported"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "NotSupported"
+                    }
+                ]
+            }
         }
-    ]
+    }
 }

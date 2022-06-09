@@ -1,18 +1,44 @@
 ﻿{
     "resourceName": "ODSettings",
     "description": "",
-    "permissions": [
-        {
-            "read": [
-                {
-                    "name": "Domain.Read.All"
-                }
-            ],
-            "update": [
-                {
-                    "name": "Domain.Read.All"
-                }
-            ]
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Domain.Read.All"
+                    },
+                    {
+                        "name": "Sites.FullControl.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Domain.Read.All"
+                    },
+                    {
+                        "name": "Sites.FullControl.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Domain.Read.All"
+                    },
+                    {
+                        "name": "Sites.FullControl.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Domain.Read.All"
+                    },
+                    {
+                        "name": "Sites.FullControl.All"
+                    }
+                ]
+            }
         }
-    ]
+    }
 }
