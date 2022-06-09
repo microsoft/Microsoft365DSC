@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+# 1.22.608.1
+
+* AADConditionalAccessPolicy
+  * Updated settings.json with missing permissions
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to 1.0.85;
+* MISC
+  * Updated permissions for SharePoint and OneDrive in settings.json files.
+
 # 1.22.601.1
 
 * DEPENDENCIES

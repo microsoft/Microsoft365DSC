@@ -5,6 +5,9 @@
         {
             "read": [
                 {
+                    "name": "Agreement.Read.All"
+                },
+                {
                     "name": "DeviceManagementApps.Read.All"
                 },
                 {
@@ -60,6 +63,9 @@
                 }
             ],
             "update": [
+                {
+                    "name": "Agreement.Read.All"
+                },
                 {
                     "name": "Application.Read.All"
                 },
