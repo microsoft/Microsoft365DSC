@@ -221,6 +221,7 @@ function Get-TargetResource
             'Assignments' = $assignmentsArray;
             'ExcludedGroups' = $exclusionArray
         }
+
         $policy = @{}
         foreach ($property in ($policyInfo | get-member -MemberType properties))
         {
@@ -482,7 +483,7 @@ function Set-TargetResource
 
         else
         {
-            write-verbose -message "Cannot specify this in graph cmdlet: $param"
+            #write-verbose -message "Cannot specify this in graph cmdlet: $param"
         }
     }
 
