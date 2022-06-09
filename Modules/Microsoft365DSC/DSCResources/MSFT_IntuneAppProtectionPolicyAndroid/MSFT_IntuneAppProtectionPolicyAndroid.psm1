@@ -221,8 +221,6 @@ function Get-TargetResource
         }
 
         $AllParams = (get-command Get-TargetResource).Parameters
-        ($AllParams.keys | Where-Object { $AllParams.$_.Aliases.count -ne 0 } ) | foreach {$allparams.remove($_) | out-null}
-        $AllParams.add('id', 'Placeholder')
 
         $policy = @{}
         foreach ($property in ($policyInfo | get-member -MemberType properties))
@@ -235,11 +233,13 @@ function Get-TargetResource
 
         $ComplexParameters.keys | foreach { $policy.add($_, $ComplexParameters.$_ ) }
         $policy.add('Ensure', 'Present' )
+        $Policy.add('id', $policyInfo.id)
 
         return $policy
     }
     catch
     {
+        write-Verbose -message "ERROR on get-targetresource for $displayName"
         try
         {
             Write-Verbose -Message $_
@@ -869,7 +869,6 @@ function Export-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
             }
             $Results = Get-TargetResource @Params
-            write-host ($Results | out-string)
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
