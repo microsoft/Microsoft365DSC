@@ -152,9 +152,7 @@ function Get-TargetResource
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace "MSFT_", ""
-    write-host 'resourcename:' $ResourceName
     $CommandName  = $MyInvocation.MyCommand
-    write-host 'commandname:' $commandname
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
@@ -222,10 +220,14 @@ function Get-TargetResource
             'ExcludedGroups' = $exclusionArray
         }
 
+        $AllParams = (get-command Get-TargetResource).Parameters
+        ($AllParams.keys | Where-Object { $AllParams.$_.Aliases.count -ne 0 } ) | foreach {$allparams.remove($_) | out-null}
+        $AllParams.add('id', 'Placeholder')
+
         $policy = @{}
         foreach ($property in ($policyInfo | get-member -MemberType properties))
         {
-            if (!($ComplexParameters.keys -contains $property.name))
+            if (!($ComplexParameters.keys -contains $property.name) -and ($AllParams.keys -contains $property.name))
             {
                 $policy.add($property.name, $policyInfo.($property.name) )
             }
@@ -867,6 +869,7 @@ function Export-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
             }
             $Results = Get-TargetResource @Params
+            write-host ($Results | out-string)
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
