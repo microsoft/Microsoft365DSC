@@ -952,8 +952,6 @@ function set-JSONstring
 
     $JsonContent = ''
 
-    #write-verbose -message "setting jsonstring of type $type with value $id"
-
     switch ($type)
     {
 
