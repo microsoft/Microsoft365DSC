@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
+# 1.22.608.1
 
 * IntuneAppProtectionPolicyAndroid
   * Amended to remove direct graph calls and instead use Graph module cmdlets
