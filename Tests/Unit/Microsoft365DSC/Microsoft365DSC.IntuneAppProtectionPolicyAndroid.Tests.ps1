@@ -63,6 +63,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowedInboundDataTransferSources       = "managedApps";
                     AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                     AllowedOutboundDataTransferDestinations = "managedApps";
+                    AppGroupType                            = "selectedPublicApps";
                     Apps                                    = @("com.cisco.im.intune.android", "com.penlink.penpoint.android", "com.slack.intune.android");
                     Assignments                             = @("6ee86c9f-2b3c-471d-ad38-ff4673ed723e");
                     ContactSyncBlocked                      = $False;
@@ -129,6 +130,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowedInboundDataTransferSources       = "managedApps";
                     AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                     AllowedOutboundDataTransferDestinations = "managedApps";
+                    AppGroupType                            = "selectedPublicApps";
                     Apps                                    = @("com.cisco.im.intune.android", "com.penlink.penpoint.android", "com.slack.intune.android");
                     Assignments                             = @("6ee86c9f-2b3c-471d-ad38-ff4673ed723e");
                     ContactSyncBlocked                      = $False;
@@ -171,6 +173,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowedInboundDataTransferSources       = "managedApps";
                         AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                         AllowedOutboundDataTransferDestinations = "managedApps";
+                        AppGroupType                            = "selectedPublicApps";
                         Apps                                    = @(
                             @{
                                 id                  = "com.cisco.im.intune.android.android"
@@ -254,6 +257,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowedInboundDataTransferSources       = "managedApps";
                     AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                     AllowedOutboundDataTransferDestinations = "managedApps";
+                    AppGroupType                            = "selectedPublicApps";
                     Apps                                    = @("com.cisco.im.intune.android", "com.penlink.penpoint.android", "com.slack.intune.android");
                     Assignments                             = @("6ee86c9f-2b3c-471d-ad38-ff4673ed723e");
                     ContactSyncBlocked                      = $False;
@@ -296,6 +300,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowedInboundDataTransferSources       = "managedApps";
                         AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                         AllowedOutboundDataTransferDestinations = "managedApps";
+                        AppGroupType                            = "selectedPublicApps";
                         Apps                                    = @(
                             @{
                                 id                  = "com.cisco.im.intune.android.android"
@@ -370,6 +375,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowedInboundDataTransferSources       = "managedApps";
                     AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                     AllowedOutboundDataTransferDestinations = "managedApps";
+                    AppGroupType                            = "selectedPublicApps";
                     Apps                                    = @("com.cisco.im.intune.android", "com.penlink.penpoint.android", "com.slack.intune.android");
                     Assignments                             = @("6ee86c9f-2b3c-471d-ad38-ff4673ed723e");
                     ContactSyncBlocked                      = $False;
@@ -412,6 +418,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowedInboundDataTransferSources       = "managedApps";
                         AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                         AllowedOutboundDataTransferDestinations = "managedApps";
+                        AppGroupType                            = "selectedPublicApps";
                         Apps                                    = @(
                             @{
                                 id                  = "com.cisco.im.intune.android.android"
@@ -509,6 +516,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowedInboundDataTransferSources       = "managedApps";
                         AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                         AllowedOutboundDataTransferDestinations = "managedApps";
+                        AppGroupType                            = "selectedPublicApps";
                         Apps                                    = @(
                             @{
                                 id                  = "com.cisco.im.intune.android.android"
