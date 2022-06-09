@@ -40,15 +40,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
             }
-
-            Mock -CommandName Set-M365DSCIntuneAppProtectionPolicyAndroid -MockWith {
-            }
-            Mock -CommandName Set-M365DSCIntuneAppProtectionPolicyAndroidAssignment -MockWith {
-            }
-            Mock -CommandName Set-M365DSCIntuneAppProtectionPolicyAndroidApps -MockWith {
-            }
-            Mock -CommandName New-M365DSCIntuneAppProtectionPolicyAndroid -MockWith {
-            }
             Mock -CommandName Remove-IntuneAppProtectionPolicy -MockWith {
             }
             Mock -CommandName Remove-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
