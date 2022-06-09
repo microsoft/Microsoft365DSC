@@ -200,7 +200,7 @@ function Get-TargetResource
         {
             foreach ($assignment in $policyInfo.Assignments)
             {
-                write-host '#######'  $assignment.Target.AdditionalProperties.'@odata.type'
+                #write-host '#######'  $assignment.Target.AdditionalProperties.'@odata.type'
                 switch ($assignment.Target.AdditionalProperties.'@odata.type')
                 {
                     '#microsoft.graph.groupAssignmentTarget'
@@ -499,10 +499,10 @@ function Set-TargetResource
             {
                 if ($appshash.AppGroupType -eq 'selectedPublicApps' )
                 {
-                    $appshash.App | foreach {
+                    $appshash.Apps | foreach {
                         if ($_ -ne $null) {$appsarray+= set-JSONstring -id $_ -type $param}
                     }
-                    $configstring += ($param + ":`r`n" +($appshash.App | out-string) + "`r`n" )
+                    $configstring += ($param + ":`r`n" +($appshash.Apps | out-string) + "`r`n" )
                 }
             }
 
@@ -719,9 +719,6 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    $AppsHash = set-AppsHash -AppGroupType $AppGroupType -apps $apps
-    $PSBoundParameters.AppGroupType = $AppsHash.AppGroupType
-    $PSBoundParameters.Apps = $AppsHash.Apps
     if ($CurrentValues.AppGroupType -ne 'SelectedPublicApps') { $CurrentValues.Apps = @() }
 
     if ($CurrentValues.Ensure -eq "ERROR")
@@ -732,6 +729,13 @@ function Test-TargetResource
     }
 
     $ValuesToCheck = @{}
+
+    $ComplexParameters = @(
+        'AppGroupType',
+        'Apps',
+        'Assignments',
+        'ExcludedGroups'
+    )
 
     $credentialParams = @(
         'Credential',
@@ -745,10 +749,24 @@ function Test-TargetResource
 
         if(!($PSBoundParameters.keys -contains $allparams.$_.name) -and ($allparams.$_.Aliases.count -eq 0) -and !($credentialParams -contains $_) )
         {
-            write-host 'Unspecified Parameter:' $allparams.$_.name  "setting to '' "
-            $ValuesToCheck.add( ($allparams.$_.name) , '')
+            if ($ComplexParameters -contains $allparams.$_.name)
+            {
+                write-host 'Unspecified Parameter in Config:' $allparams.$_.name  "- Current Value is:" $CurrentValues.$_ `
+                "`r`nNOTE:" $allparams.$_.name "interacts with other values - not specifying may lead to unexpected output"
+                # set to '' at this stage - the apps values are configured below
+                $ValuesToCheck.add( ($allparams.$_.name) , '')
+            }
+            else
+            {
+                write-host 'Unspecified Parameter in Config:' $allparams.$_.name  "Current Value Will be retained:" $CurrentValues.$_
+                #$ValuesToCheck.add( ($allparams.$_.name) , '')
+            }
         }
     }
+
+    $AppsHash = set-AppsHash -AppGroupType $AppGroupType -apps $apps
+    $PSBoundParameters.AppGroupType = $AppsHash.AppGroupType
+    $PSBoundParameters.Apps = $AppsHash.Apps
 
     #$ValuesToCheck = $PSBoundParameters
     $PSBoundParameters.Remove('Credential') | Out-Null
@@ -933,6 +951,8 @@ function set-JSONstring
     )
 
     $JsonContent = ''
+
+    #write-verbose -message "setting jsonstring of type $type with value $id"
 
     switch ($type)
     {
