@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
+# 1.22.608.1
 
 * AADConditionalAccessPolicy
   * Updated settings.json with missing permissions

@@ -301,7 +301,15 @@ function Export-TargetResource
         [array]$environments = Get-AdminPowerAppEnvironment -ErrorAction Stop
         $dscContent = ''
         $i = 1
-        Write-Host "`r`n" -NoNewline
+
+        if ($environments.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
         foreach ($environment in $environments)
         {
             Write-Host "    |---[$i/$($environments.Count)] $($environment.DisplayName)" -NoNewline
