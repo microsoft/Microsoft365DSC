@@ -214,6 +214,18 @@ function Get-TargetResource
             }
         }
 
+        $policy = @{}
+
+        $credentialParams = @(
+            'Credential',
+            'ApplicationId',
+            'TenantId',
+            'ApplicationSecret',
+            'CertificateThumbprint'
+        )
+
+        $credentialParams | foreach { $policy.add($_, (get-variable $_).value) }
+
         $ComplexParameters = @{
             'Apps' = $appsArray;
             'Assignments' = $assignmentsArray;
@@ -222,7 +234,6 @@ function Get-TargetResource
 
         $AllParams = (get-command Get-TargetResource).Parameters
 
-        $policy = @{}
         foreach ($property in ($policyInfo | get-member -MemberType properties))
         {
             if (!($ComplexParameters.keys -contains $property.name) -and ($AllParams.keys -contains $property.name))
@@ -772,11 +783,11 @@ function Test-TargetResource
     $PSBoundParameters.Apps = $AppsHash.Apps
 
     #$ValuesToCheck = $PSBoundParameters
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
-    $PSBoundParameters.Remove("CertificateThumbprint") | Out-Null
+
+    $credentialParams | foreach {
+        $CurrentValues.Remove($_) | out-null
+        $PSBoundParameters.Remove($_) | out-null
+    }
 
     $PSBoundParameters.keys | foreach {
         if ($currentvalues.$_ -ne $null)
@@ -869,6 +880,7 @@ function Export-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
             }
             $Results = Get-TargetResource @Params
+            $Results.remove('id') | out-null
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
