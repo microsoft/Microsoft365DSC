@@ -198,7 +198,6 @@ function Get-TargetResource
         {
             foreach ($assignment in $policyInfo.Assignments)
             {
-                #write-host '#######'  $assignment.Target.AdditionalProperties.'@odata.type'
                 switch ($assignment.Target.AdditionalProperties.'@odata.type')
                 {
                     '#microsoft.graph.groupAssignmentTarget'
@@ -773,7 +772,6 @@ function Test-TargetResource
             else
             {
                 write-host 'Unspecified Parameter in Config:' $allparams.$_.name  "Current Value Will be retained:" $CurrentValues.$_
-                #$ValuesToCheck.add( ($allparams.$_.name) , '')
             }
         }
     }
@@ -781,8 +779,6 @@ function Test-TargetResource
     $AppsHash = set-AppsHash -AppGroupType $AppGroupType -apps $apps
     $PSBoundParameters.AppGroupType = $AppsHash.AppGroupType
     $PSBoundParameters.Apps = $AppsHash.Apps
-
-    #$ValuesToCheck = $PSBoundParameters
 
     $credentialParams | foreach {
         $CurrentValues.Remove($_) | out-null
