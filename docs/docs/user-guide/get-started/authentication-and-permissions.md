@@ -35,13 +35,13 @@ The following table provides an overview of what authentication methods are supp
 
 > ![Check](../../Images/check.png) = Supported / ![Cross](../../Images/cross.png) = Not supported
 
-__Note:__ As you can see, while using Credentials is the least preferred option for security reasons, it is the only option that works across __all__ supported workloads.
+__Note:__ As you can see, while using Credentials is the least preferred option for security reasons, it is the only option that works across __most__ supported workloads.
 
 We are having discussions with the various product groups that are responsible for these PowerShell modules inside of Microsoft, to have better consistency across all workloads on how to authenticate. Items in the table above marked with a asterisk (*), are workloads for which the <a href="https://github.com/microsoftgraph/msgraph-sdk-powershell" target="_blank">Microsoft Graph PowerShell SDK</a> is used to authenticate against. The plan is to update the underlying logic of every component inside of Microsoft365DSC to leverage that SDK as new APIs become available on Microsoft Graph.
 
-It is possible for a configuration to use a mix of Credentials and Service Principals to authenticate against the various workloads. For example, if you decide to keep a master configuration for all the configuration of your tenant, you could have Azure AD components use the Service Principal of an app you have created to authenticate, and further down in the configuration have your Security and Compliance components use credentials. That approach is perfectly fine, but we would recommend to try and split different workloads across different configuration files. That way the configuration becomes less complex and easier to manage.
+It is possible for a configuration to use a mix of Credentials and Service Principals to authenticate against the various workloads. For example, if you decide to keep a master configuration for all the configuration of your tenant, you could have Azure AD components use the Service Principal of an app you have created to authenticate, and further down in the configuration have your Security and Compliance components use credentials. That approach is perfectly fine, but we would recommend to try and split different workloads across different (composite) configuration files. That way the configuration becomes less complex and easier to manage.
 
-It is also important to note that we have added logic inside of the commands that allows you to take a snapshot of your current tenant configuration to warn you when the components you are trying to capture can’t be accessed based on the authentication model you have selected.
+It is also important to note that we have added logic inside of the commands that allow you to take a snapshot of your current tenant configuration to warn you when the components you are trying to capture can’t be accessed based on the authentication model you have selected.
 
 > *For example:* If you are trying to take a snapshot of both Azure AD and Security and Compliance components, but are authenticating using a Service Principal, the tool will warn you that the Security and Compliance components can’t be captured and that they will be ignored. In this case, the resulting capture would only contain the Azure AD components because those are the only ones the tool can get access to using Service Principal.
 
@@ -93,6 +93,12 @@ In order to be able to interact with these components, you need to grant your ap
 
 Doing so will return an object with two properties. The **ReadPermissions** property contains a list of the minimal permissions that need to be granted for the app to be able to read information about the selected components. These are the permissions you want to grant if you are taking a snapshot of the configuration of an existing tenant. The second property, **UpdatePermissions**, contains the minimal permissions required to interact with and configure the selected components. You will need to grant your application these permissions if you are trying to apply a configuration onto a tenant.
 
+By default, this cmdlet outputs the permissions required for Delegated permissions. To output the Application permissions, use the PermissionsType parameter
+
+```PowerShell
+Get-M365DSCCompiledPermissionList -ResourceNameList @('O365User', 'AADApplication') -Source 'Graph' -PermissionsType 'Application'
+```
+
 If you are trying to interact with all available components in Microsoft365DSC, you can get a complete picture of all permissions required across all resources by running the following line of PowerShell.
 
 ```PowerShell
@@ -100,8 +106,8 @@ Get-M365DSCCompiledPermissionList -ResourceNameList (Get-M365DSCAllResources)
 ```
 
 <figure markdown>
-  ![How to retrieve the permissions for all resources](../../Images/GetRequiredGraphPermissionsAllResources.png)
-  <figcaption>How to retrieve the permissions for all resources</figcaption>
+  ![How to retrieve the Graph permissions for all resources](../../Images/GetRequiredGraphPermissionsAllResources.png)
+  <figcaption>How to retrieve the Graph permissions for all resources</figcaption>
 </figure>
 
 The <a href="../../cmdlets/Get-M365DSCAllResources/" target="_blank">Get-M365DSCAllResources</a> cmdlet will return a list of all components available inside of the Microsoft365DSC solution which will then by passed in the **Get-M365DSCCompiledPermissionList** cmdlet which will compile the resulting permissions needed for the list of components it receives, in occurrence all of them. These permissions need to be granted to your application instance, either using the Azure portal or automating the process via PowerShell.
@@ -116,7 +122,20 @@ We provide an easy way of consenting permissions to the Delegated Permissions ap
 
 Executing the cmdlet will prompt you to authenticate using an administrator account that has access to consent permissions to Azure AD applications in your environment.
 
-**NOTE:** If you get the error "Device code terminal timed-out after 120 seconds", check out the <a href="../../cmdlets/../get-started/troubleshooting/#error-device-code-terminal-timed-out-after-120-seconds-please-try-again/" target="_blank">Troubleshooting section</a>
+**NOTE:** If you get the error "Device code terminal timed-out after 120 seconds", check out the <a href="../../get-started/troubleshooting/#error-device-code-terminal-timed-out-after-120-seconds-please-try-again/" target="_blank">Troubleshooting section</a>
+
+### Creating a custom service principal
+As mentioned earlier in this article, there is also the possibility to use Application permissions or custom service principal to authenticate against Microsoft 365. This custom service principal can be created and configured manually, but Microsoft365DSC also offers the <a href="../../cmdlets/Update-M365DSCAzureAdApplication/" target="_blank">Update-M365DSCAzureAdApplication</a> cmdlet. With this cmdlet, you can create the custom service application, grant the correct permissions, provide admin consent and create credentials (secret or certificate).
+
+```PowerShell
+Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions Sites.FullControl.All -AdminConsent -Type Secret
+```
+
+or
+
+```PowerShell
+Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions Sites.FullControl.All -AdminConsent -Type Certificate -CreateSelfSignedCertificate -CertificatePath c:\Temp\M365DSC.cer
+```
 
 ## SharePoint PnP PowerShell Permissions
 All SharePoint Online resources are using the <a href="https://github.com/pnp/powershell" target="_blank">SharePoint PnP PowerShell</a> module. Just like the Graph module, you can use the default PnP PowerShell app registration or create your own app registration.
@@ -130,6 +149,23 @@ Use the "<a href="https://pnp.github.io/powershell/cmdlets/Register-PnPManagemen
 <a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app" target="_blank">Create a new app registration</a> in Azure AD yourself and grant the correct permissions to this app. The documentation on this website for each of the SharePoint Online resources list the permissions needed for the resource.
 
 As an alternative, you can use the "<a href="https://pnp.github.io/powershell/cmdlets/Register-PnPAzureADApp.html" target="_blank">Register-PnPAzureADApp</a>" cmdlet to have PnP PowerShell create the app registration for you and grant the correct permissions.
+
+## Exchange Permissions
+For the Exchange Online resources, the service account needs certain permissions in order to be able to connect and manage the settings in Exchange Online. You can request the required permissions/roles and the corresponding rolegroups using the <a href="../../cmdlets/Get-M365DSCCompiledPermissionList/" target="_blank">Get-M365DSCCompiledPermissionList</a> cmdlet.
+
+To request the permissions,
+```PowerShell
+Get-M365DSCCompiledPermissionList -ResourceNameList @('EXOAcceptedDomain') -Source 'Exchange'
+```
+
+<figure markdown>
+  ![How to retrieve the permissions for Exchange resources](../../Images/RetrieveExchangePermissions.png)
+  <figcaption>How to retrieve the permissions for Exchange resources</figcaption>
+</figure>
+
+Then make sure your service account is a member of the specified Role Group or has been granted the required roles.
+
+**NOTE:** There are resources, like the <a href="../../../resources/exchange/EXOAddressList/" target="_blank">EXOAddressList</a> which roles by default are not granted to any of the default role groups. Make sure you grant these permissions correctly before using them.
 
 ## Using Authentication in DSC configurations
 

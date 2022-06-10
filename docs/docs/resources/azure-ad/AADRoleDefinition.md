@@ -50,7 +50,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Update**
 
-    - RoleManagement.Read.Directory
+    - RoleManagement.ReadWrite.Directory
 
 ## Examples
 

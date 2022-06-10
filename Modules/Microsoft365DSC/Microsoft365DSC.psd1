@@ -67,6 +67,7 @@
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
     NestedModules     = @(
         'modules\M365DSCAgent.psm1',
+        'modules\M365DSCDocGenerator.psm1',
         'modules\M365DSCErrorHandler.psm1',
         'modules\M365DSCLogEngine.psm1',
         'modules\M365DSCPermissions.psm1',
@@ -101,6 +102,7 @@
         'Update-M365DSCAllowedGraphScopes',
         'Update-M365DSCAzureAdApplication',
         'Update-M365DSCDependencies',
+        'Update-M365DSCResourceDocumentationPage',
         'Update-M365DSCResourcesSettingsJSON'
     )
 

@@ -32,21 +32,21 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementServiceConfig.Read.All, Sites.FullControl.All
+    - DeviceManagementServiceConfig.Read.All, Domain.Read.All, Sites.FullControl.All
 
 - **Update**
 
-    - DeviceManagementServiceConfig.ReadWrite.All, Sites.FullControl.All
+    - DeviceManagementServiceConfig.ReadWrite.All, Domain.Read.All, Sites.FullControl.All
 
 #### Application permissions
 
 - **Read**
 
-    - DeviceManagementServiceConfig.Read.All, Sites.FullControl.All
+    - DeviceManagementServiceConfig.Read.All, Domain.Read.All, Sites.FullControl.All
 
 - **Update**
 
-    - DeviceManagementServiceConfig.Read.All, Sites.FullControl.All
+    - DeviceManagementServiceConfig.ReadWrite.All, Domain.Read.All, Sites.FullControl.All
 
 ## Examples
 

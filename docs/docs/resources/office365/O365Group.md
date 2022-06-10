@@ -44,7 +44,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Update**
 
-    - Group.Read.All
+    - Group.Read.All, Group.ReadWrite.All, User.Read.All
 
 ## Examples
 

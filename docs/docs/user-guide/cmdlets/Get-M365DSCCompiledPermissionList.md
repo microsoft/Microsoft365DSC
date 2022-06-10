@@ -2,8 +2,9 @@
 
 ## Description
 
-This function lists all Graph permissions required for the specified resources,
-both for reading and updating.
+This function lists all Graph or Exchange permissions required for the specified resources,
+both for reading and updating. With the parameters, you can specify which permissions you
+are interested in.
 
 ## Output
 
@@ -15,8 +16,8 @@ This function outputs information as the following type:
 | Parameter | Required | DataType | Default Value | Allowed Values | Description |
 | --- | --- | --- | --- | --- | --- |
 | ResourceNameList | True | String[] |  |  | An array of resource names for which the permissions should be determined. |
-| PermissionsType | False | String | Delegated | Delegated, Application |  |
-| Source | False | String | Graph | Exchange, Graph |  |
+| PermissionsType | False | String | Delegated | Delegated, Application | Specifies what type of Graph permissions need to get returned. |
+| Source | False | String | Graph | Exchange, Graph | Specifies the workload of the permissions that need to get returned. |
 
 ## Examples
 

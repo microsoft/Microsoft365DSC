@@ -634,7 +634,15 @@ function New-DscMofResourceWikiPage
                     $null = $permissionsContent.AppendLine()
                     $null = $permissionsContent.AppendLine("#### Role Groups")
                     $null = $permissionsContent.AppendLine()
-                    $null = $permissionsContent.AppendLine("- $($settingsJson.permissions.exchange.requiredrolegroups -join ", ")")
+                    if ($settingsJson.permissions.exchange.requiredrolegroups.Count -ne 0)
+                    {
+                        $roleGroups = $settingsJson.permissions.exchange.requiredrolegroups -join ", "
+                    }
+                    else
+                    {
+                        $roleGroups = 'None'
+                    }
+                    $null = $permissionsContent.AppendLine("- $roleGroups")
                 }
                 elseif ($null -ne $settingsJson.permissions.graph)
                 {
@@ -762,7 +770,6 @@ Overwrites any existing file when outputting the generated content.
 .Example
 Update-M365DSCResourceDocumentationPage `
     -SourcePath C:\repos\MyResource\source `
-    -BuiltModulePath C:\repos\MyResource\output\MyResource\1.0.0 `
     -OutputPath C:\repos\MyResource\output\WikiContent
 
 This example shows how to generate wiki documentation for a specific module.

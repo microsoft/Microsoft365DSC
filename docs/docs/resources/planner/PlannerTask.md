@@ -72,7 +72,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Update**
 
-    - User.Read.All
+    - User.Read.All, Group.ReadWrite.All
 
 ## Examples
 

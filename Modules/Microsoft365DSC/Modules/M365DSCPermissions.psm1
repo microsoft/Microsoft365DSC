@@ -68,7 +68,7 @@ function Get-M365DSCCompiledPermissionList
         }
     }
 
-    :nextResource foreach ($resourceName in $ResourceNameList)
+    foreach ($resourceName in $ResourceNameList)
     {
         $settingsFilePath = $null
         try
@@ -86,46 +86,60 @@ function Get-M365DSCCompiledPermissionList
         if ($null -ne $settingsFilePath)
         {
             $fileContent = Get-Content $settingsFilePath -Raw
-            $jsonContent = ConvertFrom-Json -InputObject $fileContent
+            $resourceSettings = ConvertFrom-Json -InputObject $fileContent
+
+            if ($null -eq $resourceSettings.permissions)
+            {
+                Write-Warning "Error in reading permissions. Missing permissions node in settings.json."
+                continue
+            }
 
             switch ($Source)
             {
                 'Graph'
                 {
-                    # Update permissions
-                    foreach ($updatePermission in $jsonContent.permissions.graph.$PermissionsType.update)
+                    if ($null -ne $resourceSettings.permissions.graph)
                     {
-                        if (-not $results.UpdatePermissions.Contains($updatePermission.name))
+                        # Update permissions
+                        foreach ($updatePermission in $resourceSettings.permissions.graph.$PermissionsType.update)
                         {
-                            Write-Verbose -Message "Found new Update permission {$($updatePermission.name)}"
-                            $results.UpdatePermissions += $updatePermission.name
+                            if (-not $results.UpdatePermissions.Contains($updatePermission.name))
+                            {
+                                Write-Verbose -Message "Found new Update permission {$($updatePermission.name)}"
+                                $results.UpdatePermissions += $updatePermission.name
+                            }
+                            else
+                            {
+                                Write-Verbose -Message "Update permission {$($updatePermission.name)} was already added"
+                            }
                         }
-                        else
+
+                        # Read permissions
+                        foreach ($readPermission in $resourceSettings.permissions.graph.$PermissionsType.read)
                         {
-                            Write-Verbose -Message "Update permission {$($updatePermission.name)} was already added"
+                            if (-not $results.ReadPermissions.Contains($readPermission.name))
+                            {
+                                Write-Verbose -Message "Found new Read permission {$($readPermission.name)}"
+                                $results.ReadPermissions += $readPermission.name
+                            }
+                            else
+                            {
+                                Write-Verbose -Message "Read permission {$($readPermission.name)} was already added"
+                            }
                         }
                     }
-
-                    # Read permissions
-                    foreach ($readPermission in $jsonContent.permissions.graph.$PermissionsType.read)
+                    else
                     {
-                        if (-not $results.ReadPermissions.Contains($readPermission.name))
-                        {
-                            Write-Verbose -Message "Found new Read permission {$($readPermission.name)}"
-                            $results.ReadPermissions += $readPermission.name
-                        }
-                        else
-                        {
-                            Write-Verbose -Message "Read permission {$($readPermission.name)} was already added"
-                        }
+                        Write-Warning "Error in reading Graph permissions. Missing graph node in settings.json."
+                        continue
                     }
                 }
                 'Exchange'
                 {
-                    if ($null -ne $jsonContent.permissions.exchange)
+                    if ($null -ne $resourceSettings.permissions.exchange)
                     {
                         # Required Role
-                        foreach ($requiredRole in $jsonContent.permissions.exchange.requiredroles)
+                        foreach ($requiredRole in $resourceSettings.permissions.exchange.requiredroles)
                         {
                             if (-not $results.RequiredRoles.Contains($requiredRole))
                             {
@@ -139,7 +153,7 @@ function Get-M365DSCCompiledPermissionList
                         }
 
                         # Required RoleGroups
-                        foreach ($requiredRoleGroup in $jsonContent.permissions.exchange.requiredrolegroups)
+                        foreach ($requiredRoleGroup in $resourceSettings.permissions.exchange.requiredrolegroups)
                         {
                             if (-not $results.RequiredRoleGroups.Contains($requiredRoleGroup))
                             {
@@ -151,6 +165,11 @@ function Get-M365DSCCompiledPermissionList
                                 Write-Verbose -Message "Required Role Group {$($requiredRoleGroup)} was already added"
                             }
                         }
+                    }
+                    else
+                    {
+                        Write-Warning "Error in reading Exchange permissions. Missing exchange node in settings.json."
+                        continue
                     }
                 }
             }

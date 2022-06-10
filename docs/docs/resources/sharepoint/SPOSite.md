@@ -53,21 +53,21 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Application.Read.All
+    - Application.Read.All, Domain.Read.All, Sites.FullControl.All
 
 - **Update**
 
-    - Sites.FullControl.All
+    - Domain.Read.All, Sites.FullControl.All
 
 #### Application permissions
 
 - **Read**
 
-    - Application.Read.All
+    - Application.Read.All, Domain.Read.All, Sites.FullControl.All
 
 - **Update**
 
-    - Application.Read.All
+    - Domain.Read.All, Sites.FullControl.All
 
 ## Examples
 

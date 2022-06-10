@@ -43,7 +43,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Update**
 
-    - Directory.Read.All
+    - Directory.Read.All, Directory.ReadWrite.All
 
 ## Examples
 

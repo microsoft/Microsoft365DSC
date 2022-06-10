@@ -2,7 +2,8 @@
 
 ## Description
 
-This function updates the required permissions in the Graph API for the specified resources and type
+This function updates the required permissions for the specified resources and type
+for the Microsoft Graph delegated application in Azure Active Directory.
 
 ## Output
 
