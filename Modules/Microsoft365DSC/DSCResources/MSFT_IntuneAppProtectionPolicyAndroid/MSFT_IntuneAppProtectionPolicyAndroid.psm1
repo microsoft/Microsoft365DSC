@@ -460,10 +460,15 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing Android App Protection Policy {$DisplayName}"
-        $setParams.add('AndroidManagedAppProtectionId', (Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'").id)
+        $setParams.add('AndroidManagedAppProtectionId', $currentPolicy.id)
         $graphparams = get-inputParamsList -commandName 'Update-MgDeviceAppMgtAndroidManagedAppProtection'
     }
-    elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present'){}
+    elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Removing Android App Protection Policy {$DisplayName}"
+        Remove-MgDeviceAppManagementAndroidManagedAppProtection -AndroidManagedAppProtectionId $currentPolicy.id
+        return $true
+    }
 
     # construct command
     write-verbose -message "Preparing input parameters..."
@@ -556,13 +561,6 @@ function Set-TargetResource
         Write-Verbose -Message 'Setting Group Assignments...'
         set-MgDeviceAppMgtTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Assignments $assignmentsArray
 
-    }
-    elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
-    {
-        Write-Verbose -Message "Removing Android App Protection Policy {$DisplayName}"
-        $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'" `
-            -ErrorAction Stop
-        Remove-MgDeviceAppManagementAndroidManagedAppProtection -AndroidManagedAppProtectionId $policyInfo.id
     }
 
     if ( $ensure -ne 'Absent')
@@ -739,6 +737,11 @@ function Test-TargetResource
 
         Throw 'Error when searching for current policy details - Please check verbose output for further detail'
 
+    }
+    if ( ($Ensure -eq 'Absent') -and ($currentvalues.Ensure -eq 'Present') )
+    {
+        Write-Verbose -Message "Existing Policy {$DisplayName} will be removed"
+        return $False
     }
 
     $ValuesToCheck = @{}
