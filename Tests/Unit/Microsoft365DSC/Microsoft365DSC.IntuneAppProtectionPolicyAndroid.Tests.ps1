@@ -1,6 +1,40 @@
 [CmdletBinding()]
 param(
 )
+
+class MockManagedAppProtectionObject
+{
+	[string]$id
+	[array]$AllowedDataStorageLocations
+	[string]$AllowedInboundDataTransferSources
+	[string]$AllowedOutboundClipboardSharingLevel
+	[string]$AllowedOutboundDataTransferDestinations
+	[string]$AppGroupType
+	[array]$Apps
+	[array]$Assignments
+	[boolean]$ContactSyncBlocked
+	[boolean]$DataBackupBlocked
+	[string]$Description
+	[boolean]$DeviceComplianceRequired
+	[string]$DisplayName
+	[array]$ExcludedGroups
+	[boolean]$FingerprintBlocked
+	[boolean]$ManagedBrowserToOpenLinksRequired
+	[int32]$MaximumPinRetries
+	[int32]$MinimumPinLength
+	[boolean]$OrganizationalCredentialsRequired
+	[timespan]$PeriodBeforePinReset
+	[timespan]$PeriodOfflineBeforeAccessCheck
+	[timespan]$PeriodOfflineBeforeWipeIsEnforced
+	[timespan]$PeriodOnlineBeforeAccessCheck
+	[string]$PinCharacterSet
+	[boolean]$PinRequired
+	[boolean]$DisableAppPinIfDevicePinIsSet
+	[boolean]$PrintBlocked
+	[boolean]$SaveAsBlocked
+	[boolean]$SimplePinBlocked
+}
+
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
     -ChildPath "..\..\Unit" `
     -Resolve
@@ -40,8 +74,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
             }
+
+            Mock -CommandName New-MgDeviceAppMgtAndroidManagedAppProtection -MockWith {
+            }
+
+            Mock -CommandName Update-MgDeviceAppMgtAndroidManagedAppProtection -MockWith {
+            }
+
+            Mock -CommandName Invoke-MgTargetDeviceAppMgtTargetedManagedAppConfigurationApp -MockWith {
+            }
+
+            Mock -CommandName set-MgDeviceAppMgtTargetedManagedAppConfiguration -MockWith {
+            }
+
             Mock -CommandName Remove-IntuneAppProtectionPolicy -MockWith {
             }
+
             Mock -CommandName Remove-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
             }
         }
@@ -55,11 +103,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                     AllowedOutboundDataTransferDestinations = "managedApps";
                     AppGroupType                            = "selectedPublicApps";
-                    Apps                                    = @("com.cisco.im.intune.android", "com.penlink.penpoint.android", "com.slack.intune.android");
+                    Apps                                    = @("com.cisco.im.intune", "com.penlink.penpoint", "com.slack.intune");
                     Assignments                             = @("6ee86c9f-2b3c-471d-ad38-ff4673ed723e");
                     ContactSyncBlocked                      = $False;
                     DataBackupBlocked                       = $False;
-                    Description                             = "";
+                    Description                             = "When the Policy doesn't already exist";
                     DeviceComplianceRequired                = $True;
                     DisplayName                             = "DSC Policy";
                     Ensure                                  = "Present"
@@ -85,17 +133,78 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
                     if ($Global:Count -eq 0)
                     {
-                        $Global:Count++
+						$Global:Count++
                         return $null
                     }
                     else
                     {
-                        return @{
-                            displayName   = "DSC Policy"
-                            id            = "12345-12345-12345-12345-12345"
-                            '@odata.type' = "#microsoft.graph.androidManagedAppProtection"
+                        return [MockManagedAppProtectionObject]@{
+                        displayName   = "DSC Policy"
+                        id            = "12345-12345-12345-12345-12345"
+                        #'@odata.type' = "#microsoft.graph.androidManagedAppProtection"
+						AllowedDataStorageLocations             = @("sharePoint");
+                        AllowedInboundDataTransferSources       = "managedApps";
+                        AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
+                        AllowedOutboundDataTransferDestinations = "managedApps";
+                        AppGroupType                            = "selectedPublicApps";
+                        Apps                                    = @()
+                        Assignments                             = @()
+                        ContactSyncBlocked                      = $False;
+                        DataBackupBlocked                       = $False;
+                        Description                             = "When the Policy doesn't already exist";
+                        DeviceComplianceRequired                = $True;
+                        FingerprintBlocked                      = $False;
+                        ManagedBrowserToOpenLinksRequired       = $True;
+                        MaximumPinRetries                       = 5;
+                        MinimumPinLength                        = 4;
+                        OrganizationalCredentialsRequired       = $False;
+                        PeriodBeforePinReset                    = New-TimeSpan -Days 60;
+                        PeriodOfflineBeforeAccessCheck          = New-TimeSpan -Hours 12;
+                        PeriodOfflineBeforeWipeIsEnforced       = New-TimeSpan -Days 90;
+                        PeriodOnlineBeforeAccessCheck           = New-TimeSpan -Minutes 30;
+                        PinCharacterSet                         = "alphanumericAndSymbol";
+                        PinRequired                             = $True;
+                        DisableAppPinIfDevicePinIsSet           = $False;
+                        PrintBlocked                            = $False;
+                        SaveAsBlocked                           = $True;
+                        SimplePinBlocked                        = $False;
                         }
                     }
+                }
+
+                Mock -CommandName New-MgDeviceAppMgtAndroidManagedAppProtection -MockWith {
+                    return [MockManagedAppProtectionObject]@{
+                        displayName   = "DSC Policy"
+                        id            = "12345-12345-12345-12345-12345"
+                        #'@odata.type' = "#microsoft.graph.androidManagedAppProtection"
+						AllowedDataStorageLocations             = @("sharePoint");
+                        AllowedInboundDataTransferSources       = "managedApps";
+                        AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
+                        AllowedOutboundDataTransferDestinations = "managedApps";
+                        AppGroupType                            = "selectedPublicApps";
+                        Apps                                    = @()
+                        Assignments                             = @()
+                        ContactSyncBlocked                      = $False;
+                        DataBackupBlocked                       = $False;
+                        Description                             = "When the Policy doesn't already exist";
+                        DeviceComplianceRequired                = $True;
+                        FingerprintBlocked                      = $False;
+                        ManagedBrowserToOpenLinksRequired       = $True;
+                        MaximumPinRetries                       = 5;
+                        MinimumPinLength                        = 4;
+                        OrganizationalCredentialsRequired       = $False;
+                        PeriodBeforePinReset                    = New-TimeSpan -Days 60;
+                        PeriodOfflineBeforeAccessCheck          = New-TimeSpan -Hours 12;
+                        PeriodOfflineBeforeWipeIsEnforced       = New-TimeSpan -Days 90;
+                        PeriodOnlineBeforeAccessCheck           = New-TimeSpan -Minutes 30;
+                        PinCharacterSet                         = "alphanumericAndSymbol";
+                        PinRequired                             = $True;
+                        DisableAppPinIfDevicePinIsSet           = $False;
+                        PrintBlocked                            = $False;
+                        SaveAsBlocked                           = $True;
+                        SimplePinBlocked                        = $False;
+                    }
+
                 }
             }
 
@@ -110,7 +219,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It "Should create the Policy from the Set method" {
                 $Global:Count = 0
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName "New-M365DSCIntuneAppProtectionPolicyAndroid" -Exactly 1
+                Should -Invoke -CommandName "New-MgDeviceAppMgtAndroidManagedAppProtection" -Exactly 1
             }
         }
 
@@ -122,11 +231,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                     AllowedOutboundDataTransferDestinations = "managedApps";
                     AppGroupType                            = "selectedPublicApps";
-                    Apps                                    = @("com.cisco.im.intune.android", "com.penlink.penpoint.android", "com.slack.intune.android");
+                    Apps                                    = @("com.cisco.im.intune", "com.penlink.penpoint", "com.slack.intune");
                     Assignments                             = @("6ee86c9f-2b3c-471d-ad38-ff4673ed723e");
                     ContactSyncBlocked                      = $False;
                     DataBackupBlocked                       = $False;
-                    Description                             = "";
+                    Description                             = "When the policy already exists and is NOT in the Desired State";
                     DeviceComplianceRequired                = $True;
                     DisplayName                             = "DSC Policy";
                     Ensure                                  = "Present"
@@ -150,79 +259,84 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
-                    return @{
+
+                    return [MockManagedAppProtectionObject]@{
                         displayName   = "DSC Policy"
                         id            = "12345-12345-12345-12345-12345"
-                        '@odata.type' = "#microsoft.graph.androidManagedAppProtection"
-                    }
-                }
-
-                Mock -CommandName Get-M365DSCIntuneAppProtectionPolicyAndroid -MockWith {
-                    return @{
-                        '@odata.type'                           = "#microsoft.graph.androidManagedAppProtection"
+                        #'@odata.type' = "#microsoft.graph.androidManagedAppProtection"
                         AllowedDataStorageLocations             = @("sharePoint");
                         AllowedInboundDataTransferSources       = "managedApps";
                         AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                         AllowedOutboundDataTransferDestinations = "managedApps";
                         AppGroupType                            = "selectedPublicApps";
                         Apps                                    = @(
-                            @{
-                                id                  = "com.cisco.im.intune.android.android"
+                            [pscustomobject]@{
+                                id                  = "com.cisco.im.intune.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    packageid      = "com.cisco.im.intune.android"
+									"AdditionalProperties" = @{
+										"@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+										"packageid"      = "com.cisco.im.intune"
+									}
                                 }
                             },
-                            @{
-                                id                  = "com.penlink.penpoint.android.android"
+                            [pscustomobject]@{
+                                id                  = "com.penlink.penpoint.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    packageid      = "com.penlink.penpoint.android"
+									"AdditionalProperties" = @{
+										"@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+										"packageid"      = "com.penlink.penpoint"
+									}
                                 }
                             },
-                            @{
-                                id                  = "com.slack.intune.android.android"
+                            [pscustomobject]@{
+                                id                  = "com.slack.intune.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    packageid      = "com.slack.intune.android"
+									'AdditionalProperties' = @{
+										"@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+										"packageid"      = "com.slack.intune"
+									}
                                 }
                             }
                         )
                         Assignments                             = @(
                             @{
-                                target = @{
-                                    '@odata.type' = "#microsoft.graph.groupAssignmentTarget"
-                                    groupId       = "6ee86c9f-2b3c-471d-ad38-ff4673ed723e"
+                                id = '6ee86c9f-2b3c-471d-ad38-ff4673ed723e'
+								target = @{
+									'AdditionalProperties' = @{
+										'@odata.type' = "#microsoft.graph.groupAssignmentTarget"
+										groupId       = "6ee86c9f-2b3c-471d-ad38-ff4673ed723e"
+									}
                                 }
                             },
                             @{
-                                target = @{
-                                    '@odata.type' = "#microsoft.graph.exclusionGroupAssignmentTarget"
-                                    groupId       = "3eacc231-d77b-4efb-bb5f-310f68bd6198"
+                                id = '3eacc231-d77b-4efb-bb5f-310f68bd6198'
+								target = @{
+									'AdditionalProperties' = @{
+										'@odata.type' = "#microsoft.graph.exclusionGroupAssignmentTarget"
+										groupId       = "3eacc231-d77b-4efb-bb5f-310f68bd6198"
+									}
                                 }
                             }
                         )
                         ContactSyncBlocked                      = $False;
                         DataBackupBlocked                       = $False;
-                        Description                             = "";
+                        Description                             = "When the policy already exists and is NOT in the Desired State";
                         DeviceComplianceRequired                = $True;
-                        DisplayName                             = "DSC Policy";
                         FingerprintBlocked                      = $False;
                         ManagedBrowserToOpenLinksRequired       = $True;
                         MaximumPinRetries                       = 5;
                         MinimumPinLength                        = 4;
                         OrganizationalCredentialsRequired       = $False;
-                        PeriodBeforePinReset                    = "P60D";
-                        PeriodOfflineBeforeAccessCheck          = "PT12H";
-                        PeriodOfflineBeforeWipeIsEnforced       = "P90D";
-                        PeriodOnlineBeforeAccessCheck           = "PT30M";
+                        PeriodBeforePinReset                    = New-TimeSpan -Days 60;
+                        PeriodOfflineBeforeAccessCheck          = New-TimeSpan -Hours 12;
+                        PeriodOfflineBeforeWipeIsEnforced       = New-TimeSpan -Days 90;
+                        PeriodOnlineBeforeAccessCheck           = New-TimeSpan -Minutes 30;
                         PinCharacterSet                         = "alphanumericAndSymbol";
                         PinRequired                             = $True;
                         DisableAppPinIfDevicePinIsSet           = $False;
                         PrintBlocked                            = $False;
                         SaveAsBlocked                           = $True;
                         SimplePinBlocked                        = $False;
-                        id                                      = "12345-12345-12345-12345-12345"
                     }
                 }
             }
@@ -237,7 +351,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should update the App Configuration Policy from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-M365DSCIntuneAppProtectionPolicyAndroid -Exactly 1
+                Should -Invoke -CommandName Update-MgDeviceAppMgtAndroidManagedAppProtection -Exactly 1
             }
         }
 
@@ -249,11 +363,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                     AllowedOutboundDataTransferDestinations = "managedApps";
                     AppGroupType                            = "selectedPublicApps";
-                    Apps                                    = @("com.cisco.im.intune.android", "com.penlink.penpoint.android", "com.slack.intune.android");
+                    Apps                                    = @("com.cisco.im.intune", "com.penlink.penpoint", "com.slack.intune");
                     Assignments                             = @("6ee86c9f-2b3c-471d-ad38-ff4673ed723e");
                     ContactSyncBlocked                      = $False;
                     DataBackupBlocked                       = $False;
-                    Description                             = "";
+                    Description                             = "When the policy already exists and IS in the Desired State";
                     DeviceComplianceRequired                = $True;
                     DisplayName                             = "DSC Policy";
                     Ensure                                  = "Present"
@@ -277,79 +391,86 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
-                    return @{
+                    return [MockManagedAppProtectionObject]@{
                         displayName   = "DSC Policy"
                         id            = "12345-12345-12345-12345-12345"
-                        '@odata.type' = "#microsoft.graph.androidManagedAppProtection"
-                    }
-                }
+                        #'@odata.type' = "#microsoft.graph.androidManagedAppProtection"
 
-                Mock -CommandName Get-M365DSCIntuneAppProtectionPolicyAndroid -MockWith {
-                    @{
-                        '@odata.type'                           = "#microsoft.graph.androidManagedAppProtection"
                         AllowedDataStorageLocations             = @("sharePoint");
                         AllowedInboundDataTransferSources       = "managedApps";
                         AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                         AllowedOutboundDataTransferDestinations = "managedApps";
                         AppGroupType                            = "selectedPublicApps";
                         Apps                                    = @(
-                            @{
-                                id                  = "com.cisco.im.intune.android.android"
+                            [pscustomobject]@{
+                                id                  = "com.cisco.im.intune.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    packageid      = "com.cisco.im.intune.android"
+									"AdditionalProperties" = @{
+										"@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+										"packageid"      = "com.cisco.im.intune"
+									}
                                 }
                             },
-                            @{
-                                id                  = "com.penlink.penpoint.android.android"
+                            [pscustomobject]@{
+                                id                  = "com.penlink.penpoint.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    packageid      = "com.penlink.penpoint.android"
+									"AdditionalProperties" = @{
+										"@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+										"packageid"      = "com.penlink.penpoint"
+									}
                                 }
                             },
-                            @{
-                                id                  = "com.slack.intune.android.android"
+                            [pscustomobject]@{
+                                id                  = "com.slack.intune.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    packageid      = "com.slack.intune.android"
+									'AdditionalProperties' = @{
+										"@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+										"packageid"      = "com.slack.intune"
+									}
                                 }
                             }
                         )
                         Assignments                             = @(
                             @{
-                                target = @{
-                                    '@odata.type' = "#microsoft.graph.groupAssignmentTarget"
-                                    groupId       = "6ee86c9f-2b3c-471d-ad38-ff4673ed723e"
+                                id = '6ee86c9f-2b3c-471d-ad38-ff4673ed723e'
+								target = @{
+									'AdditionalProperties' = @{
+										'@odata.type' = "#microsoft.graph.groupAssignmentTarget"
+										groupId       = "6ee86c9f-2b3c-471d-ad38-ff4673ed723e"
+									}
                                 }
                             },
                             @{
-                                target = @{
-                                    '@odata.type' = "#microsoft.graph.exclusionGroupAssignmentTarget"
-                                    groupId       = "3eacc231-d77b-4efb-bb5f-310f68bd6198"
+                                id = '3eacc231-d77b-4efb-bb5f-310f68bd6198'
+								target = @{
+									'AdditionalProperties' = @{
+										'@odata.type' = "#microsoft.graph.exclusionGroupAssignmentTarget"
+										groupId       = "3eacc231-d77b-4efb-bb5f-310f68bd6198"
+									}
                                 }
                             }
                         )
                         ContactSyncBlocked                      = $False;
                         DataBackupBlocked                       = $False;
-                        Description                             = "";
+                        Description                             = "When the policy already exists and IS in the Desired State";
                         DeviceComplianceRequired                = $True;
-                        DisplayName                             = "DSC Policy";
                         FingerprintBlocked                      = $False;
                         ManagedBrowserToOpenLinksRequired       = $True;
                         MaximumPinRetries                       = 5;
                         MinimumPinLength                        = 4;
                         OrganizationalCredentialsRequired       = $False;
-                        PeriodBeforePinReset                    = "P60D";
-                        PeriodOfflineBeforeAccessCheck          = "PT12H";
-                        PeriodOfflineBeforeWipeIsEnforced       = "P90D";
-                        PeriodOnlineBeforeAccessCheck           = "PT30M";
+                        PeriodBeforePinReset                    = New-TimeSpan -Days 60;
+                        PeriodOfflineBeforeAccessCheck          = New-TimeSpan -Hours 12;
+                        PeriodOfflineBeforeWipeIsEnforced       = New-TimeSpan -Days 90;
+                        PeriodOnlineBeforeAccessCheck           = New-TimeSpan -Minutes 30;
                         PinCharacterSet                         = "alphanumericAndSymbol";
                         PinRequired                             = $True;
                         DisableAppPinIfDevicePinIsSet           = $False;
                         PrintBlocked                            = $False;
                         SaveAsBlocked                           = $True;
                         SimplePinBlocked                        = $False;
-                        id                                      = "12345-12345-12345-12345-12345"
+
+
                     }
                 }
             }
@@ -367,17 +488,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                     AllowedOutboundDataTransferDestinations = "managedApps";
                     AppGroupType                            = "selectedPublicApps";
-                    Apps                                    = @("com.cisco.im.intune.android", "com.penlink.penpoint.android", "com.slack.intune.android");
+                    Apps                                    = @("com.cisco.im.intune", "com.penlink.penpoint", "com.slack.intune");
                     Assignments                             = @("6ee86c9f-2b3c-471d-ad38-ff4673ed723e");
                     ContactSyncBlocked                      = $False;
                     DataBackupBlocked                       = $False;
-                    Description                             = "";
+                    Description                             = "When the policy exists and it SHOULD NOT";
                     DeviceComplianceRequired                = $True;
                     DisplayName                             = "DSC Policy";
-                    Ensure                                  = "Absent"
+                    Ensure                                  = "Absent";
                     ExcludedGroups                          = @("3eacc231-d77b-4efb-bb5f-310f68bd6198");
                     FingerprintBlocked                      = $False;
-                    Credential                      = $Credential;
+                    #Credential                              = $Credential;
                     ManagedBrowserToOpenLinksRequired       = $True;
                     MaximumPinRetries                       = 5;
                     MinimumPinLength                        = 4;
@@ -395,79 +516,84 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
-                    return @{
+                    return [MockManagedAppProtectionObject]@{
                         displayName   = "DSC Policy"
                         id            = "12345-12345-12345-12345-12345"
-                        '@odata.type' = "#microsoft.graph.androidManagedAppProtection"
-                    }
-                }
-
-                Mock -CommandName Get-M365DSCIntuneAppProtectionPolicyAndroid -MockWith {
-                    @{
-                        '@odata.type'                           = "#microsoft.graph.androidManagedAppProtection"
                         AllowedDataStorageLocations             = @("sharePoint");
                         AllowedInboundDataTransferSources       = "managedApps";
                         AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                         AllowedOutboundDataTransferDestinations = "managedApps";
                         AppGroupType                            = "selectedPublicApps";
                         Apps                                    = @(
-                            @{
-                                id                  = "com.cisco.im.intune.android.android"
+                            [pscustomobject]@{
+                                id                  = "com.cisco.im.intune.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    packageid      = "com.cisco.im.intune.android"
+									"AdditionalProperties" = @{
+										"@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+										"packageid"      = "com.cisco.im.intune"
+									}
                                 }
                             },
-                            @{
-                                id                  = "com.penlink.penpoint.android.android"
+                            [pscustomobject]@{
+                                id                  = "com.penlink.penpoint.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    packageid      = "com.penlink.penpoint.android"
+									"AdditionalProperties" = @{
+										"@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+										"packageid"      = "com.penlink.penpoint"
+									}
                                 }
                             },
-                            @{
-                                id                  = "com.slack.intune.android.android"
+                            [pscustomobject]@{
+                                id                  = "com.slack.intune.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    packageid      = "com.slack.intune.android"
+									'AdditionalProperties' = @{
+										"@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+										"packageid"      = "com.slack.intune"
+									}
                                 }
                             }
                         )
                         Assignments                             = @(
                             @{
-                                target = @{
-                                    '@odata.type' = "#microsoft.graph.groupAssignmentTarget"
-                                    groupId       = "6ee86c9f-2b3c-471d-ad38-ff4673ed723e"
+                                id = '6ee86c9f-2b3c-471d-ad38-ff4673ed723e'
+								target = @{
+									'AdditionalProperties' = @{
+										'@odata.type' = "#microsoft.graph.groupAssignmentTarget"
+										groupId       = "6ee86c9f-2b3c-471d-ad38-ff4673ed723e"
+									}
                                 }
                             },
                             @{
-                                target = @{
-                                    '@odata.type' = "#microsoft.graph.exclusionGroupAssignmentTarget"
-                                    groupId       = "3eacc231-d77b-4efb-bb5f-310f68bd6198"
+                                id = '3eacc231-d77b-4efb-bb5f-310f68bd6198'
+								target = @{
+									'AdditionalProperties' = @{
+										'@odata.type' = "#microsoft.graph.exclusionGroupAssignmentTarget"
+										groupId       = "3eacc231-d77b-4efb-bb5f-310f68bd6198"
+									}
                                 }
                             }
                         )
                         ContactSyncBlocked                      = $False;
                         DataBackupBlocked                       = $False;
-                        Description                             = "";
+                        Description                             = "When the policy exists and it SHOULD NOT";
                         DeviceComplianceRequired                = $True;
-                        DisplayName                             = "DSC Policy";
                         FingerprintBlocked                      = $False;
                         ManagedBrowserToOpenLinksRequired       = $True;
                         MaximumPinRetries                       = 5;
                         MinimumPinLength                        = 4;
                         OrganizationalCredentialsRequired       = $False;
-                        PeriodBeforePinReset                    = "P60D";
-                        PeriodOfflineBeforeAccessCheck          = "PT12H";
-                        PeriodOfflineBeforeWipeIsEnforced       = "P90D";
-                        PeriodOnlineBeforeAccessCheck           = "PT30M";
+                        PeriodBeforePinReset                    = New-TimeSpan -Days 60;
+                        PeriodOfflineBeforeAccessCheck          = New-TimeSpan -Hours 12;
+                        PeriodOfflineBeforeWipeIsEnforced       = New-TimeSpan -Days 90;
+                        PeriodOnlineBeforeAccessCheck           = New-TimeSpan -Minutes 30;
                         PinCharacterSet                         = "alphanumericAndSymbol";
                         PinRequired                             = $True;
                         DisableAppPinIfDevicePinIsSet           = $False;
                         PrintBlocked                            = $False;
                         SaveAsBlocked                           = $True;
                         SimplePinBlocked                        = $False;
-                        id                                      = "12345-12345-12345-12345-12345"
+
+
                     }
                 }
             }
@@ -476,14 +602,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It "Should return true from the Test method" {
+            It "Should return false from the Test method" {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
             It "Should remove the App Configuration Policy from the Set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgDeviceAppManagementAndroidManagedAppProtection -Exactly 1
+                Should -Invoke -CommandName "Remove-MgDeviceAppManagementAndroidManagedAppProtection" -Exactly 1
             }
+
         }
 
         Context -Name "ReverseDSC Tests" -Fixture {
@@ -493,79 +620,85 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgDeviceAppManagementAndroidManagedAppProtection -MockWith {
-                    return @{
+                    return [MockManagedAppProtectionObject]@{
                         displayName   = "DSC Policy"
                         id            = "12345-12345-12345-12345-12345"
-                        '@odata.type' = "#microsoft.graph.androidManagedAppProtection"
-                    }
-                }
+                        #'@odata.type' = "#microsoft.graph.androidManagedAppProtection"
 
-                Mock -CommandName Get-M365DSCIntuneAppProtectionPolicyAndroid -MockWith {
-                    @{
-                        '@odata.type'                           = "#microsoft.graph.androidManagedAppProtection"
                         AllowedDataStorageLocations             = @("sharePoint");
                         AllowedInboundDataTransferSources       = "managedApps";
                         AllowedOutboundClipboardSharingLevel    = "managedAppsWithPasteIn";
                         AllowedOutboundDataTransferDestinations = "managedApps";
                         AppGroupType                            = "selectedPublicApps";
                         Apps                                    = @(
-                            @{
-                                id                  = "com.cisco.im.intune.android.android"
+                            [pscustomobject]@{
+                                id                  = "com.cisco.im.intune.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    packageid      = "com.cisco.im.intune.android"
+									"AdditionalProperties" = @{
+										"@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+										"packageid"      = "com.cisco.im.intune"
+									}
                                 }
                             },
-                            @{
-                                id                  = "com.penlink.penpoint.android.android"
+                            [pscustomobject]@{
+                                id                  = "com.penlink.penpoint.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    packageid      = "com.penlink.penpoint.android"
+									"AdditionalProperties" = @{
+										"@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+										"packageid"      = "com.penlink.penpoint"
+									}
                                 }
                             },
-                            @{
-                                id                  = "com.slack.intune.android.android"
+                            [pscustomobject]@{
+                                id                  = "com.slack.intune.android"
                                 mobileAppIdentifier = @{
-                                    "@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
-                                    packageid      = "com.slack.intune.android"
+									'AdditionalProperties' = @{
+										"@odata.type" = "#microsoft.graph.androidMobileAppIdentifier"
+										"packageid"      = "com.slack.intune"
+									}
                                 }
                             }
                         )
                         Assignments                             = @(
                             @{
-                                target = @{
-                                    '@odata.type' = "#microsoft.graph.groupAssignmentTarget"
-                                    groupId       = "6ee86c9f-2b3c-471d-ad38-ff4673ed723e"
+                                id = '6ee86c9f-2b3c-471d-ad38-ff4673ed723e'
+								target = @{
+									'AdditionalProperties' = @{
+										'@odata.type' = "#microsoft.graph.groupAssignmentTarget"
+										groupId       = "6ee86c9f-2b3c-471d-ad38-ff4673ed723e"
+									}
                                 }
                             },
                             @{
-                                target = @{
-                                    '@odata.type' = "#microsoft.graph.exclusionGroupAssignmentTarget"
-                                    groupId       = "3eacc231-d77b-4efb-bb5f-310f68bd6198"
+                                id = '3eacc231-d77b-4efb-bb5f-310f68bd6198'
+								target = @{
+									'AdditionalProperties' = @{
+										'@odata.type' = "#microsoft.graph.exclusionGroupAssignmentTarget"
+										groupId       = "3eacc231-d77b-4efb-bb5f-310f68bd6198"
+									}
                                 }
                             }
                         )
                         ContactSyncBlocked                      = $False;
                         DataBackupBlocked                       = $False;
-                        Description                             = "";
+                        Description                             = "ReverseDSC Tests";
                         DeviceComplianceRequired                = $True;
-                        DisplayName                             = "DSC Policy";
                         FingerprintBlocked                      = $False;
                         ManagedBrowserToOpenLinksRequired       = $True;
                         MaximumPinRetries                       = 5;
                         MinimumPinLength                        = 4;
                         OrganizationalCredentialsRequired       = $False;
-                        PeriodBeforePinReset                    = "P60D";
-                        PeriodOfflineBeforeAccessCheck          = "PT12H";
-                        PeriodOfflineBeforeWipeIsEnforced       = "P90D";
-                        PeriodOnlineBeforeAccessCheck           = "PT30M";
+                        PeriodBeforePinReset                    = New-TimeSpan -Days 60;
+                        PeriodOfflineBeforeAccessCheck          = New-TimeSpan -Hours 12;
+                        PeriodOfflineBeforeWipeIsEnforced       = New-TimeSpan -Days 90;
+                        PeriodOnlineBeforeAccessCheck           = New-TimeSpan -Minutes 30;
                         PinCharacterSet                         = "alphanumericAndSymbol";
                         PinRequired                             = $True;
                         DisableAppPinIfDevicePinIsSet           = $False;
                         PrintBlocked                            = $False;
                         SaveAsBlocked                           = $True;
                         SimplePinBlocked                        = $False;
-                        id                                      = "12345-12345-12345-12345-12345"
+
                     }
                 }
             }
