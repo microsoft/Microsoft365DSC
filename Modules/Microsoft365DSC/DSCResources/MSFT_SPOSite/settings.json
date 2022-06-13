@@ -5,10 +5,16 @@
         {
             "read": [
                 {
+                    "name": "Domain.Read.All"
+                },
+{
                     "name": "Sites.FullControl.All"
                 }
             ],
             "update": [
+                {
+                    "name": "Domain.Read.All"
+                },
                 {
                     "name": "Sites.FullControl.All"
                 }

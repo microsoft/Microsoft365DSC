@@ -3,7 +3,7 @@ class MSFT_PPPowerAppsEnvironment : OMI_BaseResource
 {
     [Key, Description("Display name for the PowerApps environment")] String DisplayName;
     [Required, Description("Location of the PowerApps environment."), ValueMap{"canada","unitedstates","europe","asia","australia","india","japan","unitedkingdom","unitedstatesfirstrelease","southamerica","france","usgov"}, Values{"canada","unitedstates","europe","asia","australia","india","japan","unitedkingdom","unitedstatesfirstrelease","southamerica","france","usgov"}] string Location;
-    [Required, Description("Environment type."), ValueMap{"Production","Standard","Trial","Sandbox"}, Values{"Production","Standard","Trial","Sandbox"}] String EnvironmentSKU;
+    [Required, Description("Environment type."), ValueMap{"Production","Standard","Trial","Sandbox","SubscriptionBasedTrial", "Teams"}, Values{"Production","Standard","Trial","Sandbox","SubscriptionBasedTrial", "Teams"}] String EnvironmentSKU;
     [Write, Description("Only accepted value is 'Present'."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the Power Platform Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

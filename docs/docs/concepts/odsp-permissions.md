@@ -34,14 +34,14 @@ The best option when using Microsoft365DSC with SharePoint and OneDrive is to us
 
 ### Configure AzureAD app for Microsoft365DSC
 
-The SharePoint PNP team created a cmdlet that simplifies the setup of AzureAD App called [Initialize-PNPPowerShellAuthentication](https://docs.microsoft.com/en-us/powershell/module/sharepoint-pnp/initialize-pnppowershellauthentication?view=sharepoint-ps). The following script can be used to create the AzureAD app permissions needed for Microsoft365DSC
+The SharePoint PNP team created a cmdlet that simplifies the setup of AzureAD App called [Register-PnPAzureADApp](https://pnp.github.io/powershell/cmdlets/Register-PnPAzureADApp). The following script can be used to create the AzureAD app permissions needed for Microsoft365DSC
 
 ```PowerShell
-Initialize-PnPPowerShellAuthentication -ApplicationName TestApp2 -Tenant contoso.onmicrosoft.com -OutPath c:\DSC -CertificatePassword (ConvertTo-SecureString -String "password" -AsPlainText -Force) -store CurrentUser -scopes "SPO.Sites.FullControl.All"
+Register-PnPAzureADApp -ApplicationName TestApp2 -Tenant contoso.onmicrosoft.com -OutPath C:\DSC -CertificatePassword (ConvertTo-SecureString -String "password" -AsPlainText -Force) -Store CurrentUser -Scopes "SPO.Sites.FullControl.All"
 ```
 
 This cmdlet will open a dialog box to authenticate to Azure AD and grant admin consent once its created the AzureAD app. It will also install
-the certificate in current user store and output a PFX file in the c:\dsc directory. If you plan to use the certificate thumbprint option when using
+the certificate in current user store and output a PFX file in the C:\DSC directory. If you plan to use the certificate thumbprint option when using
 DSC by default the LCM runs under the system account so easiest option to install in cert store is by using [PSExec](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec). To install certificate under system account using PSExec run the following:
 
     1. .\PsExec.exe -s -i mmc.exe

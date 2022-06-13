@@ -1,7 +1,26 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.608.1
 
+* AADConditionalAccessPolicy
+  * Updated settings.json with missing permissions
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to 1.0.85;
+* MISC
+  * Updated permissions for SharePoint and OneDrive in settings.json files.
+
+# 1.22.601.1
+
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 4.4.1
+
+# 1.22.525.1
+
+* IntuneASRRulesPolicyWindows10
+  * Initial release;
+* PPowerAppsEnvironment
+  * Fixed issue on export to exclude EnvironmenTypes of Notspecified and Developer
+  * Updated validation set of EnvironmentTypes to latest values
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant module to version 1.0.84.
 * MISC
