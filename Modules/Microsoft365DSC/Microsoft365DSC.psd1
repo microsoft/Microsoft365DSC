@@ -82,7 +82,7 @@
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport = @(
         #'Add-M365DSCEvent'
-        #'Add-M365DSCTelemetryEvent'
+        'Add-M365DSCTelemetryEvent'
         'Assert-M365DSCBlueprint'
         #'Confirm-ImportedCmdletIsAvailable'
         #'Confirm-M365DSCDependencies'
