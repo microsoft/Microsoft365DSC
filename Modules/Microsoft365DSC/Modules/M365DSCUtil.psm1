@@ -134,7 +134,7 @@ function Convert-M365DscHashtableToString
             }
             elseif ($pair.Value -is [System.Collections.Hashtable])
             {
-                $str = "$($pair.Key)={$(Convert-M365DSCHashtableToString -Hashtable $pair.Value)}"
+                $str = "$($pair.Key)={$(Convert-M365DscHashtableToString -Hashtable $pair.Value)}"
             }
             elseif ($pair.Value -is [Microsoft.Management.Infrastructure.CimInstance])
             {
@@ -2440,7 +2440,7 @@ function Update-M365DSCDependencies
 .Description
 This function uninstalls all previous M365DSC dependencies and older versions of the module.
 .Example
-Uninstall-M365DSCOutdatedObjects
+Uninstall-M365DSCOutdatedDependencies
 .Functionality
 Public
 #>
@@ -3291,6 +3291,7 @@ function New-M365DSCCmdletDocumentation
                 foreach ($example in $helpInfo.examples.example)
                 {
                     $null = $output.AppendLine($example.title)
+                    $null = $output.AppendLine('')
                     $null = $output.AppendLine("``$($example.code)``")
                     $null = $output.AppendLine('')
                 }
@@ -3374,7 +3375,7 @@ function Create-M365DSCResourceExample
 
     $resourceExample = Get-M365DSCExportContentForResource -ResourceName $ResourceName -ModulePath $resource.Path -Results $params -ConnectionMode Credentials -Credential $credObject
 
-    $resourceExample = $resourceExample.TrimEnd() -replace ";",""
+    $resourceExample = $resourceExample.TrimEnd() -replace ";", ""
 
     $exampleText = @"
 <#
@@ -3432,13 +3433,15 @@ function New-M365DSCMissingResourcesExample
         $path = Join-Path -Path '.\Modules\Microsoft365DSC\Examples\Resources' -ChildPath $difference.InputObject
         switch ($difference.SideIndicator)
         {
-            "<=" {
+            "<="
+            {
                 Write-Host "  - Example missing, generating!"
                 $null = New-Item -Path $path -ItemType Directory
                 $exampleFile = Join-Path -Path $path -ChildPath "1-Configure.ps1"
                 Set-Content -Path $exampleFile -Value (Create-M365DSCResourceExample -ResourceName $difference.InputObject)
             }
-            "=>" {
+            "=>"
+            {
                 Write-Host "  - No resource for existing example, removing!"
                 Remove-Item -Path $path -Force -Confirm:$false
             }

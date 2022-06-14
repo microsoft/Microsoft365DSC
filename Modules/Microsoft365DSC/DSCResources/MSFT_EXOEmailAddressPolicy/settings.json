@@ -1,10 +1,22 @@
 ﻿{
     "resourceName": "EXOEmailAddressPolicy",
     "description": "",
-    "permissions": [
-        {
-            "read": [],
-            "update": []
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        },
+        "exchange": {
+            "requiredroles": [
+                "E-Mail Address Policies"
+            ],
+            "requiredrolegroups": "Organization Management"
         }
-    ]
+    }
 }

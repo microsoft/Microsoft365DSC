@@ -4,39 +4,50 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Key** | Key | String | The key of the storage entity. ||
-| **EntityScope** | Write | String | Scope of the storage entity. |Tenant, Site|
-| **Value** | Write | String | Value of the storage entity. ||
-| **Description** | Write | String | Description of storage entity. ||
-| **Comment** | Write | String | Comment for the storage entity. ||
-| **Ensure** | Write | String | Used to add or remove storage entity. |Present, Absent|
-| **SiteUrl** | Required | String | The url of site collection or tenant. ||
-| **Credential** | Write | PSCredential | Credentials of the Office365 Tenant Admin. ||
-| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
-| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory application to authenticate with. ||
-| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||
-| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for certificatePassword ||
-| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. ||
-| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
+| **Key** | Key | String | The key of the storage entity. | |
+| **EntityScope** | Write | String | Scope of the storage entity. | `Tenant`, `Site` |
+| **Value** | Write | String | Value of the storage entity. | |
+| **Description** | Write | String | Description of storage entity. | |
+| **Comment** | Write | String | Comment for the storage entity. | |
+| **Ensure** | Write | String | Used to add or remove storage entity. | `Present`, `Absent` |
+| **SiteUrl** | Required | String | The url of site collection or tenant. | |
+| **Credential** | Write | PSCredential | Credentials of the Office365 Tenant Admin. | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com | |
+| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for certificatePassword | |
+| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 
-# SPOStorageEntity
-
-### Description
+## Description
 
 This resource configures Storage Entity for SharePoint Online.
 
-## Azure AD Permissions
+## Permissions
 
-To authenticate via Azure Active Directory, this resource required the following Application permissions:
+### Microsoft Graph
 
-* **Automate**
-  * SharePoint
-    * Sites.FullControl.All
-* **Export**
-  * SharePoint
-    * Sites.FullControl.All
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
 
-NOTE: All permisions listed above require admin consent.
+#### Delegated permissions
+
+- **Read**
+
+    - Domain.Read.All, Sites.FullControl.All
+
+- **Update**
+
+    - Domain.Read.All, Sites.FullControl.All
+
+#### Application permissions
+
+- **Read**
+
+    - Domain.Read.All, Sites.FullControl.All
+
+- **Update**
+
+    - Domain.Read.All, Sites.FullControl.All
 
 ## Examples
 

@@ -24,10 +24,8 @@ This function outputs information as the following type:
 
 `Set-M365DSCAgentCertificateConfiguration -KeepCertificate`
 
-
 -------------------------- EXAMPLE 2 --------------------------
 
 `Set-M365DSCAgentCertificateConfiguration -GeneratePFX -Password 'P@ssword123!'`
-
 
 

@@ -4,36 +4,47 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **SiteDesignTitle** | Key | String | The title of the site design ||
-| **Rights** | Key | String | Rights to grant user principals on site design rights. |View, None|
-| **UserPrincipals** | Write | StringArray[] | List of user principals with seperated by commas to site design rights. ||
-| **Ensure** | Write | String | Used to add or remove list of users from site design rights. |Present, Absent|
-| **Credential** | Write | PSCredential | Credentials of the Office365 Tenant Admin. ||
-| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
-| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory application to authenticate with. ||
-| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||
-| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for certificatePassword ||
-| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. ||
-| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
+| **SiteDesignTitle** | Key | String | The title of the site design | |
+| **Rights** | Key | String | Rights to grant user principals on site design rights. | `View`, `None` |
+| **UserPrincipals** | Write | StringArray[] | List of user principals with seperated by commas to site design rights. | |
+| **Ensure** | Write | String | Used to add or remove list of users from site design rights. | `Present`, `Absent` |
+| **Credential** | Write | PSCredential | Credentials of the Office365 Tenant Admin. | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com | |
+| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for certificatePassword | |
+| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 
-# SPOSiteDesignRights
-
-### Description
+## Description
 
 This resource configures rights on Site Designs.
 
-## Azure AD Permissions
+## Permissions
 
-To authenticate via Azure Active Directory, this resource required the following Application permissions:
+### Microsoft Graph
 
-* **Automate**
-  * SharePoint
-    * Sites.FullControl.All
-* **Export**
-  * SharePoint
-    * Sites.FullControl.All
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
 
-NOTE: All permisions listed above require admin consent.
+#### Delegated permissions
+
+- **Read**
+
+    - Domain.Read.All, Sites.FullControl.All
+
+- **Update**
+
+    - Domain.Read.All, Sites.FullControl.All
+
+#### Application permissions
+
+- **Read**
+
+    - Domain.Read.All, Sites.FullControl.All
+
+- **Update**
+
+    - Domain.Read.All, Sites.FullControl.All
 
 ## Examples
 

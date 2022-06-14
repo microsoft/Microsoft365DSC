@@ -2,7 +2,8 @@
 
 ## Description
 
-This function updates the required permissions in the Graph API for the specified resources and type
+This function updates the required permissions for the specified resources and type
+for the Microsoft Graph delegated application in Azure Active Directory.
 
 ## Output
 
@@ -15,7 +16,7 @@ This function does not generate any output.
 | ResourceNameList | False | String[] |  |  | An array of resource names for which the permissions should be determined. |
 | All | False | SwitchParameter |  |  | Specifies that the permissions should be determined for all resources. |
 | Type | True | String |  | Read, Update | For which action should the permissions be updated: Read or Update. |
-| Environment | True | String | Global | Global, China, USGov, USGovDoD, Germany |  |
+| Environment | False | String | Global | Global, China, USGov, USGovDoD, Germany |  |
 
 ## Examples
 
@@ -23,10 +24,8 @@ This function does not generate any output.
 
 `Update-M365DSCAllowedGraphScopes -ResourceNameList @('O365User', 'AADApplication') -Type 'Read'`
 
-
 -------------------------- EXAMPLE 2 --------------------------
 
 `Update-M365DSCAllowedGraphScopes -All -Type 'Update' -Environment 'Global'`
-
 
 

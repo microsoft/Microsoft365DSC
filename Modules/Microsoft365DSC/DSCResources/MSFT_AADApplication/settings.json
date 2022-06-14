@@ -1,39 +1,38 @@
 ﻿{
     "resourceName": "AADApplication",
     "description": "This resource configures an Azure Active Directory Application.",
-    "permissions": [
-        {
-            "read": [
-                {
-                    "name": "Application.Read.All"
-                },
-                {
-                    "name": "Application.ReadWrite.All"
-                },
-                {
-                    "name": "Directory.AccessAsUser.All"
-                },
-                {
-                    "name": "Directory.Read.All"
-                }
-            ],
-            "update": [
-                {
-                    "name": "Application.Read.All"
-                },
-                {
-                    "name": "Application.ReadWrite.All"
-                },
-                {
-                    "name": "Directory.AccessAsUser.All"
-                },
-                {
-                    "name": "Directory.Read.All"
-                },
-                {
-                    "name": "Directory.ReadWrite.All"
-                }
-            ]
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Application.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Application.Read.All"
+                    },
+                    {
+                        "name": "Application.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Application.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Application.Read.All"
+                    },
+                    {
+                        "name": "Application.ReadWrite.All"
+                    }
+                ]
+            }
         }
-    ]
+    }
 }

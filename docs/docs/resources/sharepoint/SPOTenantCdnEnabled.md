@@ -4,38 +4,48 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **CdnType** | Key | String | Specifies the CDN type. The valid values are public or private. |Public, Private|
-| **Enable** | Write | Boolean | Specify to enable or disable tenant CDN. ||
-| **Ensure** | Write | String | Get-PNPTenantCdnEnabled always returns a value, only support value is Present |Present|
-| **Credential** | Write | PSCredential | Credentials of the SharePoint Admin ||
-| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
-| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory application to authenticate with. ||
-| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||
-| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for certificatePassword ||
-| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. ||
-| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
+| **CdnType** | Key | String | Specifies the CDN type. The valid values are public or private. | `Public`, `Private` |
+| **Enable** | Write | Boolean | Specify to enable or disable tenant CDN. | |
+| **Ensure** | Write | String | Get-PNPTenantCdnEnabled always returns a value, only support value is Present | `Present` |
+| **Credential** | Write | PSCredential | Credentials of the SharePoint Admin | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com | |
+| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for certificatePassword | |
+| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 
-# SPOTenantCdnEnabled
-
-### Description
+## Description
 
 This resource enables / disables SharePoint online CDN
 
 * Not supported in GCC High
 
-## Azure AD Permissions
+## Permissions
 
-To authenticate via Azure Active Directory, this resource required the following Application permissions:
+### Microsoft Graph
 
-* **Automate**
-  * SharePoint
-    * Sites.FullControl.All
-* **Export**
-  * SharePoint
-    * Sites.FullControl.All
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
 
-NOTE: All permisions listed above require admin consent.
+#### Delegated permissions
 
+- **Read**
+
+    - Domain.Read.All, Sites.FullControl.All
+
+- **Update**
+
+    - Domain.Read.All, Sites.FullControl.All
+
+#### Application permissions
+
+- **Read**
+
+    - Domain.Read.All, Sites.FullControl.All
+
+- **Update**
+
+    - Domain.Read.All, Sites.FullControl.All
 
 ## Examples
 

@@ -20,10 +20,8 @@ This function does not generate any output.
 
 `Update-M365DSCDependencies`
 
-
 -------------------------- EXAMPLE 2 --------------------------
 
 `Update-M365DSCDependencies -Force`
-
 
 

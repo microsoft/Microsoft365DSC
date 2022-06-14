@@ -1,10 +1,26 @@
 ﻿{
     "resourceName": "EXOMobileDeviceMailboxPolicy",
     "description": "",
-    "permissions": [
-        {
-            "read": [],
-            "update": []
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        },
+        "exchange": {
+            "requiredroles": [
+                "Recipient Policies",
+                "View-Only Recipients",
+                "Mail Recipient Creation",
+                "View-Only Configuration",
+                "Mail Recipients"
+            ],
+            "requiredrolegroups": "Organization Management"
         }
-    ]
+    }
 }

@@ -4,23 +4,23 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Url** | Key | String | The URL of the site collection ||
-| **Title** | Write | String | The title of the hub site ||
-| **Description** | Write | String | The description of the hub site ||
-| **LogoUrl** | Write | String | The url to the logo of the hub site ||
-| **RequiresJoinApproval** | Write | Boolean | Does the hub site require approval to join ||
-| **AllowedToJoin** | Write | StringArray[] | The users or mail-enabled security groups which are allowed to associate their site with a hub site ||
-| **SiteDesignId** | Write | String | The guid of the site design to link to the hub site ||
-| **Ensure** | Write | String | Present ensures the site collection is registered as hub site, absent ensures it is unregistered |Present, Absent|
-| **Credential** | Write | PSCredential | Credentials of the account to authenticate with. ||
-| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
-| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory application to authenticate with. ||
-| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com ||
-| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for certificatePassword ||
-| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. ||
-| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
+| **Url** | Key | String | The URL of the site collection | |
+| **Title** | Write | String | The title of the hub site | |
+| **Description** | Write | String | The description of the hub site | |
+| **LogoUrl** | Write | String | The url to the logo of the hub site | |
+| **RequiresJoinApproval** | Write | Boolean | Does the hub site require approval to join | |
+| **AllowedToJoin** | Write | StringArray[] | The users or mail-enabled security groups which are allowed to associate their site with a hub site | |
+| **SiteDesignId** | Write | String | The guid of the site design to link to the hub site | |
+| **Ensure** | Write | String | Present ensures the site collection is registered as hub site, absent ensures it is unregistered | `Present`, `Absent` |
+| **Credential** | Write | PSCredential | Credentials of the account to authenticate with. | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **ApplicationSecret** | Write | String | Secret of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com | |
+| **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for certificatePassword | |
+| **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 
-# SPO Hub Site
+## Description
 
 This resource allows users to configure a Site Collection as Hub Site
 Collection and configure its properties.
@@ -32,18 +32,31 @@ Security groups). However, when using DisplayName it is required that
 there is only one group with that name. The resource will throw an
 exception if there are multiple groups with that name found!
 
-## Azure AD Permissions
+## Permissions
 
-To authenticate via Azure Active Directory, this resource required the following Application permissions:
+### Microsoft Graph
 
-* **Automate**
-  * SharePoint
-    * Sites.FullControl.All
-* **Export**
-  * SharePoint
-    * Sites.FullControl.All
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
 
-NOTE: All permisions listed above require admin consent.
+#### Delegated permissions
+
+- **Read**
+
+    - Domain.Read.All, Group.Read.All, Sites.FullControl.All
+
+- **Update**
+
+    - Domain.Read.All, Group.Read.All, Sites.FullControl.All
+
+#### Application permissions
+
+- **Read**
+
+    - Domain.Read.All, Group.Read.All, Sites.FullControl.All
+
+- **Update**
+
+    - Domain.Read.All, Group.Read.All, Sites.FullControl.All
 
 ## Examples
 

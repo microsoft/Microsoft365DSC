@@ -1,60 +1,41 @@
 ﻿{
     "resourceName": "PlannerPlan",
     "description": "",
-    "permissions": [
-        {
-            "read": [
-                {
-                    "name": "Directory.AccessAsUser.All"
-                },
-                {
-                    "name": "Directory.Read.All"
-                },
-                {
-                    "name": "Directory.ReadWrite.All"
-                },
-                {
-                    "name": "Group.Read.All"
-                },
-                {
-                    "name": "Group.ReadWrite.All"
-                },
-                {
-                    "name": "GroupMember.Read.All"
-                },
-                {
-                    "name": "Tasks.Read"
-                },
-                {
-                    "name": "Tasks.ReadWrite"
-                }
-            ],
-            "update": [
-                {
-                    "name": "Directory.AccessAsUser.All"
-                },
-                {
-                    "name": "Directory.Read.All"
-                },
-                {
-                    "name": "Directory.ReadWrite.All"
-                },
-                {
-                    "name": "Group.Read.All"
-                },
-                {
-                    "name": "Group.ReadWrite.All"
-                },
-                {
-                    "name": "GroupMember.Read.All"
-                },
-                {
-                    "name": "Tasks.Read"
-                },
-                {
-                    "name": "Tasks.ReadWrite"
-                }
-            ]
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "Tasks.Read"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "Tasks.Read"
+                    },
+                    {
+                        "name": "Tasks.ReadWrite"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "NotSupported"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "NotSupported"
+                    }
+                ]
+            }
         }
-    ]
+    }
 }
