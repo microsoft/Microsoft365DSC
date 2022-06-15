@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
+# 1.22.615.1
 
 * EXODataClassification
   * Added example
@@ -18,6 +18,8 @@
   * Checked and updated the readme.md files of all resources to make them consistent
     and usable by the new documentation cmdlet
   * Corrected documentation issues on the microsoft365dsc.com website
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.148;
 
 # 1.22.608.1
 
