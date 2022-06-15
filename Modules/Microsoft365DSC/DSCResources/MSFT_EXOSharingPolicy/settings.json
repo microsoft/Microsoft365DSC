@@ -1,10 +1,24 @@
 ﻿{
     "resourceName": "EXOSharingPolicy",
     "description": "",
-    "permissions": [
-        {
-            "read": [],
-            "update": []
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        },
+        "exchange": {
+            "requiredroles": [
+                "Federated Sharing",
+                "Mail Recipient Creation",
+                "View-Only Configuration"
+            ],
+            "requiredrolegroups": "Organization Management"
         }
-    ]
+    }
 }

@@ -19,7 +19,9 @@
 | **Ensure** | Write | String | Specify if this dial plan should exist or not. |Present, Absent|
 | **Credential** | Required | PSCredential | Credentials of the Teams Global Admin ||
 
-## Description
+# TeamsTenantDialPlan
+
+### Description
 
 This resource is used to configure the tenant-wide dial plans for Microsoft Teams.
 

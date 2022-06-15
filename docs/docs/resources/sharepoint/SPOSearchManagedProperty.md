@@ -32,7 +32,9 @@
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
-## Description
+# SPOSearchManagedProperty
+
+### Description
 
 This resource allows users to create and monitor SharePoint Online Search
 Managed Properties.

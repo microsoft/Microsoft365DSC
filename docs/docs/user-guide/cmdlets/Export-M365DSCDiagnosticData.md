@@ -28,10 +28,8 @@ This function does not generate any output.
 
 `Export-M365DSCDiagnosticData -ExportFilePath C:\Temp\DSCLogsExport.zip -NumberOfDays 3`
 
-
 -------------------------- EXAMPLE 2 --------------------------
 
 `Export-M365DSCDiagnosticData -ExportFilePath C:\Temp\DSCLogsExport.zip -Anonymize -Server spfe -Domain contoso.com -Url sharepoint.contoso.com`
-
 
 

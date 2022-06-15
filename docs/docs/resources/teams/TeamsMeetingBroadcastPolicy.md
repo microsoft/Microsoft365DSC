@@ -12,7 +12,9 @@
 | **Ensure** | Write | String | Present ensures the Policy exists, absent ensures it is removed |Present, Absent|
 | **Credential** | Required | PSCredential | Credentials of the Teams Admin ||
 
-## Description
+# TeamsMeetingBroadcastPolicy
+
+### Description
 
 This resource is used to configure the Teams Meeting Broadcast Policies.
 

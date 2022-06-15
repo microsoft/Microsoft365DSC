@@ -27,7 +27,9 @@
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. ||
 | **Credential** | Required | PSCredential | Credentials of the Global Admin ||
 
-## Description
+# PlannerTask
+
+### Description
 
 This resource is used to configure the Planner Tasks.
 

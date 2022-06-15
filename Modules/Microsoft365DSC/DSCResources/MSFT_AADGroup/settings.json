@@ -1,39 +1,32 @@
 ﻿{
     "resourceName": "AADGroup",
     "description": "This resource configures an Azure Active Directory group.",
-    "permissions": [
-        {
-            "read": [
-                {
-                    "name": "Directory.AccessAsUser.All"
-                },
-                {
-                    "name": "Directory.Read.All"
-                },
-                {
-                    "name": "Directory.ReadWrite.All"
-                },
-                {
-                    "name": "Group.Read.All"
-                },
-                {
-                    "name": "Group.ReadWrite.All"
-                },
-                {
-                    "name": "GroupMember.Read.All"
-                }
-            ],
-            "update": [
-                {
-                    "name": "Directory.AccessAsUser.All"
-                },
-                {
-                    "name": "Directory.ReadWrite.All"
-                },
-                {
-                    "name": "Group.ReadWrite.All"
-                }
-            ]
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Group.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Group.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Group.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Group.ReadWrite.All"
+                    }
+                ]
+            }
         }
-    ]
+    }
 }

@@ -1,10 +1,45 @@
 ﻿{
     "resourceName": "EXOSharedMailbox",
     "description": "",
-    "permissions": [
-        {
-            "read": [],
-            "update": []
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        },
+        "exchange": {
+            "requiredroles": [
+                "Mail Enabled Public Folders",
+                "MyName",
+                "Public Folders",
+                "Compliance Admin",
+                "User Options",
+                "Message Tracking",
+                "View-Only Recipients",
+                "Role Management",
+                "Legal Hold",
+                "Audit Logs",
+                "Retention Management",
+                "Distribution Groups",
+                "Move Mailboxes",
+                "Information Rights Management",
+                "Mail Recipient Creation",
+                "Reset Password",
+                "View-Only Audit Logs",
+                "Mail Recipients",
+                "Mailbox Search",
+                "UM Mailboxes",
+                "Security Group Creation and Membership",
+                "Mailbox Import Export",
+                "MyMailboxDelegation",
+                "MyDisplayName"
+            ],
+            "requiredrolegroups": "Organization Management"
         }
-    ]
+    }
 }

@@ -19,7 +19,9 @@
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
 
-# SPO Theme
+# SPOTheme
+
+### Description
 
 This resource allows users to configure and monitor the themes for
 their SPO tenant.
@@ -38,21 +40,6 @@ the JSON Output and put it directly into your configuration.
 
 More details on the theme schema can be found
 [here](https://aka.ms/AboutSPOThemes)
-
-
-## Azure AD Permissions
-
-To authenticate via Azure Active Directory, this resource required the following Application permissions:
-
-* **Automate**
-  * SharePoint
-    * Sites.FullControl.All
-* **Export**
-  * SharePoint
-    * Sites.FullControl.All
-
-NOTE: All permisions listed above require admin consent.
-
 
 ## Examples
 

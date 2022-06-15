@@ -22,7 +22,7 @@ nav:
           - 'Support': 'user-guide/get-started/support.md'
           - 'Telemetry': 'user-guide/get-started/telemetry.md'
           - 'Troubleshooting': 'user-guide/get-started/troubleshooting.md'
-      - Advanced: 
+      - Advanced:
           - 'Blueprints': 'user-guide/advanced/create-blueprint.md'
           - 'Dynamic Resource Generator (DRG)': 'user-guide/advanced/dynamic-resource-generator.md'
       - Cmdlets:
@@ -44,8 +44,8 @@ nav:
           - 'Test-M365DSCNewVersionAvailable': 'user-guide/cmdlets/Test-M365DSCNewVersionAvailable.md'
           - 'Uninstall-M365DSCOutdatedDependencies': 'user-guide/cmdlets/Uninstall-M365DSCOutdatedDependencies.md'
           - 'Update-M365DSCAllowedGraphScopes': 'user-guide/cmdlets/Update-M365DSCAllowedGraphScopes.md'
+          - 'Update-M365DSCAzureAdApplication': 'user-guide/cmdlets/Update-M365DSCAzureAdApplication.md'
           - 'Update-M365DSCDependencies': 'user-guide/cmdlets/Update-M365DSCDependencies.md'
-          - 'Update-M365DSCResourcesSettingsJSON': 'user-guide/cmdlets/Update-M365DSCResourcesSettingsJSON.md'
   - Contributing:
       - 'Guidelines': 'contributing/contribution-guidelines.md'
       - 'Getting started': 'contributing/getting-started.md'

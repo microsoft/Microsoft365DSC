@@ -13,24 +13,11 @@
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
-## Description
+# TeamsUser
+
+### Description
 
 This resource is used to add new users to a team
-
-## Azure AD Permissions
-
-To authenticate via Azure Active Directory, this resource required the following Application permissions:
-
-* **Automate**
-  * Microsoft.Graph
-    * Group.ReadWrite.All
-* **Export**
-  * Microsoft.Graph
-    * Group.ReadAll
-
-NOTE: All permisions listed above require admin consent.
-
-More information: https://docs.microsoft.com/en-us/microsoftteams/assign-roles-permissions
 
 ## Examples
 

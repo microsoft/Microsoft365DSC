@@ -1,10 +1,28 @@
 ﻿{
     "resourceName": "EXOOMEConfiguration",
     "description": "",
-    "permissions": [
-        {
-            "read": [],
-            "update": []
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        },
+        "exchange": {
+            "requiredroles": [
+                "Compliance Admin",
+                "Security Admin",
+                "Data Loss Prevention",
+                "Transport Rules",
+                "Information Rights Management",
+                "View-Only Configuration",
+                "Security Reader"
+            ],
+            "requiredrolegroups": "Organization Management"
         }
-    ]
+    }
 }

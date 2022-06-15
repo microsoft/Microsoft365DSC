@@ -35,15 +35,12 @@ This function does not generate any output.
 
 `Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential`
 
-
 -------------------------- EXAMPLE 2 --------------------------
 
 `Export-M365DSCConfiguration -Mode 'Default' -ApplicationId '2560bb7c-bc85-415f-a799-841e10ec4f9a' -TenantId 'contoso.sharepoint.com' -ApplicationSecret 'abcdefghijkl'`
 
-
 -------------------------- EXAMPLE 3 --------------------------
 
 `Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential -Path 'C:\DSC\Config.ps1'`
-
 
 
