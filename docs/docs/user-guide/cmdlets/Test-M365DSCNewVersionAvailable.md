@@ -19,4 +19,3 @@ This function does not have any input parameters.
 `Test-M365DSCNewVersionAvailable`
 
 
-

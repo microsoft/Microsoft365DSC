@@ -789,15 +789,15 @@ function New-M365DSCDeltaReport
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Source,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Destination,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $OutputPath,
 

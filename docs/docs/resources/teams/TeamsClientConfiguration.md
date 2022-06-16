@@ -21,7 +21,9 @@
 | **RestrictedSenderList** | Write | StringArray[] | Senders domains can be further restricted to ensure that only allowed SMTP domains can send emails to the Teams channels. This is a comma-separated string of the domains you'd like to allow to send emails to Teams channels. ||
 | **Credential** | Required | PSCredential | Credentials of the Teams Admin ||
 
-## Description
+# TeamsClientConfiguration
+
+### Description
 
 This resource is used to configure the Teams client settings.
 

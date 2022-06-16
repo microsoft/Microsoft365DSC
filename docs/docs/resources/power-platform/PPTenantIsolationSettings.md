@@ -13,7 +13,9 @@
 | **RulesToExclude** | Write | InstanceArray[] | A list of tenant rules that is now allowed to be added. ||
 | **Credential** | Write | PSCredential | Credentials of the Power Platform Admin ||
 
-# PPTenantSettings
+# PPTenantSettingsIsolationSettings
+
+### Description
 
 This resource configures the Tenant Isolation settings for a Power Platform Tenant.
 

@@ -1,10 +1,23 @@
 ﻿{
     "resourceName": "EXOInboundConnector",
     "description": "",
-    "permissions": [
-        {
-            "read": [],
-            "update": []
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        },
+        "exchange": {
+            "requiredroles": [
+                "Remote and Accepted Domains",
+                "View-Only Configuration"
+            ],
+            "requiredrolegroups": "Organization Management"
         }
-    ]
+    }
 }

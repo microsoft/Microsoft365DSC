@@ -26,7 +26,9 @@
 | **Ensure** | Write | String | Present ensures the Team Message Policy exists, absent ensures it is removed |Present, Absent|
 | **Credential** | Required | PSCredential | Credentials of the Teams Service Admin ||
 
-## Description
+# TeamsMessagingPolicy
+
+### Description
 
 This resource is used to configure the Teams messaging policy.
 

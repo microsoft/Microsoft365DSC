@@ -9,31 +9,3 @@ customize the tenant. This setting is reflected by the Organization Config propt
 Running this resource will set the property to false.
 
 Currently there is no setting available to undo Enable-OrganizationCustomization.
-
-## Parameters
-
-IsSingleInstance
-
-- Required: Yes
-- Description: Single instance resource, the value must be 'Yes'
-
-Ensure
-
-- Required: No (Defaults to 'Present')
-- Description: `Present` is the only value accepted.
-  Configurations using `Ensure = 'Absent'` will throw an Error!
-
-Credential
-
-- Required: Yes
-- Description: Credentials of the account to authenticate with
-
-## Example
-
-```PowerShell
-        O365OrgCustomizationSettting EnableOgranizationCustomization {
-            IsSingleInstance    = 'Yes'
-            Ensure              = 'Present'
-            Credential  = $Credential
-        }
-```

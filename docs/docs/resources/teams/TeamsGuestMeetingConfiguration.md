@@ -10,7 +10,9 @@
 | **AllowMeetNow** | Write | Boolean | Determines whether guests can start ad-hoc meetings. Set this to TRUE to allow guests to start ad-hoc meetings. Set this to FALSE to prohibit guests from starting ad-hoc meetings. ||
 | **Credential** | Required | PSCredential | Credentials of the Teams Admin ||
 
-## Description
+# TeamsGuestMeetingConfiguration
+
+### Description
 
 This resource is used to configure the Teams Guest Meetings Configuration.
 
