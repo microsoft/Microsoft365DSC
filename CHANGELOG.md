@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# Unreleased changes
+
+* TeamsMessagingPolicy
+    * Removed the -force deprecated parameter on New/Set/Remove
+
 # 1.22.615.1
 
 * EXODataClassification
