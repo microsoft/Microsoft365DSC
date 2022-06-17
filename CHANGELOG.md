@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* MISC
+  * Modified the dependency installation functions to for the AllUsers scope.
+
 # 1.22.615.1
 
 * EXODataClassification

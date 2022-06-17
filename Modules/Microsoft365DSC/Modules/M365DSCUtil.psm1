@@ -1054,7 +1054,7 @@ function Export-M365DSCConfiguration
         foreach ($dependency in $outdatedOrMissingAssemblies)
         {
             Write-Host "Updating dependency {$($dependency.ModuleName)} to version {$($dependency.RequiredVersion)}..." -NoNewline
-            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force | Out-Null
+            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -Scope 'AllUsers'  | Out-Null
             Write-Host $Global:M365DSCEmojiGreenCheckmark
         }
     }
@@ -2007,7 +2007,7 @@ function Install-M365DSCDevBranch
         $existingModule = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
         if ($null -eq $existingModule)
         {
-            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -AllowClobber | Out-Null
+            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -AllowClobber -Scope 'AllUsers' | Out-Null
         }
         Import-Module $dependency.ModuleName -Force | Out-Null
         Write-Host "Done" -ForegroundColor Green
@@ -2425,7 +2425,7 @@ function Update-M365DSCDependencies
             if (-not $found -or $Force)
             {
                 Write-Information -Message "Installing $($dependency.ModuleName) version {$($dependency.RequiredVersion)}"
-                Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force
+                Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force -Scope 'AllUsers'
             }
         }
         catch
