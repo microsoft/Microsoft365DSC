@@ -1051,11 +1051,18 @@ function Export-M365DSCConfiguration
     $outdatedOrMissingAssemblies = Test-M365DSCDependencies
     if ($outdatedOrMissingAssemblies)
     {
-        foreach ($dependency in $outdatedOrMissingAssemblies)
+        if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
         {
-            Write-Host "Updating dependency {$($dependency.ModuleName)} to version {$($dependency.RequiredVersion)}..." -NoNewline
-            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -Scope 'AllUsers'  | Out-Null
-            Write-Host $Global:M365DSCEmojiGreenCheckmark
+            foreach ($dependency in $outdatedOrMissingAssemblies)
+            {
+                Write-Host "Updating dependency {$($dependency.ModuleName)} to version {$($dependency.RequiredVersion)}..." -NoNewline
+                Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -Scope 'AllUsers'  | Out-Null
+                Write-Host $Global:M365DSCEmojiGreenCheckmark
+            }
+        }
+        else
+        {
+            Write-Error "Cannot update the dependencies for Microsoft365DSC. You need to run this command as a local administrator."
         }
     }
 
@@ -2001,16 +2008,23 @@ function Install-M365DSCDevBranch
     #region Install All Dependencies
     $manifest = Import-PowerShellDataFile "$extractPath\Microsoft365DSC-Dev\Modules\Microsoft365DSC\Microsoft365DSC.psd1"
     $dependencies = $manifest.RequiredModules
-    foreach ($dependency in $dependencies)
+    if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
     {
-        Write-Host "Installing {$($dependency.ModuleName)}..." -NoNewline
-        $existingModule = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
-        if ($null -eq $existingModule)
+        foreach ($dependency in $dependencies)
         {
-            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -AllowClobber -Scope 'AllUsers' | Out-Null
+            Write-Host "Installing {$($dependency.ModuleName)}..." -NoNewline
+            $existingModule = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
+            if ($null -eq $existingModule)
+            {
+                Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -AllowClobber -Scope 'AllUsers' | Out-Null
+            }
+            Import-Module $dependency.ModuleName -Force | Out-Null
+            Write-Host "Done" -ForegroundColor Green
         }
-        Import-Module $dependency.ModuleName -Force | Out-Null
-        Write-Host "Done" -ForegroundColor Green
+    }
+    else
+    {
+        Write-Error "Cannot update the dependencies for Microsoft365DSC. You need to run this command as a local administrator."
     }
     #endregion
 
@@ -2412,27 +2426,35 @@ function Update-M365DSCDependencies
     $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
     $dependencies = $manifest.Dependencies
     $i = 1
-    foreach ($dependency in $dependencies)
-    {
-        Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
-        try
-        {
-            if (-not $Force)
-            {
-                $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
-            }
 
-            if (-not $found -or $Force)
-            {
-                Write-Information -Message "Installing $($dependency.ModuleName) version {$($dependency.RequiredVersion)}"
-                Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force -Scope 'AllUsers'
-            }
-        }
-        catch
+    if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
+    {
+        foreach ($dependency in $dependencies)
         {
-            Write-Host "Could not update {$($dependency.ModuleName)}"
+            Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
+            try
+            {
+                if (-not $Force)
+                {
+                    $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
+                }
+
+                if (-not $found -or $Force)
+                {
+                    Write-Information -Message "Installing $($dependency.ModuleName) version {$($dependency.RequiredVersion)}"
+                    Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force -Scope 'AllUsers'
+                }
+            }
+            catch
+            {
+                Write-Host "Could not update {$($dependency.ModuleName)}"
+            }
+            $i++
         }
-        $i++
+    }
+    else
+    {
+        Write-Error "Cannot update the dependencies for Microsoft365DSC. You need to run this command as a local administrator."
     }
 }
 
