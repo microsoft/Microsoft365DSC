@@ -301,15 +301,15 @@ function Set-TargetResource
 
     if ($curPolicy.Ensure -eq "Absent" -and "Present" -eq $Ensure )
     {
-        New-CsTeamsMessagingPolicy @SetParams -force:$True
+        New-CsTeamsMessagingPolicy @SetParams
     }
     elseif (($curPolicy.Ensure -eq "Present" -and "Present" -eq $Ensure))
     {
-        Set-CsTeamsMessagingPolicy @SetParams -force:$True
+        Set-CsTeamsMessagingPolicy @SetParams
     }
     elseif (($Ensure -eq "Absent" -and $curPolicy.Ensure -eq "Present"))
     {
-        Remove-CsTeamsMessagingPolicy -identity $curPolicy.Identity -force:$True
+        Remove-CsTeamsMessagingPolicy -identity $curPolicy.Identity
     }
 }
 
