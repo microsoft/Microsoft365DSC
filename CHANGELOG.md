@@ -1,9 +1,11 @@
 # Change log for Microsoft365DSC
 
-# Unreleased changes
+# UNRELEASED
 
 * TeamsMessagingPolicy
     * Removed the -force deprecated parameter on New/Set/Remove
+* MISC
+  * Modified the dependency installation functions to for the AllUsers scope.
 
 # 1.22.615.1
 
