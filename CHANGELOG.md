@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.22.622.1
 
 * TeamsMessagingPolicy
     * Removed the -force deprecated parameter on New/Set/Remove
