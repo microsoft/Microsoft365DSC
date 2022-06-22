@@ -155,15 +155,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Get-MgRoleManagementDirectoryRoleDefinition -MockWith {
-                    $AADRoleDef = New-Object PSCustomObject
-                    $AADRoleDef | Add-Member -MemberType NoteProperty -Name DisplayName -Value "Role1"
-                    $AADRoleDef | Add-Member -MemberType NoteProperty -Name Description -Value "This is a custom role"
-                    $AADRoleDef | Add-Member -MemberType NoteProperty -Name ResourceScopes -Value "/"
-                    $AADRoleDef | Add-Member -MemberType NoteProperty -Name IsEnabled -Value "True"
-                    $AADRoleDef | Add-Member -MemberType NoteProperty -Name RolePermissions -Value @{AllowedResourceActions = "microsoft.directory/applicationPolicies/allProperties/read", "microsoft.directory/applicationPolicies/allProperties/update", "microsoft.directory/applicationPolicies/basic/update" }
-                    $AADRoleDef | Add-Member -MemberType NoteProperty -Name Version -Value "1.0"
-                    return $AADRoleDef
+                Mock -CommandName Invoke-MgGraphRequest -ParameterFilter {$Method -eq 'GET'} -MockWith {
+                    $AADAuthPol = [pscustomobject]@{
+                        allowedToSignUpEmailBasedSubscriptions = $true
+                        allowedToUseSSPR = $true
+                        allowEmailVerifiedUsersToJoinOrganization = $true
+                        AllowInvitesFrom = "Everyone"
+                        defaultUserRolePermissions = @{
+                                allowedToCreateApps = $true
+                                allowedToCreateSecurityGroups = $true
+                                allowedToReadOtherUsers = $true
+                            }
+                        PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
+                        GuestUserRoleId = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
+                    }
+                    return $AADAuthPol
                 }
             }
 

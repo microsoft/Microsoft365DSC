@@ -280,7 +280,7 @@ function Set-TargetResource
     try
     {
         Write-Verbose -Message "Updating existing policy with values: $(Convert-M365DscHashtableToString -Hashtable $NewParameters)"
-        $response = Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/v1.0/policies/authorizationPolicy" -Method PATCH -Body ($NewParameters | ConvertTo-Json -Compress) -ErrorAction Stop
+        $response = Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/beta/policies/authorizationPolicy" -Method PATCH -Body ($NewParameters | ConvertTo-Json -Compress) -ErrorAction Stop
     }
     catch
     {
@@ -517,7 +517,7 @@ function Export-TargetResource
 This function returns a hashtable correlating GUIDs and GuestUserRoleIds
 
 .Link
-https://docs.microsoft.com/en-us/graph/api/authorizationpolicy-update?view=graph-rest-1.0&tabs=http#request-body
+https://docs.microsoft.com/en-us/graph/api/resources/authorizationpolicy?view=graph-rest-beta#properties
 
 .Functionality
 Internal, Hidden
