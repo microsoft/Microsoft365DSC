@@ -17,23 +17,12 @@
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
-## Description
+# SPOApp
+
+### Description
 
 This resource allows users to deploy App instances in the
 App Catalog.
-
-## Azure AD Permissions
-
-To authenticate via Azure Active Directory, this resource required the following Application permissions:
-
-* **Automate**
-  * SharePoint
-    * Sites.FullControl.All
-* **Export**
-  * SharePoint
-    * Sites.FullControl.All
-
-NOTE: All permisions listed above require admin consent.
 
 ## Examples
 

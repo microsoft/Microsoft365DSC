@@ -22,4 +22,3 @@ This function outputs information as the following type:
 `Get-M365DSCWorkloadsListFromResourceNames -ResourceNames O365User`
 
 
-

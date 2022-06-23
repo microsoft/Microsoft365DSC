@@ -1,10 +1,26 @@
 ﻿{
     "resourceName": "EXOAddressBookPolicy",
     "description": "",
-    "permissions": [
-        {
-            "read": [],
-            "update": []
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        },
+        "exchange": {
+            "requiredroles": [
+                "View-Only Recipients",
+                "Mail Recipient Creation",
+                "View-Only Configuration",
+                "Mail Recipients",
+                "Address Lists"
+            ],
+            "requiredrolegroups": "Organization Management"
         }
-    ]
+    }
 }

@@ -1,21 +1,38 @@
 ﻿{
     "resourceName": "AADNamedLocationPolicy",
     "description": "This resource configures the Azure AD Named Location Policies in Azure Active Directory.",
-    "permissions": [
-        {
-            "read": [
-                {
-                    "name": "Policy.Read.All"
-                }
-            ],
-            "update": [
-                {
-                    "name": "Policy.Read.All"
-                },
-                {
-                    "name": "Policy.ReadWrite.ConditionalAccess"
-                }
-            ]
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Policy.Read.All"
+                    },
+                    {
+                        "name": "Policy.ReadWrite.ConditionalAccess"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Policy.Read.All"
+                    },
+                    {
+                        "name": "Policy.ReadWrite.ConditionalAccess"
+                    }
+                ]
+            }
         }
-    ]
+    }
 }

@@ -15,7 +15,9 @@
 | **AllowImmersiveReader** | Write | Boolean | Determines if Immersive Reader is enabled. ||
 | **Credential** | Required | PSCredential | Credentials of the Teams Admin ||
 
-## Description
+# TeamsGuestMessagingConfiguration
+
+### Description
 
 This resource is used to configure the Teams Guest Messaging Configuration.
 

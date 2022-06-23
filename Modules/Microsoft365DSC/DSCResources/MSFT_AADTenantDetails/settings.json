@@ -1,56 +1,37 @@
 ﻿{
     "description": "This resource configures the Azure AD Tenant Details.",
-    "permissions": [
-        {
-            "read": [
-                {
-                    "name": "DeviceManagementServiceConfig.Read.All"
-                },
-                {
-                    "name": "DeviceManagementServiceConfig.ReadWrite.All"
-                },
-                {
-                    "name": "Directory.Read.All"
-                },
-                {
-                    "name": "Directory.ReadWrite.All"
-                },
-                {
-                    "name": "Organization.Read.All"
-                },
-                {
-                    "name": "Organization.ReadWrite.All"
-                },
-                {
-                    "name": "User.Read"
-                }
-            ],
-            "update": [
-                {
-                    "name": "DeviceManagementServiceConfig.Read.All"
-                },
-                {
-                    "name": "DeviceManagementServiceConfig.ReadWrite.All"
-                },
-                {
-                    "name": "Directory.AccessAsUser.All"
-                },
-                {
-                    "name": "Directory.Read.All"
-                },
-                {
-                    "name": "Directory.ReadWrite.All"
-                },
-                {
-                    "name": "Organization.Read.All"
-                },
-                {
-                    "name": "Organization.ReadWrite.All"
-                },
-                {
-                    "name": "User.Read"
-                }
-            ]
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Organization.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Organization.Read.All"
+                    },
+                    {
+                        "name": "Organization.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Organization.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Organization.Read.All"
+                    },
+                    {
+                        "name": "Organization.ReadWrite.All"
+                    }
+                ]
+            }
         }
-    ]
+    }
 }

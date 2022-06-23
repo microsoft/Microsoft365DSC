@@ -23,4 +23,3 @@ This function does not generate any output.
 `Set-M365DSCTelemetryOption -Enabled $false`
 
 
-

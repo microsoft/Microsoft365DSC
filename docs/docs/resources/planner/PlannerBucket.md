@@ -12,7 +12,9 @@
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
-## Description
+# PlannerBucket
+
+### Description
 
 This resource is used to configure the Planner Buckets.
 

@@ -11,7 +11,9 @@
 | **AllowTeamsConsumerInbound** | Write | Boolean | Allows people using Teams with an account that's not managed by an organization, to discover and start communication with users in your organization. ||
 | **Credential** | Required | PSCredential | Credentials of the Teams Admin ||
 
-## Description
+# TeamsFederationConfiguration
+
+### Description
 
 This resource is used to configure the Teams Federation Configuration (CsTenantFederationConfiguration).
 In the Teams admin center this is available in 'External access' in the Users section.

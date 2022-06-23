@@ -37,17 +37,6 @@
 This resource configures the settings of MacOS compliance policies
 in your cloud-based organization.
 
-## Permissions Needed
-
-To authenticate via Azure Active Directory, this resource requires the following Delegated permissions:
-
-* **Automate**
-  * DeviceManagementConfiguration.ReadWrite.All (Delegated)
-* **Export**
-  * DeviceManagementConfiguration.Read.All (Delegated)
-
-NOTE: All permisions listed above require admin consent.
-
 ## Parameters
 
 ### Device Health
@@ -127,37 +116,6 @@ For more information, see Gatekeeper on macOS.
   * Mac App Store - Only install apps for the Mac app store. Apps can't be installed from third parties nor identified developers. If a user selects Gatekeeper to install apps outside the Mac App Store, then the device is considered not compliant.
   * Mac App Store and identified developers - Install apps for the Mac app store and from identified developers. macOS checks the identity of developers, and does some other checks to verify app integrity. If a user selects Gatekeeper to install apps outside these options, then the device is considered not compliant.
   * Anywhere - Apps can be installed from anywhere, and by any developer. This option is the least secure.
-
-## Example
-
-```PowerShell
-
-        IntuneDeviceCompliancePolicyMacOS MyCustomMacOSPolicy
-        {
-            DisplayName                                 = "MacOS DSC Policy";
-            Description                                 = "Test policy";
-            PasswordRequired                            = $False;
-            PasswordBlockSimple                         = $False;
-            PasswordExpirationDays                      = 365;
-            PasswordMinimumLength                       = 6;
-            PasswordMinutesOfInactivityBeforeLock       = 5;
-            PasswordPreviousPasswordBlockCount          = 13;
-            PasswordMinimumCharacterSetCount            = 1;
-            PasswordRequiredType                        = "DeviceDefault";
-            OsMinimumVersion                            = 10;
-            OsMaximumVersion                            = 13;
-            SystemIntegrityProtectionEnabled            = $False;
-            DeviceThreatProtectionEnabled               = $False;
-            DeviceThreatProtectionRequiredSecurityLevel = "Unavailable";
-            StorageRequireEncryption                    = $False;
-            FirewallEnabled                             = $False;
-            FirewallBlockAllIncoming                    = $False;
-            FirewallEnableStealthMode                   = $False;
-            Ensure                                      = 'Present';
-            Credential                          = $Credential;
-        }
-
-```
 
 ## Examples
 

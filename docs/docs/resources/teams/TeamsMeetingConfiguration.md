@@ -20,7 +20,9 @@
 | **ClientAppSharingPortRange** | Write | UInt32 | Determines the total number of ports available for client sharing or application sharing. Default value is 20. ||
 | **Credential** | Required | PSCredential | Credentials of the Teams Admin ||
 
-## Description
+# TeamsMeetingConfiguration
+
+### Description
 
 This resource is used to configure the Teams Meeting Configuration.
 

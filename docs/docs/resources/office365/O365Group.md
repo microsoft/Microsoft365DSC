@@ -16,7 +16,9 @@
 | **ApplicationSecret** | Write | String | Secret of the Azure Active Directory application used for authentication. ||
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. ||
 
-## Description
+# O365Group
+
+### Description
 
 This resource allows users to create Office 365 Users and assign them licenses.
 
