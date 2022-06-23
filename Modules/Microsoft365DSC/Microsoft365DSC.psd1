@@ -81,30 +81,63 @@
     )
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    #FunctionsToExport = @()
-
-    # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport   = @('Assert-M365DSCBlueprint',
-        'Assert-M365DSCTemplate',
-        'Confirm-M365DSCDependencies',
-        'Export-M365DSCConfiguration',
-        'Export-M365DSCDiagnosticData',
-        'Import-M365DSCDependencies',
-        'New-M365DSCDeltaReport',
-        'New-M365DSCReportFromConfiguration',
-        'New-M365DSCStubFiles',
-        'Set-M365DSCAgentCertificateConfiguration',
-        'Start-M365DSCConfiguration',
-        'Test-M365DSCAgent',
-        'Test-M365DSCDependencies',
-        'Test-M365DSCDependenciesForNewVersions',
-        'Uninstall-M365DSCOutdatedDependencies',
-        'Update-M365DSCAllowedGraphScopes',
-        'Update-M365DSCAzureAdApplication',
-        'Update-M365DSCDependencies',
-        'Update-M365DSCResourceDocumentationPage',
+    FunctionsToExport = @(
+        #'Add-M365DSCEvent'
+        'Add-M365DSCTelemetryEvent'
+        'Assert-M365DSCBlueprint'
+        #'Confirm-ImportedCmdletIsAvailable'
+        #'Confirm-M365DSCDependencies'
+        #'Convert-M365DscHashtableToString'
+        #'ConvertTo-SPOUserProfilePropertyInstanceString'
+        'Export-M365DSCConfiguration'
+        'Export-M365DSCDiagnosticData'
+        #'Format-M365DSCString'
+        'Format-M365DSCTelemetryParameters'
+        #'Get-AllSPOPackages'
+        'Get-M365DSCAllResources'
+        #'Get-M365DSCAuthenticationMode'
+        'Get-M365DSCCompiledPermissionList'
+        #'Get-M365DSCComponentsForAuthenticationType'
+        'Get-M365DSCExportContentForResource'
+        #'Get-M365DSCOrganization'
+        'Get-M365DSCTelemetryOption'
+        #'Get-M365DSCTenantDomain'
+        'Get-M365DSCWorkloadsListFromResourceNames'
+        #'Get-M365TenantName'
+        #'Get-SPOAdministrationUrl'
+        #'Get-SPOUserProfilePropertyInstance'
+        #'Get-TeamByName'
+        'Import-M365DSCDependencies'
+        'Install-M365DSCDevBranch'
+        #'Invoke-M365DSCCommand'
+        #'New-EXOSafeAttachmentRule'
+        #'New-EXOSafeLinksRule'
+        #'New-M365DSCCmdletDocumentation'
+        #'New-M365DSCConnection'
+        'New-M365DSCDeltaReport'
+        #'New-M365DSCLogEntry'
+        'New-M365DSCReportFromConfiguration'
+        #'New-M365DSCStubFiles'
+        #'Save-M365DSCPartialExport'
+        #'Set-EXOSafeAttachmentRule'
+        #'Set-EXOSafeLinksRule'
+        'Set-M365DSCAgentCertificateConfiguration'
+        'Set-M365DSCTelemetryOption'
+        #'Split-ArrayByParts'
+        #'Start-M365DSCConfigurationExtract'
+        'Test-M365DSCAgent'
+        'Test-M365DSCDependenciesForNewVersions'
+        'Test-M365DSCNewVersionAvailable'
+        #'Test-M365DSCParameterState'
+        'Uninstall-M365DSCOutdatedDependencies'
+        'Update-M365DSCAllowedGraphScopes'
+        'Update-M365DSCDependencies'
+        'Update-M365DSCExportAuthenticationResults'
         'Update-M365DSCResourcesSettingsJSON'
     )
+
+    # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
+    CmdletsToExport   = @()
 
     # Variables to export from this module
     # VariablesToExport = @()
