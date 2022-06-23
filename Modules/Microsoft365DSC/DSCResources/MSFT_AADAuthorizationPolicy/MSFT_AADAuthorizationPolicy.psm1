@@ -124,7 +124,7 @@ function Get-TargetResource
         Write-Verbose -Message "Get-TargetResource: Found existing authorization policy"
 
         $result = @{
-            IsSingleInstance                                  = $true
+            IsSingleInstance                                  = 'Yes'
             DisplayName                                       = $Policy.DisplayName
             Description                                       = $Policy.Description
             AllowedToSignUpEmailBasedSubscriptions            = $Policy.AllowedToSignUpEmailBasedSubscriptions
@@ -135,7 +135,7 @@ function Get-TargetResource
             DefaultUserRoleAllowedToCreateApps                = $Policy.DefaultUserRolePermissions.AllowedToCreateApps
             DefaultUserRoleAllowedToCreateSecurityGroups      = $Policy.DefaultUserRolePermissions.AllowedToCreateSecurityGroups
             DefaultUserRoleAllowedToReadOtherUsers            = $Policy.DefaultUserRolePermissions.AllowedToReadOtherUsers
-            PermissionGrantPolicyIdsAssignedToDefaultUserRole = $Policy.permissionGrantPolicyIdsAssignedToDefaultUserRole
+           #permissionGrantPolicyIdsAssignedToDefaultUserRole   (added below as value can come from 2 different locations)
             GuestUserRole                                     = Get-GuestUserRoleNameFromId -RoleNameId $Policy.GuestUserRoleId
             #Standard part
             Ensure                                            = "Present"
@@ -145,6 +145,15 @@ function Get-TargetResource
             TenantId                                          = $TenantId
             CertificateThumbprint                             = $CertificateThumbprint
         }
+        if ($Policy.ContainsKey('permissionGrantPolicyIdsAssignedToDefaultUserRole'))
+        {
+            $result.Add('PermissionGrantPolicyIdsAssignedToDefaultUserRole', $Policy.permissionGrantPolicyIdsAssignedToDefaultUserRole)
+        }
+        else
+        {
+            $result.Add('PermissionGrantPolicyIdsAssignedToDefaultUserRole', $Policy.DefaultUserRolePermissions.permissionGrantPoliciesAssigned)
+        }
+
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
     }
@@ -264,6 +273,12 @@ function Set-TargetResource
     Write-Verbose -Message "Set-Targetresource: Authorization Policy Ensure Present"
     $NewParameters = @{}
     # update policy with supplied parameters only
+
+    # according to the documentation, the API requestbody can contain parameter 'PermissionGrantPolicyIdsAssignedToDefaultUserRole'
+    # but for some tenants, the API expect the value in the defaultUserRolePermissions hashtable as 'permissionGrantPoliciesAssigned'
+    # modify the $NewParameters accordingly
+    $defaultUserRolePermissionsAdded = $false
+
     foreach ($param in $currentParameters.Keys)
     {
         if ($param -eq 'GuestUserRole')
@@ -273,7 +288,31 @@ function Set-TargetResource
         }
         else
         {
-            $NewParameters.Add($param, $currentParameters.$param)
+            if ($param -eq 'PermissionGrantPolicyIdsAssignedToDefaultUserRole' -and $currentPolicy.defaultUserRolePermissions.ContainsKey('permissionGrantPoliciesAssigned'))
+            {
+                if (-not $defaultUserRolePermissionsAdded)
+                {
+                    $NewParameters.Add('defaultUserRolePermissions', @{})
+                    $defaultUserRolePermissionsAdded = $true
+                }
+                $NewParameters.defaultUserRolePermissions.Add('permissionGrantPoliciesAssigned', $currentParameters.$param)
+            }
+            else {
+                if ($param -in @('DefaultUserRoleAllowedToCreateApps', 'DefaultUserRoleAllowedToCreateSecurityGroups', 'DefaultUserRoleAllowedToReadOtherUsers'))
+                {
+                    if (-not $defaultUserRolePermissionsAdded)
+                    {
+                        $NewParameters.Add('defaultUserRolePermissions', @{})
+                        $defaultUserRolePermissionsAdded = $true
+                    }
+                    $defaultUserRoleParam = $param -replace '^DefaultUserRole'
+                    $NewParameters.defaultUserRolePermissions.Add($defaultUserRoleParam, $currentParameters.$param)
+                }
+                else
+                {
+                    $NewParameters.Add($param, $currentParameters.$param)
+                }
+            }
         }
     }
     Write-Verbose -Message "Set-Targetresource: Change authorization policy"

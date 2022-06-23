@@ -53,7 +53,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The role definition exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance = $true
+                    IsSingleInstance = 'Yes'
                     AllowInvitesFrom = "Everyone"
                     GuestUserRole    = 'Guest'
                     Ensure           = "Present"
@@ -75,8 +75,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 allowedToCreateApps = $true
                                 allowedToCreateSecurityGroups = $true
                                 allowedToReadOtherUsers = $true
+                                permissionGrantPoliciesAssigned = @()
                             }
-                        PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
+                        #PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
                         GuestUserRoleId = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
                     }
                     return $AADAuthPol
@@ -96,6 +97,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Values are not in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
+                    IsSingleInstance = 'Yes'
                     AllowedToUseSSPR = $false
                     Ensure          = "Present"
                     Credential      = $Credential
@@ -117,8 +119,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 allowedToCreateApps = $true
                                 allowedToCreateSecurityGroups = $true
                                 allowedToReadOtherUsers = $true
+                                permissionGrantPoliciesAssigned = @()
                             }
-                        PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
+                        #PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
                         GuestUserRoleId = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
                     }
                     return $AADAuthPol
@@ -165,8 +168,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 allowedToCreateApps = $true
                                 allowedToCreateSecurityGroups = $true
                                 allowedToReadOtherUsers = $true
+                                permissionGrantPoliciesAssigned = @()
                             }
-                        PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
+                        #PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
                         GuestUserRoleId = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
                     }
                     return $AADAuthPol
