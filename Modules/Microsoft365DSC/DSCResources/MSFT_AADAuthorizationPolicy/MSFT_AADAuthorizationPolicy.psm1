@@ -304,7 +304,7 @@ function Set-TargetResource
         catch
         {
             Write-Verbose -Message $_
-
+        }
         Write-Verbose -Message "Set-Targetresource: Failed change policy $DisplayName"
         Write-Verbose -Message $_
     }
