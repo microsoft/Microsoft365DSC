@@ -277,17 +277,15 @@ function Set-TargetResource
     # update policy with supplied parameters that are different from existing policy
 
     # prepare object for default user role permissions
-    $defaultUserRolePermissionsRequired = $false
     $defaultuserRolePermissions = @{}
 
     foreach ($param in $currentParameters.Keys)
     {
         if ($param -match 'defaultuserrole')
         {
-            $defaultUserRolePermissionsRequired = $true
             if ($param -like 'Permission*')
             {
-                $defaultuserRolePermissions.Add('PermissionGrantPoliciesAssigned', $currentParameters.$param)
+                $defaultuserRolePermissions.Add($param, $currentParameters.$param)
             }
             else
             {
@@ -314,9 +312,9 @@ function Set-TargetResource
             }
         }
     }
-    if ($defaultUserRolePermissionsRequired)
+    if ($defaultUserRolePermissions.Keys.Count -gt 0)
     {
-        $UpdateParameters.Add('defaultUserRolePermissions', [psobject]$defaultUserRolePermissions)
+        $UpdateParameters.Add('defaultUserRolePermissions', [pscustomobject]$defaultUserRolePermissions)
     }
     Write-Verbose -Message "Set-Targetresource: Change authorization policy"
     try
