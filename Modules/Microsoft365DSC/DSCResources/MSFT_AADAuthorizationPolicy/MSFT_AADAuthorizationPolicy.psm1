@@ -89,7 +89,7 @@ function Get-TargetResource
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Getting configuration of AzureAD Conditional Access Policy"
+    Write-Verbose -Message "Getting configuration of AzureAD Authorization Policy"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
@@ -285,7 +285,7 @@ function Set-TargetResource
         {
             if ($param -like 'Permission*')
             {
-                $defaultuserRolePermissions.Add($param, $currentParameters.$param)
+                $UpdateParameters.Add($param, $currentParameters.$param)
             }
             else
             {
@@ -314,7 +314,7 @@ function Set-TargetResource
     }
     if ($defaultUserRolePermissions.Keys.Count -gt 0)
     {
-        $UpdateParameters.Add('defaultUserRolePermissions', [pscustomobject]$defaultUserRolePermissions)
+        $UpdateParameters.Add('defaultUserRolePermissions', [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDefaultUserRolePermissions1]::New($defaultUserRolePermissions))
     }
     Write-Verbose -Message "Set-Targetresource: Change authorization policy"
     try
