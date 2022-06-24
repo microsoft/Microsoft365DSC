@@ -65,7 +65,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Invoke-MgGraphRequest -ParameterFilter {$Method -eq 'GET'} -MockWith {
-                    $AADAuthPol = [pscustomobject]@{
+                    $AADAuthPol = @{
                         allowedToSignUpEmailBasedSubscriptions = $true
                         allowedToUseSSPR = $true
                         allowEmailVerifiedUsersToJoinOrganization = $true
@@ -109,7 +109,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
 
                 Mock -CommandName Invoke-MgGraphRequest -ParameterFilter {$Method -eq 'GET'} -MockWith {
-                    $AADAuthPol = [pscustomobject]@{
+                    $AADAuthPol = @{
                         allowedToSignUpEmailBasedSubscriptions = $true
                         allowedToUseSSPR = $true
                         allowEmailVerifiedUsersToJoinOrganization = $true
@@ -159,7 +159,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Invoke-MgGraphRequest -ParameterFilter {$Method -eq 'GET'} -MockWith {
-                    $AADAuthPol = [pscustomobject]@{
+                    $AADAuthPol = @{
                         allowedToSignUpEmailBasedSubscriptions = $true
                         allowedToUseSSPR = $true
                         allowEmailVerifiedUsersToJoinOrganization = $true
