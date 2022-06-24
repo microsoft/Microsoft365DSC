@@ -54,7 +54,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance = 'Yes'
+                    Id = "authorizationPolicy"
+                    DisplayName = 'Authorization Policy'
+                    Description = 'something'
+                    allowedToSignUpEmailBasedSubscriptions = $true
+                    allowedToUseSSPR = $true
+                    allowEmailVerifiedUsersToJoinOrganization = $true
                     AllowInvitesFrom = "Everyone"
+                    blockMsolPowerShell = $false
+                    DefaultuserRoleAllowedToCreateApps = $true
+                    DefaultUserRoleAllowedToCreateSecurityGroups = $true
+                    DefaultUserRoleAllowedToReadOtherUsers = $true
+                    PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
                     GuestUserRole    = 'Guest'
                     Ensure           = "Present"
                     Credential       = $Credential
@@ -67,6 +78,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgPolicyAuthorizationPolicy -MockWith {
                     $AADAuthPol = [pscustomobject]@{
                         Id = "authorizationPolicy"
+                        DisplayName = 'Authorization Policy'
+                        Description = 'something'
                         allowedToSignUpEmailBasedSubscriptions = $true
                         allowedToUseSSPR = $true
                         allowEmailVerifiedUsersToJoinOrganization = $true
@@ -98,7 +111,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance = 'Yes'
-                    AllowedToUseSSPR = $false
+                    Id = 'authorizationPolicy'
+                    DisplayName = 'Authorization Policy'
+                    Description = 'something'
+                    allowedToSignUpEmailBasedSubscriptions = $False
+                    allowedToUseSSPR = $false
+                    allowEmailVerifiedUsersToJoinOrganization = $false
+                    AllowInvitesFrom = 'AdminsAndGuestInviters'
+                    blockMsolPowerShell = $false
+                    DefaultuserRoleAllowedToCreateApps = $true
+                    DefaultUserRoleAllowedToCreateSecurityGroups = $true
+                    DefaultUserRoleAllowedToReadOtherUsers = $true
+                    PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
+                    GuestUserRole = 'RestrictedGuest'
                     Ensure          = "Present"
                     Credential      = $Credential
                 }
@@ -111,6 +136,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgPolicyAuthorizationPolicy -MockWith {
                     $AADAuthPol = [pscustomobject]@{
                         Id = "authorizationPolicy"
+                        DisplayName = 'Authorization Policy'
+                        Description = 'something'
                         allowedToSignUpEmailBasedSubscriptions = $true
                         allowedToUseSSPR = $true
                         allowEmailVerifiedUsersToJoinOrganization = $true
@@ -161,6 +188,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgPolicyAuthorizationPolicy -MockWith {
                     $AADAuthPol = [pscustomobject]@{
                         Id = "authorizationPolicy"
+                        DisplayName = 'Authorization Policy'
+                        Description = 'something'
                         allowedToSignUpEmailBasedSubscriptions = $true
                         allowedToUseSSPR = $true
                         allowEmailVerifiedUsersToJoinOrganization = $true

@@ -106,15 +106,15 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-        try
-        {
-            $Policy = Get-MgPolicyAuthorizationPolicy -ErrorAction Stop
-        }
-        catch
-        {
-            Write-Verbose -Message "Couldn't find existing authorization policy"
-            throw "Cannot retrieve authorization policy, $($_.Exception.Message)"
-        }
+    try
+    {
+        $Policy = Get-MgPolicyAuthorizationPolicy -ErrorAction Stop
+    }
+    catch
+    {
+        Write-Verbose -Message "Couldn't find existing authorization policy"
+        throw "Cannot retrieve authorization policy, $($_.Exception.Message)"
+    }
 
     if ($null -eq $Policy)
     {
