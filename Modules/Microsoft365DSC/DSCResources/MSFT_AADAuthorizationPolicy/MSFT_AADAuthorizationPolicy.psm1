@@ -140,7 +140,7 @@ function Get-TargetResource
             DefaultUserRoleAllowedToCreateSecurityGroups      = $Policy.DefaultUserRolePermissions.AllowedToCreateSecurityGroups
             DefaultUserRoleAllowedToReadOtherUsers            = $Policy.DefaultUserRolePermissions.AllowedToReadOtherUsers
             PermissionGrantPolicyIdsAssignedToDefaultUserRole = $Policy.PermissionGrantPolicyIdsAssignedToDefaultUserRole
-            GuestUserRole                                     = Get-GuestUserRoleNameFromId -RoleNameId $Policy.GuestUserRoleId
+            GuestUserRole                                     = Get-GuestUserRoleNameFromId -GuserUserRoleId $Policy.GuestUserRoleId
             #Standard part
             Ensure                                            = "Present"
             Credential                                        = $Credential
@@ -307,6 +307,7 @@ function Set-TargetResource
             else
             {
                 if ($currentParameters.$param -ne $currentPolicy.$param)
+                {
                     $UpdateParameters.Add($param, $currentParameters.$param)
                 }
             }
