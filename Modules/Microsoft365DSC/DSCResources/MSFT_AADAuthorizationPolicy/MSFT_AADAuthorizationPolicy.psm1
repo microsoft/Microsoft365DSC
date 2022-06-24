@@ -287,11 +287,11 @@ function Set-TargetResource
             $defaultUserRolePermissionsRequired = $true
             if ($param -like 'Permission*')
             {
-                $defaultuserRolePermissions.Add(($param -replace '^DefaultUserRole'), $currentParameters.$param)
+                $defaultuserRolePermissions.Add('PermissionGrantPoliciesAssigned', $currentParameters.$param)
             }
             else
             {
-                $defaultuserRolePermissions.Add('PermissionGrantPoliciesAssigned', $currentParameters.$param)
+                $defaultuserRolePermissions.Add(($param -replace '^DefaultUserRole'), $currentParameters.$param)
             }
         }
         else
