@@ -135,7 +135,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return values from the get method" {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Invoke-MgGraphRequest" -Exactly 1
+                Should -Invoke -CommandName "Get-MgPolicyAuthorizationPolicy" -Exactly 1
             }
 
             It 'Should return false from the test method' {
@@ -144,7 +144,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the set method" {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Invoke-MgGraphRequest' -Exactly 2
+                Should -Invoke -CommandName 'Update-MgPolicyAuthorizationPolicy' -Exactly 1
             }
         }
 
