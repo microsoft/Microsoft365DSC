@@ -314,7 +314,7 @@ function Set-TargetResource
     }
     if ($defaultUserRolePermissions.Keys.Count -gt 0)
     {
-        $UpdateParameters.Add('defaultUserRolePermissions', [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphDefaultUserRolePermissions1]::New($defaultUserRolePermissions))
+        $UpdateParameters.Add('defaultUserRolePermissions', $defaultUserRolePermissions)
     }
     Write-Verbose -Message "Set-Targetresource: Change authorization policy"
     try
@@ -442,7 +442,7 @@ function Test-TargetResource
         $CertificateThumbprint
     )
 
-    Write-Verbose -Message "Testing configuration of AzureAD Authentication Policy"
+    Write-Verbose -Message "Testing configuration of AzureAD Authorization Policy"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
