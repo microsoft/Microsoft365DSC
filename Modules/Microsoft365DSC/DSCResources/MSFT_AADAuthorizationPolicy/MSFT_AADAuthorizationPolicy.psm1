@@ -649,12 +649,14 @@ function Get-GuestUserRoleNameFromId {
     {
         throw "Unexpected value of GuestuserRoleId '$GuestUserRoleId', should be one of $($guestUserRoleIdTable.Values -join ',')"
     }
-    foreach ($roleName in $guestUserRoleIdTable) {
+    foreach ($roleName in $guestUserRoleIdTable.Keys) {
         if ($guestUserRoleIdTable.$roleName -eq $GuestUserRoleId)
         {
+            write-verbose "`tRoleName matching GuestUserRoleId is $roleName"
             break
         }
     }
+    write-verbose "return $rolename"
     return $roleName
 }
 
