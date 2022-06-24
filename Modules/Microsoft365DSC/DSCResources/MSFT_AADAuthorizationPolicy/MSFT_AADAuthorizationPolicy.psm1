@@ -141,7 +141,7 @@ function Get-TargetResource
             DefaultUserRoleAllowedToCreateSecurityGroups      = $Policy.DefaultUserRolePermissions.AllowedToCreateSecurityGroups
             DefaultUserRoleAllowedToReadOtherUsers            = $Policy.DefaultUserRolePermissions.AllowedToReadOtherUsers
             PermissionGrantPolicyIdsAssignedToDefaultUserRole = $Policy.PermissionGrantPolicyIdsAssignedToDefaultUserRole
-            GuestUserRole                                     = Get-GuestUserRoleNameFromId -GuserUserRoleId $Policy.GuestUserRoleId
+            GuestUserRole                                     = Get-GuestUserRoleNameFromId -GuestUserRoleId $Policy.GuestUserRoleId
             #Standard part
             Ensure                                            = "Present"
             Credential                                        = $Credential
