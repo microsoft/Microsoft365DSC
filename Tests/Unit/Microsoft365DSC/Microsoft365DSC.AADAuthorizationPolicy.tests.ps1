@@ -64,20 +64,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Invoke-MgGraphRequest -ParameterFilter {$Method -eq 'GET'} -MockWith {
-                    $AADAuthPol = @{
+                Mock -CommandName Get-MgPolicyAuthorizationPolicy -MockWith {
+                    $AADAuthPol = [pscustomobject]@{
+                        Id = "authorizationPolicy"
                         allowedToSignUpEmailBasedSubscriptions = $true
                         allowedToUseSSPR = $true
                         allowEmailVerifiedUsersToJoinOrganization = $true
                         AllowInvitesFrom = "Everyone"
                         blockMsolPowerShell = $false
-                        defaultUserRolePermissions = @{
+                        defaultUserRolePermissions = [pscustomobject]@{
                                 allowedToCreateApps = $true
                                 allowedToCreateSecurityGroups = $true
                                 allowedToReadOtherUsers = $true
-                                permissionGrantPoliciesAssigned = @()
                             }
-                        #PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
+                        PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
                         GuestUserRoleId = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
                     }
                     return $AADAuthPol
@@ -86,7 +86,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return Values from the get method" {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName "Invoke-MgGraphRequest" -Exactly 1
+                Should -Invoke -CommandName "Get-MgPolicyAuthorizationPolicy" -Exactly 1
             }
 
             It 'Should return true from the test method' {
@@ -108,27 +108,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
 
-                Mock -CommandName Invoke-MgGraphRequest -ParameterFilter {$Method -eq 'GET'} -MockWith {
-                    $AADAuthPol = @{
+                Mock -CommandName Get-MgPolicyAuthorizationPolicy -MockWith {
+                    $AADAuthPol = [pscustomobject]@{
+                        Id = "authorizationPolicy"
                         allowedToSignUpEmailBasedSubscriptions = $true
                         allowedToUseSSPR = $true
                         allowEmailVerifiedUsersToJoinOrganization = $true
                         AllowInvitesFrom = "Everyone"
                         blockMsolPowerShell = $false
-                        defaultUserRolePermissions = @{
+                        defaultUserRolePermissions = [pscustomobject]@{
                                 allowedToCreateApps = $true
                                 allowedToCreateSecurityGroups = $true
                                 allowedToReadOtherUsers = $true
-                                permissionGrantPoliciesAssigned = @()
                             }
-                        #PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
+                        PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
                         GuestUserRoleId = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
                     }
                     return $AADAuthPol
                 }
 
 
-                Mock -CommandName Invoke-MgGraphRequest -ParameterFilter {$Method -eq 'PATCH'} -MockWith {
+                Mock -CommandName Update-MgPolicyAuthorizationPolicy -MockWith {
                 }
 
             }
@@ -158,19 +158,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return "Credential"
                 }
 
-                Mock -CommandName Invoke-MgGraphRequest -ParameterFilter {$Method -eq 'GET'} -MockWith {
-                    $AADAuthPol = @{
+                Mock -CommandName Get-MgPolicyAuthorizationPolicy -MockWith {
+                    $AADAuthPol = [pscustomobject]@{
+                        Id = "authorizationPolicy"
                         allowedToSignUpEmailBasedSubscriptions = $true
                         allowedToUseSSPR = $true
                         allowEmailVerifiedUsersToJoinOrganization = $true
                         AllowInvitesFrom = "Everyone"
-                        defaultUserRolePermissions = @{
+                        blockMsolPowerShell = $false
+                        defaultUserRolePermissions = [pscustomobject]@{
                                 allowedToCreateApps = $true
                                 allowedToCreateSecurityGroups = $true
                                 allowedToReadOtherUsers = $true
-                                permissionGrantPoliciesAssigned = @()
                             }
-                        #PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
+                        PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
                         GuestUserRoleId = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
                     }
                     return $AADAuthPol

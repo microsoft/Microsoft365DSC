@@ -11,6 +11,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
         $DisplayName,
 
         [Parameter()]
@@ -104,7 +108,7 @@ function Get-TargetResource
 
         try
         {
-            $Policy = Invoke-MgGraphRequest -Uri 'https://graph.microsoft.com/v1.0/policies/authorizationPolicy' -Method GET -ErrorAction Stop
+            $Policy = Get-MgPolicyAuthorizationPolicy -ErrorAction Stop
         }
         catch
         {
@@ -135,7 +139,7 @@ function Get-TargetResource
             DefaultUserRoleAllowedToCreateApps                = $Policy.DefaultUserRolePermissions.AllowedToCreateApps
             DefaultUserRoleAllowedToCreateSecurityGroups      = $Policy.DefaultUserRolePermissions.AllowedToCreateSecurityGroups
             DefaultUserRoleAllowedToReadOtherUsers            = $Policy.DefaultUserRolePermissions.AllowedToReadOtherUsers
-           #permissionGrantPolicyIdsAssignedToDefaultUserRole   (added below as value can come from 2 different locations)
+            PermissionGrantPolicyIdsAssignedToDefaultUserRole = $Policy.PermissionGrantPolicyIdsAssignedToDefaultUserRole
             GuestUserRole                                     = Get-GuestUserRoleNameFromId -RoleNameId $Policy.GuestUserRoleId
             #Standard part
             Ensure                                            = "Present"
@@ -144,14 +148,6 @@ function Get-TargetResource
             ApplicationId                                     = $ApplicationId
             TenantId                                          = $TenantId
             CertificateThumbprint                             = $CertificateThumbprint
-        }
-        if ($Policy.ContainsKey('permissionGrantPolicyIdsAssignedToDefaultUserRole'))
-        {
-            $result.Add('PermissionGrantPolicyIdsAssignedToDefaultUserRole', $Policy.permissionGrantPolicyIdsAssignedToDefaultUserRole)
-        }
-        else
-        {
-            $result.Add('PermissionGrantPolicyIdsAssignedToDefaultUserRole', $Policy.DefaultUserRolePermissions.permissionGrantPoliciesAssigned)
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -168,6 +164,10 @@ function Set-TargetResource
         [System.String]
         [ValidateSet('Yes')]
         $IsSingleInstance,
+
+        [Parameter()]
+        [System.String]
+        $Id,
 
         [Parameter()]
         [System.String]
@@ -263,6 +263,7 @@ function Set-TargetResource
     Write-Verbose -Message "Set-Targetresource: Cleaning up parameters"
     $currentParameters = $PSBoundParameters
     $currentParameters.Remove("IsSingleInstance") | Out-Null
+    $currentParameters.Remove("Id") | Out-Null
     $currentParameters.Remove("ApplicationId") | Out-Null
     $currentParameters.Remove("TenantId") | Out-Null
     $currentParameters.Remove("CertificateThumbprint") | Out-Null
@@ -271,55 +272,55 @@ function Set-TargetResource
     $currentParameters.Remove("Credential") | Out-Null
 
     Write-Verbose -Message "Set-Targetresource: Authorization Policy Ensure Present"
-    $NewParameters = @{}
-    # update policy with supplied parameters only
+    $UpdateParameters = @{}
+    # update policy with supplied parameters that are different from existing policy
 
-    # according to the documentation, the API requestbody can contain parameter 'PermissionGrantPolicyIdsAssignedToDefaultUserRole'
-    # but for some tenants, the API expect the value in the defaultUserRolePermissions hashtable as 'permissionGrantPoliciesAssigned'
-    # modify the $NewParameters accordingly
-    $defaultUserRolePermissionsAdded = $false
+    # prepare object for default user role permissions
+    $defaultUserRolePermissionsRequired = $false
+    $defaultuserRolePermissions = @{}
 
     foreach ($param in $currentParameters.Keys)
     {
-        if ($param -eq 'GuestUserRole')
+        if ($param -match 'defaultuserrole')
         {
-            # translate displayvalue to corresponding GUID
-            $NewParameters.Add($param, (Get-GuestUserRoleIdFromName -GuestUserRole $currentParameters.$param))
+            $defaultUserRolePermissionsRequired = $true
+            if ($param -like 'Permission*')
+            {
+                $defaultuserRolePermissions.Add(($param -replace '^DefaultUserRole'), $currentParameters.$param)
+            }
+            else
+            {
+                $defaultuserRolePermissions.Add('PermissionGrantPoliciesAssigned', $currentParameters.$param)
+            }
         }
         else
         {
-            if ($param -eq 'PermissionGrantPolicyIdsAssignedToDefaultUserRole' -and $currentPolicy.defaultUserRolePermissions.ContainsKey('permissionGrantPoliciesAssigned'))
+            if ($param -eq 'GuestUserRole')
             {
-                if (-not $defaultUserRolePermissionsAdded)
+                # translate displayvalue to corresponding GUID
+                $guestUserRoleId = Get-GuestUserRoleIdFromName -GuestUserRole $currentParameters.$param
+                if ($guestUserRoleId -ne $currentPolicy.GuestUserRoleId)
                 {
-                    $NewParameters.Add('defaultUserRolePermissions', @{})
-                    $defaultUserRolePermissionsAdded = $true
+                    $UpdateParameters.Add($param, $guestUserRoleId)
                 }
-                $NewParameters.defaultUserRolePermissions.Add('permissionGrantPoliciesAssigned', $currentParameters.$param)
             }
-            else {
-                if ($param -in @('DefaultUserRoleAllowedToCreateApps', 'DefaultUserRoleAllowedToCreateSecurityGroups', 'DefaultUserRoleAllowedToReadOtherUsers'))
-                {
-                    if (-not $defaultUserRolePermissionsAdded)
-                    {
-                        $NewParameters.Add('defaultUserRolePermissions', @{})
-                        $defaultUserRolePermissionsAdded = $true
-                    }
-                    $defaultUserRoleParam = $param -replace '^DefaultUserRole'
-                    $NewParameters.defaultUserRolePermissions.Add($defaultUserRoleParam, $currentParameters.$param)
-                }
-                else
-                {
-                    $NewParameters.Add($param, $currentParameters.$param)
+            else
+            {
+                if ($currentParameters.$param -ne $currentPolicy.$param)
+                    $UpdateParameters.Add($param, $currentParameters.$param)
                 }
             }
         }
     }
+    if ($defaultUserRolePermissionsRequired)
+    {
+        $UpdateParameters.Add('defaultUserRolePermissions', [psobject]$defaultUserRolePermissions)
+    }
     Write-Verbose -Message "Set-Targetresource: Change authorization policy"
     try
     {
-        Write-Verbose -Message "Updating existing policy with values: $(Convert-M365DscHashtableToString -Hashtable $NewParameters)"
-        $response = Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/beta/policies/authorizationPolicy" -Method PATCH -Body ($NewParameters | ConvertTo-Json -Compress) -ErrorAction Stop
+        Write-Verbose -Message "Updating existing policy with values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParameters)"
+        $response = Update-MgPolicyAuthorizationPolicy -AuthorizationPolicyId $currentpolicy.Id @updateParameters -ErrorAction Stop
     }
     catch
     {
@@ -360,6 +361,10 @@ function Test-TargetResource
         [System.String]
         [ValidateSet('Yes')]
         $IsSingleInstance,
+
+        [Parameter()]
+        [System.String]
+        $Id,
 
         [Parameter()]
         [System.String]
