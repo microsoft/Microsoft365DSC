@@ -129,6 +129,7 @@ function Get-TargetResource
 
         $result = @{
             IsSingleInstance                                  = 'Yes'
+            Id                                                = $Policy.Id
             DisplayName                                       = $Policy.DisplayName
             Description                                       = $Policy.Description
             AllowedToSignUpEmailBasedSubscriptions            = $Policy.AllowedToSignUpEmailBasedSubscriptions
