@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+* IntuneAppProtectionPolicyAndroid
+  * Amended to remove direct graph calls and instead use Graph module cmdlets
+  * Added AppGroupType parameter - this value takes precedence over apps specified in the 'apps' parameter
+  * Configuration will complete even if some parameters missing from config (existing values retained for updates)
+  * Timespans can be used for time periods rather than iso8601 string
+  * Removed unused parameters in function (fixes #1955)
+
 # 1.22.622.1
 
 * TeamsMessagingPolicy
@@ -30,12 +37,6 @@
 
 # 1.22.608.1
 
-* IntuneAppProtectionPolicyAndroid
-  * Amended to remove direct graph calls and instead use Graph module cmdlets
-  * Added AppGroupType parameter - this value takes precedence over apps specified in the 'apps' parameter
-  * Configuration will complete even if some parameters missing from config (existing values retained for updates)
-  * Timespans can be used for time periods rather than iso8601 string
-  * Removed unused parameters in function (fixes #1955)
 * AADConditionalAccessPolicy
   * Updated settings.json with missing permissions
 * DEPENDENCIES
