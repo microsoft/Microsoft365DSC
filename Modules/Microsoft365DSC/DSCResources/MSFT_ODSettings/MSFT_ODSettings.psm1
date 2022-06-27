@@ -329,6 +329,7 @@ function Set-TargetResource
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("Credential") | Out-Null
     $Options = @{}
+    $TenantRestrictionEnabled = $false
 
     if ($CurrentParameters.ContainsKey("Ensure"))
     {
@@ -341,6 +342,17 @@ function Set-TargetResource
     }
     if ($CurrentParameters.ContainsKey("DomainGuids"))
     {
+        if ($CurrentParameters.DomainGuids.count -gt 0)
+        {
+            Write-Verbose -Message "Updating DomainGuids"
+            $TenantRestrictionEnabled = $true
+        }
+        else
+        {
+            Write-Verbose -Message "No DomainGuids Specified - TenantRestrictionEnabled will be set to False"
+        }
+        # think we need to add a blank value in here even if we'#ve omitted domainguids...
+        #gui wipes out the value but cmdlet doesn't and it alters what we get as exports
         $Options.Add("DomainGuids", [System.Guid[]]$CurrentParameters.DomainGuids)
         $CurrentParameters.Remove("DomainGuids") | Out-Null
     }
@@ -379,15 +391,8 @@ function Set-TargetResource
     Write-Verbose -Message "Setting other configuration parameters"
     Write-Verbose -Message ($Options | Out-String)
 
-    if ($Options.ContainsKey("DomainGuids"))
-    {
-        Write-Verbose -Message "Updating DomainGuids"
-        Set-PnPTenantSyncClientRestriction @Options -Enable:$true
-    }
-    else
-    {
-        Set-PnPTenantSyncClientRestriction @Options
-    }
+    Set-PnPTenantSyncClientRestriction @Options -Enable:$TenantRestrictionEnabled
+
 }
 
 function Test-TargetResource
