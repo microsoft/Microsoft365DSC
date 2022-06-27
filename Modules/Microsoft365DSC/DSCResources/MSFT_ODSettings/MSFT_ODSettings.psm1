@@ -348,16 +348,12 @@ function Set-TargetResource
         $Options.Add("BlockMacSync", $CurrentParameters.BlockMacSync)
         $CurrentParameters.Remove("BlockMacSync") | Out-Null
     }
-
-
+    # set the TenantRestrictionEnabled and DomainGuids values to avoid invalid configurations
     if ($TenantRestrictionEnabled -eq $true)
     {
-        # specified true so we need to ensure guids are valid`
-        # this should check there is a domainguids value, it isn't an empty array and it isn't an array with an empty string
         if (!($CurrentParameters.ContainsKey("DomainGuids") -and ($CurrentParameters.DomainGuids.count -gt 0) -and ($CurrentParameters.DomainGuids[0] -ne '') ))
         {
             Write-Verbose -Message "Invalid configuration specified: TenantRestrictionEnabled is True but No DomainGuids Specified, this option will not be enabled"
-            # wipe settings
             $TenantRestrictionEnabled = $false
             $DomainGuids = @()
 
@@ -366,10 +362,8 @@ function Set-TargetResource
     }
     else
     {
-        # have we specified false or omitted?
         if ($CurrentParameters.ContainsKey("TenantRestrictionEnabled"))
         {
-            # specified false, so we will ignore guids
             if ($CurrentParameters.ContainsKey("DomainGuids") -and ($CurrentParameters.DomainGuids.count -gt 0) -and ($CurrentParameters.DomainGuids[0] -ne '') )
             {
                 Write-Verbose -Message "DomainGuids have been Specified but TenantRestrictionEnabled is set to False, DomainGuids value will be ignored"
@@ -383,11 +377,9 @@ function Set-TargetResource
                 $DomainGuids = @()
             }
             $CurrentParameters.Remove("TenantRestrictionEnabled") | Out-Null
-
         }
         else
         {
-            #value not specified, so we need to figure out what is wanted
             if ($CurrentParameters.ContainsKey("DomainGuids") -and ($CurrentParameters.DomainGuids.count -gt 0) -and ($CurrentParameters.DomainGuids[0] -ne '') )
             {
                 Write-Verbose -Message "TenantRestrictionEnabled value not specified but a valid DomainGuids value is present - TenantRestrictionEnabled will be set to true"
@@ -404,8 +396,8 @@ function Set-TargetResource
     }
 
     if ($CurrentParameters.ContainsKey("DomainGuids")) { $CurrentParameters.Remove("DomainGuids") | Out-Null }
-    # add the values we've set
-    $Options.Add("DomainGuids", $DomainGuids)
+
+    $Options.Add("DomainGuids", [System.Guid[]]$DomainGuids)
     $Options.Add("Enable", $TenantRestrictionEnabled)
 
     if ($CurrentParameters.ContainsKey("DisableReportProblemDialog"))
@@ -440,10 +432,10 @@ function Set-TargetResource
     ## Configure Sync Client restrictions
     ## Set-SPOTenantSyncClientRestriction has different parameter sets and they cannot be combined see article:
     ## https://docs.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenantsyncclientrestriction?view=sharepoint-ps
-    Write-Verbose -Message "Setting other configuration parameters"
+    Write-Verbose -Message "Setting other configuration parameters2"
     Write-Verbose -Message ($Options | Out-String)
 
-    Set-PnPTenantSyncClientRestriction @Options # -Enable:$TenantRestrictionEnabled
+    Set-PnPTenantSyncClientRestriction @Options
 
 }
 
