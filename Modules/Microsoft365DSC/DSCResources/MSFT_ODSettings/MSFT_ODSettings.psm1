@@ -338,7 +338,6 @@ function Set-TargetResource
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("Credential") | Out-Null
     $Options = @{}
-    $TenantRestrictionEnabled = $false
 
     if ($CurrentParameters.ContainsKey("Ensure"))
     {
@@ -349,22 +348,66 @@ function Set-TargetResource
         $Options.Add("BlockMacSync", $CurrentParameters.BlockMacSync)
         $CurrentParameters.Remove("BlockMacSync") | Out-Null
     }
-    if ($CurrentParameters.ContainsKey("DomainGuids"))
+
+
+    if ($TenantRestrictionEnabled -eq $true)
     {
-        if ($CurrentParameters.DomainGuids.count -gt 0)
+        # specified true so we need to ensure guids are valid`
+        # this should check there is a domainguids value, it isn't an empty array and it isn't an array with an empty string
+        if (!($CurrentParameters.ContainsKey("DomainGuids") -and ($CurrentParameters.DomainGuids.count -gt 0) -and ($CurrentParameters.DomainGuids[0] -ne '') ))
         {
-            Write-Verbose -Message "Updating DomainGuids"
-            $TenantRestrictionEnabled = $true
+            Write-Verbose -Message "Invalid configuration specified: TenantRestrictionEnabled is True but No DomainGuids Specified, this option will not be enabled"
+            # wipe settings
+            $TenantRestrictionEnabled = $false
+            $DomainGuids = @()
+
+        }
+        $CurrentParameters.Remove("TenantRestrictionEnabled") | Out-Null
+    }
+    else
+    {
+        # have we specified false or omitted?
+        if ($CurrentParameters.ContainsKey("TenantRestrictionEnabled"))
+        {
+            # specified false, so we will ignore guids
+            if ($CurrentParameters.ContainsKey("DomainGuids") -and ($CurrentParameters.DomainGuids.count -gt 0) -and ($CurrentParameters.DomainGuids[0] -ne '') )
+            {
+                Write-Verbose -Message "DomainGuids have been Specified but TenantRestrictionEnabled is set to False, DomainGuids value will be ignored"
+                $TenantRestrictionEnabled = $false
+                $DomainGuids = @()
+
+            }
+            else
+            {
+                $TenantRestrictionEnabled = $false
+                $DomainGuids = @()
+            }
+            $CurrentParameters.Remove("TenantRestrictionEnabled") | Out-Null
+
         }
         else
         {
-            Write-Verbose -Message "No DomainGuids Specified - TenantRestrictionEnabled will be set to False"
+            #value not specified, so we need to figure out what is wanted
+            if ($CurrentParameters.ContainsKey("DomainGuids") -and ($CurrentParameters.DomainGuids.count -gt 0) -and ($CurrentParameters.DomainGuids[0] -ne '') )
+            {
+                Write-Verbose -Message "TenantRestrictionEnabled value not specified but a valid DomainGuids value is present - TenantRestrictionEnabled will be set to true"
+                $TenantRestrictionEnabled = $true
+                $DomainGuids = $CurrentParameters.DomainGuids
+            }
+            else
+            {
+                Write-Verbose -Message "TenantRestrictionEnabled value not specified - No valid DomainGuids value is present - TenantRestrictionEnabled will be set to False"
+                $TenantRestrictionEnabled = $false
+                $DomainGuids = @()
+            }
         }
-        # think we need to add a blank value in here even if we'#ve omitted domainguids...
-        #gui wipes out the value but cmdlet doesn't and it alters what we get as exports
-        $Options.Add("DomainGuids", [System.Guid[]]$CurrentParameters.DomainGuids)
-        $CurrentParameters.Remove("DomainGuids") | Out-Null
     }
+
+    if ($CurrentParameters.ContainsKey("DomainGuids")) { $CurrentParameters.Remove("DomainGuids") | Out-Null }
+    # add the values we've set
+    $Options.Add("DomainGuids", $DomainGuids)
+    $Options.Add("Enable", $TenantRestrictionEnabled)
+
     if ($CurrentParameters.ContainsKey("DisableReportProblemDialog"))
     {
         $Options.Add("DisableReportProblemDialog", $CurrentParameters.DisableReportProblemDialog)
@@ -400,7 +443,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting other configuration parameters"
     Write-Verbose -Message ($Options | Out-String)
 
-    Set-PnPTenantSyncClientRestriction @Options -Enable:$TenantRestrictionEnabled
+    Set-PnPTenantSyncClientRestriction @Options # -Enable:$TenantRestrictionEnabled
 
 }
 
