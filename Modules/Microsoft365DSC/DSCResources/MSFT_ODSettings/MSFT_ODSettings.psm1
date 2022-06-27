@@ -130,7 +130,7 @@ function Get-TargetResource
 
         if ($null -eq $tenantRestrictions)
         {
-            Write-Verbose -Message "Failed to get Tenant client synce settings!"
+            Write-Verbose -Message "Failed to get Tenant client sync settings!"
             return $nullReturn
         }
 
@@ -174,6 +174,7 @@ function Get-TargetResource
             IsSingleInstance                          = "Yes"
             BlockMacSync                              = $tenantRestrictions.BlockMacSync
             DisableReportProblemDialog                = $tenantRestrictions.DisableReportProblemDialog
+            TenantRestrictionEnabled                  = $tenantRestrictions.TenantRestrictionEnabled
             DomainGuids                               = $FixedAllowedDomainList
             ExcludedFileExtensions                    = $FixedExcludedFileExtensions
             GrooveBlockOption                         = $GrooveOption
